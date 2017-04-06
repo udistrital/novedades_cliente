@@ -68,7 +68,7 @@ angular
         controller: 'NecesidadesCtrl',
         controllerAs: 'necesidades'
       })
-      .when('/necesidad/aprobar/:Vigencia/:Id', {
+      /*.when('/necesidad/aprobar/:Vigencia/:Id', {
         templateUrl: 'views/necesidad/aprobar_necesidad.html',
         controller: 'AprobarNecesidadCtrl',
         controllerAs: 'aprobarNecesidad'
@@ -77,7 +77,7 @@ angular
         templateUrl: 'views/necesidad/ver_necesidad.html',
         controller: 'VerNecesidadCtrl',
         controllerAs: 'verNecesidad'
-      })
+      })*/
       .otherwise({
         redirectTo: '/'
       });

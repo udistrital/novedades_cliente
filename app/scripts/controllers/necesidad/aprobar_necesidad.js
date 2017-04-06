@@ -49,7 +49,7 @@ angular.module('contractualClienteApp')
 
     self.rechazar_necesidad = function() {
       administrativaRequest.get('estado_necesidad', $.param({
-        query: "Nombre: Rechazada"
+        query: "Nombre:Rechazada"
       })).then(function(response) {
         self.ap_necesidad.Estado = response.data[0];
         administrativaRequest.put('necesidad', self.ap_necesidad.Id, self.ap_necesidad).then(function(response) {
