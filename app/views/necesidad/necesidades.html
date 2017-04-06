@@ -1,0 +1,37 @@
+<div class="panel panel-primary panel-primary">
+  <div class="panel-body">
+    <center>
+      <h1 class="page-header">
+          Necesidades
+      </h1></center>
+    <div style="height: {{gridHeight}}px" ui-grid="necesidades.gridOptions" ui-grid-selection ui-grid-auto-resize ui-grid-pagination>
+    </div>
+    <button type="button" name="button" ng-click="sel=!sel">sel</button>
+
+
+      <div id="myModal" class="modal fade" role="dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content col-md-10 col-md-offset-1" style="margin-top: 5%">
+
+            <div class="modal-body" ng-if="necesidades.mod_ver">
+              <div ng-include="necesidades.templateUrl" ng-controller="VerNecesidadCtrl as verNecesidad" ng-repeat="data in necesidades.parametros"></div>
+            </div>
+            <div class="modal-body" ng-if="necesidades.mod_aprobar">
+              <div ng-include="necesidades.templateUrl" ng-controller="AprobarNecesidadCtrl as aprobarNecesidad" ng-repeat="data in necesidades.parametros"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default btn-info" data-dismiss="modal">Salir</button>
+            </div>
+          </div>
+
+      </div>
+
+
+
+
+  </div>
+  <div class="panel-footer">
+    Panel Footer
+  </div>
+</div>
