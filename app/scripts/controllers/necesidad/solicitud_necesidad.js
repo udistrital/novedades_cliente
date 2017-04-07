@@ -105,7 +105,7 @@ angular.module('contractualClienteApp')
     //
 
     //Temporal viene dado por un servicio de javier
-    administrativaRequest.get('informacion_persona_natural', $.param({
+    agoraRequest.get('informacion_persona_natural', $.param({
       limit: 0
     })).then(function(response) {
       self.persona_data = response.data;
