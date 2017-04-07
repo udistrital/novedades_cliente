@@ -160,32 +160,49 @@ angular.module('contractualClienteApp')
     };
 
     self.rechazar_necesidad = function() {
-      administrativaRequest.get('estado_necesidad', $.param({
-        query: "Nombre:Rechazada"
-      })).then(function(response) {
-        self.g_necesidad.Estado = response.data[0];
-        administrativaRequest.put('necesidad', self.g_necesidad.Id, self.g_necesidad).then(function(response) {
-          if (response.data == "OK") {
-            swal(
-              'Ok!',
-              'La necesidad ha sido Rechazada!',
-              'success'
-            )
-          } else {
-            swal(
-              'error!',
-              'La necesidad no pudo ser rechazada!',
-              'error'
-            )
-          }
-          self.recargar_grid();
-          $("#myModal").modal("hide");
-        });
-      });
+
+      swal({
+        title: 'Indica una justificación por el rechazo',
+        input: 'textarea',
+        showCancelButton: true,
+        inputValidator: function (value) {
+          return new Promise(function (resolve, reject) {
+            if (value) {
+              resolve()
+            } else {
+              reject('Por favor indica una justificación!')
+            }
+          })
+        }
+      }).then(function(text) {
+        console.log(text);
+        var nec_rech={
+          Justificacion: text,
+          Necesidad: self.g_necesidad
+        };
+          administrativaRequest.post('necesidad_rechazada', nec_rech).then(function(response) {
+            if (response.data != undefined) {
+              swal(
+                'Ok!',
+                'La necesidad ha sido Rechazada!',
+                'success'
+              )
+            } else {
+              swal(
+                'error!',
+                'La necesidad no pudo ser rechazada!',
+                'error'
+              )
+            }
+            self.recargar_grid();
+            $("#myModal").modal("hide");
+          });
+
+      })
     };
 
     self.solicitar_cdp = function() {
-      self.sol_cdp={};
+      self.sol_cdp = {};
       self.sol_cdp.Necesidad = self.g_necesidad;
       administrativaRequest.post("solicitud_disponibilidad", self.sol_cdp).then(function(response) {
         if (response.data != null) {
