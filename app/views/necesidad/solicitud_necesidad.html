@@ -139,6 +139,7 @@
           <legend class="text-primary">Objeto contractual<span class="fa fa-plus pull-right" ng-click="info_objeto=true" ng-show="!info_objeto"></span> <span class="fa fa-minus pull-right" ng-click="info_objeto=false" ng-show="info_objeto"></span></legend class="text-primary">
 
           <div class="panel-body" ng-show="info_objeto">
+
             <div class="form-group">
               <label for="objeto" class="control-label">Objeto del Contrato</label>
               <textarea type="text" class="form-control" rows="6" ng-model="solicitudNecesidad.necesidad.Objeto" placeholder="Objeto de Contrato" required/></textarea>
@@ -160,9 +161,9 @@
             <div class="col-md-6 form-group">
               <h4>Documentos</h4>
               <ul class="list-group">
-                <li class="list-group-item" ng-repeat="do in solicitudNecesidad.documentos">
-                  <label><span class="text-info">{{$index+1}}. </span>{{do.NombreDocumento}}</label>
-                  <a href="{{do.Enlace}}" class="pull-right">enlace</a>
+                <li class="list-group-item" ng-repeat="doc in solicitudNecesidad.documentos">
+                  <label><span class="text-info">{{$index+1}}. </span>{{doc.NombreDocumento}}</label>
+                  <a href="{{doc.Enlace}}" class="pull-right">enlace</a>
                 </li>
               </ul>
             </div>
