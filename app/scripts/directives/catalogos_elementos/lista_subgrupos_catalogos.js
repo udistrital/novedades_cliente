@@ -7,7 +7,7 @@
  * # catalogosElementos/listaSubgruposCatalogos
  */
 angular.module('contractualClienteApp')
-  .directive('listaSubgruposCatalogos', function (administrativaRequest) {
+  .directive('listaSubgruposCatalogos', function (coreRequest) {
     return {
       restrict: 'E',
       scope:{
@@ -46,8 +46,9 @@ angular.module('contractualClienteApp')
           });
         };
 
-        administrativaRequest.get('catalogo_elemento',$.param({
-          fields: 'ElementoId, ElementoNombre'
+        //coreRequest.get('catalogo_elemento',$.param({
+        coreRequest.get('subgrupo_catalogo',$.param({
+          fields: 'Id,Nombre'
         })).then(function(response) {
           self.gridOptions.data = response.data;
         });

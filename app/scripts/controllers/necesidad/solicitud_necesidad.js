@@ -11,6 +11,8 @@ angular.module('contractualClienteApp')
   .controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope) {
     var self = this;
 
+
+
     self.necesidad = {};
     self.necesidad.PlanAnualAdquisiciones = 20171;
     self.necesidad.TecnicasUniformes = false;
@@ -87,11 +89,11 @@ angular.module('contractualClienteApp')
     //-----
 
 
-      administrativaRequest.get('estado_necesidad', $.param({
-        query: "Nombre:Solicitada"
-      })).then(function(response) {
-        self.necesidad.Estado = response.data[0];
-      });
+    administrativaRequest.get('estado_necesidad', $.param({
+      query: "Nombre:Solicitada"
+    })).then(function(response) {
+      self.necesidad.Estado = response.data[0];
+    });
 
 
     administrativaRequest.get('modalidad_seleccion', $.param({
@@ -193,15 +195,28 @@ angular.module('contractualClienteApp')
         self.necesidad.Valor = self.valor_fun;
       }
 
+      self.dep_ned = {
+        DependenciaDestino: 9,
+        DependenciaSolicitante: 9,
+        JefeDependenciaDestino: 642,
+        JefeDependenciaSolicitante: 642,
+        OrdenadorGasto: 645
+      };
+
+      self.sup_sol_ned= {
+        Estado: "Activo",
+        Funcionario: 52116364
+      }
+
       self.tr_necesidad = {
         Necesidad: self.necesidad,
-        SupervisorSolicitudNecesidad: self.supervisor_solicitud,
+        SupervisorSolicitudNecesidad: self.sup_sol_ned,
         Especificacion: self.especificaciones,
         ActividadEspecifica: self.ActividadEspecifica,
         ActividadEconomicaNecesidad: self.actividades_economicas_id,
         MarcoLegalNecesidad: self.marcos_legales,
         Ffapropiacion: self.f_apropiaciones,
-        DependenciaNecesidad: self.dependencia_necesidad
+        DependenciaNecesidad: self.dep_ned
       };
 
       administrativaRequest.post("tr_necesidad", self.tr_necesidad).then(function(response) {
