@@ -48,6 +48,48 @@
         </div>
 
         <fieldset class="form-group">
+          <legend class="text-primary">Responsables <span class="fa fa-plus pull-right" ng-click="info_responsables=true" ng-show="!info_responsables"></span> <span class="fa fa-minus pull-right" ng-click="info_responsables=false" ng-show="info_responsables"></span></legend class="text-primary">
+
+          <div class="panel-body" ng-show="info_responsables">
+
+            <div class="col-md-6">
+              <label for="dep_solicitante" class=" control-label">Dependencia solicitante</label>
+              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.DependenciaSolicitante" ng-options="deps.Id as deps.Nombre for deps in solicitudNecesidad.dependencia_data" >
+	              <option value="" disabled selected>Seleccionar dependencia solicitante</option>
+	            </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="jefe_solicitante" class="control-label">Jefe dependencia solicitante</label>
+              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.JefeDependenciaSolicitante" ng-options="jsol.Id as jsol.PrimerNombre+' '+jsol.SegundoNombre+' '+jsol.PrimerApellido+' '+jsol.SegundoApellido for jsol in solicitudNecesidad.persona_data" >
+	              <option value="" disabled selected>Seleccionar jefe dependencia solicitante</option>
+	            </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="dep_destino" class="control-label">Dependencia destino</label>
+              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.DependenciaDestino" ng-options="depd.Id as depd.Nombre for depd in solicitudNecesidad.dependencia_data" >
+	              <option value="" disabled selected>Seleccionar dependencia destino</option>
+	            </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="jefe_destino" class="control-label">Jefe dependencia destino</label>
+              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.JefeDependenciaDestino" ng-options="jdes.Id as jdes.PrimerNombre+' '+jdes.SegundoNombre+' '+jdes.PrimerApellido+' '+jdes.SegundoApellido for jdes in solicitudNecesidad.persona_data" >
+	               <option value="" disabled selected>Seleccionar jefe dependencia destino</option>
+	            </select>
+            </div>
+
+            <div>
+              <label for="ordenador_gasto" class="control-label">Ordenador del Gasto</label>
+              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.OrdenadorGasto" ng-options="og.Id as og.PrimerNombre+' '+og.SegundoNombre+' '+og.PrimerApellido+' '+og.SegundoApellido for og in solicitudNecesidad.persona_data" >
+	              <option value="" disabled selected>Seleccionar ordenador del gasto</option>
+	            </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-group">
 
           <legend class="text-primary">General <span class="fa fa-plus pull-right" ng-click="info_general=true" ng-show="!info_general"></span> <span class="fa fa-minus pull-right" ng-click="info_general=false" ng-show="info_general"></span></legend class="text-primary">
 
@@ -84,7 +126,7 @@
 
             <div class="form-group">
               <label for="supervisor" class="control-label">Supervisor</label>
-              <select ng-init="solicitudNecesidad.supervisor_solicitud.Estado='activo'" class="form-control" ng-model="solicitudNecesidad.supervisor_solicitud.Funcionario" ng-options="sup.Id as sup.PrimerNombre+' '+sup.SegundoNombre+' '+sup.PrimerApellido+' '+sup.SegundoApellido for sup in solicitudNecesidad.persona_data" required>
+              <select ng-init="solicitudNecesidad.supervisor_solicitud.Estado='activo'" class="form-control" ng-model="solicitudNecesidad.supervisor_solicitud.Funcionario" ng-options="sup.Id as sup.PrimerNombre+' '+sup.SegundoNombre+' '+sup.PrimerApellido+' '+sup.SegundoApellido for sup in solicitudNecesidad.persona_data" >
 	          <option value="" disabled selected>Seleccionar supervisor</option>
 	          </select>
             </div>
@@ -93,47 +135,6 @@
 
         </fieldset>
 
-        <fieldset class="form-group">
-          <legend class="text-primary">Responsables <span class="fa fa-plus pull-right" ng-click="info_responsables=true" ng-show="!info_responsables"></span> <span class="fa fa-minus pull-right" ng-click="info_responsables=false" ng-show="info_responsables"></span></legend class="text-primary">
-
-          <div class="panel-body" ng-show="info_responsables">
-
-            <div class="col-md-6">
-              <label for="dep_solicitante" class=" control-label">Dependencia solicitante</label>
-              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.DependenciaSolicitante" ng-options="deps.Id as deps.Dependencia for deps in solicitudNecesidad.dependencia_data" required>
-	              <option value="" disabled selected>Seleccionar dependencia solicitante</option>
-	            </select>
-            </div>
-
-            <div class="col-md-6">
-              <label for="jefe_solicitante" class="control-label">Jefe dependencia solicitante</label>
-              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.JefeDependenciaSolicitante" ng-options="jsol.Id as jsol.PrimerNombre+' '+jsol.SegundoNombre+' '+jsol.PrimerApellido+' '+jsol.SegundoApellido for jsol in solicitudNecesidad.persona_data" required>
-	              <option value="" disabled selected>Seleccionar jefe dependencia solicitante</option>
-	            </select>
-            </div>
-
-            <div class="col-md-6">
-              <label for="dep_destino" class="control-label">Dependencia destino</label>
-              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.DependenciaDestino" ng-options="depd.Id as depd.Dependencia for depd in solicitudNecesidad.dependencia_data" required>
-	              <option value="" disabled selected>Seleccionar dependencia destino</option>
-	            </select>
-            </div>
-
-            <div class="col-md-6">
-              <label for="jefe_destino" class="control-label">Jefe dependencia destino</label>
-              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.JefeDependenciaDestino" ng-options="jdes.Id as jdes.PrimerNombre+' '+jdes.SegundoNombre+' '+jdes.PrimerApellido+' '+jdes.SegundoApellido for jdes in solicitudNecesidad.persona_data" required>
-	               <option value="" disabled selected>Seleccionar jefe dependencia destino</option>
-	            </select>
-            </div>
-
-            <div>
-              <label for="ordenador_gasto" class="control-label">Ordenador del Gasto</label>
-              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.OrdenadorGasto" ng-options="og.Id as og.PrimerNombre+' '+og.SegundoNombre+' '+og.PrimerApellido+' '+og.SegundoApellido for og in solicitudNecesidad.persona_data" required>
-	              <option value="" disabled selected>Seleccionar ordenador del gasto</option>
-	            </select>
-            </div>
-          </div>
-        </fieldset>
 
         <fieldset class="form-group">
           <legend class="text-primary">Objeto contractual<span class="fa fa-plus pull-right" ng-click="info_objeto=true" ng-show="!info_objeto"></span> <span class="fa fa-minus pull-right" ng-click="info_objeto=false" ng-show="info_objeto"></span></legend class="text-primary">
@@ -337,6 +338,7 @@
 
 
         <fieldset>
+          {{solicitudNecesidad.persona_data}}
           <center><input type="submit" class="btn btn-success btn-outline " name="button" value="Enviar Solicitud"/></center>
         </fieldset>
 
@@ -348,6 +350,7 @@
   </div>
 
 </div>
+
 
 
 <!--<pre class="col-md-12">necesidad{{solicitudNecesidad.f_apropiacion_inv | json}}</pre>

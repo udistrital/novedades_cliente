@@ -35,7 +35,9 @@ angular
     'pascalprecht.translate',
     'financieraService',
     'coreService',
-    'administrativaService'
+    'administrativaService',
+    'agoraService',
+    'oikosService'
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');

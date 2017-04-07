@@ -8,10 +8,41 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope) {
+  .controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope, agoraRequest, oikosRequest) {
     var self = this;
 
+    self.dep_ned = {
+      DependenciaDestino: 9,
+      DependenciaSolicitante: 9,
+      JefeDependenciaDestino: 642,
+      JefeDependenciaSolicitante: 642,
+      OrdenadorGasto: 645
+    };
 
+    self.sup_sol_ned= {
+      Estado: "Activo",
+      Funcionario: 52116364
+    }
+
+    oikosRequest.get('dependencia', $.param({
+      limit: 0
+    })).then(function(response) {
+      self.dependencia_data = response.data;
+    });
+
+    oikosRequest.get('dependencia', $.param({
+      query: 'Id:9',
+      limit: 0
+    })).then(function(response) {
+      self.dependencia_solicitante = response.data;
+    });
+
+    agoraRequest.get('informacion_persona_natural', $.param({
+      query: 'Id:1234567890',
+      limit: 0
+    })).then(function(response) {
+      self.persona_data = response.data[0];
+    });
 
     self.necesidad = {};
     self.necesidad.PlanAnualAdquisiciones = 20171;
@@ -193,19 +224,6 @@ angular.module('contractualClienteApp')
       } else {
         self.f_apropiaciones = self.f_apropiacion_fun;
         self.necesidad.Valor = self.valor_fun;
-      }
-
-      self.dep_ned = {
-        DependenciaDestino: 9,
-        DependenciaSolicitante: 9,
-        JefeDependenciaDestino: 642,
-        JefeDependenciaSolicitante: 642,
-        OrdenadorGasto: 645
-      };
-
-      self.sup_sol_ned= {
-        Estado: "Activo",
-        Funcionario: 52116364
       }
 
       self.tr_necesidad = {
