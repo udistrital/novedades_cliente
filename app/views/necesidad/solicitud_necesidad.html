@@ -154,7 +154,7 @@
           <legend class="text-primary">Marco Legal<span class="fa fa-plus pull-right" ng-click="info_legal=true" ng-show="!info_legal"></span> <span class="fa fa-minus pull-right" ng-click="info_legal=false" ng-show="info_legal"></span></legend class="text-primary">
 
           <div class="panel-body" ng-show="info_legal">
-            <lista-documentos-legales class="col-md-6" documentos="solicitudNecesidad.documentos" />
+            <lista-documentos-legales class="col-md-6" documentos="solicitudNecesidad.documentos"></lista-documentos-legales>
             <div class="col-md-6 form-group">
               <h4>Documentos</h4>
               <ul class="list-group">
@@ -209,7 +209,7 @@
 
               <div class="form-group">
                 <div class="col-md-6">
-                  <lista-actividades-economicas actividades="solicitudNecesidad.actividades_economicas" />
+                  <lista-actividades-economicas actividades="solicitudNecesidad.actividades_economicas"></lista-actividades-economicas>
                 </div>
                 <div class="col-md-6">
                   <label for="objeto" class="control-label">Actividades Economicas:</label>
@@ -226,7 +226,7 @@
 
             <div class="form-group" ng-show="solicitudNecesidad.necesidad.Servicio.Nombre=='Compra'">
               <div class="col-md-6">
-                <lista-subgrupos-catalogos  productos="solicitudNecesidad.productos" />
+                <lista-subgrupos-catalogos  productos="solicitudNecesidad.productos"></lista-subgrupos-catalogos>
               </div>
               <div class="col-md-6 form-group">
                 <h4>Productos</h4>
@@ -256,7 +256,7 @@
               <label class=" control-label">Seleccionar Apropiaciones:</label>
 
               <div ng-show="solicitudNecesidad.necesidad.TipoFuenteFinanciacion.Nombre=='inversion'">
-                <lista-apropiaciones vigencia="2017" tipo="'3-3'" apropiacion="apro" selhijos="true"/>
+                <lista-apropiaciones vigencia="2017" tipo="'3-3'" apropiacion="apro" selhijos="true"></lista-apropiaciones>
                 <center><button type="button" class="btn btn-success btn-outline" ng-click="solicitudNecesidad.agregar_ffapropiacion(apro)">
 							  Agregar
 							</button></center>
@@ -269,7 +269,7 @@
                     <label><span class="text-success">{{$index+1}}.</span> {{ap.aprop.Rubro.Descripcion}}</label><br>
 
                     <div class="col-md-6">
-                      <fuentes-apropiacion apropiacion="ap.Apropiacion" fuenteapropiacion="ap.fuentes" />
+                      <fuentes-apropiacion apropiacion="ap.Apropiacion" fuenteapropiacion="ap.fuentes"></fuentes-apropiacion>
                     </div>
 
                     <ul class="list-group col-md-6">
@@ -297,7 +297,7 @@
               <div class="panel panel-body col-md-12" ng-show="solicitudNecesidad.necesidad.TipoFuenteFinanciacion.Nombre=='funcionamiento'">
 
                 <div class="form-group">
-                  <lista-apropiaciones vigencia="2017" tipo="'3-1'" apropiacion="apro" selhijos="true"/>
+                  <lista-apropiaciones vigencia="2017" tipo="'3-1'" apropiacion="apro" selhijos="true"></lista-apropiaciones>
                   <center><button type="button" class="btn btn-success btn-outline" ng-click="solicitudNecesidad.agregar_ffapropiacion(apro)">
   							  Agregar
   							</button></center>
