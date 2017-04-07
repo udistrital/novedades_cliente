@@ -12,16 +12,16 @@ angular.module('contractualClienteApp')
     var self = this;
 
     self.dep_ned = {
-      DependenciaDestino: 9,
-      DependenciaSolicitante: 9,
-      JefeDependenciaDestino: 642,
-      JefeDependenciaSolicitante: 642,
-      OrdenadorGasto: 645
+      DependenciaDestino: 12,
+      DependenciaSolicitante: 12,
+      JefeDependenciaDestino: 1234567890,
+      JefeDependenciaSolicitante: 1234567890,
+      OrdenadorGasto: 1234567890
     };
 
     self.sup_sol_ned= {
       Estado: "Activo",
-      Funcionario: 52116364
+      Funcionario: 1234567890
     }
 
     oikosRequest.get('dependencia', $.param({
@@ -31,17 +31,17 @@ angular.module('contractualClienteApp')
     });
 
     oikosRequest.get('dependencia', $.param({
-      query: 'Id:9',
+      query: 'Id:12',
       limit: 0
     })).then(function(response) {
-      self.dependencia_solicitante = response.data;
+      self.dependencia_solicitante = response.data[0];
     });
 
     agoraRequest.get('informacion_persona_natural', $.param({
       query: 'Id:1234567890',
       limit: 0
     })).then(function(response) {
-      self.persona_data = response.data[0];
+      self.persona_solicitante = response.data[0];
     });
 
     self.necesidad = {};
@@ -109,12 +109,6 @@ angular.module('contractualClienteApp')
       limit: 0
     })).then(function(response) {
       self.persona_data = response.data;
-    });
-
-    administrativaRequest.get('dependencia', $.param({
-      limit: 0
-    })).then(function(response) {
-      self.dependencia_data = response.data;
     });
 
     //-----

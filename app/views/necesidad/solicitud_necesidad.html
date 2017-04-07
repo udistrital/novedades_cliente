@@ -54,16 +54,12 @@
 
             <div class="col-md-6">
               <label for="dep_solicitante" class=" control-label">Dependencia solicitante</label>
-              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.DependenciaSolicitante" ng-options="deps.Id as deps.Nombre for deps in solicitudNecesidad.dependencia_data" >
-	              <option value="" disabled selected>Seleccionar dependencia solicitante</option>
-	            </select>
+              <p>{{solicitudNecesidad.dependencia_solicitante.Nombre}}</p>
             </div>
 
             <div class="col-md-6">
               <label for="jefe_solicitante" class="control-label">Jefe dependencia solicitante</label>
-              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.JefeDependenciaSolicitante" ng-options="jsol.Id as jsol.PrimerNombre+' '+jsol.SegundoNombre+' '+jsol.PrimerApellido+' '+jsol.SegundoApellido for jsol in solicitudNecesidad.persona_data" >
-	              <option value="" disabled selected>Seleccionar jefe dependencia solicitante</option>
-	            </select>
+              <p>{{solicitudNecesidad.persona_solicitante.PrimerNombre}} {{solicitudNecesidad.persona_solicitante.PrimerApellido}}</p>
             </div>
 
             <div class="col-md-6">
@@ -338,7 +334,7 @@
 
 
         <fieldset>
-        
+
           <center><input type="submit" class="btn btn-success btn-outline " name="button" value="Enviar Solicitud"/></center>
         </fieldset>
 
