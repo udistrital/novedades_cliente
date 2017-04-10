@@ -14,7 +14,7 @@ angular.module('contractualClienteApp')
         documentos: '='
       },
 
-      templateUrl: '/views/directives/marco_legal/lista_documentos_legales.html',
+      templateUrl: 'views/directives/marco_legal/lista_documentos_legales.html',
       controller: function($scope, uiGridConstants) {
         var self = this;
         self.gridOptions = {
