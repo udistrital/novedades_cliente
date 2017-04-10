@@ -10,6 +10,7 @@
 angular.module('contractualClienteApp')
   .controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope, agoraRequest, oikosRequest) {
     var self = this;
+    self.documentos=[];
 
     self.dep_ned = {
       DependenciaDestino: 12,
