@@ -220,7 +220,7 @@ module.exports = function (grunt) {
             }
           }
       }
-    }, 
+    },
 
     // Renames files for browser caching purposes
     filerev: {
@@ -384,7 +384,7 @@ module.exports = function (grunt) {
           ]
         },{
           expand: true,
-          cwd: '/views',
+          cwd: '<%= yeoman.app %>/views',
           src: '**/*.html',
           dest: '<%= yeoman.dist %>/views'
         },{
