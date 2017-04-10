@@ -1,7 +1,7 @@
 <div class="panel panel-primary panel-body" style="padding:30px;">
 
   <center>
-    <h3 class="page-header">Solicitud Necesidad</h3></center>
+    <h3 class="page-header">{{"SOLICITUD" | translate}} {{"NECESIDAD" | translate}}</h3></center>
 
   <div>
     <!--<div ng-show="panelDatosGenerales" class="panel-body">-->
@@ -22,7 +22,7 @@
 	  						</label>
           </div>
         </div>
-        <br />
+        <br />bj,
 
         <!--<pre>{{solicitudNecesidad.necesidad | json}}</pre> -->
         <div  ng-show="solicitudNecesidad.ver_duracion_fecha">
@@ -78,9 +78,7 @@
 
             <div>
               <label for="ordenador_gasto" class="control-label">Ordenador del Gasto</label>
-              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.OrdenadorGasto" ng-options="og.Id as og.PrimerNombre+' '+og.SegundoNombre+' '+og.PrimerApellido+' '+og.SegundoApellido for og in solicitudNecesidad.persona_data" >
-	              <option value="" disabled selected>Seleccionar ordenador del gasto</option>
-	            </select>
+              <p>{{solicitudNecesidad.persona_solicitante.PrimerNombre}} {{solicitudNecesidad.persona_solicitante.PrimerApellido}}</p>
             </div>
           </div>
         </fieldset>

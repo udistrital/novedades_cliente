@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc directive
- * @name contractualClienteApp.directive:actividadesEconomicas/listaActividadesEconomicas
+ * @name contractualClienteApp.listaActividadesEconomicas
  * @description
- * # actividadesEconomicas/listaActividadesEconomicas
+ * # listaActividadesEconomicas
  */
 angular.module('contractualClienteApp')
   .directive('listaActividadesEconomicas', function (coreRequest) {

@@ -27,9 +27,16 @@ angular.module('contractualClienteApp')
             query: "NumeroElaboracion:"+$scope.numero+",Vigencia:"+$scope.vigencia
           })).then(function(response){
             self.v_necesidad=response.data[0];
+            administrativaRequest.get('marco_legal_necesidad',$.param({
+              query: "Necesidad:"+response.data[0].Id,
+              fields: "MarcoLegal"
+            })).then(function(response){
+              console.log(response);
+              self.marco_legal=response.data;
+            });
             console.log(self.v_necesidad);
           });
-        };   
+        };
 
       },
       controllerAs:'d_visualizarNecesidad'
