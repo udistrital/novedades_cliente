@@ -17,7 +17,7 @@
           <!-- Modal content-->
           <div class="modal-content col-md-10 col-md-offset-1" style="margin-top: 5%">
 
-            <div class="modal-body">
+            <div class="modal-body" ng-if="necesidades.g_necesidad!=undefined">
               <visualizar-necesidad  vigencia="necesidades.vigencia" numero="necesidades.numero_el" />
               <!--<div ng-include="necesidades.templateUrl" ng-controller="VerNecesidadCtrl as verNecesidad" ng-repeat="data in necesidades.parametros"></div>-->
             </div>

@@ -10,7 +10,7 @@
 angular.module('contractualClienteApp')
   .controller('NecesidadesCtrl', function($scope, administrativaRequest) {
     var self = this;
-    self.g_necesidad = {};
+    //self.g_necesidad = {};
 
 
 
@@ -89,16 +89,9 @@ angular.module('contractualClienteApp')
     self.gridOptions.multiSelect = false;
 
     $scope.direccionar = function(necesidad) {
-      console.log("ent");
-      console.log(necesidad);
       self.g_necesidad = necesidad;
-      console.log(self.g_necesidad);
       self.numero_el = necesidad.NumeroElaboracion;
       self.vigencia = necesidad.Vigencia;
-      /*self.dat=[necesidad.NumeroElaboracion,necesidad.Vigencia];
-      self.parametros=[];
-      self.parametros.push(self.dat);
-      console.log(self.parametros);*/
       if (necesidad.Estado.Nombre == 'Solicitada') {
         self.mod_aprobar = true;
         self.mod_cdp = false;
@@ -154,6 +147,7 @@ angular.module('contractualClienteApp')
           }
           self.recargar_grid();
           $("#myModal").modal("hide");
+          self.g_necesidad=undefined;
           console.log(response.data);
         });
       });
@@ -195,6 +189,7 @@ angular.module('contractualClienteApp')
               )
             }
             self.recargar_grid();
+            self.self.g_necesidad=undefined;
             $("#myModal").modal("hide");
           });
 
@@ -219,6 +214,7 @@ angular.module('contractualClienteApp')
           )
         }
         self.recargar_grid();
+        self.necesidad=undefined;
         $("#myModal").modal("hide");
       });
     };

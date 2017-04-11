@@ -17,27 +17,40 @@
 
       <cite class="text-info pull-right">Numero Elaboración: {{d_visualizarNecesidad.v_necesidad.NumeroElaboracion}}</cite>
 
-      <h3>Objeto</h3>
+      <h3 class="text-info">Objeto</h3>
         <p class="text-muted text-justify">
           {{d_visualizarNecesidad.v_necesidad.Objeto}}
         </p>
-      <h3>Justificacion</h3>
+      <!--<h3 class="text-info">Justificacion</h3>
       <p class="text-muted text-justify">
         {{d_visualizarNecesidad.v_necesidad.Justificacion}}
       </p>
-      <h3>Analisis de Riesgos</h3>
+      <h3 class="text-info">Analisis de Riesgos</h3>
       <p class="text-muted text-justify">
         {{d_visualizarNecesidad.v_necesidad.AnalisisRiesgo}}
       </p>
-      <h3>Estudio de Mercado</h3>
+      <h3 class="text-info">Estudio de Mercado</h3>
       <p class="text-muted text-justify">
         {{d_visualizarNecesidad.v_necesidad.EstudioMercado}}
+      </p>-->
+
+      <h3 class="text-info">Financiación</h3>
+      <p class="text-muted text-justify" >
+        Por {{d_visualizarNecesidad.v_necesidad.TipoFuenteFinanciacion.Nombre}} de {{d_visualizarNecesidad.v_necesidad.Valor | currency}}
+        <ul ng-repeat="inv in d_visualizarNecesidad.ff_necesidad track by $index">
+          <strong>{{inv.Apropiacion.Rubro.Codigo}}</strong> {{inv.Apropiacion.Rubro.Descripcion}}
+          <li ng-repeat='f in inv.Fuentes'>
+          {{f.FuenteFinanciacion.Descripcion}} <strong>Monto:</strong> {{f.MontoParcial | currency}}
+        </li>
+      </ul>
       </p>
 
-        <h3>Marco Legal</h3>
+        <h3 class="text-info">Marco Legal</h3>
         <p class="text-muted text-justify">
-          <li ng-repeat="doc in d_visualizarNecesidad.marco_legal">{{doc.MarcoLegal.NombreDocumento}}</li>
+          <li ng-repeat="doc in d_visualizarNecesidad.marco_legal track by $index">{{doc.MarcoLegal.NombreDocumento}}</li>
         </p>
+
+
       </div>
 
 

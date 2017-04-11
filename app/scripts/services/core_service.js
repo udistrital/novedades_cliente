@@ -11,7 +11,8 @@ angular.module('coreService',[])
   .factory('coreRequest', function ($http) {
     // Service logic
     // ...
-    var path = "http://10.20.2.78:8081/v1/";
+    //var path = "http://10.20.2.78:8081/v1/";
+    var path = "http://10.20.0.254/core_api/v1/";
     // Public API here
     return {
       get: function (tabla,params) {
