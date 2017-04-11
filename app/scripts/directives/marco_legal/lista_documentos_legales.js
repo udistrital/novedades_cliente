@@ -7,7 +7,7 @@
  * # marcoLegal/listaDocumentosLegales
  */
 angular.module('contractualClienteApp')
-  .directive('listaDocumentosLegales', function (administrativaRequest) {
+  .directive('listaDocumentosLegales', function(administrativaRequest) {
     return {
       restrict: 'E',
       scope: {
@@ -21,12 +21,12 @@ angular.module('contractualClienteApp')
           paginationPageSizes: [5, 10, 15],
           paginationPageSize: null,
           enableRowSelection: true,
-          enableRowHeaderSelection:false,
+          enableRowHeaderSelection: false,
           enableFiltering: true,
           enableSelectAll: true,
           enableHorizontalScrollbar: 0,
           enableVerticalScrollbar: 0,
-          minRowsToShow:8,
+          minRowsToShow: 8,
           useExternalPagination: false,
           columnDefs: [{
               field: 'NombreDocumento',
@@ -49,10 +49,10 @@ angular.module('contractualClienteApp')
 
         self.gridOptions.onRegisterApi = function(gridApi) {
           self.gridApi = gridApi;
-          gridApi.selection.on.rowSelectionChanged($scope,function(row){
+          gridApi.selection.on.rowSelectionChanged($scope, function(row) {
             //if(self.tipo_fuente.Id==1){
-            $scope.documentos=self.gridApi.selection.getSelectedRows();
-          //}
+            $scope.documentos = self.gridApi.selection.getSelectedRows();
+            //}
           });
           /*self.gridApi.pagination.on.paginationChanged($scope,function(){
         //$scope.gridOptions.virtualizationThreshold =  $scope.gridOptions.paginationPageSize;
@@ -60,32 +60,32 @@ angular.module('contractualClienteApp')
       })*/
         };
 
-      /*  self.busqueda = function() {
-          self.gridOptions.enableFiltering = !self.gridOptions.enableFiltering;
-          self.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
-        };*/
+        /*  self.busqueda = function() {
+            self.gridOptions.enableFiltering = !self.gridOptions.enableFiltering;
+            self.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+          };*/
 
         administrativaRequest.get('marco_legal', 'limit=0').then(function(response) {
           self.gridOptions.data = response.data;
         });
 
-        $scope.$watch('[d_listaDocumentosLegales.gridOptions.paginationPageSize, d_listaDocumentosLegales.gridOptions.data]', function(){
-          if ((self.gridOptions.data.length<=self.gridOptions.paginationPageSize || self.gridOptions.paginationPageSize== null) && self.gridOptions.data.length>0) {
-            $scope.gridHeight = self.gridOptions.rowHeight * 2+ (self.gridOptions.data.length * self.gridOptions.rowHeight);
-            if (self.gridOptions.data.length<=5) {
-              self.gridOptions.enablePaginationControls= false;
+        $scope.$watch('[d_listaDocumentosLegales.gridOptions.paginationPageSize, d_listaDocumentosLegales.gridOptions.data]', function() {
+          if ((self.gridOptions.data.length <= self.gridOptions.paginationPageSize || self.gridOptions.paginationPageSize == null) && self.gridOptions.data.length > 0) {
+            $scope.gridHeight = self.gridOptions.rowHeight * 2 + (self.gridOptions.data.length * self.gridOptions.rowHeight);
+            if (self.gridOptions.data.length <= 5) {
+              self.gridOptions.enablePaginationControls = false;
             }
           } else {
             $scope.gridHeight = self.gridOptions.rowHeight * 3 + (self.gridOptions.paginationPageSize * self.gridOptions.rowHeight);
-            self.gridOptions.enablePaginationControls= true;
+            self.gridOptions.enablePaginationControls = true;
           }
-        },true)
+        }, true);
 
 
         self.gridOptions.multiSelect = true;
 
         //
       },
-      controllerAs:'d_listaDocumentosLegales'
+      controllerAs: 'd_listaDocumentosLegales'
     };
   });

@@ -45,7 +45,6 @@ module.exports = function(config) {
       'bower_components/moment/moment.js',
       'bower_components/angular-moment/angular-moment.js',
       'bower_components/angular-translate/angular-translate.js',
-      'bower_components/es6-promise/es6-promise.js',
       'bower_components/sweetalert2/dist/sweetalert2.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
