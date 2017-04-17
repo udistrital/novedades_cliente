@@ -17,7 +17,8 @@ angular.module('contractualClienteApp')
     $scope.actual = "";
     $scope.token_service = token_service;
     $scope.breadcrumb = [];
-    $scope.menu_service = [{ //aqui va el servicio de el app de configuracion
+    $scope.menu_service = [
+    { //aqui va el servicio de el app de configuracion
       "Id": 2,
       "Nombre": "Necesidad",
       "Url": "url_nivel_1",
@@ -33,7 +34,21 @@ angular.module('contractualClienteApp')
         "Url": "necesidades",
         "Opciones": null
       }]
-    }];
+    },
+    { //RP
+      "Id": 1,
+      "Nombre": "RP",
+      "Url": "",
+      "Opciones": [
+        { //Consulta de solicitud de RP
+          "Id": 1,
+          "Nombre": "Solicitar registro presupuestal",
+          "Url": "rp_solicitud_personas",
+          "Opciones": null
+        }
+      ]
+    }
+  ];
 
     var recorrerArbol = function(item, padre) {
       var padres = "";

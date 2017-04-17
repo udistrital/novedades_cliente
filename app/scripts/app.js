@@ -37,7 +37,9 @@ angular
     'coreService',
     'administrativaService',
     'agoraService',
-    'oikosService'
+    'oikosService',
+    'financieraMidService',
+    'adminMidService'
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');
@@ -69,6 +71,16 @@ angular
         templateUrl: 'views/necesidad/necesidades.html',
         controller: 'NecesidadesCtrl',
         controllerAs: 'necesidades'
+      })
+      .when('/rp_solicitud_personas', {
+        templateUrl: 'views/rp/rp_solicitud_personas.html',
+        controller: 'RpSolicitudPersonasCtrl',
+        controllerAs: 'rpSolicitudPersonas'
+      })
+      .when('/rp/rp_solicitud/:contrato/:vigencia/:valor/:documento/:nombre', {
+        templateUrl: 'views/rp/rp_solicitud.html',
+        controller: 'RpSolicitudCtrl',
+        controllerAs: 'rpSolicitud'
       })
       /*.when('/necesidad/aprobar/:Vigencia/:Id', {
         templateUrl: 'views/necesidad/aprobar_necesidad.html',

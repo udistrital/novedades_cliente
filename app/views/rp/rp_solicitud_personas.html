@@ -1,0 +1,55 @@
+<br>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="panel panel-primary">
+      <div class="panel-heading" >
+        <h3>{{'SOLICITUD_PERSONAS_PANEL' | translate}}</h3>
+      </div>
+    </div>
+    <div class="panel panel-body">
+      <div class="row">
+        <div class="col-md-2 col-md-offset-3">
+          <div ng-if="vigenciaModel=== null">
+            <label>{{'VIGENCIA_ACTUAL' | translate}} <b>2017</b> </label>
+          </div>
+          <div ng-if="vigenciaModel !== null">
+            <label>{{'VIGENCIA_SELECCIONADA' | translate}}<b>{{vigenciaModel}}</b> </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-md-3" align="right">
+            <label>Seleccione una vigencia diferente</label>
+          </div>
+          <div class="col-md-2">
+            <select class="form-control" ng-change="rpSolicitudPersonas.buscarContratosVigencia()" ng-model="vigenciaModel">
+              <option ng-repeat="vigencia in vigencias" >{{vigencia}}</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+      <br>
+
+      <table style="width:70%;" align="center">
+        <tr>
+          <td>
+            <div ui-grid="rpSolicitudPersonas.gridOptions" ui-grid-selection class="myGrid"></div>
+          </td>
+        </tr>
+        <tr>
+          <td align="center">
+            <br><br>
+            <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
+              {{'BTN.SOLICITAR_RP' | translate }}
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+  <div class="panel-footer">
+    Panel Footer
+  </div>
+</div>
