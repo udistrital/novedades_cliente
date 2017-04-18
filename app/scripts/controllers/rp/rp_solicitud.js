@@ -71,22 +71,7 @@ angular.module('contractualClienteApp')
 
     };
 
-    self.limpiar = function() {
-      self.proveedor = {
-lista_apropiaciones
-      };
-      self.cdp = {
 
-      };
-      self.rubros = {
-
-      };
-      self.valor_rp = "";
-
-      self.rubroSeleccionado = {
-
-      };
-    };
     if (self.cdp.Id != null) {
       for (var i = 0; i < self.rubros.length; i++) {
         var saldo = self.DescripcionRubro(rubros[i].Id);

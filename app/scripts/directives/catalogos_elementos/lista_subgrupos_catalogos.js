@@ -7,7 +7,7 @@
  * # catalogosElementos/listaSubgruposCatalogos
  */
 angular.module('contractualClienteApp')
-  .directive('listaSubgruposCatalogos', function (coreRequest) {
+  .directive('listaSubgruposCatalogos', function (administrativaRequest) {
     return {
       restrict: 'E',
       scope:{
@@ -28,7 +28,7 @@ angular.module('contractualClienteApp')
           useExternalPagination: false,
           enableSelectAll: true,
           columnDefs: [{
-              field: 'Nombre',
+              field: 'ElementoNombre',
               displayName: 'Productos',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
               cellTooltip: function(row, col) {
@@ -46,8 +46,8 @@ angular.module('contractualClienteApp')
           });
         };
 
-        //coreRequest.get('catalogo_elemento',$.param({
-        coreRequest.get('subgrupo_catalogo',$.param({
+        //administrativaRequest.get('catalogo_elemento',$.param({
+        administrativaRequest.get('catalogo_elemento_grupo',$.param({
           fields: 'Id,Nombre'
         })).then(function(response) {
           self.gridOptions.data = response.data;

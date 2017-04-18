@@ -17,22 +17,33 @@
 
       <cite class="text-info pull-right">Numero Elaboración: {{d_visualizarNecesidad.v_necesidad.NumeroElaboracion}}</cite>
 
+
+      <h3 class="text-info">Responsables</h3>
+      <p class="text-muted text-justify">
+        <table class="table-condensed table table-hover">
+        <tr>
+        <td><strong>Dependencia solicitante:</strong></td><td> {{d_visualizarNecesidad.dependencia_solicitante.Nombre}}</td>
+      </tr>
+      <tr>
+        <td><strong>Jefe dependencia solicitante:</strong></td><td> {{d_visualizarNecesidad.jefe_dependencia_solicitante.PrimerApellido}} {{d_visualizarNecesidad.jefe_dependencia_solicitante.PrimerNombre}}</td>
+        </tr>
+        <tr>
+        <td><strong>Dependencia destino:</strong></td> <td>{{d_visualizarNecesidad.dependencia_destino.Nombre}}</td>
+        </tr>
+        <tr>
+        <td><strong>Jefe dependencia_destino:</strong> </td><td>{{d_visualizarNecesidad.jefe_dependencia_destino.PrimerApellido}} {{d_visualizarNecesidad.jefe_dependencia_destino.PrimerNombre}}</td>
+        </tr>
+        <tr>
+        <td><strong>Ordenador gasto:</strong> </td><td>{{d_visualizarNecesidad.ordenador_gasto.PrimerApellido}} {{d_visualizarNecesidad.ordenador_gasto.PrimerNombre}}</td>
+        </tr>
+      </table>
+
+      </p>
+
       <h3 class="text-info">Objeto</h3>
         <p class="text-muted text-justify">
           {{d_visualizarNecesidad.v_necesidad.Objeto}}
         </p>
-      <!--<h3 class="text-info">Justificacion</h3>
-      <p class="text-muted text-justify">
-        {{d_visualizarNecesidad.v_necesidad.Justificacion}}
-      </p>
-      <h3 class="text-info">Analisis de Riesgos</h3>
-      <p class="text-muted text-justify">
-        {{d_visualizarNecesidad.v_necesidad.AnalisisRiesgo}}
-      </p>
-      <h3 class="text-info">Estudio de Mercado</h3>
-      <p class="text-muted text-justify">
-        {{d_visualizarNecesidad.v_necesidad.EstudioMercado}}
-      </p>-->
 
       <h3 class="text-info">Financiación</h3>
       <p class="text-muted text-justify" >
@@ -45,10 +56,25 @@
       </ul>
       </p>
 
+      <h3 class="text-info">Justificacion</h3>
+      <p class="text-muted text-justify">
+        {{d_visualizarNecesidad.v_necesidad.Justificacion}}
+      </p>
+      <h3 class="text-info">Analisis de Riesgos</h3>
+      <p class="text-muted text-justify">
+        {{d_visualizarNecesidad.v_necesidad.AnalisisRiesgo}}
+      </p>
+      <h3 class="text-info">Estudio de Mercado</h3>
+      <p class="text-muted text-justify">
+        {{d_visualizarNecesidad.v_necesidad.EstudioMercado}}
+      </p>
+
         <h3 class="text-info">Marco Legal</h3>
         <p class="text-muted text-justify">
           <li ng-repeat="doc in d_visualizarNecesidad.marco_legal track by $index">{{doc.MarcoLegal.NombreDocumento}}</li>
         </p>
+
+
 
 
       </div>
@@ -56,7 +82,6 @@
 
       </div>
     </div>
-
 
   </div>
 

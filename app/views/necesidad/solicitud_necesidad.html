@@ -44,8 +44,8 @@
           </div>
         </div>
 
-        <fieldset class="form-group">
-          <legend class="text-primary">Responsables <span class="fa fa-plus pull-right" ng-click="info_responsables=true" ng-show="!info_responsables"></span> <span class="fa fa-minus pull-right" ng-click="info_responsables=false" ng-show="info_responsables"></span></legend class="text-primary">
+        <fieldset class="form-group" >
+          <legend class="text-primary" ng-click="info_responsables=!info_responsables">Responsables <span class="fa fa-plus pull-right"  ng-show="!info_responsables"></span> <span class="fa fa-minus pull-right" ng-show="info_responsables"></span></legend class="text-primary">
 
           <div class="panel-body" ng-show="info_responsables">
 
@@ -61,19 +61,17 @@
 
             <div class="col-md-6">
               <label for="dep_destino" class="control-label">Dependencia destino</label>
-              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.DependenciaDestino" ng-options="depd.Id as depd.Nombre for depd in solicitudNecesidad.dependencia_data" >
+              <select class="form-control" ng-model="solicitudNecesidad.dependencia_destino" ng-options="depd.Id as depd.Nombre for depd in solicitudNecesidad.dependencia_data" >
 	              <option value="" disabled selected>Seleccionar dependencia destino</option>
 	            </select>
             </div>
 
             <div class="col-md-6">
-              <label for="jefe_destino" class="control-label">Jefe dependencia destino</label>
-              <select class="form-control" ng-model="solicitudNecesidad.dependencia_necesidad.JefeDependenciaDestino" ng-options="jdes.Id as jdes.PrimerNombre+' '+jdes.SegundoNombre+' '+jdes.PrimerApellido+' '+jdes.SegundoApellido for jdes in solicitudNecesidad.persona_data" >
-	               <option value="" disabled selected>Seleccionar jefe dependencia destino</option>
-	            </select>
+              <label for="jefe_solicitante" class="control-label">Jefe dependencia destino</label>
+              <p>{{solicitudNecesidad.jefe_destino.PrimerNombre}} {{solicitudNecesidad.jefe_destino.PrimerApellido}}</p>
             </div>
 
-            <div>
+            <div class="col-md-12">
               <label for="ordenador_gasto" class="control-label">Ordenador del Gasto</label>
               <p>{{solicitudNecesidad.persona_solicitante.PrimerNombre}} {{solicitudNecesidad.persona_solicitante.PrimerApellido}}</p>
             </div>
@@ -81,8 +79,7 @@
         </fieldset>
 
         <fieldset class="form-group">
-
-          <legend class="text-primary">General <span class="fa fa-plus pull-right" ng-click="info_general=true" ng-show="!info_general"></span> <span class="fa fa-minus pull-right" ng-click="info_general=false" ng-show="info_general"></span></legend class="text-primary">
+          <legend class="text-primary" ng-click="info_general=!info_general">General <span class="fa fa-plus pull-right" ng-show="!info_general"></span> <span class="fa fa-minus pull-right" ng-show="info_general"></span></legend class="text-primary">
 
           <div class="panel-body" ng-show="info_general">
             <div class="form-group">
@@ -122,13 +119,11 @@
 	          </select>
             </div>
           </div>
-
-
         </fieldset>
 
 
         <fieldset class="form-group">
-          <legend class="text-primary">Objeto contractual<span class="fa fa-plus pull-right" ng-click="info_objeto=true" ng-show="!info_objeto"></span> <span class="fa fa-minus pull-right" ng-click="info_objeto=false" ng-show="info_objeto"></span></legend class="text-primary">
+          <legend class="text-primary" ng-click="info_objeto=!info_objeto">Objeto contractual<span class="fa fa-plus pull-right"  ng-show="!info_objeto"></span> <span class="fa fa-minus pull-right" ng-show="info_objeto"></span></legend class="text-primary">
 
           <div class="panel-body" ng-show="info_objeto">
 
@@ -147,7 +142,7 @@
         </fieldset>
 
    <fieldset class="form-group">
-          <legend class="text-primary">Marco Legal<span class="fa fa-plus pull-right" ng-click="info_legal=true" ng-show="!info_legal"></span> <span class="fa fa-minus pull-right" ng-click="info_legal=false" ng-show="info_legal"></span></legend class="text-primary">
+          <legend class="text-primary" ng-click="info_legal=!info_legal">Marco Legal<span class="fa fa-plus pull-right"  ng-show="!info_legal"></span> <span class="fa fa-minus pull-right" ng-show="info_legal"></span></legend class="text-primary">
 
           <div class="panel-body" ng-show="info_legal">
             <lista-documentos-legales class="col-md-6" documentos="solicitudNecesidad.documentos"></lista-documentos-legales>
@@ -164,7 +159,7 @@
         </fieldset>
 
         <fieldset class="form-group">
-          <legend class="text-primary">Especificaciones<span class="fa fa-plus pull-right" ng-click="info_espf=true" ng-show="!info_espf"></span> <span class="fa fa-minus pull-right" ng-click="info_espf=false" ng-show="info_espf"></span></legend class="text-primary">
+          <legend class="text-primary" ng-click="info_espf=!info_espf">Especificaciones<span class="fa fa-plus pull-right"  ng-show="!info_espf"></span> <span class="fa fa-minus pull-right" ng-show="info_espf"></span></legend class="text-primary">
 
           <div class="panel-body" ng-show="info_espf">
 
@@ -237,7 +232,7 @@
         </fieldset>
 
         <fieldset class="form-group">
-          <legend class="text-primary">Financiación<span class="fa fa-plus pull-right" ng-click="info_finan=true" ng-show="!info_finan"></span> <span class="fa fa-minus pull-right" ng-click="info_finan=false" ng-show="info_finan"></span></legend class="text-primary">
+          <legend class="text-primary" ng-click="info_finan=!info_finan">Financiación<span class="fa fa-plus pull-right" ng-show="!info_finan"></span> <span class="fa fa-minus pull-right" ng-show="info_finan"></span></legend class="text-primary">
 
           <div class="panel-body" ng-show="info_finan">
 

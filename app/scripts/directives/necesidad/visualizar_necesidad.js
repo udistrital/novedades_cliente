@@ -15,7 +15,7 @@ angular.module('contractualClienteApp')
           numero: '='
       },
       templateUrl: 'views/directives/necesidad/visualizar_necesidad.html',
-      controller:function (financieraRequest,administrativaRequest,$scope) {
+      controller:function (financieraRequest,administrativaRequest,agoraRequest,oikosRequest,$scope) {
         var self = this;
 
         $scope.$watch('[vigencia,numero]',function(){
@@ -71,13 +71,50 @@ angular.module('contractualClienteApp')
                   obj.Fuentes.push(i_fuente);
                   //obj.fuentes.push({FuenteFinanciacion:item.FuenteFinanciacion, MontoParcial: item.MontoParcial });
               });
-
-
               self.ff_necesidad=dateArr;
 
               //-----------
             });
             console.log(self.v_necesidad);
+
+            administrativaRequest.get('dependencia_necesidad',$.param({
+              query: "Necesidad:"+response.data[0].Id,
+              fields: "JefeDependenciaSolicitante,DependenciaSolicitante,JefeDependenciaDestino,DependenciaDestino,OrdenadorGasto"
+            })).then(function(response){
+              self.dependencias=response.data[0];
+
+              oikosRequest.get('dependencia', $.param({
+                query: 'Id:'+response.data[0].DependenciaSolicitante
+              })).then(function(response) {
+                self.dependencia_solicitante = response.data[0];
+              });
+
+              agoraRequest.get('informacion_persona_natural', $.param({
+                query: 'Id:'+response.data[0].JefeDependenciaSolicitante
+              })).then(function(response) {
+                self.jefe_dependencia_solicitante = response.data[0];
+              });
+
+              oikosRequest.get('dependencia', $.param({
+                query: 'Id:'+response.data[0].DependenciaDestino
+              })).then(function(response) {
+                self.dependencia_destino = response.data[0];
+              });
+
+              agoraRequest.get('informacion_persona_natural', $.param({
+                query: 'Id:'+response.data[0].JefeDependenciaDestino
+              })).then(function(response) {
+                self.jefe_dependencia_destino = response.data[0];
+              });
+
+              agoraRequest.get('informacion_persona_natural', $.param({
+                query: 'Id:'+response.data[0].OrdenadorGasto
+              })).then(function(response) {
+                self.ordenador_gasto = response.data[0];
+              });
+
+
+            });
           });
         };
 

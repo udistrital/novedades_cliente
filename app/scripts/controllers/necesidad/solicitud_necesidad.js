@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope, agoraRequest, oikosRequest) {
+  .controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope, agoraRequest, oikosRequest, coreRequest) {
     var self = this;
     self.documentos=[];
 
@@ -17,8 +17,27 @@ angular.module('contractualClienteApp')
       DependenciaSolicitante: 12,
       JefeDependenciaDestino: 1234567890,
       JefeDependenciaSolicitante: 1234567890,
-      OrdenadorGasto: 1234567890
+      OrdenadorGasto: 876543219
     };
+
+    $scope.$watch('solicitudNecesidad.dependencia_destino',function(){
+      console.log("asdasfsfa");
+      self.dep_ned.DependenciaDestino=self.dependencia_destino;
+      coreRequest.get('jefe_dependencia', $.param({
+        query: "DependenciaId:"+self.dependencia_destino,
+        fields: "TerceroId",
+        limit: 0
+      })).then(function(response) {
+        agoraRequest.get('informacion_persona_natural', $.param({
+          query: 'Id:'+response.data[0].TerceroId,
+          limit: 0
+        })).then(function(response) {
+          self.jefe_destino = response.data[0];
+          console.log(response.data[0]);
+          self.dep_ned.JefeDependenciaDestino=response.data[0].Id;
+        });
+      });
+    },true);
 
     self.sup_sol_ned= {
       Estado: "Activo",
