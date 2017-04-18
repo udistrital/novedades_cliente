@@ -272,7 +272,7 @@
 
                         <li class="list-group-item" ng-repeat="fu in ap.fuentes">
                           <label class="text-warning">Fuente:</label> {{fu.Fuente.Descripcion}}<br>
-                          <label class="text-warning">Monto:</label><input type="number" ng-init="fu.Monto=0" ng-model="fu.Monto" ui-money-mask="0"><br>
+                          <label class="text-warning">Monto:</label><input type="text" ng-init="fu.Monto=0" ng-model="fu.Monto" ui-money-mask="0"><br>
                         </li>
                       </li>
                     </ul>
@@ -301,7 +301,7 @@
 
                         <label><span class="text-success">{{$index+1}}.</span> {{ap.aprop.Rubro.Descripcion}}</label><br>
                         <label class="text-info">Saldo:</label> {{ap.aprop.Saldo}}<br>
-                        <label class="text-info">Monto:</label><input type="number" ng-model="ap.MontoParcial" ui-money-mask="0"><br>
+                        <label class="text-info">Monto:</label><input type="text" ng-model="ap.MontoParcial" ui-money-mask="0"><br>
                       </li>
                     </ul>
                   </div>
