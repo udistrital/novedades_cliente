@@ -132,7 +132,14 @@ angular.module('contractualClienteApp')
       })).then(function(response) {
         self.g_necesidad.Estado = response.data[0];
         administrativaRequest.put('necesidad', self.g_necesidad.Id, self.g_necesidad).then(function(response) {
-          if (response.data == "OK") {
+          console.log(response);
+          self.alerta = "";
+          for (var i = 1; i < response.data.length; i++) {
+            self.alerta = self.alerta + response.data[i] + "\n";
+          }
+          swal("", self.alerta, response.data[0]);
+
+          /*if (response.data == "OK") {
             swal(
               'Bien!',
               'La necesidad ha sido Aprobada!',
@@ -144,7 +151,7 @@ angular.module('contractualClienteApp')
               'La necesidad no pudo ser aprobada!',
               'error'
             )
-          }
+          }*/
           self.recargar_grid();
           $("#myModal").modal("hide");
           self.g_necesidad=undefined;
@@ -162,9 +169,9 @@ angular.module('contractualClienteApp')
         inputValidator: function (value) {
           return new Promise(function (resolve, reject) {
             if (value) {
-              resolve()
+              resolve();
             } else {
-              reject('Por favor indica una justificación!')
+              reject('Por favor indica una justificación!');
             }
           })
         }
@@ -200,19 +207,11 @@ angular.module('contractualClienteApp')
       self.sol_cdp = {};
       self.sol_cdp.Necesidad = self.g_necesidad;
       administrativaRequest.post("solicitud_disponibilidad", self.sol_cdp).then(function(response) {
-        if (response.data != null) {
-          swal(
-            'Ok!',
-            'El CDP ha sido Solicitado!',
-            'success'
-          )
-        } else {
-          swal(
-            'error!',
-            'No se pudo solicitar el CDP!',
-            'error'
-          )
+        self.alerta = "";
+        for (var i = 1; i < response.data.length; i++) {
+          self.alerta = self.alerta + response.data[i] + "\n";
         }
+        swal("", self.alerta, response.data[0]);
         self.recargar_grid();
         self.necesidad=undefined;
         $("#myModal").modal("hide");
