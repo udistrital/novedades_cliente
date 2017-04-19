@@ -20,11 +20,15 @@ angular.module('contractualClienteApp')
       $scope.fuente = $translate.instant('FUENTE');
 
       self.gridOptions = {
-        enableRowSelection: false,
+        paginationPageSizes: [5, 10, 15],
+        paginationPageSize: 5,
+        enableRowSelection: true,
+        enableFiltering: true,
         enableRowHeaderSelection: false,
+        useExternalPagination: false,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
-        enableSelectAll: false,
+        enableSelectAll: true,
         columnDefs: [{
             field: 'Fuente.Descripcion',
             displayName: $scope.fuente,
@@ -33,6 +37,12 @@ angular.module('contractualClienteApp')
               return row.entity.Fuente.Descripcion;
             }
           },
+          {
+             field: 'Valor',
+             displayName: 'Valor',
+             headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
+             cellFilter: 'currency'
+            }
         ]
       };
 
