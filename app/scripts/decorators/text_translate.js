@@ -45,7 +45,7 @@ var text_es = {
   CONSECUTIVO_OBJETO:"Objeto",
   CONSECUTIVO_ORDENADOR:"Ordenador",
   COMPROMISO: "Compromiso",
-  COMPROMISO_ID:"Id",
+  COMPROMISO_NUMERO:"Numero",
   COMPROMISO_VIGENCIA:"Vigencia",
   COMPROMISO_TIPO:"Tipo",
   VALOR_RP:"Valor registro presupuestal",
