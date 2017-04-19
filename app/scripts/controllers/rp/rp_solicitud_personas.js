@@ -8,13 +8,18 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudPersonasCtrl', function($window, $scope, financieraRequest, $routeParams, adminMidRequest) {
+  .controller('RpSolicitudPersonasCtrl', function($window, $scope, financieraRequest, $routeParams, adminMidRequest,$translate) {
     var self = this;
     var query;
     $scope.vigencias = [2017, 2016];
     $scope.vigenciaModel = null;
     $scope.busquedaSinResultados = false;
     $scope.banderaValores = true;
+    $scope.contrato = $translate.instant('CONTRATO');
+    $scope.vigencia_contrato = $translate.instant('VIGENCIA_CONTRATO');
+    $scope.contratista_nombre = $translate.instant('NOMBRE_CONTRATISTA');
+    $scope.contratista_documento = $translate.instant('DOCUMENTO_CONTRATISTA');
+    $scope.valor_contrato = $translate.instant('VALOR_CONTRATO');
     $scope.fields = {
       numcontrato: '',
       vigcontrato: '',
@@ -30,28 +35,28 @@ angular.module('contractualClienteApp')
       multiSelect: false,
       columnDefs: [{
           field: 'Id',
-          displayName: 'Contrato',
+          displayName: $scope.contrato,
           width: "10%",
           cellTemplate: '<div align="center">{{row.entity.Id}}</div>'
         },
         {
           field: 'VigenciaContrato',
-          displayName: 'Vigencia de Contrato',
+          displayName: $scope.vigencia_contrato,
           visible: false
         },
         {
           field: 'Contratista.NomProveedor',
-          displayName: 'Contratista nombre',
+          displayName: $scope.contratista_nombre,
           width: "50%"
         },
         {
           field: 'Contratista.NumDocumento',
-          displayName: 'Contratista documento',
+          displayName: $scope.contratista_documento,
           cellTemplate: '<div align="center">{{row.entity.Contratista.NumDocumento}}</div>'
         },
         {
           field: 'ValorContrato',
-          displayName: 'Valor del contrato',
+          displayName: $scope.valor_contrato,
           cellTemplate: '<div align="right">{{row.entity.ValorContrato | currency }}</div>'
         },
       ],

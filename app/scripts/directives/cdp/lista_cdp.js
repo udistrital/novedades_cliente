@@ -48,7 +48,7 @@
        self.gridApi = gridApi;
        gridApi.selection.on.rowSelectionChanged($scope,function(row){
          $scope.cdp = row.entity;
-         financieraRequest.get('disponibilidad_apropiacion','limit=0&query=Disponibilidad.Id:'+$scope.cdp.Id).then(function(response) {
+         financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+$scope.cdp.Id).then(function(response) {
            $scope.rubros = response.data;
            angular.forEach($scope.rubros, function(data){
                var saldo;
@@ -62,11 +62,6 @@
 
              });
          });
-
-
-
-
-
        });
      };
      self.gridOptions_cdp.multiSelect = false;

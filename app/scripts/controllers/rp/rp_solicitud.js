@@ -185,7 +185,7 @@ angular.module('contractualClienteApp')
             var fechaFormato = SolicitudRp.FechaSolicitud.getDay() + "/" + SolicitudRp.FechaSolicitud.getMonth() + "/" + SolicitudRp.FechaSolicitud.getFullYear();
 
             swal({
-              html: "<label>Se inserto correctamente la solicitud del registro presupuestal con los siguientes datos</label><br><br><label><b>Vigencia solicitud:</b></label> " + response.data.Vigencia + "<br><label><b>Fecha solicitud:</b></label>:" + fechaFormato +
+              html: "<label>Se inserto correctamente la solicitud del registro presupuestal con los siguientes datos</label><br><br><label><b>Numero solicitud:</b></label> "+response.data.Id+"<br><label><b>Vigencia solicitud:</b></label> " + response.data.Vigencia + "<br><label><b>Fecha solicitud:</b></label>:" + fechaFormato +
                 "<br><label><b>Numero contrato:</b></label>" + response.data.NumeroContrato + "<br><label><b>Vigencia contrato:</b></label>" + response.data.VigenciaContrato,
               type: "success",
               showCancelButton: true,
