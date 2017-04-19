@@ -32,7 +32,7 @@ var text_es = {
   VIGENCIA_ACTUAL:"Vigencia Actual ",
   VIGENCIA_SELECCIONADA:"Vigencia Seleccionada ",
   CDP_PANEL:"Selección de CDP",
-  COMPROMISO_PANEL:"Selección de compromiso",
+  SELECCION_COMPROMISO:"Selección de Compromiso",
   SOLICITUD_RP: "Solicitud Registro Presupuestal",
   DATOS_RP:"Datos del Registro Presupuestal",
   BENEFICIARIO:"Beneficiario",

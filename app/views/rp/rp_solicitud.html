@@ -1,5 +1,9 @@
 <div class="row">
-  <center><h3 class="page-header">{{"SOLICITUD_RP" | translate}}</h3></center>
+  <div class="panel panel-primary">
+  <div class="panel-heading" >
+    <h3>{{'SOLICITUD_RP' | translate}}</h3>
+  </div>
+</div>
   <div class="col-sm-5">
     <div class="panel panel-default">
       <div class="panel-heading" ng-click="panelCdp = !panelCdp">
@@ -14,7 +18,7 @@
     </div>
     <div class="panel panel-default class">
       <div class="panel-heading" ng-click="panelApro = !panelApro">
-        <h4>{{'COMPROMISO_PANEL' | translate }}
+        <h4>{{'SELECCION_COMPROMISO' | translate }}
               <span style="float:right" class="glyphicon glyphicon glyphicon-plus" ng-show="!panelApro"></span>
               <span style="float:right" class="glyphicon glyphicon glyphicon-minus" ng-show="panelApro"></span>
             </h4>
