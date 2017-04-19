@@ -1,13 +1,13 @@
 <div class="row">
   <div class="panel panel-primary">
   <div class="panel-heading" >
-    <h3>{{'SOLICITUD_RP' | translate}}</h3>
+    <center><h3>{{'SOLICITUD_RP' | translate}}</h3></center>
   </div>
 </div>
   <div class="col-sm-5">
     <div class="panel panel-default">
       <div class="panel-heading" ng-click="panelCdp = !panelCdp">
-        <h4>{{'CDP_PANEL' | translate }}
+        <h4>{{'SELECCION_CDP' | translate }}
             <span style="float:right" class="glyphicon glyphicon glyphicon-plus" ng-show="!panelCdp"></span>
             <span style="float:right" class="glyphicon glyphicon glyphicon-minus" ng-show="panelCdp"></span>
           </h4>
@@ -122,8 +122,23 @@
                   {{rpSolicitud.cdp.Solicitud.DependenciaSolicitante.OrdenadorGasto.PrimerNombre+" "+ rpSolicitud.cdp.Solicitud.DependenciaSolicitante.OrdenadorGasto.PrimerApellido}}
                 </td>
               </tr>
+              <tr>
+                <th>
+                  {{'UNIDAD_EJECUTORA' | translate}}
+                </th>
+                <td>
+                  {{rpSolicitud.cdp.UnidadEjecutora.Nombre}}
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  {{'ESTADO_CDP' | translate}}
+                </th>
+                <td>
+                  {{rpSolicitud.cdp.Estado.Nombre}}
+                </td>
+              </tr>
             </tbody>
-
           </table>
         </div>
         <div class="col-sm-6">

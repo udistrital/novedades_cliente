@@ -181,7 +181,6 @@ angular.module('contractualClienteApp')
               });
             }
 
-
             var fechaFormato = SolicitudRp.FechaSolicitud.getDay() + "/" + SolicitudRp.FechaSolicitud.getMonth() + "/" + SolicitudRp.FechaSolicitud.getFullYear();
 
             swal({
