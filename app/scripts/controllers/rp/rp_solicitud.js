@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudCtrl', function($window,administrativaRequest,$scope,financieraRequest,$routeParams) {
+  .controller('RpSolicitudCtrl', function($window,administrativaRequest,$scope,financieraRequest,$routeParams,$translate) {
     var self = this;
     //self.solicitudPersonas=solicitudPersonas;
     self.Contrato = $routeParams.contrato;
@@ -24,6 +24,8 @@ angular.module('contractualClienteApp')
     self.compromiso = null;
     self.rubros_seleccionados = [];
     self.rubros_select = [];
+    $scope.vigencia_compromiso = $translate.instant('VIGENCIA');
+    $scope.objeto_compromiso = $translate.instant('OBJETO');
 
     self.gridOptions_compromiso = {
       enableRowSelection: true,
@@ -36,12 +38,12 @@ angular.module('contractualClienteApp')
         },
         {
           field: 'Vigencia',
-          displayName: 'Vigencia',
+          displayName: $scope.vigencia_compromiso,
           width: '20%'
         },
         {
-          field: 'TipoCompromisoTesoral.Nombre',
-          displayName: 'Tipo Compromiso',
+          field: 'Objeto',
+          displayName: $scope.objeto_compromiso,
           width: '60%'
         }
       ],
@@ -52,6 +54,7 @@ angular.module('contractualClienteApp')
     };
     financieraRequest.get('compromiso', 'limit=0').then(function(response) {
       self.gridOptions_compromiso.data = response.data;
+      console.log(response.data);
     });
 
 

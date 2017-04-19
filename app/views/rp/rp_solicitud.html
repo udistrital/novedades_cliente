@@ -67,7 +67,7 @@
             <tbody>
               <tr>
                 <th>
-                  {{'NUMERO_CONTRATO' | translate}}:
+                  {{'NUMERO' | translate}}:
                 </th>
                 <td>
                   {{rpSolicitud.Contrato}}
@@ -75,7 +75,7 @@
               </tr>
               <tr>
                 <th>
-                  {{'VIGENCIA_CONTRATO' | translate}}:
+                  {{'VIGENCIA' | translate}}:
                 </th>
                 <td>
                   {{rpSolicitud.Vigencia}}
@@ -83,7 +83,7 @@
               </tr>
               <tr>
                 <th>
-                  {{'VALOR_CONTRATO' | translate}}:
+                  {{'VALOR' | translate}}:
                 </th>
                 <td>
                   {{rpSolicitud.Valor | currency}}
@@ -100,7 +100,7 @@
             <tbody>
               <tr>
                 <th>
-                  {{'CDP_CONSECUTIVO' | translate}}
+                  {{'CONSECUTIVO' | translate}}
                 </th>
                 <td>
                   {{rpSolicitud.cdp.NumeroDisponibilidad}}
@@ -108,7 +108,7 @@
               </tr>
               <tr>
                 <th>
-                  {{'CDP_OBJETIVO' | translate}}
+                  {{'OBJETO' | translate}}
                 </th>
                 <td>
                   {{rpSolicitud.cdp.Solicitud.SolicitudDisponibilidad.Necesidad.Objeto}}
@@ -116,7 +116,7 @@
               </tr>
               <tr>
                 <th>
-                  {{'CDP_ORDENADOR' | translate}}
+                  {{'ORDENADOR' | translate}}
                 </th>
                 <td>
                   {{rpSolicitud.cdp.Solicitud.DependenciaSolicitante.OrdenadorGasto.PrimerNombre+" "+ rpSolicitud.cdp.Solicitud.DependenciaSolicitante.OrdenadorGasto.PrimerApellido}}
@@ -132,7 +132,7 @@
               </tr>
               <tr>
                 <th>
-                  {{'ESTADO_CDP' | translate}}
+                  {{'ESTADO' | translate}}
                 </th>
                 <td>
                   {{rpSolicitud.cdp.Estado.Nombre}}
@@ -147,7 +147,7 @@
             <tbody>
               <tr>
                 <th>
-                  {{'COMPROMISO_NUMERO' | translate}}
+                  {{'NUMERO' | translate}}
                 </th>
                 <td>
                   {{rpSolicitud.compromiso.Id}}
@@ -155,7 +155,7 @@
               </tr>
               <tr>
                 <th>
-                  {{'COMPROMISO_VIGENCIA' | translate}}
+                  {{'VIGENCIA' | translate}}
                 </th>
                 <td>
                   {{rpSolicitud.compromiso.Vigencia}}
@@ -163,10 +163,10 @@
               </tr>
               <tr>
                 <th>
-                  {{'COMPROMISO_TIPO' | translate}}
+                  {{'OBJETO' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.compromiso.TipoCompromisoTesoral.Nombre}}
+                  {{rpSolicitud.compromiso.Objeto}}
                 </td>
               </tr>
             </tbody>

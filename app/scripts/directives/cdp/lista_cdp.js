@@ -50,7 +50,6 @@
          financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+$scope.cdp.Id).then(function(response) {
            $scope.rubros = response.data;
            angular.forEach($scope.rubros, function(data){
-             console.log(data);
                var saldo;
                var rp = {
                  Disponibilidad : data.Disponibilidad, // se construye rp auxiliar para obtener el saldo del CDP para la apropiacion seleccionada

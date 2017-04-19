@@ -32,7 +32,7 @@ var text_es = {
   VIGENCIA_SELECCIONADA:"Vigencia Seleccionada ",
   SELECCION_CDP:"Selección de CDP",
   UNIDAD_EJECUTORA:"Unidad ejecutora",
-  ESTADO_CDP:"Estado",
+  ESTADO:"Estado",
   SELECCION_COMPROMISO:"Selección de Compromiso",
   SOLICITUD_RP: "Solicitud Registro Presupuestal",
   DATOS_RP:"Datos del Registro Presupuestal",
@@ -40,30 +40,27 @@ var text_es = {
   NOMBRE_CONTRATISTA: "Nombre Contratista",
   DOCUMENTO_CONTRATISTA: "No Documento",
   CONTRATO: "Contrato",
-  NUMERO_CONTRATO: "No Contrato",
-  VIGENCIA_CONTRATO: "Vigencia Contrato",
-  VALOR_CONTRATO: "Valor Contrato",
-  CONSECUTIVO_ID: "Consecutivo id",
-  CONSECUTIVO_OBJETO:"Objeto",
-  CONSECUTIVO_ORDENADOR:"Ordenador",
+  VALOR: "Valor",
   COMPROMISO: "Compromiso",
-  COMPROMISO_NUMERO:"Número",
-  COMPROMISO_VIGENCIA:"Vigencia",
+  NUMERO:"Número",
+  VIGENCIA:"Vigencia",
   COMPROMISO_TIPO:"Tipo",
   VALOR_RP:"Valor registro presupuestal",
   SALDO_RP:"Saldo registro presupuestal",
   CDP:"CDP",
   DATOS_RP:"Datos del Registro Presupuestal",
-  CDP_CONSECUTIVO:"Consecutivo",
-  CDP_OBJETIVO:"Objetivo",
-  CDP_ORDENADOR:"Ordenador",
+  CONSECUTIVO:"Consecutivo",
+  OBJETIVO:"Objetivo",
+  OBJETO:"Objeto",
+  ORDENADOR:"Ordenador",
 };
 
 var text_en = {
+  SOLICITUD_RP:"INGLES",
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Now get to start to develop ...",
   NECESIDADES: "Needs",
-  NECESIDAD: "Need"
+  NECESIDAD: "Need",
 };
 
 angular.module('contractualClienteApp')
