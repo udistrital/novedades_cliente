@@ -15,33 +15,24 @@ angular.module('contractualClienteApp')
         fuenteapropiacion: '='
       },
     templateUrl: 'views/directives/apropiaciones/fuentes_apropiacion.html',
-    controller:function($scope, uiGridConstants){
+    controller:function($scope,$translate,uiGridConstants){
       var self = this;
+      $scope.fuente = $translate.instant('FUENTE');
 
       self.gridOptions = {
-        paginationPageSizes: [5, 10, 15],
-        paginationPageSize: 5,
-        enableRowSelection: true,
+        enableRowSelection: false,
         enableRowHeaderSelection: false,
-        enableFiltering: true,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
-        useExternalPagination: false,
-        enableSelectAll: true,
+        enableSelectAll: false,
         columnDefs: [{
             field: 'Fuente.Descripcion',
-            displayName: 'Fuente',
+            displayName: $scope.fuente,
             headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
             cellTooltip: function(row, col) {
               return row.entity.Fuente.Descripcion;
             }
           },
-          {
-              field: 'Valor',
-              displayName: 'Valor',
-              headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-              cellFilter: 'currency'
-            }
         ]
       };
 

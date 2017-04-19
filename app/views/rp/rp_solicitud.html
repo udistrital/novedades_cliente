@@ -4,8 +4,8 @@
     <div class="panel panel-default">
       <div class="panel-heading" ng-click="panelCdp = !panelCdp">
         <h4>{{'CDP_PANEL' | translate }}
-            <span style="float:right" class="glyphicon glyphicon-chevron-down" ng-show="!panelCdp"></span>
-            <span style="float:right" class="glyphicon glyphicon-chevron-up" ng-show="panelCdp"></span>
+            <span style="float:right" class="glyphicon glyphicon glyphicon-plus" ng-show="!panelCdp"></span>
+            <span style="float:right" class="glyphicon glyphicon glyphicon-minus" ng-show="panelCdp"></span>
           </h4>
       </div>
       <div ng-show="panelCdp" class="panel-body panel-collapse">
@@ -15,8 +15,8 @@
     <div class="panel panel-default class">
       <div class="panel-heading" ng-click="panelApro = !panelApro">
         <h4>{{'COMPROMISO_PANEL' | translate }}
-              <span style="float:right" class="glyphicon glyphicon-chevron-down" ng-show="!panelApro"></span>
-              <span style="float:right" class="glyphicon glyphicon-chevron-up" ng-show="panelApro"></span>
+              <span style="float:right" class="glyphicon glyphicon glyphicon-plus" ng-show="!panelApro"></span>
+              <span style="float:right" class="glyphicon glyphicon glyphicon-minus" ng-show="panelApro"></span>
             </h4>
       </div>
       <div ng-show="panelApro" class="panel-body panel-collapse">
@@ -158,7 +158,7 @@
         <div class="col-sm-12">
           <form class="form-horizontal">
             <fieldset>
-              <legend>{{'DATOS_RP' | translate }}</legend>
+              <h3>{{'DATOS_RP' | translate }}</h3>
               <div class="row">
                 <div class="col-md-2" align="right">
                   <label for="select_rubro" class="col-form-label">Rubro </label>

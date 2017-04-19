@@ -24,6 +24,7 @@ var text_es = {
   NECESIDAD: "Necesidad",
   SOLICITUD: "Solicitud",
   //SOLICITUD RP
+  FUENTE:"Fuente",
   SOLICITUD_PERSONAS_PANEL:"Contratos para solicitud del registro presupuestal",
   VIGENCIA_ACTUAL:"Vigencia actual ",
   VIGENCIA_SELECCIONADA:"Vigencia seleccionada ",

@@ -25,8 +25,6 @@ angular.module('contractualClienteApp')
     self.rubros_seleccionados = [];
     self.rubros_select = [];
 
-
-
     self.gridOptions_compromiso = {
       enableRowSelection: true,
       enableRowHeaderSelection: false,
