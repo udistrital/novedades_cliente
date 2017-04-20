@@ -25,6 +25,7 @@ var text_es = {
   SOLICITUD: "Solicitud",
   //SOLICITUD RP
   RESPONSABLE: "Responsable",
+  MODALIDAD_SELECCION: "Modalidad Selección",
   CONTRATO: "Contrato",
   VIGENCIA_CONTRATO: "Vigencia contrato",
   FUENTE:"Fuente",

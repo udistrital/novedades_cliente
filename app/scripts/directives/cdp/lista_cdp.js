@@ -7,12 +7,13 @@
  * # cdp/listaCdp
  */
  angular.module('contractualClienteApp')
-   .directive('listaCdp', function (financieraRequest,financieraMidRequest,agoraRequest) {
+   .directive('listaCdp', function (financieraRequest,financieraMidRequest,agoraRequest,administrativaRequest) {
      return {
        restrict: 'E',
       scope : {
            cdp :'=' ,
-           rubros : '='
+           rubros : '=',
+           necesidad : '='
          },
        templateUrl: 'views/directives/cdp/lista_cdp.html',
        controller:function($scope){
@@ -47,6 +48,11 @@
        self.gridApi = gridApi;
        gridApi.selection.on.rowSelectionChanged($scope,function(row){
          $scope.cdp = row.entity;
+         var CdpId = $scope.cdp.Solicitud.SolicitudDisponibilidad.Id;
+         administrativaRequest.get('solicitud_disponibilidad','query=Id:'+CdpId).then(function(responseN){
+           $scope.necesidad=responseN.data[0];
+           console.log($scope.necesidad);
+         });
          financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+$scope.cdp.Id).then(function(response) {
            $scope.rubros = response.data;
            angular.forEach($scope.rubros, function(data){

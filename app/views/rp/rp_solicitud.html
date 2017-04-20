@@ -13,7 +13,7 @@
           </h4>
       </div>
       <div ng-show="panelCdp" class="panel-body panel-collapse">
-        <lista-cdp cdp='rpSolicitud.cdp' rubros='rpSolicitud.rubros'>
+        <lista-cdp cdp='rpSolicitud.cdp' rubros='rpSolicitud.rubros' necesidad='rpSolicitud.necesidad'>
       </div>
     </div>
     <div class="panel panel-default class">
@@ -36,7 +36,8 @@
         <h4>{{'DATOS_RP' | translate }}</h4>
       </div>
       <div ng-show=" rpSolicitud.proveedor" class="panel-body row">
-        <div class="col-sm-5 rp" style="border-radius: 5px;margin:15px;border: 2px solid #337AB7">
+
+        <div class="col-sm-6 rp registro_presupuestal">
           <h3>{{'BENEFICIARIO' | translate}}</h3>
           <table name="info_beneficiario" class="table">
               <tr>
@@ -58,7 +59,40 @@
           </table>
         </div>
 
-        <div class="col-sm-5 rp" style="border-radius: 5px;margin:15px;border: 2px solid #337AB7">
+        <div class="col-sm-5 rp registro_presupuestal">
+          <h3>{{'COMPROMISO' | translate}}</h3>
+          <table name="info_compromiso" class="table">
+            <tbody>
+              <tr>
+                <th>
+                  {{'NUMERO' | translate}}
+                </th>
+                <td>
+                  {{rpSolicitud.compromiso.Id}}
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  {{'VIGENCIA' | translate}}
+                </th>
+                <td>
+                  {{rpSolicitud.compromiso.Vigencia}}
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  {{'OBJETO' | translate}}
+                </th>
+                <td>
+                  {{rpSolicitud.compromiso.Objeto}}
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
+        <div class="col-sm-6 rp registro_presupuestal">
           <h3>{{'CONTRATO' | translate}}</h3>
           <table class="table">
               <tr>
@@ -85,10 +119,17 @@
                   {{rpSolicitud.Valor | currency}}
                 </td>
               </tr>
+              <tr>
+                <th>
+                  {{'MODALIDAD_SELECCION' | translate}}
+                </th>
+                <td>
+                  {{rpSolicitud.necesidad.Necesidad.ModalidadSeleccion.Nombre}}
+                </td>
+              </tr>
           </table>
         </div>
-
-        <div class="col-sm-5 rp" style="border-radius: 5px;margin:15px;border: 2px solid #337AB7">
+        <div class="col-sm-5 rp registro_presupuestal">
           <h3>{{'CDP' | translate}}</h3>
           <table name="info_beneficiario" class="table">
             <tbody>
@@ -133,38 +174,6 @@
                 </td>
               </tr>
             </tbody>
-          </table>
-        </div>
-        <div class="col-sm-5 rp" style="border-radius: 5px;margin:15px;border: 2px solid #337AB7">
-          <h3>{{'COMPROMISO' | translate}}</h3>
-          <table name="info_compromiso" class="table">
-            <tbody>
-              <tr>
-                <th>
-                  {{'NUMERO' | translate}}
-                </th>
-                <td>
-                  {{rpSolicitud.compromiso.Id}}
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  {{'VIGENCIA' | translate}}
-                </th>
-                <td>
-                  {{rpSolicitud.compromiso.Vigencia}}
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  {{'OBJETO' | translate}}
-                </th>
-                <td>
-                  {{rpSolicitud.compromiso.Objeto}}
-                </td>
-              </tr>
-            </tbody>
-
           </table>
         </div>
 

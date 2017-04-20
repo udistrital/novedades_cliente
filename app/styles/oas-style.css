@@ -1,3 +1,9 @@
+div.registro_presupuestal{
+  border-radius: 5px;
+  margin:15px;
+  border: 2px solid #337AB7;
+}
+
 legend {
     /*width:inherit; /* Or auto */
     /*padding:0 10px; /* To give a bit of padding on the left and right */
