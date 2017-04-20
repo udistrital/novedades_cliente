@@ -83,6 +83,7 @@ angular.module('contractualClienteApp')
 
     self.agregarRubro = function(id) {
       var rubro_seleccionado = self.DescripcionRubro(id);
+      console.log(rubro_seleccionado);
       if(rubro_seleccionado!=undefined){
         self.rubros_seleccionados.push(rubro_seleccionado);
         $scope.seleccionado= rubro_seleccionado;

@@ -32,7 +32,7 @@
 
      };
 
-     financieraRequest.get('disponibilidad','limit=0').then(function(response) {
+     financieraRequest.get('disponibilidad','limit=-1').then(function(response) {
        self.gridOptions_cdp.data = response.data;
        angular.forEach(self.gridOptions_cdp.data, function(data){
          financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {

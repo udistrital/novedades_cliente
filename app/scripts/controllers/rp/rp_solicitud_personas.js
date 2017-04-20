@@ -19,7 +19,7 @@ angular.module('contractualClienteApp')
     $scope.vigencia_contrato = $translate.instant('VIGENCIA_CONTRATO');
     $scope.contratista_nombre = $translate.instant('NOMBRE_CONTRATISTA');
     $scope.contratista_documento = $translate.instant('DOCUMENTO_CONTRATISTA');
-    $scope.valor_contrato = $translate.instant('VALOR_CONTRATO');
+    $scope.valor_contrato = $translate.instant('VALOR');
     $scope.fields = {
       numcontrato: '',
       vigcontrato: '',

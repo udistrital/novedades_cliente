@@ -36,10 +36,9 @@
         <h4>{{'DATOS_RP' | translate }}</h4>
       </div>
       <div ng-show=" rpSolicitud.proveedor" class="panel-body row">
-        <div class="col-sm-6">
+        <div class="col-sm-5 rp" style="border-radius: 5px;margin:15px;border: 2px solid #337AB7">
           <h3>{{'BENEFICIARIO' | translate}}</h3>
           <table name="info_beneficiario" class="table">
-            <tbody>
               <tr>
                 <th>
                   {{'NOMBRE_CONTRATISTA' | translate}}:
@@ -56,18 +55,15 @@
                   {{rpSolicitud.Documento}}
                 </td>
               </tr>
-            </tbody>
-
           </table>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-5 rp" style="border-radius: 5px;margin:15px;border: 2px solid #337AB7">
           <h3>{{'CONTRATO' | translate}}</h3>
-          <table name="info_beneficiario" class="table">
-            <tbody>
+          <table class="table">
               <tr>
                 <th>
-                  {{'NUMERO' | translate}}:
+                  {{'NUMERO' | translate}}
                 </th>
                 <td>
                   {{rpSolicitud.Contrato}}
@@ -75,7 +71,7 @@
               </tr>
               <tr>
                 <th>
-                  {{'VIGENCIA' | translate}}:
+                  {{'VIGENCIA' | translate}}
                 </th>
                 <td>
                   {{rpSolicitud.Vigencia}}
@@ -83,18 +79,16 @@
               </tr>
               <tr>
                 <th>
-                  {{'VALOR' | translate}}:
+                  {{'VALOR' | translate}}
                 </th>
                 <td>
                   {{rpSolicitud.Valor | currency}}
                 </td>
               </tr>
-            </tbody>
-
           </table>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-5 rp" style="border-radius: 5px;margin:15px;border: 2px solid #337AB7">
           <h3>{{'CDP' | translate}}</h3>
           <table name="info_beneficiario" class="table">
             <tbody>
@@ -116,7 +110,7 @@
               </tr>
               <tr>
                 <th>
-                  {{'ORDENADOR' | translate}}
+                  {{'RESPONSABLE' | translate}}
                 </th>
                 <td>
                   {{rpSolicitud.cdp.Solicitud.DependenciaSolicitante.OrdenadorGasto.PrimerNombre+" "+ rpSolicitud.cdp.Solicitud.DependenciaSolicitante.OrdenadorGasto.PrimerApellido}}
@@ -141,7 +135,7 @@
             </tbody>
           </table>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-5 rp" style="border-radius: 5px;margin:15px;border: 2px solid #337AB7">
           <h3>{{'COMPROMISO' | translate}}</h3>
           <table name="info_compromiso" class="table">
             <tbody>

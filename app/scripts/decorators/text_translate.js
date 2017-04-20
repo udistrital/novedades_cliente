@@ -24,6 +24,7 @@ var text_es = {
   NECESIDAD: "Necesidad",
   SOLICITUD: "Solicitud",
   //SOLICITUD RP
+  RESPONSABLE: "Responsable",
   CONTRATO: "Contrato",
   VIGENCIA_CONTRATO: "Vigencia contrato",
   FUENTE:"Fuente",

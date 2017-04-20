@@ -7,7 +7,7 @@ legend {
 legend:hover {
     background-color: #528ec2;
     color: #fff;
-    padding: 5px; 
+    padding: 5px;
 }
 
 fieldset.scheduler-border {
@@ -73,7 +73,9 @@ fieldset.scheduler-border {
 .badge-inverse:hover {
   background-color: #1a1a1a;
 }
-
+.rp th, .rp td {
+     border-top: none !important;
+ }
 /* NOTIFICATION*/
 
 .img-responsive{
