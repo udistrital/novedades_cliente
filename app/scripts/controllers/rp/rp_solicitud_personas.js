@@ -8,14 +8,17 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudPersonasCtrl', function($window, $scope, financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate) {
+.factory("contrato",function(){
+      return {};
+})
+.controller('RpSolicitudPersonasCtrl', function($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate) {
     var self = this;
     var query;
-
+    self.contrato = contrato;
     $scope.vigenciaModel = null;
     $scope.busquedaSinResultados = false;
     $scope.banderaValores = true;
-    $scope.contrato = $translate.instant('CONTRATO');
+    $scope.contrato_int = $translate.instant('CONTRATO');
     $scope.vigencia_contrato = $translate.instant('VIGENCIA_CONTRATO');
     $scope.contratista_nombre = $translate.instant('NOMBRE_CONTRATISTA');
     $scope.contratista_documento = $translate.instant('DOCUMENTO_CONTRATISTA');
@@ -35,7 +38,7 @@ angular.module('contractualClienteApp')
       multiSelect: false,
       columnDefs: [{
           field: 'Id',
-          displayName: $scope.contrato,
+          displayName: $scope.contrato_int,
           width: "10%",
           cellTemplate: '<div align="center">{{row.entity.Id}}</div>'
         },
@@ -96,19 +99,17 @@ angular.module('contractualClienteApp')
 
     self.mostrar_estadisticas = function() {
       var seleccion = self.gridApi.selection.getSelectedRows();
-      var contrato = {
-        Id: seleccion[0].Id,
-        Vigencia: seleccion[0].VigenciaContrato,
-        ContratistaId: seleccion[0].Contratista.NumDocumento,
-        ValorContrato: seleccion[0].ValorContrato,
-        NombreContratista: seleccion[0].Contratista.NomProveedor,
-      };
+      self.contrato.Id = seleccion[0].Id;
+      self.contrato.Vigencia= seleccion[0].VigenciaContrato;
+      self.contrato.ContratistaId= seleccion[0].Contratista.NumDocumento;
+      self.contrato.ValorContrato= seleccion[0].ValorContrato;
+      self.contrato.NombreContratista= seleccion[0].Contratista.NomProveedor;
 
       self.saving = true;
       self.btnGenerartxt = "Generando...";
 
       self.saving = false;
       self.btnGenerartxt = "Generar";
-      $window.location.href = '#/rp/rp_solicitud/' + contrato.Id + "/" + contrato.Vigencia + "/" + contrato.ValorContrato + "/" + contrato.ContratistaId + "/" + contrato.NombreContratista;
+      $window.location.href = '#/rp/rp_solicitud/';
     };
   });

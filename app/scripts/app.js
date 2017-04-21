@@ -40,7 +40,7 @@ angular
     'oikosService',
     'financieraMidService',
     'adminMidService'
-    
+
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');
@@ -78,7 +78,7 @@ angular
         controller: 'RpSolicitudPersonasCtrl',
         controllerAs: 'rpSolicitudPersonas'
       })
-      .when('/rp/rp_solicitud/:contrato/:vigencia/:valor/:documento/:nombre', {
+      .when('/rp/rp_solicitud/', {
         templateUrl: 'views/rp/rp_solicitud.html',
         controller: 'RpSolicitudCtrl',
         controllerAs: 'rpSolicitud'

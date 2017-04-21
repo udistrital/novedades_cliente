@@ -45,7 +45,7 @@
                   {{'NOMBRE_CONTRATISTA' | translate}}:
                 </th>
                 <td>
-                  {{rpSolicitud.Nombre}}
+                  {{rpSolicitud.contrato.NombreContratista}}
                 </td>
               </tr>
               <tr>
@@ -53,7 +53,7 @@
                   {{'DOCUMENTO_CONTRATISTA' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.Documento}}
+                  {{rpSolicitud.contrato.ContratistaId}}
                 </td>
               </tr>
           </table>
@@ -100,7 +100,7 @@
                   {{'NUMERO' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.Contrato}}
+                  {{rpSolicitud.contrato.Id}}
                 </td>
               </tr>
               <tr>
@@ -108,7 +108,7 @@
                   {{'VIGENCIA' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.Vigencia}}
+                  {{rpSolicitud.contrato.Vigencia}}
                 </td>
               </tr>
               <tr>
@@ -116,7 +116,7 @@
                   {{'VALOR' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.Valor | currency}}
+                  {{rpSolicitud.contrato.ValorContrato | currency}}
                 </td>
               </tr>
               <tr>

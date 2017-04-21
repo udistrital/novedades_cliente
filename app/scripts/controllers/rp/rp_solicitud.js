@@ -8,10 +8,12 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudCtrl', function($window,administrativaRequest,$scope,financieraRequest,$routeParams,$translate) {
+  .controller('RpSolicitudCtrl', function($window,contrato,administrativaRequest,$scope,financieraRequest,$routeParams,$translate) {
     var self = this;
     //self.solicitudPersonas=solicitudPersonas;
-    self.Contrato = $routeParams.contrato;
+    self.contrato = contrato;
+    console.log(self.contrato);
+    self.Contratop = $routeParams.contrato;
     self.Vigencia = $routeParams.vigencia;
     self.Nombre = $routeParams.nombre;
     self.Valor = $routeParams.valor;
@@ -54,7 +56,6 @@ angular.module('contractualClienteApp')
     };
     financieraRequest.get('compromiso', 'limit=0').then(function(response) {
       self.gridOptions_compromiso.data = response.data;
-      console.log(response.data);
     });
 
 
@@ -83,7 +84,6 @@ angular.module('contractualClienteApp')
 
     self.agregarRubro = function(id) {
       var rubro_seleccionado = self.DescripcionRubro(id);
-      console.log(rubro_seleccionado);
       if(rubro_seleccionado!=undefined){
         self.rubros_seleccionados.push(rubro_seleccionado);
         $scope.seleccionado= rubro_seleccionado;
@@ -168,11 +168,11 @@ angular.module('contractualClienteApp')
           FechaSolicitud: self.CurrentDate,
           Cdp: self.cdp.Id,
           Expedida: false,
-          NumeroContrato: self.Contrato,
-          VigenciaContrato: self.Vigencia,
+          NumeroContrato: self.contrato.Id,
+          VigenciaContrato: self.contrato.Vigencia.toString(),
           Compromiso: self.compromiso.Id
         }
-
+        console.log(SolicitudRp);
           administrativaRequest.post('solicitud_rp', SolicitudRp).then(function(response) {
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
               var Disponibilidad_apropiacion_solicitud_rp = {
