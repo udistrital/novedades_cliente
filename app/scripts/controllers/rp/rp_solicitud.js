@@ -8,16 +8,9 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudCtrl', function($window,contrato,administrativaRequest,$scope,financieraRequest,$routeParams,$translate) {
+  .controller('RpSolicitudCtrl', function($window,contrato,administrativaRequest,$scope,financieraRequest,financieraMidRequest,$translate) {
     var self = this;
-    //self.solicitudPersonas=solicitudPersonas;
     self.contrato = contrato;
-    console.log(self.contrato);
-    self.Contratop = $routeParams.contrato;
-    self.Vigencia = $routeParams.vigencia;
-    self.Nombre = $routeParams.nombre;
-    self.Valor = $routeParams.valor;
-    self.Documento = $routeParams.documento;
     $scope.rubroVacio=false;
     self.CurrentDate = new Date();
     self.alertas = false;
@@ -26,8 +19,69 @@ angular.module('contractualClienteApp')
     self.compromiso = null;
     self.rubros_seleccionados = [];
     self.rubros_select = [];
+    $scope.numero = $translate.instant('NUMERO');
+    $scope.codigo = $translate.instant('CODIGO');
+    $scope.nombre = $translate.instant('NOMBRE');
     $scope.vigencia_compromiso = $translate.instant('VIGENCIA');
+    $scope.fuente_financiamiento = $translate.instant('FUENTE_FINANCIAMIENTO');
     $scope.objeto_compromiso = $translate.instant('OBJETO');
+
+    self.gridOptions_cdp = {
+     enableRowSelection: true,
+     enableRowHeaderSelection: false,
+     enableFiltering: true,
+
+  columnDefs : [
+    {field: 'Id',             visible : false},
+    {field: 'Vigencia',   displayName: 'Vigencia'},
+    {field: 'NumeroDisponibilidad',   displayName: 'Consecutivo'},
+    {field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Objeto',   displayName: 'Objeto'},
+    {field: 'Solicitud..DependenciaSolicitante.Nombre',   displayName: 'Ordenador'},
+  ]
+
+};
+financieraRequest.get('disponibilidad','limit=-1').then(function(response) {
+  self.gridOptions_cdp.data = response.data;
+  angular.forEach(self.gridOptions_cdp.data, function(data){
+    financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
+        data.Solicitud = response.data[0];
+        });
+
+      });
+});
+
+self.gridOptions_cdp.onRegisterApi = function(gridApi){
+  //set gridApi on scope
+
+  self.gridApi = gridApi;
+  gridApi.selection.on.rowSelectionChanged($scope,function(row){
+    $scope.cdp = row.entity;
+    var CdpId = $scope.cdp.Solicitud.SolicitudDisponibilidad.Id;
+    administrativaRequest.get('solicitud_disponibilidad','query=Id:'+CdpId).then(function(responseN){
+      $scope.necesidad=responseN.data[0];
+      console.log($scope.necesidad);
+    });
+    financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+$scope.cdp.Id).then(function(response) {
+
+      $scope.rubros = response.data;
+      self.gridOptions_rubros.data = response.data;
+      angular.forEach($scope.rubros, function(data){
+          var saldo;
+          var rp = {
+            Disponibilidad : data.Disponibilidad, // se construye rp auxiliar para obtener el saldo del CDP para la apropiacion seleccionada
+            Apropiacion : data.Apropiacion
+          };
+          financieraRequest.post('disponibilidad/SaldoCdp',rp).then(function(response){
+            data.Saldo  = response.data;
+          });
+
+        });
+    });
+  });
+};
+self.gridOptions_cdp.multiSelect = false;
+
+
 
     self.gridOptions_compromiso = {
       enableRowSelection: true,
@@ -35,7 +89,7 @@ angular.module('contractualClienteApp')
       multiSelect: false,
       columnDefs: [{
           field: 'Id',
-          displayName: 'Numero',
+          displayName: $scope.numero,
           width: '20%'
         },
         {
@@ -54,10 +108,42 @@ angular.module('contractualClienteApp')
 
       }
     };
+
+    self.gridOptions_rubros = {
+      enableRowSelection: true,
+      enableRowHeaderSelection: false,
+      multiSelect: false,
+      enableVerticalScrollbar : 0,
+      enableHorizontalScrollbar : 0,
+      columnDefs: [{
+          field: 'Apropiacion.Rubro.Codigo',
+          displayName: $scope.codigo,
+          width: "25%",
+        },
+        {
+          field: 'Apropiacion.Rubro.Descripcion',
+          displayName: $scope.nombre,
+          width: "50%",
+        },
+        {
+          field: 'FuenteFinanciamiento.Descripcion',
+          displayName: $scope.fuente_financiamiento,
+          width: "25%",
+        }
+      ],
+    };
+
+    $scope.getTableStyle= function() {
+      var rowHeight=30;
+      var headerHeight=45;
+      return {
+      height: (self.gridOptions_rubros.data.length * rowHeight + headerHeight) + "px"
+      };
+    };
+
     financieraRequest.get('compromiso', 'limit=0').then(function(response) {
       self.gridOptions_compromiso.data = response.data;
     });
-
 
     self.proveedor = {
 
@@ -117,6 +203,8 @@ angular.module('contractualClienteApp')
     }
 
     self.DescripcionRubro = function(id) {
+      console.log("este esta seleccionado");
+      console.log(self.rubros);
       var rubro;
       for (var i = 0; i < self.rubros.length; i++) {
 

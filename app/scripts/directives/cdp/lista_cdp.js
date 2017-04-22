@@ -11,6 +11,7 @@
      return {
        restrict: 'E',
       scope : {
+           gridOptions_rubros: '=',
            cdp :'=' ,
            rubros : '=',
            necesidad : '='
@@ -19,9 +20,9 @@
        controller:function($scope){
          var self = this;
          self.gridOptions_cdp = {
-           enableRowSelection: true,
-       enableRowHeaderSelection: false,
-       enableFiltering: true,
+          enableRowSelection: true,
+          enableRowHeaderSelection: false,
+          enableFiltering: true,
 
        columnDefs : [
          {field: 'Id',             visible : false},
@@ -32,6 +33,8 @@
        ]
 
      };
+
+
 
      financieraRequest.get('disponibilidad','limit=-1').then(function(response) {
        self.gridOptions_cdp.data = response.data;
@@ -45,6 +48,7 @@
 
      self.gridOptions_cdp.onRegisterApi = function(gridApi){
        //set gridApi on scope
+
        self.gridApi = gridApi;
        gridApi.selection.on.rowSelectionChanged($scope,function(row){
          $scope.cdp = row.entity;
@@ -54,7 +58,9 @@
            console.log($scope.necesidad);
          });
          financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+$scope.cdp.Id).then(function(response) {
+
            $scope.rubros = response.data;
+           gridOptions_rubros.data = response.data;
            angular.forEach($scope.rubros, function(data){
                var saldo;
                var rp = {

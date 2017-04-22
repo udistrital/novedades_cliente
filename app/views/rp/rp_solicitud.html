@@ -13,7 +13,10 @@
           </h4>
       </div>
       <div ng-show="panelCdp" class="panel-body panel-collapse">
-        <lista-cdp cdp='rpSolicitud.cdp' rubros='rpSolicitud.rubros' necesidad='rpSolicitud.necesidad'>
+        <div ui-grid='rpSolicitud.gridOptions_cdp' ui-grid-selection ui-grid-auto-resize class="myGrid"> </div>
+        
+        <lista-cdp cdp='rpSolicitud.cdp' rubros='rpSolicitud.rubros' necesidad='rpSolicitud.necesidad' gridOptionsrubros='rpSolicitud.gridOptions_rubros'>
+
       </div>
     </div>
     <div class="panel panel-default class">
@@ -25,7 +28,6 @@
       </div>
       <div ng-show="panelApro" class="panel-body panel-collapse">
         <div ui-grid='rpSolicitud.gridOptions_compromiso' ui-grid-selection ui-grid-auto-resize class="myGrid"> </div>
-
       </div>
     </div>
   </div>
@@ -180,21 +182,21 @@
         <div class="col-sm-12">
           <form class="form-horizontal">
             <fieldset>
-              <h3>{{'DATOS_RP' | translate }}</h3>
+              <h3>{{'DATOS_APROPIACIONES' | translate }}</h3>
+              <div ui-grid="rpSolicitud.gridOptions_rubros" ng-show="rpSolicitud.gridOptions_rubros.data.length>0" ng-style="getTableStyle()"  ui-grid-selection ui-grid-auto-resize class="col-md-11" ng-style="getTableStyle()"></div>
+
               <div class="row">
-                <div class="col-md-2" align="right">
-                  <label for="select_rubro" class="col-form-label">Rubro </label>
-                </div>
-                <div class="col-md-4">
+                <div class="col-md-4 col-md-offset-4">
+                  <br>
+                  <button id="btn_agregar_rubr" name="btn_agregar_rubr" class="btn btn-outline btn-primary" ng-click="rpSolicitud.agregarRubro(rpSolicitud.selectRubro)">
+              {{'BTN.AGREGAR' | translate }}
+                  </button>
+                  <br>
                   <select class="form-control" name="select_rubro" id="select_rubro" ng-model="rpSolicitud.selectRubro">
               <option selected disabled selected="selected">Seleccione...</option>
-              <option ng-repeat="rubro in rpSolicitud.rubros"  value="{{rubro.Id}}">{{rubro.Apropiacion.Rubro.Descripcion + ' / ' + rubro.Apropiacion.Rubro.Codigo  }}</option>
+              <option ng-repeat="rubro in rpSolicitud.rubros"  value="{{rubro.Id}}">{{rubro.Apropiacion.Rubro.Descripcion + ' / ' + rubro.Apropiacion.Rubro.Codigo +' / '+ rubro.FuenteFinanciamiento.Descripcion}}</option>
             </select>
                 </div>
-
-                <button id="btn_agregar_rubr" name="btn_agregar_rubr" class="btn btn-outline btn-primary" ng-click="rpSolicitud.agregarRubro(rpSolicitud.selectRubro)">
-            {{'BTN.AGREGAR' | translate }}
-            </button>
                 <br><br>
               </div>
         </div>
