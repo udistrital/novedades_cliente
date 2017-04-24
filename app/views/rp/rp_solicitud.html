@@ -233,7 +233,7 @@
                   </div>
                 </div>
                 <br><br>
-                <div class="col-sm-12" ng-show="rubro.FuenteFinanciamiento!=null">
+                <div class="col-sm-12" ng-show="rubro.FuenteFinanciamiento!=null && rubro.FuenteFinanciamiento.Id!=0">
                   <fuentes-apropiacion apropiacion = "rubro.Apropiacion.Id" fuenteapropiacion = "seleccionado.Descripcion" dependenciasolicitante="rpSolicitud.dependencia_solicitante_data.DependenciaId"/>
                 </div>
                 <div class="col-md-8">
