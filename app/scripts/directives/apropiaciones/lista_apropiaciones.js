@@ -59,6 +59,7 @@ angular.module('contractualClienteApp')
               field: 'Valor',
               displayName: 'Valor',
               cellFilter: 'currency',
+              cellTemplate: '<div align="right">{{row.entity.Valor | currency}}</div>',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
               cellClass: function(row, col) {
                 if (col.treeNode.children.length === 0) {
@@ -72,6 +73,7 @@ angular.module('contractualClienteApp')
             {
               field: 'Saldo',
               cellFilter: 'currency',
+              cellTemplate: '<div align="right">{{row.entity.Saldo | currency}}</div>',
               headerCellClass: $scope.highlightFilteredHeader + 'text-right ',
               cellClass: function(row, col) {
                 if (col.treeNode.children.length === 0) {

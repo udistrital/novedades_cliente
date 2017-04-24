@@ -55,6 +55,23 @@ angular.module('contractualClienteApp')
       });
     },true);
 
+    $scope.$watch('solicitudNecesidad.especificaciones.Valor',function(){
+      self.valor_iva=(self.especificaciones.Iva/100)*self.especificaciones.Valor*self.especificaciones.Cantidad;
+    },true);
+
+    $scope.$watch('solicitudNecesidad.especificaciones.Iva',function(){
+      self.valor_iva=(self.especificaciones.Iva/100)*self.especificaciones.Valor*self.especificaciones.Cantidad;
+    },true);
+
+    $scope.$watch('solicitudNecesidad.especificaciones.Cantidad',function(){
+      self.valor_iva=(self.especificaciones.Iva/100)*self.especificaciones.Valor*self.especificaciones.Cantidad;
+    },true);
+
+    $scope.$watch('solicitudNecesidad.valor_iva',function(){
+      self.valor_total=(self.especificaciones.Valor*self.especificaciones.Cantidad)+self.valor_iva;
+    },true);
+
+
     self.sup_sol_ned= {
       Estado: "Activo",
       Funcionario: 1234567890
@@ -132,6 +149,17 @@ angular.module('contractualClienteApp')
       self.unidad_ejecutora_data = response.data;
     });
 
+    agoraRequest.get('unidad', $.param({
+      limit: -1
+    })).then(function(response) {
+      self.unidad_data = response.data;
+    });
+
+    financieraRequest.get('iva', $.param({
+      limit: -1
+    })).then(function(response) {
+      self.iva_data = response.data;
+    });
 
     // function
     self.duracionEspecial = function(especial) {
