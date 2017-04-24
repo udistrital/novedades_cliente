@@ -40,7 +40,7 @@ angular.module('contractualClienteApp')
   ]
 
 };
-financieraRequest.get('disponibilidad','limit=-1').then(function(response) {
+financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
   self.gridOptions_cdp.data = response.data;
   angular.forEach(self.gridOptions_cdp.data, function(data){
     financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
@@ -52,16 +52,18 @@ financieraRequest.get('disponibilidad','limit=-1').then(function(response) {
 
 self.gridOptions_cdp.onRegisterApi = function(gridApi){
   //set gridApi on scope
-
   self.gridApi = gridApi;
   gridApi.selection.on.rowSelectionChanged($scope,function(row){
-    $scope.cdp = row.entity;
-    var CdpId = $scope.cdp.Solicitud.SolicitudDisponibilidad.Id;
+    self.rubros_seleccionados = [];
+    console.log("funciona");
+    console.log(self.rubros_seleccionados);
+    self.cdp = row.entity;
+    var CdpId = self.cdp.Solicitud.SolicitudDisponibilidad.Id;
     administrativaRequest.get('solicitud_disponibilidad','query=Id:'+CdpId).then(function(responseN){
       $scope.necesidad=responseN.data[0];
       console.log($scope.necesidad);
     });
-    financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+$scope.cdp.Id).then(function(response) {
+    financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.cdp.Id).then(function(response) {
 
       $scope.rubros = response.data;
       self.gridOptions_rubros.data = response.data;
@@ -133,6 +135,14 @@ self.gridOptions_cdp.multiSelect = false;
       ],
     };
 
+    self.gridOptions_rubros.onRegisterApi = function(gridApi){
+      self.gridApi = gridApi;
+      gridApi.selection.on.rowSelectionChanged($scope,function(row){
+        self.selectRubro = row.entity;
+      });
+    };
+
+
     $scope.getTableStyle= function() {
       var rowHeight=30;
       var headerHeight=45;
@@ -169,16 +179,21 @@ self.gridOptions_cdp.multiSelect = false;
     }
 
     self.agregarRubro = function(id) {
-      var rubro_seleccionado = self.DescripcionRubro(id);
-      if(rubro_seleccionado!=undefined){
-        self.rubros_seleccionados.push(rubro_seleccionado);
-        $scope.seleccionado= rubro_seleccionado;
-        for (var i = 0; i < self.rubros.length; i++) {
+      var rubro_seleccionado = self.selectRubro;
+      var bandera = true;
+      //console.log(rubro_seleccionado);
 
-          if (self.rubros[i].Id == id) {
-            self.rubros_select.push(rubro_seleccionado);
-            self.rubros.splice(i, 1)
+      $scope.seleccionado= rubro_seleccionado;
+      if(rubro_seleccionado!=undefined){
+        for (var i = 0; i < self.rubros_seleccionados.length; i++) {
+          if (self.rubros_seleccionados[i].Id == rubro_seleccionado.Id) {
+            bandera = false;
           }
+        }
+        if(bandera === true){
+          self.rubros_seleccionados.push(rubro_seleccionado);
+        }else{
+          swal("Alertas", "Este rubro ya fue agregado", "error");
         }
       }else{
         swal("Alertas", "Debe seleccionar un rubro para agregar", "error");

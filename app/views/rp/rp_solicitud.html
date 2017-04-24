@@ -14,9 +14,9 @@
       </div>
       <div ng-show="panelCdp" class="panel-body panel-collapse">
         <div ui-grid='rpSolicitud.gridOptions_cdp' ui-grid-selection ui-grid-auto-resize class="myGrid"> </div>
-        
+        <!--
         <lista-cdp cdp='rpSolicitud.cdp' rubros='rpSolicitud.rubros' necesidad='rpSolicitud.necesidad' gridOptionsrubros='rpSolicitud.gridOptions_rubros'>
-
+        -->
       </div>
     </div>
     <div class="panel panel-default class">
@@ -179,11 +179,14 @@
           </table>
         </div>
 
+        <div>
+
+
         <div class="col-sm-12">
-          <form class="form-horizontal">
+          <form class="form-horizontal" ng-show="rpSolicitud.gridOptions_rubros.data.length>0">
             <fieldset>
               <h3>{{'DATOS_APROPIACIONES' | translate }}</h3>
-              <div ui-grid="rpSolicitud.gridOptions_rubros" ng-show="rpSolicitud.gridOptions_rubros.data.length>0" ng-style="getTableStyle()"  ui-grid-selection ui-grid-auto-resize class="col-md-11" ng-style="getTableStyle()"></div>
+              <div ui-grid="rpSolicitud.gridOptions_rubros" ng-style="getTableStyle()"  ui-grid-selection ui-grid-auto-resize class="col-md-11" ng-style="getTableStyle()"></div>
 
               <div class="row">
                 <div class="col-md-4 col-md-offset-4">
@@ -192,28 +195,24 @@
               {{'BTN.AGREGAR' | translate }}
                   </button>
                   <br>
-                  <select class="form-control" name="select_rubro" id="select_rubro" ng-model="rpSolicitud.selectRubro">
-              <option selected disabled selected="selected">Seleccione...</option>
-              <option ng-repeat="rubro in rpSolicitud.rubros"  value="{{rubro.Id}}">{{rubro.Apropiacion.Rubro.Descripcion + ' / ' + rubro.Apropiacion.Rubro.Codigo +' / '+ rubro.FuenteFinanciamiento.Descripcion}}</option>
-            </select>
+                </div>
                 </div>
                 <br><br>
-              </div>
         </div>
         <br>
         <div ng-repeat="rubro in rpSolicitud.rubros_seleccionados">
           <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
               <div class="panel-heading" align="center">
-                {{rubro.Apropiacion.Rubro.Codigo + ' / ' + rubro.Apropiacion.Rubro.Descripcion}}
+                {{rubro.Apropiacion.Rubro.Codigo + ' / ' + rubro.Apropiacion.Rubro.Descripcion +' / '+ rubro.FuenteFinanciamiento.Descripcion }}
               </div>
               <div class="panel-body">
                 <div class="row">
                   <div class="col-md-4">
-                    <label>{{'SALDO_RP' | translate}}</label>
+                    <label>{{'SALDO_AP' | translate}}</label>
                   </div>
                   <div class="col-md-6">
-                    <input id="saldo_apropiacion" name="saldo_apropiacion" disabled type="text" ui-money-mask="0" placeholder="Saldo" class="form-control input-md currency" required="" ng-model="rubro.Saldo">
+                    <input id="saldo_apropiacion" name="saldo_apropiacion" disabled type="text" ui-money-mask="0" placeholder="Saldo" class="form-control input-md currency" required="" ng-model="rubro.Valor">
                   </div>
                 </div>
                 <br>
@@ -226,11 +225,11 @@
                   </div>
                 </div>
                 <br><br>
-                <div class="col-sm-12">
+                <div class="col-sm-12" ng-show="rubro.FuenteFinanciamiento!=null">
                   <fuentes-apropiacion apropiacion = "rubro.Apropiacion.Id" fuenteapropiacion = "seleccionado.Descripcion" />
                 </div>
                 <div class="col-md-8">
-                  <button name="btn_quitar_rbr" class="btn btn-default" ng-click="rpSolicitud.quitarRubro(rubro.Id)">
+                  <button name="btn_quitar_rbr" class="btn btn-danger" ng-click="rpSolicitud.quitarRubro(rubro.Id)">
                     {{'BTN.QUITAR_RUBRO' | translate}}
                   </button>
                 </div>
@@ -239,14 +238,13 @@
           </div>
         </div>
         <br><br><br>
-        </form>
-        <div class="col-md-3 col-md-offset-3">
+        <div class="col-md-3 col-md-offset-4" ng-show="rpSolicitud.gridOptions_rubros.data.length>0">
           <button id="btn_registrar" name="btn_registrar" class="btn btn-outline btn-success" ng-click="rpSolicitud.Registrar()">
             {{'BTN.REGISTRAR' | translate}}
           </button>
         </div>
+        </form>
       </div>
-
     </div>
   </div>
 </div>
