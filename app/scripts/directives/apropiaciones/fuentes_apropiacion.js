@@ -42,7 +42,7 @@ angular.module('contractualClienteApp')
              field: 'Valor',
              displayName: 'Valor',
              headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-             cellFilter: 'currency'
+             cellTemplate: '<div align="right">{{row.entity.Valor | currency }}</div>',
             }
         ]
       };
