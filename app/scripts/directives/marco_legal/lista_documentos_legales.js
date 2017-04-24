@@ -15,7 +15,7 @@ angular.module('contractualClienteApp')
       },
 
       templateUrl: 'views/directives/marco_legal/lista_documentos_legales.html',
-      controller: function($scope, uiGridConstants) {
+      controller: function($scope) {
         var self = this;
         self.gridOptions = {
           paginationPageSizes: [5, 10, 15],
@@ -33,7 +33,7 @@ angular.module('contractualClienteApp')
               displayName: 'Nombre del documento',
               width: '80%',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-              cellTooltip: function(row, col) {
+              cellTooltip: function(row) {
                 return row.entity.NombreDocumento;
               }
             },
@@ -49,7 +49,7 @@ angular.module('contractualClienteApp')
 
         self.gridOptions.onRegisterApi = function(gridApi) {
           self.gridApi = gridApi;
-          gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+          gridApi.selection.on.rowSelectionChanged($scope, function() {
             //if(self.tipo_fuente.Id==1){
             $scope.documentos = self.gridApi.selection.getSelectedRows();
             //}
@@ -70,7 +70,7 @@ angular.module('contractualClienteApp')
         });
 
         $scope.$watch('[d_listaDocumentosLegales.gridOptions.paginationPageSize, d_listaDocumentosLegales.gridOptions.data]', function() {
-          if ((self.gridOptions.data.length <= self.gridOptions.paginationPageSize || self.gridOptions.paginationPageSize == null) && self.gridOptions.data.length > 0) {
+          if ((self.gridOptions.data.length <= self.gridOptions.paginationPageSize || self.gridOptions.paginationPageSize === null) && self.gridOptions.data.length > 0) {
             $scope.gridHeight = self.gridOptions.rowHeight * 2 + (self.gridOptions.data.length * self.gridOptions.rowHeight);
             if (self.gridOptions.data.length <= 5) {
               self.gridOptions.enablePaginationControls = false;

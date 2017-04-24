@@ -14,7 +14,7 @@ angular.module('contractualClienteApp')
           actividades:'=?'
         },
       templateUrl: 'views/directives/actividades_economicas/lista_actividades_economicas.html',
-      controller:function($scope, uiGridConstants){
+      controller:function($scope){
         var self = this;
 
         self.gridOptions = {
@@ -31,7 +31,7 @@ angular.module('contractualClienteApp')
               field: 'Id',
               displayName: 'Código',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-              cellTooltip: function(row, col) {
+              cellTooltip: function(row) {
                 return row.entity.Id;
               }
             },
@@ -39,7 +39,7 @@ angular.module('contractualClienteApp')
                 field: 'Nombre',
                 displayName: 'Actividades Economicas',
                 headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-                cellTooltip: function(row, col) {
+                cellTooltip: function(row) {
                   return row.entity.Nombre;
                 }
               }
@@ -48,7 +48,7 @@ angular.module('contractualClienteApp')
 
         self.gridOptions.onRegisterApi = function(gridApi) {
           self.gridApi = gridApi;
-          gridApi.selection.on.rowSelectionChanged($scope,function(row){
+          gridApi.selection.on.rowSelectionChanged($scope,function(){
             $scope.actividades=self.gridApi.selection.getSelectedRows();
           });
         };
@@ -60,7 +60,7 @@ angular.module('contractualClienteApp')
         });
 
         $scope.$watch('[d_listaActividadesEconomicas.gridOptions.paginationPageSize, d_listaActividadesEconomicas.gridOptions.data]', function(){
-          if ((self.gridOptions.data.length<=self.gridOptions.paginationPageSize || self.gridOptions.paginationPageSize== null) && self.gridOptions.data.length>0) {
+          if ((self.gridOptions.data.length<=self.gridOptions.paginationPageSize || self.gridOptions.paginationPageSize=== null) && self.gridOptions.data.length>0) {
             $scope.gridHeight = self.gridOptions.rowHeight * 2+ (self.gridOptions.data.length * self.gridOptions.rowHeight);
             if (self.gridOptions.data.length<=5) {
               self.gridOptions.enablePaginationControls= false;
@@ -69,7 +69,7 @@ angular.module('contractualClienteApp')
             $scope.gridHeight = self.gridOptions.rowHeight * 3 + (self.gridOptions.paginationPageSize * self.gridOptions.rowHeight);
             self.gridOptions.enablePaginationControls= true;
           }
-        },true)
+        },true);
       },
 
       controllerAs:'d_listaActividadesEconomicas'

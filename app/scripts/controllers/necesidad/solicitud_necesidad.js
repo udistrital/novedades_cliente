@@ -17,7 +17,6 @@ angular.module('contractualClienteApp')
     };
 
     $scope.$watch('solicitudNecesidad.dependencia_destino',function(){
-      console.log("asdasfsfa");
       self.dep_ned.DependenciaDestino=self.dependencia_destino;
       coreRequest.get('jefe_dependencia', $.param({
         query: "DependenciaId:"+self.dependencia_destino,
@@ -39,6 +38,7 @@ angular.module('contractualClienteApp')
     ).then(function(response) {
       self.dependencia_solicitante_data = response.data;
     });
+
 
 
     $scope.$watch('solicitudNecesidad.rol_ordenador_gasto',function(){
@@ -64,7 +64,23 @@ angular.module('contractualClienteApp')
     self.sup_sol_ned= {
       Estado: "Activo",
       Funcionario: 1234567890
-    }
+    };
+
+    agoraRequest.get('snies_area', $.param({
+      limit: -1,
+      query: 'Estado:ACTIVO'
+    })).then(function(response) {
+      self.snies_data = response.data;
+    });
+
+    $scope.$watch('solicitudNecesidad.snies',function(){
+      agoraRequest.get('snies_nucleo_basico', $.param({
+        query: 'IdArea.Id:'+self.snies,
+        limit: -1
+      })).then(function(response) {
+        self.snies_nucleo_basico_data = response.data;
+      });
+    },true);
 
     oikosRequest.get('dependencia', $.param({
       limit: -1
@@ -114,7 +130,7 @@ angular.module('contractualClienteApp')
     self.planes_anuales = [{
       Id: 1,
       Nombre: "Necesidad1 -2017"
-    }]
+    }];
 
     financieraRequest.get('unidad_ejecutora', $.param({
       limit: -1
@@ -126,16 +142,16 @@ angular.module('contractualClienteApp')
     // function
     self.duracionEspecial = function(especial) {
       self.ver_duracion_fecha = false;
-      if (especial == 'duracion') {
+      if (especial === 'duracion') {
         self.ver_duracion_fecha = true;
         self.necesidad.UnicoPago = false;
         self.necesidad.AgotarPresupuesto = false;
-      } else if (especial == "unico_pago") {
+      } else if (especial === "unico_pago") {
         self.necesidad.DiasDuracion = 0;
         self.necesidad.UnicoPago = true;
         self.necesidad.AgotarPresupuesto = false;
         self.ver_duracion_fecha = false;
-      } else if (especial == "agotar_presupuesto") {
+      } else if (especial === "agotar_presupuesto") {
         self.necesidad.UnicoPago = false;
         self.necesidad.AgotarPresupuesto = true;
         self.ver_duracion_fecha = true;
@@ -143,18 +159,18 @@ angular.module('contractualClienteApp')
     };
     //
 
-    self.calculo_total_dias = function(anos, meses, dias) {
-      if (self.anos == undefined) {
+    self.calculo_total_dias = function() {
+      if (self.anos === undefined) {
         self.anos = 0;
       }
-      if (self.meses == undefined) {
+      if (self.meses === undefined) {
         self.meses = 0;
       }
-      if (self.dias == undefined) {
+      if (self.dias === undefined) {
         self.dias = 0;
       }
       self.necesidad.DiasDuracion = ((parseInt(self.anos) * 360) + (parseInt(self.meses) * 30) + parseInt(self.dias));
-    }
+    };
     //
 
     //Temporal viene dado por un servicio de javier
@@ -207,7 +223,7 @@ angular.module('contractualClienteApp')
         Apropiacion: apropiacion.Id,
         MontoParcial: 0,
       };
-      if (self.necesidad.TipoRubro.Nombre == 'funcionamiento') {
+      if (self.necesidad.TipoRubro.Nombre === 'funcionamiento') {
         self.f_apropiacion_fun.push(Fap);
       } else {
         self.f_apropiacion_inv.push(Fap);
@@ -218,7 +234,7 @@ angular.module('contractualClienteApp')
       self.valor_inv = 0;
       for (var i = 0; i < self.f_apropiacion_inv.length; i++) {
         self.f_apropiacion_inv[i].MontoParcial = 0;
-        if (self.f_apropiacion_inv[i].fuentes != undefined) {
+        if (self.f_apropiacion_inv[i].fuentes !== undefined) {
           for (var k = 0; k < self.f_apropiacion_inv[i].fuentes.length; k++) {
             self.f_apropiacion_inv[i].MontoParcial += self.f_apropiacion_inv[i].fuentes[k].Monto;
           }
@@ -256,20 +272,20 @@ angular.module('contractualClienteApp')
         self.actividades_economicas_id.push(Act_Economica);
       }
 
-      for (var i = 0; i < self.documentos.length; i++) {
+      for (var j = 0; j < self.documentos.length; j++) {
         var marco = {};
-        marco.MarcoLegal = self.documentos[i];
+        marco.MarcoLegal = self.documentos[j];
         self.marcos_legales.push(marco);
       }
 
-      if (self.necesidad.TipoRubro.Nombre == "inversion") {
-        for (var i = 0; i < self.f_apropiacion_inv.length; i++) {
-          if (self.f_apropiacion_inv[i].fuentes != undefined) {
-            for (var k = 0; k < self.f_apropiacion_inv[i].fuentes.length; k++) {
+      if (self.necesidad.TipoRubro.Nombre === "inversion") {
+        for (var h = 0; h < self.f_apropiacion_inv.length; h++) {
+          if (self.f_apropiacion_inv[h].fuentes !== undefined) {
+            for (var k = 0; k < self.f_apropiacion_inv[h].fuentes.length; k++) {
               var f_ap = {};
-              f_ap.Apropiacion = self.f_apropiacion_inv[i].Apropiacion;
-              f_ap.MontoParcial = self.f_apropiacion_inv[i].fuentes[k].Monto;
-              f_ap.FuenteFinanciacion = self.f_apropiacion_inv[i].fuentes[k].Fuente.Id;
+              f_ap.Apropiacion = self.f_apropiacion_inv[h].Apropiacion;
+              f_ap.MontoParcial = self.f_apropiacion_inv[h].fuentes[k].Monto;
+              f_ap.FuenteFinanciacion = self.f_apropiacion_inv[h].fuentes[k].Fuente.Id;
               self.f_apropiaciones.push(f_ap);
             }
           }

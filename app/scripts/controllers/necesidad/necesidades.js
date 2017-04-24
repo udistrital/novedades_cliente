@@ -29,7 +29,7 @@ angular.module('contractualClienteApp')
           displayName: 'Número de Elaboración',
           type: 'number',
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-          cellTooltip: function(row, col) {
+          cellTooltip: function(row) {
             return row.entity.NumeroElaboracion;
           },
           width: '7%'
@@ -39,7 +39,7 @@ angular.module('contractualClienteApp')
           displayName: 'Vigencia',
           type: 'number',
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-          cellTooltip: function(row, col) {
+          cellTooltip: function(row) {
             return row.entity.Vigencia;
           },
           width: '7%'
@@ -48,7 +48,7 @@ angular.module('contractualClienteApp')
           field: 'Objeto',
           displayName: 'Objeto',
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-          cellTooltip: function(row, col) {
+          cellTooltip: function(row) {
             return row.entity.Objeto;
           },
           width: '35%'
@@ -57,7 +57,7 @@ angular.module('contractualClienteApp')
           field: 'Justificacion',
           displayName: 'Justificación',
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-          cellTooltip: function(row, col) {
+          cellTooltip: function(row) {
             return row.entity.Justificacion;
           },
           width: '25%'
@@ -66,7 +66,7 @@ angular.module('contractualClienteApp')
           field: 'Estado.Nombre',
           displayName: 'Estado',
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-          cellTooltip: function(row, col) {
+          cellTooltip: function(row) {
             return row.entity.Estado.Nombre + ".\n" + row.entity.Estado.Descripcion;
           },
           width: '20%'
@@ -78,7 +78,7 @@ angular.module('contractualClienteApp')
             return '<center><a href="" style="border:0" type="button" ng-click="grid.appScope.direccionar(row.entity)"><span class="fa fa-eye"></span></a></center>';
           },
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-          cellTooltip: function(row, col) {
+          cellTooltip: function(row) {
             return row.entity.Estado.Nombre + ".\n" + row.entity.Estado.Descripcion;
           },
           width: '6%'
@@ -92,10 +92,10 @@ angular.module('contractualClienteApp')
       self.g_necesidad = necesidad;
       self.numero_el = necesidad.NumeroElaboracion;
       self.vigencia = necesidad.Vigencia;
-      if (necesidad.Estado.Nombre == 'Solicitada') {
+      if (necesidad.Estado.Nombre === 'Solicitada') {
         self.mod_aprobar = true;
         self.mod_cdp = false;
-      } else if (necesidad.Estado.Nombre == 'Aprobada' || necesidad.Estado.Nombre == 'Cdp Solicitado') {
+      } else if (necesidad.Estado.Nombre === 'Aprobada' || necesidad.Estado.Nombre === 'Cdp Solicitado') {
         self.mod_aprobar = false;
         self.mod_cdp = true;
       } else {
@@ -103,6 +103,7 @@ angular.module('contractualClienteApp')
         self.mod_aprobar = false;
       }
       $("#myModal").modal();
+
     };
 
     self.gridOptions.onRegisterApi = function(gridApi) {
@@ -139,19 +140,6 @@ angular.module('contractualClienteApp')
           }
           swal("", self.alerta, response.data[0]);
 
-          /*if (response.data == "OK") {
-            swal(
-              'Bien!',
-              'La necesidad ha sido Aprobada!',
-              'success'
-            )
-          } else {
-            swal(
-              'error!',
-              'La necesidad no pudo ser aprobada!',
-              'error'
-            )
-          }*/
           self.recargar_grid();
           $("#myModal").modal("hide");
           self.g_necesidad=undefined;
@@ -173,7 +161,7 @@ angular.module('contractualClienteApp')
             } else {
               reject('Por favor indica una justificación!');
             }
-          })
+          });
         }
       }).then(function(text) {
         console.log(text);
@@ -182,25 +170,25 @@ angular.module('contractualClienteApp')
           Necesidad: self.g_necesidad
         };
           administrativaRequest.post('necesidad_rechazada', nec_rech).then(function(response) {
-            if (response.data != undefined) {
+            if (response.data !== undefined) {
               swal(
                 'Ok!',
                 'La necesidad ha sido Rechazada!',
                 'success'
-              )
+              );
             } else {
               swal(
                 'error!',
                 'La necesidad no pudo ser rechazada!',
                 'error'
-              )
+              );
             }
             self.recargar_grid();
             self.self.g_necesidad=undefined;
             $("#myModal").modal("hide");
           });
 
-      })
+      });
     };
 
     self.solicitar_cdp = function() {
@@ -222,7 +210,7 @@ angular.module('contractualClienteApp')
 
 
     $scope.$watch('[necesidades.gridOptions.paginationPageSize, necesidades.gridOptions.data]', function() {
-      if ((self.gridOptions.data.length <= self.gridOptions.paginationPageSize || self.gridOptions.paginationPageSize == null) && self.gridOptions.data.length > 0) {
+      if ((self.gridOptions.data.length <= self.gridOptions.paginationPageSize || self.gridOptions.paginationPageSize === null) && self.gridOptions.data.length > 0) {
         $scope.gridHeight = self.gridOptions.rowHeight * 2 + (self.gridOptions.data.length * self.gridOptions.rowHeight);
         if (self.gridOptions.data.length <= 10) {
           self.gridOptions.enablePaginationControls = false;

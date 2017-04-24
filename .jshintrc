@@ -14,6 +14,8 @@
     "angular": false,
     "jQuery" : false,
     "KJUR" : false,
-    "b64utoutf8": false
+    "b64utoutf8": false,
+    "$": false,
+    "swal": false
   }
 }

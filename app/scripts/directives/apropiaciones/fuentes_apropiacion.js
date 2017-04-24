@@ -16,7 +16,7 @@ angular.module('contractualClienteApp')
         dependenciasolicitante: '='
       },
     templateUrl: 'views/directives/apropiaciones/fuentes_apropiacion.html',
-    controller:function($scope,$translate,uiGridConstants){
+    controller:function($scope,$translate){
       var self = this;
       $scope.fuente = $translate.instant('FUENTE');
 
@@ -34,7 +34,7 @@ angular.module('contractualClienteApp')
             field: 'Fuente.Descripcion',
             displayName: $scope.fuente,
             headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
-            cellTooltip: function(row, col) {
+            cellTooltip: function(row) {
               return row.entity.Fuente.Descripcion;
             }
           },
@@ -50,7 +50,7 @@ angular.module('contractualClienteApp')
 
       self.gridOptions.onRegisterApi = function(gridApi) {
         self.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope,function(row){
+        gridApi.selection.on.rowSelectionChanged($scope,function(){
           $scope.fuenteapropiacion=self.gridApi.selection.getSelectedRows();
         });
       };
@@ -63,7 +63,7 @@ angular.module('contractualClienteApp')
       });
 
       $scope.$watch('[d_fuentesApropiacion.gridOptions.paginationPageSize, d_fuentesApropiacion.gridOptions.data]', function(){
-        if ((self.gridOptions.data.length<=self.gridOptions.paginationPageSize || self.gridOptions.paginationPageSize== null) && self.gridOptions.data.length>0) {
+        if ((self.gridOptions.data.length<=self.gridOptions.paginationPageSize || self.gridOptions.paginationPageSize=== null) && self.gridOptions.data.length>0) {
           $scope.gridHeight = self.gridOptions.rowHeight * 2+ (self.gridOptions.data.length * self.gridOptions.rowHeight);
           if (self.gridOptions.data.length<=5) {
             self.gridOptions.enablePaginationControls= false;

@@ -43,7 +43,6 @@ var text_es = {
   NOMBRE_CONTRATISTA: "Nombre",
   DOCUMENTO_CONTRATISTA: "No Documento",
   NOMBRE: "Nombre",
-  CONTRATO: "Contrato",
   FUENTE_FINANCIAMIENTO: "Fuente Financiamiento",
   VALOR: "Valor",
   COMPROMISO: "Compromiso",

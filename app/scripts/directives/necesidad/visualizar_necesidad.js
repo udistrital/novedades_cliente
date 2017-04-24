@@ -42,11 +42,12 @@ angular.module('contractualClienteApp')
               //------------
               var dateArrKeyHolder = [];
               var dateArr = [];
-              angular.forEach(response.data, function(item, key) {
+              angular.forEach(response.data, function(item) {
                   dateArrKeyHolder[item.Apropiacion] = dateArrKeyHolder[item.Apropiacion]||{};
                   var obj = dateArrKeyHolder[item.Apropiacion];
-                  if(Object.keys(obj).length == 0)
-                  dateArr.push(obj);
+                  if(Object.keys(obj).length === 0){
+                    dateArr.push(obj);
+                  }
 
                   financieraRequest.get('apropiacion',$.param({
                     query: "Id:"+item.Apropiacion,
@@ -67,7 +68,7 @@ angular.module('contractualClienteApp')
                     console.log("entro e jhizo algo");
                     i_fuente.FuenteFinanciacion=response.data[0];
                   });
-                  i_fuente.MontoParcial=item.MontoParcial
+                  i_fuente.MontoParcial=item.MontoParcial;
                   obj.Fuentes.push(i_fuente);
                   //obj.fuentes.push({FuenteFinanciacion:item.FuenteFinanciacion, MontoParcial: item.MontoParcial });
               });

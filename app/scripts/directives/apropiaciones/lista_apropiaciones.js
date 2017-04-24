@@ -18,7 +18,7 @@ angular.module('contractualClienteApp')
       },
 
       templateUrl: 'views/directives/apropiaciones/lista_apropiaciones.html',
-      controller: function($scope, uiGridConstants) {
+      controller: function($scope) {
         var self = this;
         self.gridOptions = {
           enableRowSelection: true,
@@ -31,10 +31,10 @@ angular.module('contractualClienteApp')
               displayName: 'Codigo Rubro',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
               cellClass: function(row, col) {
-                if (col.treeNode.children.length == 0) {
-                  return "unbold "
+                if (col.treeNode.children.length === 0) {
+                  return "unbold ";
                 } else {
-                  return "text-info"
+                  return "text-info";
                 }
               },
               width: '15%'
@@ -43,14 +43,14 @@ angular.module('contractualClienteApp')
               field: 'Rubro.Descripcion',
               displayName: 'Descripcion Rubro',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
-              cellTooltip: function(row, col) {
+              cellTooltip: function(row) {
                 return row.entity.Rubro.Descripcion;
               },
               cellClass: function(row, col) {
-                if (col.treeNode.children.length == 0) {
-                  return "unbold "
+                if (col.treeNode.children.length === 0) {
+                  return "unbold ";
                 }else {
-                  return "text-info"
+                  return "text-info";
                 }
               },
               width: '38%'
@@ -61,10 +61,10 @@ angular.module('contractualClienteApp')
               cellFilter: 'currency',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
               cellClass: 'grid-align', function(row, col) {
-                if (col.treeNode.children.length == 0) {
-                  return "unbold"
+                if (col.treeNode.children.length === 0) {
+                  return "unbold";
                 }else {
-                  return "text-info"
+                  return "text-info";
                 }
               },
               width: '20%'
@@ -74,10 +74,10 @@ angular.module('contractualClienteApp')
               cellFilter: 'currency',
               headerCellClass: $scope.highlightFilteredHeader + 'text-right ',
               cellClass: 'grid-align', function(row, col) {
-                if (col.treeNode.children.length == 0) {
-                  return "unbold"
+                if (col.treeNode.children.length === 0) {
+                  return "unbold";
                 }else {
-                  return "text-info"
+                  return "text-info";
                 }
               },
               width: '20%'
@@ -94,13 +94,13 @@ angular.module('contractualClienteApp')
               data.Saldo = response.data;
             });
           });
-        }
+        };
 
         financieraRequest.get('apropiacion', 'limit=0&query=Vigencia:' + $scope.vigencia + ",Rubro.Codigo__startswith:" + $scope.tipo).then(function(response) {
 
           self.gridOptions.data = response.data.sort(function(a, b) {
-            if (a.Rubro.Codigo < b.Rubro.Codigo) return -1;
-            if (a.Rubro.Codigo > b.Rubro.Codigo) return 1;
+            if (a.Rubro.Codigo < b.Rubro.Codigo) {return -1;}
+            if (a.Rubro.Codigo > b.Rubro.Codigo) {return 1;}
             return 0;
           });
           self.max_level = 0;
@@ -109,16 +109,16 @@ angular.module('contractualClienteApp')
             level = (self.gridOptions.data[i].Rubro.Codigo.match(/-/g) || []).length;
             if (level > self.max_level) {
               self.max_level = level;
-            };
-          };
+            }
+          }
 
-          for (var i = 0; i < self.gridOptions.data.length; i++) {
-            level = (self.gridOptions.data[i].Rubro.Codigo.match(/-/g) || []).length;
+          for (var h = 0; h < self.gridOptions.data.length; h++) {
+            level = (self.gridOptions.data[h].Rubro.Codigo.match(/-/g) || []).length;
             //console.log(level);
             if (level < self.max_level) {
-              self.gridOptions.data[i].$$treeLevel = level;
-            };
-          };
+              self.gridOptions.data[h].$$treeLevel = level;
+            }
+          }
           self.cargarSaldos();
         });
 
@@ -126,8 +126,8 @@ angular.module('contractualClienteApp')
         self.actualiza_rubros = function() {
           financieraRequest.get('apropiacion', 'limit=0&query=Vigencia:' + $scope.vigencia + ",Rubro.Codigo__startswith:" + $scope.tipo).then(function(response) {
             self.gridOptions.data = response.data.sort(function(a, b) {
-              if (a.Rubro.Codigo < b.Rubro.Codigo) return -1;
-              if (a.Rubro.Codigo > b.Rubro.Codigo) return 1;
+              if (a.Rubro.Codigo < b.Rubro.Codigo) {return -1;}
+              if (a.Rubro.Codigo > b.Rubro.Codigo) {return 1;}
               return 0;
             });
             self.max_level = 0;
@@ -136,16 +136,16 @@ angular.module('contractualClienteApp')
               level = (self.gridOptions.data[i].Rubro.Codigo.match(/-/g) || []).length;
               if (level > self.max_level) {
                 self.max_level = level;
-              };
-            };
+              }
+            }
 
-            for (var i = 0; i < self.gridOptions.data.length; i++) {
-              level = (self.gridOptions.data[i].Rubro.Codigo.match(/-/g) || []).length;
+            for (var j = 0; j < self.gridOptions.data.length; j++) {
+              level = (self.gridOptions.data[j].Rubro.Codigo.match(/-/g) || []).length;
               //console.log(level);
               if (level < self.max_level) {
-                self.gridOptions.data[i].$$treeLevel = level;
-              };
-            };
+                self.gridOptions.data[j].$$treeLevel = level;
+              }
+            }
 
           });
         };
@@ -166,7 +166,7 @@ angular.module('contractualClienteApp')
         };
 
         self.gridOptions.isRowSelectable = function(row) {
-          if (row.treeNode.children.length > 0 && $scope.selhijos==true) {
+          if (row.treeNode.children.length > 0 && $scope.selhijos===true) {
             return false;
           } else {
             return true;

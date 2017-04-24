@@ -83,16 +83,6 @@ angular
         controller: 'RpSolicitudCtrl',
         controllerAs: 'rpSolicitud'
       })
-      /*.when('/necesidad/aprobar/:Vigencia/:Id', {
-        templateUrl: 'views/necesidad/aprobar_necesidad.html',
-        controller: 'AprobarNecesidadCtrl',
-        controllerAs: 'aprobarNecesidad'
-      })
-      .when('/necesidad/ver/:Vigencia/:Id', {
-        templateUrl: 'views/necesidad/ver_necesidad.html',
-        controller: 'VerNecesidadCtrl',
-        controllerAs: 'verNecesidad'
-      })*/
       .otherwise({
         redirectTo: '/'
       });
