@@ -246,8 +246,9 @@ self.gridOptions_cdp.multiSelect = false;
     $scope.saldosValor = function() {
       $scope.banderaRubro = true;
       var i=0;
+      console.log(self.rubros_seleccionados);
       angular.forEach(self.rubros_seleccionados, function(v) {
-        if (v.Saldo < v.ValorAsignado || v.ValorAsignado===0 || isNaN(v.ValorAsignado) || v.ValorAsignado === undefined) {
+        if (v.Valor < v.ValorAsignado || v.ValorAsignado===0 || isNaN(v.ValorAsignado) || v.ValorAsignado === undefined) {
           $scope.banderaRubro = false;
         }
       });
@@ -260,10 +261,10 @@ self.gridOptions_cdp.multiSelect = false;
         swal("Alertas", "Debe seleccionar el CDP objetivo del RP", "error");
         self.alerta_registro_rp = ["Debe seleccionar el CDP objetivo del RP"];
       } else if (self.rubros_seleccionados.length === 0) {
-        swal("Alertas", "debe seleccionar el Rubro objetivo del RP", "error");
+        swal("Alertas", "Debe seleccionar el Rubro objetivo del RP", "error");
         self.alerta_registro_rp = ["Debe seleccionar el Rubro objetivo del RP"];
       } else if (self.compromiso === null) {
-        swal("Alertas", "debe seleccionar el Compromiso del RP", "error");
+        swal("Alertas", "Debe seleccionar el Compromiso del RP", "error");
         self.alerta_registro_rp = ["Debe seleccionar el Compromiso del RP"];
       } else if ($scope.banderaRubro === false) {
         swal({
@@ -303,8 +304,8 @@ self.gridOptions_cdp.multiSelect = false;
             var fechaFormato = SolicitudRp.FechaSolicitud.getDay() + "/" + SolicitudRp.FechaSolicitud.getMonth() + "/" + SolicitudRp.FechaSolicitud.getFullYear();
 
             swal({
-              html: "<label>Se inserto correctamente la solicitud del registro presupuestal con los siguientes datos</label><br><br><label><b>Numero solicitud:</b></label> "+response.data.Id+"<br><label><b>Vigencia solicitud:</b></label> " + response.data.Vigencia + "<br><label><b>Fecha solicitud:</b></label>:" + fechaFormato +
-                "<br><label><b>Numero contrato:</b></label>" + response.data.NumeroContrato + "<br><label><b>Vigencia contrato:</b></label>" + response.data.VigenciaContrato,
+              html: "<label>Se insertó correctamente la solicitud del registro presupuestal con los siguientes datos</label><br><br><label><b>Número solicitud:</b></label> "+response.data.Id+"<br><label><b>Vigencia solicitud:</b></label> " + response.data.Vigencia + "<br><label><b>Fecha solicitud:</b></label>:" + fechaFormato +
+                "<br><label><b>Número contrato:</b></label>" + response.data.NumeroContrato + "<br><label><b>Vigencia contrato:</b></label>" + response.data.VigenciaContrato,
               type: "success",
               showCancelButton: true,
               confirmButtonColor: "#449D44",
