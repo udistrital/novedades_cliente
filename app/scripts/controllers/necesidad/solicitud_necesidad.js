@@ -13,10 +13,7 @@ angular.module('contractualClienteApp')
     self.documentos=[];
 
     self.dep_ned = {
-      DependenciaDestino: 12,
-      DependenciaSolicitante: 12,
-      JefeDependenciaDestino: 1234567890,
-      JefeDependenciaSolicitante: 1234567890
+      JefeDependenciaSolicitante: 18
     };
 
     $scope.$watch('solicitudNecesidad.dependencia_destino',function(){
@@ -24,19 +21,25 @@ angular.module('contractualClienteApp')
       self.dep_ned.DependenciaDestino=self.dependencia_destino;
       coreRequest.get('jefe_dependencia', $.param({
         query: "DependenciaId:"+self.dependencia_destino,
-        fields: "TerceroId",
-        limit: 0
-      })).then(function(response) {
+        limit: -1
+      })).then(function(response2) {
         agoraRequest.get('informacion_persona_natural', $.param({
-          query: 'Id:'+response.data[0].TerceroId,
+          query: 'Id:'+response2.data[0].TerceroId,
           limit: -1
         })).then(function(response) {
           self.jefe_destino = response.data[0];
           console.log(response.data[0]);
-          self.dep_ned.JefeDependenciaDestino=response.data[0].Id;
+          console.log(response2.data[0]);
+          self.dep_ned.JefeDependenciaDestino=response2.data[0].Id;
         });
       });
     },true);
+
+    coreRequest.get('jefe_dependencia/'+self.dep_ned.JefeDependenciaSolicitante, ''
+    ).then(function(response) {
+      self.dependencia_solicitante_data = response.data;
+    });
+
 
     $scope.$watch('solicitudNecesidad.rol_ordenador_gasto',function(){
       console.log("rol ordenador activado (? xD");
@@ -114,7 +117,7 @@ angular.module('contractualClienteApp')
     }]
 
     financieraRequest.get('unidad_ejecutora', $.param({
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.unidad_ejecutora_data = response.data;
     });
@@ -156,11 +159,18 @@ angular.module('contractualClienteApp')
 
     //Temporal viene dado por un servicio de javier
     agoraRequest.get('informacion_persona_natural', $.param({
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.persona_data = response.data;
     });
 
+
+    agoraRequest.get('parametro_estandar', $.param({
+      query: "ClaseParametro:"+'Tipo Perfil',
+      limit: -1
+    })).then(function(response) {
+      self.parametro_estandar_data = response.data;
+    });
     //-----
 
 

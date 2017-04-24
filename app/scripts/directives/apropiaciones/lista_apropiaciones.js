@@ -60,7 +60,7 @@ angular.module('contractualClienteApp')
               displayName: 'Valor',
               cellFilter: 'currency',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
-              cellClass: function(row, col) {
+              cellClass: 'grid-align', function(row, col) {
                 if (col.treeNode.children.length == 0) {
                   return "unbold"
                 }else {
@@ -72,8 +72,8 @@ angular.module('contractualClienteApp')
             {
               field: 'Saldo',
               cellFilter: 'currency',
-              headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
-              cellClass: function(row, col) {
+              headerCellClass: $scope.highlightFilteredHeader + 'text-right ',
+              cellClass: 'grid-align', function(row, col) {
                 if (col.treeNode.children.length == 0) {
                   return "unbold"
                 }else {

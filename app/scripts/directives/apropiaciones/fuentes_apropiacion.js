@@ -12,7 +12,8 @@ angular.module('contractualClienteApp')
     restrict: 'E',
     scope:{
         apropiacion:'=',
-        fuenteapropiacion: '='
+        fuenteapropiacion: '=',
+        dependenciasolicitante: '='
       },
     templateUrl: 'views/directives/apropiaciones/fuentes_apropiacion.html',
     controller:function($scope,$translate,uiGridConstants){
@@ -55,8 +56,9 @@ angular.module('contractualClienteApp')
       };
 
       financieraRequest.get('fuente_financiacion_apropiacion',$.param({
-        query: "Apropiacion:"+$scope.apropiacion
+        query: "Apropiacion:"+$scope.apropiacion+",Dependencia:"+$scope.dependenciasolicitante
       })).then(function(response) {
+
         self.gridOptions.data = response.data;
       });
 

@@ -21,13 +21,21 @@ angular.module('contractualClienteApp')
           paginationPageSizes: [5, 10, 15],
           paginationPageSize: 5,
           enableRowSelection: true,
-          enableRowHeaderSelection: true,
+          enableRowHeaderSelection: false,
           enableFiltering: true,
           enableHorizontalScrollbar: 0,
           enableVerticalScrollbar: 0,
           useExternalPagination: false,
-          enableSelectAll: true,
+          enableSelectAll: false,
           columnDefs: [{
+              field: 'ElementoCodigo',
+              displayName: 'Codigo',
+              headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
+              cellTooltip: function(row, col) {
+                return row.entity.Nombre;
+              }
+            },
+            {
               field: 'ElementoNombre',
               displayName: 'Productos',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
@@ -48,7 +56,8 @@ angular.module('contractualClienteApp')
 
         //administrativaRequest.get('catalogo_elemento',$.param({
         administrativaRequest.get('catalogo_elemento_grupo',$.param({
-          fields: 'Id,Nombre'
+          fields: 'Id,ElementoNombre,ElementoCodigo',
+          limit: -1
         })).then(function(response) {
           self.gridOptions.data = response.data;
         });
