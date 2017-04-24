@@ -57,6 +57,7 @@ angular
         templateUrl: 'views/notificaciones.html',
         controller: 'NotificacionesCtrl',
         controllerAs: 'notificaciones'
+        
       })
       .when('/about', {
         templateUrl: 'views/about.html',

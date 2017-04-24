@@ -13,5 +13,6 @@ angular.module('contractualClienteApp')
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
+      
     ];
   });
