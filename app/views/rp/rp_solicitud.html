@@ -126,7 +126,7 @@
                   {{'MODALIDAD_SELECCION' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.necesidad.Necesidad.ModalidadSeleccion.Nombre}}
+                  {{necesidad.Necesidad.ModalidadSeleccion.Nombre}}
                 </td>
               </tr>
           </table>
@@ -156,7 +156,15 @@
                   {{'RESPONSABLE' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.cdp.Solicitud.DependenciaSolicitante.OrdenadorGasto.PrimerNombre+" "+ rpSolicitud.cdp.Solicitud.DependenciaSolicitante.OrdenadorGasto.PrimerApellido}}
+                  {{rpSolicitud.responsable.PrimerApellido}} {{rpSolicitud.responsable.SegundoApellido}} {{rpSolicitud.responsable.PrimerNombre}} {{rpSolicitud.responsable.SegundoNombre}}
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  {{'RESPONSABLE_DOCUMENTO' | translate}}
+                </th>
+                <td>
+                  {{rpSolicitud.responsable.Id}}
                 </td>
               </tr>
               <tr>
@@ -226,7 +234,7 @@
                 </div>
                 <br><br>
                 <div class="col-sm-12" ng-show="rubro.FuenteFinanciamiento!=null">
-                  <fuentes-apropiacion apropiacion = "rubro.Apropiacion.Id" fuenteapropiacion = "seleccionado.Descripcion" />
+                  <fuentes-apropiacion apropiacion = "rubro.Apropiacion.Id" fuenteapropiacion = "seleccionado.Descripcion" dependenciasolicitante="rpSolicitud.dependencia_solicitante_data.DependenciaId"/>
                 </div>
                 <div class="col-md-8">
                   <button name="btn_quitar_rbr" class="btn btn-danger" ng-click="rpSolicitud.quitarRubro(rubro.Id)">

@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudCtrl', function($window,contrato,administrativaRequest,$scope,financieraRequest,financieraMidRequest,$translate) {
+  .controller('RpSolicitudCtrl', function(coreRequest,$window,agoraRequest,contrato,administrativaRequest,$scope,financieraRequest,financieraMidRequest,$translate) {
     var self = this;
     self.contrato = contrato;
     $scope.rubroVacio=false;
@@ -19,12 +19,22 @@ angular.module('contractualClienteApp')
     self.compromiso = null;
     self.rubros_seleccionados = [];
     self.rubros_select = [];
+    self.responsable = "";
     $scope.numero = $translate.instant('NUMERO');
     $scope.codigo = $translate.instant('CODIGO');
     $scope.nombre = $translate.instant('NOMBRE');
     $scope.vigencia_compromiso = $translate.instant('VIGENCIA');
     $scope.fuente_financiamiento = $translate.instant('FUENTE_FINANCIAMIENTO');
     $scope.objeto_compromiso = $translate.instant('OBJETO');
+
+    self.dep_ned = {
+      JefeDependenciaSolicitante: 18
+    };
+
+    coreRequest.get('jefe_dependencia/'+self.dep_ned.JefeDependenciaSolicitante, ''
+    ).then(function(response) {
+      self.dependencia_solicitante_data = response.data;
+    });
 
     self.gridOptions_cdp = {
      enableRowSelection: true,
@@ -48,6 +58,7 @@ financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Ago
         });
 
       });
+
 });
 
 self.gridOptions_cdp.onRegisterApi = function(gridApi){
@@ -55,14 +66,20 @@ self.gridOptions_cdp.onRegisterApi = function(gridApi){
   self.gridApi = gridApi;
   gridApi.selection.on.rowSelectionChanged($scope,function(row){
     self.rubros_seleccionados = [];
-    console.log("funciona");
-    console.log(self.rubros_seleccionados);
     self.cdp = row.entity;
     var CdpId = self.cdp.Solicitud.SolicitudDisponibilidad.Id;
-    administrativaRequest.get('solicitud_disponibilidad','query=Id:'+CdpId).then(function(responseN){
-      $scope.necesidad=responseN.data[0];
-      console.log($scope.necesidad);
+    administrativaRequest.get('solicitud_disponibilidad','query=Id:'+CdpId).then(function(response){
+      $scope.necesidad=response.data[0];
     });
+
+    agoraRequest.get('informacion_persona_natural', 'query=Id:'+self.cdp.Responsable).then(function(response) {
+      if(response.data != null){
+      self.responsable = response.data[0];
+    }else{
+        self.responsable = "";
+    }
+    });
+
     financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.cdp.Id).then(function(response) {
 
       $scope.rubros = response.data;
@@ -174,19 +191,17 @@ self.gridOptions_cdp.multiSelect = false;
       for (var i = 0; i < self.rubros.length; i++) {
         var saldo = self.DescripcionRubro(rubros[i].Id);
         rubros[i].saldo = saldo;
-        alert(saldo);
       }
     }
 
     self.agregarRubro = function(id) {
       var rubro_seleccionado = self.selectRubro;
       var bandera = true;
-      //console.log(rubro_seleccionado);
 
       $scope.seleccionado= rubro_seleccionado;
       if(rubro_seleccionado!=undefined){
         for (var i = 0; i < self.rubros_seleccionados.length; i++) {
-          if (self.rubros_seleccionados[i].Id == rubro_seleccionado.Id) {
+          if (self.rubros_seleccionados[i].Id === rubro_seleccionado.Id) {
             bandera = false;
           }
         }
@@ -203,7 +218,7 @@ self.gridOptions_cdp.multiSelect = false;
     self.quitarRubro = function(id) {
 
       for (var i = 0; i < self.rubros_select.length; i++) {
-        if (self.rubros_select[i].Id == id) {
+        if (self.rubros_select[i].Id === id) {
 
           self.rubros.push(self.rubros_select[i]);
           self.rubros_select.splice(i, 1)
@@ -211,19 +226,17 @@ self.gridOptions_cdp.multiSelect = false;
       }
       for (var i = 0; i < self.rubros_seleccionados.length; i++) {
 
-        if (self.rubros_seleccionados[i].Id == id) {
+        if (self.rubros_seleccionados[i].Id === id) {
           self.rubros_seleccionados.splice(i, 1)
         }
       }
     }
 
     self.DescripcionRubro = function(id) {
-      console.log("este esta seleccionado");
-      console.log(self.rubros);
       var rubro;
       for (var i = 0; i < self.rubros.length; i++) {
 
-        if (self.rubros[i].Id == id) {
+        if (self.rubros[i].Id === id) {
           rubro = self.rubros[i];
         }
       }
@@ -243,13 +256,13 @@ self.gridOptions_cdp.multiSelect = false;
     self.Registrar = function() {
       $scope.saldosValor();
       self.alerta_registro_rp = ["No se pudo solicitar el rp"];
-      if (self.cdp.NumeroDisponibilidad == null) {
+      if (self.cdp.NumeroDisponibilidad === null) {
         swal("Alertas", "Debe seleccionar el CDP objetivo del RP", "error");
         self.alerta_registro_rp = ["Debe seleccionar el CDP objetivo del RP"];
-      } else if (self.rubros_seleccionados.length == 0) {
+      } else if (self.rubros_seleccionados.length === 0) {
         swal("Alertas", "debe seleccionar el Rubro objetivo del RP", "error");
         self.alerta_registro_rp = ["Debe seleccionar el Rubro objetivo del RP"];
-      } else if (self.compromiso == null) {
+      } else if (self.compromiso === null) {
         swal("Alertas", "debe seleccionar el Compromiso del RP", "error");
         self.alerta_registro_rp = ["Debe seleccionar el Compromiso del RP"];
       } else if ($scope.banderaRubro === false) {
@@ -275,7 +288,6 @@ self.gridOptions_cdp.multiSelect = false;
           VigenciaContrato: self.contrato.Vigencia.toString(),
           Compromiso: self.compromiso.Id
         }
-        console.log(SolicitudRp);
           administrativaRequest.post('solicitud_rp', SolicitudRp).then(function(response) {
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
               var Disponibilidad_apropiacion_solicitud_rp = {

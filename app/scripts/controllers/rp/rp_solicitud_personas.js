@@ -70,7 +70,6 @@ angular.module('contractualClienteApp')
 
     administrativaRequest.get('vigencia_contrato', datos).then(function(response) {
       $scope.vigencias = response.data;
-      console.log($scope.vigencias);
     });
 
     //1 carga los contratos con vigencia 2017 al cargar el controllador
