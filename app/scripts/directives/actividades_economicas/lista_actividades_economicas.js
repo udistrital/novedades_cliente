@@ -28,13 +28,21 @@ angular.module('contractualClienteApp')
           useExternalPagination: false,
           enableSelectAll: false,
           columnDefs: [{
-              field: 'Nombre',
-              displayName: 'Actividades Economicas',
+              field: 'Id',
+              displayName: 'Código',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
               cellTooltip: function(row, col) {
-                return row.entity.Nombre;
+                return row.entity.Id;
               }
-            }
+            },
+            {
+                field: 'Nombre',
+                displayName: 'Actividades Economicas',
+                headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
+                cellTooltip: function(row, col) {
+                  return row.entity.Nombre;
+                }
+              }
           ]
         };
 

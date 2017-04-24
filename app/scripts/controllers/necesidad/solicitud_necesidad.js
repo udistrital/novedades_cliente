@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope, agoraRequest, oikosRequest, coreRequest) {
+  .controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope, agoraRequest, oikosRequest, coreRequest, financieraRequest) {
     var self = this;
     self.documentos=[];
 
@@ -16,8 +16,7 @@ angular.module('contractualClienteApp')
       DependenciaDestino: 12,
       DependenciaSolicitante: 12,
       JefeDependenciaDestino: 1234567890,
-      JefeDependenciaSolicitante: 1234567890,
-      OrdenadorGasto: 876543219
+      JefeDependenciaSolicitante: 1234567890
     };
 
     $scope.$watch('solicitudNecesidad.dependencia_destino',function(){
@@ -30,11 +29,31 @@ angular.module('contractualClienteApp')
       })).then(function(response) {
         agoraRequest.get('informacion_persona_natural', $.param({
           query: 'Id:'+response.data[0].TerceroId,
-          limit: 0
+          limit: -1
         })).then(function(response) {
           self.jefe_destino = response.data[0];
           console.log(response.data[0]);
           self.dep_ned.JefeDependenciaDestino=response.data[0].Id;
+        });
+      });
+    },true);
+
+    $scope.$watch('solicitudNecesidad.rol_ordenador_gasto',function(){
+      console.log("rol ordenador activado (? xD");
+      console.log(self.rol_ordenador_gasto);
+      coreRequest.get('jefe_dependencia', $.param({
+        query: "DependenciaId:"+self.rol_ordenador_gasto,
+        fields: "TerceroId",
+        limit: -1
+      })).then(function(response) {
+        agoraRequest.get('informacion_persona_natural', $.param({
+          query: 'Id:'+response.data[0].TerceroId,
+          limit: -1
+        })).then(function(response) {
+          self.ordenador_gasto = response.data[0];
+          console.log("Look ");
+          console.log(response.data[0]);
+          self.dep_ned.OrdenadorGasto=response.data[0].Id;
         });
       });
     },true);
@@ -45,9 +64,15 @@ angular.module('contractualClienteApp')
     }
 
     oikosRequest.get('dependencia', $.param({
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.dependencia_data = response.data;
+    });
+
+    coreRequest.get('ordenador_gasto', $.param({
+      limit: -1
+    })).then(function(response) {
+      self.ordenador_gasto_data = response.data;
     });
 
     oikosRequest.get('dependencia', $.param({
@@ -66,8 +91,6 @@ angular.module('contractualClienteApp')
 
     self.necesidad = {};
     self.necesidad.PlanAnualAdquisiciones = 20171;
-    self.necesidad.TecnicasUniformes = false;
-    self.necesidad.UnidadEjecutora = 1;
     self.necesidad.UnicoPago = true;
     self.necesidad.AgotarPresupuesto = false;
     self.necesidad.Valor = 0;
@@ -89,6 +112,13 @@ angular.module('contractualClienteApp')
       Id: 1,
       Nombre: "Necesidad1 -2017"
     }]
+
+    financieraRequest.get('unidad_ejecutora', $.param({
+      limit: 0
+    })).then(function(response) {
+      self.unidad_ejecutora_data = response.data;
+    });
+
 
     // function
     self.duracionEspecial = function(especial) {
@@ -147,7 +177,7 @@ angular.module('contractualClienteApp')
       self.modalidad_data = response.data;
     });
 
-    administrativaRequest.get('tipo_fuente_financiacion', $.param({
+    administrativaRequest.get('tipo_rubro', $.param({
       limit: 0
     })).then(function(response) {
       self.tipos_fuentes_finan = response.data;
@@ -167,7 +197,7 @@ angular.module('contractualClienteApp')
         Apropiacion: apropiacion.Id,
         MontoParcial: 0,
       };
-      if (self.necesidad.TipoFuenteFinanciacion.Nombre == 'funcionamiento') {
+      if (self.necesidad.TipoRubro.Nombre == 'funcionamiento') {
         self.f_apropiacion_fun.push(Fap);
       } else {
         self.f_apropiacion_inv.push(Fap);
@@ -222,7 +252,7 @@ angular.module('contractualClienteApp')
         self.marcos_legales.push(marco);
       }
 
-      if (self.necesidad.TipoFuenteFinanciacion.Nombre == "inversion") {
+      if (self.necesidad.TipoRubro.Nombre == "inversion") {
         for (var i = 0; i < self.f_apropiacion_inv.length; i++) {
           if (self.f_apropiacion_inv[i].fuentes != undefined) {
             for (var k = 0; k < self.f_apropiacion_inv[i].fuentes.length; k++) {
