@@ -84,7 +84,6 @@ angular.module('contractualClienteApp')
     $scope.$on('$routeChangeStart', function(next, current) {
       $scope.actual = $location.path();
       update_url();
-      console.log(next + current);
     });
 
     $scope.changeLanguage = function (key){

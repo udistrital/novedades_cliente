@@ -133,7 +133,6 @@ angular.module('contractualClienteApp')
       })).then(function(response) {
         self.g_necesidad.Estado = response.data[0];
         administrativaRequest.put('necesidad', self.g_necesidad.Id, self.g_necesidad).then(function(response) {
-          console.log(response);
           self.alerta = "";
           for (var i = 1; i < response.data.length; i++) {
             self.alerta = self.alerta + response.data[i] + "\n";
@@ -143,7 +142,6 @@ angular.module('contractualClienteApp')
           self.recargar_grid();
           $("#myModal").modal("hide");
           self.g_necesidad=undefined;
-          console.log(response.data);
         });
       });
     };

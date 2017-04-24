@@ -27,8 +27,6 @@ angular.module('contractualClienteApp')
           limit: -1
         })).then(function(response) {
           self.jefe_destino = response.data[0];
-          console.log(response.data[0]);
-          console.log(response2.data[0]);
           self.dep_ned.JefeDependenciaDestino=response2.data[0].Id;
         });
       });
@@ -42,8 +40,6 @@ angular.module('contractualClienteApp')
 
 
     $scope.$watch('solicitudNecesidad.rol_ordenador_gasto',function(){
-      console.log("rol ordenador activado (? xD");
-      console.log(self.rol_ordenador_gasto);
       coreRequest.get('jefe_dependencia', $.param({
         query: "DependenciaId:"+self.rol_ordenador_gasto,
         fields: "TerceroId",
@@ -54,8 +50,6 @@ angular.module('contractualClienteApp')
           limit: -1
         })).then(function(response) {
           self.ordenador_gasto = response.data[0];
-          console.log("Look ");
-          console.log(response.data[0]);
           self.dep_ned.OrdenadorGasto=response.data[0].Id;
         });
       });
@@ -313,7 +307,6 @@ angular.module('contractualClienteApp')
           self.alerta = self.alerta + response.data[i] + "\n";
         }
         swal("", self.alerta, response.data[0]);
-        console.log(response.data);
       });
     };
 

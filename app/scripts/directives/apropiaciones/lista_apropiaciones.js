@@ -155,7 +155,6 @@ angular.module('contractualClienteApp')
         self.gridOptions.onRegisterApi = function(gridApi) {
           //set gridApi on scope
           self.gridApi = gridApi;
-          console.log(self.gridApi);
           self.gridApi.grid.registerDataChangeCallback(function() {
             self.gridApi.treeBase.expandAllRows();
           });

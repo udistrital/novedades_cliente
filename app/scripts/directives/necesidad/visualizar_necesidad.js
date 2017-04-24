@@ -15,7 +15,7 @@ angular.module('contractualClienteApp')
           numero: '='
       },
       templateUrl: 'views/directives/necesidad/visualizar_necesidad.html',
-      controller:function (financieraRequest,administrativaRequest,agoraRequest,oikosRequest,$scope) {
+      controller:function (financieraRequest,administrativaRequest,agoraRequest,oikosRequest,coreRequest,$scope) {
         var self = this;
 
         $scope.$watch('[vigencia,numero]',function(){
@@ -31,7 +31,6 @@ angular.module('contractualClienteApp')
               query: "Necesidad:"+response.data[0].Id,
               fields: "MarcoLegal"
             })).then(function(response){
-              console.log(response);
               self.marco_legal=response.data;
             });
             administrativaRequest.get('fuente_financiacion_rubro_necesidad',$.param({
@@ -65,7 +64,6 @@ angular.module('contractualClienteApp')
                     query: "Id:"+item.FuenteFinanciacion
                   })).then(function(response){
                     //console.log(response);
-                    console.log("entro e jhizo algo");
                     i_fuente.FuenteFinanciacion=response.data[0];
                   });
                   i_fuente.MontoParcial=item.MontoParcial;
@@ -76,37 +74,43 @@ angular.module('contractualClienteApp')
 
               //-----------
             });
-            console.log(self.v_necesidad);
 
             administrativaRequest.get('dependencia_necesidad',$.param({
               query: "Necesidad:"+response.data[0].Id,
-              fields: "JefeDependenciaSolicitante,DependenciaSolicitante,JefeDependenciaDestino,DependenciaDestino,OrdenadorGasto"
+              fields: "JefeDependenciaSolicitante,JefeDependenciaDestino,OrdenadorGasto"
             })).then(function(response){
               self.dependencias=response.data[0];
 
-              oikosRequest.get('dependencia', $.param({
-                query: 'Id:'+response.data[0].DependenciaSolicitante
-              })).then(function(response) {
-                self.dependencia_solicitante = response.data[0];
-              });
-
-              agoraRequest.get('informacion_persona_natural', $.param({
+              coreRequest.get('jefe_dependencia', $.param({
                 query: 'Id:'+response.data[0].JefeDependenciaSolicitante
               })).then(function(response) {
-                self.jefe_dependencia_solicitante = response.data[0];
+                agoraRequest.get('informacion_persona_natural', $.param({
+                  query: 'Id:'+response.data[0].TerceroId
+                })).then(function(response2) {
+                  self.jefe_dependencia_solicitante = response2.data[0];
+                });
+                oikosRequest.get('dependencia', $.param({
+                  query: 'Id:'+response.data[0].DependenciaId
+                })).then(function(response3) {
+                  self.dependencia_solicitante = response3.data[0];
+                });
               });
 
-              oikosRequest.get('dependencia', $.param({
-                query: 'Id:'+response.data[0].DependenciaDestino
-              })).then(function(response) {
-                self.dependencia_destino = response.data[0];
-              });
-
-              agoraRequest.get('informacion_persona_natural', $.param({
+              coreRequest.get('jefe_dependencia', $.param({
                 query: 'Id:'+response.data[0].JefeDependenciaDestino
               })).then(function(response) {
-                self.jefe_dependencia_destino = response.data[0];
+                agoraRequest.get('informacion_persona_natural', $.param({
+                  query: 'Id:'+response.data[0].TerceroId
+                })).then(function(response2) {
+                  self.jefe_dependencia_destino = response2.data[0];
+                });
+                oikosRequest.get('dependencia', $.param({
+                  query: 'Id:'+response.data[0].DependenciaId
+                })).then(function(response3) {
+                  self.dependencia_destino = response3.data[0];
+                });
               });
+
 
               agoraRequest.get('informacion_persona_natural', $.param({
                 query: 'Id:'+response.data[0].OrdenadorGasto
