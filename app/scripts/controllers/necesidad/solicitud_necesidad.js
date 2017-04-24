@@ -138,7 +138,7 @@ angular.module('contractualClienteApp')
       } else if (especial == "agotar_presupuesto") {
         self.necesidad.UnicoPago = false;
         self.necesidad.AgotarPresupuesto = true;
-        self.ver_duracion_fecha = false;
+        self.ver_duracion_fecha = true;
       }
     };
     //

@@ -26,7 +26,7 @@ angular.module('contractualClienteApp')
       enableSelectAll: false,
       columnDefs: [{
           field: 'NumeroElaboracion',
-          displayName: 'Número',
+          displayName: 'Número de Elaboración',
           type: 'number',
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
           cellTooltip: function(row, col) {
