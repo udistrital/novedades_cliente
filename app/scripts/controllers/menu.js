@@ -18,6 +18,36 @@ angular.module('contractualClienteApp')
     $scope.token_service = token_service;
     $scope.breadcrumb = [];
     $scope.menu_service = [
+      { //aqui va el servicio de el app de configuracion
+        "Id": 3,
+        "Nombre": "Seguimiento y control",
+        "Url": "url_nivel_1",
+        "Opciones": [{
+          "Id": 1,
+          "Nombre": "Novedades",
+          "Url": "",
+          "Opciones": null
+        },
+        {
+          "Id": 2,
+          "Nombre": "Segumiento Financiero",
+          "Url": "seguimientoycontrol/financiero",
+          "Opciones": null
+        },
+        {
+          "Id": 3,
+          "Nombre": "Segumiento Legal",
+          "Url": "",
+          "Opciones": null
+        },
+        {
+          "Id": 4,
+          "Nombre": "Segumiento Tecnico",
+          "Url": "",
+          "Opciones": null
+        }
+      ]
+      },
     { //aqui va el servicio de el app de configuracion
       "Id": 2,
       "Nombre": "Necesidad",

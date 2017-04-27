@@ -57,7 +57,7 @@ angular
         templateUrl: 'views/notificaciones.html',
         controller: 'NotificacionesCtrl',
         controllerAs: 'notificaciones'
-        
+
       })
       .when('/about', {
         templateUrl: 'views/about.html',
@@ -83,6 +83,16 @@ angular
         templateUrl: 'views/rp/rp_solicitud.html',
         controller: 'RpSolicitudCtrl',
         controllerAs: 'rpSolicitud'
+      })
+      .when('/seguimientoycontrol/financiero', {
+        templateUrl: 'views/seguimientoycontrol/financiero.html',
+        controller: 'SeguimientoycontrolFinancieroCtrl',
+        controllerAs: 'sFinanciero'
+      })
+      .when('/seguimientoycontrol/financiero/contrato', {
+        templateUrl: 'views/seguimientoycontrol/financiero/contrato.html',
+        controller: 'SeguimientoycontrolFinancieroContratoCtrl',
+        controllerAs: 'sFcontrato'
       })
       .otherwise({
         redirectTo: '/'
