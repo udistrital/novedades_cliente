@@ -22,26 +22,21 @@ angular.module('contractualClienteApp')
         "Id": 3,
         "Nombre": "Seguimiento y control",
         "Url": "url_nivel_1",
-        "Opciones": [{
-          "Id": 1,
-          "Nombre": "Novedades",
-          "Url": "",
-          "Opciones": null
-        },
+        "Opciones": [
         {
-          "Id": 2,
+          "Id": 1,
           "Nombre": "Segumiento Financiero",
           "Url": "seguimientoycontrol/financiero",
           "Opciones": null
         },
         {
-          "Id": 3,
+          "Id": 2,
           "Nombre": "Segumiento Legal",
           "Url": "",
           "Opciones": null
         },
         {
-          "Id": 4,
+          "Id": 3,
           "Nombre": "Segumiento Tecnico",
           "Url": "",
           "Opciones": null

@@ -1,57 +1,64 @@
 <br>
 <div class="panel panel-default">
   <div class="panel-body">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
           <center><h3>{{'SEGUIMIENTO_FINANCIERO' | translate}}</h3></center>
-          <div class="row">
-            <button type="button" class="btn btn-primary col-md-4"><center><h4>{{'DATOS_CONTRATO' | translate}}</h4></center></button>
-            <button type="button" class="btn btn-primary col-md-4"><center><h4>{{'ORDENES_PAGO'| translate}}</h4></center></button>
-            <button type="button" class="btn btn-primary col-md-4"><center><h4>{{'ESTADISTICAS' | translate}}</h4></center></button>
-          </div>
-      </div>
-    </div>
-    <div class="panel panel-body">
+          <ul class="nav nav-tabs">
+              <li class="active"><a href="#/seguimientoycontrol/financiero/contrato" data-toggle="tab">{{'DATOS_CONTRATO' | translate}}</a>
+              </li>
+              <li><a href="#profile" data-toggle="tab">{{'ORDENES_PAGO' | translate}}</a>
+              </li>
+              <li><a href="#messages" data-toggle="tab">{{'ESTADISTICAS' | translate}}</a>
+              </li>
+          </ul>
+          <br/>
       <div class="row">
-        <div class="col-md-2 col-md-offset-3">
-          <div ng-if="vigenciaModel=== null">
-            <label>{{'VIGENCIA_ACTUAL' | translate}} <b>2017</b> </label>
-          </div>
-          <div ng-if="vigenciaModel !== null">
-            <label>{{'VIGENCIA_SELECCIONADA' | translate}}<b>{{vigenciaModel}}</b> </label>
-          </div>
+        <div class="col-md-12">
+          <center><h4>{{'DATOS_FINANCIEROS_CONTRATO' | translate}} <b>{{sFcontrato.contrato.Id}}</b></h4></center>
+          <br><br>
+        </div>
+        <div class="col-md-3 panel panel-info">
+           <div class="panel-heading row"><div class="col-md-12"><center><h4><b>{{'DATOS_CONTRATISTA' | translate}}</b></h4></center></div></div>
+           <div class="panel-body">
+             <div class="col-md-6"><center><b>{{'APELLIDOS' | translate}}</b></center></div>
+             <div class="col-md-6">Castillo Gonzalez<br><br/></div>
+             <div class="col-md-6"><center><b>{{'NOMBRES' | translate}}</b></center></div>
+             <div class="col-md-6">Diego Orlando<br><br/></div>
+             <div class="col-md-6"><b>{{'TIPO_DOCUMENTO' | translate}}</b></div>
+             <div class="col-md-6">Cedula ciudadania<br><br/></div>
+             <div class="col-md-6"><b>{{'NUMERO_DOCUMENTO' | translate}}</b></div>
+             <div class="col-md-6">{{sFcontrato.contrato.ContratistaId}}</div>
+           </div>
+        </div>
+        <div class="col-md-offset-1 col-md-4 panel panel-info">
+           <div class="panel-heading row"><div class="col-md-12"><center><h4><b>{{'DATOS_REGISTRO_PRESUPUESTAL' | translate}}</b></h4></center></div></div>
+           <div class="panel-body">
+             <div class="col-md-6"><b>{{'NUMERO_REGISTRO_PRESUPUESTAL' | translate}}</b></div>
+             <div class="col-md-6">Castillo Gonzalez<br><br/></div>
+             <div class="col-md-6"><b>{{'NOMBRE_REGISTRO_PRESUPUESTAL' | translate}}</b></div>
+             <div class="col-md-6">Diego Orlando<br><br/></div>
+             <div class="col-md-6"><b>{{'NUMERO_DISPONIBILIDAD' | translate}}</b></div>
+             <div class="col-md-6">Cedula ciudadania<br><br/></div>
+             <div class="col-md-6"><b>{{'NOMBRE_DISPONIBILIDAD' | translate}}</b></div>
+             <div class="col-md-6">1031138556</div>
+           </div>
+        </div>
+        <div class="col-md-offset-1 col-md-3 panel panel-info">
+           <div class="panel-heading row"><div class="col-md-12"><center><h4><b>{{'DATOS_CONTRATO' | translate}}</b></h4></center></div></div>
+           <div class="panel-body">
+             <div class="col-md-6"><center><b>{{'CONTRATO' | translate}}</b></center></div>
+             <div class="col-md-6">{{sFcontrato.contrato.Id}}<br><br/></div>
+             <div class="col-md-6"><center><b>{{'VIGENCIA' | translate}}</b></center></div>
+             <div class="col-md-6">{{sFcontrato.contrato.Vigencia}}<br><br/></div>
+             <div class="col-md-6"><center><b>{{'FECHA_INICIO' | translate}}</b></center></div>
+             <div class="col-md-6">{{sFcontrato.contrato.Vigencia}}<br><br/></div>
+             <div class="col-md-6"><center><b>{{'FECHA_FIN' | translate}}</b></center></div>
+             <div class="col-md-6">{{sFcontrato.contrato.Vigencia}}<br><br/></div>
+             <div class="col-md-6"><center><b>{{'VALOR' | translate}}</b></center></div>
+             <div class="col-md-6">{{sFcontrato.contrato.ValorContrato | currency}}<br><br/></div>
+           </div>
         </div>
 
-        <div class="form-group">
-          <div class="col-md-3" align="right">
-            <label>{{'SELECCIONE_UNA_VIGENCIA' | translate}}</label>
-          </div>
-          <div class="col-md-2">
-            <select class="form-control" ng-change="sFinanciero.buscarContratosVigencia()" ng-model="vigenciaModel">
-              <option ng-repeat="vigencia in vigencias" >{{vigencia}}</option>
-            </select>
-          </div>
-
-        </div>
       </div>
-      <br>
-
-      <table style="width:70%;" align="center">
-        <tr>
-          <td>
-            <div ui-grid="sFinanciero.gridOptions" ui-grid-selection class="myGrid"></div>
-          </td>
-        </tr>
-        <tr>
-          <td align="center">
-            <br><br>
-            <button ng-click="sFinanciero.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="sFinanciero.saving"> <i class="" ng-show="sFinanciero.saving"></i>
-              {{'BTN.VER_SEGUIMIENTO_FINANCIERO' | translate }}
-            </button>
-          </td>
-        </tr>
-      </table>
-    </div>
     </div>
     <div class="panel-footer">
         Panel Footer

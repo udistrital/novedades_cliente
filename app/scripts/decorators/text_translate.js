@@ -66,6 +66,19 @@ var text_es = {
   DATOS_CONTRATO:"Datos contrato",
   ORDENES_PAGO: "Ordenes pago",
   ESTADISTICAS : "Estadisticas",
+  DATOS_FINANCIEROS_CONTRATO: "Datos financieros del contrato",
+  DATOS_CONTRATISTA: "Datos contratista",
+  APELLIDOS: "Apellidos",
+  NOMBRES: "Nombres",
+  TIPO_DOCUMENTO: "Tipo documento",
+  NUMERO_DOCUMENTO : "No documento",
+  FECHA_INICIO:"Fecha inicio",
+  FECHA_FIN:"Fecha fin",
+  DATOS_REGISTRO_PRESUPUESTAL:"Datos del registro presupuestal",
+  NUMERO_REGISTRO_PRESUPUESTAL: "No registro presupuestal",
+  NOMBRE_REGISTRO_PRESUPUESTAL: "Nombre RP",
+  NUMERO_DISPONIBILIDAD: "No CDP",
+  NOMBRE_DISPONIBILIDAD: "Nombre CDP",
 };
 
 var text_en = {
@@ -126,6 +139,19 @@ var text_en = {
   DATOS_CONTRATO:"Contract data",
   ORDENES_PAGO: "Pay orders",
   ESTADISTICAS : "Statistics",
+  DATOS_FINANCIEROS_CONTRATO: "Financial data of the contract",
+  DATOS_CONTRATISTA: "Contractor data",
+  APELLIDOS: "Surnames",
+  NOMBRES: "Names",
+  TIPO_DOCUMENTO: "Identification type",
+  NUMERO_DOCUMENTO : "Document number",
+  FECHA_INICIO:"Start date",
+  FECHA_FIN:"End date",
+  DATOS_REGISTRO_PRESUPUESTAL:"Budget register data",
+  NUMERO_REGISTRO_PRESUPUESTAL: "Budget register number",
+  NOMBRE_REGISTRO_PRESUPUESTAL: "Budget register name",
+  NUMERO_DISPONIBILIDAD: "Availability number",
+  NOMBRE_DISPONIBILIDAD: "Availability name",
 };
 
 angular.module('contractualClienteApp')
