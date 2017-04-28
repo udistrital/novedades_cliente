@@ -75,10 +75,22 @@ var text_es = {
   FECHA_INICIO:"Fecha inicio",
   FECHA_FIN:"Fecha fin",
   DATOS_REGISTRO_PRESUPUESTAL:"Datos del registro presupuestal",
-  NUMERO_REGISTRO_PRESUPUESTAL: "No registro presupuestal",
+  NUMERO_REGISTRO_PRESUPUESTAL: "No RP",
   NOMBRE_REGISTRO_PRESUPUESTAL: "Nombre RP",
   NUMERO_DISPONIBILIDAD: "No CDP",
   NOMBRE_DISPONIBILIDAD: "Nombre CDP",
+  ORDEN_PAGO: "Orden pago",
+  FECHA_ORDEN: "Fecha orden",
+  VALOR_BRUTO: "Valor bruto",
+  LINEA_ORDEN_PAGO:"Linea del tiempo de ordenes de pago",
+  ESTADISTICAS_GENERALES: "Estadisticas generales",
+  VALOR_TOTAL_CONTRATO: "Valor total contrato",
+  VALOR_MENSUAL: "Valor mensual",
+  VALOR_TOTAL_PAGADO:"Valor total pagado",
+  VALOR_RESTANTE:"Valor restante",
+  PORCENTAJE_PAGADO:"Porcentaje pagado",
+  PORCENTAJE_RESTANTE:"Porcentaje restante",
+  GRAFICO_BARRAS_CONTRATO:"Grafico de barras del contrato",
 };
 
 var text_en = {
@@ -152,6 +164,18 @@ var text_en = {
   NOMBRE_REGISTRO_PRESUPUESTAL: "Budget register name",
   NUMERO_DISPONIBILIDAD: "Availability number",
   NOMBRE_DISPONIBILIDAD: "Availability name",
+  ORDEN_PAGO: "Pay order",
+  FECHA_ORDEN: "Order date",
+  VALOR_BRUTO: "Gross value",
+  LINEA_ORDEN_PAGO:"Pay orders timeline",
+  ESTADISTICAS_GENERALES: "General statistics",
+  VALOR_TOTAL_CONTRATO: "Contract total value",
+  VALOR_MENSUAL: "Monthly value",
+  VALOR_TOTAL_PAGADO:"Paid total value",
+  VALOR_RESTANTE:"Remaining value",
+  PORCENTAJE_PAGADO:"Paid percentage",
+  PORCENTAJE_RESTANTE:"Remaining percentage",
+  GRAFICO_BARRAS_CONTRATO:"Contract bar graph",
 };
 
 angular.module('contractualClienteApp')

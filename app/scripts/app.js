@@ -94,6 +94,16 @@ angular
         controller: 'SeguimientoycontrolFinancieroContratoCtrl',
         controllerAs: 'sFcontrato'
       })
+      .when('/seguimientoycontrol/financiero/ordenes_pago', {
+        templateUrl: 'views/seguimientoycontrol/financiero/ordenes_pago.html',
+        controller: 'SeguimientoycontrolFinancieroOrdenesPagoCtrl',
+        controllerAs: 'sFordenesPago'
+      })
+      .when('/seguimientoycontrol/financiero/estadisticas', {
+        templateUrl: 'views/seguimientoycontrol/financiero/estadisticas.html',
+        controller: 'SeguimientoycontrolFinancieroEstadisticasCtrl',
+        controllerAs: 'sFestadisticas'
+      })
       .otherwise({
         redirectTo: '/'
       });
