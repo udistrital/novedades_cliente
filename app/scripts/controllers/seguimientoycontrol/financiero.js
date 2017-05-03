@@ -93,17 +93,22 @@ angular.module('contractualClienteApp')
 
      self.mostrar_estadisticas = function() {
        var seleccion = self.gridApi.selection.getSelectedRows();
-       self.contrato.Id = seleccion[0].Id;
-       self.contrato.Vigencia= seleccion[0].VigenciaContrato;
-       self.contrato.ContratistaId= seleccion[0].Contratista.NumDocumento;
-       self.contrato.ValorContrato= seleccion[0].ValorContrato;
-       self.contrato.NombreContratista= seleccion[0].Contratista.NomProveedor;
+       if(seleccion[0]===null || seleccion[0]===undefined){
+         swal("Alertas", "Debe seleccionar un contratista", "error");
+       }else{
+         self.contrato.Id = seleccion[0].Id;
+         self.contrato.Vigencia= seleccion[0].VigenciaContrato;
+         self.contrato.ContratistaId= seleccion[0].Contratista.NumDocumento;
+         self.contrato.ValorContrato= seleccion[0].ValorContrato;
+         self.contrato.NombreContratista= seleccion[0].Contratista.NomProveedor;
 
-       self.saving = true;
-       self.btnGenerartxt = "Generando...";
+         self.saving = true;
+         self.btnGenerartxt = "Generando...";
 
-       self.saving = false;
-       self.btnGenerartxt = "Generar";
-       $window.location.href = '#/seguimientoycontrol/financiero/contrato';
+         self.saving = false;
+         self.btnGenerartxt = "Generar";
+         $window.location.href = '#/seguimientoycontrol/financiero/contrato';
+       }
+
  };
   });
