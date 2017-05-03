@@ -17,7 +17,7 @@ var text_es = {
     REGISTRAR: "Registrar",
     SOLICITAR_RP:"Solicitar RP",
     QUITAR_RUBRO: "Quitar",
-    VER_SEGUIMIENTO_FINANCIERO:"Ver seguimiento financiero"
+    VER_SEGUIMIENTO_FINANCIERO:"Ver seguimiento financiero",
   },
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
@@ -25,8 +25,14 @@ var text_es = {
   NECESIDAD: "Necesidad",
   SOLICITUD: "Solicitud",
   //SOLICITUD RP
+  ERROR: "Error",
+  SALIR:"Salir",
+  VOLVER_CONTRATOS: "Volver a contratos",
   NUMERO_SOLICITUD:"Número solicitud",
   INSERCION_RP:"Se insertó correctamente la solicitud del registro presupuestal con los siguientes datos",
+  VIGENCIA_SOLICITUD: "Vigencia solicitud",
+  FECHA_SOLICITUD: "Fecha solicitud",
+  NUMERO_CONTRATO: "Número contrato",
   SELECCIONE_UNA_VIGENCIA:"Seleccione una vigencia diferente",
   RESPONSABLE_DOCUMENTO: "Responsable documento",
   RESPONSABLE: "Responsable",
@@ -113,6 +119,14 @@ var text_en = {
     VER_SEGUIMIENTO_FINANCIERO:"See financial monitoring"
   },
   //SOLICITUD RP
+  ERROR: "Error",
+  SALIR:"Exit",
+  VOLVER_CONTRATOS: "Back to contracts",
+  NUMERO_SOLICITUD:"Request number",
+  INSERCION_RP:"The budget register request was insert correctly with the following data:",
+  VIGENCIA_SOLICITUD: "Request validity",
+  FECHA_SOLICITUD: "Request date",
+  NUMERO_CONTRATO: "Contract number",
   RESPONSABLE_DOCUMENTO: "Person responsible identification",
   SELECCIONE_UNA_VIGENCIA:"Choose a diferente validity",
   RESPONSABLE: "Person responsible",

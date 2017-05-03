@@ -301,15 +301,15 @@ self.gridOptions_cdp.multiSelect = false;
 
             swal({
               html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
-              +response.data.Id+"<br><label><b>Vigencia solicitud:</b></label> " + response.data.Vigencia + "<br><label><b>Fecha solicitud:</b></label>:"
-              +" "+ dia+"/"+ mes+"/" + ano + "<br><label><b>Número contrato:</b></label>" + response.data.NumeroContrato + "<br><label><b>Vigencia contrato:</b></label>"
+              +response.data.Id+"<br><label><b>"+$translate.instant('VIGENCIA_SOLICITUD')+":</b></label> " + response.data.Vigencia + "<br><label><b>"+$translate.instant('FECHA_SOLICITUD')+":</b></label>:"
+              +" "+ dia+"/"+ mes+"/" + ano + "<br><label><b>"+$translate.instant('NUMERO_CONTRATO')+":</b></label>" + response.data.NumeroContrato + "<br><label><b>"+$translate.instant('VIGENCIA_CONTRATO')+":</b></label>"
               + response.data.VigenciaContrato,
               type: "success",
               showCancelButton: true,
               confirmButtonColor: "#449D44",
               cancelButtonColor: "#C9302C",
-              confirmButtonText: "Volver a contratos",
-              cancelButtonText: "Salir",
+              confirmButtonText: $translate.instant('VOLVER_CONTRATOS'),
+              cancelButtonText: $translate.instant('SALIR'),
             }).then(function() {
               //si da click en ir a contratistas
               $window.location.href = '#/rp_solicitud_personas';
