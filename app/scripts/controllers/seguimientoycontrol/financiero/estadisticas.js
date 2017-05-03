@@ -8,7 +8,9 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroEstadisticasCtrl', function () {
+  .controller('SeguimientoycontrolFinancieroEstadisticasCtrl', function (contrato) {
+    var self = this;
+    self.contrato=contrato;
     var containerB = document.getElementById('estadistica');
           var groups = new vis.DataSet();
           groups.add({id: 0, content: "group0"})

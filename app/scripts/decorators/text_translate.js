@@ -64,7 +64,7 @@ var text_es = {
   OBJETO:"Objeto",
   ORDENADOR:"Ordenador",
   //SEGUMIENTO FINANCIERO
-  SEGUIMIENTO_FINANCIERO:"Seguimiento financiero",
+  SEGUIMIENTO_FINANCIERO:"Seguimiento financiero del contrato",
   DATOS_CONTRATO:"Datos contrato",
   ORDENES_PAGO: "Ordenes pago",
   ESTADISTICAS : "Estadisticas",
@@ -150,7 +150,7 @@ var text_en = {
   OBJETO:"Object",
   ORDENADOR:"Authorizer",
   //SEGUMIENTO FINANCIERO
-  SEGUIMIENTO_FINANCIERO:"Financial monitoring",
+  SEGUIMIENTO_FINANCIERO:"Financial monitoring of the contract",
   DATOS_CONTRATO:"Contract data",
   ORDENES_PAGO: "Pay orders",
   ESTADISTICAS : "Statistics",

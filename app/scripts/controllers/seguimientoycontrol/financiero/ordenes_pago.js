@@ -8,7 +8,10 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function () {
+  .controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function (contrato) {
+    var self = this;
+    self.contrato=contrato;
+    console.log(contrato);
     var container = document.getElementById('linea');
 
   // Create a DataSet (allows two way data-binding)
