@@ -20,13 +20,15 @@
            <div class="panel-heading row"><div class="col-md-12"><center><h4><b>{{'DATOS_CONTRATISTA' | translate}}</b></h4></center></div></div>
            <div class="panel-body">
              <div class="col-md-6"><center><b>{{'APELLIDOS' | translate}}</b></center></div>
-             <div class="col-md-6">Castillo Gonzalez<br><br/></div>
+             <div class="col-md-6">{{sFcontrato.persona.PrimerApellido}} {{sFcontrato.persona.SegundoApellido}}<br><br/></div>
              <div class="col-md-6"><center><b>{{'NOMBRES' | translate}}</b></center></div>
-             <div class="col-md-6">Diego Orlando<br><br/></div>
+             <div class="col-md-6">{{sFcontrato.persona.PrimerNombre}} {{sFcontrato.persona.SegundoNombre}}<br><br/></div>
              <div class="col-md-6"><b>{{'TIPO_DOCUMENTO' | translate}}</b></div>
-             <div class="col-md-6">Cedula ciudadania<br><br/></div>
+             <div class="col-md-6">{{sFcontrato.persona.TipoDocumento.ValorParametro}}<br><br/></div>
              <div class="col-md-6"><b>{{'NUMERO_DOCUMENTO' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.contrato.ContratistaId}}</div>
+             <div class="col-md-6">{{sFcontrato.contrato.ContratistaId}}<br><br/></div>
+             <div class="col-md-6"><b>{{'CARGO' | translate}}</b></div>
+             <div class="col-md-6">{{sFcontrato.persona.Cargo}}<br><br/></div>
            </div>
         </div>
         <div class="col-md-offset-1 col-md-4 panel panel-info">

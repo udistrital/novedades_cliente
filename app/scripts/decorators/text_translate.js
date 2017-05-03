@@ -25,6 +25,8 @@ var text_es = {
   NECESIDAD: "Necesidad",
   SOLICITUD: "Solicitud",
   //SOLICITUD RP
+  NUMERO_SOLICITUD:"Número solicitud",
+  INSERCION_RP:"Se insertó correctamente la solicitud del registro presupuestal con los siguientes datos",
   SELECCIONE_UNA_VIGENCIA:"Seleccione una vigencia diferente",
   RESPONSABLE_DOCUMENTO: "Responsable documento",
   RESPONSABLE: "Responsable",
@@ -91,6 +93,7 @@ var text_es = {
   PORCENTAJE_PAGADO:"Porcentaje pagado",
   PORCENTAJE_RESTANTE:"Porcentaje restante",
   GRAFICO_BARRAS_CONTRATO:"Grafico de barras del contrato",
+  CARGO:"Cargo",
 };
 
 var text_en = {
@@ -176,6 +179,7 @@ var text_en = {
   PORCENTAJE_PAGADO:"Paid percentage",
   PORCENTAJE_RESTANTE:"Remaining percentage",
   GRAFICO_BARRAS_CONTRATO:"Contract bar graph",
+  CARGO:"Post",
 };
 
 angular.module('contractualClienteApp')

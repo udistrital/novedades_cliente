@@ -7,12 +7,13 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-.controller('menuCtrl', function($location, $http, $scope, token_service, notificacion, $translate) {
+.controller('menuCtrl', function($location, $http, $scope, token_service, notificacion, $translate, $route) {
     var paths = [];
     $scope.language = {
         es:"btn btn-primary btn-circle btn-outline active",
         en:"btn btn-primary btn-circle btn-outline"
     };
+
     $scope.notificacion = notificacion;
     $scope.actual = "";
     $scope.token_service = token_service;
@@ -124,6 +125,7 @@ angular.module('contractualClienteApp')
                 break;
             default:
         }
+        $route.reload();
     };
     //Pendiente por definir json del menu
     (function($) {

@@ -18,11 +18,6 @@ angular.module('contractualClienteApp')
      $scope.vigenciaModel = null;
      $scope.busquedaSinResultados = false;
      $scope.banderaValores = true;
-     $scope.contrato_int = $translate.instant('CONTRATO');
-     $scope.vigencia_contrato = $translate.instant('VIGENCIA_CONTRATO');
-     $scope.contratista_nombre = $translate.instant('NOMBRE_CONTRATISTA');
-     $scope.contratista_documento = $translate.instant('DOCUMENTO_CONTRATISTA');
-     $scope.valor_contrato = $translate.instant('VALOR');
      $scope.fields = {
        numcontrato: '',
        vigcontrato: '',
@@ -38,28 +33,28 @@ angular.module('contractualClienteApp')
        multiSelect: false,
        columnDefs: [{
            field: 'Id',
-           displayName: $scope.contrato_int,
+           displayName: $translate.instant('CONTRATO'),
            width: "10%",
            cellTemplate: '<div align="center">{{row.entity.Id}}</div>'
          },
          {
            field: 'VigenciaContrato',
-           displayName: $scope.vigencia_contrato,
+           displayName: $translate.instant('VIGENCIA_CONTRATO'),
            visible: false
          },
          {
            field: 'Contratista.NomProveedor',
-           displayName: $scope.contratista_nombre,
+           displayName: $translate.instant('NOMBRE_CONTRATISTA'),
            width: "50%"
          },
          {
            field: 'Contratista.NumDocumento',
-           displayName: $scope.contratista_documento,
+           displayName: $translate.instant('DOCUMENTO_CONTRATISTA'),
            cellTemplate: '<div align="center">{{row.entity.Contratista.NumDocumento}}</div>'
          },
          {
            field: 'ValorContrato',
-           displayName: $scope.valor_contrato,
+           displayName: $translate.instant('VALOR'),
            cellTemplate: '<div align="right">{{row.entity.ValorContrato | currency }}</div>'
          },
        ],

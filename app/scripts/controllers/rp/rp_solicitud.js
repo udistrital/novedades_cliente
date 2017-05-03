@@ -13,6 +13,9 @@ angular.module('contractualClienteApp')
     self.contrato = contrato;
     $scope.rubroVacio=false;
     self.CurrentDate = new Date();
+    var mes=self.CurrentDate.getMonth()+1;
+    var dia=self.CurrentDate.getDay();
+    var ano=self.CurrentDate.getFullYear();
     self.alertas = false;
     self.alerta = "";
     self.valor_rp = "";
@@ -20,13 +23,6 @@ angular.module('contractualClienteApp')
     self.rubros_seleccionados = [];
     self.rubros_select = [];
     self.responsable = "";
-    $scope.numero = $translate.instant('NUMERO');
-    $scope.codigo = $translate.instant('CODIGO');
-    $scope.nombre = $translate.instant('NOMBRE');
-    $scope.vigencia_compromiso = $translate.instant('VIGENCIA');
-    $scope.fuente_financiamiento = $translate.instant('FUENTE_FINANCIAMIENTO');
-    $scope.objeto_compromiso = $translate.instant('OBJETO');
-
     self.dep_ned = {
       JefeDependenciaSolicitante: 18
     };
@@ -108,17 +104,17 @@ self.gridOptions_cdp.multiSelect = false;
       multiSelect: false,
       columnDefs: [{
           field: 'Id',
-          displayName: $scope.numero,
+          displayName: $translate.instant('NUMERO'),
           width: '20%'
         },
         {
           field: 'Vigencia',
-          displayName: $scope.vigencia_compromiso,
+          displayName: $translate.instant('VIGENCIA'),
           width: '20%'
         },
         {
           field: 'Objeto',
-          displayName: $scope.objeto_compromiso,
+          displayName: $translate.instant('OBJETO'),
           width: '60%'
         }
       ],
@@ -136,17 +132,17 @@ self.gridOptions_cdp.multiSelect = false;
       enableHorizontalScrollbar : 0,
       columnDefs: [{
           field: 'Apropiacion.Rubro.Codigo',
-          displayName: $scope.codigo,
+          displayName: $translate.instant('CODIGO'),
           width: "25%",
         },
         {
           field: 'Apropiacion.Rubro.Descripcion',
-          displayName: $scope.nombre,
+          displayName: $translate.instant('NOMBRE'),
           width: "50%",
         },
         {
           field: 'FuenteFinanciamiento.Descripcion',
-          displayName: $scope.fuente_financiamiento,
+          displayName: $translate.instant('FUENTE_FINANCIAMIENTO'),
           width: "25%",
         }
       ],
@@ -289,6 +285,7 @@ self.gridOptions_cdp.multiSelect = false;
           VigenciaContrato: self.contrato.Vigencia.toString(),
           Compromiso: self.compromiso.Id
         }
+
           administrativaRequest.post('solicitud_rp', SolicitudRp).then(function(response) {
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
               var Disponibilidad_apropiacion_solicitud_rp = {
@@ -297,15 +294,16 @@ self.gridOptions_cdp.multiSelect = false;
                 Monto: self.rubros_seleccionados[i].ValorAsignado,
               }
 
+
               administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
               });
             }
 
-            var fechaFormato = SolicitudRp.FechaSolicitud.getDay() + "/" + SolicitudRp.FechaSolicitud.getMonth() + "/" + SolicitudRp.FechaSolicitud.getFullYear();
-
             swal({
-              html: "<label>Se insertó correctamente la solicitud del registro presupuestal con los siguientes datos</label><br><br><label><b>Número solicitud:</b></label> "+response.data.Id+"<br><label><b>Vigencia solicitud:</b></label> " + response.data.Vigencia + "<br><label><b>Fecha solicitud:</b></label>:" + fechaFormato +
-                "<br><label><b>Número contrato:</b></label>" + response.data.NumeroContrato + "<br><label><b>Vigencia contrato:</b></label>" + response.data.VigenciaContrato,
+              html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
+              +response.data.Id+"<br><label><b>Vigencia solicitud:</b></label> " + response.data.Vigencia + "<br><label><b>Fecha solicitud:</b></label>:"
+              +" "+ dia+"/"+ mes+"/" + ano + "<br><label><b>Número contrato:</b></label>" + response.data.NumeroContrato + "<br><label><b>Vigencia contrato:</b></label>"
+              + response.data.VigenciaContrato,
               type: "success",
               showCancelButton: true,
               confirmButtonColor: "#449D44",
