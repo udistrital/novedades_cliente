@@ -13,6 +13,12 @@ angular.module('contractualClienteApp')
     var self = this;
     self.contrato=contrato;
     console.log(contrato);
+
+    sicapitalRequest.get('registro/rp', '2016/8803').then(function(response) {
+      console.log("asdasdas");
+      console.log(response.data[0]);
+    });
+
     agoraRequest.get('informacion_persona_natural', 'query=Id:'+contrato.ContratistaId).then(function(response) {
       self.persona=response.data[0];
     agoraRequest.get('parametro_estandar', 'query=Id:'+self.persona.TipoDocumento.Id).then(function(response) {

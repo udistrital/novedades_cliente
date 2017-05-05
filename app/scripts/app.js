@@ -39,7 +39,7 @@ angular
     'agoraService',
     'oikosService',
     'financieraMidService',
-    'adminMidService'
+    'adminMidService',
     'sicapitalService'
   ])
     .run(function(amMoment) {
