@@ -40,7 +40,7 @@ angular
     'oikosService',
     'financieraMidService',
     'adminMidService'
-
+    'sicapitalService'
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');

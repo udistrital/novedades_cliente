@@ -7,9 +7,9 @@
  * # SeguimientoycontrolFinancieroContratoCtrl
  * Controller of the contractualClienteApp
  */
- 
+
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroContratoCtrl', function (contrato,agoraRequest) {
+  .controller('SeguimientoycontrolFinancieroContratoCtrl', function (contrato,agoraRequest,sicapitalRequest) {
     var self = this;
     self.contrato=contrato;
     console.log(contrato);
