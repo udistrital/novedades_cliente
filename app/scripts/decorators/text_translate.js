@@ -100,6 +100,7 @@ var text_es = {
   PORCENTAJE_RESTANTE:"Porcentaje restante",
   GRAFICO_BARRAS_CONTRATO:"Grafico de barras del contrato",
   CARGO:"Cargo",
+  NUMERO_COMPROMISO:"No compromiso" ,
 };
 
 var text_en = {
@@ -194,6 +195,7 @@ var text_en = {
   PORCENTAJE_RESTANTE:"Remaining percentage",
   GRAFICO_BARRAS_CONTRATO:"Contract bar graph",
   CARGO:"Post",
+  NUMERO_COMPROMISO:"Compromise number" ,
 };
 
 angular.module('contractualClienteApp')

@@ -9,14 +9,19 @@
  */
 
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroContratoCtrl', function (contrato,agoraRequest,sicapitalRequest) {
+  .controller('SeguimientoycontrolFinancieroContratoCtrl', function (contrato,agoraRequest,sicapitalRequest,administrativaRequest) {
     var self = this;
     self.contrato=contrato;
     console.log(contrato);
 
-    sicapitalRequest.get('registro/rp', '2016/8803').then(function(response) {
-      console.log("asdasdas");
-      console.log(response.data[0]);
+    /*administrativaRequest.get('contrato_general','query=Id:DVE470,VigenciaContrato:2017').then(function(response) {
+      self.registro_presupuestal=response.data[0].RegistroPresupuestal;
+    });*/
+
+    //petición para traer los rp por cdp de sicapital vigencia/cdp/cedula
+    sicapitalRequest.get('registro/rpxcdp', '2016/3472/1031138556').then(function(response) {
+      self.registro_presupuestal=response.data[0];
+      console.log(self.registro_presupuestal);
     });
 
     agoraRequest.get('informacion_persona_natural', 'query=Id:'+contrato.ContratistaId).then(function(response) {

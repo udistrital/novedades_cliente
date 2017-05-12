@@ -93,6 +93,7 @@ angular.module('contractualClienteApp')
 
      self.mostrar_estadisticas = function() {
        var seleccion = self.gridApi.selection.getSelectedRows();
+       console.log(seleccion[0]);
        if(seleccion[0]===null || seleccion[0]===undefined){
          swal("Alertas", "Debe seleccionar un contratista", "error");
        }else{
