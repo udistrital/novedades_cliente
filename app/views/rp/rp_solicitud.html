@@ -231,9 +231,6 @@
                   </div>
                 </div>
                 <br><br>
-                <div class="col-sm-12" ng-show="rubro.FuenteFinanciamiento!=null && rubro.FuenteFinanciamiento.Id!=0">
-                  <fuentes-apropiacion apropiacion = "rubro.Apropiacion.Id" fuenteapropiacion = "seleccionado.Descripcion" dependenciasolicitante="rpSolicitud.dependencia_solicitante_data.DependenciaId"/>
-                </div>
                 <div class="col-md-8">
                   <button name="btn_quitar_rbr" class="btn btn-danger" ng-click="rpSolicitud.quitarRubro(rubro.Id)">
                     {{'BTN.QUITAR_RUBRO' | translate}}
