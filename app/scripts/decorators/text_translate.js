@@ -101,6 +101,7 @@ var text_es = {
   GRAFICO_BARRAS_CONTRATO:"Grafico de barras del contrato",
   CARGO:"Cargo",
   NUMERO_COMPROMISO:"No compromiso" ,
+  FECHA_REGISTRO: "Fecha registro",
 };
 
 var text_en = {
@@ -196,6 +197,7 @@ var text_en = {
   GRAFICO_BARRAS_CONTRATO:"Contract bar graph",
   CARGO:"Post",
   NUMERO_COMPROMISO:"Compromise number" ,
+  FECHA_REGISTRO: "Register date",
 };
 
 angular.module('contractualClienteApp')

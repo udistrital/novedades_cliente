@@ -20,8 +20,15 @@ angular.module('contractualClienteApp')
 
     //petición para traer los rp por cdp de sicapital vigencia/cdp/cedula
     sicapitalRequest.get('registro/rpxcdp', '2016/3472/1031138556').then(function(response) {
-      self.registro_presupuestal=response.data[0];
-      console.log(self.registro_presupuestal);
+      self.registro_presupuestal=response.data;
+      var rp={
+        VIGENCIA:2017,
+      }
+      var rp2={
+        VIGENCIA:2017,
+      }
+      self.registro_presupuestal.push(rp);
+      self.registro_presupuestal.push(rp2);
     });
 
     agoraRequest.get('informacion_persona_natural', 'query=Id:'+contrato.ContratistaId).then(function(response) {

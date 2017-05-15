@@ -102,6 +102,8 @@ angular.module('contractualClienteApp')
          self.contrato.ContratistaId= seleccion[0].Contratista.NumDocumento;
          self.contrato.ValorContrato= seleccion[0].ValorContrato;
          self.contrato.NombreContratista= seleccion[0].Contratista.NomProveedor;
+         self.contrato.ObjetoContrato= seleccion[0].ObjetoContrato;
+         self.contrato.FechaRegistro= seleccion[0].FechaRegistro;
 
          self.saving = true;
          self.btnGenerartxt = "Generando...";
