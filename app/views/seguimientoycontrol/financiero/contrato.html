@@ -27,22 +27,30 @@
              <div class="col-md-6">{{sFcontrato.persona.Cargo}}<br><br/></div>
            </div>
         </div>
-        {{sFcontrato.registro_presupuestal}}
+
         <div class="col-md-3 panel panel-primary paneles">
-           <div class="panel-heading row"><div class="col-md-12"><center><h4><b>{{'DATOS_REGISTRO_PRESUPUESTAL' | translate}} {{sFcontrato.registro_presupuestal.NUMERO_REGISTRO}} {{sFcontrato.registro_presupuestal.VIGENCIA}} </b></h4></center></div></div>
-           <div class="panel-body">
-             <div class="col-md-6"><b>{{'NUMERO_REGISTRO_PRESUPUESTAL' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.registro_presupuestal.NUMERO_REGISTRO}}<br><br/></div>
-             <div class="col-md-6"><b>{{'VIGENCIA' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.registro_presupuestal.VIGENCIA}}<br><br/></div>
-             <div class="col-md-6"><b>{{'NUMERO_COMPROMISO' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.registro_presupuestal.NUMERO_COMPROMISO}}<br><br/></div>
-             <div class="col-md-6"><b>{{'NUMERO_DISPONIBILIDAD' | translate}}</b></div>
-             <div class="col-md-6">Cedula ciudadania<br><br/></div>
-             <div class="col-md-6"><b>{{'NOMBRE_DISPONIBILIDAD' | translate}}</b></div>
-             <div class="col-md-6">1031138556</div>
-           </div>
+          <div class="panel-heading paneles col-md-12" ng-click="panelrp = !panelrp">
+            <center><h4><b>{{'DATOS_REGISTRO_PRESUPUSTAL' | translate}} {{sFcontrato.registro_presupuestal.NUMERO_REGISTRO}} {{sFcontrato.registro_presupuestal.VIGENCIA}} </b></h4></center>
+          </div>
+              <span style="float:right" class="glyphicon glyphicon glyphicon-plus" ng-show="!panelrp"></span>
+              <span style="float:right" class="glyphicon glyphicon glyphicon-minus" ng-show="panelrp"></span>
+            </h4>
+          <div ng-show="panelrp" class="panel-body panel-collapse">
+            <div class="panel-body">
+              <div class="col-md-6"><b>{{'NUMERO_REGISTRO_PRESUPUESTAL' | translate}}</b></div>
+              <div class="col-md-6">{{sFcontrato.registro_presupuestal.NUMERO_REGISTRO}}<br><br/></div>
+              <div class="col-md-6"><b>{{'VIGENCIA' | translate}}</b></div>
+              <div class="col-md-6">{{sFcontrato.registro_presupuestal.VIGENCIA}}<br><br/></div>
+              <div class="col-md-6"><b>{{'NUMERO_COMPROMISO' | translate}}</b></div>
+              <div class="col-md-6">{{sFcontrato.registro_presupuestal.NUMERO_COMPROMISO}}<br><br/></div>
+              <div class="col-md-6"><b>{{'NUMERO_DISPONIBILIDAD' | translate}}</b></div>
+              <div class="col-md-6">Cedula ciudadania<br><br/></div>
+              <div class="col-md-6"><b>{{'NOMBRE_DISPONIBILIDAD' | translate}}</b></div>
+              <div class="col-md-6">1031138556</div>
+            </div>
+          </div>
         </div>
+
         <div class="col-md-3 panel panel-primary paneles">
            <div class="panel-heading row"><div class="col-md-12"><center><h4><b>{{'DATOS_CONTRATO' | translate}}</b></h4></center></div></div>
            <div class="panel-body">
@@ -60,3 +68,4 @@
       </div>
     </div>
 </div>
+{{sFcontrato.registro_presupuestal}}
