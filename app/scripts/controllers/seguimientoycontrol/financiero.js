@@ -67,6 +67,7 @@ angular.module('contractualClienteApp')
        $scope.vigencias = response.data;
      });
 
+$scope.vigencias = [2016,2017];
      //1 carga los contratos con vigencia 2017 al cargar el controllador
      var datos = JSON.stringify("VigenciaContrato:2017");
      adminMidRequest.post('informacion_proveedor/contratoPersona', datos).then(function(response) {
