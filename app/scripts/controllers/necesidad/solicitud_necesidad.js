@@ -110,7 +110,7 @@ angular.module('contractualClienteApp')
 
     agoraRequest.get('informacion_persona_natural', $.param({
       query: 'Id:1234567890',
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.persona_solicitante = response.data[0];
     });
@@ -154,7 +154,7 @@ angular.module('contractualClienteApp')
 
     agoraRequest.get('unidad', $.param({
       limit: -1,
-      sortby:"Nombre",
+      sortby:"Unidad",
       order:"asc",
     })).then(function(response) {
       self.unidad_data = response.data;
@@ -227,19 +227,19 @@ angular.module('contractualClienteApp')
 
 
     administrativaRequest.get('modalidad_seleccion', $.param({
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.modalidad_data = response.data;
     });
 
     administrativaRequest.get('tipo_rubro', $.param({
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.tipos_fuentes_finan = response.data;
     });
 
     administrativaRequest.get('servicio', $.param({
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.servicio_data = response.data;
     });
