@@ -7,7 +7,7 @@
  * # listaActividadesEconomicas
  */
 angular.module('contractualClienteApp')
-  .directive('listaActividadesEconomicas', function (coreRequest) {
+  .directive('listaActividadesEconomicas', function (coreRequest, $translate) {
     return {
       restrict: 'E',
       scope:{
@@ -29,7 +29,7 @@ angular.module('contractualClienteApp')
           enableSelectAll: false,
           columnDefs: [{
               field: 'Id',
-              displayName: 'Código',
+              displayName: $translate.instant('CODIGO'),
               headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
               cellTooltip: function(row) {
                 return row.entity.Id;
@@ -37,7 +37,7 @@ angular.module('contractualClienteApp')
             },
             {
                 field: 'Nombre',
-                displayName: 'Actividades Economicas',
+                displayName: $translate.instant('ACTIVIDADES_ECONOMICAS'),
                 headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
                 cellTooltip: function(row) {
                   return row.entity.Nombre;
@@ -54,7 +54,9 @@ angular.module('contractualClienteApp')
         };
 
         coreRequest.get('ciiu_subclase',$.param({
-          limit:0
+          limit:-1,
+          sortby:"Id",
+          order:"asc",
         })).then(function(response) {
           self.gridOptions.data = response.data;
         });

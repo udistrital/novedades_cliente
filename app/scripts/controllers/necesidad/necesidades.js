@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('NecesidadesCtrl', function($scope, administrativaRequest) {
+  .controller('NecesidadesCtrl', function($scope, administrativaRequest, $translate) {
     var self = this;
     //self.g_necesidad = {};
 
@@ -26,7 +26,7 @@ angular.module('contractualClienteApp')
       enableSelectAll: false,
       columnDefs: [{
           field: 'NumeroElaboracion',
-          displayName: 'Número de Elaboración',
+          displayName: $translate.instant('NUMERO_ELABORACION'),
           type: 'number',
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
           cellTooltip: function(row) {
@@ -36,7 +36,7 @@ angular.module('contractualClienteApp')
         },
         {
           field: 'Vigencia',
-          displayName: 'Vigencia',
+          displayName: $translate.instant('VIGENCIA'),
           type: 'number',
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
           cellTooltip: function(row) {
@@ -46,7 +46,7 @@ angular.module('contractualClienteApp')
         },
         {
           field: 'Objeto',
-          displayName: 'Objeto',
+          displayName: $translate.instant('OBJETO_CONTRACTUAL'),
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
           cellTooltip: function(row) {
             return row.entity.Objeto;
@@ -55,7 +55,7 @@ angular.module('contractualClienteApp')
         },
         {
           field: 'Justificacion',
-          displayName: 'Justificación',
+          displayName: $translate.instant('JUSTIFICACION_CONTRATO'),
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
           cellTooltip: function(row) {
             return row.entity.Justificacion;
@@ -64,7 +64,7 @@ angular.module('contractualClienteApp')
         },
         {
           field: 'Estado.Nombre',
-          displayName: 'Estado',
+          displayName: $translate.instant('ESTADO'),
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
           cellTooltip: function(row) {
             return row.entity.Estado.Nombre + ".\n" + row.entity.Estado.Descripcion;
@@ -73,7 +73,7 @@ angular.module('contractualClienteApp')
         },
         {
           field: 'ver',
-          displayName: 'ver',
+          displayName: $translate.instant('VER'),
           cellTemplate: function() {
             return '<center><a href="" style="border:0" type="button" ng-click="grid.appScope.direccionar(row.entity)"><span class="fa fa-eye"></span></a></center>';
           },
@@ -118,7 +118,9 @@ angular.module('contractualClienteApp')
     self.recargar_grid = function() {
       administrativaRequest.get('necesidad', $.param({
         query: "Estado.Nombre__not_in:Borrador",
-        limit: 0
+        limit: -1,
+        sortby:"NumeroElaboracion",
+        order:"desc",
       })).then(function(response) {
         self.gridOptions.data = response.data;
       });

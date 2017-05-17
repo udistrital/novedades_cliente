@@ -32,7 +32,7 @@ angular.module('contractualClienteApp')
         enableSelectAll: true,
         columnDefs: [{
             field: 'Fuente.Descripcion',
-            displayName: $scope.fuente,
+            displayName: $translate.instant('FUENTE'),
             headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
             cellTooltip: function(row) {
               return row.entity.Fuente.Descripcion;
@@ -40,7 +40,8 @@ angular.module('contractualClienteApp')
           },
           {
              field: 'Valor',
-             displayName: 'Valor',
+             displayName: $translate.instant('VALOR'),
+             cellTemplate: '<div align="right">{{row.entity.Valor | currency}}</div>',
              headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
              cellFilter: 'currency'
             }
