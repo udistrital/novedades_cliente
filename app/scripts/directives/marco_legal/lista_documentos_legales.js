@@ -7,7 +7,7 @@
  * # marcoLegal/listaDocumentosLegales
  */
 angular.module('contractualClienteApp')
-  .directive('listaDocumentosLegales', function(administrativaRequest) {
+  .directive('listaDocumentosLegales', function(administrativaRequest, $translate) {
     return {
       restrict: 'E',
       scope: {
@@ -30,7 +30,7 @@ angular.module('contractualClienteApp')
           useExternalPagination: false,
           columnDefs: [{
               field: 'NombreDocumento',
-              displayName: 'Nombre del documento',
+              displayName: $translate.instant('NOMBRE_DOCUMENTO'),
               width: '80%',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
               cellTooltip: function(row) {
@@ -39,7 +39,7 @@ angular.module('contractualClienteApp')
             },
             {
               field: 'Enlace',
-              displayName: 'Ver',
+              displayName: $translate.instant('VER'),
               width: '20%',
               cellTemplate: '<center><a href="{{row.entity.Enlace}}" onclick="window.open(this.href, \'\', \'resizable=yes,status=no,location=center,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=1150,height=1600\'); return false;" ><span class="fa fa-eye"></span></a></center>',
               headerCellClass: $scope.highlightFilteredHeader + ' text-info'

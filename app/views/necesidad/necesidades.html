@@ -2,7 +2,7 @@
   <div class="panel-body">
     <center>
       <h1 class="page-header">
-          {{ 'GESTIÓN DE NECESIDADES' | translate }}
+          {{ 'GESTION_NECESIDADES' | translate }}
       </h1></center>
 
       <div class="panel panel-success">
@@ -30,13 +30,13 @@
             </div>-->
             <div class="modal-footer" ng-show="necesidades.mod_aprobar">
               <center>
-                <button class="btn btn-success btn-outline" type="button" name="button" ng-click="necesidades.aprobar_necesidad()">Aprobar</button>
-                <button class="btn btn-warning btn-outline" type="button" name="button" ng-click="necesidades.rechazar_necesidad()">Rechazar</button>
+                <button class="btn btn-success btn-outline" type="button" name="button" ng-click="necesidades.aprobar_necesidad()">{{"APROBAR" | translate}}</button>
+                <button class="btn btn-warning btn-outline" type="button" name="button" ng-click="necesidades.rechazar_necesidad()">{{"RECHAZAR" | translate}}</button>
               </center>
             </div>
             <div class="modal-footer" ng-show="necesidades.mod_cdp">
               <center>
-                <button class="btn btn-success btn-outline" type="button" name="button" ng-click="necesidades.solicitar_cdp()">Solicitar CDP</button>
+                <button class="btn btn-success btn-outline" type="button" name="button" ng-click="necesidades.solicitar_cdp()">{{"SOLICITAR_CDP" | translate}}</button>
               </center>
             </div>
           </div>

@@ -7,7 +7,7 @@
  * # apropiaciones/listaApropiaciones
  */
 angular.module('contractualClienteApp')
-.directive('listaApropiaciones', function (financieraRequest) {
+.directive('listaApropiaciones', function (financieraRequest, $translate) {
     return {
       restrict: 'E',
       scope: {
@@ -28,7 +28,7 @@ angular.module('contractualClienteApp')
 
           columnDefs: [{
               field: 'Rubro.Codigo',
-              displayName: 'Codigo Rubro',
+              displayName: $translate.instant('CODIGO_RUBRO'),
               headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
               cellClass: function(row, col) {
                 if (col.treeNode.children.length === 0) {
@@ -41,7 +41,7 @@ angular.module('contractualClienteApp')
             },
             {
               field: 'Rubro.Descripcion',
-              displayName: 'Descripcion Rubro',
+              displayName: $translate.instant('DESCRIPCION_RUBRO'),
               headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
               cellTooltip: function(row) {
                 return row.entity.Rubro.Descripcion;
@@ -57,7 +57,7 @@ angular.module('contractualClienteApp')
             },
             {
               field: 'Valor',
-              displayName: 'Valor',
+              displayName: $translate.instant('VALOR'),
               cellFilter: 'currency',
               cellTemplate: '<div align="right">{{row.entity.Valor | currency}}</div>',
               headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
@@ -72,6 +72,7 @@ angular.module('contractualClienteApp')
             },
             {
               field: 'Saldo',
+              displayName: $translate.instant('SALDO'),
               cellFilter: 'currency',
               cellTemplate: '<div align="right">{{row.entity.Saldo | currency}}</div>',
               headerCellClass: $scope.highlightFilteredHeader + 'text-right ',

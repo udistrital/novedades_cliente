@@ -7,7 +7,7 @@
  * # catalogosElementos/listaSubgruposCatalogos
  */
 angular.module('contractualClienteApp')
-  .directive('listaSubgruposCatalogos', function (administrativaRequest) {
+  .directive('listaSubgruposCatalogos', function (administrativaRequest, $translate) {
     return {
       restrict: 'E',
       scope:{
@@ -29,7 +29,7 @@ angular.module('contractualClienteApp')
           enableSelectAll: false,
           columnDefs: [{
               field: 'ElementoCodigo',
-              displayName: 'Codigo',
+              displayName: $translate.instant('CODIGO'),
               headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
               cellTooltip: function(row) {
                 return row.entity.Nombre;
@@ -37,7 +37,7 @@ angular.module('contractualClienteApp')
             },
             {
               field: 'ElementoNombre',
-              displayName: 'Productos',
+              displayName: $translate.instant('PRODUCTOS'),
               headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
               cellTooltip: function(row) {
                 return row.entity.Nombre;
@@ -57,7 +57,9 @@ angular.module('contractualClienteApp')
         //administrativaRequest.get('catalogo_elemento',$.param({
         administrativaRequest.get('catalogo_elemento_grupo',$.param({
           fields: 'Id,ElementoNombre,ElementoCodigo',
-          limit: -1
+          limit: -1,
+          sortby:"ElementoCodigo",
+          order:"asc",
         })).then(function(response) {
           self.gridOptions.data = response.data;
         });
