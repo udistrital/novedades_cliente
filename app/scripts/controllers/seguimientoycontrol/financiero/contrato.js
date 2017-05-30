@@ -74,6 +74,7 @@ angular.module('contractualClienteApp')
         self.orden.push(temp);
         temp = [];
       }
+
     };
 
   });
