@@ -3,7 +3,7 @@
   <div class="panel-body">
           <center><h3 class="titulo-centrado">{{'SEGUIMIENTO_FINANCIERO' | translate}} {{sFcontrato.contrato.Id}}</h3></center>
           <ul class="nav nav-tabs">
-            <li class="active"><a href="#/seguimientoycontrol/financiero/contrato" data-toggle="tab">{{'DATOS_CONTRATO' | translate}}</a>
+            <li class="active"><a href="#/seguimientoycontrol/financiero/contrato" data-toggle="tab" >{{'DATOS_CONTRATO' | translate}}</a>
             </li>
             <li><a href="#/seguimientoycontrol/financiero/ordenes_pago" data-toggle="tab">{{'ORDENES_PAGO' | translate}}</a>
             </li>
@@ -27,10 +27,16 @@
              <div class="col-md-6">{{sFcontrato.persona.Cargo}}<br><br/></div>
            </div>
         </div>
-
         <div class="col-md-3 paneles">
-        <div ng-repeat="rp in sFcontrato.registro_presupuestal" >
-        <div class="panel panel-primary col-md-12">
+          <div ng-show="!banderaRP">
+            <div class="panel panel-danger col-md-12">
+              <div class="panel-heading row">
+                <b>No existe disponibilidades registradas para este contrato por lo cual no puede mostrarse ningun registro presupuestal</b>
+              </div>
+            </div>
+          </div>
+        <div  ng-show="banderaRP" ng-repeat="rp in sFcontrato.registro_presupuestal" >
+        <div class="panel panel-primary col-md-12" ng-init="sFcontrato.seleccionarValores()">
           <div class="panel-heading row" ng-click="panelrp = !panelrp">
             <center><h4><b>{{'DATOS_REGISTRO_PRESUPUESTAL' | translate}} {{rp.NUMERO_REGISTRO}} {{'VIGENCIA' | translate}} {{rp.VIGENCIA}} </b></h4></center>
               <span style="float:right" class="glyphicon glyphicon glyphicon-plus" ng-show="!panelrp"></span>

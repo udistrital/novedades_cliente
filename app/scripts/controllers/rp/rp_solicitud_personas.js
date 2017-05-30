@@ -14,6 +14,7 @@ angular.module('contractualClienteApp')
 .controller('RpSolicitudPersonasCtrl', function($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate) {
     var self = this;
     var query;
+    var datos = "";
     self.contrato = contrato;
     $scope.vigenciaModel = null;
     $scope.busquedaSinResultados = false;
@@ -67,21 +68,21 @@ angular.module('contractualClienteApp')
         self.gridApi = gridApi;
       }
     };
-/*
-    administrativaRequest.get('vigencia_contrato', datos).then(function(response) {
-      $scope.vigencias = [2016,2017];
-    });
-*/
-$scope.vigencias = [2016,2017];
-    //1 carga los contratos con vigencia 2017 al cargar el controllador
-    var datos = JSON.stringify("VigenciaContrato:2017");
-    adminMidRequest.post('informacion_proveedor/contratoPersona', datos).then(function(response) {
-      self.gridOptions.data = response.data;
-      if (response.data === null) {
-        $scope.busquedaSinResultados = true;
-      }
-    });
 
+    administrativaRequest.get('vigencia_contrato', datos).then(function(response) {
+      $scope.vigencias = response.data;
+
+    //selecciona la vigencia actual
+    var vigenciaActual=$scope.vigencias[0];
+
+    //carga los contratos con la vigencia actual
+    administrativaRequest.get('contrato_general', $.param({
+        query: "VigenciaContrato:"+vigenciaActual,
+        limit: -1
+      })).then(function(response) {
+        self.gridOptions.data = response.data;
+      });
+    });
     //se buscan los contratos por la vigencia seleccionada
     self.buscarContratosVigencia = function() {
       query = "";
@@ -89,10 +90,7 @@ $scope.vigencias = [2016,2017];
         query = query + "VigenciaContrato:" + $scope.vigenciaModel;
         var datos = JSON.stringify(query);
 
-        administrativaRequest.get('informacion_proveedor/contratoPersona', $.param({
-          query: datos,
-          limit: -1
-        })).then(function(response) {
+        adminMidRequest.post('informacion_proveedor/contratoPersona', datos).then(function(response) {
           self.gridOptions.data = response.data;
           if (response.data === null) {
             $scope.busquedaSinResultados = true;
@@ -104,6 +102,9 @@ $scope.vigencias = [2016,2017];
 
     self.mostrar_estadisticas = function() {
       var seleccion = self.gridApi.selection.getSelectedRows();
+      if(seleccion[0]===null || seleccion[0]===undefined){
+        swal("Alertas", "Debe seleccionar un contratista", "error");
+      }else{
       self.contrato.Id = seleccion[0].Id;
       self.contrato.Vigencia= seleccion[0].VigenciaContrato;
       self.contrato.ContratistaId= seleccion[0].Contratista.NumDocumento;
@@ -116,5 +117,6 @@ $scope.vigencias = [2016,2017];
       self.saving = false;
       self.btnGenerartxt = "Generar";
       $window.location.href = '#/rp/rp_solicitud/';
+      }
     };
   });

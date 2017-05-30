@@ -102,6 +102,13 @@ var text_es = {
   CARGO:"Cargo",
   NUMERO_COMPROMISO:"No compromiso" ,
   FECHA_REGISTRO: "Fecha registro",
+  VIGENCIA_PRESUPUESTO: "Vigencia presupuesto",
+  CODIGO_RUBRO:"Codigo rubro",
+  DESCRIPCION_RUBRO: "Descripción rubro",
+  VALOR_ORDEN:"Valor orden",
+  VALOR_NETO:"Valor neto",
+  VIGENCIA_ORDEN: "Vigencia orden",
+  SELECCIONAR_ORDEN_PAGO:"Seleccione una orden de pago",
 };
 
 var text_en = {
@@ -195,9 +202,16 @@ var text_en = {
   PORCENTAJE_PAGADO:"Paid percentage",
   PORCENTAJE_RESTANTE:"Remaining percentage",
   GRAFICO_BARRAS_CONTRATO:"Contract bar graph",
-  CARGO:"Post",
+  CARGO:"Position",
   NUMERO_COMPROMISO:"Compromise number" ,
   FECHA_REGISTRO: "Register date",
+  VIGENCIA_PRESUPUESTO: "Budget validity",
+  CODIGO_RUBRO:"Leading code",
+  DESCRIPCION_RUBRO: "Leading description",
+  VALOR_ORDEN:"Order value",
+  VALOR_NETO:"Net value",
+  VIGENCIA_ORDEN: "Validity order",
+  SELECCIONAR_ORDEN_PAGO:"Choose a pay order",
 };
 
 angular.module('contractualClienteApp')
