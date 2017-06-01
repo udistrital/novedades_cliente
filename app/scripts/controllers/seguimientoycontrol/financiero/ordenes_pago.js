@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function($http,$scope, registro, disponibilidad,contrato, sicapitalRequest) {
+  .controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function($http, $scope,$translate,registro, disponibilidad,contrato, sicapitalRequest) {
     var self = this;
     self.contrato = contrato;
     self.items = [];
@@ -19,14 +19,87 @@ angular.module('contractualClienteApp')
     var container = document.getElementById('linea');
     self.ordenActual = {};
     var url;
+    self.consulta_finalizada=false;
     self.banderaOP=false;
+
+    self.gridOptions = {
+      enableRowSelection: true,
+      enableRowHeaderSelection: false,
+      enableSorting: true,
+      enableFiltering: true,
+      multiSelect: false,
+      columnDefs: [{
+          field: 'CONSECUTIVO',
+          displayName: $translate.instant('CONSECUTIVO'),
+          width: "12%",
+          cellTemplate: '<div align="center">{{row.entity.CONSECUTIVO_ORDEN}}</div>'
+        },
+        {
+          field: 'VIGENCIA',
+          width: "9%",
+          displayName: $translate.instant('VIGENCIA'),
+          cellTemplate: '<div align="center">{{row.entity.VIGENCIA}}</div>'
+        },
+        {
+          field: 'VIGENCIA_PRESUPUESTO',
+          width: "18%",
+          displayName: $translate.instant('VIGENCIA_PRESUPUESTO'),
+          cellTemplate: '<div align="center">{{row.entity.VIGENCIA_PRESUPUESTO}}</div>'
+        },
+        {
+          field: 'FECHA_ORDEN',
+          width: "12%",
+          displayName: $translate.instant('FECHA_ORDEN'),
+          cellTemplate: '<div align="center">{{row.entity.FECHA_ORDEN}}</div>'
+        },
+        {
+        field: 'NUMERO_REGISTRO',
+        width: "8%",
+        displayName: $translate.instant('NUMERO_REGISTRO_PRESUPUESTAL'),
+        cellTemplate: '<div align="center">{{row.entity.NUMERO_REGISTRO}}</div>'
+      },
+      {
+        field: 'NUMERO_DISPONIBILIDAD',
+        width: "8%",
+        displayName: $translate.instant('NUMERO_DISPONIBILIDAD'),
+        cellTemplate: '<div align="center">{{row.entity.NUMERO_DISPONIBILIDAD}}</div>'
+      },
+      {
+        field: 'ESTADO',
+        width: "8%",
+        displayName: $translate.instant('ESTADO'),
+        cellTemplate: '<div align="center">{{row.entity.ESTADO}}</div>'
+      },
+      {
+        field: 'VALOR_ORDEN',
+        width: "13%",
+        displayName: $translate.instant('VALOR_ORDEN'),
+        cellTemplate: '<div align="center">{{row.entity.VALOR_ORDEN | currency}}</div>'
+      },
+      {
+        field: 'VALOR_NETO',
+        width: "13%",
+        displayName: $translate.instant('VALOR_NETO'),
+        cellTemplate: '<div align="center">{{row.entity.VALOR_NETO | currency}}</div>'
+      },
+      ],
+      onRegisterApi: function(gridApi) {
+        self.gridApi = gridApi;
+      }
+    };
+
+
     for (var x = 0; x < self.registro.length; x++) {
     url = self.contrato.ContratistaId+"/"+self.registro[x].numero_disponibilidad+"/"+self.registro[x].numero_registro+"/"+self.registro[x].vigencia;
       sicapitalRequest.get('ordenpago/opgsyc', url).then(function(response) {
         if(response.data[0]!= "<"){
           self.ordenes_pago = self.ordenes_pago.concat(response.data);
+
         }
         if(x === self.registro.length){
+           self.gridOptions.data = response.data;
+           console.log(response.data);
+           self.consulta_finalizada=true;
           var i = 0;
           angular.forEach(self.ordenes_pago, function(op) {
             self.items.push({
