@@ -32,23 +32,24 @@ angular.module('contractualClienteApp')
           field: 'CONSECUTIVO',
           displayName: $translate.instant('CONSECUTIVO'),
           width: "12%",
+          rowHeight: 30,
           cellTemplate: '<div align="center">{{row.entity.CONSECUTIVO_ORDEN}}</div>'
         },
         {
           field: 'VIGENCIA',
-          width: "9%",
+          width: "10%",
           displayName: $translate.instant('VIGENCIA'),
           cellTemplate: '<div align="center">{{row.entity.VIGENCIA}}</div>'
         },
         {
           field: 'VIGENCIA_PRESUPUESTO',
-          width: "18%",
-          displayName: $translate.instant('VIGENCIA_PRESUPUESTO'),
+          width: "13%",
+          displayName: $translate.instant('PRESUPUESTO'),
           cellTemplate: '<div align="center">{{row.entity.VIGENCIA_PRESUPUESTO}}</div>'
         },
         {
           field: 'FECHA_ORDEN',
-          width: "12%",
+          width: "13%",
           displayName: $translate.instant('FECHA_ORDEN'),
           cellTemplate: '<div align="center">{{row.entity.FECHA_ORDEN}}</div>'
         },
@@ -66,7 +67,7 @@ angular.module('contractualClienteApp')
       },
       {
         field: 'ESTADO',
-        width: "8%",
+        width: "9%",
         displayName: $translate.instant('ESTADO'),
         cellTemplate: '<div align="center">{{row.entity.ESTADO}}</div>'
       },
@@ -74,20 +75,26 @@ angular.module('contractualClienteApp')
         field: 'VALOR_ORDEN',
         width: "13%",
         displayName: $translate.instant('VALOR_ORDEN'),
-        cellTemplate: '<div align="center">{{row.entity.VALOR_ORDEN | currency}}</div>'
+        cellTemplate: '<div align="right">{{row.entity.VALOR_ORDEN | currency}}</div>'
       },
       {
         field: 'VALOR_NETO',
         width: "13%",
         displayName: $translate.instant('VALOR_NETO'),
-        cellTemplate: '<div align="center">{{row.entity.VALOR_NETO | currency}}</div>'
+        cellTemplate: '<div align="right">{{row.entity.VALOR_NETO | currency}}</div>'
       },
       ],
       onRegisterApi: function(gridApi) {
         self.gridApi = gridApi;
       }
     };
-
+    $scope.getTableStyle= function() {
+      var rowHeight=30;
+      var headerHeight=45;
+      return {
+      height: (self.gridOptions.data.length * rowHeight + headerHeight) + "px"
+      };
+    };
 
     for (var x = 0; x < self.registro.length; x++) {
     url = self.contrato.ContratistaId+"/"+self.registro[x].numero_disponibilidad+"/"+self.registro[x].numero_registro+"/"+self.registro[x].vigencia;
@@ -102,10 +109,15 @@ angular.module('contractualClienteApp')
            self.consulta_finalizada=true;
           var i = 0;
           angular.forEach(self.ordenes_pago, function(op) {
+            //esto debe hacerse ya que la fecha queda un dia antes de la que esta definida
+            var fechaArreglo = op.FECHA_ORDEN.split("-");
+            var dia =parseInt(fechaArreglo[2])+1;
+            var fecha = fechaArreglo[0]+"-"+fechaArreglo[1]+"-"+dia.toString();
+
             self.items.push({
               id: i++,
               content: "OP: "+op.CONSECUTIVO_ORDEN,
-              start: op.FECHA_ORDEN
+              start: fecha
             });
           });
           var options = {

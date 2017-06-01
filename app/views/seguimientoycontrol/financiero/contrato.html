@@ -38,7 +38,7 @@
         <div  ng-show="banderaRP" ng-repeat="rp in sFcontrato.registro_presupuestal" >
         <div class="panel panel-primary col-md-12" ng-init="sFcontrato.seleccionarValores()">
           <div class="panel-heading row" ng-click="panelrp = !panelrp">
-            <center><h4><b>{{'DATOS_REGISTRO_PRESUPUESTAL' | translate}} {{rp.NUMERO_REGISTRO}} {{'VIGENCIA' | translate}} {{rp.VIGENCIA}} </b></h4></center>
+            <center><h4><b>{{'DATOS_REGISTRO_PRESUPUESTAL' | translate}} {{rp.NUMERO_REGISTRO}} - {{rp.VIGENCIA}} </b></h4></center>
               <span style="float:right" class="glyphicon glyphicon glyphicon-plus" ng-show="!panelrp"></span>
               <span style="float:right" class="glyphicon glyphicon glyphicon-minus" ng-show="panelrp"></span>
           </div>

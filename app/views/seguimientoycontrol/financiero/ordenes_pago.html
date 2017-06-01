@@ -13,7 +13,7 @@
           <br/>
       <div class="row">
         <div class="panel-body">
-          -<div class="col-md-3" ng-show="sFordenesPago.ordenActual.VIGENCIA === undefined">
+          <div class="col-md-3" ng-show="sFordenesPago.ordenActual.VIGENCIA === undefined">
           <div class=" panel panel panel-primary">
             <div class="panel-heading row"><h4><b><div class="col-md-12" ng-init="sFordenesPagos.inicio()"><center> {{'SELECCIONAR_ORDEN_PAGO' | translate}}</center></div></b></h4></div>
           </div>
@@ -61,7 +61,8 @@
             <div class="col-md-3" ng-show="sFordenesPago.ordenActual.VIGENCIA === undefined">
             </div>
             <div class="col-md-8 col-md-offset-1">
-              <div ui-grid="sFordenesPago.gridOptions" ui-grid-selection class="myGrid" ></div>
+              <br/><br/>
+              <div ui-grid="sFordenesPago.gridOptions" ui-grid-auto-resize ui-grid-selection class="myGrid" ng-style="getTableStyle()"></div>
             </div>
       </div>
     </div>
