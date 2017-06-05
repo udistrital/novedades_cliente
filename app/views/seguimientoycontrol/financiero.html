@@ -31,7 +31,12 @@
       <table style="width:70%;" align="center">
         <tr>
           <td>
-            <div ui-grid="sFinanciero.gridOptions" ui-grid-selection class="myGrid"></div>
+            <div ui-grid="sFinanciero.gridOptions" ui-grid-selection class="myGrid">
+              <div class="well grid-loading" ng-show="sFinanciero.longitud_grid == 0">
+                  <i class="fa fa-spin fa-spinner"></i>
+                <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
+              </div>
+            </div>
           </td>
         </tr>
         <tr>

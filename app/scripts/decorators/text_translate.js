@@ -110,6 +110,9 @@ var text_es = {
   VALOR_NETO:"Valor neto",
   VIGENCIA_ORDEN: "Vigencia orden",
   SELECCIONAR_ORDEN_PAGO:"Seleccione una orden de pago",
+  NO_CDP_REGISTRADAS: "No existe disponibilidades o registros presupuestales registradas para este contrato",
+  POR_FAVOR_ESPERE:"Por favor espere",
+  CARGANDO_DATOS: "Los datos se estan cargando",
 };
 
 var text_en = {
@@ -214,6 +217,9 @@ var text_en = {
   VALOR_NETO:"Net value",
   VIGENCIA_ORDEN: "Validity order",
   SELECCIONAR_ORDEN_PAGO:"Choose a pay order",
+  NO_CDP_REGISTRADAS: "There are not availabilities registered for this contract",
+  POR_FAVOR_ESPERE:"Please wait",
+  CARGANDO_DATOS: "Data is loading",
 };
 
 angular.module('contractualClienteApp')

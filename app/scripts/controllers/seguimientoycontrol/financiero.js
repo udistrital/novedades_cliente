@@ -14,6 +14,7 @@ angular.module('contractualClienteApp')
      self.contrato = contrato;
      $scope.vigenciaModel = null;
      $scope.vigencias=null;
+     self.longitud_grid = 0;
      $scope.busquedaSinResultados = false;
      $scope.banderaValores = true;
      $scope.fields = {
@@ -73,10 +74,12 @@ angular.module('contractualClienteApp')
          limit: -1
        })).then(function(response) {
          self.gridOptions.data = response.data;
+         self.longitud_grid = self.gridOptions.data.length;
        });
      });
      //se buscan los contratos por la vigencia seleccionada
      self.buscarContratosVigencia = function() {
+        self.longitud_grid = 0;
        query = "";
        if ($scope.vigenciaModel !== undefined || $scope.vigenciaModel === null) {
          query = query + "VigenciaContrato:" + $scope.vigenciaModel;
@@ -84,6 +87,7 @@ angular.module('contractualClienteApp')
 
          adminMidRequest.post('informacion_proveedor/contratoPersona', datos).then(function(response) {
            self.gridOptions.data = response.data;
+            self.longitud_grid = self.gridOptions.data.length;
            if (response.data === null) {
              $scope.busquedaSinResultados = true;
            }

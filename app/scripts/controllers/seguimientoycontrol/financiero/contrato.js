@@ -18,14 +18,14 @@ angular.module('contractualClienteApp')
     var temp = [];
     self.disponibilidad = disponibilidad;
     self.cdp=null;
-    $scope.banderaRP = false;
+    self.cargando_datos = true;
+    $scope.banderaRP = true;
     query = "query=NumeroContrato:"+self.contrato.Id;
     self.registro_presupuestal=[];
     //CDP asociado a un contrato
     administrativaRequest.get('contrato_disponibilidad',query).then(function(response) {
       self.cdps=response.data;
       if(self.cdps != null){
-        $scope.banderaRP = true;
       //petición para traer los rp por cdp de sicapital vigencia/cdp/cedula
       for (var i = 0; i < self.cdps.length; i++) {
         self.cdp=self.cdps[i];
@@ -35,11 +35,27 @@ angular.module('contractualClienteApp')
         //sicapitalRequest.get('registro/rpxcdp', self.cdp.Vigencia+"/"+self.cdp.NumeroCdp).then(function(response) {
         if(response.data[0]!= "<"){
           self.registro_presupuestal=self.registro_presupuestal.concat(response.data);
-          }
+          self.cargando_datos = false;
+        }else{
+          console.log("error=");
+          console.log(response.data);
+          $scope.banderaRP = false;
+        }
         });
       }
+    }else{
+      //comentariar la siguiente linea para ver el reloj
+      $scope.banderaRP = false;
     }
     });
+
+    self.reloj = function(){
+      if($scope.banderaRP === true && self.cargando_datos === true){
+        return true;
+      }else{
+        return false;
+      }
+    };
 
     agoraRequest.get('informacion_persona_natural', 'query=Id:'+contrato.ContratistaId).then(function(response) {
       self.persona=response.data[0];

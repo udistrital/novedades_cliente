@@ -28,15 +28,28 @@
            </div>
         </div>
         <div class="col-md-3 paneles">
+          <div ng-show="sFcontrato.reloj()">
+            <br /><br/>
+              <div class="col-md-12">
+                <center><loading load="sFcontrato.cargando_datos" tam ="5" /></center>
+              </div>
+              <div class="panel panel-primary col-md-8 col-md-offset-2">
+                <div class="panel-heading row">
+                  <center><h4><b>{{'POR_FAVOR_ESPERE' |translate}}</b></h4>
+                  {{'CARGANDO_DATOS' |translate}}
+                  </center>
+                </div>
+              </div>
+          </div>
           <div ng-show="!banderaRP">
             <div class="panel panel-danger col-md-12">
               <div class="panel-heading row">
-                <b>No existe disponibilidades registradas para este contrato por lo cual no puede mostrarse ningun registro presupuestal</b>
+                <b>{{'NO_CDP_REGISTRADAS' |translate}}</b>
               </div>
             </div>
           </div>
-        <div  ng-show="banderaRP" ng-repeat="rp in sFcontrato.registro_presupuestal" >
-        <div class="panel panel-primary col-md-12" ng-init="sFcontrato.seleccionarValores()">
+        <div ng-show="banderaRP" ng-repeat="rp in sFcontrato.registro_presupuestal" >
+        <div class="panel panel-primary col-md-12" ng-show="!sFcontrato.cargando_datos" ng-init="sFcontrato.seleccionarValores()">
           <div class="panel-heading row" ng-click="panelrp = !panelrp">
             <center><h4><b>{{'DATOS_REGISTRO_PRESUPUESTAL' | translate}} {{rp.NUMERO_REGISTRO}} - {{rp.VIGENCIA}} </b></h4></center>
               <span style="float:right" class="glyphicon glyphicon glyphicon-plus" ng-show="!panelrp"></span>
