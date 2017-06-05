@@ -8,13 +8,16 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroContratoCtrl', function (contrato,registro,disponibilidad,agoraRequest,orden,sicapitalRequest,administrativaRequest,$scope,$rootScope) {
+  .controller('SeguimientoycontrolFinancieroContratoCtrl', function ($timeout,contrato,registro,disponibilidad,agoraRequest,orden,sicapitalRequest,administrativaRequest,$scope,$rootScope) {
     var self = this;
+    self.cambio = false;
     self.contrato=contrato;
     self.registro_presupuestal = [];
+    var url;
     self.registro = registro;
     self.ordenes_pago = [];
-    self.orden = orden;
+    self.orden=[];
+    self.orden_pago = orden;
     var temp = [];
     self.disponibilidad = disponibilidad;
     self.cdp=null;
@@ -22,6 +25,11 @@ angular.module('contractualClienteApp')
     $scope.banderaRP = true;
     query = "query=NumeroContrato:"+self.contrato.Id;
     self.registro_presupuestal=[];
+    var t1;
+    var t0;
+    var total;
+
+    t0 = performance.now();
     //CDP asociado a un contrato
     administrativaRequest.get('contrato_disponibilidad',query).then(function(response) {
       self.cdps=response.data;
@@ -41,6 +49,38 @@ angular.module('contractualClienteApp')
           console.log(response.data);
           $scope.banderaRP = false;
         }
+        if(i === self.cdps.length){
+          for (var x = 0; x < self.registro_presupuestal.length; x++) {
+          url = self.contrato.ContratistaId+"/"+self.registro_presupuestal[x].NUMERO_DISPONIBILIDAD+"/"+self.registro_presupuestal[x].NUMERO_REGISTRO+"/"+self.registro_presupuestal[x].VIGENCIA;
+          console.log(url);
+            sicapitalRequest.get('ordenpago/opgsyc', url).then(function(response) {
+              if(response.data[0]!= "<"){
+                self.ordenes_pago = self.ordenes_pago.concat(response.data);
+              }
+              if(x===self.registro_presupuestal.length){
+
+                for (var i = 0; i < self.ordenes_pago.length; i++) {
+                  temp.numero_disponibilidad = self.ordenes_pago[i].NUMERO_DISPONIBILIDAD;
+                  temp.numero_registro = self.ordenes_pago[i].NUMERO_REGISTRO;
+                  temp.beneficiario = self.ordenes_pago[i].BENEFICIARIO;
+                  temp.cod_rubro = self.ordenes_pago[i].COD_RUBRO;
+                  temp.consecutivo_orden = self.ordenes_pago[i].CONSECUTIVO_ORDEN;
+                  temp.descripcion_rubro = self.ordenes_pago[i].DESCRIPCION_RUBRO;
+                  temp.estado = self.ordenes_pago[i].ESTADO;
+                  temp.fecha_orden = self.ordenes_pago[i].FECHA_ORDEN;
+                  temp.valor_bruto = self.ordenes_pago[i].VALOR_BRUTO;
+                  temp.valor_neto = self.ordenes_pago[i].VALOR_NETO;
+                  temp.valor_orden = self.ordenes_pago[i].VALOR_ORDEN;
+                  temp.vigencia_presupuesto = self.ordenes_pago[i].VIGENCIA_PRESUPUESTO;
+                  temp.vigencia = self.ordenes_pago[i].VIGENCIA;
+                  self.orden.push(temp);
+                  temp=[];
+                }
+              }
+
+            });
+          }
+        }
         });
       }
     }else{
@@ -48,6 +88,10 @@ angular.module('contractualClienteApp')
       $scope.banderaRP = false;
     }
     });
+
+    t1 = performance.now();
+    total = (t1 - t0) +500;
+
 
     self.reloj = function(){
       if($scope.banderaRP === true && self.cargando_datos === true){
@@ -65,7 +109,8 @@ angular.module('contractualClienteApp')
     });
 
     self.seleccionarValores = function(){
-
+      $timeout(function(){
+      temp =[];
       //se recorre el arreglo de rps que se obtienen de la consulta y se guardan en la fabrica para usarlos en otra vista
       for (var i = 0; i < self.registro_presupuestal.length; i++) {
         temp.numero_disponibilidad= self.registro_presupuestal[i].NUMERO_DISPONIBILIDAD;
@@ -85,12 +130,25 @@ angular.module('contractualClienteApp')
         self.disponibilidad.push(temp);
         temp = [];
       }
-      for (var i = 0; i < self.ordenes_pago.length; i++) {
-        temp.fecha_orden = self.ordenes_pago[x].beneficiario;
-        self.orden.push(temp);
+      for (var i = 0; i < self.orden.length; i++) {
+        temp.numero_disponibilidad = self.orden[i].numero_disponibilidad;
+        temp.numero_registro = self.orden[i].numero_registro;
+        temp.beneficiario = self.orden[i].beneficiario;
+        temp.cod_rubro = self.orden[i].cod_rubro;
+        temp.consecutivo_orden = self.orden[i].consecutivo_orden;
+        temp.descripcion_rubro = self.orden[i].descripcion_rubro;
+        temp.estado = self.orden[i].estado;
+        temp.fecha_orden = self.orden[i].fecha_orden;
+        temp.valor_bruto = self.orden[i].valor_bruto;
+        temp.valor_neto = self.orden[i].valor_neto;
+        temp.valor_orden = self.orden[i].valor_orden;
+        temp.vigencia_presupuesto = self.orden[i].vigencia_presupuesto;
+        temp.vigencia = self.orden[i].vigencia;
+        self.orden_pago.push(temp);
         temp = [];
       }
-
+      self.cambio = true;
+        }, total)
     };
 
   });

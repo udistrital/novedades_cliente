@@ -8,21 +8,22 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function($http, $scope,$translate,registro, disponibilidad,contrato, sicapitalRequest) {
+  .controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function($http, $scope,$translate,registro,orden, disponibilidad,contrato, sicapitalRequest) {
     var self = this;
     self.contrato = contrato;
     self.items = [];
     self.registro = registro;
     self.disponibilidad = disponibilidad;
-    self.ordenes_pago =[];
+    self.ordenes_pago =orden;
     var retorno = null;
     var container = document.getElementById('linea');
-    self.ordenActual = {};
     var url;
     self.consulta_finalizada=false;
     self.banderaOP=false;
+    var i = 0;
+    self.ordenActual={};
 
-    self.gridOptions = {
+      self.gridOptions = {
       enableRowSelection: true,
       enableRowHeaderSelection: false,
       enableSorting: true,
@@ -96,34 +97,23 @@ angular.module('contractualClienteApp')
       };
     };
 
-    for (var x = 0; x < self.registro.length; x++) {
-    url = self.contrato.ContratistaId+"/"+self.registro[x].numero_disponibilidad+"/"+self.registro[x].numero_registro+"/"+self.registro[x].vigencia;
-      sicapitalRequest.get('ordenpago/opgsyc', url).then(function(response) {
-        if(response.data[0]!= "<"){
-          self.ordenes_pago = self.ordenes_pago.concat(response.data);
-
-        }
-        if(x === self.registro.length){
-           self.gridOptions.data = response.data;
-           console.log(response.data);
-           self.consulta_finalizada=true;
-          var i = 0;
+          console.log(self.ordenes_pago);
           angular.forEach(self.ordenes_pago, function(op) {
             //esto debe hacerse ya que la fecha queda un dia antes de la que esta definida
-            var fechaArreglo = op.FECHA_ORDEN.split("-");
+            var fechaArreglo = op.fecha_orden.split("-");
             var dia =parseInt(fechaArreglo[2])+1;
             var fecha = fechaArreglo[0]+"-"+fechaArreglo[1]+"-"+dia.toString();
 
             self.items.push({
               id: i++,
-              content: "OP: "+op.CONSECUTIVO_ORDEN,
+              content: "OP: "+op.consecutivo_orden,
               start: fecha
             });
           });
           var options = {
             showCurrentTime: true,
-            start: self.items[0].FECHA_ORDEN,
-            end: self.items[self.items.length-1].FECHA_ORDEN,
+            start: self.items[0].fecha_orden,
+            end: self.items[self.items.length-1].fecha_orden,
             height: '200px',
 
           };
@@ -133,14 +123,22 @@ angular.module('contractualClienteApp')
           container.on('select', function (properties) {
             var lugar=properties.items[0];
             if(lugar !== undefined){
-              var a = self.ordenes_pago[parseInt(lugar)];
-              self.ordenActual= a;
+              self.ordenActual.numero_disponibilidad = self.ordenes_pago[parseInt(lugar)].numero_disponibilidad;
+              self.ordenActual.numero_registro = self.ordenes_pago[parseInt(lugar)].numero_registro;
+              self.ordenActual.beneficiario = self.ordenes_pago[parseInt(lugar)].beneficiario;
+              self.ordenActual.cod_rubro = self.ordenes_pago[parseInt(lugar)].cod_rubro;
+              self.ordenActual.consecutivo_orden = self.ordenes_pago[parseInt(lugar)].consecutivo_orden;
+              self.ordenActual.descripcion_rubro = self.ordenes_pago[parseInt(lugar)].descripcion_rubro;
+              self.ordenActual.estado = self.ordenes_pago[parseInt(lugar)].estado;
+              self.ordenActual.fecha_orden = self.ordenes_pago[parseInt(lugar)].fecha_orden;
+              self.ordenActual.valor_bruto = self.ordenes_pago[parseInt(lugar)].valor_bruto;
+              self.ordenActual.valor_neto = self.ordenes_pago[parseInt(lugar)].valor_neto;
+              self.ordenActual.valor_orden = self.ordenes_pago[parseInt(lugar)].valor_orden;
+              self.ordenActual.vigencia_presupuesto = self.ordenes_pago[parseInt(lugar)].vigencia_presupuesto;
+              self.ordenActual.vigencia = self.ordenes_pago[parseInt(lugar)].vigencia;
             }
         });
-        }
 
-    });
-    }
 
 
   self.accion = function(){

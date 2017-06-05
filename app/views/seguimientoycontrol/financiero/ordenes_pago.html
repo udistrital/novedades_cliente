@@ -13,42 +13,40 @@
           <br/>
       <div class="row">
         <div class="panel-body">
-          <div class="col-md-3" ng-show="sFordenesPago.ordenActual.VIGENCIA === undefined">
+          <div class="col-md-3" ng-show="sFordenesPago.ordenActual.vigencia === undefined">
           <div class=" panel panel panel-primary">
-            <div class="panel-heading row"><h4><b><div class="col-md-12" ng-init="sFordenesPagos.inicio()"><center> {{'SELECCIONAR_ORDEN_PAGO' | translate}}</center></div></b></h4></div>
+            <div class="panel-heading row"><h4><b><div class="col-md-12"><center> {{'SELECCIONAR_ORDEN_PAGO' | translate}}</center></div></b></h4></div>
           </div>
         </div>
-            <div class=" panel panel panel-primary col-md-3" ng-show="sFordenesPago.ordenActual.VIGENCIA !== undefined">
+            <div class=" panel panel panel-primary col-md-3" ng-show="sFordenesPago.ordenActual.vigencia !== undefined">
               <div class="panel-heading row"><h4><b><div class="col-md-12"><center>{{'ORDEN_PAGO' | translate}} {{sFordenesPago.ordenActual.CONSECUTIVO_ORDEN}} <br> {{'VIGENCIA_PRESUPUESTO' | translate}} {{sFordenesPago.ordenActual.VIGENCIA_PRESUPUESTO}} <br> {{'VIGENCIA_ORDEN' | translate}} {{sFordenesPago.ordenActual.VIGENCIA}}</center></div></b></h4></div>
               <div class="panel-body row" >
                 <div class="col-md-7" ><b>{{'CONSECUTIVO' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.CONSECUTIVO_ORDEN}}<br></br></div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.consecutivo_orden}}<br></br></div>
                 <div class="col-md-7"><b>{{'VIGENCIA_ORDEN' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.VIGENCIA}}<br></br></div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.vigencia}}<br></br></div>
                 <div class="col-md-7"><b>{{'FECHA_ORDEN' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.FECHA_ORDEN}}<br></br></div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.fecha_orden}}<br></br></div>
                 <div class="col-md-7"><b>{{'UNIDAD_EJECUTORA' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.UNIDAD_EJECUTORA}}<br></br></div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.unidad_ejecutora}}<br></br></div>
                 <div class="col-md-7"><b>{{'VIGENCIA_PRESUPUESTO' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.VIGENCIA_PRESUPUESTO}}<br></br></div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.vigencia_presupuesto}}<br></br></div>
                 <div class="col-md-7"><b>{{'ESTADO' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.ESTADO}}<br></br></div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.estado}}<br></br></div>
                 <div class="col-md-7"><b>{{'NUMERO_REGISTRO_PRESUPUESTAL' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.NUMERO_REGISTRO}}<br></br></div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.numero_registro}}<br></br></div>
                 <div class="col-md-7"><b>{{'NUMERO_DISPONIBILIDAD' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.NUMERO_DISPONIBILIDAD}}<br></br></div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.numero_disponibilidad}}<br></br></div>
                 <div class="col-md-5"><b>{{'CODIGO_RUBRO' | translate}}</b></div>
-                <div class="col-md-7">{{sFordenesPago.ordenActual.COD_RUBRO}}<br></br></div>
+                <div class="col-md-7">{{sFordenesPago.ordenActual.cod_rubro}}<br></br></div>
                 <div class="col-md-7"><b>{{'DESCRIPCION_RUBRO' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.DESCRIPCION_RUBRO}}<br></br></div>
-                <div class="col-md-7"><b>{{'ESTADO' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.ESTADO}}<br></br></div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.descripcion_rubro}}<br></br></div>
                 <div class="col-md-7"><b>{{'VALOR_ORDEN' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.VALOR_ORDEN | currency}}<br></br></div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.valor_orden | currency}}<br></br></div>
                 <div class="col-md-7"><b>{{'VALOR_BRUTO' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.VALOR_BRUTO | currency}}<br></br></div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.valor_bruto | currency}}<br></br></div>
                 <div class="col-md-7"><b>{{'VALOR_NETO' | translate}}</b></div>
-                <div class="col-md-5">{{sFordenesPago.ordenActual.VALOR_NETO | currency}}</div>
+                <div class="col-md-5">{{sFordenesPago.ordenActual.valor_neto | currency}}</div>
               </div>
             </div>
             <div class=" panel panel panel-primary col-md-8 col-md-offset-1">

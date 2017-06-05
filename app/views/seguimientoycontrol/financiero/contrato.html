@@ -3,11 +3,11 @@
   <div class="panel-body">
           <center><h3 class="titulo-centrado">{{'SEGUIMIENTO_FINANCIERO' | translate}} {{sFcontrato.contrato.Id}}</h3></center>
           <ul class="nav nav-tabs">
-            <li class="active"><a href="#/seguimientoycontrol/financiero/contrato" data-toggle="tab" >{{'DATOS_CONTRATO' | translate}}</a>
+            <li class="active"><a href="#/seguimientoycontrol/financiero/contrato" data-toggle="tab" ng-show="sFcontrato.cambio">{{'DATOS_CONTRATO' | translate}}</a>
             </li>
-            <li><a href="#/seguimientoycontrol/financiero/ordenes_pago" data-toggle="tab">{{'ORDENES_PAGO' | translate}}</a>
+            <li><a href="#/seguimientoycontrol/financiero/ordenes_pago" data-toggle="tab" ng-show="sFcontrato.cambio">{{'ORDENES_PAGO' | translate}}</a>
             </li>
-            <li><a href="#/seguimientoycontrol/financiero/estadisticas" data-toggle="tab">{{'ESTADISTICAS' | translate}}</a>
+            <li><a href="#/seguimientoycontrol/financiero/estadisticas" data-toggle="tab" ng-show="sFcontrato.cambio">{{'ESTADISTICAS' | translate}}</a>
             </li>
           </ul>
           <br/>
