@@ -45,14 +45,12 @@ angular.module('contractualClienteApp')
           self.registro_presupuestal=self.registro_presupuestal.concat(response.data);
           self.cargando_datos = false;
         }else{
-          console.log("error=");
-          console.log(response.data);
           $scope.banderaRP = false;
         }
         if(i === self.cdps.length){
+          //recorre los rps y busca las ordenes de pago de este
           for (var x = 0; x < self.registro_presupuestal.length; x++) {
           url = self.contrato.ContratistaId+"/"+self.registro_presupuestal[x].NUMERO_DISPONIBILIDAD+"/"+self.registro_presupuestal[x].NUMERO_REGISTRO+"/"+self.registro_presupuestal[x].VIGENCIA;
-          console.log(url);
             sicapitalRequest.get('ordenpago/opgsyc', url).then(function(response) {
               if(response.data[0]!= "<"){
                 self.ordenes_pago = self.ordenes_pago.concat(response.data);
@@ -62,6 +60,7 @@ angular.module('contractualClienteApp')
                 for (var i = 0; i < self.ordenes_pago.length; i++) {
                   temp.numero_disponibilidad = self.ordenes_pago[i].NUMERO_DISPONIBILIDAD;
                   temp.numero_registro = self.ordenes_pago[i].NUMERO_REGISTRO;
+                  temp.unidad_ejecutora = self.ordenes_pago[i].UNIDAD_EJECUTORA;
                   temp.beneficiario = self.ordenes_pago[i].BENEFICIARIO;
                   temp.cod_rubro = self.ordenes_pago[i].COD_RUBRO;
                   temp.consecutivo_orden = self.ordenes_pago[i].CONSECUTIVO_ORDEN;
@@ -130,9 +129,11 @@ angular.module('contractualClienteApp')
         self.disponibilidad.push(temp);
         temp = [];
       }
+      //se recorre el arreglo de ordenes que se obtienen de la consulta y se guardan en la fabrica para usarlos en otra vista
       for (var i = 0; i < self.orden.length; i++) {
         temp.numero_disponibilidad = self.orden[i].numero_disponibilidad;
         temp.numero_registro = self.orden[i].numero_registro;
+        temp.unidad_ejecutora = self.orden[i].unidad_ejecutora;
         temp.beneficiario = self.orden[i].beneficiario;
         temp.cod_rubro = self.orden[i].cod_rubro;
         temp.consecutivo_orden = self.orden[i].consecutivo_orden;
