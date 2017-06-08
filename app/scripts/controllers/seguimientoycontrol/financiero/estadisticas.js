@@ -8,15 +8,16 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroEstadisticasCtrl', function (contrato) {
+  .controller('SeguimientoycontrolFinancieroEstadisticasCtrl', function (contrato,orden) {
     var self = this;
+    self.orden=orden;
     self.contrato=contrato;
-    var containerB = document.getElementById('estadistica');
+    var container = document.getElementById('estadistica');
           var groups = new vis.DataSet();
           groups.add({id: 0, content: "group0"})
           groups.add({id: 1, content: "group1"})
 
-            var itemsB = [
+            var items = [
               {x: '2016-10-11', y: 5, group:0},
               {x: '2016-11-12', y: 15, group:0},
               {x: '2017-12-13', y: 25, group:0},
@@ -31,8 +32,8 @@ angular.module('contractualClienteApp')
               {x: '2017-03-16', y: 100, group:1},
             ];
 
-            var datasetB = new vis.DataSet(itemsB);
-            var optionsB = {
+            var dataset = new vis.DataSet(items);
+            var options = {
               showCurrentTime:true,
               style:'bar',
               stack:false,
@@ -46,5 +47,5 @@ angular.module('contractualClienteApp')
               start: '2016-09-10',
               end: '2017-05-10',
              };
-    var graph2d = new vis.Graph2d(containerB, itemsB, groups, optionsB);
+    var graph2d = new vis.Graph2d(container, items, groups, options);
   });

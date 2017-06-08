@@ -131,7 +131,6 @@ var options = {
   start: inicio,
   end: fin,
   height: '200px',
-
 };
 var items = new vis.DataSet(self.items);
 container = new vis.Timeline(container, items, options);
