@@ -41,6 +41,7 @@ angular
     'financieraMidService',
     'adminMidService',
     'sicapitalService',
+    'nvd3',
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');

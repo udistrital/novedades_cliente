@@ -8,10 +8,13 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroCtrl', function ($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate) {
+  .controller('SeguimientoycontrolFinancieroCtrl', function ($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate,orden,registro,disponibilidad) {
     var self = this;
      var query;
      self.contrato = contrato;
+     orden=[];
+     disponibilidad=[];
+     registro=[];
      $scope.vigenciaModel = null;
      $scope.vigencias=null;
      self.longitud_grid = 0;

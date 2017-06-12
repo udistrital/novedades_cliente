@@ -113,6 +113,9 @@ var text_es = {
   NO_CDP_REGISTRADAS: "No existe disponibilidades o registros presupuestales registradas para este contrato",
   POR_FAVOR_ESPERE:"Por favor espere",
   CARGANDO_DATOS: "Los datos se estan cargando",
+  VALOR_ACUMULADO: "Valor acumulado",
+  PORCENTAJE_ORDEN: "Porcentaje orden",
+  PORCENTAJE_ACUMULADO: "Porcentaje acumulado",
 };
 
 var text_en = {
@@ -220,6 +223,9 @@ var text_en = {
   NO_CDP_REGISTRADAS: "There are not availabilities registered for this contract",
   POR_FAVOR_ESPERE:"Please wait",
   CARGANDO_DATOS: "Data is loading",
+  VALOR_ACUMULADO: "Accumulate value",
+  PORCENTAJE_ORDEN: "Order percentage",
+  PORCENTAJE_ACUMULADO: "Accumulate percentage",
 };
 
 angular.module('contractualClienteApp')
