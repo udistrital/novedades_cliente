@@ -28,7 +28,7 @@ angular.module('contractualClienteApp')
 
           $scope.options = {
               chart: {
-                  type: 'historicalBarChart',
+                  type: 'discreteBarChart',
                   height: 450,
                   margin : {
                       top: 20,
@@ -51,6 +51,11 @@ angular.module('contractualClienteApp')
                       axisLabelDistance: 35,
                       tickFormat:function(d){return '$' + d3.format(',f')(d) },
                   },
+                  discretebar:{
+                    dispatch: {
+                      elementClick: function(e) {console.log(e); seleccion = parseInt(e.data.x)-1;},
+                    },
+                  },
                   tooltip: {
                       keyFormatter: function(d) {
                           return d;
@@ -65,14 +70,6 @@ angular.module('contractualClienteApp')
                     unzoomEventType: 'dblclick.zoom',
                 },
               },
-              legend: {
-                dispatch: {
-                  legendClick: function(e) {
-                    console.log(e);
-                  },
-                }
-              },
-
           };
 
 
