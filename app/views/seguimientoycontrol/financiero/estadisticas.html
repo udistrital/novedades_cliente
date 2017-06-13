@@ -12,12 +12,12 @@
           </ul>
           <br/>
       <div class="row">
-          <div class="col-md-3" ng-show="!sFestadisticas.seleccion">
+          <div class="col-md-3" ng-show="sFestadisticas.orden[0].vigencia==''">
           <div class=" panel panel panel-primary">
             <div class="panel-heading row"><h4><b><div class="col-md-12"><center> {{'SELECCIONAR_ORDEN_PAGO' | translate}}</center></div></b></h4></div>
           </div>
         </div>
-            <div class=" panel panel panel-primary col-md-3" ng-show="sFestadisticas.seleccion">
+            <div class=" panel panel panel-primary col-md-3" ng-show="sFestadisticas.orden[0].vigencia!=''">
               <div class="panel-heading row"><h4><b><div class="col-md-12"><center>{{'ESTADISTICAS_GENERALES' | translate}} {{sFestadisticas.orden.consecutivo_orden}}-{{sFestadisticas.orden.vigencia}}</center></div></b></h4></div>
               <div class="panel-body row">
                 <div class="col-md-6"><b>{{'FECHA_ORDEN' | translate}}</b></div>
@@ -48,11 +48,13 @@
             <div class=" panel panel panel-primary col-md-8 col-md-offset-1">
               <div class="panel-heading row"><h4><b><div class="col-md-12"><center>{{'GRAFICO_BARRAS_CONTRATO' | translate}}</center></div></b></h4></div>
               <div class="panel-body row">
-                <nvd3 options='options' data='data' ng-click="sFestadisticas.seleccionar()"></nvd3>
+                <div ng-click="sFestadisticas.seleccionar()" id="grafico">
+                <nvd3 options='options' data='data' ></nvd3>
+                </div>
               </div>
             </div>
 
-            <div class="col-md-3" ng-show="!sFestadisticas.seleccion">
+            <div class="col-md-3" ng-show="sFestadisticas.orden[0].vigencia==''">
             </div>
 
       </div>

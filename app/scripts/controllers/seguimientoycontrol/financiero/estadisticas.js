@@ -25,53 +25,57 @@ angular.module('contractualClienteApp')
   var seleccion=0;
   var i = 1;
 
-
-          $scope.options = {
-              chart: {
-                  type: 'discreteBarChart',
-                  height: 450,
-                  margin : {
-                      top: 20,
-                      right: 5,
-                      bottom: 65,
-                      left: 100,
-                  },
-                  x: function(d){return d.x;},
-                  y: function(d){return d.valor},
-                  yDomain: [0,valor_contrato],
-                  showValues: true,
-                  duration: 100,
-                  xAxis: {
-                      axisLabel: 'X Axis',
-                      showMaxMin: false,
-                      ticks:5,
-                  },
-                  yAxis: {
-                      axisLabel: 'Monto',
-                      axisLabelDistance: 35,
-                      tickFormat:function(d){return '$' + d3.format(',f')(d) },
-                  },
-                  discretebar:{
-                    dispatch: {
-                      elementClick: function(e) {console.log(e); seleccion = parseInt(e.data.x)-1;},
-                    },
-                  },
-                  tooltip: {
-                      keyFormatter: function(d) {
-                          return d;
-                      }
-                  },
-                  zoom: {
-                    enabled: true,
-                    scale : 1,
-                    useNiceScale: false,
-                    horizontalOff: false,
-                    verticalOff: true,
-                    unzoomEventType: 'dblclick.zoom',
-                },
-              },
-          };
-
+  $scope.options = {
+    chart: {
+      type: 'multiBarChart',
+      height: 450,
+      margin : {
+        top: 20,
+        right: 5,
+        bottom: 65,
+        left: 100,
+      },
+      x: function(d){return d.x;},
+      y: function(d){return d.valor},
+      yDomain: [0,valor_contrato],
+      showValues: true,
+      duration: 100,
+      xAxis: {
+        axisLabel: 'Ordenes pago',
+        showMaxMin: false,
+        ticks:5,
+      },
+      yAxis: {
+        axisLabel: 'Monto',
+        axisLabelDistance: 35,
+        tickFormat:function(d){return '$' + d3.format(',f')(d) },
+      },
+      multibar:{
+        dispatch: {
+          elementClick: function(e) {
+            var lugar = parseInt(e.data.x)
+            self.orden = self.ordenes_pago[lugar-1];
+            self.seleccion = true;
+            angular.element('#grafico').triggerHandler('click');
+            //refresh();
+          },
+        },
+      },
+      tooltip: {
+        keyFormatter: function(d) {
+          return d;
+        }
+      },
+      zoom: {
+        enabled: true,
+        scale : 1,
+        useNiceScale: false,
+        horizontalOff: false,
+        verticalOff: true,
+        unzoomEventType: 'dblclick.zoom',
+      },
+    },
+  };
 
   self.porcentaje = function(total,actual){
     return parseFloat((actual/total)*100).toFixed(2);
@@ -114,79 +118,15 @@ angular.module('contractualClienteApp')
     i++;
   });
 
+console.log(data);
   $scope.data = [
       {
-          "key" : "Quantity" ,
           "bar": true,
           "values" : data,
       }];
 
-/*
-   // specify options
-   var options = {
-       width:600,
-       style: 'bar',
-       showGrid: true,
-       tooltip:true,
-       showLegend:true,
-       legendLabel:"Cantidad de dinero",
-       yLabel: "",
-       zLabel: "",
-       xLabel: "",
-      zValueLabel:function(z){
-          var valor = "$ " + z.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-          return valor;
-       },
-       xValueLabel:function(x){
-         x=x-1;
-         return self.ordenes_pago[x].consecutivo_orden;
-       },
-       yValueLabel:function(y){
-         if(y===1){
-           return "Orden de pago actual";
-         }else if(y===2){
-           return "Acumulado de ordenes de pago";
-         }else if(y===3){
-           return "Total Contrato";
-         }
-          return " ";
-       },
-       // Option tooltip can be true, false, or a function returning a string with HTML contents
-        tooltip: function (point) {
-          seleccion = parseInt(point.x)-1;
-          // parameter point contains properties x, y, z, and data
-          // data is the original object passed to the point constructor
-          var valor =point.z.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-          return '<b>'+point.data.label+'</b><br>'
-          +'Valor: <b> $ ' + valor +'</b><br>'
-          +"Porcentaje:<b> % "+point.data.porcentaje+"</b><br>"
-          +"Fecha:<b> "+point.data.fecha+"</b><br>";
-        },
-
-        // Tooltip default styling can be overridden
-        tooltipStyle: {
-          content: {
-            background    : 'rgba(143, 195, 185, 0.7)',
-          },
-          line: {
-            borderLeft    : '1px dotted rgba(0, 0, 0, 0.5)'
-          },
-          dot: {
-            border        : '5px solid rgba(0, 0, 0, 0.5)'
-          }
-        },
-
-        keepAspectRatio: true,
-        verticalRatio: 0.5
-   };
-
-   // Instantiate our graph object.
-   var graph3d = new vis.Graph3d(container, data, options);
-*/
   self.seleccionar = function(){
-    self.orden = self.ordenes_pago[seleccion];
-    self.seleccion = true;
-    console.log(self.orden);
+    return self.orden;
   };
 
 
