@@ -12,7 +12,9 @@ angular.module('contractualClienteApp')
   var self = this;
   self.ordenes_pago=orden;
   self.contrato=contrato;
-  var data = [];
+  var data1 = [];
+  var data2 = [];
+  var data3 = [];
   self.ordenActual={};
   var container = document.getElementById('estadistica');
   var groups = new vis.DataSet();
@@ -94,36 +96,62 @@ angular.module('contractualClienteApp')
     var dia =parseInt(fechaArreglo[2])+1;
     var fecha = fechaArreglo[0]+"-"+fechaArreglo[1]+"-"+dia.toString();
 
-    data.push({
+    data1.push({
       x: i,
       valor: valor_actual,
       label:"Valor Orden Pago "+op.consecutivo_orden+"-"+op.vigencia,
       porcentaje : op.porcentaje,
       fecha: op.fecha_orden,
+      yAxis:0,
     });
-    data.push({
+    data2.push({
       x: i,
       valor: valor_actual_total,
       label:"Valor Acumulado Ordenes de Pago",
       porcentaje : op.porcentaje_acumulado,
       fecha: op.fecha_orden,
+      series:2,
+      yAxis:1,
     });
-    data.push({
+    data3.push({
       x: i,
       valor: valor_contrato,
       label:"Valor Total Contrato",
       porcentaje : 100,
       fecha: op.fecha_orden,
+      yAxis:3,
     });
     i++;
   });
 
-console.log(data);
-  $scope.data = [
+  self.generateData =function(){
+    return [{
+  key: 'Orden',
+  color: 'red',
+  values: data1,
+  },
+  {
+    key: 'Acumulado',
+    color: 'blue',
+    values: data2,
+  },
+  {
+    key: 'Total',
+    color: 'yellow',
+    values: data3,
+  }
+];
+  };
+
+  $scope.data = self.generateData();
+
+  /*= [
       {
           "bar": true,
           "values" : data,
       }];
+*/
+
 
   self.seleccionar = function(){
     return self.orden;
