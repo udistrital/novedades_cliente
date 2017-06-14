@@ -112,7 +112,7 @@ angular.forEach(self.ordenes_pago, function(op) {
 
   self.items.push({
     id: i++,
-    content: "OP: "+op.consecutivo_orden,
+    content: "OP: "+op.consecutivo_orden+"-"+op.vigencia,
     start: fecha
   });
 });
