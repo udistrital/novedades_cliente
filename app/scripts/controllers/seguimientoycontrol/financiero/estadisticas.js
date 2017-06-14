@@ -32,12 +32,12 @@ angular.module('contractualClienteApp')
       type: 'multiBarChart',
       height: 450,
       margin : {
-        top: 20,
+        top: 40,
         right: 5,
         bottom: 65,
         left: 100,
       },
-      x: function(d){return d.x;},
+      x: function(d){return d.op;},
       y: function(d){return d.valor},
       yDomain: [0,valor_contrato],
       showValues: true,
@@ -55,7 +55,7 @@ angular.module('contractualClienteApp')
       multibar:{
         dispatch: {
           elementClick: function(e) {
-            var lugar = parseInt(e.data.x)
+            var lugar = parseInt(e.data.x);
             self.orden = self.ordenes_pago[lugar-1];
             self.seleccion = true;
             angular.element('#grafico').triggerHandler('click');
@@ -64,9 +64,13 @@ angular.module('contractualClienteApp')
         },
       },
       tooltip: {
-        keyFormatter: function(d) {
-          return d;
-        }
+        contentGenerator: function(d){
+          var valor = d.data.valor;
+          valor = '$'+valor.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+          return "<h5><b>"+d.data.op+"</b></h5><h5><b>Valor: </b></h5>"+valor+"</br><h5><b>Fecha: </h5></b>"
+          +d.data.fecha+"</br><h5><b>Porcentaje: </b></h5>"+d.data.porcentaje+"%"+
+          "</br><h5><b>Tipo: </b></h5>"+d.data.tipo;
+        },
       },
       zoom: {
         enabled: true,
@@ -98,16 +102,18 @@ angular.module('contractualClienteApp')
 
     data1.push({
       x: i,
+      op:op.consecutivo_orden+"-"+op.vigencia,
       valor: valor_actual,
-      label:"Valor Orden Pago "+op.consecutivo_orden+"-"+op.vigencia,
+      tipo: "Unitario",
       porcentaje : op.porcentaje,
       fecha: op.fecha_orden,
       yAxis:0,
     });
     data2.push({
       x: i,
+      op:op.consecutivo_orden+"-"+op.vigencia,
       valor: valor_actual_total,
-      label:"Valor Acumulado Ordenes de Pago",
+      tipo: "Acumulado",
       porcentaje : op.porcentaje_acumulado,
       fecha: op.fecha_orden,
       series:2,
@@ -115,7 +121,9 @@ angular.module('contractualClienteApp')
     });
     data3.push({
       x: i,
+      op:op.consecutivo_orden+"-"+op.vigencia,
       valor: valor_contrato,
+      tipo: "Total",
       label:"Valor Total Contrato",
       porcentaje : 100,
       fecha: op.fecha_orden,
@@ -127,17 +135,17 @@ angular.module('contractualClienteApp')
   self.generateData =function(){
     return [{
   key: 'Orden',
-  color: 'red',
+  color: '#22313F',
   values: data1,
   },
   {
     key: 'Acumulado',
-    color: 'blue',
+    color: '#6BB9F0',
     values: data2,
   },
   {
     key: 'Total',
-    color: 'yellow',
+    color: '#1E8BC3',
     values: data3,
   }
 ];
