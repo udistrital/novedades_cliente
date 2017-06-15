@@ -8,7 +8,7 @@
 * Controller of the contractualClienteApp
 */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolFinancieroEstadisticasCtrl', function (contrato,orden,$scope) {
+.controller('SeguimientoycontrolFinancieroEstadisticasCtrl', function (contrato,orden,$scope,$translate) {
   var self = this;
   self.ordenes_pago=orden;
   self.contrato=contrato;
@@ -67,9 +67,10 @@ angular.module('contractualClienteApp')
         contentGenerator: function(d){
           var valor = d.data.valor;
           valor = '$'+valor.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-          return "<h5><b>"+d.data.op+"</b></h5><h5><b>Valor: </b></h5>"+valor+"</br><h5><b>Fecha: </h5></b>"
-          +d.data.fecha+"</br><h5><b>Porcentaje: </b></h5>"+d.data.porcentaje+"%"+
-          "</br><h5><b>Tipo: </b></h5>"+d.data.tipo;
+          return "<h5><b>"+d.data.op+"</b></h5><h5><b>"+$translate.instant('VALOR')+
+          ": </b></h5>"+valor+"</br><h5><b>"+$translate.instant('FECHA')+": </h5></b>"
+          +d.data.fecha+"</br><h5><b>"+$translate.instant('PORCENTAJE')+": </b></h5>"+d.data.porcentaje+"%"+
+          "</br><h5><b>"+$translate.instant('TIPO')+": </b></h5>"+d.data.tipo;
         },
       },
       zoom: {
@@ -104,7 +105,7 @@ angular.module('contractualClienteApp')
       x: i,
       op:op.consecutivo_orden+"-"+op.vigencia,
       valor: valor_actual,
-      tipo: "Unitario",
+      tipo: $translate.instant('UNITARIO'),
       porcentaje : op.porcentaje,
       fecha: op.fecha_orden,
       yAxis:0,
@@ -113,7 +114,7 @@ angular.module('contractualClienteApp')
       x: i,
       op:op.consecutivo_orden+"-"+op.vigencia,
       valor: valor_actual_total,
-      tipo: "Acumulado",
+      tipo: $translate.instant('ACUMULADO'),
       porcentaje : op.porcentaje_acumulado,
       fecha: op.fecha_orden,
       series:2,
@@ -123,28 +124,27 @@ angular.module('contractualClienteApp')
       x: i,
       op:op.consecutivo_orden+"-"+op.vigencia,
       valor: valor_contrato,
-      tipo: "Total",
-      label:"Valor Total Contrato",
+      tipo: $translate.instant('TOTAL'),
       porcentaje : 100,
       fecha: op.fecha_orden,
       yAxis:3,
     });
     i++;
   });
-
+//se agrega un arreglo para cada stack de la grafica
   self.generateData =function(){
     return [{
-  key: 'Orden',
+  key: $translate.instant('UNITARIO'),
   color: '#22313F',
   values: data1,
   },
   {
-    key: 'Acumulado',
+    key: $translate.instant('ACUMULADO'),
     color: '#6BB9F0',
     values: data2,
   },
   {
-    key: 'Total',
+    key: $translate.instant('TOTAL'),
     color: '#1E8BC3',
     values: data3,
   }
@@ -152,14 +152,6 @@ angular.module('contractualClienteApp')
   };
 
   $scope.data = self.generateData();
-
-  /*= [
-      {
-          "bar": true,
-          "values" : data,
-      }];
-*/
-
 
   self.seleccionar = function(){
     return self.orden;

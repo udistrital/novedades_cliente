@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroCtrl', function ($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate,orden,registro,disponibilidad) {
+  .controller('SeguimientoycontrolFinancieroCtrl', function ($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate,orden,disponibilidad,registro) {
     var self = this;
      var query;
      self.contrato = contrato;

@@ -15,9 +15,9 @@
         <div class="col-md-3 panel panel-primary paneles">
            <div class="panel-heading row"><div class="col-md-12"><center><h4><b>{{'DATOS_CONTRATISTA' | translate}}</b></h4></center></div></div>
            <div class="panel-body">
-             <div class="col-md-6"><center><b>{{'APELLIDOS' | translate}}</b></center></div>
+             <div class="col-md-6"><b>{{'APELLIDOS' | translate}}</b></div>
              <div class="col-md-6">{{sFcontrato.persona.PrimerApellido}} {{sFcontrato.persona.SegundoApellido}}<br><br/></div>
-             <div class="col-md-6"><center><b>{{'NOMBRES' | translate}}</b></center></div>
+             <div class="col-md-6"><b>{{'NOMBRES' | translate}}</b></div>
              <div class="col-md-6">{{sFcontrato.persona.PrimerNombre}} {{sFcontrato.persona.SegundoNombre}}<br><br/></div>
              <div class="col-md-6"><b>{{'TIPO_DOCUMENTO' | translate}}</b></div>
              <div class="col-md-6">{{sFcontrato.persona.TipoDocumento.ValorParametro}}<br><br/></div>
@@ -48,6 +48,7 @@
               </div>
             </div>
           </div>
+
         <div ng-show="banderaRP" ng-repeat="rp in sFcontrato.registro_presupuestal" >
         <div class="panel panel-primary col-md-12" ng-show="!sFcontrato.cargando_datos" ng-init="sFcontrato.seleccionarValores()">
           <div class="panel-heading row" ng-click="panelrp = !panelrp">
@@ -80,15 +81,15 @@
         <div class="col-md-3 panel panel-primary paneles">
            <div class="panel-heading row"><div class="col-md-12"><center><h4><b>{{'DATOS_CONTRATO' | translate}}</b></h4></center></div></div>
            <div class="panel-body">
-             <div class="col-md-6"><center><b>{{'CONTRATO' | translate}}</b></center></div>
+             <div class="col-md-6"><b>{{'CONTRATO' | translate}}</b></div>
              <div class="col-md-6">{{sFcontrato.contrato.Id}}<br><br/></div>
-             <div class="col-md-6"><center><b>{{'VIGENCIA' | translate}}</b></center></div>
+             <div class="col-md-6"><b>{{'VIGENCIA' | translate}}</b></div>
              <div class="col-md-6">{{sFcontrato.contrato.Vigencia}}<br><br/></div>
-             <div class="col-md-6"><center><b>{{'OBJETO' | translate}}</b></center></div>
+             <div class="col-md-6"><b>{{'OBJETO' | translate}}</b></div>
              <div class="col-md-6">{{sFcontrato.contrato.ObjetoContrato}}<br><br/></div>
-             <div class="col-md-6"><center><b>{{'FECHA_REGISTRO' | translate}}</b></center></div>
+             <div class="col-md-6"><b>{{'FECHA_REGISTRO' | translate}}</b></div>
              <div class="col-md-6">{{sFcontrato.contrato.FechaRegistro | date:"yyyy-MM-dd":"+0900"}}<br><br/></div>
-             <div class="col-md-6"><center><b>{{'VALOR' | translate}}</b></center></div>
+             <div class="col-md-6"><b>{{'VALOR' | translate}}</b></div>
              <div class="col-md-6">{{sFcontrato.contrato.ValorContrato | currency}}<br><br/></div>
            </div>
       </div>

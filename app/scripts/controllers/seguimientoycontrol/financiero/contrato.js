@@ -31,6 +31,7 @@ angular.module('contractualClienteApp')
 
     t0 = performance.now();
     //CDP asociado a un contrato
+    if(disponibilidad.length===0){
     administrativaRequest.get('contrato_disponibilidad',query).then(function(response) {
       self.cdps=response.data;
       if(self.cdps != null){
@@ -84,10 +85,27 @@ angular.module('contractualClienteApp')
       }
     }else{
       //comentariar la siguiente linea para ver el reloj
-      $scope.banderaRP = false;
+     $scope.banderaRP = false;
     }
     });
+  }else{
+    self.cargando_datos = false;
+    self.cambio = true;
+    $scope.banderaRP=true;
+    self.registro_presupuestal.splice(0,self.registro_presupuestal.length);
+    for (var i = 0; i < self.registro.length; i++) {
+      temp.NUMERO_REGISTRO = self.registro[i].numero_registro;
+      temp.NUMERO_DISPONIBILIDAD = self.registro[i].numero_disponibilidad;
+      temp.VIGENCIA = self.registro[i].vigencia;
+      temp.FECHA_REGISTRO = self.registro[i].fecha_registro;
+      temp.FECHA_INICIAL = self.registro[i].fecha_inicio;
+      temp.FECHA_FINAL = self.registro[i].fecha_fin;
+      temp.NUMERO_COMPROMISO = self.registro[i].numero_compromiso;
+      self.registro_presupuestal.push(temp);
+    };
+    temp=[];
 
+  };
     t1 = performance.now();
     total = (t1 - t0) +500;
 
@@ -108,48 +126,55 @@ angular.module('contractualClienteApp')
     });
 
     self.seleccionarValores = function(){
-      $timeout(function(){
-      temp =[];
-      //se recorre el arreglo de rps que se obtienen de la consulta y se guardan en la fabrica para usarlos en otra vista
-      for (var i = 0; i < self.registro_presupuestal.length; i++) {
-        temp.numero_disponibilidad= self.registro_presupuestal[i].NUMERO_DISPONIBILIDAD;
-        temp.numero_registro = self.registro_presupuestal[i].NUMERO_REGISTRO;
-        temp.vigencia = self.registro_presupuestal[i].VIGENCIA;
-        self.registro.push(temp);
-        temp = [];
-      }
+      if(disponibilidad.length===0){
+        $timeout(function(){
+        temp =[];
+        //se recorre el arreglo de rps que se obtienen de la consulta y se guardan en la fabrica para usarlos en otra vista
+        for (var i = 0; i < self.registro_presupuestal.length; i++) {
+          temp.numero_disponibilidad= self.registro_presupuestal[i].NUMERO_DISPONIBILIDAD;
+          temp.numero_registro = self.registro_presupuestal[i].NUMERO_REGISTRO;
+          temp.vigencia = self.registro_presupuestal[i].VIGENCIA;
+          temp.fecha_registro = self.registro_presupuestal[i].FECHA_REGISTRO;
+          temp.fecha_inicio = self.registro_presupuestal[i].FECHA_INICIAL;
+          temp.fecha_fin = self.registro_presupuestal[i].FECHA_FINAL;
+          temp.numero_compromiso = self.registro_presupuestal[i].NUMERO_COMPROMISO;
+          self.registro.push(temp);
+          temp = [];
+        }
 
-     //se recorre el arreglo de cdps que se obtienen de la consulta y se guardan en la fabrica para usarlos en otra vista
-      for (var i = 0; i < self.cdps.length; i++) {
-        temp.numero_cdp = self.cdps[i].NumeroCdp;
-        temp.vigencia = self.cdps[i].Vigencia;
-        temp.vigencia_cdp = self.cdps[i].VigenciaCdp;
-        temp.fecha_registro = self.cdps[i].FechaRegistro;
-        temp.estado = self.cdps[i].Estado;
-        self.disponibilidad.push(temp);
-        temp = [];
-      }
-      //se recorre el arreglo de ordenes que se obtienen de la consulta y se guardan en la fabrica para usarlos en otra vista
-      for (var i = 0; i < self.orden.length; i++) {
-        temp.numero_disponibilidad = self.orden[i].numero_disponibilidad;
-        temp.numero_registro = self.orden[i].numero_registro;
-        temp.unidad_ejecutora = self.orden[i].unidad_ejecutora;
-        temp.beneficiario = self.orden[i].beneficiario;
-        temp.cod_rubro = self.orden[i].cod_rubro;
-        temp.consecutivo_orden = self.orden[i].consecutivo_orden;
-        temp.descripcion_rubro = self.orden[i].descripcion_rubro;
-        temp.estado = self.orden[i].estado;
-        temp.fecha_orden = self.orden[i].fecha_orden;
-        temp.valor_bruto = self.orden[i].valor_bruto;
-        temp.valor_neto = self.orden[i].valor_neto;
-        temp.valor_orden = self.orden[i].valor_orden;
-        temp.vigencia_presupuesto = self.orden[i].vigencia_presupuesto;
-        temp.vigencia = self.orden[i].vigencia;
-        self.orden_pago.push(temp);
-        temp = [];
-      }
-      self.cambio = true;
-        }, total)
+       //se recorre el arreglo de cdps que se obtienen de la consulta y se guardan en la fabrica para usarlos en otra vista
+        for (var i = 0; i < self.cdps.length; i++) {
+          temp.numero_cdp = self.cdps[i].NumeroCdp;
+          temp.vigencia = self.cdps[i].Vigencia;
+          temp.vigencia_cdp = self.cdps[i].VigenciaCdp;
+          temp.fecha_registro = self.cdps[i].FechaRegistro;
+          temp.estado = self.cdps[i].Estado;
+          self.disponibilidad.push(temp);
+          temp = [];
+        }
+        //se recorre el arreglo de ordenes que se obtienen de la consulta y se guardan en la fabrica para usarlos en otra vista
+        for (var i = 0; i < self.orden.length; i++) {
+          temp.numero_disponibilidad = self.orden[i].numero_disponibilidad;
+          temp.numero_registro = self.orden[i].numero_registro;
+          temp.unidad_ejecutora = self.orden[i].unidad_ejecutora;
+          temp.beneficiario = self.orden[i].beneficiario;
+          temp.cod_rubro = self.orden[i].cod_rubro;
+          temp.consecutivo_orden = self.orden[i].consecutivo_orden;
+          temp.descripcion_rubro = self.orden[i].descripcion_rubro;
+          temp.estado = self.orden[i].estado;
+          temp.fecha_orden = self.orden[i].fecha_orden;
+          temp.valor_bruto = self.orden[i].valor_bruto;
+          temp.valor_neto = self.orden[i].valor_neto;
+          temp.valor_orden = self.orden[i].valor_orden;
+          temp.vigencia_presupuesto = self.orden[i].vigencia_presupuesto;
+          temp.vigencia = self.orden[i].vigencia;
+          self.orden_pago.push(temp);
+          temp = [];
+        }
+        self.cambio = true;
+          }, total)
+      };
+
     };
 
   });
