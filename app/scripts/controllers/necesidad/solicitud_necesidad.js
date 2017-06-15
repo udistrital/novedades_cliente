@@ -17,7 +17,6 @@ angular.module('contractualClienteApp')
     };
 
     $scope.$watch('solicitudNecesidad.dependencia_destino',function(){
-      self.dep_ned.DependenciaDestino=self.dependencia_destino;
       coreRequest.get('jefe_dependencia', $.param({
         query: "DependenciaId:"+self.dependencia_destino,
         limit: -1
@@ -42,7 +41,6 @@ angular.module('contractualClienteApp')
     $scope.$watch('solicitudNecesidad.rol_ordenador_gasto',function(){
       coreRequest.get('jefe_dependencia', $.param({
         query: "DependenciaId:"+self.rol_ordenador_gasto,
-        fields: "TerceroId",
         limit: -1
       })).then(function(response) {
         agoraRequest.get('informacion_persona_natural', $.param({
@@ -71,12 +69,6 @@ angular.module('contractualClienteApp')
       self.valor_total=(self.especificaciones.Valor*self.especificaciones.Cantidad)+self.valor_iva;
     },true);
 
-
-    self.sup_sol_ned= {
-      Estado: "Activo",
-      Funcionario: 1234567890
-    };
-
     agoraRequest.get('snies_area', $.param({
       limit: -1,
       query: 'Estado:ACTIVO'
@@ -94,32 +86,37 @@ angular.module('contractualClienteApp')
     },true);
 
     oikosRequest.get('dependencia', $.param({
-      limit: -1
+      limit: -1,
+      sortby:"Nombre",
+      order:"asc",
     })).then(function(response) {
       self.dependencia_data = response.data;
     });
 
     coreRequest.get('ordenador_gasto', $.param({
-      limit: -1
+      limit: -1,
+      sortby:"Cargo",
+      order:"asc",
     })).then(function(response) {
       self.ordenador_gasto_data = response.data;
     });
 
     oikosRequest.get('dependencia', $.param({
       query: 'Id:12',
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.dependencia_solicitante = response.data[0];
     });
 
     agoraRequest.get('informacion_persona_natural', $.param({
       query: 'Id:1234567890',
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.persona_solicitante = response.data[0];
     });
 
     self.necesidad = {};
+    self.variable={};
     self.necesidad.PlanAnualAdquisiciones = 20171;
     self.necesidad.UnicoPago = true;
     self.necesidad.AgotarPresupuesto = false;
@@ -130,9 +127,13 @@ angular.module('contractualClienteApp')
     self.f_apropiacion_inv = [];
     self.ActividadEspecifica = [];
     self.especificaciones = [];
+    self.requisitos_minimos = [];
+    self.actividades_economicas = [];
     self.actividades_economicas_id = [];
+    self.productos = [];
     self.valor_inv = 0;
     self.valor_fun = 0;
+    self.asd = [];
 
 
 
@@ -144,13 +145,17 @@ angular.module('contractualClienteApp')
     }];
 
     financieraRequest.get('unidad_ejecutora', $.param({
-      limit: -1
+      limit: -1,
+      sortby:"Nombre",
+      order:"asc",
     })).then(function(response) {
       self.unidad_ejecutora_data = response.data;
     });
 
     agoraRequest.get('unidad', $.param({
-      limit: -1
+      limit: -1,
+      sortby:"Unidad",
+      order:"asc",
     })).then(function(response) {
       self.unidad_data = response.data;
     });
@@ -197,7 +202,9 @@ angular.module('contractualClienteApp')
 
     //Temporal viene dado por un servicio de javier
     agoraRequest.get('informacion_persona_natural', $.param({
-      limit: -1
+      limit: -1,
+      sortby:"PrimerNombre",
+      order:"asc",
     })).then(function(response) {
       self.persona_data = response.data;
     });
@@ -220,19 +227,19 @@ angular.module('contractualClienteApp')
 
 
     administrativaRequest.get('modalidad_seleccion', $.param({
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.modalidad_data = response.data;
     });
 
     administrativaRequest.get('tipo_rubro', $.param({
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.tipos_fuentes_finan = response.data;
     });
 
     administrativaRequest.get('servicio', $.param({
-      limit: 0
+      limit: -1
     })).then(function(response) {
       self.servicio_data = response.data;
     });
@@ -245,7 +252,7 @@ angular.module('contractualClienteApp')
         Apropiacion: apropiacion.Id,
         MontoParcial: 0,
       };
-      if (self.necesidad.TipoRubro.Nombre === 'funcionamiento') {
+      if (self.necesidad.TipoRubro.Nombre === 'Funcionamiento') {
         self.f_apropiacion_fun.push(Fap);
       } else {
         self.f_apropiacion_inv.push(Fap);
@@ -279,6 +286,33 @@ angular.module('contractualClienteApp')
       self.ActividadEspecifica.push(a);
     };
 
+    self.agregarReq = function() {
+      for(var j=0; j < self.requisitos_minimos.length; j++){
+        for(var h=0; h < self.productos.length; h++){
+          if(self.requisitos_minimos[j].reqi===self.productos[h].i){
+            console.log(self.productos[h]);
+            console.log("xDDDDD");
+            console.log(self.requisitos_minimos[j]);
+            //self.productos[h].Iva.push(self.requisitos_minimos[j]);
+        //    self.requisitos_minimos.splice(j,1);
+        }
+        }
+      }
+    };
+
+    /*self.agregar_ffapropiacion = function(apropiacion) {
+      var Fap = {
+        aprop: apropiacion,
+        Apropiacion: apropiacion.Id,
+        MontoParcial: 0,
+      };
+      if (self.necesidad.TipoRubro.Nombre === 'funcionamiento') {
+        self.f_apropiacion_fun.push(Fap);
+      } else {
+        self.f_apropiacion_inv.push(Fap);
+      }
+    };*/
+
     self.quitar_act_esp = function(i) {
       self.ActividadEspecifica.splice(i, 1);
     };
@@ -288,19 +322,23 @@ angular.module('contractualClienteApp')
       self.marcos_legales = [];
       self.f_apropiaciones = [];
 
+      if(self.actividades_economicas.length>0){
       for (var i = 0; i < self.actividades_economicas.length; i++) {
         var Act_Economica = {};
         Act_Economica.ActividadEconomica = self.actividades_economicas[i].Id;
         self.actividades_economicas_id.push(Act_Economica);
       }
+    }
 
+      if(self.documentos.length>0){
       for (var j = 0; j < self.documentos.length; j++) {
         var marco = {};
         marco.MarcoLegal = self.documentos[j];
         self.marcos_legales.push(marco);
       }
+    }
 
-      if (self.necesidad.TipoRubro.Nombre === "inversion") {
+      if (self.necesidad.TipoRubro.Nombre === "Inversión") {
         for (var h = 0; h < self.f_apropiacion_inv.length; h++) {
           if (self.f_apropiacion_inv[h].fuentes !== undefined) {
             for (var k = 0; k < self.f_apropiacion_inv[h].fuentes.length; k++) {
@@ -318,16 +356,22 @@ angular.module('contractualClienteApp')
         self.necesidad.Valor = self.valor_fun;
       }
 
+      self.agregarReq();
+
+      //self.variable.EspecificacionTecnica = self.productos;
+
       self.tr_necesidad = {
         Necesidad: self.necesidad,
-        SupervisorSolicitudNecesidad: self.sup_sol_ned,
-        Especificacion: self.especificaciones,
+        SupervisorSolicitudNecesidad: self.supervisor_necesidad,
+        //Especificacion: self.variable,
         ActividadEspecifica: self.ActividadEspecifica,
         ActividadEconomicaNecesidad: self.actividades_economicas_id,
         MarcoLegalNecesidad: self.marcos_legales,
         Ffapropiacion: self.f_apropiaciones,
-        DependenciaNecesidad: self.dep_ned
+        DependenciaNecesidad: self.dep_ned,
+        ServicioNecesidad: self.servicio_necesidad
       };
+
 
       administrativaRequest.post("tr_necesidad", self.tr_necesidad).then(function(response) {
         self.alerta = "";
