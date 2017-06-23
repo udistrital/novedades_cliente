@@ -60,7 +60,7 @@ angular.module('contractualClienteApp')
                   obj.Fuentes  = obj.Fuentes || [];
 
                   var i_fuente={};
-                  financieraRequest.get('fuente_financiacion',$.param({
+                  financieraRequest.get('fuente_financiamiento',$.param({
                     query: "Id:"+item.FuenteFinanciacion
                   })).then(function(response){
                     //console.log(response);
