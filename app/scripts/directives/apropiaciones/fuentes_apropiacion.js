@@ -31,7 +31,7 @@ angular.module('contractualClienteApp')
         enableVerticalScrollbar: 0,
         enableSelectAll: true,
         columnDefs: [{
-            field: 'Fuente.Descripcion',
+            field: 'FuenteFinanciamiento.Descripcion',
             displayName: $translate.instant('FUENTE'),
             headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
             cellTooltip: function(row) {
