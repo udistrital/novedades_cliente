@@ -194,6 +194,7 @@ var text_es = {
   ACUMULADO:"Acumulado",
   TOTAL:"Total",
   UNITARIO:"Unitario",
+  NO_HAY_DATOS_REDIRIGIR:"No hay datos para mostrar, será redirigido al menú anterior",
 };
 
 var text_en = {
@@ -383,6 +384,7 @@ var text_en = {
   ACUMULADO:"Accumulate",
   TOTAL:"Total",
   UNITARIO:"Unit",
+  NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu",
 };
 
 angular.module('contractualClienteApp')

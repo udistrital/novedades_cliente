@@ -8,7 +8,7 @@
 * Controller of the contractualClienteApp
 */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function($http, $scope,$translate,registro,orden, disponibilidad,contrato, sicapitalRequest) {
+.controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function($http,$window, $scope,$translate,registro,orden, disponibilidad,contrato, sicapitalRequest) {
   var self = this;
   self.contrato = contrato;
   self.items = [];
@@ -28,6 +28,12 @@ angular.module('contractualClienteApp')
   var mesinicio;
   var mesfin;
 
+  if(self.contrato.Id === undefined){
+    swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR'), "error").then(function() {
+      //si da click en ir a contratistas
+      $window.location.href = '#/seguimientoycontrol/financiero';
+    });
+  };
   self.gridOptions = {
     enableRowSelection: true,
     enableRowHeaderSelection: false,

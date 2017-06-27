@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroContratoCtrl', function ($timeout,contrato,registro,disponibilidad,agoraRequest,orden,sicapitalRequest,administrativaRequest,$scope,$rootScope) {
+  .controller('SeguimientoycontrolFinancieroContratoCtrl', function ($timeout,$window,contrato,registro,disponibilidad,agoraRequest,orden,sicapitalRequest,administrativaRequest,$scope,$rootScope,$translate) {
     var self = this;
     self.cambio = false;
     self.contrato=contrato;
@@ -28,6 +28,13 @@ angular.module('contractualClienteApp')
     var t1;
     var t0;
     var total;
+
+    if(self.contrato.Id === undefined){
+      swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR'), "error").then(function() {
+        //si da click en ir a contratistas
+        $window.location.href = '#/seguimientoycontrol/financiero';
+      });
+    };
 
     t0 = performance.now();
     //CDP asociado a un contrato
@@ -108,7 +115,6 @@ angular.module('contractualClienteApp')
   };
     t1 = performance.now();
     total = (t1 - t0) +500;
-
 
     self.reloj = function(){
       if($scope.banderaRP === true && self.cargando_datos === true){

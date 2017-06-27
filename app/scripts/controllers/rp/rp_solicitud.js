@@ -96,8 +96,6 @@ self.gridOptions_cdp.onRegisterApi = function(gridApi){
 };
 self.gridOptions_cdp.multiSelect = false;
 
-
-
     self.gridOptions_compromiso = {
       enableRowSelection: true,
       enableRowHeaderSelection: false,

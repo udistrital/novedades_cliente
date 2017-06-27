@@ -8,7 +8,7 @@
 * Controller of the contractualClienteApp
 */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolFinancieroEstadisticasCtrl', function (contrato,orden,$scope,$translate) {
+.controller('SeguimientoycontrolFinancieroEstadisticasCtrl', function (contrato,$window,orden,$scope,$translate) {
   var self = this;
   self.ordenes_pago=orden;
   self.contrato=contrato;
@@ -27,6 +27,13 @@ angular.module('contractualClienteApp')
   var seleccion=0;
   var i = 1;
 
+  if(self.contrato.Id === undefined){
+    swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR'), "error").then(function() {
+      //si da click en ir a contratistas
+      $window.location.href = '#/seguimientoycontrol/financiero';
+    });
+  };
+
   $scope.options = {
     chart: {
       type: 'multiBarChart',
@@ -37,6 +44,7 @@ angular.module('contractualClienteApp')
         bottom: 65,
         left: 100,
       },
+      stacked: true,
       x: function(d){return d.op;},
       y: function(d){return d.valor},
       yDomain: [0,valor_contrato],
