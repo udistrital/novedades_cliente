@@ -12,9 +12,11 @@ angular.module('contractualClienteApp')
     var self = this;
      var query;
      self.contrato = contrato;
+     //esto es para resetear los valores de disponibilidad, orden y registro
      orden.splice(0,orden.length)
      disponibilidad.splice(0,disponibilidad.length)
      registro.splice(0,registro.length)
+
      $scope.vigenciaModel = null;
      $scope.vigencias=null;
      self.longitud_grid = 0;
