@@ -17,7 +17,14 @@ describe('Controller: SeguimientoycontrolFinancieroCtrl', function () {
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(SeguimientoycontrolFinancieroCtrl.awesomeThings.length).toBe(3);
+  it('Verificar si se estan reseteando las ordenes, disponibilidades y registros', function () {
+    expect(SeguimientoycontrolFinancieroCtrl.orden.length).toBe(0);
+    expect(SeguimientoycontrolFinancieroCtrl.disponibilidad.length).toBe(0);
+    expect(SeguimientoycontrolFinancieroCtrl.registro.length).toBe(0);
   });
+
+  it('Verificar si se han traido datos desde los contratos', function () {
+  //  expect(SeguimientoycontrolFinancieroCtrl.self.gridOptions).toBeUndefined();
+  });
+
 });

@@ -23,7 +23,7 @@ angular.module('contractualClienteApp')
     self.cdp=null;
     self.cargando_datos = true;
     $scope.banderaRP = true;
-    query = "query=NumeroContrato:"+self.contrato.Id;
+    var query = "query=NumeroContrato:"+self.contrato.Id;
     self.registro_presupuestal=[];
     var t1;
     var t0;
@@ -36,14 +36,14 @@ angular.module('contractualClienteApp')
         //si da click en ir a contratistas
         $window.location.href = '#/seguimientoycontrol/financiero';
       });
-    };
+    }
 
     t0 = performance.now();
     //CDP asociado a un contrato
     if(disponibilidad.length===0){
     administrativaRequest.get('contrato_disponibilidad',query).then(function(response) {
       self.cdps=response.data;
-      if(self.cdps != null){
+      if(self.cdps !== null){
       //petición para traer los rp por cdp de sicapital vigencia/cdp/cedula
       for (var i = 0; i < self.cdps.length; i++) {
         self.cdp=self.cdps[i];
@@ -52,7 +52,7 @@ angular.module('contractualClienteApp')
         sicapitalRequest.get('registro/rpxcdp', self.cdp.Vigencia+"/"+self.cdp.NumeroCdp+"/"+contrato.ContratistaId).then(function(response) {
         //caso prueba
         //sicapitalRequest.get('registro/rpxcdp', self.cdp.Vigencia+"/"+self.cdp.NumeroCdp).then(function(response) {
-        if(response.data[0]!= "<"){
+        if(response.data[0]!== "<"){
           self.registro_presupuestal=self.registro_presupuestal.concat(response.data);
           self.cargando_datos = false;
         }else{
@@ -63,7 +63,7 @@ angular.module('contractualClienteApp')
           for (var x = 0; x < self.registro_presupuestal.length; x++) {
           url = self.contrato.ContratistaId+"/"+self.registro_presupuestal[x].NUMERO_DISPONIBILIDAD+"/"+self.registro_presupuestal[x].NUMERO_REGISTRO+"/"+self.registro_presupuestal[x].VIGENCIA;
             sicapitalRequest.get('ordenpago/opgsyc', url).then(function(response) {
-              if(response.data[0]!= "<"){
+              if(response.data[0]!== "<"){
                 self.ordenes_pago = self.ordenes_pago.concat(response.data);
               }
               if(x===self.registro_presupuestal.length){
@@ -112,10 +112,10 @@ angular.module('contractualClienteApp')
       temp.FECHA_FINAL = self.registro[i].fecha_fin;
       temp.NUMERO_COMPROMISO = self.registro[i].numero_compromiso;
       self.registro_presupuestal.push(temp);
-    };
+    }
     temp=[];
 
-  };
+  }
     t1 = performance.now();
     total = (t1 - t0) +500;
 
@@ -152,7 +152,7 @@ angular.module('contractualClienteApp')
         }
 
        //se recorre el arreglo de cdps que se obtienen de la consulta y se guardan en la fabrica para usarlos en otra vista
-        for (var i = 0; i < self.cdps.length; i++) {
+        for (i = 0; i < self.cdps.length; i++) {
           temp.numero_cdp = self.cdps[i].NumeroCdp;
           temp.vigencia = self.cdps[i].Vigencia;
           temp.vigencia_cdp = self.cdps[i].VigenciaCdp;
@@ -162,7 +162,7 @@ angular.module('contractualClienteApp')
           temp = [];
         }
         //se recorre el arreglo de ordenes que se obtienen de la consulta y se guardan en la fabrica para usarlos en otra vista
-        for (var i = 0; i < self.orden.length; i++) {
+        for (i = 0; i < self.orden.length; i++) {
           temp.numero_disponibilidad = self.orden[i].numero_disponibilidad;
           temp.numero_registro = self.orden[i].numero_registro;
           temp.unidad_ejecutora = self.orden[i].unidad_ejecutora;
@@ -181,8 +181,8 @@ angular.module('contractualClienteApp')
           temp = [];
         }
         self.cambio = true;
-          }, total)
-      };
+      }, total);
+      }
 
     };
 

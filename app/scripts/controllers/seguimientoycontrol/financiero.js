@@ -11,11 +11,15 @@ angular.module('contractualClienteApp')
   .controller('SeguimientoycontrolFinancieroCtrl', function ($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate,orden,disponibilidad,registro) {
     var self = this;
      var query;
+     self.dato = [1];
      self.contrato = contrato;
+     self.orden = orden;
+     self.disponibilidad=disponibilidad;
+     self.registro=registro;
      //esto es para resetear los valores de disponibilidad, orden y registro
-     orden.splice(0,orden.length)
-     disponibilidad.splice(0,disponibilidad.length)
-     registro.splice(0,registro.length)
+     self.orden.splice(0,orden.length);
+     self.disponibilidad.splice(0,disponibilidad.length);
+     self.registro.splice(0,registro.length);
 
      $scope.vigenciaModel = null;
      $scope.vigencias=null;

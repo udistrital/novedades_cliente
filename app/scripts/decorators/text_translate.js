@@ -178,8 +178,6 @@ var text_es = {
   FECHA_REGISTRO: "Fecha registro",
   VIGENCIA_PRESUPUESTO: "Vigencia presupuesto",
   PRESUPUESTO: "Presupuesto",
-  CODIGO_RUBRO:"Código rubro",
-  DESCRIPCION_RUBRO: "Descripción rubro",
   VALOR_ORDEN:"Valor orden",
   VALOR_NETO:"Valor neto",
   VIGENCIA_ORDEN: "Vigencia orden",
@@ -194,7 +192,7 @@ var text_es = {
   ACUMULADO:"Acumulado",
   TOTAL:"Total",
   UNITARIO:"Unitario",
-  NO_HAY_DATOS_REDIRIGIR:"No hay datos para mostrar, será redirigido al menú anterior",
+  NO_HAY_DATOS_REDIRIGIR:"No hay datos para mostrar, será redirigido al menú anterior"
 };
 
 var text_en = {
@@ -368,8 +366,6 @@ var text_en = {
   FECHA_REGISTRO: "Register date",
   VIGENCIA_PRESUPUESTO: "Budget validity",
   PRESUPUESTO: "Budget",
-  CODIGO_RUBRO:"Leading code",
-  DESCRIPCION_RUBRO: "Leading description",
   VALOR_ORDEN:"Order value",
   VALOR_NETO:"Net value",
   VIGENCIA_ORDEN: "Validity order",
@@ -384,7 +380,7 @@ var text_en = {
   ACUMULADO:"Accumulate",
   TOTAL:"Total",
   UNITARIO:"Unit",
-  NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu",
+  NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu"
 };
 
 angular.module('contractualClienteApp')
