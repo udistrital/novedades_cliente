@@ -23,8 +23,4 @@ describe('Controller: SeguimientoycontrolFinancieroCtrl', function () {
     expect(SeguimientoycontrolFinancieroCtrl.registro.length).toBe(0);
   });
 
-  it('Verificar si se han traido datos desde los contratos', function () {
-  //  expect(SeguimientoycontrolFinancieroCtrl.self.gridOptions).toBeUndefined();
-  });
-
 });

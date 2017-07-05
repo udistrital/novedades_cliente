@@ -69,7 +69,7 @@ module.exports = function(config) {
     // Start these browsers, currently available:
     // - Chrome
     // - ChromeCanary
-    // - Firefox
+    // - Firefoxg
     // - Opera
     // - Safari (only Mac)
     // - PhantomJS

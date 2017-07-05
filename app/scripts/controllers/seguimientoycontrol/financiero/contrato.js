@@ -29,8 +29,6 @@ angular.module('contractualClienteApp')
     var t0;
     var total;
 
-    console.log(self.disponibilidad);
-
     if(self.contrato.Id === undefined){
       swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR'), "error").then(function() {
         //si da click en ir a contratistas

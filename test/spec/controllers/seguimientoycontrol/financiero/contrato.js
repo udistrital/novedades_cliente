@@ -17,7 +17,9 @@ describe('Controller: SeguimientoycontrolFinancieroContratoCtrl', function () {
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(SeguimientoycontrolFinancieroContratoCtrl.awesomeThings.length).toBe(3);
+  it('Verificar si se estan reseteando las ordenes, disponibilidades y registros', function () {
+    expect(SeguimientoycontrolFinancieroContratoCtrl.orden.length).toBe(0);
+    expect(SeguimientoycontrolFinancieroContratoCtrl.disponibilidad.length).toBe(0);
+    expect(SeguimientoycontrolFinancieroContratoCtrl.registro.length).toBe(0);
   });
 });

@@ -20,7 +20,7 @@ angular.module('contractualClienteApp')
      self.orden.splice(0,orden.length);
      self.disponibilidad.splice(0,disponibilidad.length);
      self.registro.splice(0,registro.length);
-
+     var seleccion;
      $scope.vigenciaModel = null;
      $scope.vigencias=null;
      self.longitud_grid = 0;
@@ -87,8 +87,8 @@ angular.module('contractualClienteApp')
        });
      });
      //se buscan los contratos por la vigencia seleccionada
-     self.buscarContratosVigencia = function() {
-        self.longitud_grid = 0;
+     self.buscar_contratos_vigencia = function() {
+       self.longitud_grid = 0;
        query = "";
        if ($scope.vigenciaModel !== undefined || $scope.vigenciaModel === null) {
          query = query + "VigenciaContrato:" + $scope.vigenciaModel;
@@ -101,12 +101,11 @@ angular.module('contractualClienteApp')
              $scope.busquedaSinResultados = true;
            }
          });
-
        }
      };
 
      self.mostrar_estadisticas = function() {
-       var seleccion = self.gridApi.selection.getSelectedRows();
+       seleccion = self.gridApi.selection.getSelectedRows();
        if(seleccion[0]===null || seleccion[0]===undefined){
          swal("Alertas", "Debe seleccionar un contratista", "error");
        }else{

@@ -16,15 +16,11 @@ angular.module('contractualClienteApp')
   var data2 = [];
   var data3 = [];
   self.ordenActual={};
-  var container = document.getElementById('estadistica');
-  var groups = new vis.DataSet();
   var valor_actual=0;
   var valor_actual_total=0;
   self.seleccion = false;
   var valor_contrato = contrato.ValorContrato;
-  var valor = "";
   self.orden = {};
-  var seleccion=0;
   var i = 1;
 
   if(self.contrato.Id === undefined){
@@ -32,7 +28,7 @@ angular.module('contractualClienteApp')
       //si da click en ir a contratistas
       $window.location.href = '#/seguimientoycontrol/financiero';
     });
-  };
+  }
 
   $scope.options = {
     chart: {
@@ -46,7 +42,7 @@ angular.module('contractualClienteApp')
       },
       stacked: true,
       x: function(d){return d.op;},
-      y: function(d){return d.valor},
+      y: function(d){return d.valor;},
       yDomain: [0,valor_contrato],
       showValues: true,
       duration: 100,
@@ -77,8 +73,8 @@ angular.module('contractualClienteApp')
           valor = '$'+valor.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
           return "<h5><b>"+d.data.op+"</b></h5><h5><b>"+$translate.instant('VALOR')+
           ": </b></h5>"+valor+"</br><h5><b>"+$translate.instant('FECHA')+": </h5></b>"
-          +d.data.fecha+"</br><h5><b>"+$translate.instant('PORCENTAJE')+": </b></h5>"+d.data.porcentaje+"%"+
-          "</br><h5><b>"+$translate.instant('TIPO')+": </b></h5>"+d.data.tipo;
+          +d.data.fecha+"</br><h5><b>"+$translate.instant('PORCENTAJE')+": </b></h5>"+d.data.porcentaje+"%"
+          +"</br><h5><b>"+$translate.instant('TIPO')+": </b></h5>"+d.data.tipo;
         },
       },
       zoom: {
@@ -115,7 +111,7 @@ angular.module('contractualClienteApp')
       valor: valor_actual,
       tipo: $translate.instant('UNITARIO'),
       porcentaje : op.porcentaje,
-      fecha: op.fecha_orden,
+      fecha: fecha,
       yAxis:0,
     });
     data2.push({
@@ -124,7 +120,7 @@ angular.module('contractualClienteApp')
       valor: valor_actual_total,
       tipo: $translate.instant('ACUMULADO'),
       porcentaje : op.porcentaje_acumulado,
-      fecha: op.fecha_orden,
+      fecha: fecha,
       series:2,
       yAxis:1,
     });
@@ -134,7 +130,7 @@ angular.module('contractualClienteApp')
       valor: valor_contrato,
       tipo: $translate.instant('TOTAL'),
       porcentaje : 100,
-      fecha: op.fecha_orden,
+      fecha: fecha,
       yAxis:3,
     });
     i++;
