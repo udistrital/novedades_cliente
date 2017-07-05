@@ -345,7 +345,7 @@ angular.module('contractualClienteApp')
               var f_ap = {};
               f_ap.Apropiacion = self.f_apropiacion_inv[h].Apropiacion;
               f_ap.MontoParcial = self.f_apropiacion_inv[h].fuentes[k].Monto;
-              f_ap.FuenteFinanciacion = self.f_apropiacion_inv[h].fuentes[k].Fuente.Id;
+              f_ap.FuenteFinanciacion = self.f_apropiacion_inv[h].fuentes[k].FuenteFinanciamiento.Id;
               self.f_apropiaciones.push(f_ap);
             }
           }

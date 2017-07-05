@@ -35,16 +35,16 @@ angular.module('contractualClienteApp')
             displayName: $translate.instant('FUENTE'),
             headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
             cellTooltip: function(row) {
-              return row.entity.Fuente.Descripcion;
+              return row.entity.FuenteFinanciamiento.Descripcion;
             }
-          },
+          }/*,
           {
              field: 'Valor',
              displayName: $translate.instant('VALOR'),
              cellTemplate: '<div align="right">{{row.entity.Valor | currency}}</div>',
              headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
              //cellTemplate: '<div align="right">{{row.entity.Valor | currency }}</div>',
-            }
+           }*/
         ]
       };
 

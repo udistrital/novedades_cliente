@@ -359,7 +359,7 @@
                         <label class="text-info">{{"VALOR_SOLICITADO" | translate}}</label>{{ap.MontoParcial | currency}}
 
                         <li class="list-group-item" ng-repeat="fu in ap.fuentes">
-                          <label class="text-warning">{{"FUENTE" | translate}}</label> {{fu.Fuente.Descripcion}}
+                          <label class="text-warning">{{"FUENTE" | translate}}</label> {{fu.FuenteFinanciamiento.Descripcion}}
                           <br>
                           <label class="text-warning">{{"VALOR_SOLICITADO" | translate}}</label>
                           <input type="text" ng-init="fu.Monto=0" ng-model="fu.Monto" ui-money-mask="0">
