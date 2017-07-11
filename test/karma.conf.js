@@ -56,7 +56,7 @@ module.exports = function(config) {
       // endbower
       'app/scripts/**/*.js',
       //'test/mock/**/*.js',
-      'test/spec/controllers/seguimientoycontrol/financiero.js'
+      'test/spec/controllers/seguimientoycontrol/financiero/contrato.js'
     ],
 
     // list of files / patterns to exclude

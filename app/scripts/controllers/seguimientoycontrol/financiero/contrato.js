@@ -65,7 +65,6 @@ angular.module('contractualClienteApp')
                 self.ordenes_pago = self.ordenes_pago.concat(response.data);
               }
               if(x===self.registro_presupuestal.length){
-
                 for (var i = 0; i < self.ordenes_pago.length; i++) {
                   temp.numero_disponibilidad = self.ordenes_pago[i].NUMERO_DISPONIBILIDAD;
                   temp.numero_registro = self.ordenes_pago[i].NUMERO_REGISTRO;

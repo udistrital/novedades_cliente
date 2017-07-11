@@ -8,16 +8,14 @@
 * Controller of the contractualClienteApp
 */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function($http,$window, $scope,$translate,registro,orden, disponibilidad,contrato, sicapitalRequest) {
+.controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function($http,$window, $scope,$translate,registro,orden, disponibilidad,contrato) {
   var self = this;
   self.contrato = contrato;
   self.items = [];
   self.registro = registro;
   self.disponibilidad = disponibilidad;
   self.ordenes_pago =orden;
-  var retorno = null;
   var container = document.getElementById('linea');
-  var url;
   self.consulta_finalizada=false;
   self.banderaOP=false;
   var i = 0;
@@ -33,7 +31,7 @@ angular.module('contractualClienteApp')
       //si da click en ir a contratistas
       $window.location.href = '#/seguimientoycontrol/financiero';
     });
-  };
+  }
   self.gridOptions = {
     enableRowSelection: true,
     enableRowHeaderSelection: false,

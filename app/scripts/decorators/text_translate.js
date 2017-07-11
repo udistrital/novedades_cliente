@@ -8,7 +8,6 @@
  * Decorator of the contractualClienteApp
  */
 var text_es = {
-  BTN: {
     VER: "Ver",
     SELECCIONAR: "Seleccionar",
     CANCELAR: "Cancelar",
@@ -20,11 +19,9 @@ var text_es = {
     VER_SEGUIMIENTO_FINANCIERO:"Ver seguimiento financiero",
     APROBAR: "Aprobar",
     RECHAZAR: "Rechazar",
-    SOLICITAR_CDP: "Solicitar CDP"
-  },
+    SOLICITAR_CDP: "Solicitar CDP",
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
-  SELECCIONAR: "Seleccionar",
   //solicitud_necesidad
   NECESIDADES: "Necesidades",
   NECESIDAD: "Necesidad",
@@ -76,7 +73,6 @@ var text_es = {
   //lista_documentos_legales
   MARCO_LEGAL: "Marco Legal",
   NOMBRE_DOCUMENTO: "Nombre del Documento",
-  VER: "Ver",
   //lista_actividades_economicas
   ACTIVIDADES_ECONOMICAS: "Actividades Económicas",
   //lista_subgrupos_catalogos
@@ -194,34 +190,22 @@ var text_es = {
   UNITARIO:"Unitario",
   NO_HAY_DATOS_REDIRIGIR:"No hay datos para mostrar, será redirigido al menú anterior",
 
-
-
-
-
-
-
-
   /*
     contrato_detalle.html
     */
-    INFORMACION_CONTRATO: "Información contrato",   
-    VIGENCIA: "Vigencia",
-    FORMA_PAGO: "Forma de pago",  
+    INFORMACION_CONTRATO: "Información contrato",
+    FORMA_PAGO: "Forma de pago",
     SEDE_SOLICITANTE: "Sede solicitante",
     NUMERO_CDP: "Número de CDP",
     NUMERO_NECESIDAD: "Número de necesidad",
     OBJETO_CDP: "Objeto del CDP",
     JUSTIFICACION: "Justificación",
     DESCRIPCION_FORMA_PAGO: "Descripción forma de pago",
-    UNIDAD_EJECUTORA: "Unidad ejecutora",
-    MARCO_LEGAL: "Marco legal",
-    OBJETO: "Objeto",
     OBSERVACIONES: "Observaciones",
     /*
     Contrato_resumen.html
     */
     DOCENTES_CONTRATADOS: "Docentes contratados - periodo actual",
-    NOMBRE: "Nombre",
     CEDULA: "Cédula",
     EXPEDICION: "Expedida",
     CATEGORIA: "Categoría",
@@ -266,10 +250,9 @@ var text_es = {
     PROYECTO_CURRICULAR: "Proyecto curricular",
     NUMERO_SEMANAS: "Número de semanas",
     NUMERO_HORAS_SEMANALES: "Número de horas semanales",
-    DEDICACION: "Dedicación",
     DOCENTE_PLANTA: "Docente de planta",
     DOCENTE_VINCULADOS: "Docentes vinculados",
-    
+
     /*
     Informacion_personal.html
     */
@@ -284,7 +267,7 @@ var text_es = {
     ESTADO_CIVIL: "Estado civil",
     /*
     persona_natural_detalle.html
-    */    
+    */
     INFORMACION_PERSONA_NATURAL: "Información persona natural",
     CIUDAD_EXPEDICION: "Ciudad de expedición",
     GENERO: "Genero",
@@ -329,10 +312,10 @@ var text_es = {
       REALIZAR_EXPEDICION: "Realizar expedición de la resolución con los datos introducidos",
       INFORMACION_PERSONA_NATURAL: "Información persona natural",
       VINCULAR_DOCENTES_SELECCIONADOS: "Vincular docentes seleccionados a la resolución",
-      FORMACION_ACADEMICA: "Formación académica",      
+      FORMACION_ACADEMICA: "Formación académica",
       EXPERIENCIA_LABORAL_DOCENTE: "Experiencia laboral docente",
       TRABAJOS_INVESTIGACION: "Trabajos de investigación",
-    },     
+    },
     /*
     Scrits
     Hoja de vida seleccion.js
@@ -349,7 +332,6 @@ var text_es = {
     DOCUMENTO_ID: "DOCUMENTO",
     REGISTRAR_CONTRATOS: "Existen docentes con una vinculacion asociada a la resolución actual, ¿desea continuar con la vinculacion?",
     AGREGAR_CONTRATO: "Agregar nuevo contrato",
-    CANCELAR: "Cancelar",
     CANCELADO: "Cancelado",
     REGISTRO_CANCELADO: "El registro ha sido cancelado",
     PREGUNTA_SEGURO: "¿Está seguro?",
@@ -387,15 +369,11 @@ var text_es = {
     TRECE: "TRECE",
     CATORCE: "CATORCE",
     QUINCE: "QUINCE",
-
     DIECISEIS: "DIECISEIS",
     DIECISIETE: "DIECISIETE",
     DIECIOCHO: "DIECIOCHO",
     DIECINUEVE: "DIECINUEVE",
-
-
     VEINTE: "VEINTE",
-
     VEINTIUNO: "TWENTY ONE",
     VEINTIDOS: "VEINTIUNO",
     VEINTITRES: "VEINTITRES",
@@ -405,10 +383,9 @@ var text_es = {
     VEINTISIETE: "VEINTISIETE",
     VEINTIOCHO: "VEINTIOCHO",
     VEINTINUEVE: "VEINTINUEVE",
-
     TREINTA: "TREINTA",
     CUARENTA: "CUARENTA",
-    CINCUENTA: "CINCUENTA", 
+    CINCUENTA: "CINCUENTA",
     SESENTA: "SESENTA",
     SETENTA: "SETENTA",
     OCHENTA: "OCHENTA",
@@ -423,9 +400,9 @@ var text_es = {
     SETECIENTOS: "SETECIENTOS ",
     OCHOCIENTOS: "OCHOCIENTOS ",
     NOVECIENTOS: "NOVECIENTOS ",
-    UN_MIL: "UN MIL", 
+    UN_MIL: "UN MIL",
     MIL: "MIL",
-    UN_MILLON: "UN MILLON", 
+    UN_MILLON: "UN MILLON",
     MILLONES: "MILLONES",
     PESOS: "PESOS",
     PESO: "PESO",
@@ -435,13 +412,12 @@ var text_es = {
     /*
     resolucion_lista.js
     */
-    VISTA_PREVIA_RESOLUCION: "Vista previa de la resolución",    
+    VISTA_PREVIA_RESOLUCION: "Vista previa de la resolución",
     NIVEL: "Nivel",
     /*
     contrato_registro.js
     */
     NO_CALCULADO_SALARIO: "El salario no ha podido ser calculado",
-    NUMERO: "Número",
     EXPEDIR: "¿Expedir la resolución?",
     SEGURO_EXPEDIR: "¿Esta seguro que desea expedir la resolución?",
     EXPEDICION_NO_REALIZADA: "No se ha realizado la expedición de la resolución",
@@ -450,7 +426,7 @@ var text_es = {
     PROBLEMA_EXPEDICION: "Se ha presentado un problema en la expedición de la resolución",
     PROBLEMA_DOCENTE_CONTRATADOS: "Se ha presentado un problema en el registro de los datos de los docentes contratados",
     NO_DOCENTES: "No hay docentes inscritos dentro de la resolución",
-    
+
     /*
     resolucion_detalle.js
     */
@@ -461,7 +437,7 @@ var text_es = {
     GUARDADO: "Guardado",
     GUARDADO_EXITO: "Los cambios se han guardado exitosamente",
     PROBLEMA_ALMACENAMIENTO: "Ha habido un problema en el almacenamiento de los cambios",
-    REVISE_DATOS_RESOLUCION: "Revise los datos de la resolución",    
+    REVISE_DATOS_RESOLUCION: "Revise los datos de la resolución",
     /*
     resolucion_administracion.js
     */
@@ -487,7 +463,6 @@ var text_es = {
 var text_en = {
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Now get to start to develop ...",
-  BTN: {
     VER: "See",
     SELECCIONAR: "Choose",
     CANCELAR: "Cancel",
@@ -499,9 +474,7 @@ var text_en = {
     APROBAR: "Approbe",
     RECHAZAR: "Reject",
     SOLICITAR_CDP: "CDP Request",
-    VER_SEGUIMIENTO_FINANCIERO:"See financial monitoring"
-  },
-  SELECCIONAR: "Select",
+    VER_SEGUIMIENTO_FINANCIERO:"See financial monitoring",
   NECESIDADES: "Needs",
   NECESIDAD: "Need",
   //SOLICITUD RP
@@ -561,7 +534,6 @@ var text_en = {
   //lista_documentos_legales
   MARCO_LEGAL: "Legal Framework",
   NOMBRE_DOCUMENTO: "Document Name",
-  VER: "Details",
   //lista_actividades_economicas
   ACTIVIDADES_ECONOMICAS: "Economic Activities",
   //lista_subgrupos_catalogos
@@ -670,18 +642,10 @@ var text_en = {
   TOTAL:"Total",
   UNITARIO:"Unit",
   NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu",
-
-
-
-
-
-
-
   /*
     contrato_detalle.html
     */
     INFORMACION_CONTRATO: "Contract information",
-    VIGENCIA: "Validity",
     FORMA_PAGO: "Way to pay",
     SEDE_SOLICITANTE: "Applicant seat",
     NUMERO_CDP: "Number of CDP",
@@ -689,15 +653,11 @@ var text_en = {
     OBJETO_CDP: "Purpose of the CDP",
     JUSTIFICACION: "Justification",
     DESCRIPCION_FORMA_PAGO: "Description of payment method",
-    UNIDAD_EJECUTORA: "Executrix unit",
-    MARCO_LEGAL: "Legal framework",
-    OBJETO: "Object",
     OBSERVACIONES: "Observations",
     /*
     Contrato_resumen.html
     */
     DOCENTES_CONTRATADOS: "Teachers hired - current period",
-    NOMBRE: "Name",
     CEDULA: "Identification card",
     EXPEDICION: "Issued",
     CATEGORIA: "Category",
@@ -742,10 +702,8 @@ var text_en = {
     PROYECTO_CURRICULAR: "Curricular project",
     NUMERO_SEMANAS: "Number of weeks",
     NUMERO_HORAS_SEMANALES: "Number of hours per week",
-    DEDICACION: "Dedication",
     DOCENTE_PLANTA: "Plant teacher",
     DOCENTE_VINCULADOS: "Entailment professors",
-    
     /*
     Informacion_personal.html
     */
@@ -760,7 +718,7 @@ var text_en = {
     ESTADO_CIVIL: "Civil status",
     /*
     persona_natural_detalle.html
-    */    
+    */
     INFORMACION_PERSONA_NATURAL: "Information natural person",
     CIUDAD_EXPEDICION: "Expedition city",
     GENERO: "Gender",
@@ -808,7 +766,7 @@ var text_en = {
       FORMACION_ACADEMICA: "Academic training",
       EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
       TRABAJOS_INVESTIGACION: "Investigation work",
-    },    
+    },
     /*
     Scrits
     Hoja de vida seleccion.js
@@ -825,7 +783,6 @@ var text_en = {
     DOCUMENTO_ID: "DOCUMENT",
     REGISTRAR_CONTRATOS: "There are teachers with a link to the current resolution, do you want to continue with the entailment?",
     AGREGAR_CONTRATO: "Add new contract",
-    CANCELAR: "Cancel",
     CANCELADO: "Cancelled",
     REGISTRO_CANCELADO: "Registration has been canceled",
     PREGUNTA_SEGURO: "Are you sure?",
@@ -886,7 +843,7 @@ var text_en = {
 
     TREINTA: "THIRTY ",
     CUARENTA: "FORTY ",
-    CINCUENTA: "FIFTY ", 
+    CINCUENTA: "FIFTY ",
     SESENTA: "SIXTY ",
     SETENTA: "SEVENTY ",
     OCHENTA: "EGHTY ",
@@ -902,9 +859,9 @@ var text_en = {
     OCHOCIENTOS: "EIGHT HUNDRED ",
     NOVECIENTOS: "NINE HUNDRED ",
 
-    UN_MIL: "ONE THOUSAND", 
+    UN_MIL: "ONE THOUSAND",
     MIL: "THOUSAND",
-    UN_MILLON: "ONE MILLION", 
+    UN_MILLON: "ONE MILLION",
     MILLONES: " MILLION ",
     PESOS: "PESOS",
     PESO: "PESO",
@@ -921,7 +878,6 @@ var text_en = {
     contrato_registro.js
     */
     NO_CALCULADO_SALARIO: "The salary could not be calculated",
-    NUMERO: "Number",
     EXPEDIR: "Issue the resolution?",
     SEGURO_EXPEDIR: "Are you sure you want to issue the resolution?",
     EXPEDICION_NO_REALIZADA: "No issuance of the resolution",
@@ -941,7 +897,7 @@ var text_en = {
     GUARDADO: "Saved",
     GUARDADO_EXITO: "Changes saved successfully",
     PROBLEMA_ALMACENAMIENTO: "There was a problem storing changes",
-    REVISE_DATOS_RESOLUCION: "Review the resolution data",    
+    REVISE_DATOS_RESOLUCION: "Review the resolution data",
     /*
     resolucion_administracion.js
     */
@@ -951,7 +907,7 @@ var text_en = {
     PREGUNTA_RESTAURAR: "Restore resolution?",
     CANCELAR_RESOLUCION: "Cancel the resolution?",
     OPCIONES: "Options",
-    VER_BTN: "See",    
+    VER_BTN: "See",
     EDITAR_BTN: "Edit",
     CONFIGURAR_BTN: "Set up",
     EXPEDIR_BTN: "Issue",
@@ -962,7 +918,7 @@ var text_en = {
     */
     DOCENTES_CONTRATADOS_ACTUAL: "TEACHERS CONTRACTED - CURRENT PERIOD",
 
-  
+
 };
 
 angular.module('contractualClienteApp')
