@@ -1,0 +1,16 @@
+.resolucionExpedida { 
+	background-color: #87CEFA !important; 
+}
+ 
+.resolucionCancelada { 
+	background-color: #F08080 !important; 
+}
+
+.valorEfectivo{
+	text-align: right;
+}
+
+.campo-boton{
+	float: left;
+	width: 33.333333%;
+}

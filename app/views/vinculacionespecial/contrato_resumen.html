@@ -1,0 +1,48 @@
+<div class="panel panel-primary panel-body">
+  <h2 class="page-header text-center">{{ 'DOCENTES_CONTRATADOS_ACTUAL' | translate }} </h2>
+  <div class="panel-body">
+    <md-content class="md-padding">
+    <md-tabs md-selected="selectedIndex" md-border-bottom md-autoselect>
+    <md-tab ng-repeat="tab in contratoResumen.proyectos"
+    label="{{tab.Nombre}}">
+    <div class="demo-tab tab{{$index%4}}">
+      <form>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+            <input type="text" class="form-control" placeholder="Buscar docente" ng-model="searchFish">
+          </div>      
+        </div>
+      </form>
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>{{ 'NOMBRE' | translate }}</th>
+            <th>{{ 'CEDULA' | translate }}</th>
+            <th>{{ 'EXPEDICION' | translate }}</th>
+            <th>{{ 'CATEGORIA' | translate }}</th>
+            <th>{{ 'DEDICACION' | translate }}</th>
+            <th>{{ 'HORAS_SEMANALES' | translate }}</th>
+            <th>{{ 'PERIODO_VINCULACION' | translate }}</th>
+            <th>{{ 'VALOR_CONTRATO' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat = "datoContrato in contratoResumen.contratados | orderBy:sortType:sortReverse | filter:searchFish" ng-if = "datoContrato.ProyectoCurricular==contratoResumen.proyectos[selectedIndex].Id">
+            <td>{{datoContrato.NombreCompleto}}</td>
+            <td>{{datoContrato.Documento}}</td>
+            <td>{{datoContrato.Expedicion}}</td>
+            <td>{{datoContrato.Categoria}}</td>
+            <td>{{datoContrato.Dedicacion}}</td>
+            <td>{{datoContrato.HorasSemanales}}</td>
+            <td>{{datoContrato.Semanas}}</td>
+            <td>{{datoContrato.ValorContrato}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </md-tab>
+    </md-tabs>
+    </md-content>
+  </div>
+</div>

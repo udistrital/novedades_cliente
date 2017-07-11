@@ -73,6 +73,25 @@ angular.module('contractualClienteApp')
           "Opciones": null
         }
       ]
+    },
+    { 
+      "Id": 6,
+      "Nombre": "Vinculación especial",
+      "Url": "",
+      "Opciones": [
+      {
+        "Id": 6,
+        "Nombre": "Gestión de resoluciones",
+        "Url": "vinculacionespecial/resolucion_gestion",
+        "Opciones": null
+      },
+      {
+        "Id": 6,
+        "Nombre": "Administración de resoluciones",
+        "Url": "vinculacionespecial/resolucion_administracion",
+        "Opciones": null
+      }
+      ]
     }
   ];
 

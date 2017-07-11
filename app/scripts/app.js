@@ -42,6 +42,10 @@ angular
     'adminMidService',
     'sicapitalService',
     'nvd3',
+    'kyronService',
+    'contratacion_service',
+    'contratacion_mid_service',
+    'titan_service',
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');
@@ -104,6 +108,41 @@ angular
         templateUrl: 'views/seguimientoycontrol/financiero/estadisticas.html',
         controller: 'SeguimientoycontrolFinancieroEstadisticasCtrl',
         controllerAs: 'sFestadisticas'
+      })
+      .when('/vinculacionespecial/resolucion_generacion', {
+        templateUrl: 'views/vinculacionespecial/resolucion_generacion.html',
+        controller: 'ResolucionGeneracionCtrl',
+        controllerAs: 'resolucionGeneracion'
+      })
+      .when('/vinculacionespecial/hojas_de_vida_seleccion/:idResolucion', {
+        templateUrl: 'views/vinculacionespecial/hojas_de_vida_seleccion.html',
+        controller: 'HojasDeVidaSeleccionCtrl',
+        controllerAs: 'hojasDeVidaSeleccion'
+      })
+      .when('/vinculacionespecial/contrato_registro', {
+        templateUrl: 'views/vinculacionespecial/contrato_registro.html',
+        controller: 'ContratoRegistroCtrl',
+        controllerAs: 'contratoRegistro'
+      })
+      .when('/vinculacionespecial/resolucion_gestion', {
+        templateUrl: 'views/vinculacionespecial/resolucion_gestion.html',
+        controller: 'ResolucionGestionCtrl',
+        controllerAs: 'resolucionGestion'
+      })
+      .when('/vinculacionespecial/resolucion_detalle/:idResolucion', {
+        templateUrl: 'views/vinculacionespecial/resolucion_detalle.html',
+        controller: 'ResolucionDetalleCtrl',
+        controllerAs: 'resolucionDetalle'
+      })
+      .when('/vinculacionespecial/resolucion_vista', {
+        templateUrl: 'views/vinculacionespecial/resolucion_vista.html',
+        controller: 'ResolucionVistaCtrl',
+        controllerAs: 'resolucionVista'
+      })
+      .when('/vinculacionespecial/resolucion_administracion', {
+        templateUrl: 'views/vinculacionespecial/resolucion_administracion.html',
+        controller: 'ResolucionAdministracionCtrl',
+        controllerAs: 'resolucionAdministracion'
       })
       .otherwise({
         redirectTo: '/'
