@@ -14,6 +14,8 @@ angular.module('contractualClienteApp')
         apropiacion: '=',
         vigencia: "=",
         tipo: "=",
+        unidadejecutora: "=",
+        tiporubro: "=",
         selhijos: "=?"
       },
 
@@ -53,7 +55,7 @@ angular.module('contractualClienteApp')
                   return "text-info";
                 }
               },
-              width: '38%'
+              width: '58%'
             },
             {
               field: 'Valor',
@@ -69,7 +71,7 @@ angular.module('contractualClienteApp')
                 }
               },
               width: '20%'
-            },
+            }/*,
             {
               field: 'Saldo',
               displayName: $translate.instant('SALDO'),
@@ -84,22 +86,40 @@ angular.module('contractualClienteApp')
                 }
               },
               width: '20%'
-            }
+            }*/
           ]
 
         };
 
-        self.cargarSaldos = function() {
+                $scope.$watchGroup(['unidadejecutora', 'tiporubro'], function() {
+                  if($scope.unidadejecutora!==undefined && $scope.tiporubro!==undefined){
+                    if($scope.unidadejecutora===1 && $scope.tiporubro.Id===1){
+                        $scope.tipo="3-3";
+                    }else if($scope.unidadejecutora===1 && $scope.tiporubro.Id===2){
+                        $scope.tipo="3-1";
+                    }else if($scope.unidadejecutora===2 && $scope.tiporubro.Id===1){
+                        $scope.tipo="3-0-0";
+                    }else if($scope.unidadejecutora===2 && $scope.tiporubro.Id===2){
+                        $scope.tipo="3-0";
+                    }
+                    self.actualiza_rubros();
+                    if($scope.tipo!=="3-0-0"){
+                    //self.cargarSaldos();
+                  }
+                  }
+                }, true);
+
+      /*  self.cargarSaldos = function() {
           angular.forEach(self.gridOptions.data, function(data) {
-            financieraRequest.get('apropiacion/SaldoApropiacion/' + data.Id, 'query=Vigencia:' + $scope.vigencia + ",Rubro.Codigo__startswith:" + $scope.tipo).then(function(response) {
+            financieraRequest.get('apropiacion/SaldoApropiacion/' + data.Id, '').then(function(response) {
 
               //console.log(response.data);
               data.Saldo = response.data;
             });
           });
-        };
+        };*/
 
-        financieraRequest.get('apropiacion', 'limit=0&query=Vigencia:' + $scope.vigencia + ",Rubro.Codigo__startswith:" + $scope.tipo).then(function(response) {
+    /*    financieraRequest.get('apropiacion', 'limit=0&query=Vigencia:' + $scope.vigencia + ',Rubro.Codigo__startswith:' + $scope.tipo).then(function(response) {
 
           self.gridOptions.data = response.data.sort(function(a, b) {
             if (a.Rubro.Codigo < b.Rubro.Codigo) {return -1;}
@@ -123,11 +143,12 @@ angular.module('contractualClienteApp')
             }
           }
           self.cargarSaldos();
-        });
+        });*/
 
         //self.gridApi.core.refresh();
         self.actualiza_rubros = function() {
-          financieraRequest.get('apropiacion', 'limit=0&query=Vigencia:' + $scope.vigencia + ",Rubro.Codigo__startswith:" + $scope.tipo).then(function(response) {
+          financieraRequest.get('apropiacion', 'limit=0&query=Vigencia:' + $scope.vigencia + ",Rubro.Codigo__startswith:" + $scope.tipo + ",UnidadEjecutora:" + $scope.unidadejecutora).then(function(response) {
+            if(response.data!==null){
             self.gridOptions.data = response.data.sort(function(a, b) {
               if (a.Rubro.Codigo < b.Rubro.Codigo) {return -1;}
               if (a.Rubro.Codigo > b.Rubro.Codigo) {return 1;}
@@ -150,7 +171,10 @@ angular.module('contractualClienteApp')
               }
             }
 
-          });
+          } else {
+            self.gridOptions.data=[];
+          }
+        });
         };
 
 

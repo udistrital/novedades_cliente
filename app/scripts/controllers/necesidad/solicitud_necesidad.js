@@ -13,7 +13,7 @@ angular.module('contractualClienteApp')
     self.documentos=[];
 
     self.dep_ned = {
-      JefeDependenciaSolicitante: 18
+      JefeDependenciaSolicitante: 6
     };
 
     $scope.$watch('solicitudNecesidad.dependencia_destino',function(){
@@ -37,6 +37,10 @@ angular.module('contractualClienteApp')
     });
 
 
+    $scope.$watchGroup(['solicitudNecesidad.necesidad.UnidadEjecutora', 'solicitudNecesidad.necesidad.TipoRubro'],function(){
+        self.f_apropiacion_fun=[];
+        self.f_apropiacion_inv=[];
+    },true);
 
     $scope.$watch('solicitudNecesidad.rol_ordenador_gasto',function(){
       coreRequest.get('jefe_dependencia', $.param({
@@ -102,14 +106,14 @@ angular.module('contractualClienteApp')
     });
 
     oikosRequest.get('dependencia', $.param({
-      query: 'Id:12',
+      query: 'Id:122',
       limit: -1
     })).then(function(response) {
       self.dependencia_solicitante = response.data[0];
     });
 
     agoraRequest.get('informacion_persona_natural', $.param({
-      query: 'Id:1234567890',
+      query: 'Id:6774454',
       limit: -1
     })).then(function(response) {
       self.persona_solicitante = response.data[0];

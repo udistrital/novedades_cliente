@@ -315,7 +315,7 @@
           </div>
         </fieldset>
 
-        <fieldset class="form-group">
+        <fieldset class="form-group"  ng-show="solicitudNecesidad.necesidad.UnidadEjecutora!=undefined">
           <legend class="text-primary" ng-click="info_finan=!info_finan">{{"FINANCIACION" | translate}}<span class="fa fa-plus pull-right" ng-show="!info_finan"></span> <span class="fa fa-minus pull-right" ng-show="info_finan"></span></legend>
 
           <div class="panel-body" ng-show="info_finan">
@@ -331,7 +331,7 @@
               <label class=" control-label">{{"SELECCIONAR" | translate}} {{"APROPIACIONES" | translate}}</label>
 
               <div ng-show="solicitudNecesidad.necesidad.TipoRubro.Nombre=='Inversión'">
-                <lista-apropiaciones vigencia="2017" tipo="'3-3'" apropiacion="apro" selhijos="true"></lista-apropiaciones>
+                <lista-apropiaciones vigencia="2017" tipo="'3-3'" apropiacion="apro" unidadejecutora=solicitudNecesidad.necesidad.UnidadEjecutora tiporubro=solicitudNecesidad.necesidad.TipoRubro selhijos="true"></lista-apropiaciones>
                 <center>
                   <button type="button" class="btn btn-success btn-outline" ng-click="solicitudNecesidad.agregar_ffapropiacion(apro)">
                     {{"AGREGAR" | translate}}
@@ -354,8 +354,8 @@
                       <li class="list-group-item">
 
 
-                        <label class="text-info">{{"SALDO" | translate}}</label> {{ap.aprop.Saldo | currency}}
-                        <br>
+                        <!--label class="text-info">{{"SALDO" | translate}}</label> {{ap.aprop.Saldo | currency}}
+                        <br-->
                         <label class="text-info">{{"VALOR_SOLICITADO" | translate}}</label>{{ap.MontoParcial | currency}}
 
                         <li class="list-group-item" ng-repeat="fu in ap.fuentes">
@@ -379,7 +379,7 @@
               <div class="panel panel-body col-md-12" ng-show="solicitudNecesidad.necesidad.TipoRubro.Nombre=='Funcionamiento'">
 
                 <div class="form-group">
-                  <lista-apropiaciones vigencia="2017" tipo="'3-1'" apropiacion="apro" selhijos="true"></lista-apropiaciones>
+                  <lista-apropiaciones vigencia="2017" tipo="'3-1'" apropiacion="apro" unidadejecutora=solicitudNecesidad.necesidad.UnidadEjecutora tiporubro=solicitudNecesidad.necesidad.TipoRubro selhijos="true"></lista-apropiaciones>
                   <center>
                     <button type="button" class="btn btn-success btn-outline" ng-click="solicitudNecesidad.agregar_ffapropiacion(apro)">
                       {{"AGREGAR" | translate}}
@@ -394,9 +394,9 @@
 
                         <label><span class="text-success">{{$index+1}}.</span> {{ap.aprop.Rubro.Descripcion}}</label>
                         <br>
-                        <label class="text-info">{{"SALDO" | translate}}</label>
+                        <!--label class="text-info">{{"SALDO" | translate}}</label>
                         <input type="text" ng-model="ap.aprop.Saldo" ui-money-mask="0" readonly>
-                        <br>
+                        <br-->
                         <label class="text-info">{{"VALOR_SOLICITADO" | translate}}</label>
                         <input type="text" ng-model="ap.MontoParcial" ui-money-mask="0">
                         <br>

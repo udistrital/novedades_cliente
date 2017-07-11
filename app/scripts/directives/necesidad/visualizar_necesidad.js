@@ -60,6 +60,9 @@ angular.module('contractualClienteApp')
                   obj.Fuentes  = obj.Fuentes || [];
 
                   var i_fuente={};
+                  console.log(self.v_necesidad);
+                  if(self.v_necesidad.TipoRubro.Id===1)
+                  {
                   financieraRequest.get('fuente_financiamiento',$.param({
                     query: "Id:"+item.FuenteFinanciacion
                   })).then(function(response){
@@ -68,6 +71,7 @@ angular.module('contractualClienteApp')
                   });
                   i_fuente.MontoParcial=item.MontoParcial;
                   obj.Fuentes.push(i_fuente);
+                }
                   //obj.fuentes.push({FuenteFinanciacion:item.FuenteFinanciacion, MontoParcial: item.MontoParcial });
               });
               self.ff_necesidad=dateArr;
