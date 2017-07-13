@@ -152,7 +152,6 @@ angular.module('contractualClienteApp')
         self.contratados.forEach(function(contratado){
           var contratoGeneral=JSON.parse(JSON.stringify(self.contratoGeneralBase));
           contratoGeneral.Contratista=contratado.Documento;
-          alert(contratado.ProyectoCurricular)
           contratoGeneral.DependenciaSolicitante=contratado.ProyectoCurricular.toString();
           contratoGeneral.PlazoEjecucion=contratado.Semanas*7;
           contratoGeneral.OrdenadorGasto="1";
@@ -164,7 +163,6 @@ angular.module('contractualClienteApp')
           conjuntoContratos.push(contratoVinculacion);
         });
           contratacion_request.post("contrato_general/InsertarContratos",conjuntoContratos).then(function(response){    
-            alert(JSON.stringify(response.data))
             if(!(typeof(response.data)=="object")){
               errorInsercion=true;
             }
