@@ -14,8 +14,7 @@
                 <label>{{ 'DEPENDENCIA_SOLICITANTE' | translate }}</label>
                 <select class="form-control" ng-model="resolucionGeneracion.resolucion.facultad" required>
                   <option value="">--SELECIONE--</option>
-                  <<option value="0"> asdfasdf </option>
-                  <option ng-repeat="facultad in resolucionGeneracion.facultades" value={{facultad.Id}}> {{facultad.Nombre}}</option>
+                  <option value="0"> asdfasdf </option>
                 </select>
               </div>
               <div class="form-group col-lg-6">
@@ -32,7 +31,6 @@
                   <option value="">--{{ 'SELECCIONE' | translate }}--</option>
                   <option value="HCH">HCH</option>
                   <option value="HCP">HCP</option>
-                  <option ng-if="resolucionGeneracion.resolucion.nivelAcademico=='PREGRADO'" value="TCO-MTO">TCO-MTO</option>
                 </select>
               </div>
               <div class="col-lg-6">
