@@ -144,6 +144,16 @@ angular
         controller: 'ResolucionAdministracionCtrl',
         controllerAs: 'resolucionAdministracion'
       })
+      .when('/minutas/creacion_minuta', {
+        templateUrl: 'views/minutas/creacion_minuta.html',
+        controller: 'MinutasCreacionMinutaCtrl',
+        controllerAs: 'creacionMinuta'
+      })
+      .when('/minutas/generacion_minuta', {
+        templateUrl: 'views/minutas/generacion_minuta.html',
+        controller: 'MinutaGeneracionMinutaCtrl',
+        controllerAs: 'generacionMinuta'
+      })
       .otherwise({
         redirectTo: '/'
       });
