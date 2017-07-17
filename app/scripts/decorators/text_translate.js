@@ -20,7 +20,14 @@ var text_es = {
     VER_SEGUIMIENTO_FINANCIERO:"Ver seguimiento financiero",
     APROBAR: "Aprobar",
     RECHAZAR: "Rechazar",
-    SOLICITAR_CDP: "Solicitar CDP"
+    SOLICITAR_CDP: "Solicitar CDP",
+    GENERAR_RESOLUCION: "Generar Plantilla",
+    AGREGAR_CLAUSULA: "Agregar Clausula",
+    ELIMINAR_CLAUSULA: "Eliminar Clausula",
+    ACEPTAR: "Aceptar",
+    AGREGAR_PARAGRAFO: "Agregar Parágrafo",
+    ELIMINAR_PARAGRAFO: "Eliminar Parágrafo",
+    GUARDAR: "Guardar"
   },
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
@@ -192,7 +199,19 @@ var text_es = {
   ACUMULADO:"Acumulado",
   TOTAL:"Total",
   UNITARIO:"Unitario",
-  NO_HAY_DATOS_REDIRIGIR:"No hay datos para mostrar, será redirigido al menú anterior"
+  NO_HAY_DATOS_REDIRIGIR:"No hay datos para mostrar, será redirigido al menú anterior",
+  // Minutas
+  GENERACION_MINUTA: "Generación de Minuta",
+  DEPENDENCIA: "Dependencia",
+  TITULO_MINUTA: "Titulo de la Minuta",
+  TIPO_CONTRATO: "Tipo Contrato",
+  INTRODUCCION: "Introducción",
+  CONSIDERACION: "Consideración",
+  FORMATO_MINUTA: "Información de la Minuta",
+  RESUELVE: "Resuelve",
+  VISTA_PREVIA: "Vista previa",
+  CLAUSULA: "Clausula",
+  ESCRIBA_CLAUSULA: "Escriba el texto de la Clausula"
 };
 
 var text_en = {
@@ -210,7 +229,14 @@ var text_en = {
     APROBAR: "Approbe",
     RECHAZAR: "Reject",
     SOLICITAR_CDP: "CDP Request",
-    VER_SEGUIMIENTO_FINANCIERO:"See financial monitoring"
+    VER_SEGUIMIENTO_FINANCIERO:"See financial monitoring",
+    GENERAR_RESOLUCION: "Generate",
+    AGREGAR_CLAUSULA: "Adding a Clause",
+    ELIMINAR_CLAUSULA: "Delete Clause",
+    ACEPTAR: "Accept",
+    AGREGAR_PARAGRAFO: "Add Paragraph",
+    ELIMINAR_PARAGRAFO: "Delete Paragraph",
+    GUARDAR: "Save"
   },
   SELECCIONAR: "Select",
   NECESIDADES: "Needs",
@@ -380,7 +406,18 @@ var text_en = {
   ACUMULADO:"Accumulate",
   TOTAL:"Total",
   UNITARIO:"Unit",
-  NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu"
+  NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu",
+  // Minutas
+  GENERACION_MINUTA: "Agreement Generator",
+  TITULO_MINUTA: "Agreement Title",
+  TIPO_CONTRATO: "Agreement Type",
+  TITULO_MINUTA: "Agreement Title",
+  INTRODUCCION: "Introduction",
+  CONSIDERACION: "Consideration",
+  FORMATO_MINUTA: "Agreement Information",
+  RESUELVE: "Resolve",
+  VISTA_PREVIA: "Preview",
+  CLAUSULA: "Clause"
 };
 
 angular.module('contractualClienteApp')
