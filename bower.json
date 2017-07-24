@@ -25,11 +25,12 @@
     "angular-timelinejs3": "^0.2.3",
     "chart.js": "^2.6.0",
     "angular-nvd3": "^1.0.9",
-    "vis": "^4.20.0"
+    "vis": "^4.20.0",
+    "textAngular": "^1.5.16"
   },
   "resolutions": {
     "angular": "1.6.4",
-    "angular-route":"1.6.4"
+    "angular-route": "1.6.4"
   },
   "devDependencies": {
     "angular-mocks": "^1.6.4"

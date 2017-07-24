@@ -77,7 +77,7 @@ angular.module('contractualClienteApp')
     {
       "Id": 5,
       "Nombre": "Minutas",
-      "Url": "minutas/creacion_minuta",
+      "Url": "minutas/generacion_minuta",
       "Opciones": null
     }
   ];

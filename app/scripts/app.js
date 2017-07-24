@@ -42,6 +42,7 @@ angular
     'adminMidService',
     'sicapitalService',
     'nvd3',
+    'textAngular',
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');

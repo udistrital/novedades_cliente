@@ -22,8 +22,8 @@ var text_es = {
     RECHAZAR: "Rechazar",
     SOLICITAR_CDP: "Solicitar CDP",
     GENERAR_RESOLUCION: "Generar Plantilla",
-    AGREGAR_CLAUSULA: "Agregar Clausula",
-    ELIMINAR_CLAUSULA: "Eliminar Clausula",
+    AGREGAR_CLAUSULA: "Agregar Cláusula",
+    ELIMINAR_CLAUSULA: "Eliminar Cláusula",
     ACEPTAR: "Aceptar",
     AGREGAR_PARAGRAFO: "Agregar Parágrafo",
     ELIMINAR_PARAGRAFO: "Eliminar Parágrafo",
@@ -201,7 +201,7 @@ var text_es = {
   UNITARIO:"Unitario",
   NO_HAY_DATOS_REDIRIGIR:"No hay datos para mostrar, será redirigido al menú anterior",
   // Minutas
-  GENERACION_MINUTA: "Generación de Minuta",
+  GENERACION_MINUTA: "Gestión de Plantillas",
   DEPENDENCIA: "Dependencia",
   TITULO_MINUTA: "Titulo de la Minuta",
   TIPO_CONTRATO: "Tipo Contrato",
@@ -210,8 +210,10 @@ var text_es = {
   FORMATO_MINUTA: "Información de la Minuta",
   RESUELVE: "Resuelve",
   VISTA_PREVIA: "Vista previa",
-  CLAUSULA: "Clausula",
-  ESCRIBA_CLAUSULA: "Escriba el texto de la Clausula"
+  CLAUSULA: "Cláusula",
+  TITULO: "Titulo",
+  DESCRIPCION: "Descripción",
+  PARAGRAFO: "Parágrafo"
 };
 
 var text_en = {
@@ -408,7 +410,7 @@ var text_en = {
   UNITARIO:"Unit",
   NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu",
   // Minutas
-  GENERACION_MINUTA: "Agreement Generator",
+  GENERACION_MINUTA: "Template Management",
   TITULO_MINUTA: "Agreement Title",
   TIPO_CONTRATO: "Agreement Type",
   TITULO_MINUTA: "Agreement Title",
@@ -417,7 +419,10 @@ var text_en = {
   FORMATO_MINUTA: "Agreement Information",
   RESUELVE: "Resolve",
   VISTA_PREVIA: "Preview",
-  CLAUSULA: "Clause"
+  CLAUSULA: "Clause",
+  TITULO: "Title",
+  DESCRIPCION: "Description",
+  PARAGRAFO: "Paragraph"
 };
 
 angular.module('contractualClienteApp')
