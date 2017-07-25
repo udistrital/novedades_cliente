@@ -17,7 +17,7 @@ angular.module('contractualClienteApp')
       //Se cargan los proyectos curriculars de la facultad
       oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
         if(response.data==null){
-          //En caso de ue no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
+          //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
           oikosRequest.get("facultad/"+self.datosFiltro.IdFacultad).then(function(response){
             self.proyectos=[response.data]
           });
@@ -187,13 +187,13 @@ angular.module('contractualClienteApp')
         self.datosPersonas.data.forEach(function(row){
           //El nombre completo se guarda en una sola variable
           row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
-        });get
+        });
       });
     }
 
     //Función para cargar los datos de los docentes asociados a la resolución previamente
     self.cargarDatosPrecontratados = function(){
-      administrativaRequest.get("precontratado/"+self.idResoluciogetn.toString()).then(function(response){      
+      administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){      
         self.precontratados.data=response.data;
         if(self.precontratados.data != null){
           self.precontratados.data.forEach(function(row){
@@ -204,6 +204,8 @@ angular.module('contractualClienteApp')
               row.ValorContrato=self.FormatoNumero(response.data,0);
             });          
           });
+        }else{
+          self.precontratados.data=[] 
         }
       });
     }
