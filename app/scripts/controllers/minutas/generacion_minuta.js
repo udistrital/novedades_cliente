@@ -31,30 +31,17 @@ angular.module('contractualClienteApp')
     Clausulas: []
   };
 
-  // Muestra el textarea o el text-angular de acuerdo al valor de self.op
-  self.opcionTexto = function() {
-    switch (self.op) {
-      case "Texto":
-        self.textoNormal = true;
-        self.textoHtml = !self.textoNormal;
-        self.textoOriginal = self.textoParagrafo;
-      break;
-      case "HTML":
-        self.textoHtml = true;
-        self.textoNormal = !self.textoHtml;
-      break;
-      default:
-        self.textoNormal = true;
-        self.textoHtml = !self.textoNormal;
-      break;
-    }
-  }
-
-  // Adiciona clausulas
+  // Agregar clausula
   self.agregarClausula = function() {
     $("#modal_add_clausula").modal('hide');
     self.contenidoMinuta.Clausulas.push({Titulo: self.tituloClausula, Texto: self.textoClausula, Paragrafos: []});
     self.clausula='';
+  }
+
+  // Eliminar clausula
+  self.eliminarClausula = function(idClausula) {
+    // Elimina un objeto del arreglo Clausulas con la funcion splice, siendo idClausula la posicion del objeto y 1 la cantidad de objetos a eliminar
+    self.contenidoMinuta.Clausulas.splice(idClausula, 1);
   }
 
   // Cambia los campos de las ventanas modales vacios
@@ -68,9 +55,31 @@ angular.module('contractualClienteApp')
   self.adicionarParagrafo = function(){
     $('#modal_add_paragrafo').modal('hide');
     self.contenidoMinuta.Clausulas[self.idClausula].Paragrafos.push({Texto: self.textoParagrafo});
-    console.log(self.contenidoMinuta);
-    /*contratacion_request.getOne("resolucion",self.idResolucion).then(function(response){
-  });*/
+}
+
+// Muestra el textarea o el text-angular del texto del paragrafo de acuerdo al valor de self.op
+self.opcionTexto = function() {
+  switch (self.op) {
+    case "Texto":
+      self.textoNormal = true;
+      self.textoHtml = !self.textoNormal;
+      self.textoOriginal = self.textoParagrafo;
+    break;
+    case "HTML":
+      self.textoHtml = true;
+      self.textoNormal = !self.textoHtml;
+    break;
+    default:
+      self.textoNormal = true;
+      self.textoHtml = !self.textoNormal;
+    break;
+  }
+}
+
+// Elimina un paragrafo
+self.eliminarParagrafo = function(idClausula, idParagrafo) {
+  // Elimina el elemento con la funcion splice, siendo idParagrafo la posicion y 1 la cantidad de elementos a eliminar
+  self.contenidoMinuta.Clausulas[idClausula].Paragrafos.splice(idParagrafo, 1);
 }
 
 // Con el tamaño de objeto devuelve un arreglo de números menor a mayor
