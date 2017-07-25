@@ -11,7 +11,7 @@ angular.module('contratacion_mid_service',[])
   .factory('contratacion_mid_request', function ($http) {
     // Service logic
     // ...
-    var path = "http://10.20.0.254/cdve_api_mid/v1/";
+    var path = "http://localhost:8088/v1/";
 
     // Public API here
     return {
