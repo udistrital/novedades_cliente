@@ -53,7 +53,7 @@ angular.module('contractualClienteApp')
                     self.contratados.forEach(function(row){
                       row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
                       adminMidRequest.get("calculo_salario/Contratacion/"+row.Id).then(function(response){
-                        row.ValorContrato=response.data;
+                        row.ValorContrato=self.FormatoNumero(response.data);
                         if(row==self.contratados[self.contratados.length-1]){
                           self.generarResolucion() 
                         }  

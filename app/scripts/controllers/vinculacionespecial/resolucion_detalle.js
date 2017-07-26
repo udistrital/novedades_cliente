@@ -51,8 +51,8 @@
       self.contratados=response.data;
       if(self.contratados){
         self.contratados.forEach(function(row){
-          adminMidRequest.post("calculo_salario/"+self.datosFiltro.NivelAcademico+"/"+row.Documento+"/"+row.Semanas+"/"+row.HorasSemanales+"/"+row.Categoria.toLowerCase()+"/"+row.Dedicacion.toLowerCase()).then(function(response){
-            row.ValorContrato=response.data;
+          adminMidRequest.get("calculo_salario/Contratacion/"+row.Id).then(function(response){
+            row.ValorContrato=self.FormatoNumero(response.data);
           });
           row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
         });
