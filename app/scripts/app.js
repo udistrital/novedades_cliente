@@ -46,6 +46,7 @@ angular
     'contratacion_service',
     'contratacion_mid_service',
     'titan_service',
+    'textAngular',
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');

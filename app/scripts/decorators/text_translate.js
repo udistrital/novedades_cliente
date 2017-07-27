@@ -20,6 +20,31 @@ var text_es = {
   APROBAR: "Aprobar",
   RECHAZAR: "Rechazar",
   SOLICITAR_CDP: "Solicitar CDP",
+<<<<<<< HEAD
+
+=======
+  BTN: {
+    VER: "Ver",
+    SELECCIONAR: "Seleccionar",
+    CANCELAR: "Cancelar",
+    CONFIRMAR: "Confirmar",
+    AGREGAR: "Agregar",
+    REGISTRAR: "Registrar",
+    SOLICITAR_RP:"Solicitar RP",
+    QUITAR_RUBRO: "Quitar",
+    VER_SEGUIMIENTO_FINANCIERO:"Ver seguimiento financiero",
+    APROBAR: "Aprobar",
+    RECHAZAR: "Rechazar",
+    SOLICITAR_CDP: "Solicitar CDP",
+    GENERAR_RESOLUCION: "Generar Plantilla",
+    AGREGAR_CLAUSULA: "Agregar Cláusula",
+    ELIMINAR_CLAUSULA: "Eliminar Cláusula",
+    ACEPTAR: "Aceptar",
+    AGREGAR_PARAGRAFO: "Agregar Parágrafo",
+    ELIMINAR_PARAGRAFO: "Eliminar Parágrafo",
+    GUARDAR: "Guardar"
+  },
+>>>>>>> minutas
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
   //solicitud_necesidad
@@ -467,7 +492,7 @@ var text_es = {
     ELIMINAR_PARAGRAFO: "Eliminar Parágrafo",
     GUARDAR: "Guardar",
   },
-  GENERACION_MINUTA: "Generación de Minuta",
+  GENERACION_MINUTA: "Generación de Plantillas",
   DEPENDENCIA: "Dependencia",
   TITULO_MINUTA: "Titulo de la Minuta",
   TIPO_CONTRATO: "Tipo Contrato",
@@ -476,8 +501,10 @@ var text_es = {
   FORMATO_MINUTA: "Información de la Minuta",
   RESUELVE: "Resuelve",
   VISTA_PREVIA: "Vista previa",
-  CLAUSULA: "Clausula",
-  ESCRIBA_CLAUSULA: "Escriba el texto de la Clausula",
+  CLAUSULA: "Cláusula",
+  TITULO: "Titulo",
+  DESCRIPCION: "Descripción",
+  PARAGRAFO: "Parágrafo"
 };
 
 var text_en = {
@@ -948,7 +975,7 @@ var text_en = {
     ELIMINAR_PARAGRAFO: "Delete Paragraph",
     GUARDAR: "Save",
   },
-  GENERACION_MINUTA: "Agreement Generator",
+  GENERACION_MINUTA: "Template Management",
   TITULO_MINUTA: "Agreement Title",
   TIPO_CONTRATO: "Agreement Type",
   INTRODUCCION: "Introduction",
@@ -956,7 +983,10 @@ var text_en = {
   FORMATO_MINUTA: "Agreement Information",
   RESUELVE: "Resolve",
   VISTA_PREVIA: "Preview",
-  CLAUSULA: "Clause"
+  CLAUSULA: "Clause",
+  TITULO: "Title",
+  DESCRIPCION: "Description",
+  PARAGRAFO: "Paragraph"
 };
 
 angular.module('contractualClienteApp')
