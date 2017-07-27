@@ -20,9 +20,6 @@ var text_es = {
   APROBAR: "Aprobar",
   RECHAZAR: "Rechazar",
   SOLICITAR_CDP: "Solicitar CDP",
-<<<<<<< HEAD
-
-=======
   BTN: {
     VER: "Ver",
     SELECCIONAR: "Seleccionar",
@@ -44,7 +41,6 @@ var text_es = {
     ELIMINAR_PARAGRAFO: "Eliminar Parágrafo",
     GUARDAR: "Guardar"
   },
->>>>>>> minutas
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
   //solicitud_necesidad
