@@ -25,7 +25,9 @@
               </div>
               <div class="form-group col-lg-6">
                 <label>{{ 'TIPO_CONTRATO' | translate }}</label>
-                <input type="text" class="form-control" ng-model="generacionMinuta.contenidoMinuta.IdTipoContrato.Nombre" disabled >
+                <select ng-model="generacionMinuta.TipoContrato">
+                  <option ng-repeat="o in generacionMinuta.tipoContrato" value="{{ o.Id }}"> {{ o.TipoContrato }} </option>
+                </select>
               </div>
             </div>
             <div class="col-lg-12">
@@ -53,7 +55,7 @@
           <h4 class="intro-text text-center">{{ 'VISTA_PREVIA' | translate }}</h4>
         </div>
         <div class="panel-body">
-          <button type="submit" class="form-control btn-primary" >{{ 'VISTA_RESOLUCION_ACTUALIZADA' | translate }}</button>
+          <button ng-click="generacionMinuta.crearPdf()" type="submit" class="form-control btn-primary" >{{ 'VISTA_RESOLUCION_ACTUALIZADA' | translate }}</button>
           <iframe id="vistaPDF" frameborder='0' width='100%' height='770'> </iframe>
         </div>
       </div>
@@ -75,7 +77,8 @@
             <form role="form">
               <div class="form-group col-lg-6">
                 <label>{{ 'TEXTO' | translate }}</label>
-                <textarea rows="12" class="form-control" ng-model="generacionMinuta.contenidoMinuta.Clausulas[i].Texto"></textarea>
+                <!--<textarea rows="12" class="form-control" ng-model="generacionMinuta.contenidoMinuta.Clausulas[i].Texto"></textarea>-->
+                <div ta-bind ng-model="generacionMinuta.contenidoMinuta.Clausulas[i].Texto"></div>
               </div>
               <div class="col-lg-10 col-lg-offset-1">
                 <button class="form-control btn btn-danger" data-toggle="modal" ng-click="generacionMinuta.eliminarClausula(i)"> {{'BTN_MINUTAS.ELIMINAR_CLAUSULA' | translate}} </button>
@@ -128,7 +131,15 @@
           </div>
           <div class="col-sm-12">
             <label for="descripcion" class="col-sm-12 control-label">{{'DESCRIPCION' | translate }}:</label>
-            <textarea name="descripcion" ng-model="generacionMinuta.textoClausula" rows=7 class="form-control" required="true"></textarea>
+            <div class="col-sm-12">
+              <select ng-model="generacionMinuta.op" ng-change="generacionMinuta.opcionTexto()">
+                <option ng-repeat="o in generacionMinuta.opcionesTexto" value="{{o}}"> {{ o }} </option>
+              </select>
+              <label for="descripcion" class="col-sm-12 control-label"><h3> {{'DESCRIPCION' | translate }}: </h3></label>
+              <textarea ng-show="generacionMinuta.textoNormal" name="descripcion" ng-model="generacionMinuta.textoClausula" rows=7 class="form-control" required="true"> {{generacionMinuta.textoOriginal}}</textarea>
+              <text-angular ng-show="generacionMinuta.textoHtml" ng-model="generacionMinuta.textoClausula"></text-angular>
+            </div>
+            <!--<textarea name="descripcion" ng-model="generacionMinuta.textoClausula" rows=7 class="form-control" required="true"></textarea>-->
           </div>
         </div>
         <br>
