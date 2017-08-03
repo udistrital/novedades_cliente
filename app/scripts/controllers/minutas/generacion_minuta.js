@@ -32,7 +32,7 @@ angular.module('contractualClienteApp')
   self.agregarClausula = function() {
     $("#modal_add_clausula").modal('hide');
     self.contenidoMinuta.Clausulas.push({Titulo: self.tituloClausula, Texto: self.textoClausula, Paragrafos: []});
-    self.clausula='';
+    self.limpiarModal();
   };
 
   // Eliminar clausula
@@ -41,10 +41,11 @@ angular.module('contractualClienteApp')
     self.contenidoMinuta.Clausulas.splice(idClausula, 1);
   };
 
-  // Cambia los campos de las ventanas modales vacios
+  // Cambia los campos de las ventanas modales a vacios
   self.limpiarModal = function() {
-    self.textoClausula = '';
     self.tituloClausula = '';
+    self.textoClausula = '';
+    self.textoParagrafo = '';
   };
 
 
@@ -52,6 +53,7 @@ angular.module('contractualClienteApp')
   self.adicionarParagrafo = function(){
     $('#modal_add_paragrafo').modal('hide');
     self.contenidoMinuta.Clausulas[self.idClausula].Paragrafos.push({Texto: self.textoParagrafo});
+    self.limpiarModal();
   };
 
   // Muestra el textarea o el text-angular del texto del paragrafo de acuerdo al valor de self.op

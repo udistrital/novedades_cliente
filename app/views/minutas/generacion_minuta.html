@@ -2,7 +2,7 @@
 <div class="panel panel-default">
   <h3 class="page-header text-center"> {{ 'GENERACION_MINUTA' | translate }} </h3>
   <div class="row">
-    <!-- informacion minuta -->
+    <!-- información minuta -->
     <div class="col-lg-6">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -23,9 +23,9 @@
                 <label>{{ 'UNIDAD_EJECUTORA' | translate }}</label>
                 <input type="text" class="form-control" ng-model="generacionMinuta.contenidoMinuta.IdUnidadEjecutora.Nombre" disabled >
               </div>
-              <div class="form-group col-lg-6">
+              <div class="form-group col-lg-5">
                 <label>{{ 'TIPO_CONTRATO' | translate }}</label>
-                <select ng-model="generacionMinuta.TipoContrato">
+                <select class="form-control" ng-model="generacionMinuta.TipoContrato">
                   <option ng-repeat="o in generacionMinuta.tipoContrato" value="{{ o.Id }}"> {{ o.TipoContrato }} </option>
                 </select>
               </div>
@@ -46,7 +46,7 @@
         </div>
       </div>
     </div>
-    <!-- informacion minuta -->
+    <!-- información minuta -->
 
     <!-- Vista previa de la minuta -->
     <div class="col-lg-6" id="resolucion">
@@ -77,7 +77,6 @@
             <form role="form">
               <div class="form-group col-lg-6">
                 <label>{{ 'TEXTO' | translate }}</label>
-                <!--<textarea rows="12" class="form-control" ng-model="generacionMinuta.contenidoMinuta.Clausulas[i].Texto"></textarea>-->
                 <div ta-bind ng-model="generacionMinuta.contenidoMinuta.Clausulas[i].Texto"></div>
               </div>
               <div class="col-lg-10 col-lg-offset-1">
@@ -127,24 +126,23 @@
         <div class="row">
           <div class="col-sm-12">
             <label for="tituloClausula"> Titulo: </label>
-            <input type="text" name="textoClausula" class="form-control" ng-model="generacionMinuta.tituloClausula" required="true">
+            <input type="text" name="textoClausula" class="form-control" ng-model="generacionMinuta.tituloClausula" required>
           </div>
-          <div class="col-sm-12">
-            <label for="descripcion" class="col-sm-12 control-label">{{'DESCRIPCION' | translate }}:</label>
-            <div class="col-sm-12">
-              <select ng-model="generacionMinuta.op" ng-change="generacionMinuta.opcionTexto()">
+            <div class="col-sm-12 row form-group">
+              <label for="descripcion"  class="col-sm-4 col-form-label"> {{'DESCRIPCION' | translate }}: </label>
+              <label for="formato_texto_c"  class="col-md-offset-6 col-form-label">{{'FORMATO_TEXTO' | translate }}:</label>
+              <select id="formato_texto_c" ng-model="generacionMinuta.op" ng-change="generacionMinuta.opcionTexto()">
                 <option ng-repeat="o in generacionMinuta.opcionesTexto" value="{{o}}"> {{ o }} </option>
               </select>
-              <label for="descripcion" class="col-sm-12 control-label"><h3> {{'DESCRIPCION' | translate }}: </h3></label>
-              <textarea ng-show="generacionMinuta.textoNormal" name="descripcion" ng-model="generacionMinuta.textoClausula" rows=7 class="form-control" required="true"> {{generacionMinuta.textoOriginal}}</textarea>
-              <text-angular ng-show="generacionMinuta.textoHtml" ng-model="generacionMinuta.textoClausula"></text-angular>
             </div>
-            <!--<textarea name="descripcion" ng-model="generacionMinuta.textoClausula" rows=7 class="form-control" required="true"></textarea>-->
+          <div class="col-sm-12">
+            <textarea ng-show="generacionMinuta.textoNormal" name="descripcion" ng-model="generacionMinuta.textoClausula" rows=7 class="form-control" required="true"> {{generacionMinuta.textoOriginal}}</textarea>
+            <text-angular ng-show="generacionMinuta.textoHtml" ng-model="generacionMinuta.textoClausula"></text-angular>
           </div>
         </div>
         <br>
         <button type="button" name="button" class="btn btn-success btn-outline" ng-click="generacionMinuta.agregarClausula()"> {{ 'ACEPTAR' | translate }} </button>
-        <button type="button" class="btn btn-outline btn-danger" data-dismiss="modal" ng-click="generacionMinuta.clausula=''"> {{ 'CANCELAR' | translate }}</button><br>
+        <button type="button" class="btn btn-outline btn-danger" data-dismiss="modal" ng-click="generacionMinuta.limpiarModal()"> {{ 'CANCELAR' | translate }}</button><br>
       </div>
     </div>
   </div>
@@ -156,16 +154,17 @@
       <div class="modal-header">
         <button type="button" class="btn btn-outline btn-danger gtn-xs pull-right" data-dismiss="modal">&times</button><br>
       </div>
-      <div class="col-sm-12">
-        <select ng-model="generacionMinuta.op" ng-change="generacionMinuta.opcionTexto()">
+      <div class="col-sm-12 row form-group">
+        <label for="descripcion"  class="col-sm-4 col-form-label"> {{'DESCRIPCION' | translate }}: </label>
+        <label for="formato_texto_c"  class="col-md-offset-6 col-form-label">{{'FORMATO_TEXTO' | translate }}:</label>
+        <select id="formato_texto_c" ng-model="generacionMinuta.op" ng-change="generacionMinuta.opcionTexto()">
           <option ng-repeat="o in generacionMinuta.opcionesTexto" value="{{o}}"> {{ o }} </option>
         </select>
-        <label for="descripcion" class="col-sm-12 control-label"><h3> {{'DESCRIPCION' | translate }}: </h3></label>
         <textarea ng-show="generacionMinuta.textoNormal" name="descripcion" ng-model="generacionMinuta.textoParagrafo" rows=7 class="form-control" required="true"> {{generacionMinuta.textoOriginal}}</textarea>
         <text-angular ng-show="generacionMinuta.textoHtml" ng-model="generacionMinuta.textoParagrafo"></text-angular>
       </div>
       <button type="button" name="button" class="btn btn-success btn-outline" ng-click="generacionMinuta.adicionarParagrafo()"> {{ 'ACEPTAR' | translate }} </button>
-      <button type="button" class="btn btn-outline btn-danger" data-dismiss="modal" ng-click="generacionMinuta.clausula=''"> {{ 'CANCELAR' | translate }}</button><br>
+      <button type="button" class="btn btn-outline btn-danger" data-dismiss="modal" ng-click="generacionMinuta.limpiarModal()"> {{ 'CANCELAR' | translate }}</button><br>
     </div>
   </div>
   <!-- modal paragrafos -->

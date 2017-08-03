@@ -500,7 +500,8 @@ var text_es = {
   CLAUSULA: "Cláusula",
   TITULO: "Titulo",
   DESCRIPCION: "Descripción",
-  PARAGRAFO: "Parágrafo"
+  PARAGRAFO: "Parágrafo",
+  FORMATO_TEXTO: "Formato"
 };
 
 var text_en = {
@@ -982,7 +983,8 @@ var text_en = {
   CLAUSULA: "Clause",
   TITULO: "Title",
   DESCRIPCION: "Description",
-  PARAGRAFO: "Paragraph"
+  PARAGRAFO: "Paragraph",
+  FORMATO_TEXTO: "Format"
 };
 
 angular.module('contractualClienteApp')
