@@ -46,6 +46,7 @@ angular
     'contratacion_service',
     'contratacion_mid_service',
     'titan_service',
+    'textAngular'
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');
@@ -143,6 +144,16 @@ angular
         templateUrl: 'views/vinculacionespecial/resolucion_administracion.html',
         controller: 'ResolucionAdministracionCtrl',
         controllerAs: 'resolucionAdministracion'
+      })
+      .when('/minutas/creacion_minuta', {
+        templateUrl: 'views/minutas/creacion_minuta.html',
+        controller: 'MinutasCreacionMinutaCtrl',
+        controllerAs: 'creacionMinuta'
+      })
+      .when('/minutas/generacion_minuta', {
+        templateUrl: 'views/minutas/generacion_minuta.html',
+        controller: 'MinutaGeneracionMinutaCtrl',
+        controllerAs: 'generacionMinuta'
       })
       .otherwise({
         redirectTo: '/'

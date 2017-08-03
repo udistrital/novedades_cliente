@@ -74,7 +74,7 @@ angular.module('contractualClienteApp')
         }
       ]
     },
-    { 
+    {
       "Id": 6,
       "Nombre": "Vinculación especial",
       "Url": "",
@@ -91,7 +91,12 @@ angular.module('contractualClienteApp')
         "Url": "vinculacionespecial/resolucion_administracion",
         "Opciones": null
       }
-      ]
+    ]},
+    {
+      "Id": 5,
+      "Nombre": "Minutas",
+      "Url": "minutas/generacion_minuta",
+      "Opciones": null
     }
   ];
 

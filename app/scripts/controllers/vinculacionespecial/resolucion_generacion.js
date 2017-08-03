@@ -18,15 +18,15 @@ angular.module('contractualClienteApp')
 
   	self.resolucion={};
 
-  	$.getJSON("/resolucion.json", function(resolucion) {
+  	$.getJSON("http://10.20.0.254/cdve_cliente/resolucion.json", function(resolucion) {
         self.resolucion.preambulo=resolucion["preambulo"];
     });
 
-    $.getJSON("/resolucion.json", function(resolucion) {
+    $.getJSON("http://10.20.0.254/cdve_cliente/resolucion.json", function(resolucion) {
         self.resolucion.consideracion=resolucion["consideracion"];
     });
 
-    $.getJSON("/resolucion.json", function(resolucion) {
+    $.getJSON("http://10.20.0.254/cdve_cliente/resolucion.json", function(resolucion) {
         self.resolucion.articulos=resolucion["articulos"];
     });
 

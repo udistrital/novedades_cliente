@@ -212,8 +212,7 @@ angular.module('contractualClienteApp')
                         contratacion_request.getOne("resolucion", row.entity.Id).then(function(response){
                             var nuevaResolucion=response.data;
                             nuevaResolucion.Estado=false;
-                            contratacion_request.put("resolucion/CancelarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
-                                alert(JSON.stringify(response.data))
+                            contratacion_request.put("resolucion/CancelarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){                                
                                 self.cargarDatosResolucion();
                             })
                         })
