@@ -93,9 +93,10 @@ angular.module('contractualClienteApp')
        if ($scope.vigenciaModel !== undefined || $scope.vigenciaModel === null) {
          query = query + "VigenciaContrato:" + $scope.vigenciaModel;
          var datos = JSON.stringify(query);
+         console.log(datos);
 
          adminMidRequest.post('informacion_proveedor/contratoPersona', datos).then(function(response) {
-           self.gridOptions.data = response.data;
+            self.gridOptions.data = response.data;
             self.longitud_grid = self.gridOptions.data.length;
            if (response.data === null) {
              $scope.busquedaSinResultados = true;

@@ -11,7 +11,8 @@
    .factory('adminMidRequest', function ($http) {
      // Service logic
      // ...
-    var path = "http://10.20.0.254/administrativa_mid_api/v1/";
+  /*  var path = "http://10.20.0.254/administrativa_mid_api/v1/";*/
+    var path = "http://localhost:8085/v1/";
 
      // Public API here
      return {
