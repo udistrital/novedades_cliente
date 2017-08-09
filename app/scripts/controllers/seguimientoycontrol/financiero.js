@@ -86,7 +86,6 @@ angular.module('contractualClienteApp')
          adminMidRequest.post('informacion_proveedor/contrato_proveedor', datos).then(function(response) {
            self.gridOptions.data = response.data;
            self.longitud_grid = self.gridOptions.data.length;
-           console.log(response.data);
          });
        });
      });
