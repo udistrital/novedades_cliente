@@ -96,19 +96,63 @@ angular.module('contractualClienteApp')
     self.tipoContrato = response.data;
   });
 
-  /*
-  // PDF
-  self.crearPdf = function() {
-    var docDefinition = { content: 'PDF de prueba'}
-    // open the PDF in a new window
-    pdfMake.createPdf(docDefinition).open();
 
-    // print the PDF
-    pdfMake.createPdf(docDefinition).print();
+  // Información para la modal de plantillas
+  var plantillas = [
+    {
+      Nombre: "Plantilla 1",
+      Dependencia: "Dependencia 1",
+      UnidadEjecutora: "Unidad Ejecutora 1",
+      TipoContrato: "CPS",
+      FechaActivacion: "08-08-2017",
+      FechaInactivacion: "",
+      Activo: true
+    },
+    {
+      Nombre: "Plantilla 2",
+      Dependencia: "Dependencia 2",
+      UnidadEjecutora: "Unidad Ejecutora 2",
+      TipoContrato: "CPS Virtual",
+      FechaActivacion: "08-08-2027",
+      FechaInactivacion: "",
+      Activo: true
+    },
+    {
+      Nombre: "Plantilla 3",
+      Dependencia: "Dependencia 3",
+      UnidadEjecutora: "Unidad Ejecutora 3",
+      TipoContrato: "fsdfsdfasdf",
+      FechaActivacion: "01-01-2016",
+      FechaInactivacion: "31-12-2017",
+      Activo: false
+    }
+  ];
 
-    // download the PDF
-    pdfMake.createPdf(docDefinition).download('optionalName.pdf');
+  self.gridOptions = {
+    enableFiltering : false,
+    enableSorting : true,
+    treeRowHeaderAlwaysVisible : false,
+    showTreeExpandNoChildren : false,
+  };
+
+  self.gridOptions.columnDefs = [
+    {field: 'Nombre', headerCellTemplate: '<div align="center"> {{ \'NOMBRE\' | translate }} </div>'},
+    {field: 'Dependencia',  headerCellTemplate: '<div align="center"> {{ \'DEPENDENCIA\' | translate }} </div>'},
+    {field: 'UnidadEjecutora', headerCellTemplate: '<div align="center"> {{ \'UNIDAD_EJECUTORA\' | translate }} </div>'},
+    {field: 'TipoContrato', headerCellTemplate: '<div align="center"> {{ \'TIPO_CONTRATO\' | translate }} </div>'},
+    {field: 'Gestion', headerCellTemplate: '<div align="center"> {{ \'GESTION_PLANTILLA\' | translate }} </div>',
+      cellTemplate: '<button class="btn btn-default borrar" ng-click="grid.appScope.generacionPlantilla.cerrarModal()" ><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>'}
+  ];
+
+  self.llenarUiGrid = function() {
+    for (var i = 0; i < plantillas.length; i++) {
+      if (plantillas[i].Activo) {
+        self.gridOptions.data.push(plantillas[i]);
+      }
+    }
+  };
+
+  self.cerrarModal = function() {
+    $('#modal_plantilla_existente').modal('hide');
   }
-  // PDF
-  */
 });

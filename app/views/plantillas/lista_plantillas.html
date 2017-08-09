@@ -1,13 +1,20 @@
 <br>
 <div class="panel panel-default">
-  <div class="panel-heading">
-    minutas/lista_plantillas.
-  </div>
   <div class="panel-body">
-    <select ng-model="listaPlantillas.opcionFiltro" ng-change="listaPlantillas.cambiarFiltro()">
-      <option ng-repeat="o in listaPlantillas.opcionesFiltro" value="{{ o }}">{{ o }}</option>
-    </select>
-    <table style="width:100%;">
+    <center><h3 class="page-header"> {{ 'GESTION_PLANTILLAS' | translate }} </h3></center>
+    <div class="col-sm-4 col-sm-offset-8">
+      <div class="form-group row">
+        <div class="col-sm-4">
+            <label for="selectEstado"> {{ 'FILTRAR_POR' | translate }} </label>
+        </div>
+        <div class="col-sm-8">
+          <select id="selectEstado" class="form-control" ng-model="listaPlantillas.opcionFiltro" ng-change="listaPlantillas.cambiarFiltro()">
+            <option ng-repeat="o in listaPlantillas.opcionesFiltro" value="{{ o }}">{{ o }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <table style="width:70%;">
       <td>
         <div ui-grid="listaPlantillas.gridOptions" class="myGrid"></div>
       </td>

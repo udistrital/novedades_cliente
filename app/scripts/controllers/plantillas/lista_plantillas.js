@@ -53,8 +53,14 @@ angular.module('contractualClienteApp')
       {field: 'Dependencia',  headerCellTemplate: '<div align="center"> {{ \'DEPENDENCIA\' | translate }} </div>'},
       {field: 'UnidadEjecutora', headerCellTemplate: '<div align="center"> {{ \'UNIDAD_EJECUTORA\' | translate }} </div>'},
       {field: 'TipoContrato', headerCellTemplate: '<div align="center"> {{ \'TIPO_CONTRATO\' | translate }} </div>'},
-      {field: 'FechaActivacion', headerCellTemplate: '<div align="center"> {{ \'FECHA_ACTIVACION\' | translate }} </div>'},
-      {field: 'FechaInactivacion', headerCellTemplate: '<div align="center"> {{ \'FECHA_INACTIVACION\' | translate }} </div>'}
+      {field: 'FechaActivacion', headerCellTemplate: '<div align="center"> {{ \'FECHA_ACTIVACION\' | translate }} </div>',
+          cellTemplate: '<div align="right">{{row.entity.FechaActivacion}}</div>'},
+      {field: 'FechaInactivacion', headerCellTemplate: '<div align="center"> {{ \'FECHA_INACTIVACION\' | translate }} </div>',
+        cellTemplate: '<div align="right">{{row.entity.FechaInactivacion}}</div>'},
+      {field: 'Gestion', headerCellTemplate: '<div align="center"> {{ \'GESTION_PLANTILLA\' | translate }} </div>',
+        cellTemplate: '<center><button class="btn btn-default editar"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>'+
+        '<button class="btn btn-default borrar"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>'+
+        '<button class="btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></center>'}
     ];
 
     self.gridOptions.data = plantillas;
