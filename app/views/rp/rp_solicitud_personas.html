@@ -19,7 +19,7 @@
             <label>{{'SELECCIONE_UNA_VIGENCIA' | translate}}</label>
           </div>
           <div class="col-md-2">
-            <select class="form-control" ng-change="rpSolicitudPersonas.buscarContratosVigencia()" ng-model="vigenciaModel">
+            <select class="form-control" ng-change="rpSolicitudPersonas.buscar_contratos_vigencia()" ng-model="vigenciaModel">
               <option ng-repeat="vigencia in vigencias" >{{vigencia}}</option>
             </select>
           </div>
@@ -31,7 +31,12 @@
       <table style="width:70%;" align="center">
         <tr>
           <td>
-            <div ui-grid="rpSolicitudPersonas.gridOptions" ui-grid-selection class="myGrid"></div>
+         <div ui-grid="rpSolicitudPersonas.gridOptions" ui-grid-selection class="myGrid">
+            <div class="well grid-loading" ng-show="rpSolicitudPersonas.longitud_grid == 0">
+              <i class="fa fa-spin fa-spinner"></i>
+              <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
+            </div>
+        </div>
           </td>
         </tr>
         <tr>
