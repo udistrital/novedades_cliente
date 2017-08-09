@@ -94,8 +94,8 @@ angular.module('contractualClienteApp')
     ]},
     {
       "Id": 5,
-      "Nombre": "Minutas",
-      "Url": "minutas/generacion_minuta",
+      "Nombre": "Plantillas",
+      "Url": "plantillas/lista_plantillas",
       "Opciones": null
     }
   ];

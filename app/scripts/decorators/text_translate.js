@@ -478,7 +478,7 @@ var text_es = {
   */
   DOCENTES_CONTRATADOS_ACTUAL: "DOCENTES CONTRATADOS - PERIODO ACTUAL",
 
-  // Minutas
+  // Minutas Plantillas
   BTN_MINUTAS: {
     GENERAR_MINUTA: "Generar Plantilla",
     AGREGAR_CLAUSULA: "Agregar Clausula",
@@ -501,7 +501,11 @@ var text_es = {
   TITULO: "Titulo",
   DESCRIPCION: "Descripción",
   PARAGRAFO: "Parágrafo",
-  FORMATO_TEXTO: "Formato"
+  FORMATO_TEXTO: "Formato",
+  FECHA_ACTIVACION: "Fecha de Activación",
+  FECHA_INACTIVACION: "Fecha de Inactivación",
+  REGISTRAR_PLANTILLA: "Registrar Nueva Plantilla",
+  PLANTILLA_EXISTENTE: "Utilizar una Plantilla Existente"
 };
 
 var text_en = {
@@ -984,7 +988,11 @@ var text_en = {
   TITULO: "Title",
   DESCRIPCION: "Description",
   PARAGRAFO: "Paragraph",
-  FORMATO_TEXTO: "Format"
+  FORMATO_TEXTO: "Format",
+  FECHA_ACTIVACION: "Activate Date",
+  FECHA_INACTIVACION: "Inactive Date",
+  REGISTRAR_PLANTILLA: "New Template Register",
+  PLANTILLA_EXISTENTE: "Use an Old Template"
 };
 
 angular.module('contractualClienteApp')

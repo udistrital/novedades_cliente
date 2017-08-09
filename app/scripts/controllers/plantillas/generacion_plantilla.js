@@ -8,7 +8,7 @@
 * Controller of the contractualClienteApp
 */
 angular.module('contractualClienteApp')
-.controller('MinutaGeneracionMinutaCtrl', function ($translate, $timeout, $scope, administrativaRequest) {
+.controller('GeneracionPlantillaCtrl', function ($translate, $timeout, $scope, administrativaRequest) {
   var self = this;
 
   self.opcionesTexto = ["Texto","HTML"];

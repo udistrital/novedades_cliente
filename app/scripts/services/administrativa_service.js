@@ -15,7 +15,11 @@ angular.module('administrativaService',[])
     //var path = "http://10.20.2.78:8090/v1/";
 
     var path = "http://10.20.0.254/administrativa_api/v1/";
+<<<<<<< HEAD
     //var path = "http://localhost:8080/v1/";
+=======
+    //var path = "http://localhost:8082/v1/";
+>>>>>>> d025fd694a5377bcae43be9d061c2a5287a4f4e6
     // Public API here
     return {
       get: function (tabla,params) {

@@ -1,0 +1,20 @@
+<br>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    minutas/lista_plantillas.
+  </div>
+  <div class="panel-body">
+    <select ng-model="listaPlantillas.opcionFiltro" ng-change="listaPlantillas.cambiarFiltro()">
+      <option ng-repeat="o in listaPlantillas.opcionesFiltro" value="{{ o }}">{{ o }}</option>
+    </select>
+    <table style="width:100%;">
+      <td>
+        <div ui-grid="listaPlantillas.gridOptions" class="myGrid"></div>
+      </td>
+    </tr>
+  </table>
+  <a ng-href="#/plantillas/generacion_minuta"><button type="button" class="btn btn-outline btn-primary btn-lg btn-block" > {{ 'REGISTRAR_PLANTILLA' | translate }} </button></a>
+</div>
+<div class="panel-footer">
+</div>
+</div>
