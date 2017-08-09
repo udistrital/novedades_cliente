@@ -43,27 +43,27 @@ angular.module('contractualClienteApp')
            field: 'Id',
            displayName: $translate.instant('CONTRATO'),
            width: "10%",
-           cellTemplate: '<div align="center">{{row.entity.Id}}</div>'
+           cellTemplate: '<div align="center">{{row.entity.ContratoGeneral.Id}}</div>'
          },
          {
-           field: 'VigenciaContrato',
+           field: 'ContratoGeneral.Vigencia',
            displayName: $translate.instant('VIGENCIA_CONTRATO'),
            visible: false
          },
          {
-           field: 'Contratista.NomProveedor',
+           field: 'InformacionProveedor.NomProveedor',
            displayName: $translate.instant('NOMBRE_CONTRATISTA'),
            width: "50%"
          },
          {
-           field: 'Contratista.NumDocumento',
+           field: 'ContratoGeneral.Contratista',
            displayName: $translate.instant('DOCUMENTO_CONTRATISTA'),
-           cellTemplate: '<div align="center">{{row.entity.Contratista.NumDocumento}}</div>'
+           cellTemplate: '<div align="center">{{row.entity.ContratoGeneral.Contratista}}</div>'
          },
          {
-           field: 'ValorContrato',
+           field: 'ContratoGeneral.ValorContrato',
            displayName: $translate.instant('VALOR'),
-           cellTemplate: '<div align="right">{{row.entity.ValorContrato | currency }}</div>'
+           cellTemplate: '<div align="right">{{row.entity.ContratoGeneral.ValorContrato | currency }}</div>'
          },
        ],
        onRegisterApi: function(gridApi) {
@@ -82,8 +82,12 @@ angular.module('contractualClienteApp')
          query: "VigenciaContrato:"+vigenciaActual,
          limit: -1
        })).then(function(response) {
-         self.gridOptions.data = response.data;
-         self.longitud_grid = self.gridOptions.data.length;
+         var datos = JSON.stringify(response.data);
+         adminMidRequest.post('informacion_proveedor/contrato_proveedor', datos).then(function(response) {
+           self.gridOptions.data = response.data;
+           self.longitud_grid = self.gridOptions.data.length;
+           console.log(response.data);
+         });
        });
      });
      //se buscan los contratos por la vigencia seleccionada
@@ -91,17 +95,20 @@ angular.module('contractualClienteApp')
        self.longitud_grid = 0;
        query = "";
        if ($scope.vigenciaModel !== undefined || $scope.vigenciaModel === null) {
-         query = query + "VigenciaContrato:" + $scope.vigenciaModel;
-         var datos = JSON.stringify(query);
-         console.log(datos);
 
-         adminMidRequest.post('informacion_proveedor/contratoPersona', datos).then(function(response) {
-            self.gridOptions.data = response.data;
-            self.longitud_grid = self.gridOptions.data.length;
-           if (response.data === null) {
-             $scope.busquedaSinResultados = true;
-           }
-         });
+
+         administrativaRequest.get('contrato_general', $.param({
+             query: "VigenciaContrato:"+$scope.vigenciaModel,
+             limit: -1
+           })).then(function(response) {
+             var datos = JSON.stringify(response.data);
+             adminMidRequest.post('informacion_proveedor/contrato_proveedor', datos).then(function(response) {
+               self.gridOptions.data = response.data;
+               self.longitud_grid = self.gridOptions.data.length;
+               console.log(response.data);
+             });
+           });
+
        }
      };
 
@@ -110,13 +117,13 @@ angular.module('contractualClienteApp')
        if(seleccion[0]===null || seleccion[0]===undefined){
          swal("Alertas", "Debe seleccionar un contratista", "error");
        }else{
-         self.contrato.Id = seleccion[0].Id;
-         self.contrato.Vigencia= seleccion[0].VigenciaContrato;
-         self.contrato.ContratistaId= seleccion[0].Contratista.NumDocumento;
-         self.contrato.ValorContrato= seleccion[0].ValorContrato;
-         self.contrato.NombreContratista= seleccion[0].Contratista.NomProveedor;
-         self.contrato.ObjetoContrato= seleccion[0].ObjetoContrato;
-         self.contrato.FechaRegistro= seleccion[0].FechaRegistro;
+         self.contrato.Id = seleccion[0].ContratoGeneral.Id;
+         self.contrato.Vigencia= seleccion[0].ContratoGeneral.Vigencia;
+         self.contrato.ContratistaId= seleccion[0].ContratoGeneral.Contratista;
+         self.contrato.ValorContrato= seleccion[0].ContratoGeneral.ValorContrato;
+         self.contrato.NombreContratista= seleccion[0].InformacionProveedor.NomProveedor;
+         self.contrato.ObjetoContrato= seleccion[0].ContratoGeneral.ObjetoContrato;
+         self.contrato.FechaRegistro= seleccion[0].ContratoGeneral.FechaRegistro;
 
          self.saving = true;
          self.btnGenerartxt = "Generando...";
