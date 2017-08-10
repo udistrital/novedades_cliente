@@ -46,7 +46,7 @@ angular.module('contractualClienteApp')
            cellTemplate: '<div align="center">{{row.entity.ContratoGeneral.Id}}</div>'
          },
          {
-           field: 'ContratoGeneral.Vigencia',
+           field: 'ContratoGeneral.VigenciaContrato',
            displayName: $translate.instant('VIGENCIA_CONTRATO'),
            visible: false
          },
@@ -117,13 +117,13 @@ angular.module('contractualClienteApp')
          swal("Alertas", "Debe seleccionar un contratista", "error");
        }else{
          self.contrato.Id = seleccion[0].ContratoGeneral.Id;
-         self.contrato.Vigencia= seleccion[0].ContratoGeneral.Vigencia;
+         self.contrato.Vigencia= seleccion[0].ContratoGeneral.VigenciaContrato;
          self.contrato.ContratistaId= seleccion[0].ContratoGeneral.Contratista;
          self.contrato.ValorContrato= seleccion[0].ContratoGeneral.ValorContrato;
          self.contrato.NombreContratista= seleccion[0].InformacionProveedor.NomProveedor;
          self.contrato.ObjetoContrato= seleccion[0].ContratoGeneral.ObjetoContrato;
          self.contrato.FechaRegistro= seleccion[0].ContratoGeneral.FechaRegistro;
-
+         console.log(self.contrato.Vigencia);
          self.saving = true;
          self.btnGenerartxt = "Generando...";
 
