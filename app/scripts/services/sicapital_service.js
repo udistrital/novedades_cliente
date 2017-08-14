@@ -11,7 +11,8 @@ angular.module('sicapitalService',[])
 .factory('sicapitalRequest', function ($http) {
   // Service logic
   // ...
-  var path = "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/";
+  //var path = "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/";
+  var path = "http://10.20.2.15/sicws/ws/sicapitalAPI.php/?/";
   // Public API here
   return {
     get: function (tabla,params) {
