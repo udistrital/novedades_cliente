@@ -14,7 +14,7 @@
 
    self.idResolucion=$routeParams.idResolucion;
 
-  oikosRequest.get("facultad").then(function(response){
+  oikosRequest.get("dependencia_tipo_dependencia","query=TipoDependenciaId.Id%3A2&fields=DependenciaId&limit=-1").then(function(response){
     self.facultades=response.data;
   });
 
@@ -23,8 +23,14 @@
     self.numero=resolucion.NumeroResolucion;
   });
 
+   self.proyectos=[];
    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
     self.datosFiltro=response.data;
+    if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
+      var auxNivelAcademico=14;
+    }else if(self.datosFiltro.NivelAcademico.toLowerCase()=="posgrado"){
+      var auxNivelAcademico=15;
+    }
     administrativaRequest.get("contenido_resolucion/"+self.idResolucion).then(function(response){
       self.contenidoResolucion=response.data;
       coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.datosFiltro.IdFacultad.toString()).then(function(response){
@@ -38,7 +44,41 @@
       });
     });
     self.datosFiltro.IdFacultad=self.datosFiltro.IdFacultad.toString();
-    oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
+    oikosRequest.get("dependencia_padre","query=Padre%3A"+self.datosFiltro.IdFacultad+"&fields=Hija&limit=-1").then(function(response){
+      if(response.data==null){
+        //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
+        oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
+          self.proyectos=[response.data]
+        });
+      }
+      else{
+        var auxProyectos=response.data;
+        var auxNum=0;
+        auxProyectos.forEach(function(aux){
+          oikosRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A1&limit=-1").then(function(response){
+            if(response.data!=null){
+              oikosRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A"+auxNivelAcademico.toString()+"&limit=-1").then(function(response){
+                auxNum++;
+                if(response.data!=null){
+                  self.proyectos.push(response.data[0].DependenciaId);
+                }
+                if(auxNum==auxProyectos.length){
+                    if(self.proyectos.length==0){
+                      //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
+                      oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
+                        self.proyectos=[response.data]
+                      });
+                    }
+                  }
+              });
+            }else{
+              auxNum++;
+            }
+          });
+        });
+      }
+    });
+    /*oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
       if(response.data==null){
         oikosRequest.get("facultad/"+self.datosFiltro.IdFacultad).then(function(response){
           self.proyectos=[response.data]
@@ -46,7 +86,7 @@
       }else{
         self.proyectos=response.data;
       }
-    });
+    });*/
     administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){    
       self.contratados=response.data;
       if(self.contratados){

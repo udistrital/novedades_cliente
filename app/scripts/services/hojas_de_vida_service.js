@@ -12,7 +12,7 @@ angular.module('kyronService',[])
 
     // Service logic
     // ...
-    var path = "http://localhost:8089/v1/";
+    var path = "http://10.20.0.254/hvapi/v1/";
 
     // Public API here
     return {

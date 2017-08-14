@@ -19,10 +19,10 @@
                                   <div class="form-group col-lg-6">
                                     <label>{{ 'FACULTAD' | translate }}</label>
                                     <select class="form-control" ng-if="resolucionDetalle.contratados==null" ng-model="resolucionDetalle.datosFiltro.IdFacultad">
-                                      <option ng-repeat="facultad in resolucionDetalle.facultades" value={{facultad.Id}}> {{facultad.Nombre}}</option>
+                                      <option ng-repeat="facultad in resolucionDetalle.facultades" value={{facultad.DependenciaId.Id}}> {{facultad.DependenciaId.Nombre}}</option>
                                     </select>
                                     <select class="form-control" ng-if="resolucionDetalle.contratados!=null" ng-model="resolucionDetalle.datosFiltro.IdFacultad" disabled>
-                                      <option ng-repeat="facultad in resolucionDetalle.facultades" value={{facultad.Id}}> {{facultad.Nombre}}</option>
+                                      <option ng-repeat="facultad in resolucionDetalle.facultades" value={{facultad.DependenciaId.Id}}> {{facultad.DependenciaId.Nombre}}</option>
                                     </select>
                                   </div>
                                   <div class="form-group col-lg-6">

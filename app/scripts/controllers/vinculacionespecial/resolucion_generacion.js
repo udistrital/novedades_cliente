@@ -12,7 +12,9 @@ angular.module('contractualClienteApp')
 
   	var self=this;
 
-  	oikosRequest.get("facultad").then(function(response){
+
+
+  	oikosRequest.get("dependencia_tipo_dependencia","query=TipoDependenciaId.Id%3A2&fields=DependenciaId&limit=-1").then(function(response){
   		self.facultades=response.data;
   	});
 

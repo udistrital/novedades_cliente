@@ -14,6 +14,7 @@ angular.module('contractualClienteApp')
 
     self.idResolucion=idResolucion;
 
+    self.proyectos=[];
     //Se cargan los datos almacenados en la tabla resolucion
     administrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){ 
       self.resolucion=response.data;
@@ -21,9 +22,52 @@ angular.module('contractualClienteApp')
       //Se cargan los datos almacenados en la tabla resolucion_vinculacion_docente donde se encuentran los elementos filtro para obtener los docentes asociados a la resolución
       administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
         self.datosFiltro=response.data;
+        if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
+          var auxNivelAcademico=14;
+        }else if(self.datosFiltro.NivelAcademico.toLowerCase()=="posgrado"){
+          var auxNivelAcademico=15;
+        }
         self.datosFiltro.IdFacultad=self.datosFiltro.IdFacultad.toString();
         //Se cargan los proyectos curriculares de la facultad asociada a la resolución
-        oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
+        oikosRequest.get("dependencia_padre","query=Padre%3A"+self.datosFiltro.IdFacultad+"&fields=Hija&limit=-1").then(function(response){
+          if(response.data==null){
+            //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
+            oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
+              self.proyectos=[response.data]
+              self.getContenidoDocumento();
+            });
+          }
+          else{
+            var auxProyectos=response.data;
+            var auxNum=0;
+            auxProyectos.forEach(function(aux){
+              oikosRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A1&limit=-1").then(function(response){
+                if(response.data!=null){
+                  oikosRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A"+auxNivelAcademico.toString()+"&limit=-1").then(function(response){
+                    auxNum++;
+                    if(response.data!=null){
+                      self.proyectos.push(response.data[0].DependenciaId);
+                    }
+                    if(auxNum==auxProyectos.length){
+                      if(self.proyectos.length==0){
+                        //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
+                        oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
+                          self.proyectos=[response.data]
+                          self.getContenidoDocumento();
+                        });
+                      }else{
+                        self.getContenidoDocumento();
+                      }
+                    }
+                  });;
+                }else{
+                  auxNum++;
+                }
+              });
+            });
+          }
+        });
+        /*oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
           if(response.data==null){
             //En caso de que la facultad no cuente con proyectos curriculares, los contratos se asocian directamente con la facultad, por lo cual se cargan los datos 
             oikosRequest.get("facultad/"+self.datosFiltro.IdFacultad).then(function(response){
@@ -82,9 +126,63 @@ angular.module('contractualClienteApp')
               }
             });
           });
-        });
+        });*/
       });
     });
+
+    self.getContenidoDocumento = function(){
+                    administrativaRequest.get("contenido_resolucion/"+self.idResolucion).then(function(response){
+                      self.contenidoResolucion=response.data;
+                      //Se carga el ordenador del gasto asocciado a la dependencia solicitante de los docentes de vinculación especial
+                      coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.datosFiltro.IdFacultad.toString()).then(function(response){
+                        if(response.data==null){
+                          coreRequest.get("ordenador_gasto/1").then(function(response){
+                            self.contenidoResolucion.ordenadorGasto=response.data;
+                          })        
+                        }else{
+                          self.contenidoResolucion.ordenadorGasto=response.data[0];
+                        }
+                        //Se verifica si la resolución ha sido expedida o no
+                        if(self.resolucion.FechaExpedicion == null){
+                          //Se cargan los docentes previamente vinculados con la resolución
+                          administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){    
+                            self.contratados=response.data;
+                            if(self.contratados){
+                              var auxSalarios=0;
+                              self.contratados.forEach(function(row){
+                                row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
+                                adminMidRequest.get("calculo_salario/Contratacion/"+row.Id).then(function(response){
+                                  auxSalarios++;
+                                  row.ValorContrato=self.FormatoNumero(response.data);
+                                  if(auxSalarios==self.contratados.length){
+                                    self.generarResolucion() 
+                                  }  
+                                });
+                              });
+                            }else{
+                              //Se llama la función para generar el pdf con la resoleución
+                              self.generarResolucion() 
+                            }
+                          });
+                        }else{
+                          //Se cargan los docentes contratdos si la resolucion ya fue expedida
+                          administrativaRequest.get("precontratado/Contratado/"+self.idResolucion.toString()).then(function(response){      
+                            self.contratados=response.data;
+                            if(self.contratados){
+                              self.contratados.forEach(function(row){
+                                //El nombre completode los docentes es almacenado en una sola variable para poder ser visualizado en la tabla
+                                row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
+                              });
+                              self.generarResolucion(); 
+                            }else{
+                              //Se llama la función para generar el pdf con la resoleución
+                              self.generarResolucion() 
+                            }
+                          });
+                        }
+                      });
+                    });
+    }
 
     //Función para generar el pdf de la resolución con la información almacenada en la base de datos
   	self.generarResolucion = function() {

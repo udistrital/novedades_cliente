@@ -16,8 +16,8 @@ angular.module('contractualClienteApp')
 
     administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
       self.datosFiltro=response.data;
-      oikosRequest.get("facultad/"+self.datosFiltro.IdFacultad.toString()).then(function(response){
-        self.contratoGeneralBase.SedeSolicitante=response.data.Id;
+      oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad.toString()).then(function(response){
+        self.contratoGeneralBase.SedeSolicitante=response.data.Id.toString();
         self.sede_solicitante_defecto=response.data.Nombre;
       });
       administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){      
@@ -168,10 +168,11 @@ angular.module('contractualClienteApp')
       if(self.contratados){
         self.contratados.forEach(function(contratado){
           var contratoGeneral=JSON.parse(JSON.stringify(self.contratoGeneralBase));
-          contratoGeneral.Contratista={NumDocumento: contratado.Documento};
+          //contratoGeneral.Contratista={NumDocumento: contratado.Documento};
+          contratoGeneral.Contratista=contratado.Documento;
           contratoGeneral.DependenciaSolicitante=contratado.ProyectoCurricular.toString();
           contratoGeneral.PlazoEjecucion=contratado.Semanas*7;
-          contratoGeneral.OrdenadorGasto=self.ordenadorGasto;
+          contratoGeneral.OrdenadorGasto=self.ordenadorGasto.Id;
           contratoGeneral.ValorContrato=contratado.ValorContrato;
           var contratoVinculacion={
             ContratoGeneral: contratoGeneral,
@@ -187,7 +188,7 @@ angular.module('contractualClienteApp')
         var expedicionResolucion={
           Vinculaciones: conjuntoContratos,
           idResolucion: self.idResolucion
-        }
+        }     
           administrativaRequest.post("contrato_general/InsertarContratos",expedicionResolucion).then(function(response){
             if(typeof(response.data)=="object"){
               swal({
@@ -206,6 +207,7 @@ angular.module('contractualClienteApp')
                       });  
                       $mdDialog.hide()
                     }else{
+                      alert(response.data)
                       swal({
                         title: "Alerta",
                         text: $translate.instant('PROBLEMA_EXPEDICION'),

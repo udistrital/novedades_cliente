@@ -133,27 +133,29 @@ angular.module('contractualClienteApp')
     //Se cargan los datos de las resoluciones de vinculación especial almacenadas
     administrativaRequest.get("resolucion_vinculacion").then(function(response){
         self.resolucionesInscritas.data=response.data;
-        self.resolucionesInscritas.data.forEach(function(resolucion){
-            if(resolucion.FechaExpedicion!=null){
-                //dado que el servicio no está almacenando la Feha de expedición directamente como null, se toma el valor "0001-01-01T00:00:00Z" como tal
-                if(resolucion.FechaExpedicion.toString()=="0001-01-01T00:00:00Z"){
-                    resolucion.FechaExpedicion=null;
-                    resolucion.EstadoTexto="Creada";
-                }else{                
+        if(self.resolucionesInscritas.data!=null){
+            self.resolucionesInscritas.data.forEach(function(resolucion){
+                if(resolucion.FechaExpedicion!=null){
+                    //dado que el servicio no está almacenando la Feha de expedición directamente como null, se toma el valor "0001-01-01T00:00:00Z" como tal
+                    if(resolucion.FechaExpedicion.toString()=="0001-01-01T00:00:00Z"){
+                        resolucion.FechaExpedicion=null;
+                        resolucion.EstadoTexto="Creada";
+                    }else{                
+                        if(resolucion.Estado){
+                            resolucion.EstadoTexto="Expedida";
+                        }else{
+                            resolucion.EstadoTexto="Cancelada";
+                        }
+                    }
+                }else{
                     if(resolucion.Estado){
                         resolucion.EstadoTexto="Expedida";
                     }else{
                         resolucion.EstadoTexto="Cancelada";
                     }
                 }
-            }else{
-                if(resolucion.Estado){
-                    resolucion.EstadoTexto="Expedida";
-                }else{
-                    resolucion.EstadoTexto="Cancelada";
-                }
-            }
-        })
+            })
+        }
     });  
 
     //Función para redireccionar la página web a la vista de edición del contenido de la resolución, donde se pasa por parámetro el id de la resolucion seleccionada
