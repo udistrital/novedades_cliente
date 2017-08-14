@@ -26,8 +26,7 @@
               </div>
               <div class="form-group col-lg-5">
                 <label>{{ 'TIPO_CONTRATO' | translate }}</label>
-                <select class="form-control" ng-model="generacionPlantilla.TipoContrato">
-                  <option ng-repeat="o in generacionPlantilla.tipoContrato" value="{{ o.Id }}"> {{ o.TipoContrato }} </option>
+                <select data-ng-options="o.TipoContrato for o in generacionPlantilla.tipoContrato" class="form-control" data-ng-model="generacionPlantilla.singleTipoContrato" >
                 </select>
               </div>
             </div>
