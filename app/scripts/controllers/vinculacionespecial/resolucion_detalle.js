@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
  angular.module('contractualClienteApp')
- .controller('ResolucionDetalleCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,contratacion_request,contratacion_mid_request,$mdDialog,$scope,$routeParams,$translate) {
+ .controller('ResolucionDetalleCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,contratacion_request,contratacion_mid_request,$mdDialog,$scope,$routeParams,$translate,$window) {
 
    var self=this;
 
@@ -220,7 +220,7 @@ self.guardarCambios = function(){
 }
 
 self.verDocentesContratados = function() {
- $scope.ventanaDocentesContratados();
+  $window.location.href = '#/vinculacionespecial/hojas_de_vida_seleccion/'+self.idResolucion.toString();
 }
 
 $scope.ventanaDocentesContratados = function() {

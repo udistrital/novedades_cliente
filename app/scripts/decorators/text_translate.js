@@ -204,7 +204,7 @@ var text_es = {
   /*
     contrato_detalle.html
     */
-    INFORMACION_CONTRATO: "Información contrato",   
+    INFORMACION_CONTRATO: "Información Vinculación",   
     VIGENCIA: "Vigencia",
     FORMA_PAGO: "Forma de pago",  
     SEDE_SOLICITANTE: "Sede solicitante",
@@ -680,7 +680,7 @@ var text_en = {
   /*
     contrato_detalle.html
     */
-    INFORMACION_CONTRATO: "Contract information",
+    INFORMACION_CONTRATO: "Entailment information",
     VIGENCIA: "Validity",
     FORMA_PAGO: "Way to pay",
     SEDE_SOLICITANTE: "Applicant seat",
