@@ -123,7 +123,6 @@ angular.module('contractualClienteApp')
          self.contrato.NombreContratista= seleccion[0].InformacionProveedor.NomProveedor;
          self.contrato.ObjetoContrato= seleccion[0].ContratoGeneral.ObjetoContrato;
          self.contrato.FechaRegistro= seleccion[0].ContratoGeneral.FechaRegistro;
-         console.log(self.contrato.Vigencia);
          self.saving = true;
          self.btnGenerartxt = "Generando...";
 
