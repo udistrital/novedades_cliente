@@ -8,27 +8,29 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionGeneracionCtrl', function (contratacion_request,$mdDialog,$scope,$routeParams,$window) {
+  .controller('ResolucionGeneracionCtrl', function (administrativaRequest,oikosRequest,contratacion_request,$mdDialog,$scope,$routeParams,$window) {
 
   	var self=this;
 
-  	contratacion_request.getAll("facultad").then(function(response){
+
+
+  	oikosRequest.get("dependencia_tipo_dependencia","query=TipoDependenciaId.Id%3A2&fields=DependenciaId&limit=-1").then(function(response){
   		self.facultades=response.data;
   	});
 
   	self.resolucion={};
 
-  	$.getJSON("http://10.20.0.254/cdve_cliente/resolucion.json", function(resolucion) {
-        self.resolucion.preambulo=resolucion["preambulo"];
-    });
+    administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
+      self.resolucion.preambulo=response.data.Preambulo;
+    })
 
-    $.getJSON("http://10.20.0.254/cdve_cliente/resolucion.json", function(resolucion) {
-        self.resolucion.consideracion=resolucion["consideracion"];
-    });
+    administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
+      self.resolucion.consideracion=response.data.Consideracion;
+    })
 
-    $.getJSON("http://10.20.0.254/cdve_cliente/resolucion.json", function(resolucion) {
-        self.resolucion.articulos=resolucion["articulos"];
-    });
+    administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
+      self.resolucion.articulos=response.data.Articulos;
+    })
 
     self.getNombreFacultad = function(index){
       var nombreFacultad;
@@ -68,39 +70,39 @@ angular.module('contractualClienteApp')
 
     self.guardarResolucion = function(){
       var resolucionData={
-        NumeroResolucion: self.resolucion.numero.toString(),
+        NumeroResolucion: self.resolucion.numero,
         IdDependencia: parseInt(self.resolucion.facultad),
         PreambuloResolucion: self.resolucion.preambulo,
         ConsideracionResolucion: self.resolucion.consideracion
       }
-      contratacion_request.post("resolucion",resolucionData).then(function(response){
+      administrativaRequest.post("resolucion/GenerarResolucion",resolucionData).then(function(response){
         var resolucionVinculacionDocenteData={
           Id: response.data.Id,
           IdFacultad: parseInt(self.resolucion.facultad),
           Dedicacion: self.resolucion.dedicacion,
           NivelAcademico: self.resolucion.nivelAcademico
         }
-        contratacion_request.post("resolucion_vinculacion_docente",resolucionVinculacionDocenteData).then(function(response){
+        administrativaRequest.post("resolucion_vinculacion_docente",resolucionVinculacionDocenteData).then(function(response){
           var numeroArticulo=1;
           self.resolucion.articulos.forEach(function(articulo){
             var articuloData={
               Numero: numeroArticulo,
               ResolucionId: {Id: response.data.Id},
-              Texto: articulo.texto,
+              Texto: articulo.Texto,
               TipoComponente: "Articulo"
             }
-            contratacion_request.post("componente_resolucion",articuloData).then(function(response){
+            administrativaRequest.post("componente_resolucion",articuloData).then(function(response){
               var numeroParagrafo=1;
-              if(articulo.paragrafos){
-                articulo.paragrafos.forEach(function(paragrafo){
+              if(articulo.Paragrafos){
+                articulo.Paragrafos.forEach(function(paragrafo){
                   var paragrafoData={
                     Numero: numeroParagrafo,
                     ResolucionId: {Id: response.data.ResolucionId.Id},
-                    Texto: paragrafo.texto,
+                    Texto: paragrafo.Texto,
                     TipoComponente: "Paragrafo",
                     ComponentePadre: {Id: response.data.Id}
                   }
-                  contratacion_request.post("componente_resolucion",paragrafoData).then(function(response){
+                  administrativaRequest.post("componente_resolucion",paragrafoData).then(function(response){
                   })
                   numeroParagrafo++;
                 })

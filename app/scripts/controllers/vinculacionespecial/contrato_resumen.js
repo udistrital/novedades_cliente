@@ -8,39 +8,59 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ContratoResumenCtrl', function ($scope,contratacion_request,contratacion_mid_request,idResolucion) {
+  .controller('ContratoResumenCtrl', function ($scope,$translate,administrativaRequest,coreRequest,oikosRequest,adminMidRequest,contratacion_request,contratacion_mid_request,idResolucion,$mdDialog) {
     
   	var self = this;
 
   	self.idResolucion=idResolucion;
 
-    contratacion_request.getOne("resolucion_vinculacion_docente",self.idResolucion).then(function(response){      
+  	self.precontratados = {
+      paginationPageSizes: [10, 15, 20],
+      paginationPageSize: 10,
+      enableSorting: true,
+      enableFiltering : true,
+      enableRowSelection: false,
+      enableRowHeaderSelection: false,
+      columnDefs : [
+        {field: 'Id', visible : false},
+        {field: 'NombreCompleto', width: '25%', displayName: $translate.instant('NOMBRE')},
+        {field: 'Documento', displayName: $translate.instant('CEDULA')},
+        {field: 'Expedicion', displayName: $translate.instant('EXPEDICION')},
+        {field: 'Categoria', displayName: $translate.instant('CATEGORIA')},
+        {field: 'Dedicacion', displayName: $translate.instant('DEDICACION')},
+        {field: 'HorasSemanales', displayName: $translate.instant('HORAS_SEMANALES')},
+        {field: 'Semanas', displayName: $translate.instant('SEMANAS')},
+        {field: 'ValorContrato', displayName: $translate.instant('VALOR_CONTRATO'), cellClass:"valorEfectivo"},
+        {field: 'ProyectoCurricular', visible: false, filter: {
+                        noTerm: true,
+                        condition: function(searchTerm, cellValue) {
+                            return (cellValue == self.getNumeroProyecto(self.selectedIndex));
+                        }
+                    }}
+      ]
+    };
+
+    self.refresh = function(){
+      self.precontratados.data=JSON.parse(JSON.stringify(self.precontratados.data))
+    }
+
+    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
 	    self.datosFiltro=response.data;
-	    contratacion_request.getOne("contenido_resolucion",self.idResolucion).then(function(response){
-	      self.contenidoResolucion=response.data;
-	      contratacion_request.getOne("ordenador_gasto",self.datosFiltro.IdFacultad).then(function(response){
-	        if(response.data==null){
-	          self.contenidoResolucion.ordenadorGasto={Cargo: "Vicerector académico ILUD"}
-	        }else{
-	          self.contenidoResolucion.ordenadorGasto=response.data;
-	        }
-	      });
-	    });
 	    self.datosFiltro.IdFacultad=self.datosFiltro.IdFacultad.toString();
-	    contratacion_request.getAll("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
+	    oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
 	      if(response.data==null){
-	        contratacion_request.getAll("facultad/"+self.datosFiltro.IdFacultad).then(function(response){
+	        oikosRequest.get("facultad/"+self.datosFiltro.IdFacultad).then(function(response){
 	          self.proyectos=[response.data]
 	        });
 	      }else{
 	        self.proyectos=response.data;
 	      }
 	    });
-	    contratacion_request.getAll("precontratado/"+self.idResolucion.toString()).then(function(response){    
-	      self.contratados=response.data;
-	      if(self.contratados){
-	        self.contratados.forEach(function(row){
-	          contratacion_mid_request.post("calculo_salario/"+self.datosFiltro.NivelAcademico+"/"+row.Documento+"/"+row.Semanas+"/"+row.HorasSemanales+"/"+row.Categoria.toLowerCase()+"/"+row.Dedicacion.toLowerCase()).then(function(response){
+	    administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){  
+	      self.precontratados.data=response.data;
+	      if(self.precontratados.data){
+	        self.precontratados.data.forEach(function(row){
+	          adminMidRequest.get("calculo_salario/Contratacion/"+row.Id).then(function(response){
 	            row.ValorContrato=self.FormatoNumero(response.data,0);
 	          });
 	          row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
@@ -48,6 +68,14 @@ angular.module('contractualClienteApp')
 	      }
 	    });
 	  });
+
+	self.getNumeroProyecto=function(num){
+      if(self.proyectos[num]){
+        return self.proyectos[num].Id
+      }else{
+        return 0
+      }
+    }
 
 	self.FormatoNumero=function(amount, decimals) {
 
