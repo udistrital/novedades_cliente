@@ -494,6 +494,7 @@ var text_es = {
     GUARDAR: "Guardar",
   },
   GENERACION_MINUTA: "Generación de Plantillas",
+  GESTION_PLANTILLAS: "Gestión de Plantillas",
   DEPENDENCIA: "Dependencia",
   TITULO_MINUTA: "Titulo de la Minuta",
   TIPO_CONTRATO: "Tipo Contrato",
@@ -510,7 +511,9 @@ var text_es = {
   FECHA_ACTIVACION: "Fecha de Activación",
   FECHA_INACTIVACION: "Fecha de Inactivación",
   REGISTRAR_PLANTILLA: "Registrar Nueva Plantilla",
-  PLANTILLA_EXISTENTE: "Utilizar una Plantilla Existente"
+  PLANTILLA_EXISTENTE: "Utilizar una Plantilla Existente",
+  GESTION_PLANTILLA: "Gestión",
+  FILTRAR_POR: "Filtrar Por"
 };
 
 var text_en = {
@@ -986,7 +989,8 @@ var text_en = {
     ELIMINAR_PARAGRAFO: "Delete Paragraph",
     GUARDAR: "Save",
   },
-  GENERACION_MINUTA: "Template Management",
+  GENERACION_MINUTA: "Template Generator",
+  GESTION_PLANTILLAS: "Template Management",
   TITULO_MINUTA: "Agreement Title",
   TIPO_CONTRATO: "Agreement Type",
   INTRODUCCION: "Introduction",
@@ -1002,7 +1006,10 @@ var text_en = {
   FECHA_ACTIVACION: "Activate Date",
   FECHA_INACTIVACION: "Inactive Date",
   REGISTRAR_PLANTILLA: "New Template Register",
-  PLANTILLA_EXISTENTE: "Use an Old Template"
+  PLANTILLA_EXISTENTE: "Use an Old Template",
+  GESTION_PLANTILLA: "Options",
+  DEPENDENCIA: "Unit",
+  FILTRAR_POR: "Search By"
 };
 
 angular.module('contractualClienteApp')
