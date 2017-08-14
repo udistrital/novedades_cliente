@@ -16,22 +16,17 @@ angular.module('kyronService',[])
 
     // Public API here
     return {
-      getAll: function (table,params) {
-        return $http.get(path+table+"/?"+params);
+      get: function(tabla, params) {
+        return $http.get(path + tabla + "/?" + params);
       },
-      post: function (table,elemento) {
-        return $http.post(path+table,elemento);
+      post: function(tabla, elemento) {
+        return $http.post(path + tabla, elemento);
       },
-      delete: function (table,id) {
-        return $http.delete(path+table+"/"+id);
+      put: function(tabla, id, elemento) {
+        return $http.put(path + tabla + "/" + id, elemento);
       },
-      getOne: function (table,id) {
-        return $http.get(path+table+"/"+id);
-      },
-      put: function (table,id,elemento) {
-        return $http.put(path+table+"/"+id,elemento);
+      delete: function(tabla, id) {
+        return $http.delete(path + tabla + "/" + id);
       }
     };
-
-
   });

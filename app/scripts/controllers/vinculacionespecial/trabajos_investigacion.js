@@ -12,15 +12,15 @@ angular.module('contractualClienteApp')
   	
   	var self = this;
 
-    kyronRequest.getAll("investigacion").then(function(response){
+    kyronRequest.get("investigacion").then(function(response){
         self.investigaciones=response.data;
         self.investigaciones.forEach(function(investigacion){
         	investigacion.FechaInicio = new Date(investigacion.FechaInicio).toLocaleDateString('es');
           	investigacion.FechaFinalizacion = new Date(investigacion.FechaFinalizacion).toLocaleDateString('es');
-          kyronRequest.getOne("institucion",investigacion.InstitucionId.Id).then(function(response){
+          kyronRequest.get("institucion/"+investigacion.InstitucionId.Id).then(function(response){
             investigacion.institucion=response.data;
           });
-          kyronRequest.getOne("tipo_investigacion",investigacion.TipoInvestigacionId.Id).then(function(response){
+          kyronRequest.get("tipo_investigacion/"+investigacion.TipoInvestigacionId.Id).then(function(response){
             investigacion.tipoInvestigacion=response.data;
           });
         });

@@ -8,30 +8,47 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ContratoRegistroCtrl', function (contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate) {
+  .controller('ContratoRegistroCtrl', function (administrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate) {
   	
   	var self = this;
 
     self.idResolucion=idResolucion;
 
-    contratacion_request.getOne("resolucion_vinculacion_docente",self.idResolucion).then(function(response){      
+    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
       self.datosFiltro=response.data;
-      contratacion_request.getOne("facultad",self.datosFiltro.IdFacultad).then(function(response){
-        self.contratoGeneralBase.SedeSolicitante=response.data.Id;
+      oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad.toString()).then(function(response){
+        self.contratoGeneralBase.SedeSolicitante=response.data.Id.toString();
         self.sede_solicitante_defecto=response.data.Nombre;
+      });
+      administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){      
+        self.contratados=response.data;
+        if(self.contratados != null){
+          self.contratados.forEach(function(row){
+            adminMidRequest.get("calculo_salario/Contratacion/"+row.Id).then(function(response){
+              row.ValorContrato=response.data;
+            });
+          });
+        }
+      });
+      coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.datosFiltro.IdFacultad.toString()).then(function(response){
+        if(response.data==null){
+          coreRequest.get("ordenador_gasto/1").then(function(response){
+            self.ordenadorGasto=response.data;
+          })
+        }else{
+          self.ordenadorGasto=response.data[0];
+        }
       });
     });
 
-    contratacion_request.getAll("precontratado/"+self.idResolucion.toString()).then(function(response){      
-      self.contratados=response.data;
-      if(self.contratados != null){
-        self.contratados.forEach(function(row){
-          contratacion_mid_request.post("calculo_salario/"+self.datosFiltro.NivelAcademico+"/"+row.Documento+"/"+row.Semanas+"/"+row.HorasSemanales+"/"+row.Categoria.toLowerCase()+"/"+row.Dedicacion.toLowerCase()).then(function(response){
-            row.ValorContrato=response.data;
-          });
-        });
-      }
+    coreRequest.get("punto_salarial","sortby=Vigencia&order=desc&limit=1").then(function(response){
+      self.punto_salarial=response.data[0];
     });
+
+    coreRequest.get("salario_minimo","sortby=Vigencia&order=desc&limit=1").then(function(response){
+      self.salario_minimo=response.data[0];
+    });
+
 
     sicapitalRequest.get("disponibilidad/cdpfiltro/2017/1/VIGENTE").then(function(response){
       self.cdp_opciones=response.data;
@@ -59,19 +76,19 @@ angular.module('contractualClienteApp')
       self.contratoGeneralBase.TipoCompromiso=35;
       self.contratoGeneralBase.TipologiaContrato=46;
       self.contratoGeneralBase.FechaRegistro=new Date();
-      self.contratoGeneralBase.UnidadEjecutora={Id:1};
+      self.contratoGeneralBase.UnidadEjecutora=1;
       self.contratoGeneralBase.Condiciones="Sin condiciones";
     }
 
     self.asignarValoresDefecto();
 
-    contratacion_request.getOne("unidad_ejecutora",1).then(function(response){
+    financieraRequest.get("unidad_ejecutora/1").then(function(response){
       self.unidad_ejecutora_defecto=response.data;
     })
-    contratacion_request.getOne("parametros",240).then(function(response){
+    administrativaRequest.get("parametros/240").then(function(response){
       self.forma_pago_defecto=response.data;
     })
-    contratacion_request.getOne("parametros",136).then(function(response){
+    administrativaRequest.get("parametros/136").then(function(response){
       self.regimen_contratacion_defecto=response.data;
     })
 
@@ -80,8 +97,8 @@ angular.module('contractualClienteApp')
       $mdDialog.hide();
     }
 
-    self.calcularSalario = function(){
-        contratacion_mid_request.post("calculo_salario/"+self.nivelAcademico+"/"+persona.Id+"/"+self.datosValor.NumSemanas+"/"+self.datosValor.NumHorasSemanales+"/asociado/"+self.datosValor.dedicacion).then(function(response){
+    /*self.calcularSalario = function(){
+        adminMidRequest.post("calculo_salario/Precontratacion/"+self.nivelAcademico+"/"+persona.Id+"/"+self.datosValor.NumSemanas+"/"+self.datosValor.NumHorasSemanales+"/asociado/"+self.datosValor.dedicacion).then(function(response){
           if(typeof(response.data)=="number"){
             self.valorContrato=response.data;
               swal({
@@ -104,7 +121,7 @@ angular.module('contractualClienteApp')
               });
         }
         });
-    }
+    }*/
 
     self.realizarContrato = function(){
       if(self.contratoGeneralBase.cdp && self.contratoGeneralBase.Observaciones && self.contratoGeneralBase.Justificacion){        
@@ -151,36 +168,36 @@ angular.module('contractualClienteApp')
       if(self.contratados){
         self.contratados.forEach(function(contratado){
           var contratoGeneral=JSON.parse(JSON.stringify(self.contratoGeneralBase));
+          //contratoGeneral.Contratista={NumDocumento: contratado.Documento};
           contratoGeneral.Contratista=contratado.Documento;
           contratoGeneral.DependenciaSolicitante=contratado.ProyectoCurricular.toString();
           contratoGeneral.PlazoEjecucion=contratado.Semanas*7;
-          contratoGeneral.OrdenadorGasto="1";
+          contratoGeneral.OrdenadorGasto=self.ordenadorGasto.Id;
           contratoGeneral.ValorContrato=contratado.ValorContrato;
           var contratoVinculacion={
             ContratoGeneral: contratoGeneral,
             VinculacionDocente: {Id: contratado.Id}
           }
+          if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
+            contratoVinculacion.VinculacionDocente.IdPuntoSalarial=self.punto_salarial.Id;
+          }else if(self.datosFiltro.NivelAcademico.toLowerCase()=="posgrado"){
+            contratoVinculacion.VinculacionDocente.IdSalarioMinimo=self.salario_minimo.Id;
+          }
           conjuntoContratos.push(contratoVinculacion);
         });
-          contratacion_request.post("contrato_general/InsertarContratos",conjuntoContratos).then(function(response){    
-            if(!(typeof(response.data)=="object")){
-              errorInsercion=true;
-            }
-          })
-
-          if(!errorInsercion){
-                contratacion_request.getOne("resolucion",self.idResolucion).then(function(response){
-                  var resolucionCambio = response.data;
-                  resolucionCambio.FechaExpedicion = new Date();
-                  contratacion_request.put("resolucion", self.idResolucion, resolucionCambio).then(function(response){
-                    if(response.data=="OK"){
-                      swal({
+        var expedicionResolucion={
+          Vinculaciones: conjuntoContratos,
+          idResolucion: self.idResolucion
+        }     
+          administrativaRequest.post("contrato_general/InsertarContratos",expedicionResolucion).then(function(response){
+            if(typeof(response.data)=="object"){
+              swal({
                         title: $translate.instant('EXPEDIDA'),
                         text: $translate.instant('DATOS_REGISTRADOS'),
                         type: 'success',
                         confirmButtonText: $translate.instant('ACEPTAR')
                       });
-                      contratacion_request.getAll("resolucion_vinculacion").then(function(response){
+                      administrativaRequest.get("resolucion_vinculacion").then(function(response){
                           lista.resolucionesInscritas.data=response.data;
                           lista.resolucionesInscritas.data.forEach(function(resolucion){
                               if(resolucion.FechaExpedicion.toString()=="0001-01-01T00:00:00Z"){
@@ -190,6 +207,7 @@ angular.module('contractualClienteApp')
                       });  
                       $mdDialog.hide()
                     }else{
+                      alert(response.data)
                       swal({
                         title: "Alerta",
                         text: $translate.instant('PROBLEMA_EXPEDICION'),
@@ -198,17 +216,7 @@ angular.module('contractualClienteApp')
                         showLoaderOnConfirm: true,
                       });
                     }
-                  })
-                })
-          }else{
-                swal({
-                  title: "Alerta",
-                  text: $translate.instant('PROBLEMA_DOCENTE_CONTRATADOS'),
-                  type: "warning",
-                  confirmButtonText: $translate.instant('ACEPTAR'),
-                  showLoaderOnConfirm: true,
-                });
-          }
+          })
       }else{
                 swal({
                   text: $translate.instant('NO_DOCENTES'),

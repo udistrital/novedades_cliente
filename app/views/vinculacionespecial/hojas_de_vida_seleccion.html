@@ -63,9 +63,8 @@
                   	<div class="panel-heading">
                       	<h4 class="intro-text"> {{ 'DOCENTE_VINCULADOS' | translate }} </h4>
                   	</div>
-				    <md-tabs md-selected="hojasDeVidaSeleccion.selectedIndex" md-dynamic-height md-border-bottom md-autoselect>
-					    <md-tab ng-repeat="tab in hojasDeVidaSeleccion.proyectos"
-					    label="{{tab.Nombre}}" ng-click="hojasDeVidaSeleccion.refresh()">
+				    <md-tabs md-selected="hojasDeVidaSeleccion.selectedIndex" md-dynamic-height md-autoselect>
+					    <md-tab ng-repeat="tab in hojasDeVidaSeleccion.proyectos" label="{{tab.Nombre}}" ng-click="hojasDeVidaSeleccion.refresh()">
 						    <div>
 			                  	<div class="panel-body">
 			            			<div ui-grid="hojasDeVidaSeleccion.precontratados" ui-grid-selection ui-grid-pagination class="grid"></div>
@@ -76,5 +75,4 @@
         		</div>
         	</div>
     </div>
-
 </div>

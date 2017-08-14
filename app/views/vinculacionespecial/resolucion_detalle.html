@@ -14,15 +14,15 @@
                               <div class="row">
                                   <div class="form-group col-lg-6">
                                     <label>{{ 'NUMERO_RESOLUCION' | translate }}</label>
-                                    <input type="text" class="form-control" ng-model="resolucionDetalle.contenidoResolucion.Numero">
+                                    <input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionDetalle.contenidoResolucion.Numero">
                                   </div>
                                   <div class="form-group col-lg-6">
                                     <label>{{ 'FACULTAD' | translate }}</label>
                                     <select class="form-control" ng-if="resolucionDetalle.contratados==null" ng-model="resolucionDetalle.datosFiltro.IdFacultad">
-                                      <option ng-repeat="facultad in resolucionDetalle.facultades" value={{facultad.Id}}> {{facultad.Nombre}}</option>
+                                      <option ng-repeat="facultad in resolucionDetalle.facultades" value={{facultad.DependenciaId.Id}}> {{facultad.DependenciaId.Nombre}}</option>
                                     </select>
                                     <select class="form-control" ng-if="resolucionDetalle.contratados!=null" ng-model="resolucionDetalle.datosFiltro.IdFacultad" disabled>
-                                      <option ng-repeat="facultad in resolucionDetalle.facultades" value={{facultad.Id}}> {{facultad.Nombre}}</option>
+                                      <option ng-repeat="facultad in resolucionDetalle.facultades" value={{facultad.DependenciaId.Id}}> {{facultad.DependenciaId.Nombre}}</option>
                                     </select>
                                   </div>
                                   <div class="form-group col-lg-6">

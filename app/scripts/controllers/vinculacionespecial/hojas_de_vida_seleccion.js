@@ -1,57 +1,104 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-  .controller('HojasDeVidaSeleccionCtrl', function (contratacion_request,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
+  .controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,adminMidRequest,oikosRequest,agoraRequest,kyronRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
     
     var self = this;
 
+    //Lectura del parámetro de resolución de entrada
     self.idResolucion=$routeParams.idResolucion;
     
+
     self.dedicaciones=[];
     self.proyectos=[];
-    contratacion_request.getOne("resolucion_vinculacion_docente",self.idResolucion).then(function(response){      
+    //Se leen los datos básicos de la resolucion de vinculación especial
+    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
       self.datosFiltro=response.data;
-      contratacion_request.getAll("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
+      if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
+        var auxNivelAcademico=14;
+      }else if(self.datosFiltro.NivelAcademico.toLowerCase()=="posgrado"){
+        var auxNivelAcademico=15;
+      }
+      //Se cargan los proyectos curriculares de la facultad
+      oikosRequest.get("dependencia_padre","query=Padre%3A"+self.datosFiltro.IdFacultad+"&fields=Hija&limit=-1").then(function(response){
         if(response.data==null){
-          contratacion_request.getAll("facultad/"+self.datosFiltro.IdFacultad).then(function(response){
+          //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
+          oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
+            self.proyectos=[response.data]
+          });
+        }
+        else{  
+          var auxProyectos=response.data;
+          var auxNum=0;
+          auxProyectos.forEach(function(aux){
+            oikosRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A1&limit=-1").then(function(response){
+              if(response.data!=null){
+                oikosRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A"+auxNivelAcademico.toString()+"&limit=-1").then(function(response){
+                  auxNum++;
+                  if(response.data!=null){
+                    self.proyectos.push(response.data[0].DependenciaId);
+                  }
+                  if(auxNum==auxProyectos.length){
+                    if(self.proyectos.length==0){
+                      //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
+                      oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
+                        self.proyectos=[response.data]
+                      });
+                    }
+                  }
+                });
+              }else{
+                auxNum++;
+              }
+            });
+          });
+        }
+      });
+      /*oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
+        if(response.data==null){
+          //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
+          oikosRequest.get("facultad/"+self.datosFiltro.IdFacultad).then(function(response){
             self.proyectos=[response.data]
           });
         }else{
           self.proyectos=response.data;
         }
-      });
-      switch(self.datosFiltro.Dedicacion){      
+      });*/
+      switch(self.datosFiltro.Dedicacion){
+        //Dependiendo del tipo de resolucion se cargan las dedicaciones debidas  
         case "TCO-MTO":
-          contratacion_request.getAll("dedicacion","query=NombreDedicacion%3ATCO").then(function(response){
+          administrativaRequest.get("dedicacion","query=NombreDedicacion%3ATCO").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
           });
-          contratacion_request.getAll("dedicacion","query=NombreDedicacion%3AMTO").then(function(response){
+          administrativaRequest.get("dedicacion","query=NombreDedicacion%3AMTO").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
           });
           break;
         case "HCP":
-          contratacion_request.getAll("dedicacion","query=NombreDedicacion%3AHCP").then(function(response){
+          administrativaRequest.get("dedicacion","query=NombreDedicacion%3AHCP").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
           });
           break;
         case "HCH":
-          contratacion_request.getAll("dedicacion","query=NombreDedicacion%3AHCH").then(function(response){
+          administrativaRequest.get("dedicacion","query=NombreDedicacion%3AHCH").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
           });
           break;
       }
+      //Se llaman las funciones para cargar datos de las dos tablas de la vista
       self.cargarDatosPersonas();
       self.cargarDatosPrecontratados();
     });
 
+    //Estructura ui-grid de la tabla de docentes inscritos
     self.datosPersonas = {
       paginationPageSizes: [10, 15, 20],
       paginationPageSize: 10,
@@ -99,7 +146,7 @@ angular.module('contractualClienteApp')
           if(self.personasSeleccionadas.length==0){
             self.persona=null;
           }else{
-            contratacion_request.getOne("informacion_persona_natural",row.entity.Id).then(function(response){
+            agoraRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
               if(typeof(response.data)=="object"){
                 self.persona=row.entity;
                 self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');
@@ -119,6 +166,7 @@ angular.module('contractualClienteApp')
       }
     };
 
+    //Permite obtener el numero indicador de los proyectos curriculares dentor del arreglo donde están almacenados
     self.getNumeroProyecto=function(num){
       if(self.proyectos[num]){
         return self.proyectos[num].Id
@@ -127,6 +175,7 @@ angular.module('contractualClienteApp')
       }
     }
 
+    //Se cargan los datos de los docentes que han sido asociados previamente a la resolucion
     self.precontratados = {
       paginationPageSizes: [10, 15, 20],
       paginationPageSize: 10,
@@ -146,6 +195,7 @@ angular.module('contractualClienteApp')
         {field: 'ValorContrato', displayName: $translate.instant('VALOR_CONTRATO'), cellClass:"valorEfectivo"},
         {field: 'ProyectoCurricular', visible: false, filter: {
                         noTerm: true,
+                        //Se verifica que la vinculación este asociada al proyecto curricular selecconado
                         condition: function(searchTerm, cellValue) {
                             return (cellValue == self.getNumeroProyecto(self.selectedIndex));
                         }
@@ -164,35 +214,45 @@ angular.module('contractualClienteApp')
       ]
     };
 
+    //Actualiza los datos de la tabla self.precontratados cuando se cambia el proyecto curriular seleccionado
     self.refresh = function(){
       self.precontratados.data=JSON.parse(JSON.stringify(self.precontratados.data))
     }
 
+    //Función para cargarlos datos de los docentes con hoja de vida inscrita
     self.cargarDatosPersonas = function(){
-      contratacion_request.getAll("persona_escalafon").then(function(response){
+      kyronRequest.get("persona_escalafon/"+self.datosFiltro.NivelAcademico.toLowerCase()).then(function(response){
         self.datosPersonas.data=response.data;
         self.datosPersonas.data.forEach(function(row){
+          //El nombre completo se guarda en una sola variable
           row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
         });
       });
     }
 
+    //Función para cargar los datos de los docentes asociados a la resolución previamente
     self.cargarDatosPrecontratados = function(){
-      contratacion_request.getAll("precontratado/"+self.idResolucion.toString()).then(function(response){      
+      administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){      
         self.precontratados.data=response.data;
         if(self.precontratados.data != null){
           self.precontratados.data.forEach(function(row){
+            //El nombre completo se guarda en una sola variable
             row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
-            contratacion_mid_request.post("calculo_salario/"+self.datosFiltro.NivelAcademico+"/"+row.Documento+"/"+row.Semanas+"/"+row.HorasSemanales+"/"+row.Categoria.toLowerCase()+"/"+row.Dedicacion.toLowerCase()).then(function(response){
+            //Se calcula el valor del contrato para cada docente
+            adminMidRequest.get("calculo_salario/Contratacion/"+row.Id).then(function(response){
               row.ValorContrato=self.FormatoNumero(response.data,0);
             });          
           });
+        }else{
+          self.precontratados.data=[] 
         }
       });
     }
 
+    //Función para almacenar los datos de las vinculaciones realizadas
     self.agregarPrecontratos = function(){
       var idDedicacion;
+      //Se asigna el id de la dedicaion dependiendo de la selección realizada
       switch(self.datosValor.dedicacion){
         case "TCO":
           idDedicacion=4;
@@ -207,9 +267,9 @@ angular.module('contractualClienteApp')
           idDedicacion=2;
           break;
       }
-
       var vinculacionesData=[];
 
+      //Se almacenan los datos en un arreglo de estructuras
       self.personasSeleccionadas.forEach(function(personaSeleccionada){
         var vinculacionDocente = {
           IdPersona: personaSeleccionada.Id,
@@ -223,9 +283,11 @@ angular.module('contractualClienteApp')
         vinculacionesData.push(vinculacionDocente);
       })
 
-      contratacion_request.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
+      //Se envía en arreglo de estructuras a la transacción encargadade almacenar los datos
+      administrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
           if(typeof(response.data)=="object"){
             self.cargarDatosPrecontratados();
+            self.cargarDatosPersonas();
           }else{
             swal({
               title: $translate.instant('ERROR'),
@@ -239,7 +301,7 @@ angular.module('contractualClienteApp')
 
     self.calcularValorContratos = function(){
       self.personasSeleccionadas.forEach(function(personaSeleccionada){
-        contratacion_mid_request.post("calculo_salario/"+self.datosFiltro.NivelAcademico+"/"+self.persona.Id+"/"+self.datosValor.NumSemanas+"/"+self.datosValor.NumHorasSemanales+"/"+self.persona.Escalafon.toLowerCase()+"/"+self.datosValor.dedicacion.toLowerCase()).then(function(response){
+        adminMidRequest.post("calculo_salario/Precontratacion/"+self.datosFiltro.NivelAcademico+"/"+self.persona.Id+"/"+self.datosValor.NumSemanas+"/"+self.datosValor.NumHorasSemanales+"/"+self.persona.Escalafon.toLowerCase()+"/"+self.datosValor.dedicacion.toLowerCase()).then(function(response){
           if(typeof(response.data)=="number"){
             self.valorContrato=response.data;
             personaSeleccionada.valorContrato=self.valorContrato;
@@ -282,7 +344,7 @@ angular.module('contractualClienteApp')
     }
 
     self.validarContratos = function(){
-      contratacion_mid_request.post("validar_contrato/"+self.persona.Id+"/"+self.datosValor.NumHorasSemanales+"/"+self.datosValor.dedicacion.toLowerCase()).then(function(response){
+      adminMidRequest.post("validar_contrato/"+self.datosValor.dedicacion.toLowerCase()+"/"+self.datosValor.NumHorasSemanales).then(function(response){
         if(response.data==1){
           self.calcularValorContratos();
         }else{
@@ -300,7 +362,7 @@ angular.module('contractualClienteApp')
       var advertenciaVisualizada=false;
       if(self.datosValor.proyectoCurricular && self.datosValor.NumSemanas && self.datosValor.NumHorasSemanales && self.datosValor.dedicacion){
         self.personasSeleccionadas.forEach(function(personaSeleccionada){
-          contratacion_request.getOne("precontratado/"+self.idResolucion.toString(),personaSeleccionada.Id).then(function(response){
+          administrativaRequest.get("precontratado/"+self.idResolucion.toString()+"/"+personaSeleccionada.Id).then(function(response){
             if(response.data && !advertenciaVisualizada){
               advertenciaVisualizada=true;
               swal({
@@ -388,7 +450,7 @@ angular.module('contractualClienteApp')
         Estado: false
       };
 
-      contratacion_request.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
+      administrativaRequest.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
         self.cargarDatosPrecontratados();
       })
     }
