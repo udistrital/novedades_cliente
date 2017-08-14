@@ -211,28 +211,33 @@ var text_es = {
   UNITARIO:"Unitario",
   NO_HAY_DATOS_REDIRIGIR:"No hay datos para mostrar, será redirigido al menú anterior",
   /*
-  contrato_detalle.html
-  */
-  INFORMACION_CONTRATO: "Información contrato",
-  FORMA_PAGO: "Forma de pago",
-  SEDE_SOLICITANTE: "Sede solicitante",
-  NUMERO_CDP: "Número de CDP",
-  NUMERO_NECESIDAD: "Número de necesidad",
-  OBJETO_CDP: "Objeto del CDP",
-  JUSTIFICACION: "Justificación",
-  DESCRIPCION_FORMA_PAGO: "Descripción forma de pago",
-  OBSERVACIONES: "Observaciones",
-  /*
-  Contrato_resumen.html
-  */
-  DOCENTES_CONTRATADOS: "Docentes contratados - periodo actual",
-  CEDULA: "Cédula",
-  EXPEDICION: "Expedida",
-  CATEGORIA: "Categoría",
-  DEDICACION: "Dedicación",
-  HORAS_SEMANALES: "Horas semanales",
-  PERIODO_VINCULACION: "Periodo vinculación",
-  VALOR_CONTRATO: "Valor del contrato",
+    contrato_detalle.html
+    */
+    INFORMACION_CONTRATO: "Información Vinculación",   
+    VIGENCIA: "Vigencia",
+    FORMA_PAGO: "Forma de pago",  
+    SEDE_SOLICITANTE: "Sede solicitante",
+    NUMERO_CDP: "Número de CDP",
+    NUMERO_NECESIDAD: "Número de necesidad",
+    OBJETO_CDP: "Objeto del CDP",
+    JUSTIFICACION: "Justificación",
+    DESCRIPCION_FORMA_PAGO: "Descripción forma de pago",
+    UNIDAD_EJECUTORA: "Unidad ejecutora",
+    MARCO_LEGAL: "Marco legal",
+    OBJETO: "Objeto",
+    OBSERVACIONES: "Observaciones",
+    /*
+    Contrato_resumen.html
+    */
+    DOCENTES_CONTRATADOS: "Docentes contratados - periodo actual",
+    NOMBRE: "Nombre",
+    CEDULA: "Cédula",
+    EXPEDICION: "Expedida",
+    CATEGORIA: "Categoría",
+    DEDICACION: "Dedicación",
+    HORAS_SEMANALES: "Horas semanales",
+    PERIODO_VINCULACION: "Periodo vinculación",
+    VALOR_CONTRATO: "Valor del contrato",
   /*
   Contrato_registro.html
   */
@@ -691,29 +696,34 @@ var text_en = {
   UNITARIO:"Unit",
   NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu",
   /*
-  contrato_detalle.html
-  */
-  INFORMACION_CONTRATO: "Contract information",
-  FORMA_PAGO: "Way to pay",
-  SEDE_SOLICITANTE: "Applicant seat",
-  NUMERO_CDP: "Number of CDP",
-  NUMERO_NECESIDAD: "Need number",
-  OBJETO_CDP: "Purpose of the CDP",
-  JUSTIFICACION: "Justification",
-  DESCRIPCION_FORMA_PAGO: "Description of payment method",
-  OBSERVACIONES: "Observations",
-  /*
-  Contrato_resumen.html
-  */
-  DOCENTES_CONTRATADOS: "Teachers hired - current period",
-  CEDULA: "Identification card",
-  EXPEDICION: "Issued",
-  CATEGORIA: "Category",
-  DEDICACION: "Dedication",
-  HORAS_SEMANALES: "Weekly hours",
-  PERIODO_VINCULACION: "Entailment period",
-  VALOR_CONTRATO: "Value of contract",
-  /*
+    contrato_detalle.html
+    */
+    INFORMACION_CONTRATO: "Entailment information",
+    VIGENCIA: "Validity",
+    FORMA_PAGO: "Way to pay",
+    SEDE_SOLICITANTE: "Applicant seat",
+    NUMERO_CDP: "Number of CDP",
+    NUMERO_NECESIDAD: "Need number",
+    OBJETO_CDP: "Purpose of the CDP",
+    JUSTIFICACION: "Justification",
+    DESCRIPCION_FORMA_PAGO: "Description of payment method",
+    UNIDAD_EJECUTORA: "Executrix unit",
+    MARCO_LEGAL: "Legal framework",
+    OBJETO: "Object",
+    OBSERVACIONES: "Observations",
+    /*
+    Contrato_resumen.html
+    */
+    DOCENTES_CONTRATADOS: "Teachers hired - current period",
+    NOMBRE: "Name",
+    CEDULA: "Identification card",
+    EXPEDICION: "Issued",
+    CATEGORIA: "Category",
+    DEDICACION: "Dedication",
+    HORAS_SEMANALES: "Weekly hours",
+    PERIODO_VINCULACION: "Entailment period",
+    VALOR_CONTRATO: "Value of contract",
+    /*
   Contrato_registro.html
   */
   DATOS_BASICOS: "Basic contract information",
