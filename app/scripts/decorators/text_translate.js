@@ -9,7 +9,7 @@
  */
 var text_es = {
   BTN: {
-    VER: "Ver",
+    VER: "Ver resolución",
     SELECCIONAR: "Seleccionar",
     CANCELAR: "Cancelar",
     CONFIRMAR: "Confirmar",
@@ -311,7 +311,7 @@ var text_es = {
     GENERACION_RESOLUCION: "Generación resolución",
     SELECCIONE: "Seleccione",
     CONSIDERACION: "Consideración",
-    RESOLUCIONES: "Resoluciones",
+    RESOLUCIONES: "Resoluciones de vinculación especial de docentes",
     LISTA_RESOLUCIONES: "Lista de resoluciones",
     /*
     trabajos_investigacion.html
@@ -450,6 +450,7 @@ var text_es = {
     PROBLEMA_EXPEDICION: "Se ha presentado un problema en la expedición de la resolución",
     PROBLEMA_DOCENTE_CONTRATADOS: "Se ha presentado un problema en el registro de los datos de los docentes contratados",
     NO_DOCENTES: "No hay docentes inscritos dentro de la resolución",
+    DATOS_INCOMPLETOS: "Los datos de la epedición no han sido debidamente diligenciados",
     
     /*
     resolucion_detalle.js
@@ -787,7 +788,7 @@ var text_en = {
     GENERACION_RESOLUCION: "Generation resolution",
     SELECCIONE: "Select",
     CONSIDERACION: "Consideration",
-    RESOLUCIONES: "Resolutions",
+    RESOLUCIONES: "Special entailment Resolutions",
     LISTA_RESOLUCIONES: "List of resolutions",
     /*
     trabajos_investigacion.html
@@ -930,6 +931,7 @@ var text_en = {
     PROBLEMA_EXPEDICION: "A problem has arisen in the issuance of the resolution",
     PROBLEMA_DOCENTE_CONTRATADOS: "A problem has arisen in the registration of the data of contracted teachers",
     NO_DOCENTES: "There are no teachers enrolled within the resolution",
+    DATOS_INCOMPLETOS: "Incomplete data",
 
     /*
     resolucion_detalle.js
@@ -951,7 +953,7 @@ var text_en = {
     PREGUNTA_RESTAURAR: "Restore resolution?",
     CANCELAR_RESOLUCION: "Cancel the resolution?",
     OPCIONES: "Options",
-    VER_BTN: "See",    
+    VER_BTN: "See resolution",    
     EDITAR_BTN: "Edit",
     CONFIGURAR_BTN: "Set up",
     EXPEDIR_BTN: "Issue",
