@@ -42,7 +42,7 @@ var text_es = {
     GUARDAR: "Guardar"
   },
   TITULO: "GENERATOR-OAS",
-  MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
+  MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo en el cliente de administrativa ...",
   //solicitud_necesidad
   NECESIDADES: "Necesidades",
   NECESIDAD: "Necesidad",
@@ -591,7 +591,7 @@ var text_es = {
 
 var text_en = {
   TITULO: "GENERATOR-OAS",
-  MENSAJE_INICIAL: "Now get to start to develop ...",
+  MENSAJE_INICIAL: "Now get to start to develop in admin client...",
   VER: "See",
   SELECCIONAR: "Choose",
   CANCELAR: "Cancel",
