@@ -159,6 +159,14 @@ angular.module('contractualClienteApp')
                     })
                 }
             })
+      }else{
+        swal({
+          text: $translate.instant('DATOS_INCOMPLETOS'),
+          title: "Alerta",
+          type: "warning",
+          confirmButtonText: $translate.instant('ACEPTAR'),
+          showLoaderOnConfirm: true,
+        });
       }
     }
 
@@ -168,7 +176,6 @@ angular.module('contractualClienteApp')
       if(self.contratados){
         self.contratados.forEach(function(contratado){
           var contratoGeneral=JSON.parse(JSON.stringify(self.contratoGeneralBase));
-          //contratoGeneral.Contratista={NumDocumento: contratado.Documento};
           contratoGeneral.Contratista=contratado.Documento;
           contratoGeneral.DependenciaSolicitante=contratado.ProyectoCurricular.toString();
           contratoGeneral.PlazoEjecucion=contratado.Semanas*7;
@@ -207,7 +214,6 @@ angular.module('contractualClienteApp')
                       });  
                       $mdDialog.hide()
                     }else{
-                      alert(response.data)
                       swal({
                         title: "Alerta",
                         text: $translate.instant('PROBLEMA_EXPEDICION'),

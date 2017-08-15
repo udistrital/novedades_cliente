@@ -16,9 +16,6 @@ angular.module('contractualClienteApp')
     agoraRequest.get("informacion_persona_natural","query=Id%3A"+self.idPersona).then(function(response){
     	self.persona=response.data[0];
     	self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');
-    	coreRequest.get("pais","query=Id%3A"+self.persona.IdPaisNacimiento).then(function(response){
-	    	self.persona.Pais=response.data[0].NombrePais;
-	    })
     })
 
   });

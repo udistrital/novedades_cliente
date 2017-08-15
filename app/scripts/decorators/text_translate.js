@@ -21,7 +21,7 @@ var text_es = {
   RECHAZAR: "Rechazar",
   SOLICITAR_CDP: "Solicitar CDP",
   BTN: {
-    VER: "Ver",
+    VER: "Ver resolución",
     SELECCIONAR: "Seleccionar",
     CANCELAR: "Cancelar",
     CONFIRMAR: "Confirmar",
@@ -336,9 +336,36 @@ var text_es = {
     GENERAR_RESOLUCION: "Generar Resolución",
     REALIZAR_EXPEDICION: "Realizar expedición de la resolución con los datos introducidos",
     INFORMACION_PERSONA_NATURAL: "Información persona natural",
-    VINCULAR_DOCENTES_SELECCIONADOS: "Vincular docentes seleccionados a la resolución",
-    FORMACION_ACADEMICA: "Formación académica",
-    EXPERIENCIA_LABORAL_DOCENTE: "Experiencia laboral docente",
+    CIUDAD_EXPEDICION: "Ciudad de expedición",
+    GENERO: "Genero",
+    /*
+    resolucion_detalle-html
+    */
+    RESOLUCION: "Resolución",
+    FORMATO_RESOLUCION: "Formato de resolución",
+    VER_DOCENTES: "Ver docentes contratados",
+    NUMERO_RESOLUCION: "Número de resolución",
+    FACULTAD: "Facultad",
+    NIVEL_ACADEMICO: "Nivel académico",
+    PREAMBULO: "Preámbulo",
+    CONSIDERANDO: "Considerando",
+    VISTA_RESOLUCION: "Vista de la resolución",
+    VISTA_RESOLUCION_ACTUALIZADA: "Vista de la resolución actualizada",
+    RESUELVE: "Resuelve",
+    ARTICULO: "Artículo",
+    TEXTO: "Texto",
+    PARAGRAFO: "Parágrafo",
+    /*
+    res_generacion.html
+    */
+    GENERACION_RESOLUCION: "Generación resolución",
+    SELECCIONE: "Seleccione",
+    CONSIDERACION: "Consideración",
+    RESOLUCIONES: "Resoluciones de vinculación especial de docentes",
+    LISTA_RESOLUCIONES: "Lista de resoluciones",
+    /*
+    trabajos_investigacion.html
+    */
     TRABAJOS_INVESTIGACION: "Trabajos de investigación",
   },
   /*
@@ -452,36 +479,82 @@ var text_es = {
   PROBLEMA_DOCENTE_CONTRATADOS: "Se ha presentado un problema en el registro de los datos de los docentes contratados",
   NO_DOCENTES: "No hay docentes inscritos dentro de la resolución",
 
-  /*
-  resolucion_detalle.js
-  */
-  ESCRIBA_TEXTO: "Escriba el texto del artículo",
-  DEBE_INSERTAR: "Debe insertar texto.",
-  ALMENOS_UNO: "La resolución debe tener al menos un artículo",
-  ESCRIBA_PARAGRAFO: "Escriba el texto del paragrafo",
-  GUARDADO: "Guardado",
-  GUARDADO_EXITO: "Los cambios se han guardado exitosamente",
-  PROBLEMA_ALMACENAMIENTO: "Ha habido un problema en el almacenamiento de los cambios",
-  REVISE_DATOS_RESOLUCION: "Revise los datos de la resolución",
-  /*
-  resolucion_administracion.js
-  */
-  NO_RESTAURACION_RESOLUCION: "No se ha realizado la restauración de la resolución",
-  NO_CANCELADA_PAGOS: "La resolucion no puede ser cancelada debido a que hay pagos asociados a las vinculaciones.",
-  NO_CANCELACION_RESOLUCION: "No se ha realizado la cancelación de la resolución.",
-  PREGUNTA_RESTAURAR: "¿Restaurar la resolución?",
-  CANCELAR_RESOLUCION: "¿Cancelar la resolución?",
-  OPCIONES: "Opciones",
-  VER_BTN: "Ver",
-  EDITAR_BTN: "Editar",
-  CONFIGURAR_BTN: "Configurar",
-  EXPEDIR_BTN: "Expedir",
-  CANCELAR_BTN: "Cancelar resolución",
-  RESTAURAR_BTN: "Restaurar resolución",
-  /*
-  contrato_resumen.html
-  */
-  DOCENTES_CONTRATADOS_ACTUAL: "DOCENTES CONTRATADOS - PERIODO ACTUAL",
+    TREINTA: "TREINTA",
+    CUARENTA: "CUARENTA",
+    CINCUENTA: "CINCUENTA", 
+    SESENTA: "SESENTA",
+    SETENTA: "SETENTA",
+    OCHENTA: "OCHENTA",
+    NOVENTA: "NOVENTA",
+    CIENTO: "CIENTO ",
+    CIEN: "CIEN",
+    DOSCIENTOS: "DOSCIENTOS ",
+    TRESCIENTOS: "TRESCIENTOS ",
+    CUATROCIENTOS: "CUATROCIENTOS ",
+    QUINIENTOS: "QUINIENTOS ",
+    SEISCIENTOS: "SEISCIENTOS ",
+    SETECIENTOS: "SETECIENTOS ",
+    OCHOCIENTOS: "OCHOCIENTOS ",
+    NOVECIENTOS: "NOVECIENTOS ",
+    UN_MIL: "UN MIL", 
+    MIL: "MIL",
+    UN_MILLON: "UN MILLON", 
+    MILLONES: "MILLONES",
+    PESOS: "PESOS",
+    PESO: "PESO",
+    CON: "CON",
+    CERO: "CERO",
+    Y: " Y ",
+    /*
+    resolucion_lista.js
+    */
+    VISTA_PREVIA_RESOLUCION: "Vista previa de la resolución",    
+    NIVEL: "Nivel",
+    /*
+    contrato_registro.js
+    */
+    NO_CALCULADO_SALARIO: "El salario no ha podido ser calculado",
+    NUMERO: "Número",
+    EXPEDIR: "¿Expedir la resolución?",
+    SEGURO_EXPEDIR: "¿Esta seguro que desea expedir la resolución?",
+    EXPEDICION_NO_REALIZADA: "No se ha realizado la expedición de la resolución",
+    EXPEDIDA: "La resolución ha sido expedida con exito",
+    DATOS_REGISTRADOS: "Los datos de las vinculaciones realizadas han sido registradas con exito",
+    PROBLEMA_EXPEDICION: "Se ha presentado un problema en la expedición de la resolución",
+    PROBLEMA_DOCENTE_CONTRATADOS: "Se ha presentado un problema en el registro de los datos de los docentes contratados",
+    NO_DOCENTES: "No hay docentes inscritos dentro de la resolución",
+    DATOS_INCOMPLETOS: "Los datos de la epedición no han sido debidamente diligenciados",
+    
+    /*
+    resolucion_detalle.js
+    */
+    ESCRIBA_TEXTO: "Escriba el texto del artículo",
+    DEBE_INSERTAR: "Debe insertar texto.",
+    ALMENOS_UNO: "La resolución debe tener al menos un artículo",
+    ESCRIBA_PARAGRAFO: "Escriba el texto del paragrafo",
+    GUARDADO: "Guardado",
+    GUARDADO_EXITO: "Los cambios se han guardado exitosamente",
+    PROBLEMA_ALMACENAMIENTO: "Ha habido un problema en el almacenamiento de los cambios",
+    REVISE_DATOS_RESOLUCION: "Revise los datos de la resolución",    
+    /*
+    resolucion_administracion.js
+    */
+    NO_RESTAURACION_RESOLUCION: "No se ha realizado la restauración de la resolución",
+    NO_CANCELADA_PAGOS: "La resolucion no puede ser cancelada debido a que hay pagos asociados a las vinculaciones.",
+    NO_CANCELACION_RESOLUCION: "No se ha realizado la cancelación de la resolución.",
+    PREGUNTA_RESTAURAR: "¿Restaurar la resolución?",
+    CANCELAR_RESOLUCION: "¿Cancelar la resolución?",
+    OPCIONES: "Opciones",
+    VER_BTN: "Ver",
+    EDITAR_BTN: "Editar",
+    CONFIGURAR_BTN: "Configurar",
+    EXPEDIR_BTN: "Expedir",
+    CANCELAR_BTN: "Cancelar resolución",
+    RESTAURAR_BTN: "Restaurar resolución",
+    /*
+    contrato_resumen.html
+    */
+    DOCENTES_CONTRATADOS_ACTUAL: "DOCENTES CONTRATADOS - PERIODO ACTUAL",
 
   // Minutas Plantillas
   BTN_MINUTAS: {
@@ -823,130 +896,206 @@ var text_en = {
     GENERAR_RESOLUCION: "Generate Resolution",
     REALIZAR_EXPEDICION: "Issue the resolution with the data entered",
     INFORMACION_PERSONA_NATURAL: "Information natural person",
-    VINCULAR_DOCENTES_SELECCIONADOS: "Entailment selected teachers to resolution",
-    FORMACION_ACADEMICA: "Academic training",
-    EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
+    CIUDAD_EXPEDICION: "Expedition city",
+    GENERO: "Gender",
+    /*
+    resolucion_detalle-html
+    */
+    RESOLUCION: "Resolution",
+    FORMATO_RESOLUCION: "Resolution format",
+    VER_DOCENTES: "See teachers hired",
+    NUMERO_RESOLUCION: "Resolution number",
+    FACULTAD: "Faculty",
+    NIVEL_ACADEMICO: "Academic level",
+    PREAMBULO: "Preamble",
+    CONSIDERANDO: "Considering",
+    VISTA_RESOLUCION: "Resolution view",
+    VISTA_RESOLUCION_ACTUALIZADA: "View of updated resolution",
+    RESUELVE: "Resolves",
+    ARTICULO: "Article",
+    TEXTO: "Text",
+    PARAGRAFO: "Paragraph",
+    /*
+    res_generacion.html
+    */
+    GENERACION_RESOLUCION: "Generation resolution",
+    SELECCIONE: "Select",
+    CONSIDERACION: "Consideration",
+    RESOLUCIONES: "Special entailment Resolutions",
+    LISTA_RESOLUCIONES: "List of resolutions",
+    /*
+    trabajos_investigacion.html
+    */
     TRABAJOS_INVESTIGACION: "Investigation work",
-  },
-  /*
-  Scrits
-  Hoja de vida seleccion.js
-  */
-  ALERTA: "Alert",
-  ACEPTAR: "Accept",
-  MENSAJE_ERROR: "Data could not be found for the selected person",
-  NUMERO_VINCULACIONES: "Number of entailments made: ",
-  VALOR_CONTRATO_FORMATO: "Value of contract: $",
-  MONEDA_CORRIENTE: " (Common currency: ",
-  SALARIO_NO_CALCULADO1: "The salary of ",
-  SALARIO_NO_CALCULADO2: " could not be calculated",
-  VALIDAR_CONTRATO: "The assigned values are not valid for the current resolution, please refer to the tab Keep in mind in order to see the rules.",
-  DOCUMENTO_ID: "DOCUMENT",
-  REGISTRAR_CONTRATOS: "There are teachers with a link to the current resolution, do you want to continue with the entailment?",
-  AGREGAR_CONTRATO: "Add new contract",
-  CANCELADO: "Cancelled",
-  REGISTRO_CANCELADO: "Registration has been canceled",
-  PREGUNTA_SEGURO: "Are you sure?",
-  CONFIRMAR_DESVINCULACION: "You wish to confirm the teacher's disengagement",
-  DEVINCULAR_DOCENTE: "Unveil teacher",
-  DESVINCULACION_CANCELADA: "Entailment has been canceled",
-  HCH: "Time chair professors: ",
-  HCH1: "Between 4 and 8 hours a week.",
-  HCP: "Benefits hour chair: ",
-  HCP1: "Between 8 and 16 hours a week.",
-  MTO: "Occasional half time: ",
-  MTO1: "Between 16 and 20 hours a week.",
-  TCO: "Casual Full Time: ",
-  TCO1: "Between 24 and 40 hours per week.",
-  SEMANAS: "Weeks",
-  REGLAS: "Rules",
-  PROBLEMA: "Problem",
-  VER_INFO_PERSONAL_BTN: "See personal information",
-  VER_INFO_ACADEMICA: "See Academic Information",
-  VER_EXP_LABORAL: "See work experience",
-  VER_TRABAJOS_INVESTIGACION: "See the research papers",
-  BORRAR_BTN: "Delete",
+    NOMBRE_INVESTIGACION: "Name of research",
+    AREA_INVESTIGACION: "Area of research",
+    TIPO_INVESTIGACION: "Types of research",
+    /*
+    resolucion_lista.html
+    */
+    BTN: {
+      CREAR_RESOLUCION: "Create new special entailment resolution",
+      GENERAR_RESOLUCION: "Generate Resolution",
+      REALIZAR_EXPEDICION: "Issue the resolution with the data entered",
+      INFORMACION_PERSONA_NATURAL: "Information natural person",
+      VINCULAR_DOCENTES_SELECCIONADOS: "Entailment selected teachers to resolution",
+      FORMACION_ACADEMICA: "Academic training",
+      EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
+      TRABAJOS_INVESTIGACION: "Investigation work",
+    },    
+    /*
+    Scrits
+    Hoja de vida seleccion.js
+    */
+    ALERTA: "Alert",
+    ACEPTAR: "Accept",
+    MENSAJE_ERROR: "Data could not be found for the selected person",
+    NUMERO_VINCULACIONES: "Number of entailments made: ",
+    VALOR_CONTRATO_FORMATO: "Value of contract: $",
+    MONEDA_CORRIENTE: " (Common currency: ",
+    SALARIO_NO_CALCULADO1: "The salary of ",
+    SALARIO_NO_CALCULADO2: " could not be calculated",
+    VALIDAR_CONTRATO: "The assigned values are not valid for the current resolution, please refer to the tab Keep in mind in order to see the rules.",
+    DOCUMENTO_ID: "DOCUMENT",
+    REGISTRAR_CONTRATOS: "There are teachers with a link to the current resolution, do you want to continue with the entailment?",
+    AGREGAR_CONTRATO: "Add new contract",
+    CANCELAR: "Cancel",
+    CANCELADO: "Cancelled",
+    REGISTRO_CANCELADO: "Registration has been canceled",
+    PREGUNTA_SEGURO: "Are you sure?",
+    CONFIRMAR_DESVINCULACION: "You wish to confirm the teacher's disengagement",
+    DEVINCULAR_DOCENTE: "Unveil teacher",
+    DESVINCULACION_CANCELADA: "Entailment has been canceled",
+    HCH: "Time chair professors: ",
+    HCH1: "Between 4 and 8 hours a week.",
+    HCP: "Benefits hour chair: ",
+    HCP1: "Between 8 and 16 hours a week.",
+    MTO: "Occasional half time: ",
+    MTO1: "Between 16 and 20 hours a week.",
+    TCO: "Casual Full Time: ",
+    TCO1: "Between 24 and 40 hours per week.",
+    SEMANAS: "Weeks",
+    REGLAS: "Rules",
+    PROBLEMA: "Problem",
+    VER_INFO_PERSONAL_BTN: "See personal information",
+    VER_INFO_ACADEMICA: "See Academic Information",
+    VER_EXP_LABORAL: "See work experience",
+    VER_TRABAJOS_INVESTIGACION: "See the research papers",
+    BORRAR_BTN: "Delete",
 
-  UN: "ONE",
-  DOS: "TWO",
-  TRES: "THREE",
-  CUATRO: "FOUR",
-  CINCO: "FIVE",
-  SEIS: "SIX",
-  SIETE: "SEVEN",
-  OCHO: "EIGHT",
-  NUEVE: "NINE",
-  DIEZ: "TEN",
-  ONCE: "ELEVEN",
-  DOCE: "TWELVE",
-  TRECE: "THIRTEEN",
-  CATORCE: "FOURTEEN",
-  QUINCE: "FIFTEEN",
+    UN: "ONE",
+    DOS: "TWO",
+    TRES: "THREE",
+    CUATRO: "FOUR",
+    CINCO: "FIVE",
+    SEIS: "SIX",
+    SIETE: "SEVEN",
+    OCHO: "EIGHT",
+    NUEVE: "NINE",
+    DIEZ: "TEN",
+    ONCE: "ELEVEN",
+    DOCE: "TWELVE",
+    TRECE: "THIRTEEN",
+    CATORCE: "FOURTEEN",
+    QUINCE: "FIFTEEN",
 
 
-  DIECISEIS: "SIXTEEN",
-  DIECISIETE: "SEVENTEEN",
-  DIECIOCHO: "EIGHTEEN",
-  DIECINUEVE: "NINETEEN",
+    DIECISEIS: "SIXTEEN",
+    DIECISIETE: "SEVENTEEN",
+    DIECIOCHO: "EIGHTEEN",
+    DIECINUEVE: "NINETEEN",
 
 
-  VEINTE: "TWENTY",
+    VEINTE: "TWENTY",
 
-  VEINTIUNO: "TWENTY ONE",
-  VEINTIDOS: "TWENTY TWO",
-  VEINTITRES: "TWENTY THREE",
-  VEINTICUATRO: "TWENTY FOUR",
-  VEINTICINCO: "TWENTY FIVE",
-  VEINTISEIS: "TWENTY SIX",
-  VEINTISIETE: "TWENTY SEVEN",
-  VEINTIOCHO: "TWENTY EIGHT",
-  VEINTINUEVE: "TWENTY NINE",
+    VEINTIUNO: "TWENTY ONE",
+    VEINTIDOS: "TWENTY TWO",
+    VEINTITRES: "TWENTY THREE",
+    VEINTICUATRO: "TWENTY FOUR",
+    VEINTICINCO: "TWENTY FIVE",
+    VEINTISEIS: "TWENTY SIX",
+    VEINTISIETE: "TWENTY SEVEN",
+    VEINTIOCHO: "TWENTY EIGHT",
+    VEINTINUEVE: "TWENTY NINE",
 
-  TREINTA: "THIRTY ",
-  CUARENTA: "FORTY ",
-  CINCUENTA: "FIFTY ",
-  SESENTA: "SIXTY ",
-  SETENTA: "SEVENTY ",
-  OCHENTA: "EGHTY ",
-  NOVENTA: "NINETY ",
-  CIENTO: "ONE HUNDRED ",
-  CIEN: "HUNDRED",
-  DOSCIENTOS: "TWO HUNDRED ",
-  TRESCIENTOS: "THREE HUNDRED ",
-  CUATROCIENTOS: "FOUR HUNDRED ",
-  QUINIENTOS: "FIVE HUNDRED ",
-  SEISCIENTOS: "SIX HUNDRED ",
-  SETECIENTOS: "SEVEN HUNDRED ",
-  OCHOCIENTOS: "EIGHT HUNDRED ",
-  NOVECIENTOS: "NINE HUNDRED ",
+    TREINTA: "THIRTY ",
+    CUARENTA: "FORTY ",
+    CINCUENTA: "FIFTY ", 
+    SESENTA: "SIXTY ",
+    SETENTA: "SEVENTY ",
+    OCHENTA: "EGHTY ",
+    NOVENTA: "NINETY ",
+    CIENTO: "ONE HUNDRED ",
+    CIEN: "HUNDRED",
+    DOSCIENTOS: "TWO HUNDRED ",
+    TRESCIENTOS: "THREE HUNDRED ",
+    CUATROCIENTOS: "FOUR HUNDRED ",
+    QUINIENTOS: "FIVE HUNDRED ",
+    SEISCIENTOS: "SIX HUNDRED ",
+    SETECIENTOS: "SEVEN HUNDRED ",
+    OCHOCIENTOS: "EIGHT HUNDRED ",
+    NOVECIENTOS: "NINE HUNDRED ",
 
-  UN_MIL: "ONE THOUSAND",
-  MIL: "THOUSAND",
-  UN_MILLON: "ONE MILLION",
-  MILLONES: " MILLION ",
-  PESOS: "PESOS",
-  PESO: "PESO",
-  CON: "WITH",
-  CERO: "ZERO",
-  Y: "",
-  /*
-  resolucion_lista.js
-  */
-  VISTA_PREVIA_RESOLUCION: "Preview resolution",
-  CREAR_RESOLUCION: "Crear nueva resolución de vinculación especial",
-  NIVEL: "Level",
-  /*
-  contrato_registro.js
-  */
-  NO_CALCULADO_SALARIO: "The salary could not be calculated",
-  EXPEDIR: "Issue the resolution?",
-  SEGURO_EXPEDIR: "Are you sure you want to issue the resolution?",
-  EXPEDICION_NO_REALIZADA: "No issuance of the resolution",
-  EXPEDIDA: "The resolution has been successfully issued",
-  DATOS_REGISTRADOS: "The data of the connections made have been successfully registered",
-  PROBLEMA_EXPEDICION: "A problem has arisen in the issuance of the resolution",
-  PROBLEMA_DOCENTE_CONTRATADOS: "A problem has arisen in the registration of the data of contracted teachers",
-  NO_DOCENTES: "There are no teachers enrolled within the resolution",
+    UN_MIL: "ONE THOUSAND", 
+    MIL: "THOUSAND",
+    UN_MILLON: "ONE MILLION", 
+    MILLONES: " MILLION ",
+    PESOS: "PESOS",
+    PESO: "PESO",
+    CON: "WITH",
+    CERO: "ZERO",
+    Y: "",
+    /*
+    resolucion_lista.js
+    */
+    VISTA_PREVIA_RESOLUCION: "Preview resolution",
+    CREAR_RESOLUCION: "Crear nueva resolución de vinculación especial",
+    NIVEL: "Level",
+    /*
+    contrato_registro.js
+    */
+    NO_CALCULADO_SALARIO: "The salary could not be calculated",
+    NUMERO: "Number",
+    EXPEDIR: "Issue the resolution?",
+    SEGURO_EXPEDIR: "Are you sure you want to issue the resolution?",
+    EXPEDICION_NO_REALIZADA: "No issuance of the resolution",
+    EXPEDIDA: "The resolution has been successfully issued",
+    DATOS_REGISTRADOS: "The data of the connections made have been successfully registered",
+    PROBLEMA_EXPEDICION: "A problem has arisen in the issuance of the resolution",
+    PROBLEMA_DOCENTE_CONTRATADOS: "A problem has arisen in the registration of the data of contracted teachers",
+    NO_DOCENTES: "There are no teachers enrolled within the resolution",
+    DATOS_INCOMPLETOS: "Incomplete data",
+
+    /*
+    resolucion_detalle.js
+    */
+    ESCRIBA_TEXTO: "Write the text of the article",
+    DEBE_INSERTAR: "You must enter text.",
+    ALMENOS_UNO: "The resolution must have at least one article",
+    ESCRIBA_PARAGRAFO: "Enter the text of the paragraph",
+    GUARDADO: "Saved",
+    GUARDADO_EXITO: "Changes saved successfully",
+    PROBLEMA_ALMACENAMIENTO: "There was a problem storing changes",
+    REVISE_DATOS_RESOLUCION: "Review the resolution data",    
+    /*
+    resolucion_administracion.js
+    */
+    NO_RESTAURACION_RESOLUCION: "Restore of resolution has not been performed",
+    NO_CANCELADA_PAGOS: "The resolution can not be canceled because there are payments associated with the bindings.",
+    NO_CANCELACION_RESOLUCION: "No cancellation of the resolution.",
+    PREGUNTA_RESTAURAR: "Restore resolution?",
+    CANCELAR_RESOLUCION: "Cancel the resolution?",
+    OPCIONES: "Options",
+    VER_BTN: "See resolution",    
+    EDITAR_BTN: "Edit",
+    CONFIGURAR_BTN: "Set up",
+    EXPEDIR_BTN: "Issue",
+    CANCELAR_BTN: "Cancel resolution",
+    RESTAURAR_BTN: "Restore resolution",
+    /*
+    contrato_resumen.html
+    */
+    DOCENTES_CONTRATADOS_ACTUAL: "TEACHERS CONTRACTED - CURRENT PERIOD",
 
   /*
   resolucion_detalle.js

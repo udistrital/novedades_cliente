@@ -35,8 +35,8 @@ angular.module('contractualClienteApp')
     self.getNombreFacultad = function(index){
       var nombreFacultad;
       self.facultades.forEach(function(facultad){
-        if(facultad.Id==parseInt(index)){
-          nombreFacultad=facultad.Nombre;
+        if(facultad.DependenciaId.Id==parseInt(index)){
+          nombreFacultad=facultad.DependenciaId.Nombre;
         }
       })
       return nombreFacultad;
