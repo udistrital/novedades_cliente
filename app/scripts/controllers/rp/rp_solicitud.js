@@ -69,7 +69,7 @@ self.gridOptions_cdp.onRegisterApi = function(gridApi){
     });
 
     agoraRequest.get('informacion_persona_natural', 'query=Id:'+self.cdp.Responsable).then(function(response) {
-      if(response.data != null){
+      if(response.data !== null){
       self.responsable = response.data[0];
     }else{
         self.responsable = "";
@@ -81,7 +81,6 @@ self.gridOptions_cdp.onRegisterApi = function(gridApi){
       $scope.rubros = response.data;
       self.gridOptions_rubros.data = response.data;
       angular.forEach($scope.rubros, function(data){
-          var saldo;
           var rp = {
             Disponibilidad : data.Disponibilidad, // se construye rp auxiliar para obtener el saldo del CDP para la apropiacion seleccionada
             Apropiacion : data.Apropiacion
@@ -181,7 +180,7 @@ self.gridOptions_cdp.multiSelect = false;
     };
 
 
-    if (self.cdp.Id != null) {
+    if (self.cdp.Id !== null) {
       for (var i = 0; i < self.rubros.length; i++) {
         var saldo = self.DescripcionRubro(rubros[i].Id);
         rubros[i].saldo = saldo;
@@ -215,7 +214,7 @@ self.gridOptions_cdp.multiSelect = false;
         if (self.rubros_select[i].Id === id) {
 
           self.rubros.push(self.rubros_select[i]);
-          self.rubros_select.splice(i, 1)
+          self.rubros_select.splice(i, 1);
         }
       }
       for (var i = 0; i < self.rubros_seleccionados.length; i++) {
@@ -239,14 +238,13 @@ self.gridOptions_cdp.multiSelect = false;
 
     $scope.saldosValor = function() {
       $scope.banderaRubro = true;
-      var i=0;
       console.log(self.rubros_seleccionados);
       angular.forEach(self.rubros_seleccionados, function(v) {
         if (v.Valor < v.ValorAsignado || v.ValorAsignado===0 || isNaN(v.ValorAsignado) || v.ValorAsignado === undefined) {
           $scope.banderaRubro = false;
         }
       });
-    }
+    };
 
     self.Registrar = function() {
       $scope.saldosValor();
@@ -266,7 +264,7 @@ self.gridOptions_cdp.multiSelect = false;
           text: 'Valor incorrecto del registro presupuestal',
           type: 'error',
           confirmButtonText: 'Corregir'
-        })
+        });
       }
       else {
 
@@ -282,16 +280,19 @@ self.gridOptions_cdp.multiSelect = false;
           NumeroContrato: self.contrato.Id,
           VigenciaContrato: self.contrato.Vigencia.toString(),
           Compromiso: self.compromiso.Id
-        }
+        };
+
+        console.log(SolicitudRp);
 
           administrativaRequest.post('solicitud_rp', SolicitudRp).then(function(response) {
+            console.log("respuesta");
+            console.log(response);
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
               var Disponibilidad_apropiacion_solicitud_rp = {
                 DisponibilidadApropiacion: self.rubros_seleccionados[i].Id,
                 SolicitudRp: response.data.Id,
                 Monto: self.rubros_seleccionados[i].ValorAsignado,
-              }
-
+              };
 
               administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
               });
@@ -317,7 +318,7 @@ self.gridOptions_cdp.multiSelect = false;
                 //si da click en Salir
                 $window.location.href = '#';
               }
-            })
+            });
 
           });
       }
