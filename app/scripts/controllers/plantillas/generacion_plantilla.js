@@ -11,18 +11,18 @@ angular.module('contractualClienteApp')
 .controller('GeneracionPlantillaCtrl', function ($translate, $timeout, $scope, administrativaRequest) {
   var self = this;
 
-  self.opcionesTexto = ["Texto","HTML"];
+  self.opcionesTexto = ['Texto','HTML'];
   self.textoNormal = true;
   // Json de prueba para los datos del formulario
   self.contenidoMinuta = {
-    Titulo: "Minuta de prueba",
+    Titulo: 'Minuta de prueba',
     IdDependencia: {
       Id: 1,
-      Nombre: "OAS"
+      Nombre: 'OAS'
     },
     IdUnidadEjecutora: {
       Id: 1,
-      Nombre: "Recursos Físicos"
+      Nombre: 'Recursos Físicos'
     },
     TipoContrato: 0,
     Clausulas: []
@@ -30,9 +30,13 @@ angular.module('contractualClienteApp')
 
   // Agregar clausula
   self.agregarClausula = function() {
-    $("#modal_add_clausula").modal('hide');
-    self.contenidoMinuta.Clausulas.push({Titulo: self.tituloClausula, Texto: self.textoClausula, Paragrafos: []});
-    self.limpiarModal();
+    if (typeof self.tituloClausula != 'undefined' && typeof self.textoClausula != 'undefined') {
+      if (self.tituloClausula != '' && self.textoClausula != '') {
+        self.contenidoMinuta.Clausulas.push({Titulo: self.tituloClausula, Texto: self.textoClausula, Paragrafos: []});
+        $('#modal_add_clausula').modal('hide');
+        self.limpiarModal();
+      }
+    }
   };
 
   // Eliminar clausula
@@ -51,20 +55,24 @@ angular.module('contractualClienteApp')
 
   // Adiciona paragrafo
   self.adicionarParagrafo = function(){
-    $('#modal_add_paragrafo').modal('hide');
-    self.contenidoMinuta.Clausulas[self.idClausula].Paragrafos.push({Texto: self.textoParagrafo});
-    self.limpiarModal();
+    if(typeof self.textoParagrafo != 'undefined') {
+      if(self.textoParagrafo != '') {
+        self.contenidoMinuta.Clausulas[self.idClausula].Paragrafos.push({Texto: self.textoParagrafo});
+        $('#modal_add_paragrafo').modal('hide');
+        self.limpiarModal();
+      }
+    }
   };
 
   // Muestra el textarea o el text-angular del texto del paragrafo de acuerdo al valor de self.op
   self.opcionTexto = function() {
     switch (self.op) {
-      case "Texto":
+      case 'Texto':
       self.textoNormal = true;
       self.textoHtml = !self.textoNormal;
       self.textoOriginal = self.textoParagrafo;
       break;
-      case "HTML":
+      case 'HTML':
       self.textoHtml = true;
       self.textoNormal = !self.textoHtml;
       break;
@@ -101,55 +109,55 @@ angular.module('contractualClienteApp')
   // Información para la modal de plantillas
   var plantillas = [
     {
-      Nombre: "Plantilla 1",
-      Dependencia: "Dependencia 1",
-      UnidadEjecutora: "Unidad Ejecutora 1",
-      TipoContrato: {Id: 2, TipoContrato: "HC-SALARIOS"},
-      FechaActivacion: "08-08-2017",
-      FechaInactivacion: "",
+      Nombre: 'Plantilla 1',
+      Dependencia: 'Dependencia 1',
+      UnidadEjecutora: 'Unidad Ejecutora 1',
+      TipoContrato: {Id: 2, TipoContrato: 'HC-SALARIOS'},
+      FechaActivacion: '08-08-2017',
+      FechaInactivacion: '',
       Activo: true,
       Clausulas: [
-        {Titulo: "Clausula 1 de Plantilla 1", Texto: "Texto Clausula 1 Plantilla 1",
+        {Titulo: 'Clausula 1 de Plantilla 1', Texto: 'Texto Clausula 1 Plantilla 1',
         Paragrafos: [
-            {Texto: "Texto de Paragrafo 1 de Clausula 1"},
-            {Texto: "Texto de Paragrafo 2 de Clausula 1"},
-            {Texto: "Texto de Paragrafo 3 de Clausula 1"},
+            {Texto: 'Texto de Paragrafo 1 de Clausula 1'},
+            {Texto: 'Texto de Paragrafo 2 de Clausula 1'},
+            {Texto: 'Texto de Paragrafo 3 de Clausula 1'},
         ]},
-        {Titulo: "Clasula 2 de Plantilla 1", Texto: "Texto de Clasula 2 Plantilla 1",
+        {Titulo: 'Clasula 2 de Plantilla 1', Texto: 'Texto de Clasula 2 Plantilla 1',
         Paragragos: [
-          {Texto: "Texto de Paragrafo 1 de Clasula 2"},
-          {Texto: "Texto de Paragrafo 2 de Clasula 2"}
+          {Texto: 'Texto de Paragrafo 1 de Clasula 2'},
+          {Texto: 'Texto de Paragrafo 2 de Clasula 2'}
         ]},
-        {Titulo: "Clasula 3 de Plantilla 1", Texto: "Texto de Clasula 3 Plantilla 1",
+        {Titulo: 'Clasula 3 de Plantilla 1', Texto: 'Texto de Clasula 3 Plantilla 1',
         Paragrafos: []}
       ]
     },
     {
-      Nombre: "Plantilla 2",
-      Dependencia: "Dependencia 2",
-      UnidadEjecutora: "Unidad Ejecutora 2",
-      TipoContrato: {Id: 3, TipoContrato: "CPS"},
-      FechaActivacion: "08-08-2027",
-      FechaInactivacion: "",
+      Nombre: 'Plantilla 2',
+      Dependencia: 'Dependencia 2',
+      UnidadEjecutora: 'Unidad Ejecutora 2',
+      TipoContrato: {Id: 3, TipoContrato: 'CPS'},
+      FechaActivacion: '08-08-2027',
+      FechaInactivacion: '',
       Activo: true,
       Clasulas: []
     },
     {
-      Nombre: "Plantilla 3",
-      Dependencia: "Dependencia 3",
-      UnidadEjecutora: "Unidad Ejecutora 3",
-      TipoContrato: {Id: 1, TipoContrato: "CPS"},
-      FechaActivacion: "01-01-2016",
-      FechaInactivacion: "31-12-2017",
+      Nombre: 'Plantilla 3',
+      Dependencia: 'Dependencia 3',
+      UnidadEjecutora: 'Unidad Ejecutora 3',
+      TipoContrato: {Id: 1, TipoContrato: 'CPS'},
+      FechaActivacion: '01-01-2016',
+      FechaInactivacion: '31-12-2017',
       Activo: false,
       Clausulas: [
-        {Titulo: "Clasula 1 de Plantilla 3", Texto: "Texto de Clausula 1 de Plantilla 3",
+        {Titulo: 'Clasula 1 de Plantilla 3', Texto: 'Texto de Clausula 1 de Plantilla 3',
         Paragrafos: []},
-        {Titulo: "Clausula 2 de Plantilla 3", Texto: "Texto de Clausula 2 de Plantilla 3",
+        {Titulo: 'Clausula 2 de Plantilla 3', Texto: 'Texto de Clausula 2 de Plantilla 3',
         Paragrafos: [
-          {Texto: "Texto 1 de Paragrafo de Clasula 2"},
-          {Texto: "Texto 2 de Paragrafo de Clasula 2"},
-          {Texto: "Texto 3 de Paragrafo de Clasula 2"}
+          {Texto: 'Texto 1 de Paragrafo de Clasula 2'},
+          {Texto: 'Texto 2 de Paragrafo de Clasula 2'},
+          {Texto: 'Texto 3 de Paragrafo de Clasula 2'}
         ]}
       ]
     }
