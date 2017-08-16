@@ -487,6 +487,8 @@ var text_es = {
     AGREGAR_PARAGRAFO: "Agregar Parágrafo",
     ELIMINAR_PARAGRAFO: "Eliminar Parágrafo",
     GUARDAR: "Guardar",
+    VISTA_PREVIA: "Vista Previa Plantilla",
+    VISTA_PREVIA_ACTUALIZADA: "Vista Previa Actualizada"
   },
   GENERACION_MINUTA: "Generación de Plantillas",
   GESTION_PLANTILLAS: "Gestión de Plantillas",
@@ -978,6 +980,8 @@ var text_en = {
     AGREGAR_PARAGRAFO: "Add Paragraph",
     ELIMINAR_PARAGRAFO: "Delete Paragraph",
     GUARDAR: "Save",
+    VISTA_PREVIA: "Template Preview",
+    VISTA_PREVIA_ACTUALIZADA: "Template Preview Update"
   },
   GENERACION_MINUTA: "Template Generator",
   GESTION_PLANTILLAS: "Template Management",

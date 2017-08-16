@@ -58,7 +58,7 @@ angular.module('contractualClienteApp')
       {field: 'FechaInactivacion', headerCellTemplate: '<div align="center"> {{ \'FECHA_INACTIVACION\' | translate }} </div>',
         cellTemplate: '<div align="right">{{row.entity.FechaInactivacion}}</div>'},
       {field: 'Gestion', headerCellTemplate: '<div align="center"> {{ \'GESTION_PLANTILLA\' | translate }} </div>',
-        cellTemplate: '<center><button class="btn btn-default editar"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>'+
+        cellTemplate: '<center><button class="btn btn-default editar"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>'+
         '<button class="btn btn-default borrar"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>'+
         '<button class="btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></center>'}
     ];
