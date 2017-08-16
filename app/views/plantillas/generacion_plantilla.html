@@ -13,8 +13,8 @@
             <div class="col-lg-12">
               <button type="button" ng-click="generacionPlantilla.llenarUiGrid()" data-toggle="modal" data-target="#modal_plantilla_existente" class="btn btn-outline btn-primary btn-lg btn-block" > {{ 'PLANTILLA_EXISTENTE' | translate }} </button><br>
               <div class="form-group col-lg-6">
-                <label>{{ 'TITULO_MINUTA' | translate }}</label>
-                <input type="text" class="form-control" ng-model="generacionPlantilla.contenidoMinuta.Titulo">
+                <label for="inputTitulo">{{ 'TITULO_MINUTA' | translate }}</label>
+                <input type="text" id="inputTitulo" class="form-control" ng-model="generacionPlantilla.contenidoMinuta.Titulo">
               </div>
               <div class="form-group col-lg-6">
                 <label>{{ 'DEPENDENCIA_SOLICITANTE' | translate }}</label>
@@ -24,7 +24,7 @@
                 <label>{{ 'UNIDAD_EJECUTORA' | translate }}</label>
                 <input type="text" class="form-control" ng-model="generacionPlantilla.contenidoMinuta.IdUnidadEjecutora.Nombre" disabled >
               </div>
-              <div class="form-group col-lg-5">
+              <div class="form-group col-lg-6">
                 <label>{{ 'TIPO_CONTRATO' | translate }}</label>
                 <select data-ng-options="o.TipoContrato for o in generacionPlantilla.tipoContrato" class="form-control" data-ng-model="generacionPlantilla.singleTipoContrato" >
                 </select>
@@ -52,10 +52,10 @@
     <div class="col-lg-6" id="resolucion">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h4 class="intro-text text-center">{{ 'VISTA_PREVIA' | translate }}</h4>
+          <h4 class="intro-text text-center">{{ 'BTN_MINUTAS.VISTA_PREVIA' | translate }}</h4>
         </div>
         <div class="panel-body">
-          <button ng-click="generacionPlantilla.crearPdf()" type="submit" class="form-control btn-primary" >{{ 'VISTA_RESOLUCION_ACTUALIZADA' | translate }}</button>
+          <button ng-click="generacionPlantilla.crearPdf()" type="submit" class="form-control btn-primary" >{{ 'BTN_MINUTAS.VISTA_PREVIA_ACTUALIZADA' | translate }}</button>
           <iframe id="vistaPDF" frameborder='0' width='100%' height='770'> </iframe>
         </div>
       </div>
@@ -116,73 +116,94 @@
   <!-- modal clausulas -->
   <div id="modal_add_clausula" class="modal fade col-md-12" role="dialog" style="padding-top:5%">
     <div class="modal-content col-md-offset-1 col-md-10">
-      <div class="modal-header">
-        <button type="button" class="btn btn-outline btn-danger btn-xs pull-right" data-dismiss="modal">&times</button><br>
-      </div>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          {{ 'BTN_MINUTAS.AGREGAR_CLAUSULA' | translate }}
+      <form id="myForm" data-toggle="validator" role="form">
+        <div class="modal-header">
+          <h3 class="modal-title"> {{ 'BTN_MINUTAS.AGREGAR_CLAUSULA' | translate }} </h3>
+          <button type="button" class="btn btn-outline btn-danger btn-xs pull-right" data-dismiss="modal">&times</button><br>
         </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <label for="tituloClausula"> Titulo: </label>
-            <input type="text" name="textoClausula" class="form-control" ng-model="generacionPlantilla.tituloClausula" required>
-          </div>
-            <div class="col-sm-12 row form-group">
-              <label for="descripcion"  class="col-sm-4 col-form-label"> {{'DESCRIPCION' | translate }}: </label>
-              <label for="formato_texto_c"  class="col-md-offset-6 col-form-label">{{'FORMATO_TEXTO' | translate }}:</label>
-              <select id="formato_texto_c" ng-model="generacionPlantilla.op" ng-change="generacionPlantilla.opcionTexto()">
-                <option ng-repeat="o in generacionPlantilla.opcionesTexto" value="{{o}}"> {{ o }} </option>
-              </select>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <label for="tituloClausula"> Titulo: </label>
+              <input type="text" id="tituloClausula" class="form-control" ng-model="generacionPlantilla.tituloClausula" required>
             </div>
-          <div class="col-sm-12">
-            <textarea ng-show="generacionPlantilla.textoNormal" name="descripcion" ng-model="generacionPlantilla.textoClausula" rows=7 class="form-control" required="true"> {{generacionPlantilla.textoOriginal}}</textarea>
-            <text-angular ng-show="generacionPlantilla.textoHtml" ng-model="generacionPlantilla.textoClausula"></text-angular>
+            <div class="col-sm-12 row form-group" style="margin-top: 20px;">
+              <label for="descripcion" class="col-sm-4 col-form-label"> {{'DESCRIPCION' | translate }}: </label>
+              <div class="col-md-offset-4 col-md-2">
+                <label for="formato_texto_c" class="col-md-offset-6 col-form-label">{{'FORMATO_TEXTO' | translate }}:</label>
+              </div>
+              <div class="col-md-2 row">
+                <select id="formato_texto_c" class="form-control" ng-model="generacionPlantilla.op" ng-change="generacionPlantilla.opcionTexto()">
+                  <option ng-repeat="o in generacionPlantilla.opcionesTexto" value="{{o}}"> {{ o }} </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <textarea ng-show="generacionPlantilla.textoNormal" name="descripcion" ng-model="generacionPlantilla.textoClausula" rows=7 class="form-control" required> {{generacionPlantilla.textoOriginal}}</textarea>
+              <text-angular ng-show="generacionPlantilla.textoHtml" ng-model="generacionPlantilla.textoClausula"></text-angular>
+            </div>
           </div>
         </div>
-        <br>
-        <button type="button" name="button" class="btn btn-success btn-outline" ng-click="generacionPlantilla.agregarClausula()"> {{ 'ACEPTAR' | translate }} </button>
-        <button type="button" class="btn btn-outline btn-danger" data-dismiss="modal" ng-click="generacionPlantilla.limpiarModal()"> {{ 'CANCELAR' | translate }}</button><br>
+        <div class="modal-footer">
+          <button type="submit" name="button" class="btn btn-success btn-outline" ng-click="generacionPlantilla.agregarClausula()"> {{ 'ACEPTAR' | translate }} </button>
+          <button type="button" class="btn btn-outline btn-danger" data-dismiss="modal" ng-click="generacionPlantilla.limpiarModal()"> {{ 'CANCELAR' | translate }}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- modal clausulas -->
+
+<!-- modal paragrafos -->
+<div id="modal_add_paragrafo" class="modal face col-md-12" role="dialog" style="padding-top:5%">
+  <div class="modal-content col-md-offset-1 col-md-10">
+    <form id="formParagrafo">
+    <div class="modal-header">
+      <h3 class="modal-title"> {{ 'BTN_MINUTAS.AGREGAR_PARAGRAFO' | translate }} </h3>
+      <button type="button" class="btn btn-outline btn-danger gtn-xs pull-right" data-dismiss="modal">&times</button><br>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-12 row form-group" style="margin-top: 20px;">
+          <label for="descripcion" class="col-sm-4 col-form-label"> {{'DESCRIPCION' | translate }}: </label>
+          <div class="col-md-offset-4 col-md-2">
+            <label for="formato_texto_p" class="col-md-offset-6 col-form-label">{{'FORMATO_TEXTO' | translate }}:</label>
+          </div>
+          <div class="col-md-2 row">
+            <select id="formato_texto_p" class="form-control" ng-model="generacionPlantilla.op" ng-change="generacionPlantilla.opcionTexto()">
+              <option ng-repeat="o in generacionPlantilla.opcionesTexto" value="{{o}}"> {{ o }} </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <textarea ng-show="generacionPlantilla.textoNormal" name="descripcion" ng-model="generacionPlantilla.textoParagrafo" rows=7 class="form-control" required> {{generacionPlantilla.textoOriginal}}</textarea>
+          <text-angular ng-show="generacionPlantilla.textoHtml" ng-model="generacionPlantilla.textoParagrafo"></text-angular>
+        </div>
       </div>
     </div>
-  </div>
-  <!-- modal clausulas -->
-
-  <!-- modal paragrafos -->
-  <div id="modal_add_paragrafo" class="modal face col-md-12" role="dialog">
-    <div class="modal-content col-md-offset-1 col-md-10">
-      <div class="modal-header">
-        <button type="button" class="btn btn-outline btn-danger gtn-xs pull-right" data-dismiss="modal">&times</button><br>
-      </div>
-      <div class="col-sm-12 row form-group">
-        <label for="descripcion"  class="col-sm-4 col-form-label"> {{'DESCRIPCION' | translate }}: </label>
-        <label for="formato_texto_c"  class="col-md-offset-6 col-form-label">{{'FORMATO_TEXTO' | translate }}:</label>
-        <select id="formato_texto_c" ng-model="generacionPlantilla.op" ng-change="generacionPlantilla.opcionTexto()">
-          <option ng-repeat="o in generacionPlantilla.opcionesTexto" value="{{o}}"> {{ o }} </option>
-        </select>
-        <textarea ng-show="generacionPlantilla.textoNormal" name="descripcion" ng-model="generacionPlantilla.textoParagrafo" rows=7 class="form-control" required="true"> {{generacionPlantilla.textoOriginal}}</textarea>
-        <text-angular ng-show="generacionPlantilla.textoHtml" ng-model="generacionPlantilla.textoParagrafo"></text-angular>
-      </div>
-      <button type="button" name="button" class="btn btn-success btn-outline" ng-click="generacionPlantilla.adicionarParagrafo()"> {{ 'ACEPTAR' | translate }} </button>
+    <div class="modal-footer">
+      <button type="submit" name="button" class="btn btn-success btn-outline" ng-click="generacionPlantilla.adicionarParagrafo()"> {{ 'ACEPTAR' | translate }} </button>
       <button type="button" class="btn btn-outline btn-danger" data-dismiss="modal" ng-click="generacionPlantilla.limpiarModal()"> {{ 'CANCELAR' | translate }}</button><br>
     </div>
+    </form>
   </div>
-  <!-- modal paragrafos -->
+</div>
+<!-- modal paragrafos -->
 
-  <!-- modal plantilla existente -->
-  <div id="modal_plantilla_existente" class="modal face col-md-12" role="dialog">
-    <div class="modal-content col-md-offset-1 col-md-10">
-      <div class="modal-header">
-        <button type="button" name="btn btn-outline btn-danger gtn-xs pull-right" data-dismiss="modal">&times</button><br>
-      </div>
-      <div class="col-sm-12 row form-group">
-        <table style="width:100%;">
-          <td>
-            <div ui-grid="generacionPlantilla.gridOptions" class="myGrid"></div>
-          </td>
-        </tr>
-      </table>
-      </div>
+<!-- modal plantilla existente -->
+<div id="modal_plantilla_existente" class="modal face col-md-12" role="dialog">
+  <div class="modal-content col-md-offset-1 col-md-10">
+    <div class="modal-header">
+      <button type="button" name="btn btn-outline btn-danger gtn-xs pull-right" data-dismiss="modal">&times</button><br>
     </div>
+    <div class="col-sm-12 row form-group">
+      <table style="width:100%;">
+        <td>
+          <div ui-grid="generacionPlantilla.gridOptions" class="myGrid"></div>
+        </td>
+      </tr>
+    </table>
   </div>
-  <!-- modal plantilla existente -->
+</div>
+</div>
+<!-- modal plantilla existente -->
