@@ -20,8 +20,17 @@ var text_es = {
     VER_SEGUIMIENTO_FINANCIERO:"Ver seguimiento financiero",
     APROBAR: "Aprobar",
     RECHAZAR: "Rechazar",
-    SOLICITAR_CDP: "Solicitar CDP"
+    SOLICITAR_CDP: "Solicitar CDP",
+    CREAR_RESOLUCION: "Crear nueva resolución de vinculación especial",
+    GENERAR_RESOLUCION: "Generar Resolución",
+    REALIZAR_EXPEDICION: "Realizar expedición de la resolución con los datos introducidos",
+    INFORMACION_PERSONA_NATURAL: "Información persona natural",
+    VINCULAR_DOCENTES_SELECCIONADOS: "Vincular docentes seleccionados a la resolución",
+    FORMACION_ACADEMICA: "Formación académica",
+    EXPERIENCIA_LABORAL_DOCENTE: "Experiencia laboral docente",
+    TRABAJOS_INVESTIGACION: "Trabajos de investigación",
   },
+  RP_MASIVO: "¿Es para una solicitud de registro presupuestal masiva?",
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
   SELECCIONAR: "Seleccionar",
@@ -194,34 +203,22 @@ var text_es = {
   UNITARIO:"Unitario",
   NO_HAY_DATOS_REDIRIGIR:"No hay datos para mostrar, será redirigido al menú anterior",
 
-
-
-
-
-
-
-
   /*
     contrato_detalle.html
     */
-    INFORMACION_CONTRATO: "Información Vinculación",   
-    VIGENCIA: "Vigencia",
-    FORMA_PAGO: "Forma de pago",  
+    INFORMACION_CONTRATO: "Información Vinculación",
+    FORMA_PAGO: "Forma de pago",
     SEDE_SOLICITANTE: "Sede solicitante",
     NUMERO_CDP: "Número de CDP",
     NUMERO_NECESIDAD: "Número de necesidad",
     OBJETO_CDP: "Objeto del CDP",
     JUSTIFICACION: "Justificación",
     DESCRIPCION_FORMA_PAGO: "Descripción forma de pago",
-    UNIDAD_EJECUTORA: "Unidad ejecutora",
-    MARCO_LEGAL: "Marco legal",
-    OBJETO: "Objeto",
     OBSERVACIONES: "Observaciones",
     /*
     Contrato_resumen.html
     */
     DOCENTES_CONTRATADOS: "Docentes contratados - periodo actual",
-    NOMBRE: "Nombre",
     CEDULA: "Cédula",
     EXPEDICION: "Expedida",
     CATEGORIA: "Categoría",
@@ -266,10 +263,9 @@ var text_es = {
     PROYECTO_CURRICULAR: "Proyecto curricular",
     NUMERO_SEMANAS: "Número de semanas",
     NUMERO_HORAS_SEMANALES: "Número de horas semanales",
-    DEDICACION: "Dedicación",
     DOCENTE_PLANTA: "Docente de planta",
     DOCENTE_VINCULADOS: "Docentes vinculados",
-    
+
     /*
     Informacion_personal.html
     */
@@ -284,7 +280,7 @@ var text_es = {
     ESTADO_CIVIL: "Estado civil",
     /*
     persona_natural_detalle.html
-    */    
+    */
     INFORMACION_PERSONA_NATURAL: "Información persona natural",
     CIUDAD_EXPEDICION: "Ciudad de expedición",
     GENERO: "Genero",
@@ -320,19 +316,7 @@ var text_es = {
     NOMBRE_INVESTIGACION: "Nombre de la investigación",
     AREA_INVESTIGACION: "Área de la investigación",
     TIPO_INVESTIGACION: "Tipos de investigación",
-    /*
-    resolucion_lista.html
-    */
-    BTN: {
-      CREAR_RESOLUCION: "Crear nueva resolución de vinculación especial",
-      GENERAR_RESOLUCION: "Generar Resolución",
-      REALIZAR_EXPEDICION: "Realizar expedición de la resolución con los datos introducidos",
-      INFORMACION_PERSONA_NATURAL: "Información persona natural",
-      VINCULAR_DOCENTES_SELECCIONADOS: "Vincular docentes seleccionados a la resolución",
-      FORMACION_ACADEMICA: "Formación académica",      
-      EXPERIENCIA_LABORAL_DOCENTE: "Experiencia laboral docente",
-      TRABAJOS_INVESTIGACION: "Trabajos de investigación",
-    },     
+
     /*
     Scrits
     Hoja de vida seleccion.js
@@ -408,7 +392,7 @@ var text_es = {
 
     TREINTA: "TREINTA",
     CUARENTA: "CUARENTA",
-    CINCUENTA: "CINCUENTA", 
+    CINCUENTA: "CINCUENTA",
     SESENTA: "SESENTA",
     SETENTA: "SETENTA",
     OCHENTA: "OCHENTA",
@@ -423,9 +407,9 @@ var text_es = {
     SETECIENTOS: "SETECIENTOS ",
     OCHOCIENTOS: "OCHOCIENTOS ",
     NOVECIENTOS: "NOVECIENTOS ",
-    UN_MIL: "UN MIL", 
+    UN_MIL: "UN MIL",
     MIL: "MIL",
-    UN_MILLON: "UN MILLON", 
+    UN_MILLON: "UN MILLON",
     MILLONES: "MILLONES",
     PESOS: "PESOS",
     PESO: "PESO",
@@ -435,13 +419,12 @@ var text_es = {
     /*
     resolucion_lista.js
     */
-    VISTA_PREVIA_RESOLUCION: "Vista previa de la resolución",    
+    VISTA_PREVIA_RESOLUCION: "Vista previa de la resolución",
     NIVEL: "Nivel",
     /*
     contrato_registro.js
     */
     NO_CALCULADO_SALARIO: "El salario no ha podido ser calculado",
-    NUMERO: "Número",
     EXPEDIR: "¿Expedir la resolución?",
     SEGURO_EXPEDIR: "¿Esta seguro que desea expedir la resolución?",
     EXPEDICION_NO_REALIZADA: "No se ha realizado la expedición de la resolución",
@@ -450,7 +433,7 @@ var text_es = {
     PROBLEMA_EXPEDICION: "Se ha presentado un problema en la expedición de la resolución",
     PROBLEMA_DOCENTE_CONTRATADOS: "Se ha presentado un problema en el registro de los datos de los docentes contratados",
     NO_DOCENTES: "No hay docentes inscritos dentro de la resolución",
-    
+
     /*
     resolucion_detalle.js
     */
@@ -461,7 +444,7 @@ var text_es = {
     GUARDADO: "Guardado",
     GUARDADO_EXITO: "Los cambios se han guardado exitosamente",
     PROBLEMA_ALMACENAMIENTO: "Ha habido un problema en el almacenamiento de los cambios",
-    REVISE_DATOS_RESOLUCION: "Revise los datos de la resolución",    
+    REVISE_DATOS_RESOLUCION: "Revise los datos de la resolución",
     /*
     resolucion_administracion.js
     */
@@ -499,12 +482,21 @@ var text_en = {
     APROBAR: "Approbe",
     RECHAZAR: "Reject",
     SOLICITAR_CDP: "CDP Request",
-    VER_SEGUIMIENTO_FINANCIERO:"See financial monitoring"
+    VER_SEGUIMIENTO_FINANCIERO:"See financial monitoring",
+    CREAR_RESOLUCION: "Create new special entailment resolution",
+    GENERAR_RESOLUCION: "Generate Resolution",
+    REALIZAR_EXPEDICION: "Issue the resolution with the data entered",
+    INFORMACION_PERSONA_NATURAL: "Information natural person",
+    VINCULAR_DOCENTES_SELECCIONADOS: "Entailment selected teachers to resolution",
+    FORMACION_ACADEMICA: "Academic training",
+    EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
+    TRABAJOS_INVESTIGACION: "Investigation work",
   },
   SELECCIONAR: "Select",
   NECESIDADES: "Needs",
   NECESIDAD: "Need",
   //SOLICITUD RP
+  RP_MASIVO: "Is this for a masive budget register request?",
   ERROR: "Error",
   SALIR:"Exit",
   VOLVER_CONTRATOS: "Back to contracts",
@@ -670,18 +662,10 @@ var text_en = {
   TOTAL:"Total",
   UNITARIO:"Unit",
   NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu",
-
-
-
-
-
-
-
   /*
     contrato_detalle.html
     */
     INFORMACION_CONTRATO: "Entailment information",
-    VIGENCIA: "Validity",
     FORMA_PAGO: "Way to pay",
     SEDE_SOLICITANTE: "Applicant seat",
     NUMERO_CDP: "Number of CDP",
@@ -689,15 +673,11 @@ var text_en = {
     OBJETO_CDP: "Purpose of the CDP",
     JUSTIFICACION: "Justification",
     DESCRIPCION_FORMA_PAGO: "Description of payment method",
-    UNIDAD_EJECUTORA: "Executrix unit",
-    MARCO_LEGAL: "Legal framework",
-    OBJETO: "Object",
     OBSERVACIONES: "Observations",
     /*
     Contrato_resumen.html
     */
     DOCENTES_CONTRATADOS: "Teachers hired - current period",
-    NOMBRE: "Name",
     CEDULA: "Identification card",
     EXPEDICION: "Issued",
     CATEGORIA: "Category",
@@ -742,10 +722,9 @@ var text_en = {
     PROYECTO_CURRICULAR: "Curricular project",
     NUMERO_SEMANAS: "Number of weeks",
     NUMERO_HORAS_SEMANALES: "Number of hours per week",
-    DEDICACION: "Dedication",
     DOCENTE_PLANTA: "Plant teacher",
     DOCENTE_VINCULADOS: "Entailment professors",
-    
+
     /*
     Informacion_personal.html
     */
@@ -760,7 +739,7 @@ var text_en = {
     ESTADO_CIVIL: "Civil status",
     /*
     persona_natural_detalle.html
-    */    
+    */
     INFORMACION_PERSONA_NATURAL: "Information natural person",
     CIUDAD_EXPEDICION: "Expedition city",
     GENERO: "Gender",
@@ -796,19 +775,6 @@ var text_en = {
     NOMBRE_INVESTIGACION: "Name of research",
     AREA_INVESTIGACION: "Area of research",
     TIPO_INVESTIGACION: "Types of research",
-    /*
-    resolucion_lista.html
-    */
-    BTN: {
-      CREAR_RESOLUCION: "Create new special entailment resolution",
-      GENERAR_RESOLUCION: "Generate Resolution",
-      REALIZAR_EXPEDICION: "Issue the resolution with the data entered",
-      INFORMACION_PERSONA_NATURAL: "Information natural person",
-      VINCULAR_DOCENTES_SELECCIONADOS: "Entailment selected teachers to resolution",
-      FORMACION_ACADEMICA: "Academic training",
-      EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
-      TRABAJOS_INVESTIGACION: "Investigation work",
-    },    
     /*
     Scrits
     Hoja de vida seleccion.js
@@ -886,7 +852,7 @@ var text_en = {
 
     TREINTA: "THIRTY ",
     CUARENTA: "FORTY ",
-    CINCUENTA: "FIFTY ", 
+    CINCUENTA: "FIFTY ",
     SESENTA: "SIXTY ",
     SETENTA: "SEVENTY ",
     OCHENTA: "EGHTY ",
@@ -902,9 +868,9 @@ var text_en = {
     OCHOCIENTOS: "EIGHT HUNDRED ",
     NOVECIENTOS: "NINE HUNDRED ",
 
-    UN_MIL: "ONE THOUSAND", 
+    UN_MIL: "ONE THOUSAND",
     MIL: "THOUSAND",
-    UN_MILLON: "ONE MILLION", 
+    UN_MILLON: "ONE MILLION",
     MILLONES: " MILLION ",
     PESOS: "PESOS",
     PESO: "PESO",
@@ -921,7 +887,6 @@ var text_en = {
     contrato_registro.js
     */
     NO_CALCULADO_SALARIO: "The salary could not be calculated",
-    NUMERO: "Number",
     EXPEDIR: "Issue the resolution?",
     SEGURO_EXPEDIR: "Are you sure you want to issue the resolution?",
     EXPEDICION_NO_REALIZADA: "No issuance of the resolution",
@@ -941,7 +906,7 @@ var text_en = {
     GUARDADO: "Saved",
     GUARDADO_EXITO: "Changes saved successfully",
     PROBLEMA_ALMACENAMIENTO: "There was a problem storing changes",
-    REVISE_DATOS_RESOLUCION: "Review the resolution data",    
+    REVISE_DATOS_RESOLUCION: "Review the resolution data",
     /*
     resolucion_administracion.js
     */
@@ -951,7 +916,7 @@ var text_en = {
     PREGUNTA_RESTAURAR: "Restore resolution?",
     CANCELAR_RESOLUCION: "Cancel the resolution?",
     OPCIONES: "Options",
-    VER_BTN: "See",    
+    VER_BTN: "See",
     EDITAR_BTN: "Edit",
     CONFIGURAR_BTN: "Set up",
     EXPEDIR_BTN: "Issue",
@@ -962,7 +927,7 @@ var text_en = {
     */
     DOCENTES_CONTRATADOS_ACTUAL: "TEACHERS CONTRACTED - CURRENT PERIOD",
 
-  
+
 };
 
 angular.module('contractualClienteApp')

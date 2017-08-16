@@ -186,15 +186,17 @@
         </div>
 
         <div class="col-sm-12">
-          <div class="col-sm-5">
-            <h4>¿Es para una solicitud de registro presupuestal masiva?</h4>
+          <div class="col-sm-7">
+            <h4>{{'RP_MASIVO' | translate}}</h4>
           </div>
           <br>
           <div class="radio-inline col-sm-1">
-            <label><input type="radio" name="optradiosi">Si</label>
-          </div>
-          <div class="radio-inline col-sm-1">
-            <label><input type="radio" name="optradiono">No</label>
+            <md-radio-group ng-model="rpSolicitud.masivo_seleccion">
+               <md-radio-button ng-repeat="masivo in rpSolicitud.masivo_radio" ng-value="masivo.valor">
+                 {{masivo.nombre}}
+               </md-radio-button>
+            </md-radio-group>
+
           </div>
         </div>
         </div>

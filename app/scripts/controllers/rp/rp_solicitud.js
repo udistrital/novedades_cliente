@@ -23,6 +23,19 @@ angular.module('contractualClienteApp')
     self.rubros_seleccionados = [];
     self.rubros_select = [];
     self.responsable = "";
+    self.masivo_seleccion = false;
+
+    self.masivo_radio = {
+      0:{
+        nombre : "Si",
+        valor: true
+      },
+      1:{
+        nombre : "No",
+        valor: false
+      }
+    };
+
     self.dep_ned = {
       JefeDependenciaSolicitante: 18
     };
