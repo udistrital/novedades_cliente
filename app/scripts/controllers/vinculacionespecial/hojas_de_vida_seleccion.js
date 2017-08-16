@@ -239,7 +239,7 @@ angular.module('contractualClienteApp')
             //El nombre completo se guarda en una sola variable
             row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
             //Se calcula el valor del contrato para cada docente
-            adminMidRequest.get("calculo_salario/Contratacion/"+row.Id).then(function(response){
+            adminMidRequest.post("calculo_salario/Precontratacion/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+row.Documento+"/"+row.Semanas+"/"+row.HorasSemanales+"/"+row.Categoria.toLowerCase()+"/"+row.Dedicacion.toLowerCase()).then(function(response){
               row.ValorContrato=self.FormatoNumero(response.data,0);
             });          
           });
@@ -287,6 +287,7 @@ angular.module('contractualClienteApp')
       administrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
           if(typeof(response.data)=="object"){
             self.cargarDatosPrecontratados();
+            self.persona=null;
             self.cargarDatosPersonas();
           }else{
             swal({
@@ -359,12 +360,18 @@ angular.module('contractualClienteApp')
     }
 
     self.registrarContratos = function(){
-      var advertenciaVisualizada=false;
+      var docentesPreinscritos=false;
+      var auxContador=0;
       if(self.datosValor.proyectoCurricular && self.datosValor.NumSemanas && self.datosValor.NumHorasSemanales && self.datosValor.dedicacion){
         self.personasSeleccionadas.forEach(function(personaSeleccionada){
           administrativaRequest.get("precontratado/"+self.idResolucion.toString()+"/"+personaSeleccionada.Id).then(function(response){
-            if(response.data && !advertenciaVisualizada){
-              advertenciaVisualizada=true;
+            if(response.data){
+              docentesPreinscritos=true;
+              auxContador++;
+            }else{
+              auxContador++;
+            }
+            if(auxContador==self.personasSeleccionadas.length && docentesPreinscritos){
               swal({
                 text: $translate.instant('REGISTRAR_CONTRATOS'),
                 type: 'warning',
@@ -377,7 +384,7 @@ angular.module('contractualClienteApp')
                 cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false
               }).then(function () {
-                self.validarContratos()
+                self.validarContratos();
               }, function (dismiss) {
                 if (dismiss === 'cancel') {
                   swal(
@@ -387,10 +394,8 @@ angular.module('contractualClienteApp')
                   )
                 }
               }) 
-            }else{
-              if(personaSeleccionada.Id==self.persona.Id && !advertenciaVisualizada){
-                self.validarContratos()
-              }
+            }else if(auxContador==self.personasSeleccionadas.length && !docentesPreinscritos){
+              self.validarContratos();
             }
           })
         })
