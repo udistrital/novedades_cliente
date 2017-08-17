@@ -204,7 +204,6 @@ var text_es = {
   NO_HAY_DATOS_REDIRIGIR:"No hay datos para mostrar, será redirigido al menú anterior",
 
   /*
-<<<<<<< HEAD
     contrato_detalle.html
     */
     INFORMACION_CONTRATO: "Información Vinculación",
@@ -227,7 +226,7 @@ var text_es = {
     HORAS_SEMANALES: "Horas semanales",
     PERIODO_VINCULACION: "Periodo vinculación",
     VALOR_CONTRATO: "Valor del contrato",
-=======
+/*
   contrato_detalle.html
   */
   INFORMACION_CONTRATO: "Información Vinculación",
@@ -255,14 +254,12 @@ var text_es = {
   HORAS_SEMANALES: "Horas semanales",
   PERIODO_VINCULACION: "Periodo vinculación",
   VALOR_CONTRATO: "Valor del contrato",
->>>>>>> 2de31ef4eea5374d09168e4d537462167fdb5f2d
   /*
   Contrato_registro.html
   */
   DATOS_BASICOS: "Información básica del contrato",
   DISPONIBILIDAD: "Disponibilidad",
   JUSTIFICACION_Y_OBSERVACIONES: "Justificación y observaciones",
-<<<<<<< HEAD
     /*
     Experiencia_laboral_detalle.html
     */
@@ -312,7 +309,7 @@ var text_es = {
     /*
     persona_natural_detalle.html
     */
-=======
+
   /*
   Experiencia_laboral_detalle.html
   */
@@ -405,13 +402,11 @@ var text_es = {
     CREAR_RESOLUCION: "Crear nueva resolución de vinculación especial",
     GENERAR_RESOLUCION: "Generar Resolución",
     REALIZAR_EXPEDICION: "Realizar expedición de la resolución con los datos introducidos",
->>>>>>> 2de31ef4eea5374d09168e4d537462167fdb5f2d
     INFORMACION_PERSONA_NATURAL: "Información persona natural",
     VINCULAR_DOCENTES_SELECCIONADOS: "Vincular docentes seleccionados a la resolución",
     FORMACION_ACADEMICA: "Formación académica",
     EXPERIENCIA_LABORAL_DOCENTE: "Experiencia laboral docente",
     TRABAJOS_INVESTIGACION: "Trabajos de investigación",
-<<<<<<< HEAD
     NOMBRE_INVESTIGACION: "Nombre de la investigación",
     AREA_INVESTIGACION: "Área de la investigación",
     TIPO_INVESTIGACION: "Tipos de investigación",
@@ -563,7 +558,6 @@ var text_es = {
     contrato_resumen.html
     */
     DOCENTES_CONTRATADOS_ACTUAL: "DOCENTES CONTRATADOS - PERIODO ACTUAL",
-=======
   },
   /*
   Scrits
@@ -619,7 +613,6 @@ var text_es = {
   TRECE: "TRECE",
   CATORCE: "CATORCE",
   QUINCE: "QUINCE",
->>>>>>> 2de31ef4eea5374d09168e4d537462167fdb5f2d
 
   DIECISEIS: "DIECISEIS",
   DIECISIETE: "DIECISIETE",
@@ -946,7 +939,6 @@ var text_en = {
   UNITARIO:"Unit",
   NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu",
   /*
-<<<<<<< HEAD
     contrato_detalle.html
     */
     INFORMACION_CONTRATO: "Entailment information",
@@ -970,7 +962,6 @@ var text_en = {
     PERIODO_VINCULACION: "Entailment period",
     VALOR_CONTRATO: "Value of contract",
     /*
-=======
   contrato_detalle.html
   */
   INFORMACION_CONTRATO: "Entailment information",
@@ -999,13 +990,11 @@ var text_en = {
   PERIODO_VINCULACION: "Entailment period",
   VALOR_CONTRATO: "Value of contract",
   /*
->>>>>>> 2de31ef4eea5374d09168e4d537462167fdb5f2d
   Contrato_registro.html
   */
   DATOS_BASICOS: "Basic contract information",
   DISPONIBILIDAD: "Availability",
   JUSTIFICACION_Y_OBSERVACIONES: "Justification and observations",
-<<<<<<< HEAD
     /*
     Experiencia_laboral_detalle.html
     */
@@ -1055,7 +1044,6 @@ var text_en = {
     /*
     persona_natural_detalle.html
     */
-=======
   /*
   Experiencia_laboral_detalle.html
   */
@@ -1148,13 +1136,11 @@ var text_en = {
     CREAR_RESOLUCION: "Create new special entailment resolution",
     GENERAR_RESOLUCION: "Generate Resolution",
     REALIZAR_EXPEDICION: "Issue the resolution with the data entered",
->>>>>>> 2de31ef4eea5374d09168e4d537462167fdb5f2d
     INFORMACION_PERSONA_NATURAL: "Information natural person",
     VINCULAR_DOCENTES_SELECCIONADOS: "Entailment selected teachers to resolution",
     FORMACION_ACADEMICA: "Academic training",
     EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
     TRABAJOS_INVESTIGACION: "Investigation work",
-<<<<<<< HEAD
     NOMBRE_INVESTIGACION: "Name of research",
     AREA_INVESTIGACION: "Area of research",
     TIPO_INVESTIGACION: "Types of research",
@@ -1309,9 +1295,6 @@ var text_en = {
     contrato_resumen.html
     */
     DOCENTES_CONTRATADOS_ACTUAL: "TEACHERS CONTRACTED - CURRENT PERIOD",
-
-
-=======
   },
   /*
   Scrits
@@ -1499,7 +1482,6 @@ var text_en = {
   GESTION_PLANTILLA: "Options",
   DEPENDENCIA: "Unit",
   FILTRAR_POR: "Search By"
->>>>>>> 2de31ef4eea5374d09168e4d537462167fdb5f2d
 };
 
 angular.module('contractualClienteApp')

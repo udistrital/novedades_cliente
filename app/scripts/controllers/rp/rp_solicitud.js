@@ -24,7 +24,8 @@ angular.module('contractualClienteApp')
     self.rubros_select = [];
     self.responsable = "";
     self.masivo_seleccion = false;
-
+    var Solicitud_id;
+    var solicitud_datos;
     self.masivo_radio = {
       0:{
         nombre : "Si",
@@ -251,7 +252,6 @@ self.gridOptions_cdp.multiSelect = false;
 
     $scope.saldosValor = function() {
       $scope.banderaRubro = true;
-      console.log(self.rubros_seleccionados);
       angular.forEach(self.rubros_seleccionados, function(v) {
         if (v.Valor < v.ValorAsignado || v.ValorAsignado===0 || isNaN(v.ValorAsignado) || v.ValorAsignado === undefined) {
           $scope.banderaRubro = false;
@@ -285,37 +285,44 @@ self.gridOptions_cdp.multiSelect = false;
           self.rubros_seleccionados[i].ValorAsignado = parseFloat(self.rubros_seleccionados[i].ValorAsignado);
         }
 
-        var SolicitudRp = {
+        var Solicitud_rp = {
           Vigencia: 2017,
           FechaSolicitud: self.CurrentDate,
           Cdp: self.cdp.Id,
           Expedida: false,
           NumeroContrato: self.contrato.Id,
           VigenciaContrato: self.contrato.Vigencia.toString(),
-          Compromiso: self.compromiso.Id
+          Compromiso: self.compromiso.Id,
+          Justificacion_rechazo: 0,
+          Masivo : self.masivo_seleccion
         };
 
-        console.log(SolicitudRp);
-
-          administrativaRequest.post('solicitud_rp', SolicitudRp).then(function(response) {
-            console.log("respuesta");
-            console.log(response);
+          administrativaRequest.post('solicitud_rp', Solicitud_rp).then(function(response) {
+            Solicitud_id = response.data;
+            console.log(dia+" "+mes+" "+ano);
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
               var Disponibilidad_apropiacion_solicitud_rp = {
                 DisponibilidadApropiacion: self.rubros_seleccionados[i].Id,
-                SolicitudRp: response.data.Id,
+                SolicitudRp : Solicitud_id,
                 Monto: self.rubros_seleccionados[i].ValorAsignado,
               };
-
               administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
               });
             }
 
+            administrativaRequest.get('solicitud_rp','query=Id:'+Solicitud_id).then(function(response){
+              solicitud_datos = response.data[0];
+              console.log(solicitud_datos.FechaSolicitud);
+              var fecha = new Date(solicitud_datos.FechaSolicitud);
+              dia = fecha.getDate()+1;
+              mes = fecha.getMonth()+1;
+              ano = fecha.getFullYear();
+              var fecha_solicitud = dia +"/"+mes+"/"+ano;
             swal({
               html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
-              +response.data.Id+"<br><label><b>"+$translate.instant('VIGENCIA_SOLICITUD')+":</b></label> " + response.data.Vigencia + "<br><label><b>"+$translate.instant('FECHA_SOLICITUD')+":</b></label>:"
-              +" "+ dia+"/"+ mes+"/" + ano + "<br><label><b>"+$translate.instant('NUMERO_CONTRATO')+":</b></label>" + response.data.NumeroContrato + "<br><label><b>"+$translate.instant('VIGENCIA_CONTRATO')+":</b></label>"
-              + response.data.VigenciaContrato,
+              +solicitud_datos.Id+"<br><label><b>"+$translate.instant('VIGENCIA_SOLICITUD')+":</b></label> " + solicitud_datos.Vigencia + "<br><label><b>"+$translate.instant('FECHA_SOLICITUD')+":</b></label>:"
+              +fecha_solicitud+ "<br><label><b>"+$translate.instant('NUMERO_CONTRATO')+":</b></label>" + solicitud_datos.NumeroContrato + "<br><label><b>"+$translate.instant('VIGENCIA_CONTRATO')+":</b></label>"
+              + solicitud_datos.VigenciaContrato,
               type: "success",
               showCancelButton: true,
               confirmButtonColor: "#449D44",
@@ -332,8 +339,9 @@ self.gridOptions_cdp.multiSelect = false;
                 $window.location.href = '#';
               }
             });
-
+            });
           });
+
       }
     };
 
