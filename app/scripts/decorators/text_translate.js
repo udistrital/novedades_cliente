@@ -8,7 +8,6 @@
 * Decorator of the contractualClienteApp
 */
 var text_es = {
-  BTN: {
     VER: "Ver",
     SELECCIONAR: "Seleccionar",
     CANCELAR: "Cancelar",
@@ -29,11 +28,9 @@ var text_es = {
     FORMACION_ACADEMICA: "Formación académica",
     EXPERIENCIA_LABORAL_DOCENTE: "Experiencia laboral docente",
     TRABAJOS_INVESTIGACION: "Trabajos de investigación",
-  },
   RP_MASIVO: "¿Es para una solicitud de registro presupuestal masiva?",
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
-  SELECCIONAR: "Seleccionar",
   //solicitud_necesidad
   NECESIDADES: "Necesidades",
   NECESIDAD: "Necesidad",
@@ -85,7 +82,6 @@ var text_es = {
   //lista_documentos_legales
   MARCO_LEGAL: "Marco Legal",
   NOMBRE_DOCUMENTO: "Nombre del Documento",
-  VER: "Ver",
   //lista_actividades_economicas
   ACTIVIDADES_ECONOMICAS: "Actividades Económicas",
   //lista_subgrupos_catalogos
@@ -226,34 +222,6 @@ var text_es = {
     HORAS_SEMANALES: "Horas semanales",
     PERIODO_VINCULACION: "Periodo vinculación",
     VALOR_CONTRATO: "Valor del contrato",
-/*
-  contrato_detalle.html
-  */
-  INFORMACION_CONTRATO: "Información Vinculación",
-  VIGENCIA: "Vigencia",
-  FORMA_PAGO: "Forma de pago",
-  SEDE_SOLICITANTE: "Sede solicitante",
-  NUMERO_CDP: "Número de CDP",
-  NUMERO_NECESIDAD: "Número de necesidad",
-  OBJETO_CDP: "Objeto del CDP",
-  JUSTIFICACION: "Justificación",
-  DESCRIPCION_FORMA_PAGO: "Descripción forma de pago",
-  UNIDAD_EJECUTORA: "Unidad ejecutora",
-  MARCO_LEGAL: "Marco legal",
-  OBJETO: "Objeto",
-  OBSERVACIONES: "Observaciones",
-  /*
-  Contrato_resumen.html
-  */
-  DOCENTES_CONTRATADOS: "Docentes contratados - periodo actual",
-  NOMBRE: "Nombre",
-  CEDULA: "Cédula",
-  EXPEDICION: "Expedida",
-  CATEGORIA: "Categoría",
-  DEDICACION: "Dedicación",
-  HORAS_SEMANALES: "Horas semanales",
-  PERIODO_VINCULACION: "Periodo vinculación",
-  VALOR_CONTRATO: "Valor del contrato",
   /*
   Contrato_registro.html
   */
@@ -277,7 +245,6 @@ var text_es = {
     /*
     formacion_academica.html
     */
-    FORMACION_ACADEMICA: "Formación académica",
     NOMBRE_PROYECTO: "Nombre del proyecto",
     AREA_CONOCIMIENTO: "Área del conocimiento",
     TITULO_DOCENTE: "Título",
@@ -306,61 +273,10 @@ var text_es = {
     SEGUNDO_APELLIDO: "Segundo apellido",
     PAIS_NACIMIENTO: "País de nacimiento",
     ESTADO_CIVIL: "Estado civil",
-    /*
-    persona_natural_detalle.html
-    */
 
-  /*
-  Experiencia_laboral_detalle.html
-  */
-  EXPERIENCIA_LABORAL_DOCENTE: "Experiencia laboral docente",
-  TIPO_ACTIVIDAD: "Tipo de actividad",
-  CAMPO_ENSEÑANZA: "Campo de enseñanza",
-  INICIO: "Inicio",
-  FINALIZACION: "Finalización",
-  INSTITUCION: "Institución",
-  PAIS: "País",
-  DEPARTAMENTO: "Departamento",
-  MUNICIPIO: "Municipio",
-  LOCALIDAD: "Localidad",
-  TIPO_DEDICACION: "Tipo de dedicación",
-  /*
-  formacion_academica.html
-  */
-  FORMACION_ACADEMICA: "Formación académica",
-  NOMBRE_PROYECTO: "Nombre del proyecto",
-  AREA_CONOCIMIENTO: "Área del conocimiento",
-  TITULO_DOCENTE: "Título",
-  /*
-  hojas_vida_seleccion.html
-  */
-  HOJAS_VIDA: "Hojas de vida",
-  HOJAS_VIDA_INSCRITAS: "Hojas de vida inscritas",
-  INFORMACION_BASICA_CONTRATO: "Información  básica del contrato",
-  TENGA_CUENTA: "Tenga en cuenta",
-  PROYECTO_CURRICULAR: "Proyecto curricular",
-  NUMERO_SEMANAS: "Número de semanas",
-  NUMERO_HORAS_SEMANALES: "Número de horas semanales",
-  DEDICACION: "Dedicación",
-  DOCENTE_PLANTA: "Docente de planta",
-  DOCENTE_VINCULADOS: "Docentes vinculados",
-
-  /*
-  Informacion_personal.html
-  */
-  INFORMACION_PERSONAL: "Información personal",
-  DOCUMENTO: "Documento",
-  FECHA_EXPEDICION: "Fecha de expedición",
-  PRIMER_NOMBRE: "Primer nombre",
-  SEGUNDO_NOMBRE: "Segundo nombre",
-  PRIMER_APELLIDO: "Primer apellido",
-  SEGUNDO_APELLIDO: "Segundo apellido",
-  PAIS_NACIMIENTO: "País de nacimiento",
-  ESTADO_CIVIL: "Estado civil",
   /*
   persona_natural_detalle.html
   */
-  INFORMACION_PERSONA_NATURAL: "Información persona natural",
   CIUDAD_EXPEDICION: "Ciudad de expedición",
   GENERO: "Genero",
   /*
@@ -391,25 +307,9 @@ var text_es = {
   /*
   trabajos_investigacion.html
   */
-  TRABAJOS_INVESTIGACION: "Trabajos de investigación",
   NOMBRE_INVESTIGACION: "Nombre de la investigación",
   AREA_INVESTIGACION: "Área de la investigación",
   TIPO_INVESTIGACION: "Tipos de investigación",
-  /*
-  resolucion_lista.html
-  */
-  BTN: {
-    CREAR_RESOLUCION: "Crear nueva resolución de vinculación especial",
-    GENERAR_RESOLUCION: "Generar Resolución",
-    REALIZAR_EXPEDICION: "Realizar expedición de la resolución con los datos introducidos",
-    INFORMACION_PERSONA_NATURAL: "Información persona natural",
-    VINCULAR_DOCENTES_SELECCIONADOS: "Vincular docentes seleccionados a la resolución",
-    FORMACION_ACADEMICA: "Formación académica",
-    EXPERIENCIA_LABORAL_DOCENTE: "Experiencia laboral docente",
-    TRABAJOS_INVESTIGACION: "Trabajos de investigación",
-    NOMBRE_INVESTIGACION: "Nombre de la investigación",
-    AREA_INVESTIGACION: "Área de la investigación",
-    TIPO_INVESTIGACION: "Tipos de investigación",
 
     /*
     Scrits
@@ -427,7 +327,6 @@ var text_es = {
     DOCUMENTO_ID: "DOCUMENTO",
     REGISTRAR_CONTRATOS: "Existen docentes con una vinculacion asociada a la resolución actual, ¿desea continuar con la vinculacion?",
     AGREGAR_CONTRATO: "Agregar nuevo contrato",
-    CANCELAR: "Cancelar",
     CANCELADO: "Cancelado",
     REGISTRO_CANCELADO: "El registro ha sido cancelado",
     PREGUNTA_SEGURO: "¿Está seguro?",
@@ -558,155 +457,7 @@ var text_es = {
     contrato_resumen.html
     */
     DOCENTES_CONTRATADOS_ACTUAL: "DOCENTES CONTRATADOS - PERIODO ACTUAL",
-  },
-  /*
-  Scrits
-  Hoja de vida seleccion.js
-  */
-  ALERTA: "Alerta",
-  ACEPTAR: "Aceptar",
-  MENSAJE_ERROR: "No se han podido encontrar datos de la persona seleccionada",
-  NUMERO_VINCULACIONES: "Número de vinculaciones realizadas: ",
-  VALOR_CONTRATO_FORMATO: "Valor del contrato: $",
-  MONEDA_CORRIENTE: " (Moneda corriente: ",
-  SALARIO_NO_CALCULADO1: "El salario de ",
-  SALARIO_NO_CALCULADO2: " no ha podido ser calculado",
-  VALIDAR_CONTRATO: "Los valores asignados no son validos para la resolución actual, por favor remitarse a la pestaña tenga en cuenta para poder ver las reglas.",
-  DOCUMENTO_ID: "DOCUMENTO",
-  REGISTRAR_CONTRATOS: "Existen docentes con una vinculacion asociada a la resolución actual, ¿desea continuar con la vinculacion?",
-  AGREGAR_CONTRATO: "Agregar nuevo contrato",
-  CANCELAR: "Cancelar",
-  CANCELADO: "Cancelado",
-  REGISTRO_CANCELADO: "El registro ha sido cancelado",
-  PREGUNTA_SEGURO: "¿Está seguro?",
-  CONFIRMAR_DESVINCULACION: "Desea confirmar la desvinculación del docente",
-  DEVINCULAR_DOCENTE: "Desvincular docente",
-  DESVINCULACION_CANCELADA: "La desvinculación ha sido cancelada",
-  HCH: "Hora cátedra honorarios: ",
-  HCH1: "Entre 4 y 8 horas semanales.",
-  HCP: "Hora cátedra prestaciones: ",
-  HCP1: "Entre 8 y 16 horas semanales.",
-  MTO: "Medio tiempo ocasional: ",
-  MTO1: "Entre 16 y 20 horas semanales.",
-  TCO: "Tiempo completo ocasional: ",
-  TCO1: "Entre 24 y 40 horas semanales.",
-  SEMANAS: "Semanas",
-  REGLAS: "Reglas",
-  PROBLEMA: "Problem",
-  VER_INFO_PERSONAL_BTN: "Ver información personal",
-  VER_INFO_ACADEMICA: "Ver información académica",
-  VER_EXP_LABORAL: "Ver experiencia laboral",
-  VER_TRABAJOS_INVESTIGACION: "Ver trabajos de investigación",
-  BORRAR_BTN: "Borrar",
-  UN: "UN",
-  DOS: "DOS",
-  TRES: "TRES",
-  CUATRO: "CUATRO",
-  CINCO: "CINCO",
-  SEIS: "SEIS",
-  SIETE: "SIETE",
-  OCHO: "OCHO",
-  NUEVE: "NUEVE",
-  DIEZ: "DIEZ",
-  ONCE: "ONCE",
-  DOCE: "DOCE",
-  TRECE: "TRECE",
-  CATORCE: "CATORCE",
-  QUINCE: "QUINCE",
 
-  DIECISEIS: "DIECISEIS",
-  DIECISIETE: "DIECISIETE",
-  DIECIOCHO: "DIECIOCHO",
-  DIECINUEVE: "DIECINUEVE",
-
-
-  VEINTE: "VEINTE",
-
-  VEINTIUNO: "TWENTY ONE",
-  VEINTIDOS: "VEINTIUNO",
-  VEINTITRES: "VEINTITRES",
-  VEINTICUATRO: "VEINTICUATRO",
-  VEINTICINCO: "VEINTICINCO",
-  VEINTISEIS: "VEINTISEIS",
-  VEINTISIETE: "VEINTISIETE",
-  VEINTIOCHO: "VEINTIOCHO",
-  VEINTINUEVE: "VEINTINUEVE",
-
-  TREINTA: "TREINTA",
-  CUARENTA: "CUARENTA",
-  CINCUENTA: "CINCUENTA",
-  SESENTA: "SESENTA",
-  SETENTA: "SETENTA",
-  OCHENTA: "OCHENTA",
-  NOVENTA: "NOVENTA",
-  CIENTO: "CIENTO ",
-  CIEN: "CIEN",
-  DOSCIENTOS: "DOSCIENTOS ",
-  TRESCIENTOS: "TRESCIENTOS ",
-  CUATROCIENTOS: "CUATROCIENTOS ",
-  QUINIENTOS: "QUINIENTOS ",
-  SEISCIENTOS: "SEISCIENTOS ",
-  SETECIENTOS: "SETECIENTOS ",
-  OCHOCIENTOS: "OCHOCIENTOS ",
-  NOVECIENTOS: "NOVECIENTOS ",
-  UN_MIL: "UN MIL",
-  MIL: "MIL",
-  UN_MILLON: "UN MILLON",
-  MILLONES: "MILLONES",
-  PESOS: "PESOS",
-  PESO: "PESO",
-  CON: "CON",
-  CERO: "CERO",
-  Y: " Y ",
-  /*
-  resolucion_lista.js
-  */
-  VISTA_PREVIA_RESOLUCION: "Vista previa de la resolución",
-  NIVEL: "Nivel",
-  /*
-  contrato_registro.js
-  */
-  NO_CALCULADO_SALARIO: "El salario no ha podido ser calculado",
-  NUMERO: "Número",
-  EXPEDIR: "¿Expedir la resolución?",
-  SEGURO_EXPEDIR: "¿Esta seguro que desea expedir la resolución?",
-  EXPEDICION_NO_REALIZADA: "No se ha realizado la expedición de la resolución",
-  EXPEDIDA: "La resolución ha sido expedida con exito",
-  DATOS_REGISTRADOS: "Los datos de las vinculaciones realizadas han sido registradas con exito",
-  PROBLEMA_EXPEDICION: "Se ha presentado un problema en la expedición de la resolución",
-  PROBLEMA_DOCENTE_CONTRATADOS: "Se ha presentado un problema en el registro de los datos de los docentes contratados",
-  NO_DOCENTES: "No hay docentes inscritos dentro de la resolución",
-
-  /*
-  resolucion_detalle.js
-  */
-  ESCRIBA_TEXTO: "Escriba el texto del artículo",
-  DEBE_INSERTAR: "Debe insertar texto.",
-  ALMENOS_UNO: "La resolución debe tener al menos un artículo",
-  ESCRIBA_PARAGRAFO: "Escriba el texto del paragrafo",
-  GUARDADO: "Guardado",
-  GUARDADO_EXITO: "Los cambios se han guardado exitosamente",
-  PROBLEMA_ALMACENAMIENTO: "Ha habido un problema en el almacenamiento de los cambios",
-  REVISE_DATOS_RESOLUCION: "Revise los datos de la resolución",
-  /*
-  resolucion_administracion.js
-  */
-  NO_RESTAURACION_RESOLUCION: "No se ha realizado la restauración de la resolución",
-  NO_CANCELADA_PAGOS: "La resolucion no puede ser cancelada debido a que hay pagos asociados a las vinculaciones.",
-  NO_CANCELACION_RESOLUCION: "No se ha realizado la cancelación de la resolución.",
-  PREGUNTA_RESTAURAR: "¿Restaurar la resolución?",
-  CANCELAR_RESOLUCION: "¿Cancelar la resolución?",
-  OPCIONES: "Opciones",
-  VER_BTN: "Ver",
-  EDITAR_BTN: "Editar",
-  CONFIGURAR_BTN: "Configurar",
-  EXPEDIR_BTN: "Expedir",
-  CANCELAR_BTN: "Cancelar resolución",
-  RESTAURAR_BTN: "Restaurar resolución",
-  /*
-  contrato_resumen.html
-  */
-  DOCENTES_CONTRATADOS_ACTUAL: "DOCENTES CONTRATADOS - PERIODO ACTUAL",
 
   // Minutas Plantillas
   BTN_MINUTAS: {
@@ -726,14 +477,10 @@ var text_es = {
   TITULO_MINUTA: "Titulo de la Minuta",
   TIPO_CONTRATO: "Tipo Contrato",
   INTRODUCCION: "Introducción",
-  CONSIDERACION: "Consideración",
   FORMATO_MINUTA: "Información de la Minuta",
-  RESUELVE: "Resuelve",
   VISTA_PREVIA: "Vista previa",
   CLAUSULA: "Cláusula",
-  TITULO: "Titulo",
   DESCRIPCION: "Descripción",
-  PARAGRAFO: "Parágrafo",
   FORMATO_TEXTO: "Formato",
   FECHA_ACTIVACION: "Fecha de Activación",
   FECHA_INACTIVACION: "Fecha de Inactivación",
@@ -746,7 +493,6 @@ var text_es = {
 var text_en = {
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Now get to start to develop ...",
-  BTN: {
     VER: "See",
     SELECCIONAR: "Choose",
     CANCELAR: "Cancel",
@@ -767,8 +513,6 @@ var text_en = {
     FORMACION_ACADEMICA: "Academic training",
     EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
     TRABAJOS_INVESTIGACION: "Investigation work",
-  },
-  SELECCIONAR: "Select",
   NECESIDADES: "Needs",
   NECESIDAD: "Need",
   //SOLICITUD RP
@@ -829,7 +573,6 @@ var text_en = {
   //lista_documentos_legales
   MARCO_LEGAL: "Legal Framework",
   NOMBRE_DOCUMENTO: "Document Name",
-  VER: "Details",
   //lista_actividades_economicas
   ACTIVIDADES_ECONOMICAS: "Economic Activities",
   //lista_subgrupos_catalogos
@@ -854,7 +597,7 @@ var text_en = {
   SELECCIONE_UNA_VIGENCIA:"Choose a diferente validity",
   RESPONSABLE: "Person responsible",
   DATOS_APROPIACIONES: "Appropiation data",
-  MODALIDAD_SELECCION: "Selection method",
+  MODALIDAD_SELECCION: "Selection mefinancierothod",
   CONTRATO: "Contract",
   VIGENCIA_CONTRATO: "Contract validity",
   FUENTE:"Source",
@@ -961,34 +704,6 @@ var text_en = {
     HORAS_SEMANALES: "Weekly hours",
     PERIODO_VINCULACION: "Entailment period",
     VALOR_CONTRATO: "Value of contract",
-    /*
-  contrato_detalle.html
-  */
-  INFORMACION_CONTRATO: "Entailment information",
-  VIGENCIA: "Validity",
-  FORMA_PAGO: "Way to pay",
-  SEDE_SOLICITANTE: "Applicant seat",
-  NUMERO_CDP: "Number of CDP",
-  NUMERO_NECESIDAD: "Need number",
-  OBJETO_CDP: "Purpose of the CDP",
-  JUSTIFICACION: "Justification",
-  DESCRIPCION_FORMA_PAGO: "Description of payment method",
-  UNIDAD_EJECUTORA: "Executrix unit",
-  MARCO_LEGAL: "Legal framework",
-  OBJETO: "Object",
-  OBSERVACIONES: "Observations",
-  /*
-  Contrato_resumen.html
-  */
-  DOCENTES_CONTRATADOS: "Teachers hired - current period",
-  NOMBRE: "Name",
-  CEDULA: "Identification card",
-  EXPEDICION: "Issued",
-  CATEGORIA: "Category",
-  DEDICACION: "Dedication",
-  HORAS_SEMANALES: "Weekly hours",
-  PERIODO_VINCULACION: "Entailment period",
-  VALOR_CONTRATO: "Value of contract",
   /*
   Contrato_registro.html
   */
@@ -998,7 +713,6 @@ var text_en = {
     /*
     Experiencia_laboral_detalle.html
     */
-    EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
     TIPO_ACTIVIDAD: "Type of activity",
     CAMPO_ENSEÑANZA: "Field of instruction",
     INICIO: "Start",
@@ -1012,7 +726,6 @@ var text_en = {
     /*
     formacion_academica.html
     */
-    FORMACION_ACADEMICA: "Academic training",
     NOMBRE_PROYECTO: "Project's name",
     AREA_CONOCIMIENTO: "Area of knowledge",
     TITULO_DOCENTE: "Degree",
@@ -1041,60 +754,11 @@ var text_en = {
     SEGUNDO_APELLIDO: "Second surname",
     PAIS_NACIMIENTO: "Country of birth",
     ESTADO_CIVIL: "Civil status",
-    /*
-    persona_natural_detalle.html
-    */
-  /*
-  Experiencia_laboral_detalle.html
-  */
-  EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
-  TIPO_ACTIVIDAD: "Type of activity",
-  CAMPO_ENSEÑANZA: "Field of instruction",
-  INICIO: "Start",
-  FINALIZACION: "Ending",
-  INSTITUCION: "Institution",
-  PAIS: "Country",
-  DEPARTAMENTO: "Department",
-  MUNICIPIO: "Municipality",
-  LOCALIDAD: "Location",
-  TIPO_DEDICACION: "Type of dedication",
-  /*
-  formacion_academica.html
-  */
-  FORMACION_ACADEMICA: "Academic training",
-  NOMBRE_PROYECTO: "Project's name",
-  AREA_CONOCIMIENTO: "Area of knowledge",
-  TITULO_DOCENTE: "Degree",
-  /*
-  hojas_vida_seleccion.html
-  */
-  HOJAS_VIDA: "Resumes",
-  HOJAS_VIDA_INSCRITAS: "Resumes inscribed",
-  INFORMACION_BASICA_CONTRATO: "Basic contract information",
-  TENGA_CUENTA: "Keep in mind",
-  PROYECTO_CURRICULAR: "Curricular project",
-  NUMERO_SEMANAS: "Number of weeks",
-  NUMERO_HORAS_SEMANALES: "Number of hours per week",
-  DEDICACION: "Dedication",
-  DOCENTE_PLANTA: "Plant teacher",
-  DOCENTE_VINCULADOS: "Entailment professors",
 
-  /*
-  Informacion_personal.html
-  */
-  INFORMACION_PERSONAL: "Personal information",
-  DOCUMENTO: "Document",
-  FECHA_EXPEDICION: "Expedition date",
-  PRIMER_NOMBRE: "First name",
-  SEGUNDO_NOMBRE: "Second name",
-  PRIMER_APELLIDO: "Surname",
-  SEGUNDO_APELLIDO: "Second surname",
-  PAIS_NACIMIENTO: "Country of birth",
-  ESTADO_CIVIL: "Civil status",
+
   /*
   persona_natural_detalle.html
   */
-  INFORMACION_PERSONA_NATURAL: "Information natural person",
   CIUDAD_EXPEDICION: "Expedition city",
   GENERO: "Gender",
   /*
@@ -1125,25 +789,12 @@ var text_en = {
   /*
   trabajos_investigacion.html
   */
-  TRABAJOS_INVESTIGACION: "Investigation work",
   NOMBRE_INVESTIGACION: "Name of research",
   AREA_INVESTIGACION: "Area of research",
   TIPO_INVESTIGACION: "Types of research",
   /*
   resolucion_lista.html
   */
-  BTN: {
-    CREAR_RESOLUCION: "Create new special entailment resolution",
-    GENERAR_RESOLUCION: "Generate Resolution",
-    REALIZAR_EXPEDICION: "Issue the resolution with the data entered",
-    INFORMACION_PERSONA_NATURAL: "Information natural person",
-    VINCULAR_DOCENTES_SELECCIONADOS: "Entailment selected teachers to resolution",
-    FORMACION_ACADEMICA: "Academic training",
-    EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
-    TRABAJOS_INVESTIGACION: "Investigation work",
-    NOMBRE_INVESTIGACION: "Name of research",
-    AREA_INVESTIGACION: "Area of research",
-    TIPO_INVESTIGACION: "Types of research",
     /*
     Scrits
     Hoja de vida seleccion.js
@@ -1160,7 +811,6 @@ var text_en = {
     DOCUMENTO_ID: "DOCUMENT",
     REGISTRAR_CONTRATOS: "There are teachers with a link to the current resolution, do you want to continue with the entailment?",
     AGREGAR_CONTRATO: "Add new contract",
-    CANCELAR: "Cancel",
     CANCELADO: "Cancelled",
     REGISTRO_CANCELADO: "Registration has been canceled",
     PREGUNTA_SEGURO: "Are you sure?",
@@ -1250,7 +900,6 @@ var text_en = {
     resolucion_lista.js
     */
     VISTA_PREVIA_RESOLUCION: "Preview resolution",
-    CREAR_RESOLUCION: "Crear nueva resolución de vinculación especial",
     NIVEL: "Level",
     /*
     contrato_registro.js
@@ -1295,159 +944,6 @@ var text_en = {
     contrato_resumen.html
     */
     DOCENTES_CONTRATADOS_ACTUAL: "TEACHERS CONTRACTED - CURRENT PERIOD",
-  },
-  /*
-  Scrits
-  Hoja de vida seleccion.js
-  */
-  ALERTA: "Alert",
-  ACEPTAR: "Accept",
-  MENSAJE_ERROR: "Data could not be found for the selected person",
-  NUMERO_VINCULACIONES: "Number of entailments made: ",
-  VALOR_CONTRATO_FORMATO: "Value of contract: $",
-  MONEDA_CORRIENTE: " (Common currency: ",
-  SALARIO_NO_CALCULADO1: "The salary of ",
-  SALARIO_NO_CALCULADO2: " could not be calculated",
-  VALIDAR_CONTRATO: "The assigned values are not valid for the current resolution, please refer to the tab Keep in mind in order to see the rules.",
-  DOCUMENTO_ID: "DOCUMENT",
-  REGISTRAR_CONTRATOS: "There are teachers with a link to the current resolution, do you want to continue with the entailment?",
-  AGREGAR_CONTRATO: "Add new contract",
-  CANCELAR: "Cancel",
-  CANCELADO: "Cancelled",
-  REGISTRO_CANCELADO: "Registration has been canceled",
-  PREGUNTA_SEGURO: "Are you sure?",
-  CONFIRMAR_DESVINCULACION: "You wish to confirm the teacher's disengagement",
-  DEVINCULAR_DOCENTE: "Unveil teacher",
-  DESVINCULACION_CANCELADA: "Entailment has been canceled",
-  HCH: "Time chair professors: ",
-  HCH1: "Between 4 and 8 hours a week.",
-  HCP: "Benefits hour chair: ",
-  HCP1: "Between 8 and 16 hours a week.",
-  MTO: "Occasional half time: ",
-  MTO1: "Between 16 and 20 hours a week.",
-  TCO: "Casual Full Time: ",
-  TCO1: "Between 24 and 40 hours per week.",
-  SEMANAS: "Weeks",
-  REGLAS: "Rules",
-  PROBLEMA: "Problem",
-  VER_INFO_PERSONAL_BTN: "See personal information",
-  VER_INFO_ACADEMICA: "See Academic Information",
-  VER_EXP_LABORAL: "See work experience",
-  VER_TRABAJOS_INVESTIGACION: "See the research papers",
-  BORRAR_BTN: "Delete",
-
-  UN: "ONE",
-  DOS: "TWO",
-  TRES: "THREE",
-  CUATRO: "FOUR",
-  CINCO: "FIVE",
-  SEIS: "SIX",
-  SIETE: "SEVEN",
-  OCHO: "EIGHT",
-  NUEVE: "NINE",
-  DIEZ: "TEN",
-  ONCE: "ELEVEN",
-  DOCE: "TWELVE",
-  TRECE: "THIRTEEN",
-  CATORCE: "FOURTEEN",
-  QUINCE: "FIFTEEN",
-
-
-  DIECISEIS: "SIXTEEN",
-  DIECISIETE: "SEVENTEEN",
-  DIECIOCHO: "EIGHTEEN",
-  DIECINUEVE: "NINETEEN",
-
-
-  VEINTE: "TWENTY",
-
-  VEINTIUNO: "TWENTY ONE",
-  VEINTIDOS: "TWENTY TWO",
-  VEINTITRES: "TWENTY THREE",
-  VEINTICUATRO: "TWENTY FOUR",
-  VEINTICINCO: "TWENTY FIVE",
-  VEINTISEIS: "TWENTY SIX",
-  VEINTISIETE: "TWENTY SEVEN",
-  VEINTIOCHO: "TWENTY EIGHT",
-  VEINTINUEVE: "TWENTY NINE",
-
-  TREINTA: "THIRTY ",
-  CUARENTA: "FORTY ",
-  CINCUENTA: "FIFTY ",
-  SESENTA: "SIXTY ",
-  SETENTA: "SEVENTY ",
-  OCHENTA: "EGHTY ",
-  NOVENTA: "NINETY ",
-  CIENTO: "ONE HUNDRED ",
-  CIEN: "HUNDRED",
-  DOSCIENTOS: "TWO HUNDRED ",
-  TRESCIENTOS: "THREE HUNDRED ",
-  CUATROCIENTOS: "FOUR HUNDRED ",
-  QUINIENTOS: "FIVE HUNDRED ",
-  SEISCIENTOS: "SIX HUNDRED ",
-  SETECIENTOS: "SEVEN HUNDRED ",
-  OCHOCIENTOS: "EIGHT HUNDRED ",
-  NOVECIENTOS: "NINE HUNDRED ",
-
-  UN_MIL: "ONE THOUSAND",
-  MIL: "THOUSAND",
-  UN_MILLON: "ONE MILLION",
-  MILLONES: " MILLION ",
-  PESOS: "PESOS",
-  PESO: "PESO",
-  CON: "WITH",
-  CERO: "ZERO",
-  Y: "",
-  /*
-  resolucion_lista.js
-  */
-  VISTA_PREVIA_RESOLUCION: "Preview resolution",
-  CREAR_RESOLUCION: "Crear nueva resolución de vinculación especial",
-  NIVEL: "Level",
-  /*
-  contrato_registro.js
-  */
-  NO_CALCULADO_SALARIO: "The salary could not be calculated",
-  NUMERO: "Number",
-  EXPEDIR: "Issue the resolution?",
-  SEGURO_EXPEDIR: "Are you sure you want to issue the resolution?",
-  EXPEDICION_NO_REALIZADA: "No issuance of the resolution",
-  EXPEDIDA: "The resolution has been successfully issued",
-  DATOS_REGISTRADOS: "The data of the connections made have been successfully registered",
-  PROBLEMA_EXPEDICION: "A problem has arisen in the issuance of the resolution",
-  PROBLEMA_DOCENTE_CONTRATADOS: "A problem has arisen in the registration of the data of contracted teachers",
-  NO_DOCENTES: "There are no teachers enrolled within the resolution",
-
-  /*
-  resolucion_detalle.js
-  */
-  ESCRIBA_TEXTO: "Write the text of the article",
-  DEBE_INSERTAR: "You must enter text.",
-  ALMENOS_UNO: "The resolution must have at least one article",
-  ESCRIBA_PARAGRAFO: "Enter the text of the paragraph",
-  GUARDADO: "Saved",
-  GUARDADO_EXITO: "Changes saved successfully",
-  PROBLEMA_ALMACENAMIENTO: "There was a problem storing changes",
-  REVISE_DATOS_RESOLUCION: "Review the resolution data",
-  /*
-  resolucion_administracion.js
-  */
-  NO_RESTAURACION_RESOLUCION: "Restore of resolution has not been performed",
-  NO_CANCELADA_PAGOS: "The resolution can not be canceled because there are payments associated with the bindings.",
-  NO_CANCELACION_RESOLUCION: "No cancellation of the resolution.",
-  PREGUNTA_RESTAURAR: "Restore resolution?",
-  CANCELAR_RESOLUCION: "Cancel the resolution?",
-  OPCIONES: "Options",
-  VER_BTN: "See",
-  EDITAR_BTN: "Edit",
-  CONFIGURAR_BTN: "Set up",
-  EXPEDIR_BTN: "Issue",
-  CANCELAR_BTN: "Cancel resolution",
-  RESTAURAR_BTN: "Restore resolution",
-  /*
-  contrato_resumen.html
-  */
-  DOCENTES_CONTRATADOS_ACTUAL: "TEACHERS CONTRACTED - CURRENT PERIOD",
 
   BTN_MINUTAS: {
     GENERAR_MINUTA: "Generate",
@@ -1466,14 +962,10 @@ var text_en = {
   TITULO_MINUTA: "Agreement Title",
   TIPO_CONTRATO: "Agreement Type",
   INTRODUCCION: "Introduction",
-  CONSIDERACION: "Consideration",
   FORMATO_MINUTA: "Agreement Information",
-  RESUELVE: "Resolve",
   VISTA_PREVIA: "Preview",
   CLAUSULA: "Clause",
-  TITULO: "Title",
   DESCRIPCION: "Description",
-  PARAGRAFO: "Paragraph",
   FORMATO_TEXTO: "Format",
   FECHA_ACTIVACION: "Activate Date",
   FECHA_INACTIVACION: "Inactive Date",
