@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
 .factory("contrato",function(){
       return {};
 })
-.controller('RpSolicitudPersonasCtrl', function($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate) {
+.controller('RpSolicitudPersonasCtrl', function($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate,agoraRequest) {
     var self = this;
     var query;
     var seleccion;
@@ -42,27 +42,27 @@ angular.module('contractualClienteApp')
           field: 'Id',
           displayName: $translate.instant('CONTRATO'),
           width: "10%",
-          cellTemplate: '<div align="center">{{row.entity.ContratoGeneral.Id}}</div>'
+          cellTemplate: '<div align="center">{{row.entity.Numero_contrato}}</div>'
         },
         {
-          field: 'ContratoGeneral.VigenciaContrato',
+          field: 'Vigencia_contrato',
           displayName: $translate.instant('VIGENCIA_CONTRATO'),
           visible: false
         },
         {
-          field: 'InformacionProveedor.NomProveedor',
+          field: 'Nombre_completo',
           displayName: $translate.instant('NOMBRE_CONTRATISTA'),
           width: "50%"
         },
         {
-          field: 'ContratoGeneral.Contratista',
+          field: 'Id',
           displayName: $translate.instant('DOCUMENTO_CONTRATISTA'),
-          cellTemplate: '<div align="center">{{row.entity.ContratoGeneral.Contratista}}</div>'
+          cellTemplate: '<div align="center">{{row.entity.Id}}</div>'
         },
         {
           field: 'ContratoGeneral.ValorContrato',
           displayName: $translate.instant('VALOR'),
-          cellTemplate: '<div align="right">{{row.entity.ContratoGeneral.ValorContrato | currency }}</div>'
+          cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency }}</div>'
         },
       ],
       onRegisterApi: function(gridApi) {
@@ -76,61 +76,44 @@ angular.module('contractualClienteApp')
     //selecciona la vigencia actual
     var vigenciaActual=$scope.vigencias[0];
 
-    //carga los contratos con la vigencia actual
-    administrativaRequest.get('contrato_general', $.param({
-        query: "VigenciaContrato:"+vigenciaActual,
-        limit: -1
-      })).then(function(response) {
-        var datos = JSON.stringify(response.data);
-        adminMidRequest.post('informacion_proveedor/contrato_proveedor', datos).then(function(response) {
-          self.gridOptions.data = response.data;
+        agoraRequest.directGet('proveedor_contrato_persona',vigenciaActual).then(function(response) {
+         self.gridOptions.data = response.data;
           self.longitud_grid = self.gridOptions.data.length;
         });
-      });
     });
     //se buscan los contratos por la vigencia seleccionada
     self.buscar_contratos_vigencia = function() {
       self.longitud_grid = 0;
       query = "";
-      console.log($scope.vigenciaModel);
       if ($scope.vigenciaModel !== undefined || $scope.vigenciaModel === null) {
-
-
-        administrativaRequest.get('contrato_general', $.param({
-            query: "VigenciaContrato:"+$scope.vigenciaModel,
-            limit: -1
-          })).then(function(response) {
-            var datos = JSON.stringify(response.data);
-            adminMidRequest.post('informacion_proveedor/contrato_proveedor', datos).then(function(response) {
-              self.gridOptions.data = response.data;
-              self.longitud_grid = self.gridOptions.data.length;
-              console.log(response.data);
-            });
-          });
+       agoraRequest.directGet('proveedor_contrato_persona',$scope.vigenciaModel).then(function(response) {
+         self.gridOptions.data = response.data;
+          self.longitud_grid = self.gridOptions.data.length;
+        });
 
       }
     };
-
 
     self.mostrar_estadisticas = function() {
       seleccion = self.gridApi.selection.getSelectedRows();
       if(seleccion[0]===null || seleccion[0]===undefined){
         swal("Alertas", "Debe seleccionar un contratista", "error");
       }else{
-        self.contrato.Id = seleccion[0].ContratoGeneral.Id;
-        self.contrato.Vigencia= seleccion[0].ContratoGeneral.VigenciaContrato;
-        self.contrato.ContratistaId= seleccion[0].ContratoGeneral.Contratista;
-        self.contrato.ValorContrato= seleccion[0].ContratoGeneral.ValorContrato;
-        self.contrato.NombreContratista= seleccion[0].InformacionProveedor.NomProveedor;
-        self.contrato.ObjetoContrato= seleccion[0].ContratoGeneral.ObjetoContrato;
-        self.contrato.FechaRegistro= seleccion[0].ContratoGeneral.FechaRegistro;
-
+        self.contrato.Id = seleccion[0].Numero_contrato;
+        self.contrato.Vigencia= seleccion[0].Vigencia_contrato;
+        self.contrato.ContratistaId= seleccion[0].Id;
+        self.contrato.ValorContrato= seleccion[0].Valor_contrato;
+        self.contrato.NombreContratista= seleccion[0].Nombre_completo;
+        self.contrato.ObjetoContrato= seleccion[0].Objeto_contrato;
+        self.contrato.FechaRegistro= seleccion[0].Fecha_registro;
         self.saving = true;
         self.btnGenerartxt = "Generando...";
-
+      
         self.saving = false;
         self.btnGenerartxt = "Generar";
          $window.location.href = '#/rp/rp_solicitud/';
       }
 };
   });
+
+

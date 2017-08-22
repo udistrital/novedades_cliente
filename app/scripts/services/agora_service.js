@@ -12,10 +12,14 @@ angular.module('agoraService',[])
   // Service logic
   // ...
   var path = "http://10.20.0.254/agora_api/v1/";
+  //var path = "http://localhost:8085/v1/";
   // Public API here
   return {
     get: function (tabla,params) {
       return $http.get(path+tabla+"/?"+params);
+    },
+    directGet: function (tabla,params) {
+      return $http.get(path+tabla+"/"+params);
     },
     post: function (tabla,elemento) {
       return $http.post(path+tabla,elemento);
