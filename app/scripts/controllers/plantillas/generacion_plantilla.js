@@ -25,6 +25,8 @@ angular.module('contractualClienteApp')
       Nombre: 'Recursos Físicos'
     },
     TipoContrato: 0,
+    Introduccion: 'Entre los suscritos, de una parte, CARLOS JAVIER MOSQUERA SUAREZ, mayor de edad, vecino de esta ciudad, identificado con cédula de ciudadanía No.19.353.736 expedida en Bogotá, D.C., quien actúa en calidad de Rector (E), de conformidad con la Resolución 001 del 29 de enero de 2015 y posesionado mediante Acta del 02 de febrero de 2015, debidamente autorizado para contratar, según Acuerdo No. 003 de 2015 (Estatuto de Contratación de la Universidad Distrital Francisco José de Caldas) y Resoluciones rectorales 262 de 2015, 443 de 2015 y 003 de 2016, quien en lo sucesivo se denominará LA UNIVERSIDAD, con NIT 899999230-7, ente universitario autónomo de conformidad con la Ley 30 de 1992, y, de otra',
+    Consideracion: 'Que LA UNIVERSIDAD elaboró los respectivos estudios y documentos previos, en los términos del artículo noveno de la Resolución de Rectoría No. 262 de 2015, en los cuales se determinó, entre otras cosas, la necesidad anterior, que conlleva a contratar un perfil (profesional, técnico o asistencial), que no existe en la planta de personal de la entidad, según certificación expedida por la División de Recursos Humanos, III. Que la modalidad de selección de contratación directa procede para la celebración de contratos prestación de servicios profesionales y de apoyo a la gestión. IV. Que el Proceso de Contratación se encuentra incluido en el Plan Anual de Adquisiciones.',
     Clausulas: []
   };
 
@@ -55,7 +57,7 @@ angular.module('contractualClienteApp')
 
   // Adiciona paragrafo
   self.adicionarParagrafo = function(){
-    
+
     if(typeof self.textoParagrafo != 'undefined') {
       if(self.textoParagrafo != '') {
         self.contenidoMinuta.Clausulas[self.idClausula].Paragrafos.push({Texto: self.textoParagrafo});
@@ -120,9 +122,9 @@ angular.module('contractualClienteApp')
       Clausulas: [
         {Titulo: 'Clausula 1 de Plantilla 1', Texto: 'Texto Clausula 1 Plantilla 1',
         Paragrafos: [
-            {Texto: 'Texto de Paragrafo 1 de Clausula 1'},
-            {Texto: 'Texto de Paragrafo 2 de Clausula 1'},
-            {Texto: 'Texto de Paragrafo 3 de Clausula 1'},
+          {Texto: 'Texto de Paragrafo 1 de Clausula 1'},
+          {Texto: 'Texto de Paragrafo 2 de Clausula 1'},
+          {Texto: 'Texto de Paragrafo 3 de Clausula 1'},
         ]},
         {Titulo: 'Clasula 2 de Plantilla 1', Texto: 'Texto de Clasula 2 Plantilla 1',
         Paragragos: [
@@ -177,7 +179,7 @@ angular.module('contractualClienteApp')
     {field: 'UnidadEjecutora', headerCellTemplate: '<div align="center"> {{ \'UNIDAD_EJECUTORA\' | translate }} </div>'},
     {field: 'TipoContrato.TipoContrato', headerCellTemplate: '<div align="center"> {{ \'TIPO_CONTRATO\' | translate }} </div>'},
     {field: 'Gestion', headerCellTemplate: '<div align="center"> {{ \'GESTION_PLANTILLA\' | translate }} </div>',
-      cellTemplate: '<button class="btn btn-default borrar" ng-click="grid.appScope.generacionPlantilla.seleccionarPlantilla(row.entity)" ><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>'}
+    cellTemplate: '<button class="btn btn-default borrar" ng-click="grid.appScope.generacionPlantilla.seleccionarPlantilla(row.entity)" ><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>'}
   ];
 
   self.llenarUiGrid = function() {
@@ -192,24 +194,97 @@ angular.module('contractualClienteApp')
   // Recibe la plantilla seleccionada y establece la información al formulario
   self.seleccionarPlantilla = function(plantilla) {
     $('#modal_plantilla_existente').modal('hide');
-      self.singleTipoContrato = self.tipoContrato[plantilla.TipoContrato.Id];
-      self.contenidoMinuta = {
-        Titulo: plantilla.Nombre,
-        IdDependencia: {
-          Id: 1,
-          Nombre: plantilla.Dependencia
-        },
-        IdUnidadEjecutora: {
-          Id: 1,
-          Nombre: plantilla.UnidadEjecutora
-        },
-        TipoContrato: self.singleTipoContrato,
-        Clausulas: plantilla.Clausulas
-      };
-      console.log(plantilla.TipoContrato.Id);
+    self.singleTipoContrato = self.tipoContrato[plantilla.TipoContrato.Id];
+    self.contenidoMinuta = {
+      Titulo: plantilla.Nombre,
+      IdDependencia: {
+        Id: 1,
+        Nombre: plantilla.Dependencia
+      },
+      IdUnidadEjecutora: {
+        Id: 1,
+        Nombre: plantilla.UnidadEjecutora
+      },
+      TipoContrato: self.singleTipoContrato,
+      Clausulas: plantilla.Clausulas
+    };
+    console.log(plantilla.TipoContrato.Id);
   }
 
   self.guardarCambios = function() {
     console.log(self.contenidoMinuta);
   }
+
+  // pdfMake
+  self.crearPdf = function(op) {
+
+    var docDefinition = setInfoPlantilla();
+    switch (op) {
+      case 1:
+      // open the PDF in a new window
+      pdfMake.createPdf(docDefinition).open();
+      break;
+      case 2:
+      // print the PDF
+      pdfMake.createPdf(docDefinition).print();
+      break;
+      case 3:
+      // download the PDF
+      pdfMake.createPdf(docDefinition).download('optionalName.pdf');
+      break;
+      default:
+      console.log('Opción no implementada');
+      break;
+    }
+  }
+
+  function setInfoPlantilla() {
+    var pieDePagina = 'Oficina Asesora Jurídica – http://www.udistrital.edu.co   -   juridica@udistrital.edu.co \n Cra. 7 No. 40B-53, Piso 9º, Tel.: (57) 3239300  Ext. 1911 - 1912'
+    var contenido = {
+      pageSize: 'A4',
+
+      header: { text: self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo'},
+
+      footer: { text: pieDePagina, style: 'pie' },
+
+      content:
+      [
+        { text: self.contenidoMinuta.Introduccion+' '+self.contenidoMinuta.Consideracion, style: 'contenido' }
+      ],
+
+      styles: {
+        titulo: {
+          fontSize: 11,
+          bold: true,
+          width: '50%',
+          alignment: 'center'
+        },
+        subtitulo: {
+          fontSize: 10,
+          bold: true
+        },
+        pie: {
+          fontSize: 9,
+          alignment: 'center'
+        },
+        contenido: {
+          fontSize: 10,
+        }
+      }
+    };
+    var numClausulas = self.contenidoMinuta.Clausulas.length;
+    if (numClausulas) {
+      for (var i = 0; i < numClausulas; i++) {
+        var clausulaTitulo = { text: 'Clausula ' + (i+1) + ' ' +self.contenidoMinuta.Clausulas[i].Titulo, style: 'subtitulo' };
+        var clausulaTexto =  { text: self.contenidoMinuta.Clausulas[i].Texto, style: 'contenido' };
+        contenido.content.push(clausulaTitulo, clausulaTexto);
+      }
+    }
+
+    for (var i = 0; i < contenido.content.length; i++) {
+      contenido.content[i].text = contenido.content[i].text.trim()
+    }
+    return contenido;
+  }
+
 });
