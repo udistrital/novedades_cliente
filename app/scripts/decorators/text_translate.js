@@ -487,7 +487,15 @@ var text_es = {
   REGISTRAR_PLANTILLA: "Registrar Nueva Plantilla",
   PLANTILLA_EXISTENTE: "Utilizar una Plantilla Existente",
   GESTION_PLANTILLA: "Gestión",
-  FILTRAR_POR: "Filtrar Por"
+  FILTRAR_POR: "Filtrar Por",
+  ENCABEZADO_MINUTA: "Encabezado",
+  PIE_MINURA: "Píe de página",
+  PARAMETROS_PDF: "Parámetros del Pdf",
+  MARGENES: "Márgenes",
+  SUPERIOR: "Superior",
+  INFERIOR: "Inferior",
+  IZQUIERDA: "Izquierda",
+  DERECHA: "Derecha"
 };
 
 var text_en = {
@@ -973,7 +981,15 @@ var text_en = {
   PLANTILLA_EXISTENTE: "Use an Old Template",
   GESTION_PLANTILLA: "Options",
   DEPENDENCIA: "Unit",
-  FILTRAR_POR: "Search By"
+  FILTRAR_POR: "Search By",
+  ENCABEZADO_MINUTA: "Header",
+  PIE_MINURA: "Footer",
+  PARAMETROS_PDF: "Pdf Parameters",
+  MARGENES: "Margins",
+  SUPERIOR: "Top",
+  INFERIOR: "Buttom",
+  IZQUIERDA: "Left",
+  DERECHA: "Right"
 };
 
 angular.module('contractualClienteApp')

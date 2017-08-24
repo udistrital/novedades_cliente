@@ -13,6 +13,12 @@ angular.module('contractualClienteApp')
 
   self.opcionesTexto = ['Texto','HTML'];
   self.textoNormal = true;
+
+  self.margenIzquierda = 40;
+  self.margenDerecha = 60;
+  self.margenSuperior = 40;
+  self.margenInferior = 60;
+
   // Json de prueba para los datos del formulario
   self.contenidoMinuta = {
     Titulo: 'Minuta de prueba',
@@ -207,7 +213,6 @@ angular.module('contractualClienteApp')
       TipoContrato: self.singleTipoContrato,
       Clausulas: plantilla.Clausulas
     };
-    console.log(plantilla.TipoContrato.Id);
   }
 
   self.guardarCambios = function() {
@@ -238,13 +243,19 @@ angular.module('contractualClienteApp')
   }
 
   function setInfoPlantilla() {
-    var pieDePagina = 'Oficina Asesora Jurídica – http://www.udistrital.edu.co   -   juridica@udistrital.edu.co \n Cra. 7 No. 40B-53, Piso 9º, Tel.: (57) 3239300  Ext. 1911 - 1912'
     var contenido = {
       pageSize: 'A4',
 
-      header: { text: self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo'},
+      // left, rigth, top, button
+      pageMargins: [self.margenIzquierda, self.margenDerecha, self.margenSuperior, self.margenInferior],
 
-      footer: { text: pieDePagina, style: 'pie' },
+      header:
+      [
+        { text: self.encabezado, style: 'titulo' },
+        { text: self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' }
+      ],
+
+      footer: { text: ''+self.pieDePagina, style: 'pie' },
 
       content:
       [
@@ -267,10 +278,11 @@ angular.module('contractualClienteApp')
           alignment: 'center'
         },
         contenido: {
-          fontSize: 10,
+          fontSize: 10
         }
       }
     };
+    console.log(contenido.pageMargins);
     var numClausulas = self.contenidoMinuta.Clausulas.length;
     if (numClausulas) {
       for (var i = 0; i < numClausulas; i++) {
