@@ -38,13 +38,14 @@ angular.module('contractualClienteApp')
 
   // Agregar clausula
   self.agregarClausula = function() {
-    if (typeof self.tituloClausula != 'undefined' && typeof self.textoClausula != 'undefined') {
-      if (self.tituloClausula != '' && self.textoClausula != '') {
+    if (typeof self.tituloClausula != 'undefined') {
+      if (self.tituloClausula) {
         self.contenidoMinuta.Clausulas.push({Titulo: self.tituloClausula, Texto: self.textoClausula, Paragrafos: []});
         $('#modal_add_clausula').modal('hide');
         self.limpiarModal();
       }
     }
+    console.log('texto clausula: ' + self.textoClausula);
   };
 
   // Eliminar clausula
@@ -69,25 +70,6 @@ angular.module('contractualClienteApp')
         $('#modal_add_paragrafo').modal('hide');
         self.limpiarModal();
       }
-    }
-  };
-
-  // Muestra el textarea o el text-angular del texto del paragrafo de acuerdo al valor de self.op
-  self.opcionTexto = function() {
-    switch (self.op) {
-      case 'Texto':
-      self.textoNormal = true;
-      self.textoHtml = !self.textoNormal;
-      self.textoOriginal = self.textoParagrafo;
-      break;
-      case 'HTML':
-      self.textoHtml = true;
-      self.textoNormal = !self.textoHtml;
-      break;
-      default:
-      self.textoNormal = true;
-      self.textoHtml = !self.textoNormal;
-      break;
     }
   };
 

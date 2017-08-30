@@ -1,0 +1,13 @@
+<div class="col-md-offset-4 col-md-2">
+  <label for="formato_texto_c" class="col-md-offset-6 col-form-label">{{'FORMATO_TEXTO' | translate }}:</label>
+</div>
+<div class="col-md-2 row">
+  <select class="form-control" ng-model="textoEnriquecido.op" ng-change="textoEnriquecido.opcionTexto()">
+    <option ng-repeat="opcion in textoEnriquecido.opcionesTexto" value="{{opcion}}">{{opcion}}</option>
+  </select>
+</div>
+<br>
+<div class="col-sm-12">
+  <textarea ng-show="textoEnriquecido.textoNormal" name="descripcion" ng-model="texto" rows=7 class="form-control" required>{{generacionPlantilla.textoOriginal}}</textarea>
+  <text-angular ng-show="textoEnriquecido.textoHtml" ng-model="texto"></text-angular>
+</div>
