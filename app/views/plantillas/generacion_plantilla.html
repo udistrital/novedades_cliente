@@ -142,18 +142,7 @@
         <div class="row">
           <div class="col-sm-12 row form-group" style="margin-top: 20px;">
             <label for="descripcion" class="col-sm-4 col-form-label">{{'DESCRIPCION' | translate }}: </label>
-            <div class="col-md-offset-4 col-md-2">
-              <label for="formato_texto_p" class="col-md-offset-6 col-form-label">{{'FORMATO_TEXTO' | translate }}:</label>
-            </div>
-            <div class="col-md-2 row">
-              <select id="formato_texto_p" class="form-control" ng-model="generacionPlantilla.op" ng-change="generacionPlantilla.opcionTexto()">
-                <option ng-repeat="o in generacionPlantilla.opcionesTexto" value="{{o}}">{{ o }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <textarea ng-show="generacionPlantilla.textoNormal" name="descripcion" ng-model="generacionPlantilla.textoParagrafo" rows=7 class="form-control" required>{{generacionPlantilla.textoOriginal}}</textarea>
-            <text-angular ng-show="generacionPlantilla.textoHtml" ng-model="generacionPlantilla.textoParagrafo"></text-angular>
+            <texto-enriquecido texto="generacionPlantilla.textoParagrafo"></texto-enriquecido>
           </div>
         </div>
       </div>
@@ -177,79 +166,62 @@
         </div>
       </div>
       <div class="modal-body">
-        <div class="row">
+        <div class="row col-md-12">
           <div class="form-group col-lg-6">
-            <div class="row col-md-12" style="margin-bottom:10px;">
+            <div class="col-sm-12" style="margin-bottom:10px;">
               <label for="inputEncabezado" style="float:left; margin-top:10px;">{{ 'ENCABEZADO_MINUTA' | translate }}</label>
-              <div class="col-md-offset-5 col-md-2 row" style="margin-right:2px;">
-                <small>{{'FORMATO_TEXTO' | translate }}:</small>
-              </div>
-              <div class="col-md-3 row">
-                <select id="formato_texto_p" class="form-control" ng-model="generacionPlantilla.op" ng-change="generacionPlantilla.opcionTexto()">
-                  <option ng-repeat="o in generacionPlantilla.opcionesTexto" value="{{o}}">{{ o }}</option>
-                </select>
-              </div>
+              <texto-enriquecido texto="generacionPlantilla.encabezado"></texto-enriquecido>
             </div>
-            <textarea type="text" id="inputEncabezado" class="form-control" ng-model="generacionPlantilla.encabezado"></textarea>
           </div>
           <div class="form-group col-lg-6">
-            <div class="row col-md-12" style="margin-bottom:10px;">
+            <div class="row col-sm-12" style="margin-bottom:10px;">
               <label for="inputPieDePagina" style="float:left; margin-top:10px;">{{ 'PIE_MINURA' | translate }}</label>
-              <div class="col-md-offset-5 col-md-2 row" style="margin-right:2px;">
-                <small>{{'FORMATO_TEXTO' | translate }}:</small>
-              </div>
-              <div class="col-md-3 row">
-                <select id="formato_texto_p" class="form-control" ng-model="generacionPlantilla.op" ng-change="generacionPlantilla.opcionTexto()">
-                  <option ng-repeat="o in generacionPlantilla.opcionesTexto" value="{{o}}">{{ o }}</option>
-                </select>
-              </div>
+              <texto-enriquecido texto="generacionPlantilla.pieDePagina"></texto-enriquecido>
             </div>
-            <textarea id="inputPieDePagina" class="form-control" ng-model="generacionPlantilla.pieDePagina"></textarea>
           </div>
         </div>
-      </div>
-      <h4>{{ 'MARGENES' | translate }}</h4>
-      <div class="container col-md-12">
-        <br>
-        <div class="form-group col-lg-6">
-          <label for="inputMargRight">{{ 'IZQUIERDA' | translate }}</label>
-          <input type="number" class="form-control" id="inputMargRight" ng-model="generacionPlantilla.margenIzquierda">
+        <h4>{{ 'MARGENES' | translate }}</h4>
+        <div class="container col-md-12">
+          <br>
+          <div class="form-group col-lg-6">
+            <label for="inputMargRight">{{ 'IZQUIERDA' | translate }}</label>
+            <input type="number" class="form-control" id="inputMargRight" ng-model="generacionPlantilla.margenIzquierda">
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="inputMargLeft">{{ 'DERECHA' | translate }}</label>
+            <input type="number" class="form-control" id="inputMargLeft" ng-model="generacionPlantilla.margenDerecha">
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="inputMargTop">{{ 'SUPERIOR' | translate }}</label>
+            <input type="number" class="form-control" id="inputMargTop" ng-model="generacionPlantilla.margenSuperior">
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="inputMargButtom">{{ 'INFERIOR' | translate }}</label>
+            <input type="number" class="form-control" id="inputMargButtom" ng-model="generacionPlantilla.margenInferior">
+          </div>
         </div>
-        <div class="form-group col-lg-6">
-          <label for="inputMargLeft">{{ 'DERECHA' | translate }}</label>
-          <input type="number" class="form-control" id="inputMargLeft" ng-model="generacionPlantilla.margenDerecha">
+        <div class="modal-footer">
+          <button ng-click="generacionPlantilla.crearPdf(2)" type="submit" class="form-control btn-primary">{{ 'BTN_MINUTAS.VISTA_PREVIA_ACTUALIZADA' | translate }}</button>
         </div>
-        <div class="form-group col-lg-6">
-          <label for="inputMargTop">{{ 'SUPERIOR' | translate }}</label>
-          <input type="number" class="form-control" id="inputMargTop" ng-model="generacionPlantilla.margenSuperior">
-        </div>
-        <div class="form-group col-lg-6">
-          <label for="inputMargButtom">{{ 'INFERIOR' | translate }}</label>
-          <input type="number" class="form-control" id="inputMargButtom" ng-model="generacionPlantilla.margenInferior">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button ng-click="generacionPlantilla.crearPdf(2)" type="submit" class="form-control btn-primary">{{ 'BTN_MINUTAS.VISTA_PREVIA_ACTUALIZADA' | translate }}</button>
-      </div>
-    </form>
-  </div>
-</div>
-<!-- modal vista previa -->
-
-<!-- modal plantilla existente -->
-<div id="modal_plantilla_existente" class="modal face col-md-12" role="dialog">
-  <div class="modal-content col-md-offset-1 col-md-10">
-    <div class="modal-header">
-      <button type="button" name="btn btn-outline btn-danger gtn-xs pull-right" data-dismiss="modal">&times</button><br>
+      </form>
     </div>
-    <div class="col-sm-12 row form-group">
-      <table style="width:100%;">
-        <td>
-          <div ui-grid="generacionPlantilla.gridOptions" class="myGrid"></div>
-        </td>
-      </tr>
-    </table>
   </div>
-</div>
+  <!-- modal vista previa -->
+
+  <!-- modal plantilla existente -->
+  <div id="modal_plantilla_existente" class="modal face col-md-12" role="dialog">
+    <div class="modal-content col-md-offset-1 col-md-10">
+      <div class="modal-header">
+        <button type="button" name="btn btn-outline btn-danger gtn-xs pull-right" data-dismiss="modal">&times</button><br>
+      </div>
+      <div class="col-sm-12 row form-group">
+        <table style="width:100%;">
+          <td>
+            <div ui-grid="generacionPlantilla.gridOptions" class="myGrid"></div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>
 <!-- modal plantilla existente -->

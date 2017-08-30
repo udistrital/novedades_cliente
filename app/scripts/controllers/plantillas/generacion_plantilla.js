@@ -45,7 +45,6 @@ angular.module('contractualClienteApp')
         self.limpiarModal();
       }
     }
-    console.log('texto clausula: ' + self.textoClausula);
   };
 
   // Eliminar clausula
