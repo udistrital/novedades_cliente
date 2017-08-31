@@ -207,7 +207,9 @@ angular.module('contractualClienteApp')
     switch (op) {
       case 1:
       // open the PDF in a new window
-      pdfMake.createPdf(docDefinition).open();
+      pdfMake.createPdf(docDefinition).getDataUrl(function (outDoc) {
+        document.getElementById('pdfV').src = outDoc;
+      });
       break;
       case 2:
       // print the PDF
@@ -228,22 +230,25 @@ angular.module('contractualClienteApp')
       pageSize: 'A4',
 
       // left, rigth, top, button
-      pageMargins: [self.margenIzquierda, self.margenDerecha, self.margenSuperior, self.margenInferior],
+      pageMargins: [ self.margenIzquierda, self.margenSuperior, self.margenDerecha, self.margenInferior ],
 
       header:
       [
-        { text: self.encabezado, style: 'titulo' },
+        { text: self.encabezado, style: 'cabecera' },
         { text: self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' }
       ],
 
       footer: { text: ''+self.pieDePagina, style: 'pie' },
 
-      content:
-      [
-        { text: self.contenidoMinuta.Introduccion+' '+self.contenidoMinuta.Consideracion, style: 'contenido' }
-      ],
+      content: { text: self.contenidoMinuta.Introduccion+' '+self.contenidoMinuta.Consideracion, style: 'contenido' },
 
       styles: {
+        cabecera: {
+          fontSize: 11,
+          bold: true,
+          width: '100%',
+          alignment: 'center'
+        },
         titulo: {
           fontSize: 11,
           bold: true,
@@ -263,7 +268,6 @@ angular.module('contractualClienteApp')
         }
       }
     };
-    console.log(contenido.pageMargins);
     var numClausulas = self.contenidoMinuta.Clausulas.length;
     if (numClausulas) {
       for (var i = 0; i < numClausulas; i++) {
