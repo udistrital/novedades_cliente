@@ -11,10 +11,13 @@ angular.module('contractualClienteApp')
 .factory("contrato",function(){
       return {};
 })
-.controller('RpSolicitudPersonasCtrl', function($window,financieraMidRequest, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate,agoraRequest) {
+.controller('RpSolicitudPersonasCtrl', function($timeout,$window,financieraMidRequest, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate,agoraRequest) {
     var self = this;
     var query;
     var seleccion;
+    var t1;
+    var t0;
+    var total;
     self.contrato = contrato;
     $scope.vigenciaModel = null;
     self.longitud_grid = 0;
@@ -25,12 +28,20 @@ angular.module('contractualClienteApp')
     $scope.contratista_nombre = $translate.instant('NOMBRE_CONTRATISTA');
     $scope.contratista_documento = $translate.instant('DOCUMENTO_CONTRATISTA');
     $scope.valor_contrato = $translate.instant('VALOR');
+    self.resolucion_bool=false;
+    self.cdp_bool=false;
+    self.contrato_bool = false;
+    self.texto_busqueda = "";
+    self.persona_sel = "";
+    $scope.radioB=0;
+
     $scope.fields = {
       numcontrato: '',
       vigcontrato: '',
       contratistadocumento: '',
       valorcontrato: ''
     };
+
 
     self.gridOptions = {
       enableRowSelection: true,
@@ -41,23 +52,25 @@ angular.module('contractualClienteApp')
       columnDefs: [{
           field: 'Id',
           displayName: $translate.instant('CONTRATO'),
-          width: "7%",
+          width: "15%",
           cellTemplate: '<div align="center">{{row.entity.Numero_contrato}}</div>'
         },
         {
           field: 'Vigencia_contrato',
           displayName: $translate.instant('VIGENCIA_CONTRATO'),
-          visible: false
+          visible: true,
+          width: "15%",
         },
         {
           field: 'Nombre_completo',
           displayName: $translate.instant('NOMBRE_CONTRATISTA'),
-          width: "50%"
+          width: "30%"
         },
         {
           field: 'Id',
           displayName: $translate.instant('DOCUMENTO_CONTRATISTA'),
-          cellTemplate: '<div align="center">{{row.entity.Id}}</div>'
+          cellTemplate: '<div align="center">{{row.entity.Id}}</div>',
+          width: "20%",
         },
         {
           field: 'ContratoGeneral.ValorContrato',
@@ -69,7 +82,6 @@ angular.module('contractualClienteApp')
         self.gridApi = gridApi;
       }
     };
-
 
     //<RESOLUCION GRID
     self.gridOptionsResolucion = {
@@ -99,12 +111,12 @@ angular.module('contractualClienteApp')
         {
           field: 'FechaRegistro',
           displayName: $translate.instant('FECHA'),
-          cellTemplate: '<div align="right">{{row.entity.FechaRegistro | date:"yyyy-MM-dd":"+0900" }}</div>'
+          cellTemplate: '<div align="center">{{row.entity.FechaRegistro | date:"yyyy-MM-dd":"+0900" }}</div>'
         },
         {
           field:'Boton',
           displayName:$translate.instant('VER'),
-          cellTemplate:'<button type="button" class="btn btn-info">VER</button>'
+          cellTemplate:'<button type="button" class="btn btn-info" data-toggle="modal" data-target="#resolucionModal">VER</button>'
         }
 
       ],
@@ -112,11 +124,6 @@ angular.module('contractualClienteApp')
         self.gridApi = gridApi;
       }
     };
-
-    administrativaRequest.get('resolucion',"limit=-1").then(function(response) {
-      self.gridOptionsResolucion.data = response.data;
-       self.longitud_grid_resolucion = self.gridOptionsResolucion.data.length;
-     });
     //RESOLUCION GRID>
 
 
@@ -151,10 +158,6 @@ angular.module('contractualClienteApp')
       }
     };
 
-    agoraRequest.get('informacion_proveedor',"limit=-1").then(function(response) {
-      self.gridOptionsProveedor.data = response.data;
-       self.longitud_grid_proveedor = self.gridOptionsProveedor.data.length;
-     });
     //PROVEEDOR GRID>
 
     //CDP GRID para cargar los CDP hay que meter esto en una funcion
@@ -173,59 +176,103 @@ angular.module('contractualClienteApp')
      {
        field: 'Vigencia',   
        displayName: 'Vigencia',
-       width: '15%',
+       width: '13%',
       },
      {
        field: 'NumeroDisponibilidad',   
        displayName: 'Id',
-       width: '10%',
+       width: '12%',
       },
      {
        field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Objeto',   
-       displayName: 'Descripcion'
+       displayName: 'Descripcion',
+       width: '21%',
       },
      {
        field: 'Solicitud.DependenciaSolicitante.Nombre',   
-       displayName: 'Ordenador'
+       displayName: 'Ordenador',
+       width: '21%',
       },
      {
        field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Id',   
        displayName: 'Necesidad',
-       width: '10%',
+       width: '15%',
       },
       {
         field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Valor',   
         displayName: 'Valor necesidad',
-        width: '15%',
+        width: '18%',
         cellTemplate: '<div align="right">{{row.entity.Solicitud.SolicitudDisponibilidad.Necesidad.Valor | currency }}</div>'
        },
    ]
  };
- financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
-   self.gridOptions_cdp.data = response.data;
-   console.log(self.gridOptions_cdp.data);
-   angular.forEach(self.gridOptions_cdp.data, function(data){
-     financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
-         data.Solicitud = response.data[0];
-         });
- 
-       });
- 
- });
 
     //CDP GRID --
 
-    administrativaRequest.get('vigencia_contrato').then(function(response) {
-      $scope.vigencias = response.data;
+    //se busca de acuerdo al filtro seleccionado en la interfaz cdp,resolucion o contratos
 
-    //selecciona la vigencia actual
-    var vigenciaActual=$scope.vigencias[0];
+    self.cargar_filtro = function(){
+      console.log($scope.radioB);
+      t0 = performance.now();
+      //si es filtro por contrato
+      if ($scope.radioB === 1){
+        self.resolucion_bool=false;
+        self.cdp_bool=false;
+        self.contrato_bool = true;
 
-        agoraRequest.directGet('proveedor_contrato_persona',vigenciaActual).then(function(response) {
-         self.gridOptions.data = response.data;
-          self.longitud_grid = self.gridOptions.data.length;
+        administrativaRequest.get('vigencia_contrato').then(function(response) {
+          $scope.vigencias = response.data;
+    
+        //selecciona la vigencia actual
+        var vigenciaActual=$scope.vigencias[0];
+    
+            agoraRequest.directGet('proveedor_contrato_persona',vigenciaActual).then(function(response) {
+             self.gridOptions.data = response.data;
+              self.longitud_grid = self.gridOptions.data.length;
+            });
         });
-    });
+      }
+      //si es filtro por cdp
+      if ($scope.radioB === 2){
+        self.resolucion_bool=false;
+        self.cdp_bool=true;
+        self.contrato_bool = false;
+
+        financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
+          self.gridOptions_cdp.data = response.data;
+          console.log(self.gridOptions_cdp.data);
+          angular.forEach(self.gridOptions_cdp.data, function(data){
+            financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
+                data.Solicitud = response.data[0];
+                });
+              });       
+        });
+
+        agoraRequest.get('informacion_proveedor',"limit=-1").then(function(response) {
+          self.gridOptionsProveedor.data = response.data;
+           self.longitud_grid_proveedor = self.gridOptionsProveedor.data.length;
+         });
+
+
+      }
+      //si es filtro por resolucion
+      if ($scope.radioB === 3){
+        self.resolucion_bool=true;
+        self.cdp_bool=false;
+        self.contrato_bool = false;
+
+        administrativaRequest.get('resolucion',"limit=-1").then(function(response) {
+          self.gridOptionsResolucion.data = response.data;
+           self.longitud_grid_resolucion = self.gridOptionsResolucion.data.length;
+         });
+      }
+      t1 = performance.now();
+      total = (t1 - t0) +5;
+      $timeout(function(){
+        $(window).resize();
+      },total);
+    };
+
     //se buscan los contratos por la vigencia seleccionada
     self.buscar_contratos_vigencia = function() {
       self.longitud_grid = 0;
