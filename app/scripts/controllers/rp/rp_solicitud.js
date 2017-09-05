@@ -54,9 +54,10 @@ angular.module('contractualClienteApp')
   columnDefs : [
     {field: 'Id',             visible : false},
     {field: 'Vigencia',   displayName: 'Vigencia'},
-    {field: 'NumeroDisponibilidad',   displayName: 'Consecutivo'},
-    {field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Objeto',   displayName: 'Objeto'},
-    {field: 'Solicitud..DependenciaSolicitante.Nombre',   displayName: 'Ordenador'},
+    {field: 'NumeroDisponibilidad',   displayName: 'Id'},
+    {field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Objeto',   displayName: 'Descripcion'},
+    {field: 'Solicitud.DependenciaSolicitante.Nombre',   displayName: 'Ordenador'},
+    {field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Id',   displayName: 'Necesidad'},
   ]
 
 };

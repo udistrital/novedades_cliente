@@ -4,51 +4,113 @@
         <center><h3>{{'SOLICITUD_PERSONAS' | translate}}</h3></center>
     </div>
     <div class="panel panel-body">
-      <div class="row">
-        <div class="col-md-2 col-md-offset-3">
-          <div ng-if="vigenciaModel=== null">
-            <label>{{'VIGENCIA_ACTUAL' | translate}} <b>2017</b> </label>
-          </div>
-          <div ng-if="vigenciaModel !== null">
-            <label>{{'VIGENCIA_SELECCIONADA' | translate}}<b>{{vigenciaModel}}</b> </label>
-          </div>
+    <div class ="row">
+      <div class="panel panel-default col-md-10 col-md-offset-1">
+      <div class="panel-body">
+        <div class="col-md-9 col-md-offset-3">
+            <h4>Seleccione el tipo de filtro por el cual quiere generar la solicitud del RP</h4>
         </div>
-
-        <div class="form-group">
-          <div class="col-md-3" align="right">
-            <label>{{'SELECCIONE_UNA_VIGENCIA' | translate}}</label>
+        <div class="col-md-6 col-md-offset-3">
+          <div class="col-md-3">
+              <label><input type="radio" name="optradio">Contrato</label>
           </div>
-          <div class="col-md-2">
-            <select class="form-control" ng-change="rpSolicitudPersonas.buscar_contratos_vigencia()" ng-model="vigenciaModel">
-              <option ng-repeat="vigencia in vigencias" >{{vigencia}}</option>
-            </select>
+          
+          <div class="col-md-2 col-md-offset-1">
+              <label><input type="radio" name="optradio">CDP</label>
+          </div>
+          
+          <div class="col-md-3 col-md-offset-1">
+              <label><input type="radio" name="optradio">Resolución</label>
           </div>
 
+          <div class="col-md-1">
+              <button type="button" class="btn btn-primary">Buscar</button>
+          </div>
         </div>
       </div>
-      <br>
-
-      <table style="width:70%;" align="center">
-        <tr>
-          <td>
-         <div ui-grid="rpSolicitudPersonas.gridOptions" ui-grid-selection class="myGrid">
-            <div class="well grid-loading" ng-show="rpSolicitudPersonas.longitud_grid == 0">
-              <i class="fa fa-spin fa-spinner"></i>
-              <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
-            </div>
-        </div>
-          </td>
-        </tr>
-        <tr>
-          <td align="center">
-            <br><br>
-            <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
-              {{'SOLICITAR_RP' | translate }}
-            </button>
-          </td>
-        </tr>
-      </table>
+      </div>
     </div>
+    <div class="row">
+      <div class="panel panel-default col-md-10 col-md-offset-1">
+        <div class="panel-body">
+
+              <div class="col-md-6" align="center">
+                   <div ui-grid="rpSolicitudPersonas.gridOptions_cdp" ui-grid-selection class="myGrid">
+                      <div class="well grid-loading" ng-show="rpSolicitudPersonas.gridOptions_cdp == 0">
+                        <i class="fa fa-spin fa-spinner"></i>
+                        <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
+                      </div>
+                  </div>
+
+                </div>
+
+                <div class="col-md-6" align="center">
+                     <div ui-grid="rpSolicitudPersonas.gridOptions" ui-grid-selection class="myGrid">
+                        <div class="well grid-loading" ng-show="rpSolicitudPersonas.longitud_grid == 0">
+                          <i class="fa fa-spin fa-spinner"></i>
+                          <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-md-offset-1">
+                      <br><br>
+                      <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
+                        {{'SOLICITAR_RP' | translate }}
+                      </button>
+                  </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="panel panel-default col-md-10 col-md-offset-1">
+          <div class="panel-body">
+              <div class="col-md-2 col-md-offset-3">
+                  <div ng-if="vigenciaModel=== null">
+                    <label>{{'VIGENCIA_ACTUAL' | translate}} <b>2017</b> </label>
+                  </div>
+                  <div ng-if="vigenciaModel !== null">
+                    <label>{{'VIGENCIA_SELECCIONADA' | translate}}<b>{{vigenciaModel}}</b> </label>
+                  </div>
+                  
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3" align="right">
+                      <label>{{'SELECCIONE_UNA_VIGENCIA' | translate}}</label>
+                    </div>
+                    <div class="col-md-2">
+                      <select class="form-control" ng-change="rpSolicitudPersonas.buscar_contratos_vigencia()" ng-model="vigenciaModel">
+                        <option ng-repeat="vigencia in vigencias" >{{vigencia}}</option>
+                      </select>
+                    </div>
+                  </div>
+                <br><br>
+                <div class="col-md-12" align="center">
+                    <tr>
+                      <td>
+                     <div ui-grid="rpSolicitudPersonas.gridOptions" ui-grid-selection class="myGrid">
+                        <div class="well grid-loading" ng-show="rpSolicitudPersonas.longitud_grid == 0">
+                          <i class="fa fa-spin fa-spinner"></i>
+                          <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
+                        </div>
+                    </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center">
+                        <br><br>
+                        <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
+                          {{'SOLICITAR_RP' | translate }}
+                        </button>
+                      </td>
+                    </tr>
+                  </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
 
   </div>
   <div class="panel-footer">

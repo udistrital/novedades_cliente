@@ -70,6 +70,39 @@ angular.module('contractualClienteApp')
       }
     };
 
+
+    //CDP GRID para cargar los CDP hay que meter esto en una funcion
+    
+    self.gridOptions_cdp = {
+      enableRowSelection: true,
+      enableRowHeaderSelection: false,
+      enableFiltering: true,
+ 
+   columnDefs : [
+     {field: 'Id',             visible : false},
+     {field: 'Vigencia',   displayName: 'Vigencia'},
+     {field: 'NumeroDisponibilidad',   displayName: 'Id'},
+     {field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Objeto',   displayName: 'Descripcion'},
+     {field: 'Solicitud.DependenciaSolicitante.Nombre',   displayName: 'Ordenador'},
+     {field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Id',   displayName: 'Necesidad'},
+   ]
+ 
+ };
+ financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
+   self.gridOptions_cdp.data = response.data;
+   console.log(self.gridOptions_cdp.data);
+   angular.forEach(self.gridOptions_cdp.data, function(data){
+     financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
+         data.Solicitud = response.data[0];
+         });
+ 
+       });
+ 
+ });
+
+    //CDP GRID --
+    
+
     administrativaRequest.get('vigencia_contrato').then(function(response) {
       $scope.vigencias = response.data;
 
