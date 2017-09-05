@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
 .factory("contrato",function(){
       return {};
 })
-.controller('RpSolicitudPersonasCtrl', function($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate,agoraRequest) {
+.controller('RpSolicitudPersonasCtrl', function($window,financieraMidRequest, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate,agoraRequest) {
     var self = this;
     var query;
     var seleccion;
@@ -34,14 +34,14 @@ angular.module('contractualClienteApp')
 
     self.gridOptions = {
       enableRowSelection: true,
-      enableRowHeaderSelection: false,
+      enableRowHeaderSelection: true,
       enableSorting: true,
       enableFiltering: true,
-      multiSelect: false,
+      multiSelect: true,
       columnDefs: [{
           field: 'Id',
           displayName: $translate.instant('CONTRATO'),
-          width: "10%",
+          width: "7%",
           cellTemplate: '<div align="center">{{row.entity.Numero_contrato}}</div>'
         },
         {
@@ -71,22 +71,135 @@ angular.module('contractualClienteApp')
     };
 
 
+    //<RESOLUCION GRID
+    self.gridOptionsResolucion = {
+      enableRowSelection: true,
+      enableRowHeaderSelection: true,
+      enableSorting: true,
+      enableFiltering: true,
+      multiSelect: true,
+      rowHeight: 40,
+      columnDefs: [
+        {
+          field: 'Id',
+          displayName: $translate.instant('ID'),
+        },
+        {
+          field: 'NumeroResolucion',
+          displayName: $translate.instant('NUMERO_RESOLUCION'),
+        },
+        {
+          field: 'Vigencia',
+          displayName: $translate.instant('VIGENCIA'),
+        },
+        {
+          field: 'IdTipoResolucion.NombreTipoResolucion',
+          displayName: $translate.instant('TIPO_RESOLUCION'),
+        },
+        {
+          field: 'FechaRegistro',
+          displayName: $translate.instant('FECHA'),
+          cellTemplate: '<div align="right">{{row.entity.FechaRegistro | date:"yyyy-MM-dd":"+0900" }}</div>'
+        },
+        {
+          field:'Boton',
+          displayName:$translate.instant('VER'),
+          cellTemplate:'<button type="button" class="btn btn-info">VER</button>'
+        }
+
+      ],
+      onRegisterApi: function(gridApi) {
+        self.gridApi = gridApi;
+      }
+    };
+
+    administrativaRequest.get('resolucion',"limit=-1").then(function(response) {
+      self.gridOptionsResolucion.data = response.data;
+       self.longitud_grid_resolucion = self.gridOptionsResolucion.data.length;
+     });
+    //RESOLUCION GRID>
+
+
+    //<PROVEEDOR GRID
+    self.gridOptionsProveedor = {
+      enableRowSelection: true,
+      enableRowHeaderSelection: false,
+      enableSorting: true,
+      enableFiltering: true,
+      multiSelect: false,
+      columnDefs: [
+        {
+          field: 'Id',
+          displayName: $translate.instant('ID'),
+        },
+        {
+          field: 'NumDocumento',
+          displayName: $translate.instant('NUMERO_DOCUMENTO'),
+        },
+        {
+          field: 'Tipopersona',
+          displayName: $translate.instant('TIPO_PERSONA'),
+        },
+        {
+          field: 'NomProveedor',
+          displayName: $translate.instant('NOMBRE_PROVEEDOR'),
+          width: "50%",
+        },
+      ],
+      onRegisterApi: function(gridApi) {
+        self.gridApi = gridApi;
+      }
+    };
+
+    agoraRequest.get('informacion_proveedor',"limit=-1").then(function(response) {
+      self.gridOptionsProveedor.data = response.data;
+       self.longitud_grid_proveedor = self.gridOptionsProveedor.data.length;
+     });
+    //PROVEEDOR GRID>
+
     //CDP GRID para cargar los CDP hay que meter esto en una funcion
     
     self.gridOptions_cdp = {
       enableRowSelection: true,
       enableRowHeaderSelection: false,
       enableFiltering: true,
- 
+      rowHeight: 30,
+      headerHeight: 30,
    columnDefs : [
-     {field: 'Id',             visible : false},
-     {field: 'Vigencia',   displayName: 'Vigencia'},
-     {field: 'NumeroDisponibilidad',   displayName: 'Id'},
-     {field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Objeto',   displayName: 'Descripcion'},
-     {field: 'Solicitud.DependenciaSolicitante.Nombre',   displayName: 'Ordenador'},
-     {field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Id',   displayName: 'Necesidad'},
+     {
+       field: 'Id',             
+       visible : false,     
+      },
+     {
+       field: 'Vigencia',   
+       displayName: 'Vigencia',
+       width: '15%',
+      },
+     {
+       field: 'NumeroDisponibilidad',   
+       displayName: 'Id',
+       width: '10%',
+      },
+     {
+       field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Objeto',   
+       displayName: 'Descripcion'
+      },
+     {
+       field: 'Solicitud.DependenciaSolicitante.Nombre',   
+       displayName: 'Ordenador'
+      },
+     {
+       field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Id',   
+       displayName: 'Necesidad',
+       width: '10%',
+      },
+      {
+        field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Valor',   
+        displayName: 'Valor necesidad',
+        width: '15%',
+        cellTemplate: '<div align="right">{{row.entity.Solicitud.SolicitudDisponibilidad.Necesidad.Valor | currency }}</div>'
+       },
    ]
- 
  };
  financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
    self.gridOptions_cdp.data = response.data;
@@ -101,7 +214,6 @@ angular.module('contractualClienteApp')
  });
 
     //CDP GRID --
-    
 
     administrativaRequest.get('vigencia_contrato').then(function(response) {
       $scope.vigencias = response.data;

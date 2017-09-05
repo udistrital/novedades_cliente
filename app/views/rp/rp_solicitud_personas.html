@@ -30,38 +30,54 @@
       </div>
       </div>
     </div>
+    <!--
     <div class="row">
       <div class="panel panel-default col-md-10 col-md-offset-1">
         <div class="panel-body">
 
-              <div class="col-md-6" align="center">
-                   <div ui-grid="rpSolicitudPersonas.gridOptions_cdp" ui-grid-selection class="myGrid">
+              <div class="col-md-12">
+                <h4><b>Selecciona el CDP</b></h4>
+                   <div style="height:200px" ui-grid="rpSolicitudPersonas.gridOptions_cdp" ui-grid-selection class="myGrid">
                       <div class="well grid-loading" ng-show="rpSolicitudPersonas.gridOptions_cdp == 0">
                         <i class="fa fa-spin fa-spinner"></i>
                         <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
                       </div>
                   </div>
-
+                  <br><br>
+                  <div align="center">
+                  <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
+                    Ir a seleccionar proveedor 
+                  </button>
+                </div>
                 </div>
 
-                <div class="col-md-6" align="center">
-                     <div ui-grid="rpSolicitudPersonas.gridOptions" ui-grid-selection class="myGrid">
-                        <div class="well grid-loading" ng-show="rpSolicitudPersonas.longitud_grid == 0">
+                <div class="col-md-12">
+                    <h4><b>Selecciona el proveedor</b></h4>
+                     <div style="height:200px" ui-grid="rpSolicitudPersonas.gridOptionsProveedor" ui-grid-selection class="myGrid">
+                        <div class="well grid-loading" ng-show="rpSolicitudPersonas.longitud_grid_proveedor == 0">
                           <i class="fa fa-spin fa-spinner"></i>
                           <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
                         </div>
                     </div>
+                        <br><br>
+                        <div align="center">
+                        <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-danger btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
+                          Volver
+                        </button>
+
+                        <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
+                          {{'SOLICITAR_RP' | translate }}
+                        </button>
+
+                        </div>
                   </div>
-                  <div class="col-md-3 col-md-offset-1">
-                      <br><br>
-                      <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
-                        {{'SOLICITAR_RP' | translate }}
-                      </button>
-                  </div>
+                
         </div>
       </div>
     </div>
+  -->
 
+  <!--
     <div class="row">
         <div class="panel panel-default col-md-10 col-md-offset-1">
           <div class="panel-body">
@@ -108,6 +124,32 @@
           </div>
         </div>
       </div>
+    -->
+  
+    <div class="row">
+        <div class="panel panel-default col-md-10 col-md-offset-1">
+          <div class="panel-body">
+              <h4><b>Selecciona la resolución</b></h4>
+                <div class="col-md-12" align="center">
+                     <div style="height:200px" ui-grid="rpSolicitudPersonas.gridOptionsResolucion" ui-grid-selection class="myGrid">
+                        <div class="well grid-loading" ng-show="rpSolicitudPersonas.longitud_grid_resolucion == 0">
+                          <i class="fa fa-spin fa-spinner"></i>
+                          <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
+                        </div>
+                    </div>
+                    <div>
+                      <div align="center">
+                        <br><br>
+                        <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
+                          {{'SOLICITAR_RP' | translate }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+          </div>
+        </div>
+      </div>
+
 
     </div>
 

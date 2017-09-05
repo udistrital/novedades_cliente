@@ -29,6 +29,9 @@ var text_es = {
     EXPERIENCIA_LABORAL_DOCENTE: "Experiencia laboral docente",
     TRABAJOS_INVESTIGACION: "Trabajos de investigación",
   RP_MASIVO: "¿Es para una solicitud de registro presupuestal masiva?",
+  NOMBRE_PROVEEDOR:"Nombre proveedor",
+  TIPO_PERSONA:"Tipo persona",
+  TIPO_RESOLUCION:"Tipo resolución",
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
   //solicitud_necesidad
@@ -516,6 +519,9 @@ var text_en = {
   NECESIDADES: "Needs",
   NECESIDAD: "Need",
   //SOLICITUD RP
+  TIPO_PERSONA:"Kind of person",
+  TIPO_RESOLUCION:"Kind of resolution",
+  NOMBRE_PROVEEDOR:"Supplier name",
   RP_MASIVO: "Is this for a masive budget register request?",
   ERROR: "Error",
   SALIR:"Exit",
