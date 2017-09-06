@@ -34,6 +34,7 @@ angular.module('contractualClienteApp')
     self.texto_busqueda = "";
     self.persona_sel = "";
     $scope.radioB=0;
+    self.gridAp = null;
 
     $scope.fields = {
       numcontrato: '',
@@ -41,7 +42,6 @@ angular.module('contractualClienteApp')
       contratistadocumento: '',
       valorcontrato: ''
     };
-
 
     self.gridOptions = {
       enableRowSelection: true,
@@ -78,8 +78,8 @@ angular.module('contractualClienteApp')
           cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency }}</div>'
         },
       ],
-      onRegisterApi: function(gridApi) {
-        self.gridApi = gridApi;
+      onRegisterApi: function(gridApip) {
+        self.gridAp = gridApip;
       }
     };
 
@@ -125,7 +125,6 @@ angular.module('contractualClienteApp')
       }
     };
     //RESOLUCION GRID>
-
 
     //<PROVEEDOR GRID
     self.gridOptionsProveedor = {
@@ -214,6 +213,7 @@ angular.module('contractualClienteApp')
     self.cargar_filtro = function(){
       console.log($scope.radioB);
       t0 = performance.now();
+
       //si es filtro por contrato
       if ($scope.radioB === 1){
         self.resolucion_bool=false;
@@ -232,6 +232,7 @@ angular.module('contractualClienteApp')
             });
         });
       }
+      
       //si es filtro por cdp
       if ($scope.radioB === 2){
         self.resolucion_bool=false;
@@ -287,7 +288,9 @@ angular.module('contractualClienteApp')
     };
 
     self.mostrar_estadisticas = function() {
-      seleccion = self.gridApi.selection.getSelectedRows();
+
+      seleccion = self.gridAp.selection.getSelectedRows();
+      console.log(seleccion);
       if(seleccion[0]===null || seleccion[0]===undefined){
         swal("Alertas", "Debe seleccionar un contratista", "error");
       }else{
