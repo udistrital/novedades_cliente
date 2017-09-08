@@ -15,6 +15,7 @@ angular.module('contractualClienteApp')
     var self = this;
     var query;
     var seleccion;
+    var contrato_unidad={};
     var t1;
     var t0;
     var total;
@@ -294,13 +295,18 @@ angular.module('contractualClienteApp')
       if(seleccion[0]===null || seleccion[0]===undefined){
         swal("Alertas", "Debe seleccionar un contratista", "error");
       }else{
-        self.contrato.Id = seleccion[0].Numero_contrato;
-        self.contrato.Vigencia= seleccion[0].Vigencia_contrato;
-        self.contrato.ContratistaId= seleccion[0].Id;
-        self.contrato.ValorContrato= seleccion[0].Valor_contrato;
-        self.contrato.NombreContratista= seleccion[0].Nombre_completo;
-        self.contrato.ObjetoContrato= seleccion[0].Objeto_contrato;
-        self.contrato.FechaRegistro= seleccion[0].Fecha_registro;
+        
+        for(var i=0;i<seleccion.length;i++){
+        contrato_unidad.Id = seleccion[0].Numero_contrato;
+        contrato_unidad.Vigencia= seleccion[0].Vigencia_contrato;
+        contrato_unidad.ContratistaId= seleccion[0].Id;
+        contrato_unidad.ValorContrato= seleccion[0].Valor_contrato;
+        contrato_unidad.NombreContratista= seleccion[0].Nombre_completo;
+        contrato_unidad.ObjetoContrato= seleccion[0].Objeto_contrato;
+        contrato_unidad.FechaRegistro= seleccion[0].Fecha_registro;
+        self.contrato.push(contrato_unidad);  
+      }
+
         self.saving = true;
         self.btnGenerartxt = "Generando...";
       

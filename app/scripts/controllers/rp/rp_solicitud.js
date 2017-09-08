@@ -26,6 +26,8 @@ angular.module('contractualClienteApp')
     self.masivo_seleccion = false;
     var Solicitud_id;
     var solicitud_datos;
+    console.log("ALGUN CONTRATO");
+    console.log(self.contrato);
     self.masivo_radio = {
       0:{
         nombre : "Si",
