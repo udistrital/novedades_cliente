@@ -289,27 +289,27 @@ angular.module('contractualClienteApp')
     };
 
     self.mostrar_estadisticas = function() {
-
+      self.contrato.splice(0,self.contrato.length);
       seleccion = self.gridAp.selection.getSelectedRows();
       console.log(seleccion);
       if(seleccion[0]===null || seleccion[0]===undefined){
         swal("Alertas", "Debe seleccionar un contratista", "error");
       }else{
         
-        for(var i=0;i<seleccion.length;i++){
-        contrato_unidad.Id = seleccion[0].Numero_contrato;
-        contrato_unidad.Vigencia= seleccion[0].Vigencia_contrato;
-        contrato_unidad.ContratistaId= seleccion[0].Id;
-        contrato_unidad.ValorContrato= seleccion[0].Valor_contrato;
-        contrato_unidad.NombreContratista= seleccion[0].Nombre_completo;
-        contrato_unidad.ObjetoContrato= seleccion[0].Objeto_contrato;
-        contrato_unidad.FechaRegistro= seleccion[0].Fecha_registro;
+      for(var i=0;i<seleccion.length;i++){
+        contrato_unidad = [];
+        contrato_unidad.Id = seleccion[i].Numero_contrato;
+        contrato_unidad.Vigencia= seleccion[i].Vigencia_contrato;
+        contrato_unidad.ContratistaId= seleccion[i].Id;
+        contrato_unidad.ValorContrato= seleccion[i].Valor_contrato;
+        contrato_unidad.NombreContratista= seleccion[i].Nombre_completo;
+        contrato_unidad.ObjetoContrato= seleccion[i].Objeto_contrato;
+        contrato_unidad.FechaRegistro= seleccion[i].Fecha_registro;
         self.contrato.push(contrato_unidad);  
+        console.log(contrato_unidad);
       }
-
         self.saving = true;
         self.btnGenerartxt = "Generando...";
-      
         self.saving = false;
         self.btnGenerartxt = "Generar";
          $window.location.href = '#/rp/rp_solicitud/';

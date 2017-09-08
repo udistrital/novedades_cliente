@@ -26,8 +26,6 @@ angular.module('contractualClienteApp')
     self.masivo_seleccion = false;
     var Solicitud_id;
     var solicitud_datos;
-    console.log("ALGUN CONTRATO");
-    console.log(self.contrato);
     self.masivo_radio = {
       0:{
         nombre : "Si",
@@ -47,6 +45,22 @@ angular.module('contractualClienteApp')
     ).then(function(response) {
       self.dependencia_solicitante_data = response.data;
     });
+
+    self.gridOptions_contratos = {
+      enableRowSelection: true,
+      enableRowHeaderSelection: false,
+      enableFiltering: true,
+ 
+   columnDefs : [
+     {field: 'Id',             visible : false},
+     {field: 'Id',   displayName: 'Contrato'},
+     {field: 'NombreContratista',   displayName: 'Id'},
+     {field: 'ContratistaId',   displayName: 'Documento'},
+   ]
+ 
+ };
+ self.gridOptions_contratos.data = self.contrato;
+
 
     self.gridOptions_cdp = {
      enableRowSelection: true,
@@ -168,7 +182,6 @@ self.gridOptions_cdp.multiSelect = false;
         self.selectRubro = row.entity;
       });
     };
-
 
     $scope.getTableStyle= function() {
       var rowHeight=30;
