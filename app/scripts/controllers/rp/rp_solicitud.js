@@ -25,7 +25,9 @@ angular.module('contractualClienteApp')
     self.responsable = "";
     self.masivo_seleccion = false;
     var Solicitud_id;
+    var solictudes = [];
     var solicitud_datos;
+    var Solicitud_rp;
     self.masivo_radio = {
       0:{
         nombre : "Si",
@@ -301,17 +303,22 @@ self.gridOptions_cdp.multiSelect = false;
           self.rubros_seleccionados[i].ValorAsignado = parseFloat(self.rubros_seleccionados[i].ValorAsignado);
         }
 
-        var Solicitud_rp = {
-          Vigencia: 2017,
-          FechaSolicitud: self.CurrentDate,
-          Cdp: self.cdp.Id,
-          Expedida: false,
-          NumeroContrato: self.contrato.Id,
-          VigenciaContrato: self.contrato.Vigencia.toString(),
-          Compromiso: self.compromiso.Id,
-          Justificacion_rechazo: 0,
-          Masivo : self.masivo_seleccion
-        };
+//se envian todas las solicitudes de rp
+        for(var x=0;x<contrato.length;x++){
+          Solicitud_rp = {};
+          solicitud_datos = {};
+          Solicitud_id = {};
+          Solicitud_rp = {
+            Vigencia: 2017,
+            FechaSolicitud: self.CurrentDate,
+            Cdp: self.cdp.Id,
+            Expedida: false,
+            NumeroContrato: self.contrato.Id,
+            VigenciaContrato: self.contrato.Vigencia.toString(),
+            Compromiso: self.compromiso.Id,
+            Justificacion_rechazo: 0,
+            Masivo : self.masivo_seleccion
+          };
 
           administrativaRequest.post('solicitud_rp', Solicitud_rp).then(function(response) {
             Solicitud_id = response.data;
@@ -325,15 +332,27 @@ self.gridOptions_cdp.multiSelect = false;
               administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
               });
             }
+          });
 
-            administrativaRequest.get('solicitud_rp','query=Id:'+Solicitud_id).then(function(response){
-              solicitud_datos = response.data[0];
-              console.log(solicitud_datos.FechaSolicitud);
-              var fecha = new Date(solicitud_datos.FechaSolicitud);
-              dia = fecha.getDate()+1;
-              mes = fecha.getMonth()+1;
-              ano = fecha.getFullYear();
-              var fecha_solicitud = dia +"/"+mes+"/"+ano;
+          administrativaRequest.get('solicitud_rp','query=Id:'+Solicitud_id).then(function(response){
+            solicitud_datos = response.data[0];
+            console.log(solicitud_datos.FechaSolicitud);
+            var fecha = new Date(solicitud_datos.FechaSolicitud);
+            dia = fecha.getDate()+1;
+            mes = fecha.getMonth()+1;
+            ano = fecha.getFullYear();
+            var fecha_solicitud = dia +"/"+mes+"/"+ano;
+          });
+
+          solicitudes.push(solicitud_datos);  
+        }
+
+        
+
+
+
+
+            /*
             swal({
               html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
               +solicitud_datos.Id+"<br><label><b>"+$translate.instant('VIGENCIA_SOLICITUD')+":</b></label> " + solicitud_datos.Vigencia + "<br><label><b>"+$translate.instant('FECHA_SOLICITUD')+":</b></label>:"
@@ -355,8 +374,8 @@ self.gridOptions_cdp.multiSelect = false;
                 $window.location.href = '#';
               }
             });
-            });
-          });
+           */
+          
 
       }
     };
