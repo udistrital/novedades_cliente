@@ -79,7 +79,7 @@ angular.module('contractualClienteApp')
         },
       ],
       onRegisterApi: function(gridApi) {
-        self.gridApi = gridApi;
+        $scope.gridApril = gridApi;
       }
     };
 
@@ -121,7 +121,7 @@ angular.module('contractualClienteApp')
 
       ],
       onRegisterApi: function(gridApi) {
-        self.gridApi = gridApi;
+        $scope.gridApiResolucion = gridApi;
       }
     };
     //RESOLUCION GRID>
@@ -154,7 +154,7 @@ angular.module('contractualClienteApp')
         },
       ],
       onRegisterApi: function(gridApi) {
-        self.gridApi = gridApi;
+        $scope.gridApiProveedor = gridApi;
       }
     };
 
@@ -282,12 +282,16 @@ angular.module('contractualClienteApp')
          self.gridOptions.data = response.data;
           self.longitud_grid = self.gridOptions.data.length;
         });
-
       }
     };
 
+
     self.mostrar_estadisticas = function() {
-      seleccion = self.gridApi.selection.getSelectedRows();
+
+ 
+
+      console.log($scope.gridApril.selection.getSelectedRows());
+      seleccion = $scope.gridApril.selection.getSelectedRows();
       if(seleccion[0]===null || seleccion[0]===undefined){
         swal("Alertas", "Debe seleccionar un contratista", "error");
       }else{
