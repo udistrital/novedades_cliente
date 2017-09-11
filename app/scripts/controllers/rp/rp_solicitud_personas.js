@@ -36,6 +36,9 @@ angular.module('contractualClienteApp')
     self.persona_sel = "";
     $scope.radioB=0;
     self.gridAp = null;
+    self.resolucionNumero = "";
+    self.resolucionVigencia = "";
+    self.tipoResolucion = "";
 
     $scope.fields = {
       numcontrato: '',
@@ -117,7 +120,7 @@ angular.module('contractualClienteApp')
         {
           field:'Boton',
           displayName:$translate.instant('VER'),
-          cellTemplate:'<button type="button" class="btn btn-info" ng-click="grid.appScope.rpSolicitudPersonas.setResolucion(row.entity)"">VER</button>'
+          cellTemplate:'<button type="button" class="btn btn-info" data-toggle="modal" data-target="#resolucionModal" ng-click="grid.appScope.rpSolicitudPersonas.setResolucion(row.entity)"">VER</button>'
         }
 
       ],
@@ -288,8 +291,10 @@ angular.module('contractualClienteApp')
       }
     };
 
-    self.setResolucion= function(value){
-      console.log(value);
+    self.setResolucion= function(resolucion){
+      self.resolucionNumero = resolucion.NumeroResolucion;
+      self.resolucionVigencia = resolucion.Vigencia;
+      self.tipoResolucion = resolucion.IdTipoResolucion.NombreTipoResolucion;
     };
 
     self.mostrar_estadisticas = function() {
