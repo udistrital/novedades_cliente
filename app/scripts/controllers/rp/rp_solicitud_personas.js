@@ -38,6 +38,7 @@ angular.module('contractualClienteApp')
     self.gridAp = null;
     self.resolucionNumero = "";
     self.resolucionVigencia = "";
+    self.resolucionId = "";
     self.tipoResolucion = "";
 
     $scope.fields = {
@@ -45,6 +46,41 @@ angular.module('contractualClienteApp')
       vigcontrato: '',
       contratistadocumento: '',
       valorcontrato: ''
+    };
+
+    //grid modal
+    self.gridOptionsResolucionPersonas ={
+      enableRowSelection: false,
+      enableRowHeaderSelection: false,
+      enableSorting: true,
+      enableFiltering: true,
+      multiSelect: false,
+      columnDefs: [
+        {
+          field: 'PrimerNombre',
+          displayName: $translate.instant('NOMBRE_CONTRATISTA'),
+        },
+        {
+          field: 'SegundoNombre',
+          displayName: $translate.instant('SEGUNDO_NOMBRE_CONTRATISTA'),
+        },
+        {
+          field: 'PrimerApellido',
+          displayName: $translate.instant('APELLIDO_CONTRATISTA'),
+        },
+        {
+          field: 'SegundoApellido',
+          displayName: $translate.instant('SEGUNDO_APELLIDO_CONTRATISTA'),
+        },
+        {
+          field: 'Id',
+          displayName: $translate.instant('DOCUMENTO_CONTRATISTA'),
+          cellTemplate: '<div align="center">{{row.entity.Id}}</div>',
+        }
+      ],
+      onRegisterApi: function(gridApip) {
+        self.gridAp = gridApip;
+      }
     };
 
     self.gridOptions = {
@@ -292,9 +328,36 @@ angular.module('contractualClienteApp')
     };
 
     self.setResolucion= function(resolucion){
+      var vinculacion_docente = [];
+      var contratistas = [];
+
+      self.resolucionId = resolucion.Id;
       self.resolucionNumero = resolucion.NumeroResolucion;
       self.resolucionVigencia = resolucion.Vigencia;
       self.tipoResolucion = resolucion.IdTipoResolucion.NombreTipoResolucion;
+
+      var t0 = performance.now();
+      administrativaRequest.get('vinculacion_docente',"limit=-1&query=IdResolucion.Id:"+self.resolucionId).then(function(response) {
+        if(response.data!=null){
+        vinculacion_docente = response.data;
+        
+        for(var x = 0;x<vinculacion_docente.length;x++){
+          var cedula = vinculacion_docente[x].IdPersona.toString();
+          console.log(cedula);
+          agoraRequest.get('informacion_persona_natural',"&query=Id:"+cedula).then(function(response) {
+            contratistas.push(response.data[0]); 
+           });
+         };
+        }
+         
+       });
+       t1 = performance.now();
+       total = (t1 - t0) +50;
+        $timeout(function(){
+           self.gridOptionsResolucionPersonas.data = contratistas; 
+           self.gridOptionsResolucionPersonas.longitud_grid=self.gridOptionsResolucionPersonas.length;
+           $('#resolucionModal').resize();
+       },total);
     };
 
     self.mostrar_estadisticas = function() {
