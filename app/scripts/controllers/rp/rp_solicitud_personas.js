@@ -117,7 +117,7 @@ angular.module('contractualClienteApp')
         {
           field:'Boton',
           displayName:$translate.instant('VER'),
-          cellTemplate:'<button type="button" class="btn btn-info" data-toggle="modal" data-target="#resolucionModal">VER</button>'
+          cellTemplate:'<button type="button" class="btn btn-info" ng-click="grid.appScope.rpSolicitudPersonas.setResolucion(row.entity)"">VER</button>'
         }
 
       ],
@@ -286,6 +286,10 @@ angular.module('contractualClienteApp')
         });
 
       }
+    };
+
+    self.setResolucion= function(value){
+      console.log(value);
     };
 
     self.mostrar_estadisticas = function() {
