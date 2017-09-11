@@ -8,6 +8,17 @@
 * Decorator of the contractualClienteApp
 */
 var text_es = {
+    SEGUNDO_NOMBRE:"Segundo nombre",
+
+    SELECCIONAR_FILTRO:"Seleccione el tipo de filtro por el cual quiere generar la solicitud del RP",  
+    BUSCAR:"Buscar",
+    INGRESE_IDENTIFICACION_PROVEEDOR:"Ingrese identificación del proveedor",
+    DATOS_PROVEEDOR:"Datos proveedor",
+    IDENTIFICACION:"Identificación",
+    SELECCIONAR_RESOLUCION:"Selecciona la resolución",
+    CONTRATISTAS_RESOLUCION:"Contratistas en esta resolución",
+    SELECCIONE_CDP:"Seleccione el CDP",
+
     VER: "Ver",
     SELECCIONAR: "Seleccionar",
     CANCELAR: "Cancelar",
@@ -494,6 +505,16 @@ var text_es = {
 };
 
 var text_en = {
+  SELECCIONAR_FILTRO:" Select the filter which is going to generate the RP request",  
+  BUSCAR:"Search",   
+  INGRESE_IDENTIFICACION_PROVEEDOR:"Enter provider id",
+  DATOS_PROVEEDOR:"Provider data",
+  IDENTIFICACION:"Id",
+  SELECCIONAR_RESOLUCION:"Select the resolution",
+  CONTRATISTAS_RESOLUCION:"Contractors at this resolution",
+  SELECCIONE_CDP:"Select the CDP",
+
+  SEGUNDO_NOMBRE:"Middle name",
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Now get to start to develop ...",
     VER: "See",

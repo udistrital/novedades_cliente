@@ -15,6 +15,7 @@ angular.module('contractualClienteApp')
     var self = this;
     var query;
     var seleccion;
+    var contrato_unidad={};
     var t1;
     var t0;
     var total;
@@ -34,6 +35,11 @@ angular.module('contractualClienteApp')
     self.texto_busqueda = "";
     self.persona_sel = "";
     $scope.radioB=0;
+    self.gridAp = null;
+    self.resolucionNumero = "";
+    self.resolucionVigencia = "";
+    self.resolucionId = "";
+    self.tipoResolucion = "";
 
     $scope.fields = {
       numcontrato: '',
@@ -42,6 +48,40 @@ angular.module('contractualClienteApp')
       valorcontrato: ''
     };
 
+    //grid modal
+    self.gridOptionsResolucionPersonas ={
+      enableRowSelection: false,
+      enableRowHeaderSelection: false,
+      enableSorting: true,
+      enableFiltering: true,
+      multiSelect: false,
+      columnDefs: [
+        {
+          field: 'PrimerNombre',
+          displayName: $translate.instant('PRIMER_NOMBRE'),
+        },
+        {
+          field: 'SegundoNombre',
+          displayName: $translate.instant('SEGUNDO_NOMBRE'),
+        },
+        {
+          field: 'PrimerApellido',
+          displayName: $translate.instant('PRIMER_APELLIDO'),
+        },
+        {
+          field: 'SegundoApellido',
+          displayName: $translate.instant('SEGUNDO_APELLIDO'),
+        },
+        {
+          field: 'Id',
+          displayName: $translate.instant('DOCUMENTO_CONTRATISTA'),
+          cellTemplate: '<div align="center">{{row.entity.Id}}</div>',
+        }
+      ],
+      onRegisterApi: function(gridApip) {
+        self.gridAp = gridApip;
+      }
+    };
 
     self.gridOptions = {
       enableRowSelection: true,
@@ -78,8 +118,8 @@ angular.module('contractualClienteApp')
           cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency }}</div>'
         },
       ],
-      onRegisterApi: function(gridApi) {
-        $scope.gridApril = gridApi;
+      onRegisterApi: function(gridApip) {
+        self.gridAp = gridApip;
       }
     };
 
@@ -116,16 +156,15 @@ angular.module('contractualClienteApp')
         {
           field:'Boton',
           displayName:$translate.instant('VER'),
-          cellTemplate:'<button type="button" class="btn btn-info" data-toggle="modal" data-target="#resolucionModal">VER</button>'
+          cellTemplate:'<button type="button" class="btn btn-info" data-toggle="modal" data-target="#resolucionModal" ng-click="grid.appScope.rpSolicitudPersonas.setResolucion(row.entity)"">{{"VER" | translate}}</button>'
         }
 
       ],
       onRegisterApi: function(gridApi) {
-        $scope.gridApiResolucion = gridApi;
+        self.gridApi = gridApi;
       }
     };
     //RESOLUCION GRID>
-
 
     //<PROVEEDOR GRID
     self.gridOptionsProveedor = {
@@ -154,7 +193,7 @@ angular.module('contractualClienteApp')
         },
       ],
       onRegisterApi: function(gridApi) {
-        $scope.gridApiProveedor = gridApi;
+        self.gridApi = gridApi;
       }
     };
 
@@ -213,7 +252,7 @@ angular.module('contractualClienteApp')
 
     self.cargar_filtro = function(){
       console.log($scope.radioB);
-      t0 = performance.now();
+
       //si es filtro por contrato
       if ($scope.radioB === 1){
         self.resolucion_bool=false;
@@ -232,6 +271,7 @@ angular.module('contractualClienteApp')
             });
         });
       }
+      
       //si es filtro por cdp
       if ($scope.radioB === 2){
         self.resolucion_bool=false;
@@ -266,11 +306,7 @@ angular.module('contractualClienteApp')
            self.longitud_grid_resolucion = self.gridOptionsResolucion.data.length;
          });
       }
-      t1 = performance.now();
-      total = (t1 - t0) +5;
-      $timeout(function(){
-        $(window).resize();
-      },total);
+
     };
 
     //se buscan los contratos por la vigencia seleccionada
@@ -282,34 +318,65 @@ angular.module('contractualClienteApp')
          self.gridOptions.data = response.data;
           self.longitud_grid = self.gridOptions.data.length;
         });
+
       }
     };
 
+    self.setResolucion= function(resolucion){
+      var vinculacion_docente = [];
+      var contratistas = [];
+
+      self.resolucionId = resolucion.Id;
+      self.resolucionNumero = resolucion.NumeroResolucion;
+      self.resolucionVigencia = resolucion.Vigencia;
+      self.tipoResolucion = resolucion.IdTipoResolucion.NombreTipoResolucion;
+
+      var t0 = performance.now();
+      administrativaRequest.get('vinculacion_docente',"limit=-1&query=IdResolucion.Id:"+self.resolucionId).then(function(response) {
+        if(response.data!=null){
+        vinculacion_docente = response.data;
+        
+        for(var x = 0;x<vinculacion_docente.length;x++){
+          var cedula = vinculacion_docente[x].IdPersona.toString();
+          console.log(cedula);
+          agoraRequest.get('informacion_persona_natural',"&query=Id:"+cedula).then(function(response) {
+            contratistas.push(response.data[0]); 
+           });
+         };
+        }
+         
+       });
+        $timeout(function(){
+           self.gridOptionsResolucionPersonas.data = contratistas; 
+           self.gridOptionsResolucionPersonas.longitud_grid=self.gridOptionsResolucionPersonas.length;
+       },total);
+    };
 
     self.mostrar_estadisticas = function() {
-
- 
-
-      console.log($scope.gridApril.selection.getSelectedRows());
-      seleccion = $scope.gridApril.selection.getSelectedRows();
+      self.contrato.splice(0,self.contrato.length);
+      seleccion = self.gridAp.selection.getSelectedRows();
+      console.log(seleccion);
       if(seleccion[0]===null || seleccion[0]===undefined){
         swal("Alertas", "Debe seleccionar un contratista", "error");
       }else{
-        self.contrato.Id = seleccion[0].Numero_contrato;
-        self.contrato.Vigencia= seleccion[0].Vigencia_contrato;
-        self.contrato.ContratistaId= seleccion[0].Id;
-        self.contrato.ValorContrato= seleccion[0].Valor_contrato;
-        self.contrato.NombreContratista= seleccion[0].Nombre_completo;
-        self.contrato.ObjetoContrato= seleccion[0].Objeto_contrato;
-        self.contrato.FechaRegistro= seleccion[0].Fecha_registro;
+        
+      for(var i=0;i<seleccion.length;i++){
+        contrato_unidad = [];
+        contrato_unidad.Id = seleccion[i].Numero_contrato;
+        contrato_unidad.Vigencia= seleccion[i].Vigencia_contrato;
+        contrato_unidad.ContratistaId= seleccion[i].Id;
+        contrato_unidad.ValorContrato= seleccion[i].Valor_contrato;
+        contrato_unidad.NombreContratista= seleccion[i].Nombre_completo;
+        contrato_unidad.ObjetoContrato= seleccion[i].Objeto_contrato;
+        contrato_unidad.FechaRegistro= seleccion[i].Fecha_registro;
+        self.contrato.push(contrato_unidad);  
+        console.log(contrato_unidad);
+      }
         self.saving = true;
         self.btnGenerartxt = "Generando...";
-      
         self.saving = false;
         self.btnGenerartxt = "Generar";
          $window.location.href = '#/rp/rp_solicitud/';
       }
 };
-  });
-
-
+});
