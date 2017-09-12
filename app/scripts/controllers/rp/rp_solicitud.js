@@ -348,10 +348,6 @@ self.gridOptions_cdp.multiSelect = false;
         }
 
         
-
-
-
-
             /*
             swal({
               html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
