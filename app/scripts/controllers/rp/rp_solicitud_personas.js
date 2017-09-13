@@ -401,7 +401,6 @@ angular.module('contractualClienteApp')
         console.log(seleccion.length);
         for(var x=0;x<seleccion.length;x++){
           console.log(x);
-          t00 = performance.now();
           administrativaRequest.get('vinculacion_docente',"limit=-1&query=IdResolucion.Id:"+seleccion[x].Id).then(function(response) {
             if(response.data!=null){
               for(var i=0;i<response.data.length;i++){
@@ -410,15 +409,6 @@ angular.module('contractualClienteApp')
             }
 
            });
-
-           /*//consulta para traer la informacion de las personas de los docentes asociados a una resolucion
-           for(var x = 0;x<vinculacion_docente.length;x++){
-            cedula = vinculacion_docente[x].IdPersona.toString();
-           
-            agoraRequest.get('informacion_persona_natural',"&query=Id:"+cedula).then(function(response) {
-              contratistas.push(response.data[0]); 
-            });
-           };*/
           
           console.log("CONTRATISTAS");
           console.log(contratistas);
@@ -430,32 +420,22 @@ angular.module('contractualClienteApp')
         
         $timeout(function(){
           console.log(vinculacion_docente);
-          t00 = performance.now();
+          
           for(var x=0;x<vinculacion_docente.length;x++){
             contrato_unidad = []; 
             contrato_unidad.Id = vinculacion_docente[x].NumeroContrato;
             contrato_unidad.Vigencia= vinculacion_docente[x].Vigencia;
             contrato_unidad.ContratistaId= vinculacion_docente[x].IdPersona;
             contrato_unidad.ValorContrato= vinculacion_docente[x].Valor_contrato;
-            agoraRequest.get('informacion_proveedor',"query=NumDocumento:"+vinculacion_docente[x].IdPersona).then(function(response) {
-              contrato_unidad.NombreContratista=response.data[0].NomProveedor;
-            });
-            
             self.contrato.push(contrato_unidad);  
           }
-          
 
+              self.saving = true;
+              self.btnGenerartxt = "Generando...";
+              self.saving = false;
+              self.btnGenerartxt = "Generar";
+              $window.location.href = '#/rp/rp_solicitud/';
         },total);
-        t2 = performance.now();
-        total2= (t2 - t00) +2000;
-        $timeout(function(){
-          
-            self.saving = true;
-            self.btnGenerartxt = "Generando...";
-            self.saving = false;
-            self.btnGenerartxt = "Generar";
-            $window.location.href = '#/rp/rp_solicitud/';
-          },total2);
       }
 
 };

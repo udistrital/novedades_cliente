@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudCtrl', function(coreRequest,$window,agoraRequest,contrato,administrativaRequest,$scope,financieraRequest,financieraMidRequest,$translate) {
+  .controller('RpSolicitudCtrl', function(coreRequest,$timeout,$window,agoraRequest,contrato,administrativaRequest,$scope,financieraRequest,financieraMidRequest,$translate) {
     var self = this;
     self.contrato = contrato;
     $scope.rubroVacio=false;
@@ -23,10 +23,15 @@ angular.module('contractualClienteApp')
     self.rubros_seleccionados = [];
     self.rubros_select = [];
     self.responsable = "";
+    var cedula;
     self.masivo_seleccion = false;
     var Solicitud_id;
     var solictudes = [];
     var solicitud_datos;
+    var nombre = [];
+    var t0;
+    var t1;
+    var total;
     var Solicitud_rp;
     self.masivo_radio = {
       0:{
@@ -62,7 +67,25 @@ angular.module('contractualClienteApp')
  
  };
  self.gridOptions_contratos.data = self.contrato;
+ if (self.contrato.NombreContratista === undefined){
 
+  t0 = performance.now();
+  for(var x = 0;x<self.contrato.length;x++){
+    cedula = self.contrato[x].ContratistaId.toString();
+    console.log(cedula);
+    agoraRequest.get('informacion_persona_natural',"&query=Id:"+cedula).then(function(response) {
+      nombre.push(response.data[0].PrimerApellido+" "+response.data[0].SegundoApellido+" "+response.data[0].PrimerNombre+" "+response.data[0].SegundoNombre); 
+    });
+   };
+   t1 = performance.now();
+   total = (t1 - t0) +1000;
+   $timeout(function(){
+     console.log(nombre);
+     for(var x=0;x<self.contrato.length;x++){
+      self.contrato[x].NombreContratista=nombre[x];
+     }
+  },total);
+ };
 
     self.gridOptions_cdp = {
      enableRowSelection: true,
