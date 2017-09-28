@@ -27,7 +27,7 @@ angular.module('contractualClienteApp')
     self.masivo_seleccion = false;
     var Solicitud_id;
     var solicitudes = [];
-    var solicitud_datos;
+    var respuestas_solicitudes = [];
     var nombre = [];
     var t0;
     var t1;
@@ -60,9 +60,9 @@ angular.module('contractualClienteApp')
  
    columnDefs : [
      {field: 'Id',             visible : false},
-     {field: 'Id',   displayName: 'Contrato'},
-     {field: 'NombreContratista',   displayName: 'Id'},
-     {field: 'ContratistaId',   displayName: 'Documento'},
+     {field: 'Id',   displayName: $translate.instant('CONTRATO')},
+     {field: 'NombreContratista',   displayName:$translate.instant('ID')},
+     {field: 'ContratistaId',   displayName: $translate.instant('DOCUMENTO')},
    ]
  
  };
@@ -337,7 +337,6 @@ if(self.contrato.length>1){
   self.masivo_seleccion=false;
 }        
         for(var x=0;x<self.contrato.length;x++){
-          console.log(self.contrato);  
           Solicitud_rp = {};
           Solicitud_rp = {
             Vigencia: 2017,
@@ -356,8 +355,7 @@ if(self.contrato.length>1){
         angular.forEach(solicitudes, function(solicitud_rp) {
           administrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
             Solicitud_id = response.data;
-            
-            console.log(Solicitud_id);
+            respuestas_solicitudes.push(Solicitud_id) ;
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
               var Disponibilidad_apropiacion_solicitud_rp = {
                 DisponibilidadApropiacion: self.rubros_seleccionados[i].Id,
@@ -370,26 +368,14 @@ if(self.contrato.length>1){
           });
         });
 
-
-        /*  administrativaRequest.get('solicitud_rp','query=Id:'+Solicitud_id).then(function(response){
-            solicitud_datos = response.data[0];
-            console.log(solicitud_datos.FechaSolicitud);
-            var fecha = new Date(solicitud_datos.FechaSolicitud);
-            dia = fecha.getDate()+1;
-            mes = fecha.getMonth()+1;
-            ano = fecha.getFullYear();
-            var fecha_solicitud = dia +"/"+mes+"/"+ano;
-          });
-
-          solicitudes.push(solicitud_datos);  */
-
-        
-            /*
+        //console.log(respuestas_solicitudes);
+            
             swal({
-              html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
+              /*html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
               +solicitud_datos.Id+"<br><label><b>"+$translate.instant('VIGENCIA_SOLICITUD')+":</b></label> " + solicitud_datos.Vigencia + "<br><label><b>"+$translate.instant('FECHA_SOLICITUD')+":</b></label>:"
               +fecha_solicitud+ "<br><label><b>"+$translate.instant('NUMERO_CONTRATO')+":</b></label>" + solicitud_datos.NumeroContrato + "<br><label><b>"+$translate.instant('VIGENCIA_CONTRATO')+":</b></label>"
-              + solicitud_datos.VigenciaContrato,
+              + solicitud_datos.VigenciaContrato,*/
+              html:"<div ui-grid=self.gridOptions_compromiso ui-grid-auto-resize class='myGrid'></div>",
               type: "success",
               showCancelButton: true,
               confirmButtonColor: "#449D44",
@@ -406,7 +392,6 @@ if(self.contrato.length>1){
                 $window.location.href = '#';
               }
             });
-           */
           
 
       }
