@@ -46,13 +46,22 @@
               <div class="form-group col-lg-12">
                 <label for="inputEncabezado" style="float:left; margin-top:10px;">{{ 'ENCABEZADO_MINUTA' | translate }}</label>
                 <texto-enriquecido texto="generacionPlantilla.encabezado"></texto-enriquecido>
-                <small id="validador" class="bg-danger">Rellena este campo</small>
+                Insertar imagen: <input type="file" ngf-select="" ng-model="generacionPlantilla.imagenEncabezado" name="file" ngf-accept="'image/*'" required="">
+                <img ngf-src="generacionPlantilla.imagenEncabezado" class="thumb">
+                <span class="progress" ng-show="generacionPlantilla.imagenEncabezado.progress >= 0">
+                  <div style="width:{{generacionPlantilla.imagenEncabezado.progress}}%" ng-bind="generacionPlantilla.imagenEncabezado.progress + '%'" class="ng-binding"></div>
+                </span>
               </div>
             </div>
             <div class="col-lg-12">
               <div class="from-group col-sm-12">
                 <label for="inputPieDePagina" style="float:left; margin-top:10px;">{{ 'PIE_MINURA' | translate }}</label>
                 <texto-enriquecido texto="generacionPlantilla.pieDePagina"></texto-enriquecido>
+                Insertar imagen: <input type="file" ngf-select="" ng-model="generacionPlantilla.imagenPie" name="file" ngf-accept="'image/*'" required="">
+                <img ngf-src="generacionPlantilla.imagenPie" class="thumb">
+                <span class="progress" ng-show="generacionPlantilla.imagenPie.progress >= 0">
+                  <div style="width:{{generacionPlantilla.imagenPie.progress}}%" ng-bind="generacionPlantilla.imagenPie.progress + '%'" class="ng-binding"></div>
+                </span>
               </div>
             </div>
           </form>
@@ -69,17 +78,13 @@
         </div>
         <div class="panel-body">
           <div class="col-lg-12" ng-repeat="i in generacionPlantilla.getCantidad(generacionPlantilla.contenidoMinuta.Clausulas)">
-            <legend class="text-primary" ng-click="info_articulo=!info_articulo">{{ 'CLAUSULA' | translate }}{{ i+1 }}-{{ generacionPlantilla.contenidoMinuta.Clausulas[i].Titulo }}<span class="fa fa-plus pull-right" ng-show="!info_articulo"></span> <span class="fa fa-minus pull-right" ng-show="info_articulo"></span></legend>
+            <legend class="text-primary" ng-click="info_articulo=!info_articulo">{{ 'CLAUSULA' | translate }} {{ i+1 }} - {{ generacionPlantilla.contenidoMinuta.Clausulas[i].Titulo }}<span class="fa fa-plus pull-right" ng-show="!info_articulo"></span> <span class="fa fa-minus pull-right" ng-show="info_articulo"></span></legend>
             <div class="panel panel-default" ng-show="info_articulo">
               <div class="panel-body">
                 <form role="form">
                   <div class="form-group col-lg-6">
                     <label>{{ 'TEXTO' | translate }}</label>
                     <div ta-bind ng-model="generacionPlantilla.contenidoMinuta.Clausulas[i].Texto"></div>
-                    <img ngf-src="generacionPlantilla.contenidoMinuta.Clausulas[i].Imagen" class="thumb">
-                    <span class="progress" ng-show="generacionPlantilla.contenidoMinuta.Clausulas[i].Imagen.progress >= 0">
-                      <div style="width:{{generacionPlantilla.contenidoMinuta.Clausulas[i].Imagen.progress}}%" ng-bind="generacionPlantilla.contenidoMinuta.Clausulas[i].Imagen.progress + '%'" class="ng-binding"></div>
-                    </span>
                   </div>
                   <div class="col-lg-10 col-lg-offset-1">
                     <button class="form-control btn btn-danger" data-toggle="modal" ng-click="generacionPlantilla.eliminarClausula(i)">{{'BTN_MINUTAS.ELIMINAR_CLAUSULA' | translate}}</button>
@@ -102,7 +107,7 @@
           </div>
           <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
-              <button class="form-control btn btn-primary" data-toggle="modal" data-target="#modal_add_clausula">{{'BTN_MINUTAS.AGREGAR_CLAUSULA' | translate}}</button>
+              <button class="form-control btn btn-primary" data-toggle="modal" ng-click="generacionPlantilla.pruebas()" data-target="#modal_add_clausula">{{'BTN_MINUTAS.AGREGAR_CLAUSULA' | translate}}</button>
             </div>
           </div>
         </div>
@@ -135,11 +140,6 @@
           <div class="col-sm-12 row form-group" style="margin-top: 20px;">
             <label for="descripcion" class="col-sm-4 col-form-label">{{'DESCRIPCION' | translate }}: </label>
             <texto-enriquecido texto="generacionPlantilla.textoClausula"></texto-enriquecido>
-            Insertar imagen: <input type="file" ngf-select="" ng-model="generacionPlantilla.imagen" name="file" ngf-accept="'image/*'" required="">
-            <img ngf-src="generacionPlantilla.imagen" class="thumb">
-            <span class="progress" ng-show="generacionPlantilla.imagen.progress >= 0">
-              <div style="width:{{generacionPlantilla.imagen.progress}}%" ng-bind="generacionPlantilla.imagen.progress + '%'" class="ng-binding"></div>
-            </span>
           </div>
         </div>
       </div>

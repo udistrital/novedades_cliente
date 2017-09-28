@@ -42,7 +42,6 @@ angular.module('contractualClienteApp')
     if (typeof self.tituloClausula != 'undefined') {
       if (self.tituloClausula) {
         self.contenidoMinuta.Clausulas.push({Titulo: self.tituloClausula, Texto: self.textoClausula, Imagen: self.imagen, Paragrafos: []});
-        console.log(self.contenidoMinuta.Clausulas);
         $('#modal_add_clausula').modal('hide');
         self.limpiarModal();
       }
@@ -57,11 +56,16 @@ angular.module('contractualClienteApp')
 
   // Cambia los campos de las ventanas modales a vacios
   self.limpiarModal = function() {
-    self.tituloClausula = '';
-    self.textoClausula = '';
-    self.textoParagrafo = '';
+    self.tituloClausula = undefined;
+    self.textoClausula = undefined;
+    self.textoParagrafo = undefined;
+    self.imagen = null;
   };
 
+  self.pruebas = function() {
+    console.log(self.tituloClausula);
+    console.log(self.textoClausula);
+  }
 
   // Adiciona paragrafo
   self.adicionarParagrafo = function(){
@@ -204,7 +208,6 @@ angular.module('contractualClienteApp')
 
   // pdfMake
   self.crearPdf = function(op) {
-
     var docDefinition = setInfoPlantilla();
     switch (op) {
       case 1:
@@ -238,27 +241,6 @@ angular.module('contractualClienteApp')
   }
 
   function setInfoPlantilla() {
-
-    var docDefinition = {
-  content: [
-    'paragraph 1',
-    'paragraph 2',
-    {
-      columns: [
-        'first column is a simple text',
-        'firts friend',
-        [
-          // second column consists of paragraphs
-          'paragraph A',
-          'paragraph B',
-          'these paragraphs will be rendered one below another inside the column'
-        ]
-      ],
-      columnGap: 2
-    }
-  ]
-};
-
     var contenido = {
       pageSize: 'A4',
 
@@ -267,23 +249,19 @@ angular.module('contractualClienteApp')
 
       header:
       [
+        //{ image: , width: 330, height: 23.504 },
         { text: ''+self.encabezado, style: 'cabecera' },
         { text: ''+self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' }
       ],
 
       footer: { text: ''+self.pieDePagina, style: 'pie' },
 
-      content:
-      [
+      content: [
         {
-          columns:
-          [
-            /*{ width: '100%', text: self.contenidoMinuta.Introduccion+' '+self.contenidoMinuta.Consideracion, style: 'contenido' },*/
-            { width: 'auto', text: 'ClausulaXasfsdfgjegioewtejgnjksdfngjkd vnfd sdfgjkksfgesbfndkjfnsdfgbsjd msdfkgb sfd gsdfg ', style: 'subtitulo' },
-            { width: 'auto', text: 'texto de la cuaaaasula', style: 'contenido' }
-          ],
-          columnGap: 2
-        }
+          text: [
+            { text: self.contenidoMinuta.Introduccion+' '+self.contenidoMinuta.Consideracion, style: 'contenido' }
+          ]
+        },
       ],
 
       styles: {
@@ -313,18 +291,27 @@ angular.module('contractualClienteApp')
       }
     };
     var numClausulas = self.contenidoMinuta.Clausulas.length;
-    /*if (numClausulas) {
-    for (var i = 0; i < numClausulas; i++) {
-    var clausulaTitulo = { text: 'Clausula ' + (i+1) + ' ' +self.contenidoMinuta.Clausulas[i].Titulo, style: 'subtitulo' };
-    var clausulaTexto =  { text: self.contenidoMinuta.Clausulas[i].Texto, style: 'contenido' };
-    contenido.content.push(clausulaTitulo, clausulaTexto);
-  }
-}
+    if (numClausulas) {
+      for (var i = 0; i < numClausulas; i++) {
+        var clausulaTitulo = { text: ' Clausula ' + (i+1) + ' - ' +self.contenidoMinuta.Clausulas[i].Titulo, style: 'subtitulo' };
+        var clausulaTexto =  { text: ' ' + self.contenidoMinuta.Clausulas[i].Texto, style: 'contenido' };
+        contenido.content[0].text.push(clausulaTitulo, clausulaTexto);
+        if (self.contenidoMinuta.Clausulas[i].Paragrafos) {
+          for (var j = 0; j < self.contenidoMinuta.Clausulas[i].Paragrafos.length; j++) {
+            var paragrafoTitulo = { text: ' Parágrafo ' + (j+1)  + '.' , style: 'subtitulo'};
+            var paragrafoTexto = { text: ' ' + self.contenidoMinuta.Clausulas[i].Paragrafos[j].Texto, style: 'contenido' };
+            console.log(self.contenidoMinuta.Clausulas[i].Paragrafos[j].Texto);
+            contenido.content[0].text.push(paragrafoTitulo, paragrafoTexto);
+          }
 
-for (var i = 0; i < contenido.content.length; i++) {
-contenido.content[i].text = contenido.content[i].text.trim()
-}*/
-return docDefinition;
-}
+        }
+      }
+    }
+
+    /*for (var i = 0; i < contenido.content.length; i++) {
+      contenido.content[0].columns[i].text = contenido.content[0].columns[i].text.trim();
+    }*/
+    return contenido;
+  }
 
 });
