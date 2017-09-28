@@ -37,7 +37,7 @@ angular.module('contractualClienteApp')
     });
 
 
-    $scope.$watchGroup(['solicitudNecesidad.necesidad.UnidadEjecutora', 'solicitudNecesidad.necesidad.TipoRubro'],function(){
+    $scope.$watchGroup(['solicitudNecesidad.necesidad.UnidadEjecutora', 'solicitudNecesidad.necesidad.TipoFinanciacionNecesidad'],function(){
         self.f_apropiacion_fun=[];
         self.f_apropiacion_inv=[];
     },true);
@@ -77,15 +77,15 @@ angular.module('contractualClienteApp')
       limit: -1,
       query: 'Estado:ACTIVO'
     })).then(function(response) {
-      self.snies_data = response.data;
+      self.nucleo_area_data = response.data;
     });
 
-    $scope.$watch('solicitudNecesidad.snies',function(){
+    $scope.$watch('solicitudNecesidad.nucleoarea',function(){
       agoraRequest.get('snies_nucleo_basico', $.param({
-        query: 'IdArea.Id:'+self.snies,
+        query: 'IdArea.Id:'+self.nucleoarea,
         limit: -1
       })).then(function(response) {
-        self.snies_nucleo_basico_data = response.data;
+        self.nucleo_conocimiento_data = response.data;
       });
     },true);
 
@@ -154,6 +154,14 @@ angular.module('contractualClienteApp')
       order:"asc",
     })).then(function(response) {
       self.unidad_ejecutora_data = response.data;
+    });
+
+    administrativaRequest.get('tipo_necesidad', $.param({
+      limit: -1,
+      sortby:"NumeroOrden",
+      order:"asc",
+    })).then(function(response) {
+      self.tipo_necesidad_data = response.data;
     });
 
     agoraRequest.get('unidad', $.param({
@@ -226,26 +234,28 @@ angular.module('contractualClienteApp')
     administrativaRequest.get('estado_necesidad', $.param({
       query: "Nombre:Solicitada"
     })).then(function(response) {
-      self.necesidad.Estado = response.data[0];
+      self.necesidad.EstadoNecesidad = response.data[0];
     });
 
 
     administrativaRequest.get('modalidad_seleccion', $.param({
-      limit: -1
+      limit: -1,
+      sortby:"NumeroOrden",
+      order:"asc",
     })).then(function(response) {
       self.modalidad_data = response.data;
     });
 
-    administrativaRequest.get('tipo_rubro', $.param({
+    administrativaRequest.get('tipo_financiacion_necesidad', $.param({
       limit: -1
     })).then(function(response) {
-      self.tipos_fuentes_finan = response.data;
+      self.tipo_financiacion_data = response.data;
     });
 
-    administrativaRequest.get('servicio', $.param({
+    administrativaRequest.get('tipo_contrato_necesidad', $.param({
       limit: -1
     })).then(function(response) {
-      self.servicio_data = response.data;
+      self.tipo_contrato_data = response.data;
     });
 
 
@@ -256,7 +266,7 @@ angular.module('contractualClienteApp')
         Apropiacion: apropiacion.Id,
         MontoParcial: 0,
       };
-      if (self.necesidad.TipoRubro.Nombre === 'Funcionamiento') {
+      if (self.necesidad.TipoFinanciacionNecesidad.Nombre === 'Funcionamiento') {
         self.f_apropiacion_fun.push(Fap);
       } else {
         self.f_apropiacion_inv.push(Fap);
@@ -310,7 +320,7 @@ angular.module('contractualClienteApp')
         Apropiacion: apropiacion.Id,
         MontoParcial: 0,
       };
-      if (self.necesidad.TipoRubro.Nombre === 'funcionamiento') {
+      if (self.necesidad.TipoFinanciacionNecesidad.Nombre === 'funcionamiento') {
         self.f_apropiacion_fun.push(Fap);
       } else {
         self.f_apropiacion_inv.push(Fap);
@@ -342,14 +352,14 @@ angular.module('contractualClienteApp')
       }
     }
 
-      if (self.necesidad.TipoRubro.Nombre === "Inversión") {
+      if (self.necesidad.TipoFinanciacionNecesidad.Nombre === "Inversión") {
         for (var h = 0; h < self.f_apropiacion_inv.length; h++) {
           if (self.f_apropiacion_inv[h].fuentes !== undefined) {
             for (var k = 0; k < self.f_apropiacion_inv[h].fuentes.length; k++) {
               var f_ap = {};
               f_ap.Apropiacion = self.f_apropiacion_inv[h].Apropiacion;
               f_ap.MontoParcial = self.f_apropiacion_inv[h].fuentes[k].Monto;
-              f_ap.FuenteFinanciacion = self.f_apropiacion_inv[h].fuentes[k].FuenteFinanciamiento.Id;
+              f_ap.FuenteFinanciamiento = self.f_apropiacion_inv[h].fuentes[k].FuenteFinanciamiento.Id;
               self.f_apropiaciones.push(f_ap);
             }
           }
@@ -366,14 +376,13 @@ angular.module('contractualClienteApp')
 
       self.tr_necesidad = {
         Necesidad: self.necesidad,
-        SupervisorSolicitudNecesidad: self.supervisor_necesidad,
         //Especificacion: self.variable,
         ActividadEspecifica: self.ActividadEspecifica,
         ActividadEconomicaNecesidad: self.actividades_economicas_id,
         MarcoLegalNecesidad: self.marcos_legales,
         Ffapropiacion: self.f_apropiaciones,
         DependenciaNecesidad: self.dep_ned,
-        ServicioNecesidad: self.servicio_necesidad
+        DetalleServicioNecesidad: self.detalle_servicio_necesidad
       };
 
 

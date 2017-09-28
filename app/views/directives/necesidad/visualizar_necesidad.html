@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col-md-12">
           <h3 class="page-header">{{ 'NECESIDAD' | translate }} {{d_visualizarNecesidad.v_necesidad.NumeroElaboracion}} {{"DE" | translate}} {{d_visualizarNecesidad.v_necesidad.Vigencia}}
-          <span class="pull-right text-info">{{d_visualizarNecesidad.v_necesidad.Estado.Nombre}}</span></h3>
+          <span class="pull-right text-info">{{d_visualizarNecesidad.v_necesidad.EstadoNecesidad.Nombre}}</span></h3>
         </div>
 
         <div class="col-md-7"><span>{{"MODALIDAD_SELECCION" | translate}}: {{d_visualizarNecesidad.v_necesidad.ModalidadSeleccion.Nombre}}</span> </div>
@@ -44,14 +44,13 @@
         <p class="text-muted text-justify">
           {{d_visualizarNecesidad.v_necesidad.Objeto}}
         </p>
-
       <h3 class="text-info">{{"FINANCIACION" | translate}}</h3>
       <p class="text-muted text-justify" >
-        Por {{d_visualizarNecesidad.v_necesidad.TipoRubro.Nombre}} de <strong>{{d_visualizarNecesidad.v_necesidad.Valor | currency}}</strong>
+        Por {{d_visualizarNecesidad.v_necesidad.TipoFinanciacionNecesidad.Nombre}} de <strong>{{d_visualizarNecesidad.v_necesidad.Valor | currency}}</strong>
         <ul ng-repeat="inv in d_visualizarNecesidad.ff_necesidad track by $index">
-          <strong>{{inv.Apropiacion.Rubro.Codigo}}</strong> {{inv.Apropiacion.Rubro.Descripcion}}
+          <strong>{{inv.Apropiacion.Rubro.Codigo}}</strong> {{inv.Apropiacion.Rubro.Nombre}}
           <li ng-repeat='f in inv.Fuentes'>
-          {{f.FuenteFinanciacion.Descripcion}} <strong>{{"Monto" | translate}}:</strong> {{f.MontoParcial | currency}}
+          {{f.FuenteFinanciamiento.Nombre}} <strong>{{"Monto" | translate}}:</strong> {{f.MontoParcial | currency}}
         </li>
       </ul>
       </p>

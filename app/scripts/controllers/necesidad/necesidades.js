@@ -63,11 +63,11 @@ angular.module('contractualClienteApp')
           width: '25%'
         },
         {
-          field: 'Estado.Nombre',
+          field: 'EstadoNecesidad.Nombre',
           displayName: $translate.instant('ESTADO'),
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
           cellTooltip: function(row) {
-            return row.entity.Estado.Nombre + ".\n" + row.entity.Estado.Descripcion;
+            return row.entity.EstadoNecesidad.Nombre + ".\n" + row.entity.EstadoNecesidad.Descripcion;
           },
           width: '20%'
         },
@@ -79,7 +79,7 @@ angular.module('contractualClienteApp')
           },
           headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
           cellTooltip: function(row) {
-            return row.entity.Estado.Nombre + ".\n" + row.entity.Estado.Descripcion;
+            return row.entity.EstadoNecesidad.Nombre + ".\n" + row.entity.EstadoNecesidad.Descripcion;
           },
           width: '6%'
         }
@@ -92,10 +92,10 @@ angular.module('contractualClienteApp')
       self.g_necesidad = necesidad;
       self.numero_el = necesidad.NumeroElaboracion;
       self.vigencia = necesidad.Vigencia;
-      if (necesidad.Estado.Nombre === 'Solicitada') {
+      if (necesidad.EstadoNecesidad.Nombre === 'Solicitada') {
         self.mod_aprobar = true;
         self.mod_cdp = false;
-      } else if (necesidad.Estado.Nombre === 'Aprobada' || necesidad.Estado.Nombre === 'Cdp Solicitado') {
+      } else if (necesidad.EstadoNecesidad.Nombre === 'Aprobada' || necesidad.EstadoNecesidad.Nombre === 'Cdp Solicitado') {
         self.mod_aprobar = false;
         self.mod_cdp = true;
       } else {
@@ -117,7 +117,7 @@ angular.module('contractualClienteApp')
 
     self.recargar_grid = function() {
       administrativaRequest.get('necesidad', $.param({
-        query: "Estado.Nombre__not_in:Borrador",
+        query: "EstadoNecesidad.Nombre__not_in:Borrador",
         limit: -1,
         sortby:"NumeroElaboracion",
         order:"desc",
@@ -133,7 +133,7 @@ angular.module('contractualClienteApp')
       administrativaRequest.get('estado_necesidad', $.param({
         query: "Nombre:Aprobada"
       })).then(function(response) {
-        self.g_necesidad.Estado = response.data[0];
+        self.g_necesidad.EstadoNecesidad = response.data[0];
         administrativaRequest.put('necesidad', self.g_necesidad.Id, self.g_necesidad).then(function(response) {
           self.alerta = "";
           for (var i = 1; i < response.data.length; i++) {

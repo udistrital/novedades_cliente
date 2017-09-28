@@ -31,11 +31,11 @@ angular.module('contractualClienteApp')
         enableVerticalScrollbar: 0,
         enableSelectAll: true,
         columnDefs: [{
-            field: 'FuenteFinanciamiento.Descripcion',
+            field: 'FuenteFinanciamiento.Nombre',
             displayName: $translate.instant('FUENTE'),
             headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
             cellTooltip: function(row) {
-              return row.entity.FuenteFinanciamiento.Descripcion;
+              return row.entity.FuenteFinanciamiento.Nombre;
             }
           }/*,
           {

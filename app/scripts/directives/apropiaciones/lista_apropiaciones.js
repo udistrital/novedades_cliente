@@ -15,7 +15,7 @@ angular.module('contractualClienteApp')
         vigencia: "=",
         tipo: "=",
         unidadejecutora: "=",
-        tiporubro: "=",
+        tipofinanciacion: "=",
         selhijos: "=?"
       },
 
@@ -42,11 +42,11 @@ angular.module('contractualClienteApp')
               width: '15%'
             },
             {
-              field: 'Rubro.Descripcion',
-              displayName: $translate.instant('DESCRIPCION_RUBRO'),
+              field: 'Rubro.Nombre',
+              displayName: $translate.instant('NOMBRE_RUBRO'),
               headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
               cellTooltip: function(row) {
-                return row.entity.Rubro.Descripcion;
+                return row.entity.Rubro.Nombre;
               },
               cellClass: function(row, col) {
                 if (col.treeNode.children.length === 0) {
@@ -91,15 +91,15 @@ angular.module('contractualClienteApp')
 
         };
 
-                $scope.$watchGroup(['unidadejecutora', 'tiporubro'], function() {
-                  if($scope.unidadejecutora!==undefined && $scope.tiporubro!==undefined){
-                    if($scope.unidadejecutora===1 && $scope.tiporubro.Id===1){
+                $scope.$watchGroup(['unidadejecutora', 'tipofinanciacion'], function() {
+                  if($scope.unidadejecutora!==undefined && $scope.tipofinanciacion!==undefined){
+                    if($scope.unidadejecutora===1 && $scope.tipofinanciacion.Id===1){
                         $scope.tipo="3-3";
-                    }else if($scope.unidadejecutora===1 && $scope.tiporubro.Id===2){
+                    }else if($scope.unidadejecutora===1 && $scope.tipofinanciacion.Id===2){
                         $scope.tipo="3-1";
-                    }else if($scope.unidadejecutora===2 && $scope.tiporubro.Id===1){
+                    }else if($scope.unidadejecutora===2 && $scope.tipofinanciacion.Id===1){
                         $scope.tipo="3-0-0";
-                    }else if($scope.unidadejecutora===2 && $scope.tiporubro.Id===2){
+                    }else if($scope.unidadejecutora===2 && $scope.tipofinanciacion.Id===2){
                         $scope.tipo="3-0";
                     }
                     self.actualiza_rubros();
@@ -147,7 +147,7 @@ angular.module('contractualClienteApp')
 
         //self.gridApi.core.refresh();
         self.actualiza_rubros = function() {
-          financieraRequest.get('apropiacion', 'limit=0&query=Vigencia:' + $scope.vigencia + ",Rubro.Codigo__startswith:" + $scope.tipo + ",UnidadEjecutora:" + $scope.unidadejecutora).then(function(response) {
+          financieraRequest.get('apropiacion', 'limit=0&query=Vigencia:' + $scope.vigencia + ",Rubro.Codigo__startswith:" + $scope.tipo + ",Rubro.UnidadEjecutora:" + $scope.unidadejecutora).then(function(response) {
             if(response.data!==null){
             self.gridOptions.data = response.data.sort(function(a, b) {
               if (a.Rubro.Codigo < b.Rubro.Codigo) {return -1;}

@@ -34,8 +34,8 @@ angular.module('contractualClienteApp')
               self.marco_legal=response.data;
             });
             administrativaRequest.get('fuente_financiacion_rubro_necesidad',$.param({
-              query: "SolicitudNecesidad:"+response.data[0].Id,
-              fields: "FuenteFinanciacion,Apropiacion,MontoParcial"
+              query: "Necesidad:"+response.data[0].Id,
+              fields: "FuenteFinanciamiento,Apropiacion,MontoParcial"
             })).then(function(response){
               //self.f_necesidad=response.data;
               //------------
@@ -61,18 +61,18 @@ angular.module('contractualClienteApp')
 
                   var i_fuente={};
                   console.log(self.v_necesidad);
-                  if(self.v_necesidad.TipoRubro.Id===1)
+                  if(self.v_necesidad.TipoFinanciacionNecesidad.Id===1)
                   {
                   financieraRequest.get('fuente_financiamiento',$.param({
-                    query: "Id:"+item.FuenteFinanciacion
+                    query: "Id:"+item.FuenteFinanciamiento
                   })).then(function(response){
                     //console.log(response);
-                    i_fuente.FuenteFinanciacion=response.data[0];
+                    i_fuente.FuenteFinanciamiento=response.data[0];
                   });
                   i_fuente.MontoParcial=item.MontoParcial;
                   obj.Fuentes.push(i_fuente);
                 }
-                  //obj.fuentes.push({FuenteFinanciacion:item.FuenteFinanciacion, MontoParcial: item.MontoParcial });
+                  //obj.fuentes.push({FuenteFinanciamiento:item.FuenteFinanciamiento, MontoParcial: item.MontoParcial });
               });
               self.ff_necesidad=dateArr;
 
