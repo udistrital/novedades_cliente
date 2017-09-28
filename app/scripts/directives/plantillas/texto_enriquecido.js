@@ -36,11 +36,7 @@ angular.module('contractualClienteApp')
             ctrl.textoHtml = !ctrl.textoNormal;
             break;
           }
-        };
-
-        /*$scope.$watch('texto', function() {
-          console.log($scope.texto);
-        });*/
+        }
       },
       controllerAs:'textoEnriquecido'
     };

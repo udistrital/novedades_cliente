@@ -46,6 +46,7 @@
               <div class="form-group col-lg-12">
                 <label for="inputEncabezado" style="float:left; margin-top:10px;">{{ 'ENCABEZADO_MINUTA' | translate }}</label>
                 <texto-enriquecido texto="generacionPlantilla.encabezado"></texto-enriquecido>
+                <small id="validador" class="bg-danger">Rellena este campo</small>
               </div>
             </div>
             <div class="col-lg-12">
@@ -75,6 +76,10 @@
                   <div class="form-group col-lg-6">
                     <label>{{ 'TEXTO' | translate }}</label>
                     <div ta-bind ng-model="generacionPlantilla.contenidoMinuta.Clausulas[i].Texto"></div>
+                    <img ngf-src="generacionPlantilla.contenidoMinuta.Clausulas[i].Imagen" class="thumb">
+                    <span class="progress" ng-show="generacionPlantilla.contenidoMinuta.Clausulas[i].Imagen.progress >= 0">
+                      <div style="width:{{generacionPlantilla.contenidoMinuta.Clausulas[i].Imagen.progress}}%" ng-bind="generacionPlantilla.contenidoMinuta.Clausulas[i].Imagen.progress + '%'" class="ng-binding"></div>
+                    </span>
                   </div>
                   <div class="col-lg-10 col-lg-offset-1">
                     <button class="form-control btn btn-danger" data-toggle="modal" ng-click="generacionPlantilla.eliminarClausula(i)">{{'BTN_MINUTAS.ELIMINAR_CLAUSULA' | translate}}</button>
@@ -105,12 +110,12 @@
     </div>
     <!-- Clausulas y paragrafos -->
     <div class="col-lg-12">
-      <button type="button" class="btn btn-info btn-lg btn-md btn-block" style="border-radius: 0px" data-toggle="modal" data-target="#modal_vista_previa">{{ 'BTN_MINUTAS.VISTA_PREVIA' | translate }}</button>
+      <button type="button" class="btn btn-info btn-lg btn-md btn-block" style="border-radius: 0px" ng-click="generacionPlantilla.mostrarModal()">{{ 'BTN_MINUTAS.VISTA_PREVIA' | translate }}</button>
     </div>
   </div>
 </div>
 <div class="col-sm-2 col-lg-offset-6" style="margin:20px;">
-  <button type="button" class="btn btn-md btn-success btn-block" ng-click="generacionPlantilla.guardarCambios()">{{'BTN_MINUTAS.GUARDAR' | translate}}</button>
+  <button type="button" class="btn btn-md btn-success btn-block">{{'BTN_MINUTAS.GUARDAR' | translate}}</button>
 </div>
 
 <!-- modal clausulas -->
@@ -130,6 +135,11 @@
           <div class="col-sm-12 row form-group" style="margin-top: 20px;">
             <label for="descripcion" class="col-sm-4 col-form-label">{{'DESCRIPCION' | translate }}: </label>
             <texto-enriquecido texto="generacionPlantilla.textoClausula"></texto-enriquecido>
+            Insertar imagen: <input type="file" ngf-select="" ng-model="generacionPlantilla.imagen" name="file" ngf-accept="'image/*'" required="">
+            <img ngf-src="generacionPlantilla.imagen" class="thumb">
+            <span class="progress" ng-show="generacionPlantilla.imagen.progress >= 0">
+              <div style="width:{{generacionPlantilla.imagen.progress}}%" ng-bind="generacionPlantilla.imagen.progress + '%'" class="ng-binding"></div>
+            </span>
           </div>
         </div>
       </div>
@@ -206,7 +216,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button ng-click="generacionPlantilla.crearPdf(1)" type="submit" class="form-control btn-primary">{{ 'BTN_MINUTAS.VISTA_PREVIA_ACTUALIZADA' | translate }}</button>
+        <button ng-click="generacionPlantilla.crearPdf(3)" type="submit" class="form-control btn-primary">{{ 'BTN_MINUTAS.VISTA_PREVIA_ACTUALIZADA' | translate }}</button>
       </div>
     </form>
   </div>
@@ -214,8 +224,8 @@
 <!-- modal vista previa -->
 
 <!-- modal plantilla existente -->
-<div id="modal_plantilla_existente" class="modal face col-md-12" role="dialog">
-  <div class="modal-content col-md-offset-1 col-md-10">
+<div id="modal_plantilla_existente" class="modal fade" role="dialog">
+  <div class="modal-content">
     <div class="modal-header">
       <button type="button" name="btn btn-outline btn-danger gtn-xs pull-right" data-dismiss="modal">&times</button><br>
     </div>

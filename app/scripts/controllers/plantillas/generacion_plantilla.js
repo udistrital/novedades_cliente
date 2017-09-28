@@ -18,6 +18,7 @@ angular.module('contractualClienteApp')
   self.margenDerecha = 60;
   self.margenSuperior = 40;
   self.margenInferior = 60;
+  $('#validador').hide();
 
   // Json de prueba para los datos del formulario
   self.contenidoMinuta = {
@@ -40,7 +41,8 @@ angular.module('contractualClienteApp')
   self.agregarClausula = function() {
     if (typeof self.tituloClausula != 'undefined') {
       if (self.tituloClausula) {
-        self.contenidoMinuta.Clausulas.push({Titulo: self.tituloClausula, Texto: self.textoClausula, Paragrafos: []});
+        self.contenidoMinuta.Clausulas.push({Titulo: self.tituloClausula, Texto: self.textoClausula, Imagen: self.imagen, Paragrafos: []});
+        console.log(self.contenidoMinuta.Clausulas);
         $('#modal_add_clausula').modal('hide');
         self.limpiarModal();
       }
@@ -225,7 +227,38 @@ angular.module('contractualClienteApp')
     }
   }
 
+  self.mostrarModal = function(modal) {
+    if (typeof self.encabezado != 'undefined' && self.encabezado.length > 0) {
+      $('#modal_vista_previa').modal();
+      self.crearPdf(1)
+      $('#validador').hide(1000);
+    } else {
+      $('#validador').show('fast');
+    }
+  }
+
   function setInfoPlantilla() {
+
+    var docDefinition = {
+  content: [
+    'paragraph 1',
+    'paragraph 2',
+    {
+      columns: [
+        'first column is a simple text',
+        'firts friend',
+        [
+          // second column consists of paragraphs
+          'paragraph A',
+          'paragraph B',
+          'these paragraphs will be rendered one below another inside the column'
+        ]
+      ],
+      columnGap: 2
+    }
+  ]
+};
+
     var contenido = {
       pageSize: 'A4',
 
@@ -234,13 +267,24 @@ angular.module('contractualClienteApp')
 
       header:
       [
-        { text: self.encabezado, style: 'cabecera' },
-        { text: self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' }
+        { text: ''+self.encabezado, style: 'cabecera' },
+        { text: ''+self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' }
       ],
 
       footer: { text: ''+self.pieDePagina, style: 'pie' },
 
-      content: { text: self.contenidoMinuta.Introduccion+' '+self.contenidoMinuta.Consideracion, style: 'contenido' },
+      content:
+      [
+        {
+          columns:
+          [
+            /*{ width: '100%', text: self.contenidoMinuta.Introduccion+' '+self.contenidoMinuta.Consideracion, style: 'contenido' },*/
+            { width: 'auto', text: 'ClausulaXasfsdfgjegioewtejgnjksdfngjkd vnfd sdfgjkksfgesbfndkjfnsdfgbsjd msdfkgb sfd gsdfg ', style: 'subtitulo' },
+            { width: 'auto', text: 'texto de la cuaaaasula', style: 'contenido' }
+          ],
+          columnGap: 2
+        }
+      ],
 
       styles: {
         cabecera: {
@@ -269,18 +313,18 @@ angular.module('contractualClienteApp')
       }
     };
     var numClausulas = self.contenidoMinuta.Clausulas.length;
-    if (numClausulas) {
-      for (var i = 0; i < numClausulas; i++) {
-        var clausulaTitulo = { text: 'Clausula ' + (i+1) + ' ' +self.contenidoMinuta.Clausulas[i].Titulo, style: 'subtitulo' };
-        var clausulaTexto =  { text: self.contenidoMinuta.Clausulas[i].Texto, style: 'contenido' };
-        contenido.content.push(clausulaTitulo, clausulaTexto);
-      }
-    }
-
-    for (var i = 0; i < contenido.content.length; i++) {
-      contenido.content[i].text = contenido.content[i].text.trim()
-    }
-    return contenido;
+    /*if (numClausulas) {
+    for (var i = 0; i < numClausulas; i++) {
+    var clausulaTitulo = { text: 'Clausula ' + (i+1) + ' ' +self.contenidoMinuta.Clausulas[i].Titulo, style: 'subtitulo' };
+    var clausulaTexto =  { text: self.contenidoMinuta.Clausulas[i].Texto, style: 'contenido' };
+    contenido.content.push(clausulaTitulo, clausulaTexto);
   }
+}
+
+for (var i = 0; i < contenido.content.length; i++) {
+contenido.content[i].text = contenido.content[i].text.trim()
+}*/
+return docDefinition;
+}
 
 });
