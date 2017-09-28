@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudCtrl', function(coreRequest,$timeout,$window,agoraRequest,contrato,administrativaRequest,$scope,financieraRequest,financieraMidRequest,$translate) {
+  .controller('RpSolicitudCtrl', function(coreRequest,$timeout,$window,agoraRequest,contrato,administrativaRequest,$scope,financieraRequest,$translate) {
     var self = this;
     self.contrato = contrato;
     $scope.rubroVacio=false;
@@ -26,7 +26,7 @@ angular.module('contractualClienteApp')
     var cedula;
     self.masivo_seleccion = false;
     var Solicitud_id;
-    var solictudes = [];
+    var solicitudes = [];
     var solicitud_datos;
     var nombre = [];
     var t0;
@@ -95,19 +95,22 @@ angular.module('contractualClienteApp')
   columnDefs : [
     {field: 'Id',             visible : false},
     {field: 'Vigencia',   displayName: 'Vigencia'},
-    {field: 'NumeroDisponibilidad',   displayName: 'Id'},
-    {field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Objeto',   displayName: 'Descripcion'},
-    {field: 'Solicitud.DependenciaSolicitante.Nombre',   displayName: 'Ordenador'},
-    {field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Id',   displayName: 'Necesidad'},
+    {field: 'NumeroDisponibilidad',   width:'10%',displayName: 'Id'},
+    {field: 'Estado.Descripcion',   displayName: 'Descripcion'},
+    {field: 'Solicitud.Necesidad',   displayName: 'Necesidad'},
   ]
 
 };
 financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
   self.gridOptions_cdp.data = response.data;
   angular.forEach(self.gridOptions_cdp.data, function(data){
-    financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
+  
+    administrativaRequest.get('solicitud_disponibilidad','query=Id:'+data.Solicitud).then(function(response) {
         data.Solicitud = response.data[0];
-        });
+    });
+    /*financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
+        data.Solicitud = response.data[0];
+        });*/
 
       });
 
@@ -119,7 +122,8 @@ self.gridOptions_cdp.onRegisterApi = function(gridApi){
   gridApi.selection.on.rowSelectionChanged($scope,function(row){
     self.rubros_seleccionados = [];
     self.cdp = row.entity;
-    var CdpId = self.cdp.Solicitud.SolicitudDisponibilidad.Id;
+    var CdpId = self.cdp.Solicitud.Id;
+    console.log(CdpId);
     administrativaRequest.get('solicitud_disponibilidad','query=Id:'+CdpId).then(function(response){
       $scope.necesidad=response.data[0];
     });
@@ -189,7 +193,7 @@ self.gridOptions_cdp.multiSelect = false;
           width: "25%",
         },
         {
-          field: 'Apropiacion.Rubro.Descripcion',
+          field: 'Apropiacion.Rubro.Nombre',
           displayName: $translate.instant('NOMBRE'),
           width: "50%",
         },
@@ -327,25 +331,33 @@ self.gridOptions_cdp.multiSelect = false;
         }
 
 //se envian todas las solicitudes de rp
-        for(var x=0;x<contrato.length;x++){
+if(self.contrato.length>1){
+  self.masivo_seleccion=true;
+}else{
+  self.masivo_seleccion=false;
+}        
+        for(var x=0;x<self.contrato.length;x++){
+          console.log(self.contrato);  
           Solicitud_rp = {};
-          solicitud_datos = {};
-          Solicitud_id = {};
           Solicitud_rp = {
             Vigencia: 2017,
             FechaSolicitud: self.CurrentDate,
             Cdp: self.cdp.Id,
             Expedida: false,
-            NumeroContrato: self.contrato.Id,
-            VigenciaContrato: self.contrato.Vigencia.toString(),
+            NumeroContrato: self.contrato[x].Id,
+            VigenciaContrato: self.contrato[x].Vigencia,
             Compromiso: self.compromiso.Id,
             Justificacion_rechazo: 0,
             Masivo : self.masivo_seleccion
           };
+          solicitudes.push(Solicitud_rp);
+        }
 
-          administrativaRequest.post('solicitud_rp', Solicitud_rp).then(function(response) {
+        angular.forEach(solicitudes, function(solicitud_rp) {
+          administrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
             Solicitud_id = response.data;
-            console.log(dia+" "+mes+" "+ano);
+            
+            console.log(Solicitud_id);
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
               var Disponibilidad_apropiacion_solicitud_rp = {
                 DisponibilidadApropiacion: self.rubros_seleccionados[i].Id,
@@ -356,8 +368,10 @@ self.gridOptions_cdp.multiSelect = false;
               });
             }
           });
+        });
 
-          administrativaRequest.get('solicitud_rp','query=Id:'+Solicitud_id).then(function(response){
+
+        /*  administrativaRequest.get('solicitud_rp','query=Id:'+Solicitud_id).then(function(response){
             solicitud_datos = response.data[0];
             console.log(solicitud_datos.FechaSolicitud);
             var fecha = new Date(solicitud_datos.FechaSolicitud);
@@ -367,8 +381,7 @@ self.gridOptions_cdp.multiSelect = false;
             var fecha_solicitud = dia +"/"+mes+"/"+ano;
           });
 
-          solicitudes.push(solicitud_datos);  
-        }
+          solicitudes.push(solicitud_datos);  */
 
         
             /*
