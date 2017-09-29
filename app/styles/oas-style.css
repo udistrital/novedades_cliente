@@ -1,3 +1,10 @@
+table.respuestasrp
+{
+  width:300px; 
+  height:150px; 
+  overflow:auto;
+}
+
 .ta-editor {
     min-height: 300px;
     height: auto;

@@ -31,7 +31,10 @@ angular.module('contractualClienteApp')
     var nombre = [];
     var t0;
     var t1;
+    var t11;
+    var t00;
     var total;
+    var total2;
     var Solicitud_rp;
     self.masivo_radio = {
       0:{
@@ -352,6 +355,7 @@ if(self.contrato.length>1){
           solicitudes.push(Solicitud_rp);
         }
 
+        t00 = performance.now();
         angular.forEach(solicitudes, function(solicitud_rp) {
           administrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
             Solicitud_id = response.data;
@@ -367,33 +371,46 @@ if(self.contrato.length>1){
             }
           });
         });
+        t11 = performance.now();
+        total2 = (t11 - t00) +1000;
 
-        //console.log(respuestas_solicitudes);
+        $timeout(function(){
+          console.log("longitud de las respuestas "+respuestas_solicitudes.length);
+          var imprimir = "<table class='respuestasrp'><tr><td><b>Solicitud rp</b></td><td><b>Contrato</b></td><td><b>Vigencia</b></td></tr>";
+          for(var x=0;x<respuestas_solicitudes.length;x++){
             
-            swal({
-              /*html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
-              +solicitud_datos.Id+"<br><label><b>"+$translate.instant('VIGENCIA_SOLICITUD')+":</b></label> " + solicitud_datos.Vigencia + "<br><label><b>"+$translate.instant('FECHA_SOLICITUD')+":</b></label>:"
-              +fecha_solicitud+ "<br><label><b>"+$translate.instant('NUMERO_CONTRATO')+":</b></label>" + solicitud_datos.NumeroContrato + "<br><label><b>"+$translate.instant('VIGENCIA_CONTRATO')+":</b></label>"
-              + solicitud_datos.VigenciaContrato,*/
-              html:"<div ui-grid=self.gridOptions_compromiso ui-grid-auto-resize class='myGrid'></div>",
-              type: "success",
-              showCancelButton: true,
-              confirmButtonColor: "#449D44",
-              cancelButtonColor: "#C9302C",
-              confirmButtonText: $translate.instant('VOLVER_CONTRATOS'),
-              cancelButtonText: $translate.instant('SALIR'),
-            }).then(function() {
-              //si da click en ir a contratistas
-              $window.location.href = '#/rp_solicitud_personas';
-            }, function(dismiss) {
+            imprimir=imprimir+"<tr><td>"+respuestas_solicitudes[x].Id+
+            "</td><td>"+respuestas_solicitudes[x].NumeroContrato+
+            "</td><td>"+respuestas_solicitudes[x].VigenciaContrato;
+          };
+          imprimir=imprimir+"</td></tr></table>";
 
-              if (dismiss === 'cancel') {
-                //si da click en Salir
-                $window.location.href = '#';
-              }
-            });
+          console.log(respuestas_solicitudes[0]);
+          //console.log(respuestas_solicitudes);
           
-
+              swal({
+                /*html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
+                +solicitud_datos.Id+"<br><label><b>"+$translate.instant('VIGENCIA_SOLICITUD')+":</b></label> " + solicitud_datos.Vigencia + "<br><label><b>"+$translate.instant('FECHA_SOLICITUD')+":</b></label>:"
+                +fecha_solicitud+ "<br><label><b>"+$translate.instant('NUMERO_CONTRATO')+":</b></label>" + solicitud_datos.NumeroContrato + "<br><label><b>"+$translate.instant('VIGENCIA_CONTRATO')+":</b></label>"
+                + solicitud_datos.VigenciaContrato,*/
+                html:imprimir,
+                type: "success",
+                showCancelButton: true,
+                confirmButtonColor: "#449D44",
+                cancelButtonColor: "#C9302C",
+                confirmButtonText: $translate.instant('VOLVER_CONTRATOS'),
+                cancelButtonText: $translate.instant('SALIR'),
+              }).then(function() {
+                //si da click en ir a contratistas
+                $window.location.href = '#/rp_solicitud_personas';
+              }, function(dismiss) {
+  
+                if (dismiss === 'cancel') {
+                  //si da click en Salir
+                  $window.location.href = '#';
+                }
+              });
+       },total2);
       }
     };
 
