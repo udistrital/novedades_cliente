@@ -63,8 +63,8 @@ angular.module('contractualClienteApp')
   };
 
   self.pruebas = function() {
-    console.log(self.tituloClausula);
-    console.log(self.textoClausula);
+    //console.log(self.tituloClausula);
+    //console.log(self.textoClausula);
   }
 
   // Adiciona paragrafo
@@ -230,6 +230,20 @@ angular.module('contractualClienteApp')
     }
   }
 
+  function getBase64(file) {
+   var algo = '';
+   var reader = new FileReader();
+   reader.readAsDataURL(file);
+   reader.onload = function () {
+     console.log(reader.result);
+     algo = reader.result;
+   };
+   reader.onerror = function (error) {
+     console.log('Error: ', error);
+   };
+   console.log(reader.result);
+}
+
   self.mostrarModal = function(modal) {
     if (typeof self.encabezado != 'undefined' && self.encabezado.length > 0) {
       $('#modal_vista_previa').modal();
@@ -249,7 +263,7 @@ angular.module('contractualClienteApp')
 
       header:
       [
-        //{ image: , width: 330, height: 23.504 },
+        { image: getBase64(self.imagenEncabezado), width: 330, height: 235 },
         { text: ''+self.encabezado, style: 'cabecera' },
         { text: ''+self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' }
       ],

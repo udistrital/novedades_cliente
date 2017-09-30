@@ -57,11 +57,6 @@
               <div class="from-group col-sm-12">
                 <label for="inputPieDePagina" style="float:left; margin-top:10px;">{{ 'PIE_MINURA' | translate }}</label>
                 <texto-enriquecido texto="generacionPlantilla.pieDePagina"></texto-enriquecido>
-                Insertar imagen: <input type="file" ngf-select="" ng-model="generacionPlantilla.imagenPie" name="file" ngf-accept="'image/*'" required="">
-                <img ngf-src="generacionPlantilla.imagenPie" class="thumb">
-                <span class="progress" ng-show="generacionPlantilla.imagenPie.progress >= 0">
-                  <div style="width:{{generacionPlantilla.imagenPie.progress}}%" ng-bind="generacionPlantilla.imagenPie.progress + '%'" class="ng-binding"></div>
-                </span>
               </div>
             </div>
           </form>
