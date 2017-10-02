@@ -10,7 +10,8 @@
 angular.module('contractualClienteApp')
 .controller('GeneracionPlantillaCtrl', function ($translate, $timeout, $scope, administrativaRequest) {
   var self = this;
-
+  var anchoImg = 70;
+  var altoImg = 70;
   self.opcionesTexto = ['Texto','HTML'];
   self.textoNormal = true;
 
@@ -18,6 +19,7 @@ angular.module('contractualClienteApp')
   self.margenDerecha = 60;
   self.margenSuperior = 40;
   self.margenInferior = 60;
+  $('#validador').hide();
 
   // Json de prueba para los datos del formulario
   self.contenidoMinuta = {
@@ -40,7 +42,7 @@ angular.module('contractualClienteApp')
   self.agregarClausula = function() {
     if (typeof self.tituloClausula != 'undefined') {
       if (self.tituloClausula) {
-        self.contenidoMinuta.Clausulas.push({Titulo: self.tituloClausula, Texto: self.textoClausula, Paragrafos: []});
+        self.contenidoMinuta.Clausulas.push({Titulo: self.tituloClausula, Texto: self.textoClausula, Imagen: self.imagen, Paragrafos: []});
         $('#modal_add_clausula').modal('hide');
         self.limpiarModal();
       }
@@ -55,11 +57,16 @@ angular.module('contractualClienteApp')
 
   // Cambia los campos de las ventanas modales a vacios
   self.limpiarModal = function() {
-    self.tituloClausula = '';
-    self.textoClausula = '';
-    self.textoParagrafo = '';
+    self.tituloClausula = undefined;
+    self.textoClausula = undefined;
+    self.textoParagrafo = undefined;
+    self.imagen = null;
   };
 
+  self.pruebas = function() {
+    //console.log(self.tituloClausula);
+    //console.log(self.textoClausula);
+  }
 
   // Adiciona paragrafo
   self.adicionarParagrafo = function(){
@@ -202,12 +209,13 @@ angular.module('contractualClienteApp')
 
   // pdfMake
   self.crearPdf = function(op) {
-
     var docDefinition = setInfoPlantilla();
     switch (op) {
       case 1:
       // open the PDF in a new window
-      pdfMake.createPdf(docDefinition).open();
+      pdfMake.createPdf(docDefinition).getDataUrl(function (outDoc) {
+        document.getElementById('pdfV').src = outDoc;
+      });
       break;
       case 2:
       // print the PDF
@@ -223,27 +231,59 @@ angular.module('contractualClienteApp')
     }
   }
 
+  function getBase64(file) {
+   var reader = new FileReader();
+   reader.readAsDataURL(file);
+   reader.onload = function () {
+     self.img64 = reader.result;
+   };
+   reader.onerror = function (error) {
+     console.log('Error: ', error);
+   };
+}
+
+  self.mostrarModal = function(modal) {
+    if (typeof self.encabezado != 'undefined' && self.encabezado.length > 0) {
+      $('#modal_vista_previa').modal();
+      self.crearPdf(1)
+      $('#validador').hide(1000);
+    } else {
+      $('#validador').show('fast');
+    }
+  }
+
   function setInfoPlantilla() {
+    if (self.imagenEncabezado) {
+      getBase64(self.imagenEncabezado);
+      console.log(self.imagenEncabezado);
+      console.log(self.img64);
+    }
     var contenido = {
       pageSize: 'A4',
 
       // left, rigth, top, button
-      pageMargins: [self.margenIzquierda, self.margenDerecha, self.margenSuperior, self.margenInferior],
+      pageMargins: [ self.margenIzquierda, self.margenSuperior, self.margenDerecha, self.margenInferior ],
 
-      header:
-      [
-        { text: self.encabezado, style: 'titulo' },
-        { text: self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' }
+      content: [
+        { image: self.img64, style: 'imgEncabezado', width: 70, height: 70 },
+        { text: ''+self.encabezado, style: 'cabecera' },
+        { text: ''+self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' },
+        {
+          text: [
+            { text: self.contenidoMinuta.Introduccion+' '+self.contenidoMinuta.Consideracion, style: 'contenido' }
+          ]
+        },
       ],
 
       footer: { text: ''+self.pieDePagina, style: 'pie' },
 
-      content:
-      [
-        { text: self.contenidoMinuta.Introduccion+' '+self.contenidoMinuta.Consideracion, style: 'contenido' }
-      ],
-
       styles: {
+        cabecera: {
+          fontSize: 11,
+          bold: true,
+          width: '100%',
+          alignment: 'center'
+        },
         titulo: {
           fontSize: 11,
           bold: true,
@@ -260,22 +300,37 @@ angular.module('contractualClienteApp')
         },
         contenido: {
           fontSize: 10
+        },
+        imgEncabezado: {
+          width: 'auto',
+          alignment: 'center',
+          margin: 10
         }
       }
     };
-    console.log(contenido.pageMargins);
     var numClausulas = self.contenidoMinuta.Clausulas.length;
     if (numClausulas) {
       for (var i = 0; i < numClausulas; i++) {
-        var clausulaTitulo = { text: 'Clausula ' + (i+1) + ' ' +self.contenidoMinuta.Clausulas[i].Titulo, style: 'subtitulo' };
-        var clausulaTexto =  { text: self.contenidoMinuta.Clausulas[i].Texto, style: 'contenido' };
-        contenido.content.push(clausulaTitulo, clausulaTexto);
+        var clausulaTitulo = { text: ' Clausula ' + (i+1) + ' - ' +self.contenidoMinuta.Clausulas[i].Titulo, style: 'subtitulo' };
+        var clausulaTexto =  { text: ' ' + self.contenidoMinuta.Clausulas[i].Texto, style: 'contenido' };
+        contenido.content[3].text.push(clausulaTitulo, clausulaTexto);
+        if (self.contenidoMinuta.Clausulas[i].Paragrafos) {
+          for (var j = 0; j < self.contenidoMinuta.Clausulas[i].Paragrafos.length; j++) {
+            var paragrafoTitulo = { text: ' Parágrafo ' + (j+1)  + '.' , style: 'subtitulo'};
+            var paragrafoTexto = { text: ' ' + self.contenidoMinuta.Clausulas[i].Paragrafos[j].Texto, style: 'contenido' };
+            contenido.content[3].text.push(paragrafoTitulo, paragrafoTexto);
+          }
+        }
       }
     }
 
-    for (var i = 0; i < contenido.content.length; i++) {
-      contenido.content[i].text = contenido.content[i].text.trim()
+    if(self.imagenEncabezado === null) {
+      contenido.content[0] = null;
     }
+
+    /*for (var i = 0; i < contenido.content.length; i++) {
+      contenido.content[3].columns[i].text = contenido.content[3].columns[i].text.trim();
+    }*/
     return contenido;
   }
 
