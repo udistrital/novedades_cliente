@@ -231,17 +231,14 @@ angular.module('contractualClienteApp')
   }
 
   function getBase64(file) {
-   var algo = '';
    var reader = new FileReader();
    reader.readAsDataURL(file);
    reader.onload = function () {
-     console.log(reader.result);
-     algo = reader.result;
+     self.img64 = reader.result;
    };
    reader.onerror = function (error) {
      console.log('Error: ', error);
    };
-   console.log(reader.result);
 }
 
   self.mostrarModal = function(modal) {
@@ -255,20 +252,22 @@ angular.module('contractualClienteApp')
   }
 
   function setInfoPlantilla() {
+    getBase64(self.imagenEncabezado);
+    console.log(self.img64);
     var contenido = {
       pageSize: 'A4',
 
       // left, rigth, top, button
       pageMargins: [ self.margenIzquierda, self.margenSuperior, self.margenDerecha, self.margenInferior ],
 
-      header:
-      [
-        { image: getBase64(self.imagenEncabezado), width: 330, height: 235 },
-        { text: ''+self.encabezado, style: 'cabecera' },
-        { text: ''+self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' }
-      ],
-
-      footer: { text: ''+self.pieDePagina, style: 'pie' },
+      header: {
+        margin: 10,
+        columns: [
+          { image: self.img64, width: 70, height: 70 },
+          { text: ''+self.encabezado, style: 'cabecera' },
+          { text: ''+self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' }
+        ]
+      },
 
       content: [
         {
@@ -277,6 +276,8 @@ angular.module('contractualClienteApp')
           ]
         },
       ],
+
+      footer: { text: ''+self.pieDePagina, style: 'pie' },
 
       styles: {
         cabecera: {
