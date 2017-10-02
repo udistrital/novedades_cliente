@@ -10,7 +10,8 @@
 angular.module('contractualClienteApp')
 .controller('GeneracionPlantillaCtrl', function ($translate, $timeout, $scope, administrativaRequest) {
   var self = this;
-
+  var anchoImg = 70;
+  var altoImg = 70;
   self.opcionesTexto = ['Texto','HTML'];
   self.textoNormal = true;
 
@@ -252,24 +253,21 @@ angular.module('contractualClienteApp')
   }
 
   function setInfoPlantilla() {
-    getBase64(self.imagenEncabezado);
-    console.log(self.img64);
+    if (self.imagenEncabezado) {
+      getBase64(self.imagenEncabezado);
+      console.log(self.imagenEncabezado);
+      console.log(self.img64);
+    }
     var contenido = {
       pageSize: 'A4',
 
       // left, rigth, top, button
       pageMargins: [ self.margenIzquierda, self.margenSuperior, self.margenDerecha, self.margenInferior ],
 
-      header: {
-        margin: 10,
-        columns: [
-          { image: self.img64, width: 70, height: 70 },
-          { text: ''+self.encabezado, style: 'cabecera' },
-          { text: ''+self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' }
-        ]
-      },
-
       content: [
+        { image: self.img64, style: 'imgEncabezado', width: 70, height: 70 },
+        { text: ''+self.encabezado, style: 'cabecera' },
+        { text: ''+self.contenidoMinuta.Titulo.toUpperCase(), style: 'titulo' },
         {
           text: [
             { text: self.contenidoMinuta.Introduccion+' '+self.contenidoMinuta.Consideracion, style: 'contenido' }
@@ -302,6 +300,11 @@ angular.module('contractualClienteApp')
         },
         contenido: {
           fontSize: 10
+        },
+        imgEncabezado: {
+          width: 'auto',
+          alignment: 'center',
+          margin: 10
         }
       }
     };
@@ -310,21 +313,23 @@ angular.module('contractualClienteApp')
       for (var i = 0; i < numClausulas; i++) {
         var clausulaTitulo = { text: ' Clausula ' + (i+1) + ' - ' +self.contenidoMinuta.Clausulas[i].Titulo, style: 'subtitulo' };
         var clausulaTexto =  { text: ' ' + self.contenidoMinuta.Clausulas[i].Texto, style: 'contenido' };
-        contenido.content[0].text.push(clausulaTitulo, clausulaTexto);
+        contenido.content[3].text.push(clausulaTitulo, clausulaTexto);
         if (self.contenidoMinuta.Clausulas[i].Paragrafos) {
           for (var j = 0; j < self.contenidoMinuta.Clausulas[i].Paragrafos.length; j++) {
             var paragrafoTitulo = { text: ' Parágrafo ' + (j+1)  + '.' , style: 'subtitulo'};
             var paragrafoTexto = { text: ' ' + self.contenidoMinuta.Clausulas[i].Paragrafos[j].Texto, style: 'contenido' };
-            console.log(self.contenidoMinuta.Clausulas[i].Paragrafos[j].Texto);
-            contenido.content[0].text.push(paragrafoTitulo, paragrafoTexto);
+            contenido.content[3].text.push(paragrafoTitulo, paragrafoTexto);
           }
-
         }
       }
     }
 
+    if(self.imagenEncabezado === null) {
+      contenido.content[0] = null;
+    }
+
     /*for (var i = 0; i < contenido.content.length; i++) {
-      contenido.content[0].columns[i].text = contenido.content[0].columns[i].text.trim();
+      contenido.content[3].columns[i].text = contenido.content[3].columns[i].text.trim();
     }*/
     return contenido;
   }

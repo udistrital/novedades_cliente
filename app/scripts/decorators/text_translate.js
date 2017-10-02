@@ -469,7 +469,8 @@ var text_es = {
     ELIMINAR_PARAGRAFO: "Eliminar Parágrafo",
     GUARDAR: "Guardar",
     VISTA_PREVIA: "Vista Previa Plantilla",
-    VISTA_PREVIA_ACTUALIZADA: "Vista Previa Actualizada"
+    VISTA_PREVIA_ACTUALIZADA: "Vista Previa Actualizada",
+    BORRAR: "Borrar"
   },
   GENERACION_MINUTA: "Generación de Plantillas",
   GESTION_PLANTILLAS: "Gestión de Plantillas",
@@ -962,7 +963,8 @@ var text_en = {
     ELIMINAR_PARAGRAFO: "Delete Paragraph",
     GUARDAR: "Save",
     VISTA_PREVIA: "Template Preview",
-    VISTA_PREVIA_ACTUALIZADA: "Template Preview Update"
+    VISTA_PREVIA_ACTUALIZADA: "Template Preview Update",
+    BORRAR: "Delete"
   },
 
   GENERACION_MINUTA: "Template Generator",

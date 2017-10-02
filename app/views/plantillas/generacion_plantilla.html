@@ -47,7 +47,8 @@
                 <label for="inputEncabezado" style="float:left; margin-top:10px;">{{ 'ENCABEZADO_MINUTA' | translate }}</label>
                 <texto-enriquecido texto="generacionPlantilla.encabezado"></texto-enriquecido>
                 Insertar imagen: <input type="file" ngf-select="" ng-model="generacionPlantilla.imagenEncabezado" name="file" ngf-accept="'image/*'" required="">
-                <img ngf-src="generacionPlantilla.imagenEncabezado" class="thumb">
+                <img ngf-src="generacionPlantilla.imagenEncabezado" class="thumb" style="width:70px; height:70px;">
+                <button type="button" ng-if="generacionPlantilla.imagenEncabezado" ng-click="generacionPlantilla.imagenEncabezado=null" class="btn btn-danger btn-outline">{{'BTN_MINUTAS.BORRAR' | translate}}</button>
                 <span class="progress" ng-show="generacionPlantilla.imagenEncabezado.progress >= 0">
                   <div style="width:{{generacionPlantilla.imagenEncabezado.progress}}%" ng-bind="generacionPlantilla.imagenEncabezado.progress + '%'" class="ng-binding"></div>
                 </span>
