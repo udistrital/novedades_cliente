@@ -20,7 +20,6 @@ var text_es = {
     APROBAR: "Aprobar",
     RECHAZAR: "Rechazar",
     SOLICITAR_CDP: "Solicitar CDP",
-    CREAR_RESOLUCION: "Crear nueva resolución de vinculación especial",
     GENERAR_RESOLUCION: "Generar Resolución",
     REALIZAR_EXPEDICION: "Realizar expedición de la resolución con los datos introducidos",
     INFORMACION_PERSONA_NATURAL: "Información persona natural",

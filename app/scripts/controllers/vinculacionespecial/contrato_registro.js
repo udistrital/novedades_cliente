@@ -14,17 +14,23 @@ angular.module('contractualClienteApp')
 
     self.idResolucion=idResolucion;
 
-    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
+    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
       self.datosFiltro=response.data;
+
       oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad.toString()).then(function(response){
         self.contratoGeneralBase.SedeSolicitante=response.data.Id.toString();
         self.sede_solicitante_defecto=response.data.Nombre;
       });
-      administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){      
+      administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){   
+
         self.contratados=response.data;
         if(self.contratados != null){
           self.contratados.forEach(function(row){
-            adminMidRequest.get("calculo_salario/Contratacion/"+row.Id).then(function(response){
+            console.log("row");     
+            console.log(row.Id); 
+            adminMidRequest.get("calculo_salario/Contratacion/"+row.Id.toString()).then(function(response){
+              console.log("SCA VOY");
+              console.log(response);
               row.ValorContrato=response.data;
             });
           });
