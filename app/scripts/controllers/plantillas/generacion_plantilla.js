@@ -21,6 +21,12 @@ angular.module('contractualClienteApp')
   self.margenInferior = 60;
   $('#validador').hide();
 
+  self.variables = [
+    {Nombre: "Contrato", Valor: "F13" },
+    {Nombre: "Contratista", Valor: "Juan Camilo Sarmiento Reyes"},
+    {Nombre: "Ordenador", Valor: "Rector"}
+  ];
+
   // Json de prueba para los datos del formulario
   self.contenidoMinuta = {
     Titulo: 'Minuta de prueba',
@@ -64,8 +70,17 @@ angular.module('contractualClienteApp')
   };
 
   self.pruebas = function() {
-    //console.log(self.tituloClausula);
-    //console.log(self.textoClausula);
+    console.log(':DDD');
+  }
+
+  // Agrega las variables al texto de cláusulas o paragrafos
+  self.agregarVariable = function(item) {
+    if (self.textoClausula === undefined) {
+      self.textoClausula = '';
+    } else if (self.textoClausula.length > 0) {
+      self.textoClausula += ' ';
+    }
+    self.textoClausula += '{{'+item+'}} ';
   }
 
   // Adiciona paragrafo

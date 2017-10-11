@@ -103,7 +103,7 @@
           </div>
           <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
-              <button class="form-control btn btn-primary" data-toggle="modal" ng-click="generacionPlantilla.pruebas()" data-target="#modal_add_clausula">{{'BTN_MINUTAS.AGREGAR_CLAUSULA' | translate}}</button>
+              <button class="form-control btn btn-primary" data-toggle="modal" data-target="#modal_add_clausula">{{'BTN_MINUTAS.AGREGAR_CLAUSULA' | translate}}</button>
             </div>
           </div>
         </div>
@@ -135,7 +135,14 @@
           </div>
           <div class="col-sm-12 row form-group" style="margin-top: 20px;">
             <label for="descripcion" class="col-sm-4 col-form-label">{{'DESCRIPCION' | translate }}: </label>
-            <texto-enriquecido texto="generacionPlantilla.textoClausula"></texto-enriquecido>
+            <div class="col-sm-12">
+              <texto-enriquecido class="col-sm-8" texto="generacionPlantilla.textoClausula"></texto-enriquecido>
+              <div class="col-sm-2" style="padding-top:10px;">
+                <ul class="list-group" ng-repeat="v in generacionPlantilla.variables">
+                  <li class="list-group-item" ng-click="generacionPlantilla.agregarVariable(v.Nombre)">{{v.Nombre}}</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
