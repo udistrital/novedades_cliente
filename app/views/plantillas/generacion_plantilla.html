@@ -1,44 +1,58 @@
 <br>
 <div class="panel panel-default">
-  <h3 class="page-header text-center">{{ 'GENERACION_MINUTA' | translate }}</h3>
+  <h3 class="page-header text-center">{{'GENERACION_MINUTA' | translate}}</h3>
   <div class="row">
     <!-- información minuta -->
     <div class="col-lg-6">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h4 class="intro-text text-center">{{ 'FORMATO_MINUTA' | translate }}</h4>
+          <h4 class="intro-text text-center">{{'FORMATO_MINUTA' | translate}}</h4>
         </div>
         <div class="panel-body">
           <form role="form">
             <div class="col-lg-12">
               <button type="button" ng-click="generacionPlantilla.llenarUiGrid()" data-toggle="modal" data-target="#modal_plantilla_existente" class="btn btn-outline btn-primary btn-lg btn-block" >{{ 'PLANTILLA_EXISTENTE' | translate }}</button><br>
               <div class="form-group col-lg-6">
-                <label for="inputTitulo">{{ 'TITULO_MINUTA' | translate }}</label>
+                <label for="inputTitulo">{{'TITULO_MINUTA' | translate}}</label>
                 <input type="text" id="inputTitulo" class="form-control" ng-model="generacionPlantilla.contenidoMinuta.Titulo">
               </div>
               <div class="form-group col-lg-6">
-                <label>{{ 'DEPENDENCIA_SOLICITANTE' | translate }}</label>
+                <label>{{'DEPENDENCIA_SOLICITANTE' | translate}}</label>
                 <input type="text" class="form-control" ng-model="generacionPlantilla.contenidoMinuta.IdDependencia.Nombre" disabled >
               </div>
               <div class="form-group col-lg-6">
-                <label>{{ 'UNIDAD_EJECUTORA' | translate }}</label>
+                <label>{{'UNIDAD_EJECUTORA' | translate}}</label>
                 <input type="text" class="form-control" ng-model="generacionPlantilla.contenidoMinuta.IdUnidadEjecutora.Nombre" disabled >
               </div>
               <div class="form-group col-lg-6">
-                <label>{{ 'TIPO_CONTRATO' | translate }}</label>
+                <label>{{'TIPO_CONTRATO' | translate }}</label>
                 <select data-ng-options="o.TipoContrato for o in generacionPlantilla.tipoContrato" class="form-control" data-ng-model="generacionPlantilla.singleTipoContrato" >
                 </select>
               </div>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="margin-top:20px;">
               <div class="form-group col-lg-12">
-                <label>{{ 'INTRODUCCION' | translate }}</label>
-                <textarea rows="12" class="form-control" ng-model="generacionPlantilla.contenidoMinuta.Introduccion"></textarea>
+                <div class="col-md-6">
+                  <label>{{'INTRODUCCION' | translate}}:</label>
+                </div>
+                <div class="col-md-6" style="margin-bottom:10px;">
+                  <smal>{{'AGREGAR_COMODIN' | translate}}</smal>
+                  <select class="form-control" data-ng-options="n.Nombre for n in generacionPlantilla.variables" data-ng-model="generacionPlantilla.varIntro" ng-change="generacionPlantilla.agregarVariable(n, 'introduccion')">
+                  </select>
+                </div>
+                <textarea rows="12" class="form-control" data-ng-model="generacionPlantilla.contenidoMinuta.Introduccion"></textarea>
               </div>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="marign-top:30px;">
               <div class="form-group col-lg-12">
-                <label>{{ 'CONSIDERACION' | translate }}</label>
+                <div class="col-md-6">
+                  <label>{{'CONSIDERACION' | translate }}:</label>
+                </div>
+                <div class="col-md-6" style="margin-bottom:10px;">
+                  <smal>{{'AGREGAR_COMODIN' | translate}}</smal>
+                  <select class="form-control" ng-options="n.Nombre for n in generacionPlantilla.variables" ng-model="generacionPlantilla.variableConsideracion" ng-change="generacionPlantilla.agregarVariable(n, 'consideracion')">
+                  </select>
+                </div>
                 <textarea rows="13" class="form-control" ng-model="generacionPlantilla.contenidoMinuta.Consideracion"></textarea>
               </div>
             </div>
@@ -134,12 +148,11 @@
             <input type="text" id="tituloClausula" class="form-control" ng-model="generacionPlantilla.tituloClausula" required>
           </div>
           <div class="col-sm-12 row form-group" style="margin-top: 20px;">
-            <label for="descripcion" class="col-sm-4 col-form-label">{{'DESCRIPCION' | translate }}: </label>
             <div class="col-sm-12">
-              <texto-enriquecido class="col-sm-8" texto="generacionPlantilla.textoClausula"></texto-enriquecido>
+              <texto-enriquecido class="col-sm-9" texto="generacionPlantilla.textoClausula"></texto-enriquecido>
               <div class="col-sm-2" style="padding-top:10px;">
                 <ul class="list-group" ng-repeat="v in generacionPlantilla.variables">
-                  <li class="list-group-item" ng-click="generacionPlantilla.agregarVariable(v.Nombre)">{{v.Nombre}}</li>
+                  <li class="list-group-item" ng-click="generacionPlantilla.agregarVariable(v.Nombre, 'clausula')">{{v.Nombre}}</li>
                 </ul>
               </div>
             </div>
@@ -166,8 +179,14 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-12 row form-group" style="margin-top: 20px;">
-            <label for="descripcion" class="col-sm-4 col-form-label">{{'DESCRIPCION' | translate }}: </label>
-            <texto-enriquecido texto="generacionPlantilla.textoParagrafo"></texto-enriquecido>
+            <div class="col-sm-12">
+            <texto-enriquecido class="col-md-9" texto="generacionPlantilla.textoParagrafo"></texto-enriquecido>
+            <div class="col-sm-2" style="padding-top:10px;">
+              <ul class="list-group" ng-repeat="v in generacionPlantilla.variables">
+                <li class="list-group-item" ng-click="generacionPlantilla.agregarVariable(v.Nombre, 'paragrafo')">{{v.Nombre}}</li>
+              </ul>
+            </div>
+            </div>
           </div>
         </div>
       </div>
