@@ -21,11 +21,15 @@ angular.module('contractualClienteApp')
   self.margenInferior = 60;
   $('#validador').hide();
 
+
   self.variables = [
     {Nombre: "Contrato", Valor: "F13" },
     {Nombre: "Contratista", Valor: "Juan Camilo Sarmiento Reyes"},
     {Nombre: "Ordenador", Valor: "Rector"}
   ];
+
+  self.varIntro = self.variables[0]; // Para mostrar el primer elemento al principio del select
+  self.varConsi = self.variables[0]; // Para mostrar el primer elemento al principio del select
 
   // Json de prueba para los datos del formulario
   self.contenidoMinuta = {
@@ -74,13 +78,44 @@ angular.module('contractualClienteApp')
   }
 
   // Agrega las variables al texto de cláusulas o paragrafos
-  self.agregarVariable = function(item) {
-    if (self.textoClausula === undefined) {
-      self.textoClausula = '';
-    } else if (self.textoClausula.length > 0) {
-      self.textoClausula += ' ';
+  self.agregarVariable = function(item, componente) {
+    switch (componente) {
+      case 'introduccion':
+        if (self.contenidoMinuta.Introduccion === undefined) {
+          self.contenidoMinuta.Introduccion = '';
+        } else if (self.contenidoMinuta.Introduccion.length > 0) {
+          self.contenidoMinuta.Introduccion += ' ';
+        }
+        self.contenidoMinuta.Introduccion += '{{'+self.varIntro.Nombre+'}} ';
+        break;
+      case 'consideracion':
+        if (self.contenidoMinuta.Consideracion === undefined) {
+          self.contenidoMinuta.Consideracion = '';
+        } else if (self.contenidoMinuta.Consideracion.length > 0) {
+          self.contenidoMinuta.Consideracion += ' ';
+        }
+        self.contenidoMinuta.Consideracion += '{{'+self.varConsi.Nombre+'}} ';
+        break;
+      case 'clausula':
+        if (self.textoClausula === undefined) {
+          self.textoClausula = '';
+        } else if (self.textoClausula.length > 0) {
+          self.textoClausula += ' ';
+        }
+        self.textoClausula += '{{'+item+'}} ';
+        break;
+      case 'paragrafo':
+        if (self.textoParagrafo === undefined) {
+          self.textoParagrafo = '';
+        } else if (self.textoParagrafo.length > 0) {
+          self.textoParagrafo += ' ';
+        }
+        self.textoParagrafo += '{{'+item+'}} ';
+        break;
+      default:
+
     }
-    self.textoClausula += '{{'+item+'}} ';
+
   }
 
   // Adiciona paragrafo

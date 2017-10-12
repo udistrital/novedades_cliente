@@ -496,7 +496,8 @@ var text_es = {
   SUPERIOR: "Superior",
   INFERIOR: "Inferior",
   IZQUIERDA: "Izquierda",
-  DERECHA: "Derecha"
+  DERECHA: "Derecha",
+  AGREGAR_COMODIN: "Agregar comodín"
 };
 
 var text_en = {
@@ -991,7 +992,8 @@ var text_en = {
   SUPERIOR: "Top",
   INFERIOR: "Buttom",
   IZQUIERDA: "Left",
-  DERECHA: "Right"
+  DERECHA: "Right",
+  AGREGAR_COMODIN: "Add wildcard"
 };
 
 angular.module('contractualClienteApp')

@@ -1,5 +1,6 @@
 <div class="row">
-  <div class="col-md-offset-3 col-sm-2">
+  <label for="descripcion"class="col-sm-1 col-form-label">{{'DESCRIPCION' | translate }}: </label>
+  <div class="col-md-offset-6 col-sm-2">
     <small>{{'FORMATO_TEXTO' | translate }}:</small>
   </div>
   <div class="col-sm-3 row">
@@ -8,7 +9,7 @@
     </select>
   </div>
 </div>
-<div class="form-group col-sm-12" style="margin-top:10px;">
+<div class="col-lg-12" style="margin-top:10px; padding-right:10px;">
   <textarea ng-show="textoEnriquecido.textoNormal" name="descripcion" ng-model="texto" rows=7 class="form-control" required>{{generacionPlantilla.textoOriginal}}</textarea>
   <text-angular ng-show="textoEnriquecido.textoHtml" ng-model="texto"></text-angular>
 </div>
