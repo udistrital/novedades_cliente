@@ -36,8 +36,8 @@
                   <label>{{'INTRODUCCION' | translate}}:</label>
                 </div>
                 <div class="col-md-6" style="margin-bottom:10px;">
-                  <smal>{{'AGREGAR_COMODIN' | translate}}</smal>
-                  <select class="form-control" data-ng-options="n.Nombre for n in generacionPlantilla.variables" data-ng-model="generacionPlantilla.varIntro" ng-change="generacionPlantilla.agregarVariable(n, 'introduccion')">
+                  <small>{{'AGREGAR_COMODIN' | translate}}</small>
+                  <select class="form-control" data-ng-options="n.Nombre for n in generacionPlantilla.variables" data-ng-model="generacionPlantilla.varIntro" ng-change="generacionPlantilla.agregarVariable('introduccion')">
                   </select>
                 </div>
                 <textarea rows="12" class="form-control" data-ng-model="generacionPlantilla.contenidoMinuta.Introduccion"></textarea>
@@ -49,8 +49,8 @@
                   <label>{{'CONSIDERACION' | translate }}:</label>
                 </div>
                 <div class="col-md-6" style="margin-bottom:10px;">
-                  <smal>{{'AGREGAR_COMODIN' | translate}}</smal>
-                  <select class="form-control" ng-options="n.Nombre for n in generacionPlantilla.variables" ng-model="generacionPlantilla.variableConsideracion" ng-change="generacionPlantilla.agregarVariable(n, 'consideracion')">
+                  <small>{{'AGREGAR_COMODIN' | translate}}</small>
+                  <select class="form-control" ng-options="n.Nombre for n in generacionPlantilla.variables" ng-model="generacionPlantilla.variableConsideracion" ng-change="generacionPlantilla.agregarVariable('consideracion')">
                   </select>
                 </div>
                 <textarea rows="13" class="form-control" ng-model="generacionPlantilla.contenidoMinuta.Consideracion"></textarea>
@@ -58,7 +58,7 @@
             </div>
             <div class="col-lg-12">
               <div class="form-group col-lg-12">
-                <label for="inputEncabezado" style="float:left; margin-top:10px;">{{ 'ENCABEZADO_MINUTA' | translate }}</label>
+                <label for="inputEncabezado" style="margin-top:10px;">{{ 'ENCABEZADO_MINUTA' | translate }}</label>
                 <texto-enriquecido texto="generacionPlantilla.encabezado"></texto-enriquecido>
                 Insertar imagen: <input type="file" ngf-select="" ng-model="generacionPlantilla.imagenEncabezado" name="file" ngf-accept="'image/*'" required="">
                 <img ngf-src="generacionPlantilla.imagenEncabezado" class="thumb" style="width:70px; height:70px;">
@@ -70,7 +70,7 @@
             </div>
             <div class="col-lg-12">
               <div class="from-group col-sm-12">
-                <label for="inputPieDePagina" style="float:left; margin-top:10px;">{{ 'PIE_MINURA' | translate }}</label>
+                <label for="inputPieDePagina" style="margin-top:10px;">{{ 'PIE_MINURA' | translate }}</label>
                 <texto-enriquecido texto="generacionPlantilla.pieDePagina"></texto-enriquecido>
               </div>
             </div>
@@ -149,12 +149,16 @@
           </div>
           <div class="col-sm-12 row form-group" style="margin-top: 20px;">
             <div class="col-sm-12">
-              <texto-enriquecido class="col-sm-9" texto="generacionPlantilla.textoClausula"></texto-enriquecido>
-              <div class="col-sm-2" style="padding-top:10px;">
-                <ul class="list-group" ng-repeat="v in generacionPlantilla.variables">
-                  <li class="list-group-item" ng-click="generacionPlantilla.agregarVariable(v.Nombre, 'clausula')">{{v.Nombre}}</li>
-                </ul>
+              <div class="col-sm-5 col-md-offset-7 row">
+                <div class="col-md-5" style="margin-top:5px;">
+                  <small>{{'AGREGAR_COMODIN' | translate}}</small>
+                </div>
+                <div class="col-md-6" style="margin-bottom:10px;">
+                  <select class="form-control" data-ng-options="n.Nombre for n in generacionPlantilla.variables" data-ng-model="generacionPlantilla.varClau" ng-change="generacionPlantilla.agregarVariable('clausula')">
+                  </select>
+                </div>
               </div>
+              <texto-enriquecido class="col-sm-12" texto="generacionPlantilla.textoClausula"></texto-enriquecido>
             </div>
           </div>
         </div>
@@ -180,12 +184,16 @@
         <div class="row">
           <div class="col-sm-12 row form-group" style="margin-top: 20px;">
             <div class="col-sm-12">
-            <texto-enriquecido class="col-md-9" texto="generacionPlantilla.textoParagrafo"></texto-enriquecido>
-            <div class="col-sm-2" style="padding-top:10px;">
-              <ul class="list-group" ng-repeat="v in generacionPlantilla.variables">
-                <li class="list-group-item" ng-click="generacionPlantilla.agregarVariable(v.Nombre, 'paragrafo')">{{v.Nombre}}</li>
-              </ul>
-            </div>
+              <div class="col-sm-5 col-md-offset-7 row">
+                <div class="col-md-5" style="margin-top:5px;">
+                  <small>{{'AGREGAR_COMODIN' | translate}}</small>
+                </div>
+                <div class="col-md-6" style="margin-bottom:10px;">
+                  <select class="form-control" data-ng-options="n.Nombre for n in generacionPlantilla.variables" data-ng-model="generacionPlantilla.varPara" ng-change="generacionPlantilla.agregarVariable('paragrafo')">
+                  </select>
+                </div>
+              </div>
+            <texto-enriquecido class="col-md-12" texto="generacionPlantilla.textoParagrafo"></texto-enriquecido>
             </div>
           </div>
         </div>

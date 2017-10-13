@@ -78,7 +78,7 @@ angular.module('contractualClienteApp')
   }
 
   // Agrega las variables al texto de cláusulas o paragrafos
-  self.agregarVariable = function(item, componente) {
+  self.agregarVariable = function(componente) {
     switch (componente) {
       case 'introduccion':
         if (self.contenidoMinuta.Introduccion === undefined) {
@@ -102,7 +102,7 @@ angular.module('contractualClienteApp')
         } else if (self.textoClausula.length > 0) {
           self.textoClausula += ' ';
         }
-        self.textoClausula += '{{'+item+'}} ';
+        self.textoClausula += '{{'+self.varClau.Nombre+'}} ';
         break;
       case 'paragrafo':
         if (self.textoParagrafo === undefined) {
@@ -110,7 +110,7 @@ angular.module('contractualClienteApp')
         } else if (self.textoParagrafo.length > 0) {
           self.textoParagrafo += ' ';
         }
-        self.textoParagrafo += '{{'+item+'}} ';
+        self.textoParagrafo += '{{'+self.varPara.Nombre+'}} ';
         break;
       default:
 
