@@ -30,6 +30,9 @@ var text_es = {
   RP_MASIVO: "¿Es para una solicitud de registro presupuestal masiva?",
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
+  ACTA_INICIO:"Acta inicio",
+  CREAR_RESOLUCION:"Crear resolución",
+  CANCELAR_CONTRATO:"Cancelar contrato",
   //solicitud_necesidad
   NECESIDADES: "Necesidades",
   NECESIDAD: "Necesidad",
@@ -524,6 +527,9 @@ var text_en = {
     TRABAJOS_INVESTIGACION: "Investigation work",
   NECESIDADES: "Needs",
   NECESIDAD: "Need",
+  ACTA_INICIO:"Start agreement",
+  CANCELAR_CONTRATO:"Cancel contract",
+  CREAR_RESOLUCION:"Make resolution",
   //SOLICITUD RP
   RP_MASIVO: "Is this for a masive budget register request?",
   ERROR: "Error",

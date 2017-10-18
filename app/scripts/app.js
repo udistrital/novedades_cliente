@@ -156,6 +156,11 @@ angular
         controller: 'ListaPlantillasCtrl',
         controllerAs: 'listaPlantillas'
       })
+      .when('/vinculacionespecial/cancelar_contrato_docente', {
+        templateUrl: 'views/vinculacionespecial/cancelar_contrato_docente.html',
+        controller: 'CancelarContratoDocenteCtrl',
+        controllerAs: 'cancelarContratoDocente'
+      })
       .otherwise({
         redirectTo: '/'
       });

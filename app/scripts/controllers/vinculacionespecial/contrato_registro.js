@@ -62,6 +62,7 @@ angular.module('contractualClienteApp')
 
     self.asignarValoresDefecto = function(){
       self.contratoGeneralBase={}
+      self.acta={}
       self.contratoGeneralBase.Vigencia=new Date().getFullYear();
       self.contratoGeneralBase.FormaPago={Id:240};
       self.contratoGeneralBase.DescripcionFormaPago="Abono a Cuenta Mensual de acuerdo a puntas y hotras laboradas";
@@ -84,6 +85,7 @@ angular.module('contractualClienteApp')
       self.contratoGeneralBase.FechaRegistro=new Date();
       self.contratoGeneralBase.UnidadEjecutora=1;
       self.contratoGeneralBase.Condiciones="Sin condiciones";
+      self.acta.Descripcion="Acta inicio resolución Docente Vinculación Especial";
     }
 
     self.asignarValoresDefecto();
@@ -136,10 +138,13 @@ angular.module('contractualClienteApp')
         if(self.datosFiltro.Dedicacion=="HCH"){
           self.contratoGeneralBase.TipoContrato={Id: 3};
           self.contratoGeneralBase.ObjetoContrato="Docente de Vinculación Especial - Honorarios";
-        }else{
+        }else if(self.datosFiltro.Dedicacion=="HCP"){
           self.contratoGeneralBase.TipoContrato={Id: 2};
           self.contratoGeneralBase.ObjetoContrato="Docente de Vinculación Especial - Salario";
-        }        
+        }else{
+          self.contratoGeneralBase.TipoContrato={Id: 18};
+          self.contratoGeneralBase.ObjetoContrato="Docente de Vinculación Especial - Medio Tiempo Ocasional (MTO) - Tiempo Completo Ocasional (TCO)";
+        }    
         swal({
           title: $translate.instant('EXPEDIR'),
           text: $translate.instant('SEGURO_EXPEDIR'),
@@ -182,6 +187,7 @@ angular.module('contractualClienteApp')
       if(self.contratados){
         self.contratados.forEach(function(contratado){
           var contratoGeneral=JSON.parse(JSON.stringify(self.contratoGeneralBase));
+          var actaI=JSON.parse(JSON.stringify(self.acta));
           contratoGeneral.Contratista=contratado.Documento;
           contratoGeneral.DependenciaSolicitante=contratado.ProyectoCurricular.toString();
           contratoGeneral.PlazoEjecucion=contratado.Semanas*7;
@@ -189,6 +195,7 @@ angular.module('contractualClienteApp')
           contratoGeneral.ValorContrato=contratado.ValorContrato;
           var contratoVinculacion={
             ContratoGeneral: contratoGeneral,
+            ActaInicio: actaI,
             VinculacionDocente: {Id: contratado.Id}
           }
           if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){

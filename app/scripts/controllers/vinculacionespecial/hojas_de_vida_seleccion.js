@@ -129,13 +129,13 @@ angular.module('contractualClienteApp')
             width: '15%',  
             cellTemplate: '<center>' +
                '<a class="ver" ng-click="grid.appScope.verInformacionPersonal(row)">' +
-               '<i title="{{\'VER_INFO_PERSONAL_BTN\' | translate }}" class="fa fa-user fa-lg  faa-shake animated-hover"></i></a> ' +
+               '<i title="{{\'VER_INFO_PERSONAL_BTN\' | translate }}" class="fa fa-user fa-lg  faa-shake animated-hover"></i></a> ' /*+
                '<a class="editar" ng-click="grid.appScope.verFormacionAcademica(row)">' +
                '<i title="{{\'VER_INFO_ACADEMICA\' | translate }}" class="fa fa-graduation-cap fa-lg  faa-shake animated-hover"></i></a> ' +
                '<a class="ver" ng-click="grid.appScope.verHistoriaLaboral(row)">' +
                '<i title="{{\'VER_EXP_LABORAL\' | translate }}" class="fa fa-pencil fa-lg faa-shake animated-hover"></i></a> ' +
                '<a class="editar" ng-click="grid.appScope.verTrabajosInvestigacion(row)">' +
-               '<i title="{{\'VER_TRABAJOS_INVESTIGACION\' | translate }}" class="fa fa-book fa-lg fa-lg animated-hover"></i></a> ' +
+               '<i title="{{\'VER_TRABAJOS_INVESTIGACION\' | translate }}" class="fa fa-book fa-lg fa-lg animated-hover"></i></a> ' */+
                '</center>'
         }
       ],
@@ -737,4 +737,4 @@ angular.module('contractualClienteApp')
     }
 
 
-  });
+});

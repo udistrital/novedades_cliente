@@ -153,6 +153,16 @@ angular.module('contractualClienteApp')
 
     //Función donde se despliega un mensaje de alerta previo a la cancelación de la resolución
 	$scope.verCancelarResolucion = function(row){
+        $mdDialog.show({
+            controller: "CancelarContratoDocenteCtrl",
+            controllerAs: "cancelarContratoDocente",
+            templateUrl: 'views/vinculacionespecial/cancelar_contrato_docente.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose:true,
+            fullscreen: true,
+            locals: {idResolucion: row.entity.Id}
+          })
+        /*
     	swal({
 		  title: $translate.instant('CANCELAR_RESOLUCION'),
           html:
@@ -176,7 +186,7 @@ angular.module('contractualClienteApp')
                     type: 'error'
                 })
             }
-        })
+        })*/
     }
 
     //Función para realizar la cancelación y verificación de la resolución
