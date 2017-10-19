@@ -393,6 +393,8 @@ angular.module('contractualClienteApp')
         }
         swal("", self.alerta, response.data[0]);
       });
+
+      console.log(self.tr_necesidad);
     };
 
 

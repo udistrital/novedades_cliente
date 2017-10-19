@@ -31,8 +31,8 @@
     "ng-file-upload-shim": "^12.2.13"
   },
   "resolutions": {
-    "angular": "1.6.4",
-    "angular-route": "1.6.4"
+    "angular": "^1.6.4",
+    "angular-route": "^1.6.4"
   },
   "devDependencies": {
     "angular-mocks": "^1.6.4"

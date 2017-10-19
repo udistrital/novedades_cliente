@@ -8,7 +8,7 @@
   <div>
     <div class="panel-body">
 
-      <form name="solicitudform" class="form-horizontal" ng-submit="solicitudform.$valid && solicitudNecesidad.crear_solicitud()" novalidate>
+      <form name="solicitudform" class="form-horizontal" ng-submit="solicitudNecesidad.crear_solicitud()" novalidate>
 
         <div align="center">
           <div class="form-group">
@@ -234,7 +234,7 @@
 
               <div class="form-group">
                 <center>
-                  <button class="btn btn-primary btn-outline" ng-click="solicitudNecesidad.actividad_esp!=undefined && solicitudNecesidad.agregarActEsp(solicitudNecesidad.actividad_esp);solicitudNecesidad.actividad_esp=undefined">{{"AGREGAR" | translate}}</button>
+                  <button type="button" class="btn btn-primary btn-outline" ng-click="solicitudNecesidad.actividad_esp!=undefined && solicitudNecesidad.agregarActEsp(solicitudNecesidad.actividad_esp);solicitudNecesidad.actividad_esp=undefined">{{"AGREGAR" | translate}}</button>
                 </center>
               </div>
 
@@ -308,7 +308,7 @@
 
                     <div class="form-group">
                       <center>
-                        <button class="btn btn-primary btn-outline" ng-click="solicitudNecesidad.requisitos_minimos.push({id: $index + 1 , requisito: pro.requisitomin , reqi: pro.i});pro.requisitomin=''">{{"AGREGAR" | translate}}</button>
+                        <button type="button" class="btn btn-primary btn-outline" ng-click="solicitudNecesidad.requisitos_minimos.push({id: $index + 1 , requisito: pro.requisitomin , reqi: pro.i});pro.requisitomin=''">{{"AGREGAR" | translate}}</button>
                       </center>
                     </div>
                   </div>
@@ -398,17 +398,20 @@
                 <div class="form-group">
                   <div>
                     <ul class="list-group">
-                      <li class="list-group-item" ng-repeat="ap in solicitudNecesidad.f_apropiacion_fun">
+                      <div>
+                        <li class="list-group-item" ng-repeat="ap in solicitudNecesidad.f_apropiacion_fun">
 
-                        <label><span class="text-success">{{$index+1}}.</span> {{ap.aprop.Rubro.Descripcion}}</label>
-                        <br>
-                        <!--label class="text-info">{{"SALDO" | translate}}</label>
-                        <input type="text" ng-model="ap.aprop.Saldo" ui-money-mask="0" readonly>
-                        <br-->
-                        <label class="text-info">{{"VALOR_SOLICITADO" | translate}}</label>
-                        <input type="text" ng-model="ap.MontoParcial" ui-money-mask="0">
-                        <br>
-                      </li>
+                          <label><span class="text-success">{{$index+1}}.</span> {{ap.aprop.Rubro.Descripcion}}</label>
+                          <br>
+                          <!--label class="text-info">{{"SALDO" | translate}}</label>
+                          <input type="text" ng-model="ap.aprop.Saldo" ui-money-mask="0" readonly>
+                          <br-->
+                          <label class="text-info">{{"VALOR_SOLICITADO" | translate}}</label>
+                          <input type="text" ng-model="ap.MontoParcial" ui-money-mask="0">
+                          <br>
+                          <span class="fa "
+                        </li>
+                      </div>
                     </ul>
                   </div>
                 </div>
