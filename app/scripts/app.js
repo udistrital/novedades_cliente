@@ -47,7 +47,8 @@ angular
     'contratacion_mid_service',
     'titan_service',
     'textAngular',
-    'ngFileUpload'
+    'ngFileUpload',
+    'amazonAdministrativaService'
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');
