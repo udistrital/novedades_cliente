@@ -8,12 +8,12 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('InformacionPersonalCtrl', function (agoraRequest,coreRequest,$scope,$mdDialog,idPersona) {
+  .controller('InformacionPersonalCtrl', function (amazonamazonAdministrativaRequest,coreRequest,$scope,$mdDialog,idPersona) {
     
     var self = this;
     self.idPersona=idPersona;
 
-    agoraRequest.get("informacion_persona_natural","query=Id%3A"+self.idPersona).then(function(response){
+    amazonamazonAdministrativaRequest.get("informacion_persona_natural","query=Id%3A"+self.idPersona).then(function(response){
     	self.persona=response.data[0];
     	self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');
     })

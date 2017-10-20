@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,contratacion_request,adminMidRequest,contratacion_mid_request,$mdDialog,$scope,idResolucion) {
+  .controller('ResolucionVistaCtrl', function (amazonAdministrativaRequest,oikosRequest,coreRequest,contratacion_request,adminMidRequest,contratacion_mid_request,$mdDialog,$scope,idResolucion) {
     
   	var self=this;
 
@@ -16,11 +16,11 @@ angular.module('contractualClienteApp')
 
     self.proyectos=[];
     //Se cargan los datos almacenados en la tabla resolucion
-    administrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){ 
+    amazonAdministrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){ 
       self.resolucion=response.data;
       self.numero=self.resolucion.NumeroResolucion;
       //Se cargan los datos almacenados en la tabla resolucion_vinculacion_docente donde se encuentran los elementos filtro para obtener los docentes asociados a la resolución
-      administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
+      amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
         self.datosFiltro=response.data;
         if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
           var auxNivelAcademico=14;
@@ -77,7 +77,7 @@ angular.module('contractualClienteApp')
             self.proyectos=response.data;
           }
           //Se carga el contenido de la resolución, (preambulo, consideracion, artículos, paragrafos)
-          administrativaRequest.get("contenido_resolucion/"+self.idResolucion).then(function(response){
+          amazonAdministrativaRequest.get("contenido_resolucion/"+self.idResolucion).then(function(response){
             self.contenidoResolucion=response.data;
             //Se carga el ordenador del gasto asocciado a la dependencia solicitante de los docentes de vinculación especial
             coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.datosFiltro.IdFacultad.toString()).then(function(response){
@@ -91,7 +91,7 @@ angular.module('contractualClienteApp')
               //Se verifica si la resolución ha sido expedida o no
               if(self.resolucion.FechaExpedicion == null){
                 //Se cargan los docentes previamente vinculados con la resolución
-                administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){    
+                amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){    
                   self.contratados=response.data;
                   if(self.contratados){
                     self.contratados.forEach(function(row){
@@ -110,7 +110,7 @@ angular.module('contractualClienteApp')
                 });
               }else{
                 //Se cargan los docentes contratdos si la resolucion ya fue expedida
-                administrativaRequest.get("precontratado/Contratado/"+self.idResolucion.toString()).then(function(response){      
+                amazonAdministrativaRequest.get("precontratado/Contratado/"+self.idResolucion.toString()).then(function(response){      
                   self.contratados=response.data;
                   if(self.contratados){
                     self.contratados.forEach(function(row){
@@ -131,7 +131,7 @@ angular.module('contractualClienteApp')
     });
 
     self.getContenidoDocumento = function(){
-                    administrativaRequest.get("contenido_resolucion/"+self.idResolucion).then(function(response){
+                    amazonAdministrativaRequest.get("contenido_resolucion/"+self.idResolucion).then(function(response){
                       self.contenidoResolucion=response.data;
                       //Se carga el ordenador del gasto asocciado a la dependencia solicitante de los docentes de vinculación especial
                       coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.datosFiltro.IdFacultad.toString()).then(function(response){
@@ -145,7 +145,7 @@ angular.module('contractualClienteApp')
                         //Se verifica si la resolución ha sido expedida o no
                         if(self.resolucion.FechaExpedicion == null){
                           //Se cargan los docentes previamente vinculados con la resolución
-                          administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){    
+                          amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){    
                             self.contratados=response.data;
                             if(self.contratados){
                               var auxSalarios=0;
@@ -166,7 +166,7 @@ angular.module('contractualClienteApp')
                           });
                         }else{
                           //Se cargan los docentes contratdos si la resolucion ya fue expedida
-                          administrativaRequest.get("precontratado/Contratado/"+self.idResolucion.toString()).then(function(response){      
+                          amazonAdministrativaRequest.get("precontratado/Contratado/"+self.idResolucion.toString()).then(function(response){      
                             self.contratados=response.data;
                             if(self.contratados){
                               self.contratados.forEach(function(row){

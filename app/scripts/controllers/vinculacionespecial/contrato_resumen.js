@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ContratoResumenCtrl', function ($scope,$translate,administrativaRequest,coreRequest,oikosRequest,adminMidRequest,contratacion_request,contratacion_mid_request,idResolucion,$mdDialog) {
+  .controller('ContratoResumenCtrl', function ($scope,$translate,amazonAdministrativaRequest,coreRequest,oikosRequest,adminMidRequest,contratacion_request,contratacion_mid_request,idResolucion,$mdDialog) {
     
   	var self = this;
 
@@ -44,7 +44,7 @@ angular.module('contractualClienteApp')
       self.precontratados.data=JSON.parse(JSON.stringify(self.precontratados.data))
     }
 
-    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
+    amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
 	    self.datosFiltro=response.data;
 	    self.datosFiltro.IdFacultad=self.datosFiltro.IdFacultad.toString();
 	    oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
@@ -56,7 +56,7 @@ angular.module('contractualClienteApp')
 	        self.proyectos=response.data;
 	      }
 	    });
-	    administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){  
+	    amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){  
 	      self.precontratados.data=response.data;
 	      if(self.precontratados.data){
 	        self.precontratados.data.forEach(function(row){

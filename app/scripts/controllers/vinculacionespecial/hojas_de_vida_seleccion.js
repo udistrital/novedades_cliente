@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-  .controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,adminMidRequest,oikosRequest,agoraRequest,kyronRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
+  .controller('HojasDeVidaSeleccionCtrl', function (amazonAdministrativaRequest,adminMidRequest,oikosRequest,amazonamazonAdministrativaRequest,kyronRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
     
     var self = this;
 
@@ -12,7 +12,7 @@ angular.module('contractualClienteApp')
     self.dedicaciones=[];
     self.proyectos=[];
     //Se leen los datos básicos de la resolucion de vinculación especial
-    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
+    amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
       self.datosFiltro=response.data;
       if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
         var auxNivelAcademico=14;
@@ -67,26 +67,26 @@ angular.module('contractualClienteApp')
       switch(self.datosFiltro.Dedicacion){
         //Dependiendo del tipo de resolucion se cargan las dedicaciones debidas  
         case "TCO-MTO":
-          administrativaRequest.get("dedicacion","query=NombreDedicacion%3ATCO").then(function(response){
+          amazonAdministrativaRequest.get("dedicacion","query=NombreDedicacion%3ATCO").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
           });
-          administrativaRequest.get("dedicacion","query=NombreDedicacion%3AMTO").then(function(response){
+          amazonAdministrativaRequest.get("dedicacion","query=NombreDedicacion%3AMTO").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
           });
           break;
         case "HCP":
-          administrativaRequest.get("dedicacion","query=NombreDedicacion%3AHCP").then(function(response){
+          amazonAdministrativaRequest.get("dedicacion","query=NombreDedicacion%3AHCP").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
           });
           break;
         case "HCH":
-          administrativaRequest.get("dedicacion","query=NombreDedicacion%3AHCH").then(function(response){
+          amazonAdministrativaRequest.get("dedicacion","query=NombreDedicacion%3AHCH").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
@@ -146,7 +146,7 @@ angular.module('contractualClienteApp')
           if(self.personasSeleccionadas.length==0){
             self.persona=null;
           }else{
-            agoraRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
+            amazonamazonAdministrativaRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
               if(typeof(response.data)=="object"){
                 self.persona=row.entity;
                 self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');
@@ -232,7 +232,7 @@ angular.module('contractualClienteApp')
 
     //Función para cargar los datos de los docentes asociados a la resolución previamente
     self.cargarDatosPrecontratados = function(){
-      administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){      
+      amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){      
         self.precontratados.data=response.data;
         if(self.precontratados.data != null){
           self.precontratados.data.forEach(function(row){
@@ -284,7 +284,7 @@ angular.module('contractualClienteApp')
       })
 
       //Se envía en arreglo de estructuras a la transacción encargadade almacenar los datos
-      administrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
+      amazonAdministrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
           if(typeof(response.data)=="object"){
             self.cargarDatosPrecontratados();
             self.persona=null;
@@ -364,7 +364,7 @@ angular.module('contractualClienteApp')
       var auxContador=0;
       if(self.datosValor.proyectoCurricular && self.datosValor.NumSemanas && self.datosValor.NumHorasSemanales && self.datosValor.dedicacion){
         self.personasSeleccionadas.forEach(function(personaSeleccionada){
-          administrativaRequest.get("precontratado/"+self.idResolucion.toString()+"/"+personaSeleccionada.Id).then(function(response){
+          amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()+"/"+personaSeleccionada.Id).then(function(response){
             if(response.data){
               docentesPreinscritos=true;
               auxContador++;
@@ -455,7 +455,7 @@ angular.module('contractualClienteApp')
         Estado: false
       };
 
-      administrativaRequest.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
+      amazonAdministrativaRequest.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
         self.cargarDatosPrecontratados();
       })
     }

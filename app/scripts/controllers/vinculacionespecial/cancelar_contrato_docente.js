@@ -8,14 +8,14 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('CancelarContratoDocenteCtrl', function ($translate,agoraRequest,$scope,kyronRequest,idResolucion,administrativaRequest) {
+  .controller('CancelarContratoDocenteCtrl', function ($translate,amazonamazonAdministrativaRequest,$scope,kyronRequest,idResolucion,amazonAdministrativaRequest) {
 
     var self = this;
     self.idResolucion = idResolucion;
     self.valor = idResolucion;
 
     //Se leen los datos básicos de la resolucion de vinculación especial
-    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
+    amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
       self.datosFiltro=response.data;
       if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
         var auxNivelAcademico=14;
@@ -64,11 +64,9 @@ angular.module('contractualClienteApp')
         gridApi.selection.on.rowSelectionChanged($scope,function(row){
           self.personasSeleccionadas=gridApi.selection.getSelectedRows();
           if(self.personasSeleccionadas.length==0){
-            console.log("SELECCIOOOOON");
             self.persona=null;
           }else{
-            agoraRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
-              console.log("ACA SI HAGO ALGO");
+            amazonamazonAdministrativaRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
               if(typeof(response.data)=="object"){
                 self.persona=row.entity;
                 self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');
@@ -93,7 +91,7 @@ angular.module('contractualClienteApp')
   };
   
   /*
-                      administrativaRequest.put("resolucion/CancelarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
+                      amazonAdministrativaRequest.put("resolucion/CancelarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
                         if(response.data=="OK"){
                             self.cargarDatosResolucion();
                         }

@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionGestionCtrl', function (administrativaRequest,$scope,$window,$mdDialog,$translate) {
+  .controller('ResolucionGestionCtrl', function (amazonAdministrativaRequest,$scope,$window,$mdDialog,$translate) {
     
   	var self = this;
 
@@ -131,7 +131,7 @@ angular.module('contractualClienteApp')
     };
 
     //Se cargan los datos de las resoluciones de vinculación especial almacenadas
-    administrativaRequest.get("resolucion_vinculacion").then(function(response){
+    amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
         self.resolucionesInscritas.data=response.data;
         if(self.resolucionesInscritas.data!=null){
             self.resolucionesInscritas.data.forEach(function(resolucion){
