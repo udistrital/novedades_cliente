@@ -16,7 +16,7 @@
     </div>
 </div>
 
-<div id="modalNecesidad" class="modal fade col-md-12" role="dialog" style="padding-top:5%">
+<div id="modalNecesidadAvance" class="modal fade col-md-12" role="dialog" style="padding-top:5%">
     <div class="modal-content col-md-offset-2 col-md-8">
         <div class="modal-header">
             <button type="button" class="btn btn-outline btn-danger btn-xs pull-right" data-dismiss="modal" ng-click="">&times</button><br>
@@ -26,7 +26,7 @@
                 {{'SOLICITUD_NECESIDAD' | translate }}
             </div>
             <br>
-            </form>
+            <pre>{{necesidadExterna.solicitud | json}}</pre>
             <br>
         </div>
     </div>

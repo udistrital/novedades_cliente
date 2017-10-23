@@ -45,6 +45,7 @@ angular
         'kyronService',
         'contratacion_service',
         'contratacion_mid_service',
+        'academicaService',
         'titan_service',
         'textAngular',
         'ngFileUpload'

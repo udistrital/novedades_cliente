@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('NecesidadExternaCtrl', function($translate, administrativaRequest, $scope) {
+    .controller('NecesidadExternaCtrl', function($translate, administrativaRequest, $scope, financieraRequest, academicaRequest) {
         var ctrl = this;
         $scope.botones = [
             { clase_color: "ver", clase_css: "fa fa-eye fa-lg  faa-shake animated-hover", titulo: $translate.instant('BTN.VER'), operacion: 'ver', estado: true },
@@ -54,24 +54,94 @@ angular.module('contractualClienteApp')
                 });
         };
         ctrl.get_all_necesidad_externa();
+
+        ctrl.get_avance = function(id) {
+            financieraRequest.get("solicitud_avance", $.param({
+                    limit: -1,
+                    query: "Id:" + id,
+                    sortby: "Id",
+                    order: "asc"
+                }))
+                .then(function(response) {
+                    ctrl.solicitud = response.data[0];
+                    console.log(ctrl.solicitud);
+                    financieraRequest.get("avance_estado_avance", $.param({
+                            query: "SolicitudAvance.Id:" + ctrl.solicitud.Id,
+                            sortby: "FechaRegistro",
+                            limit: -1,
+                            order: "desc"
+                        }))
+                        .then(function(estados) {
+                            ctrl.solicitud.Estado = estados.data;
+                        });
+                    //aqui va la conexions con el beneficiario
+                    academicaRequest.get("documento=" + ctrl.solicitud.Beneficiario)
+                        .then(function(response) {
+                            ctrl.solicitud.Tercero = response.data[0];
+                        });
+                    financieraRequest.get("solicitud_tipo_avance", $.param({
+                            query: "SolicitudAvance.Id:" + ctrl.solicitud.Id,
+                            sortby: "Id",
+                            limit: -1,
+                            order: "asc"
+                        }))
+                        .then(function(response) {
+                            ctrl.solicitud.Tipos = response.data;
+                            ctrl.solicitud.Total = 0;
+                            angular.forEach(response.data, function(tipo) {
+                                ctrl.solicitud.Total += tipo.Valor;
+                                financieraRequest.get("requisito_tipo_avance", $.param({
+                                        query: "TipoAvance:" + tipo.TipoAvance.Id + ",Activo:1",
+                                        limit: -1,
+                                        fields: "RequisitoAvance,TipoAvance,Id",
+                                        sortby: "TipoAvance",
+                                        order: "asc"
+                                    }))
+                                    .then(function(response) {
+                                        tipo.Requisitos = response.data;
+                                        var sol = 0;
+                                        var leg = 0;
+                                        angular.forEach(tipo.Requisitos, function(data) {
+                                            data.SolicitudTipoAvance = { Id: tipo.Id };
+                                            data.RequisitoTipoAvance = { Id: data.Id };
+                                            if (data.RequisitoAvance.EtapaAvance.Id == 1) { //Solicitud
+                                                sol++;
+                                            }
+                                            if (data.RequisitoAvance.EtapaAvance.Id == 2) { //Legalización
+                                                leg++;
+                                            }
+                                            tipo.n_solicitar = sol;
+                                            tipo.n_legalizar = leg;
+                                        });
+                                    });
+                            });
+                        });
+                    console.log(ctrl.solicitud);
+                });
+        };
+
         $scope.loadrow = function(row, operacion) {
             ctrl.operacion = operacion;
+            ctrl.row_entity = row.entity;
             switch (operacion) {
                 case "ver":
-                    ctrl.row_entity = row.entity;
-                    console.log(ctrl.row_entity);
                     break;
                 case "solicitud":
-                    ctrl.row_entity = row.entity;
                     switch (ctrl.row_entity.TipoNecesidad.CodigoAbreviacion) {
                         case "N":
+
+                            break;
+                        case "A":
+                            ctrl.get_avance(ctrl.row_entity.ProcesoExterno);
+                            $('#modalNecesidadAvance').modal('show');
                             break;
                     }
-                    $('#modalNecesidad').modal('show');
+
                     break;
                 default:
             }
         };
+
         ctrl.gridOptions.onRegisterApi = function(gridApi) {
             ctrl.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope, function() {});
