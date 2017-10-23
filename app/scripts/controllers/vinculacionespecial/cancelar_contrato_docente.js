@@ -8,10 +8,10 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('CancelarContratoDocenteCtrl', function ($translate,amazonAdministrativaRequest,$scope,kyronRequest,idResolucion) {
+  .controller('CancelarContratoDocenteCtrl', function ($translate,amazonAdministrativaRequest,$scope,idResolucion) {
 
 var self = this;
-self.ResolucionId ="44";
+self.ResolucionId =idResolucion;
 var docentes=[];
 var cancelacion = {};
 var FechaRegistro=new Date();
@@ -52,6 +52,7 @@ self.datosPersonas={
       self.vinculacion=response.data;
       console.log(self.vinculacion);
         if(self.vinculacion[0]!==null){
+
         self.vinculacion.forEach(function(vinc) {
           amazonAdministrativaRequest.get("informacion_persona_natural/","query=Id:"+vinc.IdPersona).then(function(response){
             if(response.data[0] !== null){
@@ -63,6 +64,7 @@ self.datosPersonas={
 
               response.data[0].Vinculacion=vinc;
               if(response.data[0].Vinculacion.NumeroContrato !=="" && response.data[0].Vinculacion.Vigencia !==""){
+
                 docentes.push(response.data[0]);
               }
             }     
@@ -71,6 +73,7 @@ self.datosPersonas={
         });
         console.log(docentes);
         self.datosPersonas.data = docentes;
+        
       }else{
         console.log("error");
       }
@@ -87,11 +90,11 @@ self.datosPersonas={
         NumeroContrato:seleccion.Vinculacion.NumeroContrato,
         Vigencia:seleccion.Vinculacion.Vigencia,
         FechaRegistro:FechaRegistro,
-        Estado: 7,
+        Estado:{Id: 7},
         Usuario:"",
       }
       amazonAdministrativaRequest.post("contrato_estado",cancelacion).then(function(response){
-        
+        console.log(response.data);
       });
     });
 

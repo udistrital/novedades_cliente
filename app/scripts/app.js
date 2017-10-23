@@ -42,7 +42,6 @@ angular
     'adminMidService',
     'sicapitalService',
     'nvd3',
-    'kyronService',
     'contratacion_service',
     'contratacion_mid_service',
     'titan_service',

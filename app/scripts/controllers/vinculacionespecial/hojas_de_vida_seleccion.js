@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-  .controller('HojasDeVidaSeleccionCtrl', function (amazonAdministrativaRequest,adminMidRequest,oikosRequest,kyronRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
+  .controller('HojasDeVidaSeleccionCtrl', function (amazonAdministrativaRequest,adminMidRequest,oikosRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
     
     var self = this;
 
@@ -14,6 +14,7 @@ angular.module('contractualClienteApp')
     //Se leen los datos básicos de la resolucion de vinculación especial
     amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
       self.datosFiltro=response.data;
+      console.log(self.datosFiltro);
       if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
         var auxNivelAcademico=14;
       }else if(self.datosFiltro.NivelAcademico.toLowerCase()=="posgrado"){
@@ -221,8 +222,11 @@ angular.module('contractualClienteApp')
 
     //Función para cargarlos datos de los docentes con hoja de vida inscrita
     self.cargarDatosPersonas = function(){
-      kyronRequest.get("persona_escalafon/"+self.datosFiltro.NivelAcademico.toLowerCase()).then(function(response){
+      console.log(self.datosFiltro.NivelAcademico.toLowerCase());
+      amazonAdministrativaRequest.get("persona_escalafon/persona_escalafon_"+self.datosFiltro.NivelAcademico.toLowerCase(),"").then(function(response){
+
         self.datosPersonas.data=response.data;
+        
         self.datosPersonas.data.forEach(function(row){
           //El nombre completo se guarda en una sola variable
           row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
