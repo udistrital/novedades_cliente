@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-  .controller('HojasDeVidaSeleccionCtrl', function (amazonAdministrativaRequest,adminMidRequest,oikosRequest,amazonamazonAdministrativaRequest,kyronRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
+  .controller('HojasDeVidaSeleccionCtrl', function (amazonAdministrativaRequest,adminMidRequest,oikosRequest,kyronRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
     
     var self = this;
 
@@ -146,7 +146,7 @@ angular.module('contractualClienteApp')
           if(self.personasSeleccionadas.length==0){
             self.persona=null;
           }else{
-            amazonamazonAdministrativaRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
+            amazonAdministrativaRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
               if(typeof(response.data)=="object"){
                 self.persona=row.entity;
                 self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');

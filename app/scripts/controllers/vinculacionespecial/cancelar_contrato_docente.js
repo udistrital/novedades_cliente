@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('CancelarContratoDocenteCtrl', function ($translate,amazonamazonAdministrativaRequest,$scope,kyronRequest,idResolucion,amazonAdministrativaRequest) {
+  .controller('CancelarContratoDocenteCtrl', function ($translate,amazonAdministrativaRequest,$scope,kyronRequest,idResolucion) {
 
     var self = this;
     self.idResolucion = idResolucion;
@@ -66,7 +66,7 @@ angular.module('contractualClienteApp')
           if(self.personasSeleccionadas.length==0){
             self.persona=null;
           }else{
-            amazonamazonAdministrativaRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
+            amazonAdministrativaRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
               if(typeof(response.data)=="object"){
                 self.persona=row.entity;
                 self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');
