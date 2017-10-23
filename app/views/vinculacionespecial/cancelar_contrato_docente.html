@@ -4,7 +4,7 @@
             {{ 'CANCELAR_CONTRATO' | translate }} {{cancelarContratoDocente.idResolucion}}
     </div>
     <div class="panel-body">
-       <div ui-grid="datosPersonas" ui-grid-selection ui-grid-pagination class="grid"></div>
+       <div ui-grid="cancelarContratoDocente.datosPersonas" ui-grid-selection ui-grid-pagination class="grid"></div>
        <div class="col-md-offset-5 col-md-3">
         <br>
         <input type="button" value="{{ 'CANCELAR_CONTRATO' | translate }}" class="form-control btn btn-danger" ng-click="cancelarContratoDocente.cancelar()"/>

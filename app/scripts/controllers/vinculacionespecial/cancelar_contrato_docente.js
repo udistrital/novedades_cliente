@@ -10,102 +10,91 @@
 angular.module('contractualClienteApp')
   .controller('CancelarContratoDocenteCtrl', function ($translate,amazonAdministrativaRequest,$scope,kyronRequest,idResolucion) {
 
-    var self = this;
-    self.idResolucion = idResolucion;
-    self.valor = idResolucion;
+var self = this;
+self.ResolucionId ="44";
+var docentes=[];
+var cancelacion = {};
+var FechaRegistro=new Date();
+self.datosPersonas={
+  paginationPageSizes: [10, 15, 20],
+  paginationPageSize: 10,
+  enableRowSelection: true,
+  enableRowHeaderSelection: true,
+  enableFiltering: true,
+  enableHorizontalScrollbar: 0,
+  enableVerticalScrollbar: true,
+  useExternalPagination: false,
+  enableSelectAll: false,
+  columnDefs : [
+    {
+      field: 'Id', 
+      displayName: $translate.instant('DOCUMENTO')
+    },
+    {
+      field: 'NombreCompleto', 
+      width: '40%', displayName: $translate.instant('NOMBRE')
+    },
+    {
+      field: 'Vinculacion.NumeroContrato', 
+      displayName: $translate.instant('CONTRATO')
+    },
+    {
+      field: 'Vinculacion.Vigencia', 
+      displayName: $translate.instant('VIGENCIA')
+    },
+  ],
+  onRegisterApi : function(gridApi){
+    self.gridApi = gridApi;
+    gridApi.selection.on.rowSelectionChanged($scope,function(row){
+      self.personasSeleccionadas=gridApi.selection.getSelectedRows();
+    });
+    amazonAdministrativaRequest.get("vinculacion_docente","limit=-1&query=IdResolucion.Id:"+self.ResolucionId).then(function(response){      
+      self.vinculacion=response.data;
+      console.log(self.vinculacion);
+        if(self.vinculacion[0]!==null){
+        self.vinculacion.forEach(function(vinc) {
+          amazonAdministrativaRequest.get("informacion_persona_natural/","query=Id:"+vinc.IdPersona).then(function(response){
+            if(response.data[0] !== null){
+              if(response.data[0].SegundoNombre=""){
+                response.data[0].NombreCompleto=response.data[0].PrimerNombre+" "+response.data[0].PrimerApellido+" "+response.data[0].SegundoApellido;
+              }else{
+                response.data[0].NombreCompleto=response.data[0].PrimerNombre+" "+response.data[0].SegundoNombre+" "+response.data[0].PrimerApellido+" "+response.data[0].SegundoApellido;
+              }
 
-    //Se leen los datos básicos de la resolucion de vinculación especial
-    amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
-      self.datosFiltro=response.data;
-      if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
-        var auxNivelAcademico=14;
-      }else if(self.datosFiltro.NivelAcademico.toLowerCase()=="posgrado"){
-        var auxNivelAcademico=15;
-      }
-      
-      //Se llaman las funciones para cargar datos de las dos tablas de la vista
-      kyronRequest.get("persona_escalafon/"+self.datosFiltro.NivelAcademico.toLowerCase()).then(function(response){
-        $scope.datosPersonas.data=response.data;
-        $scope.datosPersonas.data.forEach(function(row){
-          //El nombre completo se guarda en una sola variable
-          row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
+              response.data[0].Vinculacion=vinc;
+              if(response.data[0].Vinculacion.NumeroContrato !=="" && response.data[0].Vinculacion.Vigencia !==""){
+                docentes.push(response.data[0]);
+              }
+            }     
+           });
+
         });
-      });
+        console.log(docentes);
+        self.datosPersonas.data = docentes;
+      }else{
+        console.log("error");
+      }
     });
 
-    //Estructura ui-grid de la tabla de docentes inscritos
-    $scope.datosPersonas = {
-      paginationPageSizes: [10, 15, 20],
-      paginationPageSize: 10,
-      enableRowSelection: true,
-      enableRowHeaderSelection: true,
-      enableFiltering: true,
-      enableHorizontalScrollbar: 0,
-      enableVerticalScrollbar: true,
-      useExternalPagination: false,
-      enableSelectAll: false,
-      columnDefs : [
-        {
-          field: 'Id', 
-          displayName: $translate.instant('DOCUMENTO')
-        },
-        {
-          field: 'NombreCompleto', 
-          width: '40%', displayName: 
-          $translate.instant('NOMBRE')
-        },
-        {
-          field: 'Escalafon', 
-          displayName: $translate.instant('CATEGORIA')
-        }
-      ],
-      onRegisterApi : function(gridApi){
-        self.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope,function(row){
-          self.personasSeleccionadas=gridApi.selection.getSelectedRows();
-          if(self.personasSeleccionadas.length==0){
-            self.persona=null;
-          }else{
-            amazonAdministrativaRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
-              if(typeof(response.data)=="object"){
-                self.persona=row.entity;
-                self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');
-              }else{
-                swal({
-                  title: $translate.instant('PROBLEMA'),
-                  text: $translate.instant('MENSAJE_ERROR'),
-                  type: "danger",
-                  confirmButtonText: $translate.instant('ACEPTAR'),
-                  closeOnConfirm: false,
-                  showLoaderOnConfirm: true,
-                }); 
-              }
-            });
-          }
-        });
-      }
-  };
 
+   }
+};
   self.cancelar = function(){
     console.log(self.personasSeleccionadas);
-  };
-  
-  /*
-                      amazonAdministrativaRequest.put("resolucion/CancelarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
-                        if(response.data=="OK"){
-                            self.cargarDatosResolucion();
-                        }
-                    })
-  
-  self.cargarDatosPersonas = function(){
-    kyronRequest.get("persona_escalafon/"+self.datosFiltro.NivelAcademico.toLowerCase()).then(function(response){
-      self.datosPersonas.data=response.data;
-      self.datosPersonas.data.forEach(function(row){
-        //El nombre completo se guarda en una sola variable
-        row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
+    
+    self.personasSeleccionadas.forEach(function(seleccion) {
+      cancelacion ={
+        NumeroContrato:seleccion.Vinculacion.NumeroContrato,
+        Vigencia:seleccion.Vinculacion.Vigencia,
+        FechaRegistro:FechaRegistro,
+        Estado: 7,
+        Usuario:"",
+      }
+      amazonAdministrativaRequest.post("contrato_estado",cancelacion).then(function(response){
+        
       });
     });
-  }*/
- 
+
+  };
 
   });
