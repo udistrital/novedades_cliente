@@ -503,7 +503,16 @@ var text_es = {
     INFERIOR: "Inferior",
     IZQUIERDA: "Izquierda",
     DERECHA: "Derecha",
-    AGREGAR_COMODIN: "Agregar comodín"
+    AGREGAR_COMODIN: "Agregar comodín",
+    //Directiva Avance
+    INFORMACION_AVANCE: "Información del Avance",
+    NUMERO_TELEFONICO: "Número de Teléfono",
+    DIRECCION: "Dirección",
+    CORREO_ELECTRONICO: "Correo Electrónico",
+    NUMERO_CELULAR: "Número de Celular",
+    CONVENIO: "Convenio",
+    PROYECTO_INVESTIGACION: "Proyecto de Investigación",
+
 };
 
 var text_en = {
