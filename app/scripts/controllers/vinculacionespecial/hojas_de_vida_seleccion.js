@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-  .controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,adminMidRequest,oikosRequest,agoraRequest,kyronRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
+  .controller('HojasDeVidaSeleccionCtrl', function (amazonAdministrativaRequest,adminMidRequest,oikosRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
     
     var self = this;
 
@@ -12,8 +12,9 @@ angular.module('contractualClienteApp')
     self.dedicaciones=[];
     self.proyectos=[];
     //Se leen los datos básicos de la resolucion de vinculación especial
-    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
+    amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
       self.datosFiltro=response.data;
+      console.log(self.datosFiltro);
       if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
         var auxNivelAcademico=14;
       }else if(self.datosFiltro.NivelAcademico.toLowerCase()=="posgrado"){
@@ -67,26 +68,26 @@ angular.module('contractualClienteApp')
       switch(self.datosFiltro.Dedicacion){
         //Dependiendo del tipo de resolucion se cargan las dedicaciones debidas  
         case "TCO-MTO":
-          administrativaRequest.get("dedicacion","query=NombreDedicacion%3ATCO").then(function(response){
+          amazonAdministrativaRequest.get("dedicacion","query=NombreDedicacion%3ATCO").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
           });
-          administrativaRequest.get("dedicacion","query=NombreDedicacion%3AMTO").then(function(response){
+          amazonAdministrativaRequest.get("dedicacion","query=NombreDedicacion%3AMTO").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
           });
           break;
         case "HCP":
-          administrativaRequest.get("dedicacion","query=NombreDedicacion%3AHCP").then(function(response){
+          amazonAdministrativaRequest.get("dedicacion","query=NombreDedicacion%3AHCP").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
           });
           break;
         case "HCH":
-          administrativaRequest.get("dedicacion","query=NombreDedicacion%3AHCH").then(function(response){
+          amazonAdministrativaRequest.get("dedicacion","query=NombreDedicacion%3AHCH").then(function(response){
             if(typeof(response.data)=="object"){
               self.dedicaciones=self.dedicaciones.concat(response.data);
             }
@@ -129,13 +130,13 @@ angular.module('contractualClienteApp')
             width: '15%',  
             cellTemplate: '<center>' +
                '<a class="ver" ng-click="grid.appScope.verInformacionPersonal(row)">' +
-               '<i title="{{\'VER_INFO_PERSONAL_BTN\' | translate }}" class="fa fa-user fa-lg  faa-shake animated-hover"></i></a> ' +
+               '<i title="{{\'VER_INFO_PERSONAL_BTN\' | translate }}" class="fa fa-user fa-lg  faa-shake animated-hover"></i></a> ' /*+
                '<a class="editar" ng-click="grid.appScope.verFormacionAcademica(row)">' +
                '<i title="{{\'VER_INFO_ACADEMICA\' | translate }}" class="fa fa-graduation-cap fa-lg  faa-shake animated-hover"></i></a> ' +
                '<a class="ver" ng-click="grid.appScope.verHistoriaLaboral(row)">' +
                '<i title="{{\'VER_EXP_LABORAL\' | translate }}" class="fa fa-pencil fa-lg faa-shake animated-hover"></i></a> ' +
                '<a class="editar" ng-click="grid.appScope.verTrabajosInvestigacion(row)">' +
-               '<i title="{{\'VER_TRABAJOS_INVESTIGACION\' | translate }}" class="fa fa-book fa-lg fa-lg animated-hover"></i></a> ' +
+               '<i title="{{\'VER_TRABAJOS_INVESTIGACION\' | translate }}" class="fa fa-book fa-lg fa-lg animated-hover"></i></a> ' */+
                '</center>'
         }
       ],
@@ -146,7 +147,7 @@ angular.module('contractualClienteApp')
           if(self.personasSeleccionadas.length==0){
             self.persona=null;
           }else{
-            agoraRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
+            amazonAdministrativaRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
               if(typeof(response.data)=="object"){
                 self.persona=row.entity;
                 self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');
@@ -221,8 +222,11 @@ angular.module('contractualClienteApp')
 
     //Función para cargarlos datos de los docentes con hoja de vida inscrita
     self.cargarDatosPersonas = function(){
-      kyronRequest.get("persona_escalafon/"+self.datosFiltro.NivelAcademico.toLowerCase()).then(function(response){
+      console.log(self.datosFiltro.NivelAcademico.toLowerCase());
+      amazonAdministrativaRequest.get("persona_escalafon/persona_escalafon_"+self.datosFiltro.NivelAcademico.toLowerCase(),"").then(function(response){
+
         self.datosPersonas.data=response.data;
+        
         self.datosPersonas.data.forEach(function(row){
           //El nombre completo se guarda en una sola variable
           row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
@@ -232,7 +236,7 @@ angular.module('contractualClienteApp')
 
     //Función para cargar los datos de los docentes asociados a la resolución previamente
     self.cargarDatosPrecontratados = function(){
-      administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){      
+      amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){      
         self.precontratados.data=response.data;
         if(self.precontratados.data != null){
           self.precontratados.data.forEach(function(row){
@@ -284,7 +288,7 @@ angular.module('contractualClienteApp')
       })
 
       //Se envía en arreglo de estructuras a la transacción encargadade almacenar los datos
-      administrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
+      amazonAdministrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
           if(typeof(response.data)=="object"){
             self.cargarDatosPrecontratados();
             self.persona=null;
@@ -364,7 +368,7 @@ angular.module('contractualClienteApp')
       var auxContador=0;
       if(self.datosValor.proyectoCurricular && self.datosValor.NumSemanas && self.datosValor.NumHorasSemanales && self.datosValor.dedicacion){
         self.personasSeleccionadas.forEach(function(personaSeleccionada){
-          administrativaRequest.get("precontratado/"+self.idResolucion.toString()+"/"+personaSeleccionada.Id).then(function(response){
+          amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()+"/"+personaSeleccionada.Id).then(function(response){
             if(response.data){
               docentesPreinscritos=true;
               auxContador++;
@@ -455,7 +459,7 @@ angular.module('contractualClienteApp')
         Estado: false
       };
 
-      administrativaRequest.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
+      amazonAdministrativaRequest.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
         self.cargarDatosPrecontratados();
       })
     }
@@ -737,4 +741,4 @@ angular.module('contractualClienteApp')
     }
 
 
-  });
+});

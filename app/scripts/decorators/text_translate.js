@@ -30,12 +30,15 @@ var text_es = {
     RP_MASIVO: "¿Es para una solicitud de registro presupuestal masiva?",
     TITULO: "GENERATOR-OAS",
     MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
+    ACTA_INICIO: "Acta inicio",
+    CREAR_RESOLUCION: "Crear resolución",
+    CANCELAR_CONTRATO: "Cancelar contrato",
     //solicitud_necesidad
     NECESIDADES: "Necesidades",
     NECESIDAD: "Necesidad",
     SOLICITUD: "Solicitud",
     SOLICITUD_NECESIDAD: "Solicitud de Necesidad",
-    SOLICITUD_NECESIDAD_EXTERNA: "Solicitud de Necesidad",
+    SOLICITUD_NECESIDAD_EXTERNA: "Solicitud de Necesidad Externa",
     DURACION: "Duración",
     UNICO_PAGO: "Único Pago",
     HASTA_AGOTAR_PRESUPUESTO: "Hasta Agotar Presupuesto",
@@ -232,7 +235,6 @@ var text_es = {
     /*
     Experiencia_laboral_detalle.html
     */
-    EXPERIENCIA_LABORAL_DOCENTE: "Experiencia laboral docente",
     TIPO_ACTIVIDAD: "Tipo de actividad",
     CAMPO_ENSEÑANZA: "Campo de enseñanza",
     INICIO: "Inicio",
@@ -529,6 +531,8 @@ var text_en = {
     TRABAJOS_INVESTIGACION: "Investigation work",
     NECESIDADES: "Needs",
     NECESIDAD: "Need",
+    ACTA_INICIO: "Start agreement",
+    CANCELAR_CONTRATO: "Cancel contract",
     //SOLICITUD RP
     RP_MASIVO: "Is this for a masive budget register request?",
     ERROR: "Error",

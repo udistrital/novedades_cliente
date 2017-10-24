@@ -8,20 +8,20 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ContratoRegistroCtrl', function (administrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate) {
+  .controller('ContratoRegistroCtrl', function (amazonAdministrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate) {
   	
   	var self = this;
 
     self.idResolucion=idResolucion;
 
-    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
+    amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
       self.datosFiltro=response.data;
 
       oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad.toString()).then(function(response){
         self.contratoGeneralBase.SedeSolicitante=response.data.Id.toString();
         self.sede_solicitante_defecto=response.data.Nombre;
       });
-      administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){   
+      amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){   
 
         self.contratados=response.data;
         if(self.contratados != null){
@@ -62,6 +62,7 @@ angular.module('contractualClienteApp')
 
     self.asignarValoresDefecto = function(){
       self.contratoGeneralBase={}
+      self.acta={}
       self.contratoGeneralBase.Vigencia=new Date().getFullYear();
       self.contratoGeneralBase.FormaPago={Id:240};
       self.contratoGeneralBase.DescripcionFormaPago="Abono a Cuenta Mensual de acuerdo a puntas y hotras laboradas";
@@ -84,6 +85,7 @@ angular.module('contractualClienteApp')
       self.contratoGeneralBase.FechaRegistro=new Date();
       self.contratoGeneralBase.UnidadEjecutora=1;
       self.contratoGeneralBase.Condiciones="Sin condiciones";
+      self.acta.Descripcion="Acta inicio resolución Docente Vinculación Especial";
     }
 
     self.asignarValoresDefecto();
@@ -91,10 +93,10 @@ angular.module('contractualClienteApp')
     financieraRequest.get("unidad_ejecutora/1").then(function(response){
       self.unidad_ejecutora_defecto=response.data;
     })
-    administrativaRequest.get("parametros/240").then(function(response){
+    amazonAdministrativaRequest.get("parametros/240").then(function(response){
       self.forma_pago_defecto=response.data;
     })
-    administrativaRequest.get("parametros/136").then(function(response){
+    amazonAdministrativaRequest.get("parametros/136").then(function(response){
       self.regimen_contratacion_defecto=response.data;
     })
 
@@ -136,10 +138,13 @@ angular.module('contractualClienteApp')
         if(self.datosFiltro.Dedicacion=="HCH"){
           self.contratoGeneralBase.TipoContrato={Id: 3};
           self.contratoGeneralBase.ObjetoContrato="Docente de Vinculación Especial - Honorarios";
-        }else{
+        }else if(self.datosFiltro.Dedicacion=="HCP"){
           self.contratoGeneralBase.TipoContrato={Id: 2};
           self.contratoGeneralBase.ObjetoContrato="Docente de Vinculación Especial - Salario";
-        }        
+        }else{
+          self.contratoGeneralBase.TipoContrato={Id: 18};
+          self.contratoGeneralBase.ObjetoContrato="Docente de Vinculación Especial - Medio Tiempo Ocasional (MTO) - Tiempo Completo Ocasional (TCO)";
+        }    
         swal({
           title: $translate.instant('EXPEDIR'),
           text: $translate.instant('SEGURO_EXPEDIR'),
@@ -182,6 +187,7 @@ angular.module('contractualClienteApp')
       if(self.contratados){
         self.contratados.forEach(function(contratado){
           var contratoGeneral=JSON.parse(JSON.stringify(self.contratoGeneralBase));
+          var actaI=JSON.parse(JSON.stringify(self.acta));
           contratoGeneral.Contratista=contratado.Documento;
           contratoGeneral.DependenciaSolicitante=contratado.ProyectoCurricular.toString();
           contratoGeneral.PlazoEjecucion=contratado.Semanas*7;
@@ -189,6 +195,7 @@ angular.module('contractualClienteApp')
           contratoGeneral.ValorContrato=contratado.ValorContrato;
           var contratoVinculacion={
             ContratoGeneral: contratoGeneral,
+            ActaInicio: actaI,
             VinculacionDocente: {Id: contratado.Id}
           }
           if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
@@ -202,7 +209,7 @@ angular.module('contractualClienteApp')
           Vinculaciones: conjuntoContratos,
           idResolucion: self.idResolucion
         }     
-          administrativaRequest.post("contrato_general/InsertarContratos",expedicionResolucion).then(function(response){
+          amazonAdministrativaRequest.post("contrato_general/InsertarContratos",expedicionResolucion).then(function(response){
             if(typeof(response.data)=="object"){
               swal({
                         title: $translate.instant('EXPEDIDA'),
@@ -210,7 +217,7 @@ angular.module('contractualClienteApp')
                         type: 'success',
                         confirmButtonText: $translate.instant('ACEPTAR')
                       });
-                      administrativaRequest.get("resolucion_vinculacion").then(function(response){
+                      amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
                           lista.resolucionesInscritas.data=response.data;
                           lista.resolucionesInscritas.data.forEach(function(resolucion){
                               if(resolucion.FechaExpedicion.toString()=="0001-01-01T00:00:00Z"){

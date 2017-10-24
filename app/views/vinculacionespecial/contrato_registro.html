@@ -69,8 +69,27 @@
                             </div>
                         </form>
                     </div>
+                <legend class="text-primary" ng-click="info_acta=!info_acta">{{ 'ACTA_INICIO' | translate }}<span class="fa fa-plus pull-right" ng-show="!info_acta"></span> <span class="fa fa-minus pull-right" ng-show="info_acta"></span></legend>
+                    <div class="panel-body" ng-show="info_acta">
+                        <form role="form">
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label>{{ 'FECHA_INICIO' | translate }}</label>
+                                    <md-datepicker class="form-control" ng-model="contratoRegistro.acta.FechaInicio" md-current-view="year" md-placeholder="Elija fecha inicio" required></md-datepicker>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label>{{ 'FECHA_FIN' | translate }}</label>
+                                    <md-datepicker class="form-control" ng-model="contratoRegistro.acta.FechaFin" md-current-view="year" md-placeholder="Elija fecha final" required></md-datepicker>
+                                </div>
+                                <div class="form-group col-lg-12">
+                                        <label>{{ 'DESCRIPCION' | translate }}</label>
+                                        <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistro.acta.Descripcion" required></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="form-group col-lg-8 col-lg-offset-2"><input type="submit" class="form-control btn btn-success" value="{{'BTN.REALIZAR_EXPEDICION' | translate }}" ng-click="contratoRegistro.realizarContrato()">
+                <div class="form-group col-lg-8 col-lg-offset-2"><input type="submit" class="form-control btn btn-success" value="{{'REALIZAR_EXPEDICION' | translate }}" ng-click="contratoRegistro.realizarContrato()">
                 </div>
             </div>
         </div>
