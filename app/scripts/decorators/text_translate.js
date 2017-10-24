@@ -79,6 +79,8 @@ var text_es = {
   TIPO_NECESIDAD: "Tipo de Necesidad",
   VALOR_SOLICITADO: "Valor Solicitado",
   TOTAL_FINANCIACION: "Total Financiación",
+  OBLIGATORIO: "Campo requerido",
+  PRECIO_MAS_IVA: "Valor + IVA",
   //lista_documentos_legales
   MARCO_LEGAL: "Marco Legal",
   NOMBRE_DOCUMENTO: "Nombre del Documento",
@@ -525,6 +527,8 @@ var text_en = {
     TRABAJOS_INVESTIGACION: "Investigation work",
   NECESIDADES: "Needs",
   NECESIDAD: "Need",
+  OBLIGATORIO: "Required field",
+  PRECIO_MAS_IVA: "Value + IVA",
   //SOLICITUD RP
   RP_MASIVO: "Is this for a masive budget register request?",
   ERROR: "Error",
@@ -600,6 +604,7 @@ var text_en = {
   //necesidades
   GESTION_NECESIDADES: "Managment Needs",
   NUMERO_ELABORACION: "No. of Elaboration",
+  OBLIGATORIO: "Required",
   //visualizar_necesidad
   DE: "of",
   MONTO: "Amount",
