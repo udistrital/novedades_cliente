@@ -25,9 +25,10 @@
             <div class="panel-heading">
                 {{'SOLICITUD_NECESIDAD' | translate }}
             </div>
-            <br>
-            <pre>{{necesidadExterna.solicitud | json}}</pre>
-            <br>
+            <div class="panel panel-body">
+                <ver-solicitud sol="necesidadExterna.solicitud" tipos="0"></ver-solicitud>
+                <br>
+            </div>
         </div>
     </div>
 </div>

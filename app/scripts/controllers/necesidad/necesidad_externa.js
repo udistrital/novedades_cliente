@@ -56,6 +56,7 @@ angular.module('contractualClienteApp')
         ctrl.get_all_necesidad_externa();
 
         ctrl.get_avance = function(id) {
+            console.log(id);
             financieraRequest.get("solicitud_avance", $.param({
                     limit: -1,
                     query: "Id:" + id,
