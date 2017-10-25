@@ -240,6 +240,9 @@
                   <ul class="list-group">
                     <li class="list-group-item" ng-repeat="actesp in solicitudNecesidad.ActividadEspecifica">
                       <label><span class="text-info">{{$index+1}}. </span>{{actesp.Descripcion}}</label>
+                      <button type="button" class="btn btn-danger btn-sm col-md-offset-11" ng-click="solicitudNecesidad.eliminarActividad(actesp)" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      </button>
                     </li>
                   </ul>
                 </div>
@@ -389,6 +392,9 @@
 
                         <li class="list-group-item" ng-repeat="fu in ap.fuentes">
                           <label class="text-warning">{{"FUENTE" | translate}}</label> {{fu.FuenteFinanciamiento.Descripcion}}
+                          <button type="button" class="btn btn-danger btn-sm col-md-offset-11" ng-click="solicitudNecesidad.eliminarRubro(ap)" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                          </button>
                           <br>
                           <label class="text-warning">{{"VALOR_SOLICITADO" | translate}}</label>
                           <input type="text" ng-init="fu.Monto=0" ng-model="fu.Monto" ui-money-mask="0">
@@ -421,8 +427,10 @@
                     <ul class="list-group">
                       <div>
                         <li class="list-group-item" ng-repeat="ap in solicitudNecesidad.f_apropiacion_fun">
-
-                          <label><span class="text-success">{{$index+1}}.</span> {{ap.aprop.Rubro.Descripcion}}</label>
+                          <label><span class="text-success">{{$index+1}}.</span> {{ap.aprop.Rubro.Nombre}}</label>
+                          <button type="button" class="btn btn-danger btn-sm col-md-offset-11" ng-click="solicitudNecesidad.eliminarRubro(ap)" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                          </button>
                           <br>
                           <!--label class="text-info">{{"SALDO" | translate}}</label>
                           <input type="text" ng-model="ap.aprop.Saldo" ui-money-mask="0" readonly>
@@ -430,7 +438,7 @@
                           <label class="text-info">{{"VALOR_SOLICITADO" | translate}}</label>
                           <input type="text" ng-model="ap.MontoParcial" ui-money-mask="0">
                           <br>
-                          <span class="fa "
+                          <span class="fa ">
                         </li>
                       </div>
                     </ul>

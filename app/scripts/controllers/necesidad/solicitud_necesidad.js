@@ -390,7 +390,7 @@ angular.module('contractualClienteApp')
       // por lo tanto devuelve un mensaje de alerta
       if (self.f_apropiacion_fun.filter(function(element) {
           return element.Apropiacion === apropiacion.Id;
-          }).lexngth > 0) {
+          }).length > 0) {
         swal(
           'Apropiación ya agregada',
           'El rubro: <b>' + Fap.aprop.Rubro.Nombre + '</b> ya ha sido agregado',
@@ -418,9 +418,28 @@ angular.module('contractualClienteApp')
     }
   };
 
-  // Devuelve el elemento a buscar si coincide con el elemento de busqueda
-  function filtrarElemento(elementoABuscar, elementoDeBusqueda) {
-    return elementoABuscar === elementoDeBusqueda;
+  self.eliminarRubro = function(rubro) {
+    if (self.necesidad.TipoFinanciacionNecesidad.Nombre === 'Funcionamiento') {
+      for (var i = 0; i < self.f_apropiacion_fun.length; i++) {
+        if (self.f_apropiacion_fun[i] === rubro) {
+            self.f_apropiacion_fun.splice(i,1);
+        }
+      }
+    } else {
+      for (var i = 0; i < self.f_apropiacion_inv.length; i++) {
+        if (self.f_apropiacion_fun[i] === rubro) {
+            self.f_apropiacion_inv.splice(i,1);
+        }
+      }
+    }
+  }
+
+  self.eliminarActividad = function(actividad) {
+    for (var i = 0; i < self.ActividadEspecifica.length; i++) {
+      if (self.ActividadEspecifica[i] === actividad) {
+        self.ActividadEspecifica.splice(i,1);
+      }
+    }
   }
 
   $scope.$watch('solicitudNecesidad.f_apropiacion_inv', function() {
