@@ -179,7 +179,8 @@
 
         <!-- Marco legal -->
         <fieldset class="form-group">
-          <legend class="text-primary" ng-click="info_legal=!info_legal">{{"MARCO_LEGAL" | translate}}<span class="fa fa-plus pull-right" ng-show="!info_legal"></span> <span class="fa fa-minus pull-right" ng-show="info_legal"></span></legend>
+          <legend class="text-primary" ng-click="solicitudNecesidad.validar_formu(null, 3)">
+            {{"MARCO_LEGAL" | translate}}<span class="fa fa-plus pull-right" ng-show="!info_legal"></span> <span class="fa fa-minus pull-right" ng-show="info_legal"></span></legend>
 
           <div class="panel-body" ng-show="info_legal">
             <lista-documentos-legales class="col-md-6" documentos="solicitudNecesidad.documentos"></lista-documentos-legales>

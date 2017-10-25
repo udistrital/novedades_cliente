@@ -23,85 +23,96 @@ angular.module('contractualClienteApp')
   $scope.espf = false;
   $scope.finan = false;
 
+  function validarDatos(datosPorValidar) {
+    var faltanCampos = false;
+    for (var dato in datosPorValidar) {
+      if (datosPorValidar[dato] === undefined) {
+        faltanCampos = true;
+      } else if(datosPorValidar[dato].length === 0) {
+        faltanCampos = true;
+      }
+    }
+    return faltanCampos;
+  }
+
   self.validar_formu = function(arrVariables, parteValidar) {
-    var faltanCampos = true;
-    var datosPorValidar = arrVariables;
     switch (parteValidar) {
       case 0: // responsables
         if ($scope.info_responsables) {
-          for (var dato in datosPorValidar) {
-            if (datosPorValidar[dato] !== undefined || datosPorValidar[dato].length !== 0) {
-              faltanCampos = false;
-            }
+          if (validarDatos(arrVariables)) {
+            $scope.info_responsables = true; // Si faltan datos mantiene abierta info_responsables
+            swal({
+              position: 'top-right',
+              type: 'error',
+              title: 'Complete todos los campos obligatorios en el formulario',
+              showConfirmButton: false,
+              timer: 2000
+            })
+          } else {
+            $scope.info_responsables = false;
           }
         } else {
           $scope.info_responsables = true;
         }
-
-        if (faltanCampos) {
-          $scope.info_responsables = true; // Si faltan datos mantiene abierta info_responsables
-        } else {
-          $scope.info_responsables = false; // sino faltan datos cierra info_responsables
-        }
       break;
+
       case 1: // General
         if ($scope.info_general) {
-          for (var dato in datosPorValidar) {
-            if (datosPorValidar[dato] !== undefined || datosPorValidar[dato].length !== 0) {
-              faltanCampos = false;
-            }
+          if (validarDatos(arrVariables)) {
+            $scope.info_general = true; // Si faltan datos mantiene abierta info_responsables
+            swal({
+              position: 'top-right',
+              type: 'error',
+              title: 'Complete todos los campos obligatorios en el formulario',
+              showConfirmButton: false,
+              timer: 2000
+            })
+          } else {
+            $scope.info_general = false;
           }
-
         } else {
           $scope.info_general = true;
         }
-
-        if (faltanCampos) {
-          $scope.info_general = true; // Si faltan datos mantiene abierta info_general
-        } else {
-          $scope.info_general = false; // sino faltan datos cierra info_general
-      }
       break;
+
       case 2: // Objeto contractual
         if ($scope.info_objeto) {
-          for (var dato in datosPorValidar) {
-            if (datosPorValidar[dato] !== undefined || datosPorValidar[dato].length !== 0) {
-              faltanCampos = false;
-            }
+          if (validarDatos(arrVariables)) {
+            $scope.info_objeto = true; // Si faltan datos mantiene abierta info_responsables
+            swal({
+              position: 'top-right',
+              type: 'error',
+              title: 'Complete todos los campos obligatorios en el formulario',
+              showConfirmButton: false,
+              timer: 2000
+            })
+          } else {
+            $scope.info_objeto = false;
           }
-
         } else {
           $scope.info_objeto = true;
-        }
-
-        if (faltanCampos) {
-          $scope.info_objeto = true; // Si faltan datos mantiene abierta info_general
-        } else {
-          $scope.info_objeto = false; // sino faltan datos cierra info_general
         }
       break;
       case 3: // Marco legal
       break;
       case 4: // Especificaciones
-        if ($scope.info_espf) {
-          for (var dato in datosPorValidar) {
-            if (datosPorValidar[dato] !== undefined || datosPorValidar[dato].length !== 0) {
-              faltanCampos = false;
-            }
-          }
-
+      if ($scope.info_espf) {
+        if (validarDatos(arrVariables)) {
+          $scope.info_espf = true; // Si faltan datos mantiene abierta info_responsables
+          swal({
+            position: 'top-right',
+            type: 'error',
+            title: 'Complete todos los campos obligatorios en el formulario',
+            showConfirmButton: false,
+            timer: 1500
+          })
         } else {
-          $scope.info_espf = true;
+          $scope.info_espf = false;
         }
-
-        if (faltanCampos) {
-          $scope.info_espf = true; // Si faltan datos mantiene abierta info_general
-        } else {
-          $scope.info_espf = false; // sino faltan datos cierra info_general
-        }
+      } else {
+        $scope.info_espf = true;
+      }
       break;
-      default:
-
     }
   }
 
@@ -389,8 +400,8 @@ angular.module('contractualClienteApp')
       // si lo que devuelve filter es un arreglo mayor que 0, significa que el elemento a agregar ya existe
       // por lo tanto devuelve un mensaje de alerta
       if (self.f_apropiacion_fun.filter(function(element) {
-          return element.Apropiacion === apropiacion.Id;
-          }).length > 0) {
+        return element.Apropiacion === apropiacion.Id;
+      }).length > 0) {
         swal(
           'Apropiación ya agregada',
           'El rubro: <b>' + Fap.aprop.Rubro.Nombre + '</b> ya ha sido agregado',
@@ -405,8 +416,8 @@ angular.module('contractualClienteApp')
     } else {
       // lo mismo que el if anterior pero con f_apropiacion_inv
       if (self.f_apropiacion_inv.filter(function(element) {
-          return element.Apropiacion === apropiacion.Id;
-          }).length > 0) {
+        return element.Apropiacion === apropiacion.Id;
+      }).length > 0) {
         swal(
           'Apropiación ya agregada',
           'El rubro: <b>' + Fap.aprop.Rubro.Nombre + '</b> ya ha sido agregado',
@@ -422,13 +433,13 @@ angular.module('contractualClienteApp')
     if (self.necesidad.TipoFinanciacionNecesidad.Nombre === 'Funcionamiento') {
       for (var i = 0; i < self.f_apropiacion_fun.length; i++) {
         if (self.f_apropiacion_fun[i] === rubro) {
-            self.f_apropiacion_fun.splice(i,1);
+          self.f_apropiacion_fun.splice(i,1);
         }
       }
     } else {
       for (var i = 0; i < self.f_apropiacion_inv.length; i++) {
         if (self.f_apropiacion_fun[i] === rubro) {
-            self.f_apropiacion_inv.splice(i,1);
+          self.f_apropiacion_inv.splice(i,1);
         }
       }
     }
@@ -462,12 +473,12 @@ angular.module('contractualClienteApp')
     }
   }, true);
 
-$scope.$watch('solicitudNecesidad.productos', function() {
-  self.valorTotalEspecificaciones = 0;
-  for (var i = 0; i < self.productos.length; i++) {
-    self.valorTotalEspecificaciones += self.productos[i].Valor;
-  }
-}, true);
+  $scope.$watch('solicitudNecesidad.productos', function() {
+    self.valorTotalEspecificaciones = 0;
+    for (var i = 0; i < self.productos.length; i++) {
+      self.valorTotalEspecificaciones += self.productos[i].Valor;
+    }
+  }, true);
 
   $scope.$watch('solicitudNecesidad.necesidad.TipoContratoNecesidad.Nombre', function() {
     self.valorTotalEspecificaciones = 0;
