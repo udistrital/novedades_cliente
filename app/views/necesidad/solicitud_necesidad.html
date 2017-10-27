@@ -9,7 +9,7 @@
       <div class="panel-body">
 
         <!--<form name="solicitudform" class="form-horizontal" ng-submit="solicitudform.$valid && solicitudNecesidad.crear_solicitud()" novalidate>-->
-        <form name="solicitudform" class="form-horizontal" ng-submit="solicitudform.$valid && solicitudNecesidad.crear_solicitud()" novalidate>
+        <form name="solicitudform" class="form-horizontal" ng-submit="solicitudNecesidad.submitForm(solicitudform)" novalidate>
 
 
           <div align="center">
@@ -293,7 +293,7 @@
                     </select>
 
                     <label class=" control-label">{{"VALOR_UNITARIO" | translate}}</label>
-                    <input class="form-control" ng-model="pro.Valor" placeholder="Valor Unitario" ui-money-mask="0">
+                    <input class="form-control" ng-init="pro.Valor = 0" ng-model="pro.Valor;" placeholder="Valor Unitario" ui-money-mask="0">
 
                     <label class=" control-label">{{"IVA" | translate}} %</label>
                     <select class="form-control" ng-model="pro.Iva" ng-options="iva.Id as iva.Valor for iva in solicitudNecesidad.iva_data">
@@ -407,7 +407,8 @@
                 </div>
 
                 <div class="form-group panel-body">
-                  <label>{{"TOTAL_FINANCIACION" | translate}}</label> {{solicitudNecesidad.valor_inv | currency}}
+                  <label>{{"TOTAL_FINANCIACION" | translate}}</label> {{solicitudNecesidad.valor_inv | currency}}</br>
+                  <label> Total especificaciones: </label> {{solicitudNecesidad.valorTotalEspecificaciones | currency}}
                 </div>
 
               </div>
@@ -448,7 +449,7 @@
 
                 <div class="form-group">
                   <label>{{"TOTAL_FINANCIACION" | translate}} </label> {{solicitudNecesidad.valor_fun | currency}} <br>
-                  <label for=""><b> aquí va el total </b>{{solicitudNecesidad.valorTotalEspecificaciones}}</label>
+                  <label> Total especificaciones: </label> {{solicitudNecesidad.valorTotalEspecificaciones | currency}}
                 </div>
               </div>
             </div>
@@ -456,7 +457,7 @@
         </fieldset>
         <fieldset>
           <center>
-            <input type="submit" class="btn btn-success btn-outline " name="button" value="REGISTRAR" />
+            <input type="submit" class="btn btn-success btn-outline " name="button" value="REGISTRAR"/>
           </center>
         </fieldset>
       </form>
