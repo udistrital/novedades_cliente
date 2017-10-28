@@ -70,12 +70,11 @@ angular.module('contractualClienteApp')
       }
     };
 
-    administrativaRequest.get('vigencia_contrato').then(function(response) {
+    agoraRequest.get('vigencia_contrato').then(function(response) {
       $scope.vigencias = response.data;
 
     //selecciona la vigencia actual
     var vigenciaActual=$scope.vigencias[0];
-
         agoraRequest.directGet('proveedor_contrato_persona',vigenciaActual).then(function(response) {
          self.gridOptions.data = response.data;
           self.longitud_grid = self.gridOptions.data.length;
