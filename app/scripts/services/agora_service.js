@@ -11,8 +11,13 @@ angular.module('agoraService',[])
 .factory('agoraRequest', function ($http) {
   // Service logic
   // ...
+<<<<<<< HEAD
   //var path = "http://10.20.0.254/agora_api/v1/";
   var path = "http://10.20.2.121:8080/v1/";
+=======
+  var path = "http://10.20.0.254/administrativa_amazon_api/v1/";
+  //var path = "http://10.20.2.121:8080/v1/";
+>>>>>>> bd656e6c26e85e4e48059aa85da612a0579ed128
   // Public API here
   return {
     get: function (tabla,params) {

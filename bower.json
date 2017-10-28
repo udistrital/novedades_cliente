@@ -28,7 +28,8 @@
     "vis": "^4.20.0",
     "font-awesome": "^4.7.0",
     "textAngular": "^1.5.16",
-    "ng-file-upload-shim": "^12.2.13"
+    "ng-file-upload-shim": "^12.2.13",
+    "font-awesome-animation": "^0.1.0"
   },
   "resolutions": {
     "angular": "1.6.4",
