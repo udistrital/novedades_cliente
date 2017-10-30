@@ -210,13 +210,21 @@ angular.module('contractualClienteApp')
           idResolucion: self.idResolucion
         }     
           amazonAdministrativaRequest.post("contrato_general/InsertarContratos",expedicionResolucion).then(function(response){
-            if(typeof(response.data)=="object"){
-              swal({
+            //if(typeof(response.data)=="object"){ //xDD
+
+                self.alerta = "";
+                for (var i = 1; i < response.data.length; i++) {
+                  self.alerta = self.alerta + response.data[i] + "\n";
+                }
+                swal("", self.alerta, response.data[0]);
+
+              //xD
+          /*    swal({
                         title: $translate.instant('EXPEDIDA'),
                         text: $translate.instant('DATOS_REGISTRADOS'),
                         type: 'success',
                         confirmButtonText: $translate.instant('ACEPTAR')
-                      });
+                      });*/
                       amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
                           lista.resolucionesInscritas.data=response.data;
                           lista.resolucionesInscritas.data.forEach(function(resolucion){
@@ -225,8 +233,8 @@ angular.module('contractualClienteApp')
                               }
                           })
                       });  
-                      $mdDialog.hide()
-                    }else{
+                    //  $mdDialog.hide()
+                  /*  }else{
                       swal({
                         title: "Alerta",
                         text: $translate.instant('PROBLEMA_EXPEDICION'),
@@ -234,7 +242,7 @@ angular.module('contractualClienteApp')
                         confirmButtonText: $translate.instant('ACEPTAR'),
                         showLoaderOnConfirm: true,
                       });
-                    }
+                    }*/
           })
       }else{
                 swal({

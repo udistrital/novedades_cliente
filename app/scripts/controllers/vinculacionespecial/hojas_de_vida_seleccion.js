@@ -349,7 +349,7 @@ angular.module('contractualClienteApp')
     }
 
     self.validarContratos = function(){
-      adminMidRequest.post("validar_contrato/"+self.datosValor.dedicacion.toLowerCase()+"/"+self.datosValor.NumHorasSemanales).then(function(response){
+      adminMidRequest.get("validar_contrato/"+self.datosValor.dedicacion.toLowerCase()+"/"+self.datosValor.NumHorasSemanales).then(function(response){
         if(response.data==1){
           self.calcularValorContratos();
         }else{
