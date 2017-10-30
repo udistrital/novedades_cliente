@@ -41,13 +41,11 @@ angular
     'financieraMidService',
     'adminMidService',
     'sicapitalService',
-    'nvd3',
     'kyronService',
     'contratacion_service',
     'contratacion_mid_service',
     'titan_service',
-    'textAngular',
-    'ngFileUpload'
+    
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');

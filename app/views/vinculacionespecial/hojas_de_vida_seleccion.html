@@ -1,6 +1,7 @@
 <div class="panel panel-primary panel-body">
-		<h2 class="page-header text-center">{{ 'HOJAS_VIDA' | translate }}</h2>
-	   <div class="panel-body">
+		<h2 class="page-header text-center">{{ 'TITULO_VIN_DOC' | translate }} <br> {{ 'TITULO_RES' | translate }} {{hojasDeVidaSeleccion.resolucion.Id}} <br> {{hojasDeVidaSeleccion.resolucion.Dedicacion}} </h2>
+
+		 <div class="panel-body">
 		   <div class="row">
 			   <div class="col-lg-12">
 				 <div class="panel panel-default">
@@ -28,7 +29,7 @@
 											   <option value="">--SELECCIONE--</option>
 											   <option ng-repeat="proyecto in hojasDeVidaSeleccion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
 										   </select>
-									   </div>                          
+									   </div>
 									   <div class="form-group col-lg-6">
 										   <label>{{ 'NUMERO_SEMANAS' | translate }}</label>
 										   <input type="number" class="form-control" ng-model="hojasDeVidaSeleccion.datosValor.NumSemanas" title="Número de semanas de contrato para los docentes seleccionados" required>
@@ -51,7 +52,7 @@
 									   </div>
 									   <div class="form-group col-lg-8 col-lg-offset-2">
 										   <label></label>
-										   <input type="submit" class="form-control btn btn-success" value="{{'VINCULAR_DOCENTES_SELECCIONADOS' | translate }}" ng-click="hojasDeVidaSeleccion.registrarContratos()">
+										   <input type="submit" class="form-control btn btn-success" value="{{'VINCULAR_DOCENTES_SELECCIONADOS' | translate }}" ng-click="hojasDeVidaSeleccion.agregarPrecontratos()">
 									   </div>
 								   </div>
 							   </form>
@@ -63,15 +64,21 @@
 						 <div class="panel-heading">
 							 <h4 class="intro-text"> {{ 'DOCENTE_VINCULADOS' | translate }} </h4>
 						 </div>
-					   <md-tabs md-selected="hojasDeVidaSeleccion.selectedIndex" md-dynamic-height md-autoselect>
-						   <md-tab ng-repeat="tab in hojasDeVidaSeleccion.proyectos" label="{{tab.Nombre}}" ng-click="hojasDeVidaSeleccion.refresh()">
+
+						 <select class="form-control" ng-model="hojasDeVidaSeleccion.term" ng-change="hojasDeVidaSeleccion.get_proyecto()" required>
+							<option value="">--SELECCIONE--</option>
+							<option ng-repeat="proyecto in hojasDeVidaSeleccion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
+						</select>
+
+
 							   <div>
 									 <div class="panel-body">
-									   <div ui-grid="hojasDeVidaSeleccion.precontratados" ui-grid-selection ui-grid-pagination class="grid"></div>
+									   <div ui-grid="hojasDeVidaSeleccion.precontratados" ui-grid-selection ui-grid-pagination class="grid" ng-hide="hojasDeVidaSeleccion.estado"></div>
+										 <center><loading load="hojasDeVidaSeleccion.estado" tam="5"></loading><center>
 								   </div>
 							   </div>
-						   </md-tab>
-					   </md-tabs>
+
+
 				   </div>
 			   </div>
 	   </div>
