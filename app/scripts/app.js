@@ -37,7 +37,7 @@ angular
     'coreService',
     'amazonAdministrativaService',
     'agoraService',
-    'oikosService',
+    'oikosAmazonService',
     'financieraMidService',
     'adminMidService',
     'sicapitalService',
