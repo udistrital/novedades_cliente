@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-  .controller('HojasDeVidaSeleccionCtrl', function (resolucion,administrativaRequest,adminMidRequest,oikosRequest,agoraRequest,kyronRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
+  .controller('HojasDeVidaSeleccionCtrl', function (resolucion,amazonAdministrativaRequest,adminMidRequest,oikosRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
 
     var self = this;
 
@@ -63,7 +63,7 @@ angular.module('contractualClienteApp')
           if(self.personasSeleccionadas.length==0){
             self.persona=null;
           }else{
-            agoraRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
+            amazonAdministrativaRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
               if(typeof(response.data)=="object"){
                 self.persona=row.entity;
                 self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');
@@ -84,7 +84,7 @@ angular.module('contractualClienteApp')
     };
 
     //Se leen los datos básicos de la resolucion de vinculación especial
-    administrativaRequest.get("persona_escalafon/persona_escalafon_"+self.resolucion.NivelAcademico_nombre.toLowerCase()).then(function(response){
+    amazonAdministrativaRequest.get("persona_escalafon/persona_escalafon_"+self.resolucion.NivelAcademico_nombre.toLowerCase()).then(function(response){
       self.datosPersonas.data=response.data;
       self.datosPersonas.data.forEach(function(row){
 
@@ -132,7 +132,7 @@ angular.module('contractualClienteApp')
 
     });
 
-    administrativaRequest.get("dedicacion","limit=-1&query=NombreDedicacion__in:"+self.resolucion.Dedicacion).then(function(response){
+    amazonAdministrativaRequest.get("dedicacion","limit=-1&query=NombreDedicacion__in:"+self.resolucion.Dedicacion).then(function(response){
       if(typeof(response.data)=="object"){
         self.dedicaciones=self.dedicaciones.concat(response.data);
       }
@@ -176,7 +176,7 @@ angular.module('contractualClienteApp')
 
 
 /*
-    administrativaRequest.get("precontratado/"+self.resolucion.Id.toString()).then(function(response){
+    amazonAdministrativaRequest.get("precontratado/"+self.resolucion.Id.toString()).then(function(response){
       self.precontratados.data=response.data;
       if(self.precontratados.data != null){
         self.precontratados.data.forEach(function(row){
@@ -244,7 +244,7 @@ angular.module('contractualClienteApp')
       })
 
       //Se envía en arreglo de estructuras a la transacción encargadade almacenar los datos
-      administrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
+      amazonAdministrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
           if(typeof(response.data)=="object"){
             self.persona=null;
 
@@ -317,7 +317,7 @@ angular.module('contractualClienteApp')
         Estado: false
       };
 
-      administrativaRequest.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
+      amazonAdministrativaRequest.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
         console.log("se borró")
       })
     }

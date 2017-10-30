@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
   .factory("resolucion",function(){
      return {};
   })
-  .controller('ResolucionGestionCtrl', function (resolucion,administrativaRequest,$scope,$window,$mdDialog,$translate) {
+  .controller('ResolucionGestionCtrl', function (resolucion,amazonAdministrativaRequest,$scope,$window,$mdDialog,$translate) {
 
   	var self = this;
     self.datos_docentes;
@@ -134,7 +134,7 @@ angular.module('contractualClienteApp')
     };
 
     //Se cargan los datos de las resoluciones de vinculación especial almacenadas
-    administrativaRequest.get("resolucion_vinculacion").then(function(response){
+    amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
         self.resolucionesInscritas.data=response.data;
         if(self.resolucionesInscritas.data!=null){
             self.resolucionesInscritas.data.forEach(function(resolucion){
@@ -169,7 +169,7 @@ angular.module('contractualClienteApp')
     //Función para redireccionar la página web a la vista de adición y eliminación de docentes en la resolucion, donde se pasa por parámetro el id de la resolucion seleccionada
     $scope.verEditarDocentes = function(row){
 
-      administrativaRequest.get("resolucion_vinculacion_docente/"+row.entity.Id.toString()).then(function(response){
+      amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+row.entity.Id.toString()).then(function(response){
           self.datos_docentes = response.data
 
       });
@@ -189,6 +189,8 @@ angular.module('contractualClienteApp')
         self.resolucion.IdFacultad = self.datos_docentes.IdFacultad
         if(self.datos_docentes.Dedicacion == "TCO-MTO"){
             self.resolucion.Dedicacion = "TCO|MTO"
+        }else{
+          self.resolucion.Dedicacion = self.datos_docentes.Dedicacion;
         }
 
 

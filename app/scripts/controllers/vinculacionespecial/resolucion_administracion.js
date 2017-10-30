@@ -8,11 +8,11 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionAdministracionCtrl', function (administrativaRequest,adminMidRequest,contratacion_mid_request,titan_request,$scope,$window,$mdDialog,$translate) {
+  .controller('ResolucionAdministracionCtrl', function (amazonAdministrativaRequest,adminMidRequest,contratacion_mid_request,titan_request,$scope,$window,$mdDialog,$translate) {
 
     var self = this;
 
-    //Tabla para mostrar los datos básicos de las resoluciones almacenadas dentro del sistema 
+    //Tabla para mostrar los datos básicos de las resoluciones almacenadas dentro del sistema
 	self.resolucionesInscritas = {
       paginationPageSizes: [10, 15, 20],
       paginationPageSize: 10,
@@ -22,15 +22,15 @@ angular.module('contractualClienteApp')
       enableRowHeaderSelection: false,
       columnDefs : [
         {
-            field: 'Id', 
+            field: 'Id',
             visible : false
         },
         {
-            field: 'FechaExpedicion', 
+            field: 'FechaExpedicion',
             visible : false
         },
         {
-            field: 'Estado', 
+            field: 'Estado',
             visible : false
         },
         {
@@ -42,11 +42,11 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-            width: '10%', 
+            width: '10%',
             displayName: $translate.instant('NUMERO')
         },
         {
-            field: 'Vigencia', 
+            field: 'Vigencia',
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 if (row.entity.Estado=="Cancelada") {
                     return 'resolucionCancelada';
@@ -54,11 +54,11 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-            width: '15%', 
+            width: '15%',
             displayName: $translate.instant('VIGENCIA')
         },
         {
-            field: 'Facultad', 
+            field: 'Facultad',
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 if (row.entity.Estado=="Cancelada") {
                     return 'resolucionCancelada';
@@ -66,11 +66,11 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-            width: '20%', 
+            width: '20%',
             displayName: $translate.instant('FACULTAD')
         },
         {
-            field: 'NivelAcademico', 
+            field: 'NivelAcademico',
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 if (row.entity.Estado=="Cancelada") {
                     return 'resolucionCancelada';
@@ -78,11 +78,11 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-            width: '15%', 
+            width: '15%',
             displayName: $translate.instant('NIVEL')
         },
         {
-            field: 'Dedicacion', 
+            field: 'Dedicacion',
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 if (row.entity.Estado=="Cancelada") {
                     return 'resolucionCancelada';
@@ -90,11 +90,11 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-            width: '15%', 
+            width: '15%',
             displayName: $translate.instant('DEDICACION')
         },
         {
-            field: 'Estado', 
+            field: 'Estado',
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 if (row.entity.Estado=="Cancelada") {
                     return 'resolucionCancelada';
@@ -102,7 +102,7 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-            width: '15%', 
+            width: '15%',
             displayName: $translate.instant('ESTADO')
         },
         {
@@ -115,7 +115,7 @@ angular.module('contractualClienteApp')
                 }
             },
             enableFiltering: false,
-            width: '10%',  
+            width: '10%',
             //Los botones son mostrados de acuerdo alestado de las resoluciones (ver,expedir,cancelar,restaurar)
             cellTemplate: '<center>' +
                '<a class="ver" ng-click="grid.appScope.verVisualizarResolucion(row)">' +
@@ -133,7 +133,7 @@ angular.module('contractualClienteApp')
 
     //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
     self.cargarDatosResolucion=function(){
-        administrativaRequest.get("resolucion_vinculacion").then(function(response){
+        amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
             self.resolucionesInscritas.data=response.data;
         });
     }
@@ -149,7 +149,7 @@ angular.module('contractualClienteApp')
             fullscreen: true,
             locals: {idResolucion: row.entity.Id, lista: self, resolucion: row.entity}
         })
-    }  
+    }
 
     //Función donde se despliega un mensaje de alerta previo a la cancelación de la resolución
 	$scope.verCancelarResolucion = function(row){
@@ -195,12 +195,12 @@ angular.module('contractualClienteApp')
         //Se verifica que no existan liquidaciones asoociadas a los contratos pertenecientes a la resolucion
         adminMidRequest.post("cancelacion_valida/"+row.entity.Id).then(function(response){
             if(response.data=="OK"){
-                administrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
+                amazonAdministrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
                     var nuevaResolucion=response.data;
                     //Cambio de estado
                     nuevaResolucion.Estado=false;
                     //Se actualiza el estado de la resolución
-                    administrativaRequest.put("resolucion/CancelarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
+                    amazonAdministrativaRequest.put("resolucion/CancelarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
                         if(response.data=="OK"){
                             self.cargarDatosResolucion();
                         }
@@ -258,13 +258,13 @@ angular.module('contractualClienteApp')
 
     //Función para realizar la restauración y verificación de la resolución
     self.restaurarResolucion = function(row){
-        administrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
+        amazonAdministrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
             var nuevaResolucion=response.data;
             //Cambio de estado y fecha de expedicion de la resolucion en caso de que ya hubiese sido expedida.
             nuevaResolucion.Estado=true;
             nuevaResolucion.FechaExpedicion=null;
             //Se actualizan los datos de la resolución
-            administrativaRequest.put("resolucion/RestaurarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
+            amazonAdministrativaRequest.put("resolucion/RestaurarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
                 if(response.data=="OK"){
                     self.cargarDatosResolucion();
                 }

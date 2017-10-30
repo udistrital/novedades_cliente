@@ -35,7 +35,7 @@ angular
     'pascalprecht.translate',
     'financieraService',
     'coreService',
-    'administrativaService',
+    'amazonAdministrativaService',
     'agoraService',
     'oikosService',
     'financieraMidService',
@@ -45,7 +45,7 @@ angular
     'contratacion_service',
     'contratacion_mid_service',
     'titan_service',
-    
+
   ])
     .run(function(amMoment) {
       amMoment.changeLocale('es');

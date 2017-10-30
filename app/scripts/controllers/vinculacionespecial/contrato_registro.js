@@ -8,20 +8,20 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ContratoRegistroCtrl', function (administrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate) {
+  .controller('ContratoRegistroCtrl', function (amazonAdministrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate) {
   	
   	var self = this;
 
     self.idResolucion=idResolucion;
 
-    administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
+    amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
       self.datosFiltro=response.data;
 
       oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad.toString()).then(function(response){
         self.contratoGeneralBase.SedeSolicitante=response.data.Id.toString();
         self.sede_solicitante_defecto=response.data.Nombre;
       });
-      administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){   
+      amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){   
 
         self.contratados=response.data;
         if(self.contratados != null){
@@ -93,10 +93,10 @@ angular.module('contractualClienteApp')
     financieraRequest.get("unidad_ejecutora/1").then(function(response){
       self.unidad_ejecutora_defecto=response.data;
     })
-    administrativaRequest.get("parametros/240").then(function(response){
+    amazonAdministrativaRequest.get("parametros/240").then(function(response){
       self.forma_pago_defecto=response.data;
     })
-    administrativaRequest.get("parametros/136").then(function(response){
+    amazonAdministrativaRequest.get("parametros/136").then(function(response){
       self.regimen_contratacion_defecto=response.data;
     })
 
@@ -209,7 +209,7 @@ angular.module('contractualClienteApp')
           Vinculaciones: conjuntoContratos,
           idResolucion: self.idResolucion
         }     
-          administrativaRequest.post("contrato_general/InsertarContratos",expedicionResolucion).then(function(response){
+          amazonAdministrativaRequest.post("contrato_general/InsertarContratos",expedicionResolucion).then(function(response){
             if(typeof(response.data)=="object"){
               swal({
                         title: $translate.instant('EXPEDIDA'),
@@ -217,7 +217,7 @@ angular.module('contractualClienteApp')
                         type: 'success',
                         confirmButtonText: $translate.instant('ACEPTAR')
                       });
-                      administrativaRequest.get("resolucion_vinculacion").then(function(response){
+                      amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
                           lista.resolucionesInscritas.data=response.data;
                           lista.resolucionesInscritas.data.forEach(function(resolucion){
                               if(resolucion.FechaExpedicion.toString()=="0001-01-01T00:00:00Z"){
