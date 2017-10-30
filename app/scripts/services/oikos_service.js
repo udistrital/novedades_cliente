@@ -7,8 +7,8 @@
  * # oikosService
  * Factory in the contractualClienteApp.
  */
-angular.module('oikosAmazonService',[])
-  .factory('oikosAmazonRequest', function($http) {
+angular.module('oikosService',[])
+  .factory('oikosRequest', function($http) {
     // Service logic
     // ...
     var path = "http://10.20.0.254/oikos_api/v1/";
