@@ -2,24 +2,21 @@
 
 /**
  * @ngdoc service
- * @name contractualClienteApp.agoraService
+ * @name contractualClienteApp.coreAmazonApi
  * @description
- * # agoraService
- * Factory in the contractualClienteApp.
+ * # coreAmazonApi
+ * Service in the contractualClienteApp.
  */
-angular.module('agoraService',[])
-.factory('agoraRequest', function ($http) {
+angular.module('coreAmazonService',[])
+.factory('coreAmazonRequest', function ($http) {
   // Service logic
   // ...
-  //var path = "http://10.20.0.254/administrativa_amazon_api/v1/";
-  var path = "http://10.20.0.254/agora_api/v1/";
+  //var path = "http://10.20.2.78:8081/v1/";
+  var path = "http://10.20.0.254/core_amazon_crud/v1/";
   // Public API here
   return {
     get: function (tabla,params) {
       return $http.get(path+tabla+"/?"+params);
-    },
-    directGet: function (tabla,params) {
-      return $http.get(path+tabla+"/"+params);
     },
     post: function (tabla,elemento) {
       return $http.post(path+tabla,elemento);
@@ -32,3 +29,5 @@ angular.module('agoraService',[])
     }
   };
 });
+
+

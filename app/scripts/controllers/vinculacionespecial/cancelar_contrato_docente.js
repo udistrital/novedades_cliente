@@ -95,6 +95,7 @@ self.datosPersonas={
       }
       amazonAdministrativaRequest.post("contrato_estado",cancelacion).then(function(response){
         console.log(response.data);
+        console.log(cancelacion);
       });
     });
 

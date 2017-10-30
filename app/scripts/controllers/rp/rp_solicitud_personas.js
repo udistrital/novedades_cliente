@@ -85,6 +85,7 @@ angular.module('contractualClienteApp')
 
     //GRID CONTRATISTAS
     self.gridOptions = {
+      enableSelectAll: true,
       enableRowSelection: true,
       enableRowHeaderSelection: true,
       enableSorting: true,
@@ -385,6 +386,8 @@ angular.module('contractualClienteApp')
           contrato_unidad.FechaRegistro= seleccion[i].Fecha_registro;
           self.contrato.push(contrato_unidad);  
         }
+          console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+          console.log(self.contrato);
           self.saving = true;
           self.btnGenerartxt = "Generando...";
           self.saving = false;

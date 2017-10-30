@@ -11,6 +11,7 @@ angular.module('contractualClienteApp')
   .controller('RpSolicitudCtrl', function(coreRequest,$timeout,$window,agoraRequest,contrato,administrativaRequest,$scope,financieraRequest,$translate) {
     var self = this;
     self.contrato = contrato;
+    console.log(self.contrato);
     $scope.rubroVacio=false;
     self.CurrentDate = new Date();
     var mes=self.CurrentDate.getMonth()+1;
@@ -70,12 +71,12 @@ angular.module('contractualClienteApp')
  
  };
  self.gridOptions_contratos.data = self.contrato;
+ /*
  if (self.contrato.NombreContratista === undefined){
 
   t0 = performance.now();
   for(var x = 0;x<self.contrato.length;x++){
     cedula = self.contrato[x].ContratistaId.toString();
-    console.log(cedula);
     agoraRequest.get('informacion_persona_natural',"&query=Id:"+cedula).then(function(response) {
       nombre.push(response.data[0].PrimerApellido+" "+response.data[0].SegundoApellido+" "+response.data[0].PrimerNombre+" "+response.data[0].SegundoNombre); 
     });
@@ -88,7 +89,7 @@ angular.module('contractualClienteApp')
       self.contrato[x].NombreContratista=nombre[x];
      }
   },total);
- };
+ };*/
 
     self.gridOptions_cdp = {
      enableRowSelection: true,
@@ -110,6 +111,7 @@ financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Ago
   
     administrativaRequest.get('solicitud_disponibilidad','query=Id:'+data.Solicitud).then(function(response) {
         data.Solicitud = response.data[0];
+        console.log(data.Solicitud);
     });
     /*financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
         data.Solicitud = response.data[0];
