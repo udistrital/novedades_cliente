@@ -16,7 +16,12 @@ angular.module('sicapitalService',[])
   // Public API here
   return {
     get: function (tabla,params) {
-      return $http.get(path+tabla+"/"+params);
+      return $http.get(path+tabla+"/"+params,{
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        }
+      }
+    );
     },
     post: function (tabla,elemento) {
       return $http.post(path+tabla,elemento);

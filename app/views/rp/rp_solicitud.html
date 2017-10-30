@@ -2,7 +2,7 @@
   <div class="panel panel-default">
     <center><h3>{{'SOLICITUD_RP' | translate}}</h3></center>
 </div>
-  <div class="col-sm-5">
+  <div class="col-md-5">
     <div class="panel panel-default">
       <div class="panel-heading" ng-click="panelCdp = !panelCdp">
         <h4>{{'SELECCION_CDP' | translate }}
@@ -29,7 +29,7 @@
       </div>
     </div>
   </div>
-  <div class="col-sm-7">
+  <div class="col-md-7">
 
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -37,29 +37,13 @@
       </div>
       <div ng-show=" rpSolicitud.proveedor" class="panel-body row">
 
-        <div class="col-sm-6 rp registro_presupuestal">
+        <div class="col-md-11 rp registro_presupuestal">
           <h3>{{'BENEFICIARIO' | translate}}</h3>
-          <table name="info_beneficiario" class="table">
-              <tr>
-                <th>
-                  {{'NOMBRE_CONTRATISTA' | translate}}:
-                </th>
-                <td>
-                  {{rpSolicitud.contrato.NombreContratista}}
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  {{'DOCUMENTO_CONTRATISTA' | translate}}
-                </th>
-                <td>
-                  {{rpSolicitud.contrato.ContratistaId}}
-                </td>
-              </tr>
-          </table>
+          <div style="height:200px" ui-grid='rpSolicitud.gridOptions_contratos' ui-grid-auto-resize class="myGrid">
+          </div>
         </div>
 
-        <div class="col-sm-5 rp registro_presupuestal">
+        <div class="col-md-5 rp registro_presupuestal">
           <h3>{{'COMPROMISO' | translate}}</h3>
           <table name="info_compromiso" class="table">
             <tbody>
@@ -92,44 +76,7 @@
           </table>
         </div>
 
-        <div class="col-sm-6 rp registro_presupuestal">
-          <h3>{{'CONTRATO' | translate}}</h3>
-          <table class="table">
-              <tr>
-                <th>
-                  {{'NUMERO' | translate}}
-                </th>
-                <td>
-                  {{rpSolicitud.contrato.Id}}
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  {{'VIGENCIA' | translate}}
-                </th>
-                <td>
-                  {{rpSolicitud.contrato.Vigencia}}
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  {{'VALOR' | translate}}
-                </th>
-                <td>
-                  {{rpSolicitud.contrato.ValorContrato | currency}}
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  {{'MODALIDAD_SELECCION' | translate}}
-                </th>
-                <td>
-                  {{necesidad.Necesidad.ModalidadSeleccion.Nombre}}
-                </td>
-              </tr>
-          </table>
-        </div>
-        <div class="col-sm-5 rp registro_presupuestal">
+        <div class="col-md-5 rp registro_presupuestal">
           <h3>{{'CDP' | translate}}</h3>
           <table name="info_beneficiario" class="table">
             <tbody>
@@ -184,25 +131,10 @@
             </tbody>
           </table>
         </div>
-
-        <div class="col-sm-12">
-          <div class="col-sm-7">
-            <h4>{{'RP_MASIVO' | translate}}</h4>
-          </div>
-          <br>
-          <div class="radio-inline col-sm-1">
-            <md-radio-group ng-model="rpSolicitud.masivo_seleccion">
-               <md-radio-button ng-repeat="masivo in rpSolicitud.masivo_radio" ng-value="masivo.valor">
-                 {{masivo.nombre}}
-               </md-radio-button>
-            </md-radio-group>
-
-          </div>
-        </div>
         </div>
 
-        <div class="col-sm-12">
-          <form class="form-horizontal" ng-show="rpSolicitud.gridOptions_rubros.data.length>0">
+        <div class="col-md-12">
+          <form class="form-horizontal" >
             <fieldset>
               <h3>{{'DATOS_APROPIACIONES' | translate }}</h3>
               <div ui-grid="rpSolicitud.gridOptions_rubros" ui-grid-selection ui-grid-auto-resize class="col-md-11" ng-style="getTableStyle()"></div>

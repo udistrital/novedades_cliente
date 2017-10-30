@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudCtrl', function(coreRequest,$window,agoraRequest,contrato,administrativaRequest,$scope,financieraRequest,financieraMidRequest,$translate) {
+  .controller('RpSolicitudCtrl', function(coreRequest,$timeout,$window,agoraRequest,contrato,administrativaRequest,$scope,financieraRequest,$translate) {
     var self = this;
     self.contrato = contrato;
     $scope.rubroVacio=false;
@@ -23,9 +23,19 @@ angular.module('contractualClienteApp')
     self.rubros_seleccionados = [];
     self.rubros_select = [];
     self.responsable = "";
+    var cedula;
     self.masivo_seleccion = false;
     var Solicitud_id;
-    var solicitud_datos;
+    var solicitudes = [];
+    var respuestas_solicitudes = [];
+    var nombre = [];
+    var t0;
+    var t1;
+    var t11;
+    var t00;
+    var total;
+    var total2;
+    var Solicitud_rp;
     self.masivo_radio = {
       0:{
         nombre : "Si",
@@ -46,6 +56,40 @@ angular.module('contractualClienteApp')
       self.dependencia_solicitante_data = response.data;
     });
 
+    self.gridOptions_contratos = {
+      enableRowSelection: true,
+      enableRowHeaderSelection: false,
+      enableFiltering: true,
+ 
+   columnDefs : [
+     {field: 'Id',             visible : false},
+     {field: 'Id',   displayName: $translate.instant('CONTRATO')},
+     {field: 'NombreContratista',   displayName:$translate.instant('ID')},
+     {field: 'ContratistaId',   displayName: $translate.instant('DOCUMENTO')},
+   ]
+ 
+ };
+ self.gridOptions_contratos.data = self.contrato;
+ if (self.contrato.NombreContratista === undefined){
+
+  t0 = performance.now();
+  for(var x = 0;x<self.contrato.length;x++){
+    cedula = self.contrato[x].ContratistaId.toString();
+    console.log(cedula);
+    agoraRequest.get('informacion_persona_natural',"&query=Id:"+cedula).then(function(response) {
+      nombre.push(response.data[0].PrimerApellido+" "+response.data[0].SegundoApellido+" "+response.data[0].PrimerNombre+" "+response.data[0].SegundoNombre); 
+    });
+   };
+   t1 = performance.now();
+   total = (t1 - t0) +1000;
+   $timeout(function(){
+     console.log(nombre);
+     for(var x=0;x<self.contrato.length;x++){
+      self.contrato[x].NombreContratista=nombre[x];
+     }
+  },total);
+ };
+
     self.gridOptions_cdp = {
      enableRowSelection: true,
      enableRowHeaderSelection: false,
@@ -54,18 +98,22 @@ angular.module('contractualClienteApp')
   columnDefs : [
     {field: 'Id',             visible : false},
     {field: 'Vigencia',   displayName: 'Vigencia'},
-    {field: 'NumeroDisponibilidad',   displayName: 'Consecutivo'},
-    {field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Objeto',   displayName: 'Objeto'},
-    {field: 'Solicitud..DependenciaSolicitante.Nombre',   displayName: 'Ordenador'},
+    {field: 'NumeroDisponibilidad',   width:'10%',displayName: 'Id'},
+    {field: 'Estado.Descripcion',   displayName: 'Descripcion'},
+    {field: 'Solicitud.Necesidad',   displayName: 'Necesidad'},
   ]
 
 };
 financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
   self.gridOptions_cdp.data = response.data;
   angular.forEach(self.gridOptions_cdp.data, function(data){
-    financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
+  
+    administrativaRequest.get('solicitud_disponibilidad','query=Id:'+data.Solicitud).then(function(response) {
         data.Solicitud = response.data[0];
-        });
+    });
+    /*financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
+        data.Solicitud = response.data[0];
+        });*/
 
       });
 
@@ -77,7 +125,8 @@ self.gridOptions_cdp.onRegisterApi = function(gridApi){
   gridApi.selection.on.rowSelectionChanged($scope,function(row){
     self.rubros_seleccionados = [];
     self.cdp = row.entity;
-    var CdpId = self.cdp.Solicitud.SolicitudDisponibilidad.Id;
+    var CdpId = self.cdp.Solicitud.Id;
+    console.log(CdpId);
     administrativaRequest.get('solicitud_disponibilidad','query=Id:'+CdpId).then(function(response){
       $scope.necesidad=response.data[0];
     });
@@ -147,7 +196,7 @@ self.gridOptions_cdp.multiSelect = false;
           width: "25%",
         },
         {
-          field: 'Apropiacion.Rubro.Descripcion',
+          field: 'Apropiacion.Rubro.Nombre',
           displayName: $translate.instant('NOMBRE'),
           width: "50%",
         },
@@ -165,7 +214,6 @@ self.gridOptions_cdp.multiSelect = false;
         self.selectRubro = row.entity;
       });
     };
-
 
     $scope.getTableStyle= function() {
       var rowHeight=30;
@@ -285,21 +333,33 @@ self.gridOptions_cdp.multiSelect = false;
           self.rubros_seleccionados[i].ValorAsignado = parseFloat(self.rubros_seleccionados[i].ValorAsignado);
         }
 
-        var Solicitud_rp = {
-          Vigencia: 2017,
-          FechaSolicitud: self.CurrentDate,
-          Cdp: self.cdp.Id,
-          Expedida: false,
-          NumeroContrato: self.contrato.Id,
-          VigenciaContrato: self.contrato.Vigencia.toString(),
-          Compromiso: self.compromiso.Id,
-          Justificacion_rechazo: 0,
-          Masivo : self.masivo_seleccion
-        };
+//se envian todas las solicitudes de rp
+if(self.contrato.length>1){
+  self.masivo_seleccion=true;
+}else{
+  self.masivo_seleccion=false;
+}        
+        for(var x=0;x<self.contrato.length;x++){
+          Solicitud_rp = {};
+          Solicitud_rp = {
+            Vigencia: 2017,
+            FechaSolicitud: self.CurrentDate,
+            Cdp: self.cdp.Id,
+            Expedida: false,
+            NumeroContrato: self.contrato[x].Id,
+            VigenciaContrato: self.contrato[x].Vigencia,
+            Compromiso: self.compromiso.Id,
+            Justificacion_rechazo: 0,
+            Masivo : self.masivo_seleccion
+          };
+          solicitudes.push(Solicitud_rp);
+        }
 
-          administrativaRequest.post('solicitud_rp', Solicitud_rp).then(function(response) {
+        t00 = performance.now();
+        angular.forEach(solicitudes, function(solicitud_rp) {
+          administrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
             Solicitud_id = response.data;
-            console.log(dia+" "+mes+" "+ano);
+            respuestas_solicitudes.push(Solicitud_id) ;
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
               var Disponibilidad_apropiacion_solicitud_rp = {
                 DisponibilidadApropiacion: self.rubros_seleccionados[i].Id,
@@ -309,39 +369,48 @@ self.gridOptions_cdp.multiSelect = false;
               administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
               });
             }
-
-            administrativaRequest.get('solicitud_rp','query=Id:'+Solicitud_id).then(function(response){
-              solicitud_datos = response.data[0];
-              console.log(solicitud_datos.FechaSolicitud);
-              var fecha = new Date(solicitud_datos.FechaSolicitud);
-              dia = fecha.getDate()+1;
-              mes = fecha.getMonth()+1;
-              ano = fecha.getFullYear();
-              var fecha_solicitud = dia +"/"+mes+"/"+ano;
-            swal({
-              html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
-              +solicitud_datos.Id+"<br><label><b>"+$translate.instant('VIGENCIA_SOLICITUD')+":</b></label> " + solicitud_datos.Vigencia + "<br><label><b>"+$translate.instant('FECHA_SOLICITUD')+":</b></label>:"
-              +fecha_solicitud+ "<br><label><b>"+$translate.instant('NUMERO_CONTRATO')+":</b></label>" + solicitud_datos.NumeroContrato + "<br><label><b>"+$translate.instant('VIGENCIA_CONTRATO')+":</b></label>"
-              + solicitud_datos.VigenciaContrato,
-              type: "success",
-              showCancelButton: true,
-              confirmButtonColor: "#449D44",
-              cancelButtonColor: "#C9302C",
-              confirmButtonText: $translate.instant('VOLVER_CONTRATOS'),
-              cancelButtonText: $translate.instant('SALIR'),
-            }).then(function() {
-              //si da click en ir a contratistas
-              $window.location.href = '#/rp_solicitud_personas';
-            }, function(dismiss) {
-
-              if (dismiss === 'cancel') {
-                //si da click en Salir
-                $window.location.href = '#';
-              }
-            });
-            });
           });
+        });
+        t11 = performance.now();
+        total2 = (t11 - t00) +1000;
 
+        $timeout(function(){
+          console.log("longitud de las respuestas "+respuestas_solicitudes.length);
+          var imprimir = "<table class='respuestasrp'><tr><td><b>Solicitud rp</b></td><td><b>Contrato</b></td><td><b>Vigencia</b></td></tr>";
+          for(var x=0;x<respuestas_solicitudes.length;x++){
+            
+            imprimir=imprimir+"<tr><td>"+respuestas_solicitudes[x].Id+
+            "</td><td>"+respuestas_solicitudes[x].NumeroContrato+
+            "</td><td>"+respuestas_solicitudes[x].VigenciaContrato;
+          };
+          imprimir=imprimir+"</td></tr></table>";
+
+          console.log(respuestas_solicitudes[0]);
+          //console.log(respuestas_solicitudes);
+          
+              swal({
+                /*html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
+                +solicitud_datos.Id+"<br><label><b>"+$translate.instant('VIGENCIA_SOLICITUD')+":</b></label> " + solicitud_datos.Vigencia + "<br><label><b>"+$translate.instant('FECHA_SOLICITUD')+":</b></label>:"
+                +fecha_solicitud+ "<br><label><b>"+$translate.instant('NUMERO_CONTRATO')+":</b></label>" + solicitud_datos.NumeroContrato + "<br><label><b>"+$translate.instant('VIGENCIA_CONTRATO')+":</b></label>"
+                + solicitud_datos.VigenciaContrato,*/
+                html:imprimir,
+                type: "success",
+                showCancelButton: true,
+                confirmButtonColor: "#449D44",
+                cancelButtonColor: "#C9302C",
+                confirmButtonText: $translate.instant('VOLVER_CONTRATOS'),
+                cancelButtonText: $translate.instant('SALIR'),
+              }).then(function() {
+                //si da click en ir a contratistas
+                $window.location.href = '#/rp_solicitud_personas';
+              }, function(dismiss) {
+  
+                if (dismiss === 'cancel') {
+                  //si da click en Salir
+                  $window.location.href = '#';
+                }
+              });
+       },total2);
       }
     };
 

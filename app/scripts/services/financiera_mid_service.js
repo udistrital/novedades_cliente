@@ -11,8 +11,8 @@ angular.module('financieraMidService',[])
   .factory('financieraMidRequest', function ($http) {
     // Service logic
     // ...
-    //var path = "http://127.0.0.1:8082/v1/";
-    var path = "http://10.20.0.254/financiera_mid_api/v1/";
+    var path = "http://127.0.0.1:8086/v1/";
+    //var path = "http://10.20.0.254/financiera_mid_api/v1/";
     // Public API here
     return {
       get: function (tabla,params) {
