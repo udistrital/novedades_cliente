@@ -263,8 +263,9 @@ var text_es = {
     /*
     hojas_vida_seleccion.html
     */
-    HOJAS_VIDA: "Hojas de vida",
-    HOJAS_VIDA_INSCRITAS: "Hojas de vida inscritas",
+    TITULO_VIN_DOC: "Vinculacion de docentes.",
+    TITULO_RES: "Resolucion #",
+    HOJAS_VIDA_INSCRITAS: "Docentes inscritos",
     INFORMACION_BASICA_CONTRATO: "Información  básica del contrato",
     TENGA_CUENTA: "Tenga en cuenta",
     PROYECTO_CURRICULAR: "Proyecto curricular",
@@ -779,8 +780,9 @@ var text_en = {
     /*
     hojas_vida_seleccion.html
     */
-    HOJAS_VIDA: "Resumes",
-    HOJAS_VIDA_INSCRITAS: "Resumes inscribed",
+    TITULO_VIN_DOC: "Professors' hiring",
+    TITULO_RES: "Resolution #",
+    HOJAS_VIDA_INSCRITAS: "Professors inscribed",
     INFORMACION_BASICA_CONTRATO: "Basic contract information",
     TENGA_CUENTA: "Keep in mind",
     PROYECTO_CURRICULAR: "Curricular project",

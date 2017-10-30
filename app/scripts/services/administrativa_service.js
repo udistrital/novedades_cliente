@@ -7,8 +7,8 @@
  * # administrativaRequest
  * Factory in the administrativaService.
  */
-angular.module('administrativaService',[])
-  .factory('administrativaRequest', function ($http) {
+ angular.module('amazonAdministrativaService',[])
+ .factory('amazonAdministrativaRequest', function ($http) {
     // Service logic
     // ...
     var path = "http://10.20.0.254/administrativa_api/v1/"

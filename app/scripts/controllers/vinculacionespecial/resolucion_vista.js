@@ -8,19 +8,19 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionVistaCtrl', function (amazonAdministrativaRequest,oikosRequest,coreRequest,contratacion_request,adminMidRequest,contratacion_mid_request,$mdDialog,$scope,idResolucion) {
-    
+  .controller('ResolucionVistaCtrl', function (amazonAdministrativaRequest,oikosAmazonRequest,coreRequest,contratacion_request,adminMidRequest,contratacion_mid_request,$mdDialog,$scope,idResolucion) {
+
   	var self=this;
 
     self.idResolucion=idResolucion;
 
     self.proyectos=[];
     //Se cargan los datos almacenados en la tabla resolucion
-    amazonAdministrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){ 
+    amazonAdministrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){
       self.resolucion=response.data;
       self.numero=self.resolucion.NumeroResolucion;
       //Se cargan los datos almacenados en la tabla resolucion_vinculacion_docente donde se encuentran los elementos filtro para obtener los docentes asociados a la resolución
-      amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
+      amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
         self.datosFiltro=response.data;
         if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
           var auxNivelAcademico=14;
@@ -29,10 +29,10 @@ angular.module('contractualClienteApp')
         }
         self.datosFiltro.IdFacultad=self.datosFiltro.IdFacultad.toString();
         //Se cargan los proyectos curriculares de la facultad asociada a la resolución
-        oikosRequest.get("dependencia_padre","query=Padre%3A"+self.datosFiltro.IdFacultad+"&fields=Hija&limit=-1").then(function(response){
+        oikosAmazonRequest.get("dependencia_padre","query=Padre%3A"+self.datosFiltro.IdFacultad+"&fields=Hija&limit=-1").then(function(response){
           if(response.data==null){
             //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
-            oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
+            oikosAmazonRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
               self.proyectos=[response.data]
               self.getContenidoDocumento();
             });
@@ -41,9 +41,9 @@ angular.module('contractualClienteApp')
             var auxProyectos=response.data;
             var auxNum=0;
             auxProyectos.forEach(function(aux){
-              oikosRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A1&limit=-1").then(function(response){
+              oikosAmazonRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A1&limit=-1").then(function(response){
                 if(response.data!=null){
-                  oikosRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A"+auxNivelAcademico.toString()+"&limit=-1").then(function(response){
+                  oikosAmazonRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A"+auxNivelAcademico.toString()+"&limit=-1").then(function(response){
                     auxNum++;
                     if(response.data!=null){
                       self.proyectos.push(response.data[0].DependenciaId);
@@ -51,7 +51,7 @@ angular.module('contractualClienteApp')
                     if(auxNum==auxProyectos.length){
                       if(self.proyectos.length==0){
                         //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
-                        oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
+                        oikosAmazonRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
                           self.proyectos=[response.data]
                           self.getContenidoDocumento();
                         });
@@ -67,10 +67,10 @@ angular.module('contractualClienteApp')
             });
           }
         });
-        /*oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
+        /*oikosAmazonRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
           if(response.data==null){
-            //En caso de que la facultad no cuente con proyectos curriculares, los contratos se asocian directamente con la facultad, por lo cual se cargan los datos 
-            oikosRequest.get("facultad/"+self.datosFiltro.IdFacultad).then(function(response){
+            //En caso de que la facultad no cuente con proyectos curriculares, los contratos se asocian directamente con la facultad, por lo cual se cargan los datos
+            oikosAmazonRequest.get("facultad/"+self.datosFiltro.IdFacultad).then(function(response){
               self.proyectos=[response.data]
             });
           }else{
@@ -84,14 +84,14 @@ angular.module('contractualClienteApp')
               if(response.data==null){
                 coreRequest.get("ordenador_gasto/1").then(function(response){
                   self.contenidoResolucion.ordenadorGasto=response.data;
-                })        
+                })
               }else{
                 self.contenidoResolucion.ordenadorGasto=response.data[0];
               }
               //Se verifica si la resolución ha sido expedida o no
               if(self.resolucion.FechaExpedicion == null){
                 //Se cargan los docentes previamente vinculados con la resolución
-                amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){    
+                amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
                   self.contratados=response.data;
                   if(self.contratados){
                     self.contratados.forEach(function(row){
@@ -99,28 +99,28 @@ angular.module('contractualClienteApp')
                       adminMidRequest.get("calculo_salario/Contratacion/"+row.Id).then(function(response){
                         row.ValorContrato=self.FormatoNumero(response.data);
                         if(row==self.contratados[self.contratados.length-1]){
-                          self.generarResolucion() 
-                        }  
+                          self.generarResolucion()
+                        }
                       });
                     });
                   }else{
                     //Se llama la función para generar el pdf con la resoleución
-                    self.generarResolucion() 
+                    self.generarResolucion()
                   }
                 });
               }else{
                 //Se cargan los docentes contratdos si la resolucion ya fue expedida
-                amazonAdministrativaRequest.get("precontratado/Contratado/"+self.idResolucion.toString()).then(function(response){      
+                amazonAdministrativaRequest.get("precontratado/Contratado/"+self.idResolucion.toString()).then(function(response){
                   self.contratados=response.data;
                   if(self.contratados){
                     self.contratados.forEach(function(row){
                       //El nombre completode los docentes es almacenado en una sola variable para poder ser visualizado en la tabla
                       row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
                     });
-                    self.generarResolucion(); 
+                    self.generarResolucion();
                   }else{
                     //Se llama la función para generar el pdf con la resoleución
-                    self.generarResolucion() 
+                    self.generarResolucion()
                   }
                 });
               }
@@ -138,14 +138,14 @@ angular.module('contractualClienteApp')
                         if(response.data==null){
                           coreRequest.get("ordenador_gasto/1").then(function(response){
                             self.contenidoResolucion.ordenadorGasto=response.data;
-                          })        
+                          })
                         }else{
                           self.contenidoResolucion.ordenadorGasto=response.data[0];
                         }
                         //Se verifica si la resolución ha sido expedida o no
                         if(self.resolucion.FechaExpedicion == null){
                           //Se cargan los docentes previamente vinculados con la resolución
-                          amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){    
+                          amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
                             self.contratados=response.data;
                             if(self.contratados){
                               var auxSalarios=0;
@@ -155,28 +155,28 @@ angular.module('contractualClienteApp')
                                   auxSalarios++;
                                   row.ValorContrato=self.FormatoNumero(response.data);
                                   if(auxSalarios==self.contratados.length){
-                                    self.generarResolucion() 
-                                  }  
+                                    self.generarResolucion()
+                                  }
                                 });
                               });
                             }else{
                               //Se llama la función para generar el pdf con la resoleución
-                              self.generarResolucion() 
+                              self.generarResolucion()
                             }
                           });
                         }else{
                           //Se cargan los docentes contratdos si la resolucion ya fue expedida
-                          amazonAdministrativaRequest.get("precontratado/Contratado/"+self.idResolucion.toString()).then(function(response){      
+                          amazonAdministrativaRequest.get("precontratado/Contratado/"+self.idResolucion.toString()).then(function(response){
                             self.contratados=response.data;
                             if(self.contratados){
                               self.contratados.forEach(function(row){
                                 //El nombre completode los docentes es almacenado en una sola variable para poder ser visualizado en la tabla
                                 row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
                               });
-                              self.generarResolucion(); 
+                              self.generarResolucion();
                             }else{
                               //Se llama la función para generar el pdf con la resoleución
-                              self.generarResolucion() 
+                              self.generarResolucion()
                             }
                           });
                         }
@@ -401,7 +401,7 @@ self.getDecenas = function(numero){
   var decena = Math.floor(numero/10);
   var unidad = numero-(decena*10);
   switch(decena)
-  {   
+  {
     case 0: return self.getUnidades(unidad);
     case 1: return 'DECIMO'+self.getUnidades(unidad);
     case 2: return 'VIGÉSIMO '+self.getUnidades(unidad);
@@ -428,12 +428,12 @@ self.numeroALetras = function(numero) {
 //Función que retorna un número en formato monetario "99.999.999"
 self.FormatoNumero=function(amount, decimals) {
 
-        amount += ''; 
-        amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); 
+        amount += '';
+        amount = parseFloat(amount.replace(/[^0-9\.]/g, ''));
 
-        decimals = decimals || 0; 
+        decimals = decimals || 0;
 
-        if (isNaN(amount) || amount === 0) 
+        if (isNaN(amount) || amount === 0)
             return parseFloat(0).toFixed(decimals);
 
         amount = '' + amount.toFixed(decimals);
