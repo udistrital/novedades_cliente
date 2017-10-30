@@ -38,7 +38,7 @@
     "angular-mocks": "^1.4.0"
   },
   "appPath": "app",
-  "moduleName": "administrativaClienteApp",
+  "moduleName": "contractualClienteApp",
   "overrides": {
     "bootstrap": {
       "main": [
