@@ -84,7 +84,7 @@ angular.module('contractualClienteApp')
     };
 
     //Se leen los datos básicos de la resolucion de vinculación especial
-    kyronRequest.get("persona_escalafon/"+self.resolucion.NivelAcademico_nombre.toLowerCase()).then(function(response){
+    administrativaRequest.get("persona_escalafon/persona_escalafon_"+self.resolucion.NivelAcademico_nombre.toLowerCase()).then(function(response){
       self.datosPersonas.data=response.data;
       self.datosPersonas.data.forEach(function(row){
 
@@ -132,7 +132,7 @@ angular.module('contractualClienteApp')
 
     });
 
-    administrativaRequest.get("dedicacion","limit=-1").then(function(response){
+    administrativaRequest.get("dedicacion","limit=-1&query=NombreDedicacion__in:"+self.resolucion.Dedicacion).then(function(response){
       if(typeof(response.data)=="object"){
         self.dedicaciones=self.dedicaciones.concat(response.data);
       }

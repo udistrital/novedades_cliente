@@ -187,8 +187,10 @@ angular.module('contractualClienteApp')
         self.resolucion.NivelAcademico_nombre = row.entity.NivelAcademico;
         self.resolucion.NivelAcademico = auxNivelAcademico
         self.resolucion.IdFacultad = self.datos_docentes.IdFacultad
-        
-        self.resolucion.Dedicacion = self.datos_docentes.Dedicacion
+        if(self.datos_docentes.Dedicacion == "TCO-MTO"){
+            self.resolucion.Dedicacion = "TCO|MTO"
+        }
+
 
       $window.location.href = '#/vinculacionespecial/hojas_de_vida_seleccion/'+row.entity.Id.toString();
 
