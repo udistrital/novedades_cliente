@@ -8,10 +8,9 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudCtrl', function(coreRequest,$timeout,$window,agoraRequest,contrato,administrativaRequest,$scope,financieraRequest,$translate) {
+  .controller('RpSolicitudCtrl', function(coreRequest,$timeout,$window,contrato,amazonAdministrativaRequest,$scope,financieraRequest,$translate) {
     var self = this;
     self.contrato = contrato;
-    console.log(self.contrato);
     $scope.rubroVacio=false;
     self.CurrentDate = new Date();
     var mes=self.CurrentDate.getMonth()+1;
@@ -64,32 +63,14 @@ angular.module('contractualClienteApp')
  
    columnDefs : [
      {field: 'Id',             visible : false},
-     {field: 'Id',   displayName: $translate.instant('CONTRATO')},
-     {field: 'NombreContratista',   displayName:$translate.instant('ID')},
-     {field: 'ContratistaId',   displayName: $translate.instant('DOCUMENTO')},
+     {field: 'Numero_contrato',   width:'15%',displayName: $translate.instant('CONTRATO')},
+     {field: 'Vigencia',  width:'15%' ,displayName: $translate.instant('VIGENCIA')},
+     {field: 'NombreContratista', width:'50%'  ,displayName:$translate.instant('NOMBRE')},
+     {field: 'ContratistaId', width:'20%'  ,displayName: $translate.instant('DOCUMENTO')},
    ]
  
  };
  self.gridOptions_contratos.data = self.contrato;
- /*
- if (self.contrato.NombreContratista === undefined){
-
-  t0 = performance.now();
-  for(var x = 0;x<self.contrato.length;x++){
-    cedula = self.contrato[x].ContratistaId.toString();
-    agoraRequest.get('informacion_persona_natural',"&query=Id:"+cedula).then(function(response) {
-      nombre.push(response.data[0].PrimerApellido+" "+response.data[0].SegundoApellido+" "+response.data[0].PrimerNombre+" "+response.data[0].SegundoNombre); 
-    });
-   };
-   t1 = performance.now();
-   total = (t1 - t0) +1000;
-   $timeout(function(){
-     console.log(nombre);
-     for(var x=0;x<self.contrato.length;x++){
-      self.contrato[x].NombreContratista=nombre[x];
-     }
-  },total);
- };*/
 
     self.gridOptions_cdp = {
      enableRowSelection: true,
@@ -109,13 +90,9 @@ financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Ago
   self.gridOptions_cdp.data = response.data;
   angular.forEach(self.gridOptions_cdp.data, function(data){
   
-    administrativaRequest.get('solicitud_disponibilidad','query=Id:'+data.Solicitud).then(function(response) {
+    amazonAdministrativaRequest.get('solicitud_disponibilidad','query=Id:'+data.Solicitud).then(function(response) {
         data.Solicitud = response.data[0];
-        console.log(data.Solicitud);
     });
-    /*financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
-        data.Solicitud = response.data[0];
-        });*/
 
       });
 
@@ -128,12 +105,11 @@ self.gridOptions_cdp.onRegisterApi = function(gridApi){
     self.rubros_seleccionados = [];
     self.cdp = row.entity;
     var CdpId = self.cdp.Solicitud.Id;
-    console.log(CdpId);
-    administrativaRequest.get('solicitud_disponibilidad','query=Id:'+CdpId).then(function(response){
+    amazonAdministrativaRequest.get('solicitud_disponibilidad','query=Id:'+CdpId).then(function(response){
       $scope.necesidad=response.data[0];
     });
 
-    agoraRequest.get('informacion_persona_natural', 'query=Id:'+self.cdp.Responsable).then(function(response) {
+    amazonAdministrativaRequest.get('informacion_persona_natural', 'query=Id:'+self.cdp.Responsable).then(function(response) {
       if(response.data !== null){
       self.responsable = response.data[0];
     }else{
@@ -348,7 +324,7 @@ if(self.contrato.length>1){
             FechaSolicitud: self.CurrentDate,
             Cdp: self.cdp.Id,
             Expedida: false,
-            NumeroContrato: self.contrato[x].Id,
+            NumeroContrato: self.contrato[x].NumeroContrato,
             VigenciaContrato: self.contrato[x].Vigencia,
             Compromiso: self.compromiso.Id,
             Justificacion_rechazo: 0,
@@ -359,7 +335,7 @@ if(self.contrato.length>1){
 
         t00 = performance.now();
         angular.forEach(solicitudes, function(solicitud_rp) {
-          administrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
+          amazonAdministrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
             Solicitud_id = response.data;
             respuestas_solicitudes.push(Solicitud_id) ;
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
@@ -368,16 +344,16 @@ if(self.contrato.length>1){
                 SolicitudRp : Solicitud_id,
                 Monto: self.rubros_seleccionados[i].ValorAsignado,
               };
-              administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
+              amazonAdministrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
               });
             }
           });
+
         });
         t11 = performance.now();
         total2 = (t11 - t00) +1000;
 
         $timeout(function(){
-          console.log("longitud de las respuestas "+respuestas_solicitudes.length);
           var imprimir = "<table class='respuestasrp'><tr><td><b>Solicitud rp</b></td><td><b>Contrato</b></td><td><b>Vigencia</b></td></tr>";
           for(var x=0;x<respuestas_solicitudes.length;x++){
             
@@ -386,9 +362,6 @@ if(self.contrato.length>1){
             "</td><td>"+respuestas_solicitudes[x].VigenciaContrato;
           };
           imprimir=imprimir+"</td></tr></table>";
-
-          console.log(respuestas_solicitudes[0]);
-          //console.log(respuestas_solicitudes);
           
               swal({
                 /*html: "<label>"+$translate.instant('INSERCION_RP')+":</label><br><br><label><b>"+$translate.instant('NUMERO_SOLICITUD')+":</b></label> "
