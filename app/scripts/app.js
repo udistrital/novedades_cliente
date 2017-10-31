@@ -43,12 +43,9 @@ angular
         'financieraMidService',
         'adminMidService',
         'sicapitalService',
-        'nvd3',
         'contratacion_service',
         'contratacion_mid_service',
         'titan_service',
-        'textAngular',
-        'ngFileUpload',
         'amazonAdministrativaService',
         'academicaService'
     ])
