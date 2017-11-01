@@ -184,6 +184,7 @@ angular.module('contractualClienteApp')
 
         self.resolucion = resolucion;
         self.resolucion.Id = row.entity.Id;
+        self.resolucion.Numero = row.entity.Numero;
         self.resolucion.NivelAcademico_nombre = row.entity.NivelAcademico;
         self.resolucion.NivelAcademico = auxNivelAcademico
         self.resolucion.IdFacultad = self.datos_docentes.IdFacultad
