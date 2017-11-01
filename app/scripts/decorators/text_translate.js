@@ -55,6 +55,9 @@ var text_es = {
   AÑOS: "Años",
   MESES: "Meses",
   DIAS: "Días",
+  TIPO_NECESIDAD: "Tipo de Necesidad",
+  TIPO_FINANCIACION: "Tipo de Financiación",
+  TIPO_CONTRATO_NECESIDAD: "Tipo de Contrato Necesidad",
   RESPONSABLES: "Responsables",
   DEPENDENCIA_SOLICITANTE: "Dependencia Solicitante",
   JEFE_DEPENDENCIA_SOLICITANTE: "Jefe Dependencia Solicitante",
@@ -76,6 +79,8 @@ var text_es = {
   TIPO_SERVICIO: "Tipo de Servicio",
   PERFIL: "Perfil",
   EL_TIPO_DE: "el Tipo de",
+  NUCLEO_CONOCIMIENTO_AREA: "Núcleo Conocimiento Área",
+  NUCLEO_CONOCIMIENTO: "Núcleo Conocimiento",
   SNIES_AREA: "Snies Área",
   SNIES_NUCLEO_BASICO: "Snies Núcleo Básico",
   CANTIDAD: "Cantidad",
@@ -90,6 +95,7 @@ var text_es = {
   REQUISITOS_MINIMOS: "Requisitos mínimos",
   FINANCIACION: "Financiación",
   TIPO_RUBRO: "Tipo de Rubro",
+  NOMBRE_RUBRO: "Nombre del Rubro",
   VALOR_SOLICITADO: "Valor Solicitado",
   TOTAL_FINANCIACION: "Total Financiación",
   //lista_documentos_legales
@@ -309,6 +315,7 @@ var text_es = {
     ARTICULO: "Artículo",
     TEXTO: "Texto",
     PARAGRAFO: "Parágrafo",
+    ACTA_INICIO: "Acta Inicio",
     /*
     res_generacion.html
     */
@@ -582,6 +589,9 @@ var text_en = {
   MESES: "Months",
   DIAS: "Days",
   RESPONSABLES: "Responsible",
+  TIPO_NECESIDAD: "Type of Need",
+  TIPO_FINANCIACION: "Type of financing",
+  TIPO_CONTRATO_NECESIDAD: "Type of need contract",
   DEPENDENCIA_SOLICITANTE: "Requesting Unit",
   JEFE_DEPENDENCIA_SOLICITANTE: "Boss of Requesting Unit",
   DEPENDENCIA_DESTINO: "Destination Unit",
@@ -602,6 +612,8 @@ var text_en = {
   TIPO_SERVICIO: "Type of Service",
   PERFIL: "Profile",
   EL_TIPO_DE: "the Type of",
+  NUCLEO_CONOCIMIENTO_AREA: "Knowledge Area Core",
+  NUCLEO_CONOCIMIENTO: "Knowledge Core",
   SNIES_AREA: "Snies Area",
   SNIES_NUCLEO_BASICO: "Snies Basic Core",
   CANTIDAD: "Quantity",
@@ -616,6 +628,7 @@ var text_en = {
   REQUISITOS_MINIMOS: "Minimum Requirements",
   FINANCIACION: "Financing",
   TIPO_RUBRO: "Type of Line Item",
+  NOMBRE_RUBRO: "Name of Line Item",
   VALOR_SOLICITADO: "Requested Value",
   TOTAL_FINANCIACION: "Total Financing",
   //lista_documentos_legales
@@ -827,6 +840,7 @@ var text_en = {
     ARTICULO: "Article",
     TEXTO: "Text",
     PARAGRAFO: "Paragraph",
+    ACTA_INICIO: "Beginning Act",
     /*
     res_generacion.html
     */
