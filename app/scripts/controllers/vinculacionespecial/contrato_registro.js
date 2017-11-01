@@ -9,33 +9,40 @@
  */
 angular.module('contractualClienteApp')
   .controller('ContratoRegistroCtrl', function (amazonAdministrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate) {
-  	
+
   	var self = this;
 
     self.idResolucion=idResolucion;
-
     amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
       self.datosFiltro=response.data;
 
       oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad.toString()).then(function(response){
+
         self.contratoGeneralBase.SedeSolicitante=response.data.Id.toString();
         self.sede_solicitante_defecto=response.data.Nombre;
       });
-      amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){   
+      /*
+      amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
 
         self.contratados=response.data;
         if(self.contratados != null){
           self.contratados.forEach(function(row){
-            console.log("row");     
-            console.log(row.Id); 
+            console.log("row");
+            console.log(row.Id);
             adminMidRequest.get("calculo_salario/Contratacion/"+row.Id.toString()).then(function(response){
               console.log("SCA VOY");
               console.log(response);
               row.ValorContrato=response.data;
             });
           });
+
         }
       });
+      */
+      adminMidRequest.post("calculo_salario/Precontratacion/"+self.idResolucion.toString()+"/"+resolucion.NivelAcademico).then(function(response){
+        self.contratados=response.data;
+        });
+
       coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.datosFiltro.IdFacultad.toString()).then(function(response){
         if(response.data==null){
           coreRequest.get("ordenador_gasto/1").then(function(response){
@@ -132,7 +139,7 @@ angular.module('contractualClienteApp')
     }*/
 
     self.realizarContrato = function(){
-      if(self.contratoGeneralBase.cdp && self.contratoGeneralBase.Observaciones && self.contratoGeneralBase.Justificacion){        
+      if(self.contratoGeneralBase.cdp && self.contratoGeneralBase.Observaciones && self.contratoGeneralBase.Justificacion){
         self.contratoGeneralBase.NumeroSolicitudNecesidad=parseInt(self.getNumeroDisponibilidadSeleccionada());
         self.contratoGeneralBase.NumeroCdp=parseInt(self.getNumeroNecesidadDisponibilidadSeleccionada());
         if(self.datosFiltro.Dedicacion=="HCH"){
@@ -144,7 +151,7 @@ angular.module('contractualClienteApp')
         }else{
           self.contratoGeneralBase.TipoContrato={Id: 18};
           self.contratoGeneralBase.ObjetoContrato="Docente de Vinculación Especial - Medio Tiempo Ocasional (MTO) - Tiempo Completo Ocasional (TCO)";
-        }    
+        }
         swal({
           title: $translate.instant('EXPEDIR'),
           text: $translate.instant('SEGURO_EXPEDIR'),
@@ -208,7 +215,9 @@ angular.module('contractualClienteApp')
         var expedicionResolucion={
           Vinculaciones: conjuntoContratos,
           idResolucion: self.idResolucion
-        }     
+        }
+        console.log("contratos a insertar")
+        console.log(expedicionResolucion)
           amazonAdministrativaRequest.post("contrato_general/InsertarContratos",expedicionResolucion).then(function(response){
             //if(typeof(response.data)=="object"){ //xDD
 
@@ -232,7 +241,7 @@ angular.module('contractualClienteApp')
                                   resolucion.FechaExpedicion=null;
                               }
                           })
-                      });  
+                      });
                     //  $mdDialog.hide()
                   /*  }else{
                       swal({
