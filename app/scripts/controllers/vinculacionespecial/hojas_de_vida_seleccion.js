@@ -255,6 +255,9 @@ angular.module('contractualClienteApp')
           }
       })
 
+      self.datosValor.NumSemanas = "";
+      self.datosValor.NumHorasSemanales = "";
+      self.datosValor.proyectoCurricular = proyectos
       self.RecargarDatosPersonas();
 
     }
