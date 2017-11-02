@@ -9,7 +9,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-4">
                                     <label>{{ 'VIGENCIA' | translate }}</label>
-                                    <input type="number" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Vigencia" disabled>
+                                    <input type="number" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Contrato.Vigencia" disabled>
                                 </div>
                                 <div class="form-group col-lg-4">
                                     <label>{{ 'FORMA_PAGO' | translate }}</label>
@@ -21,7 +21,7 @@
                                 </div>
                                 <div class="form-group col-lg-4">
                                     <label>{{ 'DESCRIPCION_FORMA_PAGO' | translate }}</label>
-                                    <input type="text" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.DescripcionFormaPago" disabled>
+                                    <input type="text" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Contrato.DescripcionFormaPago" disabled>
                                 </div>
                                 <div class="form-group col-lg-4">
                                     <label>{{ 'UNIDAD_EJECUTORA' | translate }}</label>
@@ -34,22 +34,32 @@
                             </div>
                         </form>
                     </div>
+                    <pre>{{contratoRegistro.contratoGeneralBase.Cdp.cdp | json}}</pre>
                 <legend class="text-primary" ng-click="info_disponibilidad=!info_disponibilidad">{{ 'DISPONIBILIDAD' | translate }}<span class="fa fa-plus pull-right" ng-show="!info_disponibilidad"></span> <span class="fa fa-minus pull-right" ng-show="info_disponibilidad"></span></legend>
                     <div class="panel-body" ng-show="info_disponibilidad">
                         <form role="form">
                             <div class="row">
-                                <div class="form-group col-lg-4">
-                                    <label>{{ 'NUMERO_CDP' | translate }}</label>
-                                    <select class="form-control" ng-model="contratoRegistro.contratoGeneralBase.cdp" required>
-                                        <option value="">--SELECCIONE--</option>
-                                        <option ng-repeat="opcion in contratoRegistro.cdp_opciones" value={{opcion}}>{{opcion.DISPONIBILIDAD}}</option>
+                                <div class="form-group col-lg-6">
+                                    <label>{{ 'VIGENCIA' | translate }} {{ 'CDP' | translate }}</label>
+                                    <select class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Cdp.VigenciaCdp" ng-options="vig for vig in contratoRegistro.vigencia_data" required>
+                                        <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"VIGENCIA" | translate}}</option>
                                     </select>
-                                    <label>{{ 'NUMERO_NECESIDAD' | translate }}</label>
-                                    <input type="text" class="form-control" ng-model="contratoRegistro.getNumeroNecesidadDisponibilidadSeleccionada()" disabled>
+                                    <div class="form-group" ng-show="contratoRegistro.contratoGeneralBase.Cdp.VigenciaCdp!=undefined">                                        
+                                        <label>{{ 'NUMERO_CDP' | translate }}</label>
+                                        <select class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Cdp.cdp" ng-options="cdps.NumeroDisponibilidad for cdps in contratoRegistro.lista_cdp" required>
+                                        <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"CDP" | translate}}</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="form-group col-lg-8">
-                                    <label>{{ 'OBJETO_CDP' | translate }}</label>
-                                    <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistro.getObjetoDisponibilidadSeleccionada()" disabled></textarea>
+                                <div class="form-group" ng-show="contratoRegistro.contratoGeneralBase.Cdp.cdp!=0">                                        
+                                    <div class="form-group col-lg-6">
+                                        <label>{{ 'NUMERO_NECESIDAD' | translate }}</label>
+                                        <input type="text" class="form-control" ng-model="contratoRegistro.necesidad.Numero" disabled>
+                                        <label>{{ 'VIGENCIA_NECESIDAD' | translate }}</label>
+                                        <input type="text" class="form-control" ng-model="contratoRegistro.necesidad.Vigencia" disabled>
+                                        <label>{{ 'OBJETO_CDP' | translate }}</label>
+                                        <textarea rows="5" type="text" class="form-control" ng-model="contratoRegistro.necesidad.Objeto" disabled></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -60,11 +70,11 @@
                             <div class="row">
                                 <div class="form-group col-lg-12">
                                     <label>{{ 'JUSTIFICACION' | translate }}</label>
-                                    <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Justificacion"></textarea>
+                                    <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Contrato.Justificacion"></textarea>
                                 </div>
                                 <div class="form-group col-lg-12">
                                     <label>{{ 'OBSERVACIONES' | translate }}</label>
-                                    <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Observaciones" required></textarea>
+                                    <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Contrato.Observaciones" required></textarea>
                                 </div>
                             </div>
                         </form>

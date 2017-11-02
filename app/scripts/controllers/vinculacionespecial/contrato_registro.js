@@ -8,9 +8,14 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ContratoRegistroCtrl', function (amazonAdministrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate) {
+  .controller('ContratoRegistroCtrl', function (amazonAdministrativaRequest,administrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate, $scope) {
 
-  	var self = this;
+    var self = this;
+    self.contratoGeneralBase={}
+    self.contratoGeneralBase.Cdp={}
+    self.contratoGeneralBase.Contrato={}
+    self.contratoGeneralBase.Cdp.cdp=0;
+    self.acta={}
 
     self.idResolucion=idResolucion;
     amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
@@ -18,7 +23,7 @@ angular.module('contractualClienteApp')
 
       oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad.toString()).then(function(response){
 
-        self.contratoGeneralBase.SedeSolicitante=response.data.Id.toString();
+        self.contratoGeneralBase.Contrato.SedeSolicitante=response.data.Id.toString();
         self.sede_solicitante_defecto=response.data.Nombre;
       });
       /*
@@ -62,36 +67,61 @@ angular.module('contractualClienteApp')
       self.salario_minimo=response.data[0];
     });
 
-
-    sicapitalRequest.get("disponibilidad/cdpfiltro/2017/1/VIGENTE").then(function(response){
-      self.cdp_opciones=response.data;
+    amazonAdministrativaRequest.get('vigencia_contrato', $.param({
+      limit: -1
+    })).then(function(response) {
+      self.vigencia_data = response.data;
     });
 
+    $scope.$watch('contratoRegistro.contratoGeneralBase.Cdp.VigenciaCdp',function(){
+      financieraRequest.get('disponibilidad', $.param({
+        query: 'Vigencia:'+self.contratoGeneralBase.Cdp.VigenciaCdp,
+        limit: -1
+      })).then(function(response) {
+        self.lista_cdp = response.data;
+      });
+    },true);
+
+    $scope.$watch('contratoRegistro.contratoGeneralBase.Cdp.cdp',function(){
+      administrativaRequest.get('solicitud_disponibilidad/'+self.contratoGeneralBase.Cdp.cdp.Solicitud, $.param({
+        limit: -1
+      })).then(function(response) {
+        self.solicitud_cdp = response.data;
+        administrativaRequest.get('necesidad/'+self.solicitud_cdp.Necesidad.Id, $.param({
+          limit: -1
+        })).then(function(response) {
+          self.necesidad = response.data;
+        });
+      });
+    },true);
+
+    /*sicapitalRequest.get("disponibilidad/cdpfiltro/2017/1/VIGENTE").then(function(response){
+      self.cdp_opciones=response.data;
+    });*/
+
     self.asignarValoresDefecto = function(){
-      self.contratoGeneralBase={}
-      self.acta={}
-      self.contratoGeneralBase.Vigencia=new Date().getFullYear();
-      self.contratoGeneralBase.FormaPago={Id:240};
-      self.contratoGeneralBase.DescripcionFormaPago="Abono a Cuenta Mensual de acuerdo a puntas y hotras laboradas";
-      self.contratoGeneralBase.Justificacion="Docente de Vinculacion Especial";
-      self.contratoGeneralBase.UnidadEjecucion={Id:205};
-      self.contratoGeneralBase.LugarEjecucion={Id:2};
-      self.contratoGeneralBase.Observaciones="Contrato de Docente Vinculación Especial";
-      self.contratoGeneralBase.TipoControl=181;
-      self.contratoGeneralBase.ClaseContratista=33;
-      self.contratoGeneralBase.TipoMoneda=137;
-      self.contratoGeneralBase.OrigenRecursos=149;
-      self.contratoGeneralBase.OrigenPresupuesto=156;
-      self.contratoGeneralBase.TemaGastoInversion=166;
-      self.contratoGeneralBase.TipoGasto=146;
-      self.contratoGeneralBase.RegimenContratacion=136;
-      self.contratoGeneralBase.Procedimiento=132;
-      self.contratoGeneralBase.ModalidadSeleccion=123;
-      self.contratoGeneralBase.TipoCompromiso=35;
-      self.contratoGeneralBase.TipologiaContrato=46;
-      self.contratoGeneralBase.FechaRegistro=new Date();
-      self.contratoGeneralBase.UnidadEjecutora=1;
-      self.contratoGeneralBase.Condiciones="Sin condiciones";
+      self.contratoGeneralBase.Contrato.Vigencia=new Date().getFullYear();
+      self.contratoGeneralBase.Contrato.FormaPago={Id:240};
+      self.contratoGeneralBase.Contrato.DescripcionFormaPago="Abono a Cuenta Mensual de acuerdo a puntas y hotras laboradas";
+      self.contratoGeneralBase.Contrato.Justificacion="Docente de Vinculacion Especial";
+      self.contratoGeneralBase.Contrato.UnidadEjecucion={Id:205};
+      self.contratoGeneralBase.Contrato.LugarEjecucion={Id:2};
+      self.contratoGeneralBase.Contrato.Observaciones="Contrato de Docente Vinculación Especial";
+      self.contratoGeneralBase.Contrato.TipoControl=181;
+      self.contratoGeneralBase.Contrato.ClaseContratista=33;
+      self.contratoGeneralBase.Contrato.TipoMoneda=137;
+      self.contratoGeneralBase.Contrato.OrigenRecursos=149;
+      self.contratoGeneralBase.Contrato.OrigenPresupuesto=156;
+      self.contratoGeneralBase.Contrato.TemaGastoInversion=166;
+      self.contratoGeneralBase.Contrato.TipoGasto=146;
+      self.contratoGeneralBase.Contrato.RegimenContratacion=136;
+      self.contratoGeneralBase.Contrato.Procedimiento=132;
+      self.contratoGeneralBase.Contrato.ModalidadSeleccion=123;
+      self.contratoGeneralBase.Contrato.TipoCompromiso=35;
+      self.contratoGeneralBase.Contrato.TipologiaContrato=46;
+      self.contratoGeneralBase.Contrato.FechaRegistro=new Date();
+      self.contratoGeneralBase.Contrato.UnidadEjecutora=1;
+      self.contratoGeneralBase.Contrato.Condiciones="Sin condiciones";
       self.acta.Descripcion="Acta inicio resolución Docente Vinculación Especial";
     }
 
@@ -139,18 +169,17 @@ angular.module('contractualClienteApp')
     }*/
 
     self.realizarContrato = function(){
-      if(self.contratoGeneralBase.cdp && self.contratoGeneralBase.Observaciones && self.contratoGeneralBase.Justificacion){
-        self.contratoGeneralBase.NumeroSolicitudNecesidad=parseInt(self.getNumeroDisponibilidadSeleccionada());
-        self.contratoGeneralBase.NumeroCdp=parseInt(self.getNumeroNecesidadDisponibilidadSeleccionada());
+      /*self.contratoGeneralBase.NumeroSolicitudNecesidad=parseInt(self.getNumeroDisponibilidadSeleccionada());
+      self.contratoGeneralBase.NumeroCdp=parseInt(self.getNumeroNecesidadDisponibilidadSeleccionada());*/
         if(self.datosFiltro.Dedicacion=="HCH"){
-          self.contratoGeneralBase.TipoContrato={Id: 3};
-          self.contratoGeneralBase.ObjetoContrato="Docente de Vinculación Especial - Honorarios";
+          self.contratoGeneralBase.Contrato.TipoContrato={Id: 3};
+          self.contratoGeneralBase.Contrato.ObjetoContrato="Docente de Vinculación Especial - Honorarios";
         }else if(self.datosFiltro.Dedicacion=="HCP"){
-          self.contratoGeneralBase.TipoContrato={Id: 2};
-          self.contratoGeneralBase.ObjetoContrato="Docente de Vinculación Especial - Salario";
+          self.contratoGeneralBase.Contrato.TipoContrato={Id: 2};
+          self.contratoGeneralBase.Contrato.ObjetoContrato="Docente de Vinculación Especial - Salario";
         }else{
-          self.contratoGeneralBase.TipoContrato={Id: 18};
-          self.contratoGeneralBase.ObjetoContrato="Docente de Vinculación Especial - Medio Tiempo Ocasional (MTO) - Tiempo Completo Ocasional (TCO)";
+          self.contratoGeneralBase.Contrato.TipoContrato={Id: 18};
+          self.contratoGeneralBase.Contrato.ObjetoContrato="Docente de Vinculación Especial - Medio Tiempo Ocasional (MTO) - Tiempo Completo Ocasional (TCO)";
         }
         swal({
           title: $translate.instant('EXPEDIR'),
@@ -177,15 +206,6 @@ angular.module('contractualClienteApp')
                     })
                 }
             })
-      }else{
-        swal({
-          text: $translate.instant('DATOS_INCOMPLETOS'),
-          title: "Alerta",
-          type: "warning",
-          confirmButtonText: $translate.instant('ACEPTAR'),
-          showLoaderOnConfirm: true,
-        });
-      }
     }
 
     self.guardarContratos = function(){
@@ -193,8 +213,10 @@ angular.module('contractualClienteApp')
       var errorInsercion = false;
       if(self.contratados){
         self.contratados.forEach(function(contratado){
-          var contratoGeneral=JSON.parse(JSON.stringify(self.contratoGeneralBase));
+          var contratoGeneral=JSON.parse(JSON.stringify(self.contratoGeneralBase.Contrato));
+          var cdp=JSON.parse(JSON.stringify(self.contratoGeneralBase.Cdp));
           var actaI=JSON.parse(JSON.stringify(self.acta));
+          cdp.NumeroCdp=self.contratoGeneralBase.Cdp.cdp.NumeroDisponibilidad;
           contratoGeneral.Contratista=contratado.Documento;
           contratoGeneral.DependenciaSolicitante=contratado.ProyectoCurricular.toString();
           contratoGeneral.PlazoEjecucion=contratado.Semanas*7;
@@ -202,6 +224,7 @@ angular.module('contractualClienteApp')
           contratoGeneral.ValorContrato=contratado.ValorContrato;
           var contratoVinculacion={
             ContratoGeneral: contratoGeneral,
+            Cdp: cdp,
             ActaInicio: actaI,
             VinculacionDocente: {Id: contratado.Id}
           }
@@ -264,28 +287,4 @@ angular.module('contractualClienteApp')
       }
     }
 
-    self.getNumeroDisponibilidadSeleccionada = function(){
-      if(self.contratoGeneralBase.cdp){
-        var numeroDisponibilidad = JSON.parse(self.contratoGeneralBase.cdp).DISPONIBILIDAD;
-        return numeroDisponibilidad;
-      }
-      return null;
-    }
-
-    self.getObjetoDisponibilidadSeleccionada = function(){
-      if(self.contratoGeneralBase.cdp){
-        var textoObjeto = JSON.parse(self.contratoGeneralBase.cdp).OBJETODISP;
-        return textoObjeto;
-      }
-      return null;
-    }
-
-    self.getNumeroNecesidadDisponibilidadSeleccionada = function(){
-      if(self.contratoGeneralBase.cdp){
-        var numeroNecesidad = JSON.parse(self.contratoGeneralBase.cdp).NUMERONECESIDAD;
-        return numeroNecesidad;
-      }
-      return null;
-    }
-
-  });
+});

@@ -240,6 +240,8 @@ angular.module('contractualClienteApp')
         };
 
         vinculacionesData.push(vinculacionDocente);
+        console.log("Aqui ando");
+        console.log(vinculacionDocente);
       })
 
       //Se envía en arreglo de estructuras a la transacción encargadade almacenar los datos
@@ -249,7 +251,7 @@ angular.module('contractualClienteApp')
 
             console.log("exitoso")
             }else{
-              self.log("no")
+              console.log("no")
             swal({
               title: $translate.instant('ERROR'),
               text: $translate.instant('CONTRATO_NO_ALMACENADO'),
