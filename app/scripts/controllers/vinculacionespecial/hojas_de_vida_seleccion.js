@@ -93,7 +93,16 @@ angular.module('contractualClienteApp')
       });
     });
 
-  z
+    self.RecargarDatosPersonas = function(){
+      amazonAdministrativaRequest.get("persona_escalafon/persona_escalafon_"+self.resolucion.NivelAcademico_nombre.toLowerCase()).then(function(response){
+        self.datosPersonas.data=response.data;
+        self.datosPersonas.data.forEach(function(row){
+
+          //El nombre completo se guarda en una sola variable
+          row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
+        });
+      });
+    }
 
     oikosAmazonRequest.get("dependencia_padre","query=Padre%3A"+self.resolucion.IdFacultad+"&fields=Hija&limit=-1").then(function(response){
       if(response.data==null){
@@ -192,6 +201,7 @@ angular.module('contractualClienteApp')
 
 
     self.get_proyecto=function(){
+
       self.estado = true;
       adminMidRequest.post("calculo_salario/Precontratacion/"+self.resolucion.Id.toString()+"/"+self.resolucion.NivelAcademico_nombre).then(function(response){
         self.precontratados.data=response.data
@@ -202,13 +212,7 @@ angular.module('contractualClienteApp')
 
     }
 
-    //Actualiza los datos de la tabla self.precontratados cuando se cambia el proyecto curriular seleccionado
-    self.refresh = function(){
-      self.precontratados.data=JSON.parse(JSON.stringify(self.precontratados.data))
-    }
-
-
-    //Función para almacenar los datos de las vinculaciones realizadas
+      //Función para almacenar los datos de las vinculaciones realizadas
     self.agregarPrecontratos = function(){
 
       var vinculacionesData=[];
@@ -235,8 +239,10 @@ angular.module('contractualClienteApp')
               text: $translate.instant('VINCULACION_EXITOSA'),
               type: 'success',
               confirmButtonText: $translate.instant('ACEPTAR')
-              
+
               })
+              self.term = self.datosValor.proyectoCurricular
+              self.get_proyecto();
             }else{
             swal({
               title: $translate.instant('ERROR'),
@@ -247,6 +253,7 @@ angular.module('contractualClienteApp')
           }
       })
 
+      self.RecargarDatosPersonas();
 
     }
 
@@ -305,7 +312,24 @@ angular.module('contractualClienteApp')
       };
 
       amazonAdministrativaRequest.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
-        console.log("se borró")
+        if(response.data=="OK"){
+          self.persona=null;
+          swal({
+            text: $translate.instant('DESVINCULACION_EXITOSA'),
+            type: 'success',
+            confirmButtonText: $translate.instant('ACEPTAR')
+
+            })
+            self.get_proyecto();
+          }else{
+          swal({
+            title: $translate.instant('ERROR'),
+            text: $translate.instant('DESVINCULACION_NOEXITOSA'),
+            type: 'error',
+            confirmButtonText: $translate.instant('ACEPTAR')
+          })
+
+        }
       })
     }
 

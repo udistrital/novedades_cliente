@@ -280,6 +280,8 @@ var text_es = {
     DOCENTE_PLANTA: "Docente de planta",
     DOCENTE_VINCULADOS: "Docentes vinculados",
     VINCULACION_EXITOSA: "Se ha vinculado el docente",
+    DESVINCULACION_EXITOSA: "Se ha desvinculado docente exitosamente",
+    DESVINCULACION_NOEXITOSA: "Error al desvincular docente",
 
     /*
     Informacion_personal.html
@@ -805,6 +807,8 @@ var text_en = {
     DOCENTE_PLANTA: "Plant teacher",
     DOCENTE_VINCULADOS: "Entailment professors",
     VINCULACION_EXITOSA: "Professor inscribed",
+    DESVINCULACION_EXITOSA: "Professor was unsuscribed successfully",
+    DESVINCULACION_NOEXITOSA: "Error in unsuscribing professor",
     /*
     Informacion_personal.html
     */
