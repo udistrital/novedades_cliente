@@ -10,7 +10,7 @@
 var text_es = {
     SEGUNDO_NOMBRE:"Segundo nombre",
 
-    SELECCIONAR_FILTRO:"Seleccione el tipo de filtro por el cual quiere generar la solicitud del RP",  
+    SELECCIONAR_FILTRO:"Seleccione el tipo de filtro por el cual quiere generar la solicitud del RP",
     BUSCAR:"Buscar",
     INGRESE_IDENTIFICACION_PROVEEDOR:"Ingrese identificación del proveedor",
     DATOS_PROVEEDOR:"Datos proveedor",
@@ -279,6 +279,7 @@ var text_es = {
     NUMERO_HORAS_SEMANALES: "Número de horas semanales",
     DOCENTE_PLANTA: "Docente de planta",
     DOCENTE_VINCULADOS: "Docentes vinculados",
+    VINCULACION_EXITOSA: "Se ha vinculado el docente",
 
     /*
     Informacion_personal.html
@@ -533,8 +534,8 @@ var text_es = {
 };
 
 var text_en = {
-  SELECCIONAR_FILTRO:" Select the filter which is going to generate the RP request",  
-  BUSCAR:"Search",   
+  SELECCIONAR_FILTRO:" Select the filter which is going to generate the RP request",
+  BUSCAR:"Search",
   INGRESE_IDENTIFICACION_PROVEEDOR:"Enter provider id",
   DATOS_PROVEEDOR:"Provider data",
   IDENTIFICACION:"Id",
@@ -803,7 +804,7 @@ var text_en = {
     NUMERO_HORAS_SEMANALES: "Number of hours per week",
     DOCENTE_PLANTA: "Plant teacher",
     DOCENTE_VINCULADOS: "Entailment professors",
-
+    VINCULACION_EXITOSA: "Professor inscribed",
     /*
     Informacion_personal.html
     */

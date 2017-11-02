@@ -12,7 +12,7 @@ angular.module('contractualClienteApp')
     //Lectura del parámetro de resolución de entrada
     self.idResolucion=$routeParams.idResolucion;
 
-    self.dedicaciones=[];
+    self.dedicaciones;
     self.proyectos=[];
 
 
@@ -134,7 +134,7 @@ angular.module('contractualClienteApp')
 
     amazonAdministrativaRequest.get("dedicacion","limit=-1&query=NombreDedicacion__in:"+self.resolucion.Dedicacion).then(function(response){
       if(typeof(response.data)=="object"){
-        self.dedicaciones=self.dedicaciones.concat(response.data);
+        self.dedicaciones=response.data;
       }
     });
 
@@ -210,22 +210,7 @@ angular.module('contractualClienteApp')
 
     //Función para almacenar los datos de las vinculaciones realizadas
     self.agregarPrecontratos = function(){
-      var idDedicacion;
-      //Se asigna el id de la dedicaion dependiendo de la selección realizada
-      switch(self.resolucion.Dedicacion){
-        case "TCO":
-          idDedicacion=4;
-          break;
-        case "MTO":
-          idDedicacion=3;
-          break;
-        case "HCH":
-          idDedicacion=1;
-          break;
-        case "HCP":
-          idDedicacion=2;
-          break;
-      }
+
       var vinculacionesData=[];
 
       //Se almacenan los datos en un arreglo de estructuras
@@ -235,7 +220,7 @@ angular.module('contractualClienteApp')
           NumeroHorasSemanales: self.datosValor.NumHorasSemanales,
           NumeroSemanas: self.datosValor.NumSemanas,
           IdResolucion: {Id: parseInt(self.resolucion.Id)},
-          IdDedicacion: {Id: idDedicacion},
+          IdDedicacion: {Id: parseInt(self.dedicacion)},
           IdProyectoCurricular: parseInt(self.datosValor.proyectoCurricular)
         };
 
@@ -248,10 +233,13 @@ angular.module('contractualClienteApp')
       amazonAdministrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
           if(typeof(response.data)=="object"){
             self.persona=null;
-
-            console.log("exitoso")
+            swal({
+              text: $translate.instant('VINCULACION_EXITOSA'),
+              type: 'success',
+              confirmButtonText: $translate.instant('ACEPTAR')
+              
+              })
             }else{
-              console.log("no")
             swal({
               title: $translate.instant('ERROR'),
               text: $translate.instant('CONTRATO_NO_ALMACENADO'),
@@ -353,7 +341,7 @@ angular.module('contractualClienteApp')
         case "HCP":
           textoReglas=textoReglas+'<p><b>'+$translate.instant('HCP')+'</b>'+$translate.instant('HCP1')+'</p>'
           break;
-        case "TCO-MTO":
+        case "TCO|MTO":
           textoReglas=textoReglas+'<p><b>'+$translate.instant('MTO')+'</b>'+$translate.instant('MTO1')+'</p>'+
                                   '<p><b>'+$translate.instant('TCO')+'</b>'+$translate.instant('TCO1')+'</p>'
           break;
