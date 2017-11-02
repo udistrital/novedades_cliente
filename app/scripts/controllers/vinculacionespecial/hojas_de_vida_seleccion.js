@@ -229,6 +229,8 @@ angular.module('contractualClienteApp')
         };
 
         vinculacionesData.push(vinculacionDocente);
+        console.log("Aqui ando");
+        console.log(vinculacionDocente);
       })
 
       //Se envía en arreglo de estructuras a la transacción encargadade almacenar los datos
