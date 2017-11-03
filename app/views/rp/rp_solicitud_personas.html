@@ -162,16 +162,18 @@
                             </select>
                           </div>
                     </div>
-
-
                 </div>
-              <h4><b>{{'SELECCIONAR_RESOLUCION' | translate}}</b></h4>
+
                 <div class="col-md-12" align="center">
-                     <div style="height:400px" ui-grid="rpSolicitudPersonas.gridOptionsResolucion" ui-grid-auto-resize ui-grid-selection class="myGrid">
-                        <div class="well grid-loading" ng-show="rpSolicitudPersonas.longitud_grid_resolucion == 0">
-                          <i class="fa fa-spin fa-spinner"></i>
-                          <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
-                        </div>
+                    <div ng-show="rpSolicitudPersonas.gridOptionsResolucion.data.length !== 0">
+                    <h4><b>{{'SELECCIONAR_RESOLUCION' | translate}}</b></h4>
+                     <div style="height:400px" ui-grid="rpSolicitudPersonas.gridOptionsResolucion"  ui-grid-auto-resize ui-grid-selection class="myGrid">
+                    </div>
+                  </div>
+                    <div ng-show="rpSolicitudPersonas.gridOptionsResolucion.data.length === 0">
+                      <h2><i class="fa fa-spin fa-spinner"></i>
+                      <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
+                      </h2>
                     </div>
                     <div>
                       <div align="center">
@@ -201,26 +203,35 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <div class="modal-title">
-            <h4><b>{{'RESOLUCION' | translate }} {{'NUMERO' | translate }} -</b>{{rpSolicitudPersonas.resolucionNumero}}</h4>
-            <h4><b>{{'VIGENCIA' | translate }}-</b>{{rpSolicitudPersonas.resolucionVigencia}} </h4>
-            <h4><b>{{'TIPO_RESOLUCION' | translate }}-</b>{{rpSolicitudPersonas.tipoResolucion}}</h4>
-          </div>
+          <h4><b>{{'RESOLUCION' | translate }} {{'NUMERO' | translate }} -</b>{{rpSolicitudPersonas.resolucionId}}</h4>
+          <h4><b>{{'VIGENCIA' | translate }}-</b>{{rpSolicitudPersonas.resolucionVigencia}} </h4>
         </div>
         <div class="modal-body">
-          <h4>{{'CONTRATISTAS_RESOLUCION' | translate }}</h4>
-          <div ui-grid="rpSolicitudPersonas.gridOptionsResolucionPersonas" ui-grid-selection ui-grid-auto-resize class="myGrid">
-              <div class="well grid-loading" ng-show="gridOptionsResolucionPersonas.longitud_grid == 0">
-                <i class="fa fa-spin fa-spinner"></i>
-                <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
-              </div>
+          <div>
+          <div ng-show="rpSolicitudPersonas.gridOptionsResolucionPersonas.data.length > 0">
+              <div class="modal-title">
+                </div>
+              <b><h4>{{'CONTRATISTAS_RESOLUCION' | translate }}</h4></b>
+            <div ui-grid="rpSolicitudPersonas.gridOptionsResolucionPersonas" ui-grid-selection ui-grid-auto-resize class="myGrid">             
+           </div>
           </div>
+
+           <div ng-show="rpSolicitudPersonas.gridOptionsResolucionPersonas.data.length === 0" align="center">
+              <h2><i class="fa fa-spin fa-spinner"></i>
+              <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
+              </h2>
+            </div>
+
+          </div>
+          
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 

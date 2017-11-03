@@ -152,7 +152,7 @@ angular.module('contractualClienteApp')
         {
           field:'Boton',
           displayName:$translate.instant('VER'),
-          cellTemplate:'<button type="button" class="btn btn-info" data-toggle="modal" data-target="#resolucionModal" ng-click="grid.appScope.rpSolicitudPersonas.setResolucion(row.entity)"">{{"VER" | translate}}</button>'
+          cellTemplate:'<a><span class="fa fa-eye" data-toggle="modal" data-target="#resolucionModal" ng-click="grid.appScope.rpSolicitudPersonas.setResolucion(row.entity)""></span></a>'
         }
 
       ],
@@ -338,6 +338,7 @@ angular.module('contractualClienteApp')
     };
 
     self.setResolucion= function(resolucion){
+      console.log(resolucion);
       self.gridOptionsResolucionPersonas.data=[];
       var vinculacion_docente = [];
       var contratistas = [];
@@ -345,10 +346,12 @@ angular.module('contractualClienteApp')
       var cedula = "";
       var numContrato = "";
       var vigenciaContrato;
-      self.resolucionId = resolucion.Id;
-      self.tipoResolucion = resolucion.IdTipoResolucion.NombreTipoResolucion;
+      //variables para mostrar en el modal
+      self.resolucionId = resolucion.NumeroResolucion;
+      self.resolucionVigencia = resolucion.Vigencia;
+      //
       //peticion para traer los docentes asociados a una resolucion
-      amazonAdministrativaRequest.get('vinculacion_docente',"limit=-1&query=IdResolucion.Id:"+self.resolucionId+",Estado:true").then(function(response) {
+      amazonAdministrativaRequest.get('vinculacion_docente',"limit=-1&query=IdResolucion.Id:"+resolucion.Id+",Estado:true").then(function(response) {
         if(response.data!=null){
         vinculacion_docente = response.data;
         //consulta para traer la informacion de las personas de los docentes asociados a una resolucion
