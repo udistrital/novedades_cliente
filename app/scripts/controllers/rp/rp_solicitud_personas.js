@@ -11,12 +11,13 @@ angular.module('contractualClienteApp')
 .factory("contrato",function(){
       return {};
 })
-.controller('RpSolicitudPersonasCtrl', function($window, $scope, contrato,financieraRequest,amazonAdministrativaRequest, adminMidRequest,$translate,disponibilidad) {
+.controller('RpSolicitudPersonasCtrl', function($window, $scope, contrato,resolucion,financieraRequest,amazonAdministrativaRequest, adminMidRequest,$translate,disponibilidad) {
     var self = this;
     var query;
     var seleccion;
     var contrato_unidad={};
     var resoluciones= [];
+    self.resolucion = resolucion;
     self.contrato = contrato;
     self.disponibilidad = disponibilidad;
     $scope.vigenciaModel = null;
@@ -297,7 +298,7 @@ angular.module('contractualClienteApp')
         //selecciona la vigencia actual
         var vigenciaActual=$scope.vigencias_resoluciones[0];
         var suma = 0;
-        amazonAdministrativaRequest.get('/resolucion/resolucion_por_estado/'+vigenciaActual+'/'+'/2',"").then(function(response) {
+        amazonAdministrativaRequest.get('resolucion/resolucion_por_estado/'+vigenciaActual+'/'+'/2',"").then(function(response) {
           self.gridOptionsResolucion.data=response.data;
             });
             
@@ -384,6 +385,7 @@ angular.module('contractualClienteApp')
       resoluciones = [];
       var vinculacion_docente = [];
       self.contrato.splice(0,self.contrato.length);
+      self.resolucion.splice(0,self.resolucion.length);
 
       // si es solicitud por contrato
       if($scope.radioB ===1){
@@ -414,7 +416,9 @@ angular.module('contractualClienteApp')
 
       // si es solicitud por resolucion
       }else if($scope.radioB===3){
+
         seleccion = self.gridApiResolucion.selection.getSelectedRows();
+        self.resolucion.push(seleccion[0]);
           amazonAdministrativaRequest.get('vinculacion_docente',"limit=-1&query=IdResolucion.Id:"+seleccion[0].Id+",Estado:true").then(function(response) {
             if(response.data!==null){
             vinculacion_docente = response.data;
@@ -432,7 +436,6 @@ angular.module('contractualClienteApp')
                       
                       financieraRequest.get('disponibilidad',"query=NumeroDisponibilidad:"+response.data[0].NumeroCdp+",Vigencia:"+response.data[0].VigenciaCdp).then(function(response) {
                         self.disponibilidad.push(response.data[0]);
-                        console.log(self.disponibilidad);
                         self.saving = true;
                         self.btnGenerartxt = "Generando...";
                         self.saving = false;

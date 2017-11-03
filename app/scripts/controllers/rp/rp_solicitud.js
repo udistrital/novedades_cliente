@@ -8,9 +8,11 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudCtrl', function(coreRequest,$window,contrato,disponibilidad,administrativaRequest,amazonAdministrativaRequest,$scope,financieraRequest,$translate) {
+  .controller('RpSolicitudCtrl', function(coreRequest,resolucion,$window,contrato,disponibilidad,administrativaRequest,amazonAdministrativaRequest,$scope,financieraRequest,$translate) {
     var self = this;
     var disponibilidad_flag=true;
+    self.resolucion = resolucion[0];
+    console.log(self.resolucion);
     self.contrato = contrato;
     self.disponibilidad = "";
     $scope.rubroVacio=false;
@@ -28,6 +30,7 @@ angular.module('contractualClienteApp')
     var solicitudes = [];
     var respuestas_solicitudes = [];
     var Solicitud_rp;
+    var resolucion_estado ={};
 
     if(self.contrato.length === 0){
       swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR'), "error").then(function() {
@@ -341,6 +344,7 @@ if(self.contrato.length>1){
             Justificacion_rechazo: 0,
             Masivo : self.masivo_seleccion
           };
+          console.log(Solicitud_rp);
           solicitudes.push(Solicitud_rp);
         }
 
@@ -356,7 +360,21 @@ if(self.contrato.length>1){
                 Monto: self.rubros_seleccionados[i].ValorAsignado,
               };
               administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
+
+
               if(i === self.rubros_seleccionados.length){
+                resolucion_estado ={
+                  FechaRegistro:self.CurrentDate,
+                  Usuario:"",
+                  Estado:{
+                    Id:4,
+                  },
+                  Resolucion:self.resolucion
+                };
+                console.log(resolucion_estado);
+                amazonAdministrativaRequest.post('resolucion_estado',resolucion_estado).then(function(response) {
+                  
+                });
                 var imprimir = "<h2>Solicitudes creadas correctamente !</h2>"; 
                 imprimir=imprimir + "<div style='height:150px;overflow:auto'><table class='col-md-8 col-md-offset-2'><tr><td style='height:20px;width:120px'><b>Numero solicitud rp</b></td><td style='height:10px;width:80px'><b>Numero contrato</b></td><td style='height:10px;width:80px'><b>Numero vigencia</b></td></tr>";
                 for(var x=0;x<respuestas_solicitudes.length;x++){
