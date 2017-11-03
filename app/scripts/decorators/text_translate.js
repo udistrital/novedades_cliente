@@ -129,7 +129,7 @@ var text_es = {
   VIGENCIA_SOLICITUD: "Vigencia solicitud",
   FECHA_SOLICITUD: "Fecha solicitud",
   NUMERO_CONTRATO: "Número contrato",
-  SELECCIONE_UNA_VIGENCIA:"Seleccione una vigencia diferente",
+  SELECCIONE_UNA_VIGENCIA:"Seleccione la Vigencia",
   RESPONSABLE_DOCUMENTO: "Responsable documento",
   RESPONSABLE: "Responsable",
   DATOS_APROPIACIONES: "Datos de las apropiaciones",

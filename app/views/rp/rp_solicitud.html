@@ -2,9 +2,9 @@
   <div class="panel panel-default">
     <center><h3>{{'SOLICITUD_RP' | translate}}</h3></center>
 </div>
-  <div class="col-md-5">
+  <div class="col-md-5" >
     <div class="panel panel-default">
-      <div class="panel-heading" ng-click="panelCdp = !panelCdp">
+      <div class="panel-heading" ng-click="panelCdp = !panelCdp" ng-show="rpSolicitud.disponibilidad_flag"> 
         <h4>{{'SELECCION_CDP' | translate }}
             <span style="float:right" class="glyphicon glyphicon glyphicon-plus" ng-show="!panelCdp"></span>
             <span style="float:right" class="glyphicon glyphicon glyphicon-minus" ng-show="panelCdp"></span>
@@ -13,7 +13,7 @@
       <div ng-show="panelCdp" class="panel-body panel-collapse">
         <div ui-grid='rpSolicitud.gridOptions_cdp' ui-grid-selection ui-grid-auto-resize class="myGrid"> </div>
         <!--
-        <lista-cdp cdp='rpSolicitud.cdp' rubros='rpSolicitud.rubros' necesidad='rpSolicitud.necesidad' gridOptionsrubros='rpSolicitud.gridOptions_rubros'>
+        <lista-cdp cdp='rpSolicitud.disponibilidad' rubros='rpSolicitud.rubros' necesidad='rpSolicitud.necesidad' gridOptionsrubros='rpSolicitud.gridOptions_rubros'>
         -->
       </div>
     </div>
@@ -82,42 +82,26 @@
             <tbody>
               <tr>
                 <th>
-                  {{'CONSECUTIVO' | translate}}
+                  {{'NUMERO_DISPONIBILIDAD' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.cdp.NumeroDisponibilidad}}
+                  {{rpSolicitud.disponibilidad.NumeroDisponibilidad}}
                 </td>
               </tr>
               <tr>
                 <th>
-                  {{'OBJETO' | translate}}
+                  {{'VIGENCIA' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.cdp.Solicitud.SolicitudDisponibilidad.Necesidad.Objeto}}
+                  {{rpSolicitud.disponibilidad.Vigencia}}
                 </td>
               </tr>
               <tr>
                 <th>
-                  {{'RESPONSABLE' | translate}}
+                  {{'FECHA_REGISTRO' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.responsable.PrimerApellido}} {{rpSolicitud.responsable.SegundoApellido}} {{rpSolicitud.responsable.PrimerNombre}} {{rpSolicitud.responsable.SegundoNombre}}
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  {{'RESPONSABLE_DOCUMENTO' | translate}}
-                </th>
-                <td>
-                  {{rpSolicitud.responsable.Id}}
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  {{'UNIDAD_EJECUTORA' | translate}}
-                </th>
-                <td>
-                  {{rpSolicitud.cdp.UnidadEjecutora.Nombre}}
+                  {{rpSolicitud.disponibilidad.FechaRegistro}}
                 </td>
               </tr>
               <tr>
@@ -125,7 +109,7 @@
                   {{'ESTADO' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.cdp.Estado.Nombre}}
+                  {{rpSolicitud.disponibilidad.Estado.Nombre}}
                 </td>
               </tr>
             </tbody>
