@@ -16,7 +16,7 @@ angular.module('contractualClienteApp')
       templateUrl: 'views/directives/catalogos_elementos/lista_subgrupos_catalogos.html',
       controller:function($scope){
         var self = this;
-
+        $scope.productos = [];
         self.gridOptions = {
           paginationPageSizes: [5, 10, 15],
           paginationPageSize: 5,
@@ -46,13 +46,19 @@ angular.module('contractualClienteApp')
           ]
         };
 
-
         self.gridOptions.onRegisterApi = function(gridApi) {
           self.gridApi = gridApi;
           gridApi.selection.on.rowSelectionChanged($scope,function(){
             $scope.productos=self.gridApi.selection.getSelectedRows();
           });
         };
+
+        $scope.$watch('productos', function() {
+          if ($scope.productos.length === 0) {
+            self.gridApi.selection.clearSelectedRows();
+            console.log(self.productos);
+          }
+        }, true);
 
         //administrativaRequest.get('catalogo_elemento',$.param({
         administrativaRequest.get('catalogo_elemento_grupo',$.param({

@@ -98,6 +98,8 @@ var text_es = {
   NOMBRE_RUBRO: "Nombre del Rubro",
   VALOR_SOLICITADO: "Valor Solicitado",
   TOTAL_FINANCIACION: "Total Financiación",
+  OBLIGATORIO: "Campo requerido",
+  PRECIO_MAS_IVA: "Valor + IVA",
   //lista_documentos_legales
   MARCO_LEGAL: "Marco Legal",
   NOMBRE_DOCUMENTO: "Nombre del Documento",
@@ -570,6 +572,8 @@ var text_en = {
     TRABAJOS_INVESTIGACION: "Investigation work",
   NECESIDADES: "Needs",
   NECESIDAD: "Need",
+  OBLIGATORIO: "Required field",
+  PRECIO_MAS_IVA: "Value + IVA",
   //SOLICITUD RP
   TIPO_PERSONA:"Kind of person",
   TIPO_RESOLUCION:"Kind of resolution",
@@ -653,6 +657,7 @@ var text_en = {
   //necesidades
   GESTION_NECESIDADES: "Managment Needs",
   NUMERO_ELABORACION: "No. of Elaboration",
+  OBLIGATORIO: "Required",
   //visualizar_necesidad
   DE: "of",
   MONTO: "Amount",
