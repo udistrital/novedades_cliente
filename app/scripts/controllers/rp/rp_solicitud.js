@@ -12,10 +12,11 @@ angular.module('contractualClienteApp')
     var self = this;
     var disponibilidad_flag=true;
     self.resolucion = resolucion[0];
-    console.log(self.resolucion);
     self.contrato = contrato;
+    var monto = 0;
     self.disponibilidad = "";
     $scope.rubroVacio=false;
+    self.boton_registrar=false;
     self.CurrentDate = new Date();
     var mes=self.CurrentDate.getMonth()+1;
     var dia=self.CurrentDate.getDay();
@@ -40,11 +41,8 @@ angular.module('contractualClienteApp')
     }
 
     if(disponibilidad.length > 0){
-      console.log(disponibilidad[0]);
       self.disponibilidad = disponibilidad[0];
-
       disponibilidad_flag=false;
-       
      financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad.Id).then(function(response) {
       
             $scope.rubros = response.data;
@@ -60,7 +58,6 @@ angular.module('contractualClienteApp')
       
               });
           });
-      console.log(self.disponibilidad);
     }else{
       //////grid cdp//////
  
@@ -143,10 +140,11 @@ angular.module('contractualClienteApp')
  
    columnDefs : [
      {field: 'Id',             visible : false},
-     {field: 'Numero_contrato',   width:'15%',displayName: $translate.instant('CONTRATO')},
-     {field: 'Vigencia_contrato',  width:'15%' ,displayName: $translate.instant('VIGENCIA')},
-     {field: 'Nombre_completo', width:'50%'  ,displayName:$translate.instant('NOMBRE')},
+     {field: 'Numero_contrato',   width:'10%',displayName: $translate.instant('CONTRATO')},
+     {field: 'Vigencia_contrato',  width:'10%' ,displayName: $translate.instant('VIGENCIA')},
+     {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
      {field: 'Id', width:'20%'  ,displayName: $translate.instant('DOCUMENTO')},
+     {field: 'Valor_contrato', width:'20%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency }}</div>',displayName: $translate.instant('VALOR')}
    ]
  
  };
@@ -320,7 +318,7 @@ angular.module('contractualClienteApp')
         });
       }
       else {
-
+        self.boton_registrar=true;
         for (var i = 0; i < self.rubros_seleccionados.length; i++) {
           self.rubros_seleccionados[i].ValorAsignado = parseFloat(self.rubros_seleccionados[i].ValorAsignado);
         }
@@ -333,6 +331,7 @@ if(self.contrato.length>1){
 }        
         for(var x=0;x<self.contrato.length;x++){
           Solicitud_rp = {};
+          //se agrega el campo de monto para que se pueda iterar en la peticion de disponibilidad_apropiacion_solicitud_rp
           Solicitud_rp = {
             Vigencia: 2017,
             FechaSolicitud: self.CurrentDate,
@@ -340,41 +339,29 @@ if(self.contrato.length>1){
             Expedida: false,
             NumeroContrato: self.contrato[x].Numero_contrato,
             VigenciaContrato: self.contrato[x].Vigencia_contrato,
+            Monto:parseInt(self.contrato[x].Valor_contrato),
             Compromiso: self.compromiso.Id,
             Justificacion_rechazo: 0,
             Masivo : self.masivo_seleccion
           };
-          console.log(Solicitud_rp);
           solicitudes.push(Solicitud_rp);
         }
 
         angular.forEach(solicitudes, function(solicitud_rp) {
           administrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
-            Solicitud_id = response.data;
-            respuestas_solicitudes.push(Solicitud_id);
-            console.log(respuestas_solicitudes);
+            respuestas_solicitudes.push(response.data);
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
               var Disponibilidad_apropiacion_solicitud_rp = {
                 DisponibilidadApropiacion: self.rubros_seleccionados[i].Id,
-                SolicitudRp : Solicitud_id,
-                Monto: self.rubros_seleccionados[i].ValorAsignado,
+                SolicitudRp :{
+                  Id: response.data.Id,
+                },
+                //este campo debe generalizarse para utilzarlo tambien con los filtros de contrato y cdp
+               // Monto: self.rubros_seleccionados[i].ValorAsignado,
+               Monto:solicitud_rp.Monto
               };
               administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
 
-
-              if(i === self.rubros_seleccionados.length){
-                resolucion_estado ={
-                  FechaRegistro:self.CurrentDate,
-                  Usuario:"",
-                  Estado:{
-                    Id:4,
-                  },
-                  Resolucion:self.resolucion
-                };
-                console.log(resolucion_estado);
-                amazonAdministrativaRequest.post('resolucion_estado',resolucion_estado).then(function(response) {
-                  
-                });
                 var imprimir = "<h2>Solicitudes creadas correctamente !</h2>"; 
                 imprimir=imprimir + "<div style='height:150px;overflow:auto'><table class='col-md-8 col-md-offset-2'><tr><td style='height:20px;width:120px'><b>Numero solicitud rp</b></td><td style='height:10px;width:80px'><b>Numero contrato</b></td><td style='height:10px;width:80px'><b>Numero vigencia</b></td></tr>";
                 for(var x=0;x<respuestas_solicitudes.length;x++){
@@ -402,11 +389,22 @@ if(self.contrato.length>1){
                     $window.location.href = '#';
                   }
                 });
-              }
               });
             }
           });
 
+        });
+        //esta peticion debe quedar fuera del foreach para que solo se guarde un registro en resolucion estado
+        resolucion_estado ={
+          FechaRegistro:self.CurrentDate,
+          Usuario:"",
+          Estado:{
+            Id:4,
+          },
+          Resolucion:self.resolucion
+        };
+        amazonAdministrativaRequest.post('resolucion_estado',resolucion_estado).then(function(response) {
+          
         });
       }
     };

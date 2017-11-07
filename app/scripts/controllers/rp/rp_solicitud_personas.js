@@ -17,6 +17,7 @@ angular.module('contractualClienteApp')
     var seleccion;
     var contrato_unidad={};
     var resoluciones= [];
+    self.boton_solicitar = false;
     self.resolucion = resolucion;
     self.contrato = contrato;
     self.disponibilidad = disponibilidad;
@@ -48,29 +49,13 @@ angular.module('contractualClienteApp')
       enableFiltering: true,
       multiSelect: false,
       columnDefs: [
-        {
-          field: 'Id',
-          displayName: $translate.instant('CONTRATO'),
-          width: "15%",
-          cellTemplate: '<div align="center">{{row.entity.Numero_contrato}}</div>'
-        },
-        {
-          field: 'Vigencia_contrato',
-          displayName: $translate.instant('VIGENCIA_CONTRATO'),
-          visible: true,
-          width: "15%",
-        },
-        {
-          field: 'Nombre_completo',
-          displayName: $translate.instant('NOMBRE_CONTRATISTA'),
-          width: "50%"
-        },
-        {
-          field: 'Id',
-          displayName: $translate.instant('DOCUMENTO_CONTRATISTA'),
-          cellTemplate: '<div align="center">{{row.entity.Id}}</div>',
-          width: "20%",
-        }
+
+        {field: 'Id',             visible : false},
+        {field: 'Numero_contrato',   width:'10%',displayName: $translate.instant('CONTRATO'),},
+        {field: 'Vigencia_contrato',  width:'10%' ,displayName: $translate.instant('VIGENCIA')},
+        {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
+        {field: 'Id', width:'20%'  ,displayName: $translate.instant('DOCUMENTO')},
+        {field: 'Valor_contrato', width:'20%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency }}</div>',displayName: $translate.instant('VALOR')}
       ],
       onRegisterApi: function(gridApi) {
         self.gridApip = gridApi;
@@ -338,7 +323,6 @@ angular.module('contractualClienteApp')
     };
 
     self.setResolucion= function(resolucion){
-      console.log(resolucion);
       self.gridOptionsResolucionPersonas.data=[];
       var vinculacion_docente = [];
       var contratistas = [];
@@ -360,8 +344,7 @@ angular.module('contractualClienteApp')
           vigenciaContrato = vinculacion_docente[x].Vigencia;
 
           if(numContrato!=="" || vigenciaContrato!=="" || vigenciaContrato!==0){
-            amazonAdministrativaRequest.get('proveedor_contrato_persona/'+numContrato+"/"+vigenciaContrato,"").then(function(response) {
-              //console.log(response.data + " "+ numContrato+" "+" "+vigenciaContrato+ x);  
+            amazonAdministrativaRequest.get('proveedor_contrato_persona/'+numContrato+"/"+vigenciaContrato,"").then(function(response) { 
               if(response.data !== null){
                   resoluciones.push(response.data[0]);          
                 }
@@ -389,72 +372,78 @@ angular.module('contractualClienteApp')
       var vinculacion_docente = [];
       self.contrato.splice(0,self.contrato.length);
       self.resolucion.splice(0,self.resolucion.length);
-
-      // si es solicitud por contrato
+     
       if($scope.radioB ===1){
         seleccion = self.gridAp.selection.getSelectedRows();
-        if(seleccion[0]===null || seleccion[0]===undefined){
-          swal("Alertas", "Debe seleccionar un contratista", "error");
-        }else{
-          
-        for(var i=0;i<seleccion.length;i++){
-          contrato_unidad = [];
-          contrato_unidad.Numero_contrato = seleccion[i].Numero_contrato;
-          contrato_unidad.Vigencia= seleccion[i].Vigencia_contrato;
-          contrato_unidad.ContratistaId= seleccion[i].Id;
-          contrato_unidad.ValorContrato= seleccion[i].Valor_contrato;
-          contrato_unidad.NombreContratista= seleccion[i].Nombre_completo;
-          contrato_unidad.ObjetoContrato= seleccion[i].Objeto_contrato;
-          contrato_unidad.FechaRegistro= seleccion[i].Fecha_registro;
-          self.contrato.push(contrato_unidad);  
-        }
-          self.saving = true;
-          self.btnGenerartxt = "Generando...";
-          self.saving = false;
-          self.btnGenerartxt = "Generar";
-           $window.location.href = '#/rp/rp_solicitud/';
-        }
-      // si es solicitud por cdp
       }else if($scope.radioB ===2){
 
-      // si es solicitud por resolucion
-      }else if($scope.radioB===3){
-
+      }else if($scope.radioB ===3){
         seleccion = self.gridApiResolucion.selection.getSelectedRows();
-        self.resolucion.push(seleccion[0]);
-          amazonAdministrativaRequest.get('vinculacion_docente',"limit=-1&query=IdResolucion.Id:"+seleccion[0].Id+",Estado:true").then(function(response) {
-            if(response.data!==null){
-            vinculacion_docente = response.data;
-            //consulta para traer la informacion de las personas de los docentes asociados a una resolucion
-            for(var x = 0;x<vinculacion_docente.length;x++){
-              numContrato = vinculacion_docente[x].NumeroContrato;
-              vigenciaContrato = vinculacion_docente[x].Vigencia;
-              if(numContrato!=="" || vigenciaContrato!=="" || vigenciaContrato!==0){
-                amazonAdministrativaRequest.get('proveedor_contrato_persona/'+numContrato+"/"+vigenciaContrato,"").then(function(response) { 
-                  if(response.data !== null){
-                      self.contrato.push(response.data[0]); 
-                    }
-                  if(self.contrato.length===vinculacion_docente.length){
-                    amazonAdministrativaRequest.get('contrato_disponibilidad',"query=NumeroContrato:"+self.contrato[0].Numero_contrato+",Vigencia:"+self.contrato[0].Vigencia_contrato).then(function(response) {
-                      
-                      financieraRequest.get('disponibilidad',"query=NumeroDisponibilidad:"+response.data[0].NumeroCdp+",Vigencia:"+response.data[0].VigenciaCdp).then(function(response) {
-                        self.disponibilidad.push(response.data[0]);
-                        self.saving = true;
-                        self.btnGenerartxt = "Generando...";
-                        self.saving = false;
-                        self.btnGenerartxt = "Generar";
-                        $window.location.href = '#/rp/rp_solicitud/';
-                      });
-                    });
+      }
+
+      if(seleccion.length===0){
+        swal("Alertas", "Debe seleccionar un parametro para solicitar el registro presupuestal", "error");
+      }else{
+      self.boton_solicitar=true;  
+      // si es solicitud por contrato
+      if($scope.radioB ===1){
+        
+      for(var i=0;i<seleccion.length;i++){
+        contrato_unidad = [];
+        contrato_unidad.Numero_contrato = seleccion[i].Numero_contrato;
+        contrato_unidad.Vigencia= seleccion[i].Vigencia_contrato;
+        contrato_unidad.ContratistaId= seleccion[i].Id;
+        contrato_unidad.ValorContrato= seleccion[i].Valor_contrato;
+        contrato_unidad.NombreContratista= seleccion[i].Nombre_completo;
+        contrato_unidad.ObjetoContrato= seleccion[i].Objeto_contrato;
+        contrato_unidad.FechaRegistro= seleccion[i].Fecha_registro;
+        self.contrato.push(contrato_unidad);  
+      }
+        self.saving = true;
+        self.btnGenerartxt = "Generando...";
+        self.saving = false;
+        self.btnGenerartxt = "Generar";
+         $window.location.href = '#/rp/rp_solicitud/';
+    // si es solicitud por cdp
+    }else if($scope.radioB ===2){
+
+    // si es solicitud por resolucion
+    }else if($scope.radioB===3){
+      self.resolucion.push(seleccion[0]);
+        amazonAdministrativaRequest.get('vinculacion_docente',"limit=-1&query=IdResolucion.Id:"+seleccion[0].Id+",Estado:true").then(function(response) {
+          if(response.data!==null){
+          vinculacion_docente = response.data;
+          //consulta para traer la informacion de las personas de los docentes asociados a una resolucion
+          for(var x = 0;x<vinculacion_docente.length;x++){
+            numContrato = vinculacion_docente[x].NumeroContrato;
+            vigenciaContrato = vinculacion_docente[x].Vigencia;
+            if(numContrato!=="" || vigenciaContrato!=="" || vigenciaContrato!==0){
+              amazonAdministrativaRequest.get('proveedor_contrato_persona/'+numContrato+"/"+vigenciaContrato,"").then(function(response) { 
+                if(response.data !== null){
+                    self.contrato.push(response.data[0]); 
                   }
-                 });
-              }
-    
-             };
+                if(self.contrato.length===vinculacion_docente.length){
+                  amazonAdministrativaRequest.get('contrato_disponibilidad',"query=NumeroContrato:"+self.contrato[0].Numero_contrato+",Vigencia:"+self.contrato[0].Vigencia_contrato).then(function(response) {
+                    
+                    financieraRequest.get('disponibilidad',"query=NumeroDisponibilidad:"+response.data[0].NumeroCdp+",Vigencia:"+response.data[0].VigenciaCdp).then(function(response) {
+                      self.disponibilidad.push(response.data[0]);
+                      self.saving = true;
+                      self.btnGenerartxt = "Generando...";
+                      self.saving = false;
+                      self.btnGenerartxt = "Generar";
+                      $window.location.href = '#/rp/rp_solicitud/';
+                    });
+                  });
+                }
+               });
             }
-             
-           });
-              
+  
+           };
+          }
+           
+         });
+            
+    }
       }
 
 };

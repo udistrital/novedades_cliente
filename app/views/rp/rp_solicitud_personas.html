@@ -169,20 +169,20 @@
                     <h4><b>{{'SELECCIONAR_RESOLUCION' | translate}}</b></h4>
                      <div style="height:400px" ui-grid="rpSolicitudPersonas.gridOptionsResolucion"  ui-grid-auto-resize ui-grid-selection class="myGrid">
                     </div>
+                    <div align="center">
+                      <br><br>
+                      <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
+                        {{'SOLICITAR_RP' | translate }} <i class="fa fa-spin fa-spinner" ng-show="rpSolicitudPersonas.boton_solicitar"></i>
+                      </button>
+                    </div>
                   </div>
-                    <div ng-show="rpSolicitudPersonas.gridOptionsResolucion.data.length === 0">
+                  <div ng-show="rpSolicitudPersonas.gridOptionsResolucion.data.length === 0">
                       <h2><i class="fa fa-spin fa-spinner"></i>
                       <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
                       </h2>
-                    </div>
                     <div>
-                      <div align="center">
-                        <br><br>
-                        <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
-                          {{'SOLICITAR_RP' | translate }}
-                        </button>
-                      </div>
                     </div>
+                </div>
                   </div>
           </div>
         </div>
@@ -224,10 +224,9 @@
 
           </div>
           
-
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{'CERRAR' | translate}}</button>
         </div>
       </div>
     </div>

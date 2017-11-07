@@ -115,7 +115,6 @@
             </tbody>
           </table>
         </div>
-        </div>
 
         <div class="col-md-12">
           <form class="form-horizontal" >
@@ -169,12 +168,14 @@
             </div>
           </div>
         </div>
-        <br><br><br>
+
+        </div> 
         <div class="col-md-3 col-md-offset-4" ng-show="rpSolicitud.gridOptions_rubros.data.length>0">
-          <button id="btn_registrar" name="btn_registrar" class="btn btn-outline btn-success" ng-click="rpSolicitud.Registrar()">
-            {{'REGISTRAR' | translate}}
+          <button id="btn_registrar" name="btn_registrar" class="btn btn-outline btn-success btn-lg" ng-click="rpSolicitud.Registrar()">
+            {{'REGISTRAR' | translate}} <i class="fa fa-spin fa-spinner" ng-show="rpSolicitud.boton_registrar"></i>
           </button>
         </div>
+        <br><br><br>
         </form>
       </div>
     </div>

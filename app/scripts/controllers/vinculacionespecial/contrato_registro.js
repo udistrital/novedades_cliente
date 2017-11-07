@@ -105,7 +105,7 @@ angular.module('contractualClienteApp')
       self.contratoGeneralBase.Contrato.DescripcionFormaPago="Abono a Cuenta Mensual de acuerdo a puntas y hotras laboradas";
       self.contratoGeneralBase.Contrato.Justificacion="Docente de Vinculacion Especial";
       self.contratoGeneralBase.Contrato.UnidadEjecucion={Id:205};
-      self.contratoGeneralBase.Contrato.LugarEjecucion={Id:2};
+      self.contratoGeneralBase.Contrato.LugarEjecucion={Id:4};
       self.contratoGeneralBase.Contrato.Observaciones="Contrato de Docente Vinculación Especial";
       self.contratoGeneralBase.Contrato.TipoControl=181;
       self.contratoGeneralBase.Contrato.ClaseContratista=33;
