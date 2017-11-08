@@ -11,27 +11,32 @@ angular.module('contractualClienteApp')
   .controller('RpSolicitudCtrl', function(coreRequest,resolucion,$window,contrato,disponibilidad,administrativaRequest,amazonAdministrativaRequest,$scope,financieraRequest,$translate) {
     var self = this;
     var disponibilidad_flag=true;
-    self.resolucion = resolucion[0];
-    self.contrato = contrato;
-    var monto = 0;
-    self.disponibilidad = "";
+
     $scope.rubroVacio=false;
+
+    self.resolucion = resolucion;
+    self.contrato = contrato;
+    self.disponibilidad = "";
     self.boton_registrar=false;
+    self.apropiacion_flag=true;
     self.CurrentDate = new Date();
-    var mes=self.CurrentDate.getMonth()+1;
-    var dia=self.CurrentDate.getDay();
-    var ano=self.CurrentDate.getFullYear();
     self.gridOptions_cdp = {};
     self.compromiso = null;
     self.rubros_seleccionados = [];
     self.rubros_select = [];
     self.responsable = "";
     self.masivo_seleccion = false;
-    var Solicitud_id;
+
+    var monto = 0;
     var solicitudes = [];
     var respuestas_solicitudes = [];
     var Solicitud_rp;
     var resolucion_estado ={};
+
+    if(self.resolucion.length > 0){
+      self.resolucion = self.resolucion[0];
+      self.apropiacion_flag = false;
+    }
 
     if(self.contrato.length === 0){
       swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR'), "error").then(function() {
@@ -40,25 +45,35 @@ angular.module('contractualClienteApp')
       });
     }
 
+    //cuando la disponibilidad viene desde rp_solcitud_personas porque se ha escogido la resolución o cdp
     if(disponibilidad.length > 0){
       self.disponibilidad = disponibilidad[0];
       disponibilidad_flag=false;
-     financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad.Id).then(function(response) {
-      
-            $scope.rubros = response.data;
-            self.gridOptions_rubros.data = response.data;
-            angular.forEach($scope.rubros, function(data){
-                var rp = {
-                  Disponibilidad : data.Disponibilidad, // se construye rp auxiliar para obtener el saldo del CDP para la apropiacion seleccionada
-                  Apropiacion : data.Apropiacion
-                };
-                financieraRequest.post('disponibilidad/SaldoCdp',rp).then(function(response){
-                  data.Saldo  = response.data;
-                });
-      
+      console.log(self.resolucion.Id);
+      // si es una solicitud de rp por resolucion se escoje automaticamente la primera y unica disponibilidad apropiacion
+      if(self.resolucion.Id !== "undefined"){
+        financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad.Id).then(function(response) {
+          self.rubros_seleccionados.push(response.data[0]);
+            });
+      }else{
+        financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad.Id).then(function(response) {
+          $scope.rubros = response.data;
+          self.gridOptions_rubros.data = response.data;
+          angular.forEach($scope.rubros, function(data){
+              var rp = {
+                Disponibilidad : data.Disponibilidad, // se construye rp auxiliar para obtener el saldo del CDP para la apropiacion seleccionada
+                Apropiacion : data.Apropiacion
+              };
+              financieraRequest.post('disponibilidad/SaldoCdp',rp).then(function(response){
+                data.Saldo  = response.data;
               });
-          });
+    
+            });
+        });
+      }
+
     }else{
+      //si la disponibilidad debe escogerse en esta interfaz
       //////grid cdp//////
  
     self.gridOptions_cdp.onRegisterApi = function(gridApi){
@@ -81,7 +96,6 @@ angular.module('contractualClienteApp')
      });
  
      financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad.Id).then(function(response) {
- 
        $scope.rubros = response.data;
        self.gridOptions_rubros.data = response.data;
        angular.forEach($scope.rubros, function(data){
@@ -144,7 +158,7 @@ angular.module('contractualClienteApp')
      {field: 'Vigencia_contrato',  width:'10%' ,displayName: $translate.instant('VIGENCIA')},
      {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
      {field: 'Id', width:'20%'  ,displayName: $translate.instant('DOCUMENTO')},
-     {field: 'Valor_contrato', width:'20%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency }}</div>',displayName: $translate.instant('VALOR')}
+     {field: 'Valor_contrato', width:'20%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
    ]
  
  };
@@ -290,11 +304,24 @@ angular.module('contractualClienteApp')
 
     $scope.saldosValor = function() {
       $scope.banderaRubro = true;
-      angular.forEach(self.rubros_seleccionados, function(v) {
-        if (v.Valor < v.ValorAsignado || v.ValorAsignado===0 || isNaN(v.ValorAsignado) || v.ValorAsignado === undefined) {
-          $scope.banderaRubro = false;
-        }
-      });
+      //si es una solicitud por resolucion se hara la comparacion con los valores de los contratos
+      if(self.resolucion.Id !== "undefined"){
+        console.log(self.contrato);
+
+        angular.forEach(self.contrato, function(v) {
+          if (v.Valor < v.Valor_contrato || v.Valor_contrato===0 || isNaN(v.Valor_contrato) || v.Valor_contrato === undefined) {
+            $scope.banderaRubro = false;
+          }
+        });
+
+      //este caso es cuando se ingresan los valores en la interfaz  
+      }else{
+        angular.forEach(self.rubros_seleccionados, function(v) {
+          if (v.Valor < v.ValorAsignado || v.ValorAsignado===0 || isNaN(v.ValorAsignado) || v.ValorAsignado === undefined) {
+            $scope.banderaRubro = false;
+          }
+        });
+      }
     };
 
     self.Registrar = function() {
@@ -361,7 +388,7 @@ if(self.contrato.length>1){
                Monto:solicitud_rp.Monto
               };
               administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
-
+                console.log("aca");
                 var imprimir = "<h2>Solicitudes creadas correctamente !</h2>"; 
                 imprimir=imprimir + "<div style='height:150px;overflow:auto'><table class='col-md-8 col-md-offset-2'><tr><td style='height:20px;width:120px'><b>Numero solicitud rp</b></td><td style='height:10px;width:80px'><b>Numero contrato</b></td><td style='height:10px;width:80px'><b>Numero vigencia</b></td></tr>";
                 for(var x=0;x<respuestas_solicitudes.length;x++){

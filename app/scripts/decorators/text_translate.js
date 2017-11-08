@@ -18,7 +18,7 @@ var text_es = {
     SELECCIONAR_RESOLUCION:"Selecciona la resolución",
     CONTRATISTAS_RESOLUCION:"Contratistas en esta resolución",
     SELECCIONE_CDP:"Seleccione el CDP",
-
+    RUBRO:"Rubro",
     VER: "Ver",
     SELECCIONAR: "Seleccionar",
     CANCELAR: "Cancelar",
@@ -598,6 +598,7 @@ var text_en = {
   VIGENCIA_SOLICITUD: "Request validity",
   FECHA_SOLICITUD: "Request date",
   NUMERO_CONTRATO: "Contract number",
+  RUBRO:"Item",
   SOLICITUD: "Request",
   SOLICITUD_NECESIDAD: "Need Request",
   DURACION: "Duration",
