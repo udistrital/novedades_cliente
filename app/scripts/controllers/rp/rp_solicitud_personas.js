@@ -55,7 +55,7 @@ angular.module('contractualClienteApp')
         {field: 'Vigencia_contrato',  width:'10%' ,displayName: $translate.instant('VIGENCIA')},
         {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
         {field: 'Id', width:'20%'  ,displayName: $translate.instant('DOCUMENTO')},
-        {field: 'Valor_contrato', width:'20%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency }}</div>',displayName: $translate.instant('VALOR')}
+        {field: 'Valor_contrato', width:'20%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
       ],
       onRegisterApi: function(gridApi) {
         self.gridApip = gridApi;
@@ -66,10 +66,10 @@ angular.module('contractualClienteApp')
     self.gridOptions = {
       enableSelectAll: true,
       enableRowSelection: true,
-      enableRowHeaderSelection: true,
+      enableRowHeaderSelection: false,
       enableSorting: true,
       enableFiltering: true,
-      multiSelect: true,
+      multiSelect: false,
       columnDefs: [{
           field: 'Id',
           displayName: $translate.instant('CONTRATO'),
@@ -96,7 +96,7 @@ angular.module('contractualClienteApp')
         {
           field: 'ContratoGeneral.ValorContrato',
           displayName: $translate.instant('VALOR'),
-          cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency }}</div>'
+          cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>'
         },
       ],
       onRegisterApi: function(gridApi) {
@@ -222,7 +222,7 @@ angular.module('contractualClienteApp')
         field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Valor',   
         displayName: $translate.instant('VALOR_NECESIDAD'),
         width: '18%',
-        cellTemplate: '<div align="right">{{row.entity.Solicitud.SolicitudDisponibilidad.Necesidad.Valor | currency }}</div>'
+        cellTemplate: '<div align="right">{{row.entity.Solicitud.SolicitudDisponibilidad.Necesidad.Valor | currency:undefined:0 }}</div>'
        },
    ]
  };
@@ -391,12 +391,12 @@ angular.module('contractualClienteApp')
       for(var i=0;i<seleccion.length;i++){
         contrato_unidad = [];
         contrato_unidad.Numero_contrato = seleccion[i].Numero_contrato;
-        contrato_unidad.Vigencia= seleccion[i].Vigencia_contrato;
-        contrato_unidad.ContratistaId= seleccion[i].Id;
-        contrato_unidad.ValorContrato= seleccion[i].Valor_contrato;
-        contrato_unidad.NombreContratista= seleccion[i].Nombre_completo;
-        contrato_unidad.ObjetoContrato= seleccion[i].Objeto_contrato;
-        contrato_unidad.FechaRegistro= seleccion[i].Fecha_registro;
+        contrato_unidad.Vigencia_contrato= seleccion[i].Vigencia_contrato;
+        contrato_unidad.Id= seleccion[i].Id;
+        contrato_unidad.Valor_contrato= seleccion[i].Valor_contrato;
+        contrato_unidad.Nombre_completo= seleccion[i].Nombre_completo;
+        contrato_unidad.Objeto_contrato= seleccion[i].Objeto_contrato;
+        contrato_unidad.Fecha_registro= seleccion[i].Fecha_registro;
         self.contrato.push(contrato_unidad);  
       }
         self.saving = true;

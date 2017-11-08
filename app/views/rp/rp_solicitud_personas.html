@@ -88,7 +88,7 @@
                 <br><br>
                 <div class="col-md-12" align="center">
                 <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
-                  {{'SOLICITAR_RP' | translate }}
+                  {{'SOLICITAR_RP' | translate }} <i class="fa fa-spin fa-spinner" ng-show="rpSolicitudPersonas.boton_solicitar"></i>
                 </button>
 
                 </div>  
@@ -130,7 +130,7 @@
                       <div align="center">
                           <br><br>
                           <button ng-click="rpSolicitudPersonas.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="preliquidacionPersonas.saving"> <i class="" ng-show="preliquidacionPersonas.saving"></i>
-                            {{'SOLICITAR_RP' | translate }}
+                            {{'SOLICITAR_RP' | translate }} <i class="fa fa-spin fa-spinner" ng-show="rpSolicitudPersonas.boton_solicitar"></i>
                           </button>
                         </div>
                   </div>
