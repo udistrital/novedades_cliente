@@ -324,7 +324,10 @@
                     <div>
                       <ul class="list-group">
                         <li class="list-group-item" ng-repeat="reqmin in solicitudNecesidad.requisitos_minimos " ng-if="reqmin.reqi == pro.i">
-                          <label><span class="text-info"></span>{{reqmin.requisito}}</label>
+                          <button type="button" class="btn btn-danger btn-sm col-md-offset-11" ng-click="solicitudNecesidad.eliminarRequisito(reqmin)" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                          </button>
+                          <label style="display:block;"><span class="text-info"></span>{{reqmin.requisito}}</label>
                         </li>
                       </ul>
                     </div>
@@ -377,6 +380,9 @@
                 <div class="form-group">
 
                   <div class="panel panel-body col-md-12" ng-repeat="ap in solicitudNecesidad.f_apropiacion_inv">
+                    <button type="button" class="btn btn-danger btn-sm col-md-offset-11" ng-click="solicitudNecesidad.eliminarRubro(ap)" aria-label="Left Align">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
 
                     <label><span class="text-success">{{$index+1}}.</span> {{ap.aprop.Rubro.Nombre}}</label>
                     <br>
@@ -393,9 +399,6 @@
 
                         <li class="list-group-item" ng-repeat="fu in ap.fuentes">
                           <label class="text-warning">{{"FUENTE" | translate}}</label> {{fu.FuenteFinanciamiento.Descripcion}}
-                          <button type="button" class="btn btn-danger btn-sm col-md-offset-11" ng-click="solicitudNecesidad.eliminarRubro(ap)" aria-label="Left Align">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                          </button>
                           <br>
                           <label class="text-warning">{{"VALOR_SOLICITADO" | translate}}</label>
                           <input type="text" ng-init="fu.Monto=0" ng-model="fu.Monto" ui-money-mask="0">
@@ -408,7 +411,7 @@
 
                 <div class="form-group panel-body">
                   <label>{{"TOTAL_FINANCIACION" | translate}}</label> {{solicitudNecesidad.valor_inv | currency}}</br>
-                  <label> Total especificaciones: </label> {{solicitudNecesidad.valorTotalEspecificaciones | currency}}
+                  <div ng-show="solicitudNecesidad.MostrarTotalEspc"><label> Total especificaciones: </label> {{solicitudNecesidad.valorTotalEspecificaciones | currency}}</div>
                 </div>
 
               </div>
@@ -449,7 +452,7 @@
 
                 <div class="form-group">
                   <label>{{"TOTAL_FINANCIACION" | translate}} </label> {{solicitudNecesidad.valor_fun | currency}} <br>
-                  <label> Total especificaciones: </label> {{solicitudNecesidad.valorTotalEspecificaciones | currency}}
+                  <div ng-show="solicitudNecesidad.MostrarTotalEspc"><label> Total especificaciones: </label> {{solicitudNecesidad.valorTotalEspecificaciones | currency}}</div>
                 </div>
               </div>
             </div>
