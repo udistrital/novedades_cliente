@@ -10,10 +10,10 @@
 angular.module('contractualClienteApp')
   .controller('RpSolicitudCtrl', function(coreRequest,resolucion,$window,contrato,disponibilidad,administrativaRequest,amazonAdministrativaRequest,$scope,financieraRequest,$translate) {
     var self = this;
-    var disponibilidad_flag=true;
 
     $scope.rubroVacio=false;
-
+    
+    self.disponibilidad_flag=true;
     self.resolucion = resolucion;
     self.contrato = contrato;
     self.disponibilidad = "";
@@ -45,16 +45,18 @@ angular.module('contractualClienteApp')
       });
     }
 
+    console.log(disponibilidad + disponibilidad.length);
     //cuando la disponibilidad viene desde rp_solcitud_personas porque se ha escogido la resolución o cdp
     if(disponibilidad.length > 0){
       self.disponibilidad = disponibilidad[0];
-      disponibilidad_flag=false;
+      self.disponibilidad_flag=false;
       // si es una solicitud de rp por resolucion se escoje automaticamente la primera y unica disponibilidad apropiacion
       if(self.resolucion.Id !== "undefined"){
         financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad.Id).then(function(response) {
           self.rubros_seleccionados.push(response.data[0]);
             });
       }else{
+        self.disponibilidad_flag=true;
         financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad.Id).then(function(response) {
           $scope.rubros = response.data;
           self.gridOptions_rubros.data = response.data;
