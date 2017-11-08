@@ -368,7 +368,8 @@ administrativaRequest.get('tipo_financiacion_necesidad', $.param({
 });
 
 administrativaRequest.get('tipo_contrato_necesidad', $.param({
-  limit: -1
+  limit: -1,
+  query: 'Estado:true'
 })).then(function(response) {
   self.tipo_contrato_data = response.data;
 });
@@ -425,11 +426,19 @@ self.eliminarRubro = function(rubro) {
     }
   } else {
     for (var i = 0; i < self.f_apropiacion_inv.length; i++) {
-      if (self.f_apropiacion_fun[i] === rubro) {
+      if (self.f_apropiacion_inv[i] === rubro) {
         self.f_apropiacion_inv.splice(i,1);
       }
     }
   }
+}
+
+self.eliminarRequisito = function(requisito) {
+    for (var i = 0; i < self.requisitos_minimos.length; i++) {
+      if (self.requisitos_minimos[i] === requisito) {
+        self.requisitos_minimos.splice(i,1);
+      }
+    }
 }
 
 self.eliminarActividad = function(actividad) {
@@ -468,6 +477,12 @@ $scope.$watch('solicitudNecesidad.productos', function() {
 }, true);
 
 $scope.$watch('solicitudNecesidad.necesidad.TipoContratoNecesidad.Nombre', function() {
+  if (self.necesidad.TipoContratoNecesidad.Nombre == 'Compra') {
+    self.MostrarTotalEspc  = true;
+  } else {
+    self.MostrarTotalEspc  = false;
+  }
+
   self.valorTotalEspecificaciones = 0;
   self.productos = [];
 }, true);
@@ -542,7 +557,8 @@ self.crear_solicitud = function() {
     }
   }
 
-  if (self.necesidad.TipoFinanciacionNecesidad.Nombre === "Inversión") {
+  console.log(self.necesidad);
+  if (self.necesidad.TipoContratoNecesidad.Nombre === 'Servicio') {
     if (self.valor_inv !== self.valorTotalEspecificaciones) {
       swal(
         'Error',
