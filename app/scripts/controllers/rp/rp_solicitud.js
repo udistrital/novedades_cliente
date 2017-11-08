@@ -49,7 +49,6 @@ angular.module('contractualClienteApp')
     if(disponibilidad.length > 0){
       self.disponibilidad = disponibilidad[0];
       disponibilidad_flag=false;
-      console.log(self.resolucion.Id);
       // si es una solicitud de rp por resolucion se escoje automaticamente la primera y unica disponibilidad apropiacion
       if(self.resolucion.Id !== "undefined"){
         financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad.Id).then(function(response) {
@@ -306,8 +305,6 @@ angular.module('contractualClienteApp')
       $scope.banderaRubro = true;
       //si es una solicitud por resolucion se hara la comparacion con los valores de los contratos
       if(self.resolucion.Id !== "undefined"){
-        console.log(self.contrato);
-
         angular.forEach(self.contrato, function(v) {
           if (v.Valor < v.Valor_contrato || v.Valor_contrato===0 || isNaN(v.Valor_contrato) || v.Valor_contrato === undefined) {
             $scope.banderaRubro = false;
@@ -388,7 +385,6 @@ if(self.contrato.length>1){
                Monto:solicitud_rp.Monto
               };
               administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
-                console.log("aca");
                 var imprimir = "<h2>Solicitudes creadas correctamente !</h2>"; 
                 imprimir=imprimir + "<div style='height:150px;overflow:auto'><table class='col-md-8 col-md-offset-2'><tr><td style='height:20px;width:120px'><b>Numero solicitud rp</b></td><td style='height:10px;width:80px'><b>Numero contrato</b></td><td style='height:10px;width:80px'><b>Numero vigencia</b></td></tr>";
                 for(var x=0;x<respuestas_solicitudes.length;x++){
