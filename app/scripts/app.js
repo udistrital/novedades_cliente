@@ -166,6 +166,11 @@ angular
                 controller: 'NecesidadExternaCtrl',
                 controllerAs: 'necesidadExterna'
             })
+            .when('/necesidad/necesidad_contratacion_docente', {
+              templateUrl: 'views/necesidad/necesidad_contratacion_docente.html',
+              controller: 'NecesidadContratacionDocenteCtrl',
+              controllerAs: 'necesidadContratacionDocente'
+            })
             .otherwise({
                 redirectTo: '/'
             });

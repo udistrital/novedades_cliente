@@ -2,12 +2,12 @@
 <html>
 <div class="panel panel-primary panel-body">
     <center>
-        <h3 class="page-header">{{"SOLICITUD_NECESIDAD_EXTERNA" | translate}}</h3>
+        <h3 class="page-header">{{"SOLICITUD_NECESIDAD" | translate}}</h3>
     </center>
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            Listado
+                {{"SOLICITUD_NECESIDAD_EXTERNA" | translate}}
         </div>
         <div class="panel-body">
             <div class="mi-grid" id="mi-grid" ui-grid="necesidadExterna.gridOptions" ui-grid-selection ui-grid-pagination></div>
@@ -31,4 +31,12 @@
             </div>
         </div>
     </div>
+</div>
+
+<div>
+    <div class="row" align="center">
+        <a ng-href="#/necesidad/solicitud_necesidad"><button class="btn btn-success btn-outline">{{'SOLICITUD_NECESIDAD_CONTRATOS' | translate }}</button></a>
+        <a ng-href="#/necesidad/necesidad_contratacion_docente"><button class="btn btn-success btn-outline">{{'SOLICITUD_NECESIDAD_CONTRATACION_DOCENTES' | translate }}</button></a>
+    </div>
+    <br>
 </div>

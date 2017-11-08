@@ -69,7 +69,16 @@ angular.module('contractualClienteApp')
           cellTooltip: function(row) {
             return row.entity.EstadoNecesidad.Nombre + ".\n" + row.entity.EstadoNecesidad.Descripcion;
           },
-          width: '20%'
+          width: '7%'
+        },
+        {
+          field: 'TipoNecesidad.Nombre',
+          displayName: $translate.instant('TIPO_NECESIDAD'),
+          headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
+          cellTooltip: function(row) {
+            return row.entity.Vigencia;
+          },
+          width: '13%'
         },
         {
           field: 'ver',

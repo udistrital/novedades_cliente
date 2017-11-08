@@ -233,6 +233,9 @@ agoraRequest.get('informacion_persona_natural', $.param({
 });
 
 self.necesidad = {};
+self.necesidad.TipoNecesidad = {
+  Id : 1
+};
 self.variable={};
 //self.necesidad.PlanAnualAdquisiciones = 20171;
 self.necesidad.UnicoPago = true;

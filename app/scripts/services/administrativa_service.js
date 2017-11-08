@@ -12,7 +12,7 @@
     // Service logic
     // ...
     var path = "http://10.20.0.254/administrativa_api/v1/"
-   // var path = "http://10.20.2.121:8080/v1/";
+    //var path = "http://10.20.2.150:8082/v1/";
     // Public API here
     return {
       get: function (tabla,params) {
