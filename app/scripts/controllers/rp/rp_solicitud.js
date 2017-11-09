@@ -12,11 +12,9 @@ angular.module('contractualClienteApp')
     var self = this;
 
     $scope.rubroVacio=false;
-    
-    self.disponibilidad_flag=true;
+  
     self.resolucion = resolucion;
     self.contrato = contrato;
-    self.disponibilidad = "";
     self.boton_registrar=false;
     self.apropiacion_flag=true;
     self.CurrentDate = new Date();
@@ -26,58 +24,57 @@ angular.module('contractualClienteApp')
     self.rubros_select = [];
     self.responsable = "";
     self.masivo_seleccion = false;
-    self.apropiaciones_flag=false;
-
+    self.solicitudcdp_bool = false;
+    self.solicitudresolucion_bool=false;
+    self.disponibilidad = disponibilidad;
     var monto = 0;
     var solicitudes = [];
     var respuestas_solicitudes = [];
     var Solicitud_rp;
     var resolucion_estado ={};
 
-    if(self.resolucion.length > 0){
-      self.resolucion = self.resolucion[0];
-      self.apropiacion_flag = false;
-    }
-
+    //si no hay contratos devuelve a la anterior interfaz
     if(self.contrato.length === 0){
       swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR'), "error").then(function() {
-        //si da click en ir a contratistas
         $window.location.href = '#/rp_solicitud_personas';
       });
     }
 
-    //cuando la disponibilidad viene desde rp_solcitud_personas porque se ha escogido la resolución o cdp
-    if(disponibilidad.length > 0){
-      self.disponibilidad = disponibilidad[0];
-      self.disponibilidad_flag=false;
+    //solicitud por resolucion
+    if(self.disponibilidad.length > 0 && self.resolucion.length > 0){
+      self.solicitudresolucion_bool=true;
       
       // si es una solicitud de rp por resolucion se escoje automaticamente la primera y unica disponibilidad apropiacion
-      if(self.resolucion.Id !== "undefined"){
-        financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad.Id).then(function(response) {
-          self.rubros_seleccionados.push(response.data[0]);
-            });
-      }else{
-        self.disponibilidad_flag=true;
-        financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad.Id).then(function(response) {
-          $scope.rubros = response.data;
-          self.gridOptions_rubros.data = response.data;
-          angular.forEach($scope.rubros, function(data){
-              var rp = {
-                Disponibilidad : data.Disponibilidad, // se construye rp auxiliar para obtener el saldo del CDP para la apropiacion seleccionada
-                Apropiacion : data.Apropiacion
-              };
-              financieraRequest.post('disponibilidad/SaldoCdp',rp).then(function(response){
-                data.Saldo  = response.data;
-              });
-    
-            });
-        });
-      }
+      
+    financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad[0].Id).then(function(response) {
+      self.rubros_seleccionados.push(response.data[0]);
+      });
+    }
 
-    }else{
+    //solicitud por cdp
+    else if(self.disponibilidad.length >0 && self.resolucion.length === 0){
+      self.solicitudcdp_bool = true;
+
+      financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad[0].Id).then(function(response) {
+        $scope.rubros = response.data;
+        self.gridOptions_rubros.data = response.data;
+        angular.forEach($scope.rubros, function(data){
+            var rp = {
+              Disponibilidad : data.Disponibilidad, // se construye rp auxiliar para obtener el saldo del CDP para la apropiacion seleccionada
+              Apropiacion : data.Apropiacion
+            };
+            financieraRequest.post('disponibilidad/SaldoCdp',rp).then(function(response){
+              data.Saldo  = response.data;
+            });
+  
+          });
+      });
+
+    } else{
       //si la disponibilidad debe escogerse en esta interfaz
       //////grid cdp//////
-
+      self.solicitudcdp_bool = false;
+      self.solicitudresolucion_bool=false;
       self.gridOptions_cdp = {
         enableRowSelection: true,
         enableRowHeaderSelection: false,
@@ -85,36 +82,32 @@ angular.module('contractualClienteApp')
         multiSelect: false,
         columnDefs : [
         {field: 'Id',             visible : false},
-        {field: 'Vigencia',   displayName: 'Vigencia'},
-        {field: 'NumeroDisponibilidad',   width:'10%',displayName: 'Id'},
-        {field: 'Estado.Descripcion',   displayName: 'Descripcion'},
-        {field: 'Solicitud.Necesidad',   displayName: 'Necesidad'},
+        {field: 'Vigencia',   displayName:$translate.instant('VIGENCIA')},
+        {field: 'NumeroDisponibilidad',   width:'10%',displayName:$translate.instant('ID')},
+        {field: 'Estado.Descripcion',   displayName: $translate.instant('DESCRIPCION')},
+        {field: 'Solicitud',   displayName: $translate.instant('SOLICITUD')},
       ]};
         financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
           self.gridOptions_cdp.data = response.data;
           angular.forEach(self.gridOptions_cdp.data, function(data){
      
-         administrativaRequest.get('solicitud_disponibilidad','query=Id:'+data.Solicitud).then(function(response) {
-           data.Solicitud = response.data[0];
-       });
-   
+            administrativaRequest.get('solicitud_disponibilidad','query=Id:'+data.Solicitud).then(function(response) {
+              data.Solicitud = response.data[0];
+            });
          });
-   
       });
     self.gridOptions_cdp.onRegisterApi = function(gridApiCdp){
 
     gridApiCdp.selection.on.rowSelectionChanged($scope,function(row){
-      self.apropiaciones_flag=true;
 
      self.rubros_seleccionados = [];
-     self.disponibilidad = row.entity;
-     var CdpId = self.disponibilidad.Solicitud.Id;
+     self.disponibilidad.push(row.entity);
+     var CdpId = self.disponibilidad[0].Solicitud.Id;
      administrativaRequest.get('solicitud_disponibilidad','query=Id:'+CdpId).then(function(response){
-       
       $scope.necesidad=response.data[0];
      });
  
-     amazonAdministrativaRequest.get('informacion_persona_natural', 'query=Id:'+self.disponibilidad.Responsable).then(function(response) {
+     amazonAdministrativaRequest.get('informacion_persona_natural', 'query=Id:'+self.disponibilidad[0].Responsable).then(function(response) {
        if(response.data !== null){
        self.responsable = response.data[0];
      }else{
@@ -122,7 +115,7 @@ angular.module('contractualClienteApp')
      }
      });
  
-     financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad.Id).then(function(response) {
+     financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad[0].Id).then(function(response) {
        $scope.rubros = response.data;
        self.gridOptions_rubros.data = response.data;
        angular.forEach($scope.rubros, function(data){
@@ -149,8 +142,6 @@ angular.module('contractualClienteApp')
     ).then(function(response) {
       self.dependencia_solicitante_data = response.data;
     });
-
-
 
     self.gridOptions_contratos = {
       enableRowSelection: true,

@@ -11,12 +11,13 @@ angular.module('contractualClienteApp')
 .factory("contrato",function(){
       return {};
 })
-.controller('RpSolicitudPersonasCtrl', function($window, $scope, contrato,resolucion,financieraRequest,amazonAdministrativaRequest, adminMidRequest,$translate,disponibilidad) {
+.controller('RpSolicitudPersonasCtrl', function($window, administrativaRequest,$scope, contrato,resolucion,financieraRequest,amazonAdministrativaRequest, adminMidRequest,$translate,disponibilidad) {
     var self = this;
     var query;
     var seleccion;
     var contrato_unidad={};
     var resoluciones= [];
+    var contratos_disponibilidades = [];
     self.boton_solicitar = false;
     self.resolucion = resolucion;
     self.contrato = contrato;
@@ -40,6 +41,9 @@ angular.module('contractualClienteApp')
     self.resolucionNumero = "";
     self.resolucionId = "";
     self.tipoResolucion = "";
+
+    self.disponibilidad.splice(0,self.disponibilidad.length);
+    self.resolucion.splice(0,self.resolucion.length);
 
     //grid modal
     self.gridOptionsResolucionPersonas ={
@@ -115,7 +119,7 @@ angular.module('contractualClienteApp')
       columnDefs: [
         {
           field: 'Id',
-          displayName: $translate.instant('ID'),
+          visible : false
         },
         {
           field: 'NumeroResolucion',
@@ -186,46 +190,21 @@ angular.module('contractualClienteApp')
       enableRowSelection: true,
       enableRowHeaderSelection: false,
       enableFiltering: true,
-      rowHeight: 30,
-      headerHeight: 30,
-   columnDefs : [
-     {
-       field: 'Id',             
-       visible : false,     
-      },
-     {
-       field: 'Vigencia',   
-       displayName: $translate.instant('VIGENCIA'),
-       width: '13%',
-      },
-     {
-       field: 'NumeroDisponibilidad',   
-       displayName: $translate.instant('ID'),
-       width: '12%',
-      },
-     {
-       field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Objeto',   
-       displayName: $translate.instant('DESCRIPCION'),
-       width: '21%',
-      },
-     {
-       field: 'Solicitud.DependenciaSolicitante.Nombre',   
-       displayName: $translate.instant('ORDENADOR'),
-       width: '21%',
-      },
-     {
-       field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Id',   
-       displayName: $translate.instant('NECESIDAD'),
-       width: '15%',
-      },
-      {
-        field: 'Solicitud.SolicitudDisponibilidad.Necesidad.Valor',   
-        displayName: $translate.instant('VALOR_NECESIDAD'),
-        width: '18%',
-        cellTemplate: '<div align="right">{{row.entity.Solicitud.SolicitudDisponibilidad.Necesidad.Valor | currency:undefined:0 }}</div>'
-       },
-   ]
- };
+      multiSelect: false,
+      columnDefs : [
+        {field: 'Id',             visible : false},
+        {field: 'Vigencia',   displayName:$translate.instant('VIGENCIA'),width:'10%'},
+        {field: 'NumeroDisponibilidad',   width:'10%',displayName:$translate.instant('ID'),width:'10%'},
+        {field: 'Estado.Nombre',   displayName: $translate.instant('ESTADO'),width:'15%'},
+        {field: 'Estado.Descripcion',   displayName: $translate.instant('DESCRIPCION'),width:'35%'},
+        {field: 'Solicitud',   displayName: $translate.instant('SOLICITUD'),width:'10%'},
+        {field: 'FechaRegistro',   displayName: $translate.instant('FECHA_REGISTRO'),width:'20%',
+        cellTemplate: '<div align="center">{{row.entity.FechaRegistro | date:"yyyy-MM-dd":"+0900" }}</div>'},
+    ],
+    onRegisterApi: function(gridApi) {
+      self.gridApiCDP = gridApi;
+    }
+    };
 
     //CDP GRID --
 
@@ -260,20 +239,10 @@ angular.module('contractualClienteApp')
 
         financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
           self.gridOptions_cdp.data = response.data;
-          angular.forEach(self.gridOptions_cdp.data, function(data){
-            financieraMidRequest.get('disponibilidad/SolicitudById/'+data.Solicitud,'').then(function(response) {
-                data.Solicitud = response.data[0];
-                });
-              });       
+          console.log(self.gridOptions_cdp.data);
         });
-
-        amazonAdministrativaRequest.get('informacion_proveedor',"limit=-1").then(function(response) {
-          self.gridOptionsProveedor.data = response.data;
-           self.longitud_grid_proveedor = self.gridOptionsProveedor.data.length;
-         });
-
-
       }
+
       //si es filtro por resolucion
       if ($scope.radioB === 3){
 
@@ -283,7 +252,7 @@ angular.module('contractualClienteApp')
         //selecciona la vigencia actual
         var vigenciaActual=$scope.vigencias_resoluciones[0];
         var suma = 0;
-        amazonAdministrativaRequest.get('resolucion/resolucion_por_estado/'+vigenciaActual+'/'+'/4',"").then(function(response) {
+        amazonAdministrativaRequest.get('resolucion/resolucion_por_estado/'+vigenciaActual+'/'+'/2',"").then(function(response) {
           self.gridOptionsResolucion.data=response.data;
             });
             
@@ -376,7 +345,7 @@ angular.module('contractualClienteApp')
       if($scope.radioB ===1){
         seleccion = self.gridAp.selection.getSelectedRows();
       }else if($scope.radioB ===2){
-
+        seleccion = self.gridApiCDP.selection.getSelectedRows();
       }else if($scope.radioB ===3){
         seleccion = self.gridApiResolucion.selection.getSelectedRows();
       }
@@ -406,6 +375,24 @@ angular.module('contractualClienteApp')
          $window.location.href = '#/rp/rp_solicitud/';
     // si es solicitud por cdp
     }else if($scope.radioB ===2){
+      self.disponibilidad.push(seleccion[0]);
+      amazonAdministrativaRequest.get('contrato_disponibilidad',"query=NumeroCdp:"+self.disponibilidad[0].Id+",VigenciaCdp:"+self.disponibilidad[0].Vigencia).then(function(response) {
+        contratos_disponibilidades= response.data;
+        for(var x =0;x<contratos_disponibilidades.length;x++){
+          amazonAdministrativaRequest.get('proveedor_contrato_persona/'+contratos_disponibilidades[x].NumeroContrato+"/"+contratos_disponibilidades[x].Vigencia,"").then(function(response) { 
+            if(response.data !== null){
+              self.contrato.push(response.data[0]); 
+              if(contratos_disponibilidades.length===x){
+                self.saving = true;
+                self.btnGenerartxt = "Generando...";
+                self.saving = false;
+                self.btnGenerartxt = "Generar";
+                $window.location.href = '#/rp/rp_solicitud/';
+              }
+            }
+          });
+        }
+      });
 
     // si es solicitud por resolucion
     }else if($scope.radioB===3){
@@ -437,14 +424,10 @@ angular.module('contractualClienteApp')
                 }
                });
             }
-  
            };
-          }
-           
-         });
-            
-    }
+          }  
+         });       
+        }
       }
-
-};
+    };
 });

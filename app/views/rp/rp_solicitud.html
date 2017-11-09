@@ -4,8 +4,7 @@
   </div>
   <div class="col-md-5" >
     <div class="panel panel-default">
-
-      <div class="panel-heading" ng-click="panelCdp = !panelCdp" ng-show="rpSolicitud.disponibilidad_flag"> 
+      <div class="panel-heading" ng-click="panelCdp = !panelCdp" ng-show="!rpSolicitud.solicitudresolucion_bool && !rpSolicitud.solicitudcdp_bool"> 
         <h4>{{'SELECCION_CDP' | translate }}
             <span style="float:right" class="glyphicon glyphicon glyphicon-plus" ng-show="!panelCdp"></span>
             <span style="float:right" class="glyphicon glyphicon glyphicon-minus" ng-show="panelCdp"></span>
@@ -13,9 +12,6 @@
       </div>
       <div ng-show="panelCdp" class="panel-body panel-collapse">
         <div ui-grid='rpSolicitud.gridOptions_cdp' ui-grid-selection ui-grid-auto-resize class="myGrid"> </div>
-        <!--
-        <lista-cdp cdp='rpSolicitud.disponibilidad' rubros='rpSolicitud.rubros' necesidad='rpSolicitud.necesidad' gridOptionsrubros='rpSolicitud.gridOptions_rubros'>
-        -->
       </div>
     </div>
     <div class="panel panel-default class">
@@ -87,7 +83,7 @@
                   {{'NUMERO_DISPONIBILIDAD' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.disponibilidad.NumeroDisponibilidad}}
+                  {{rpSolicitud.disponibilidad[0].NumeroDisponibilidad}}
                 </td>
               </tr>
               <tr>
@@ -95,7 +91,7 @@
                   {{'VIGENCIA' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.disponibilidad.Vigencia}}
+                  {{rpSolicitud.disponibilidad[0].Vigencia}}
                 </td>
               </tr>
               <tr>
@@ -103,7 +99,7 @@
                   {{'FECHA_REGISTRO' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.disponibilidad.FechaRegistro}}
+                  {{rpSolicitud.disponibilidad[0].FechaRegistro}}
                 </td>
               </tr>
               <tr>
@@ -111,14 +107,14 @@
                   {{'ESTADO' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.disponibilidad.Estado.Nombre}}
+                  {{rpSolicitud.disponibilidad[0].Estado.Nombre}}
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="col-md-5 rp registro_presupuestal" ng-show="!rpSolicitud.disponibilidad_flag">
+        <div class="col-md-5 rp registro_presupuestal" ng-show="rpSolicitud.solicitudresolucion_bool">
           <h3>{{'RUBRO' | translate}}</h3>
           <table name="info_compromiso" class="table">
             <tbody>
@@ -150,7 +146,7 @@
 
           </table>
         </div>
-        <div ng-show="rpSolicitud.disponibilidad_flag && rpSolicitud.apropiaciones_flag">
+        <div ng-show="!rpSolicitud.solicitudresolucion_bool && rpSolicitud.disponibilidad.length>0">
             <div class="col-md-12">
               <form class="form-horizontal" >
                 <fieldset>
