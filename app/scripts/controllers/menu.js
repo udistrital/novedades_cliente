@@ -46,21 +46,16 @@ angular.module('contractualClienteApp')
                 "Id": 2,
                 "Nombre": "Necesidad",
                 "Url": "url_nivel_1",
-                "Opciones": [{
-                        "Id": 3,
-                        "Nombre": "Solicitud de Necesidad",
-                        "Url": "necesidad/solicitud_necesidad",
-                        "Opciones": null
-                    },
+                "Opciones": [
                     {
-                        "Id": 4,
+                        "Id": 3,
                         "Nombre": "Gestion de Necesidades",
                         "Url": "necesidades",
                         "Opciones": null
                     },
                     {
-                        "Id": 5,
-                        "Nombre": "Solicitud de necesidad externa",
+                        "Id": 4,
+                        "Nombre": "Generación de solicitudes de necesidad",
                         "Url": "necesidad/necesidad_externa",
                         "Opciones": null
                     }
