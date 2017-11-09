@@ -119,7 +119,7 @@ angular.module('contractualClienteApp')
       columnDefs: [
         {
           field: 'Id',
-          displayName: $translate.instant('ID'),
+          visible : false
         },
         {
           field: 'NumeroResolucion',
@@ -252,7 +252,7 @@ angular.module('contractualClienteApp')
         //selecciona la vigencia actual
         var vigenciaActual=$scope.vigencias_resoluciones[0];
         var suma = 0;
-        amazonAdministrativaRequest.get('resolucion/resolucion_por_estado/'+vigenciaActual+'/'+'/4',"").then(function(response) {
+        amazonAdministrativaRequest.get('resolucion/resolucion_por_estado/'+vigenciaActual+'/'+'/2',"").then(function(response) {
           self.gridOptionsResolucion.data=response.data;
             });
             
