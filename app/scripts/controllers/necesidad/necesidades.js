@@ -104,7 +104,7 @@ angular.module('contractualClienteApp')
       if (necesidad.EstadoNecesidad.Nombre === 'Solicitada') {
         self.mod_aprobar = true;
         self.mod_cdp = false;
-      } else if (necesidad.EstadoNecesidad.Nombre === 'Aprobada' || necesidad.EstadoNecesidad.Nombre === 'Cdp Solicitado') {
+      } else if (necesidad.EstadoNecesidad.Nombre === 'Aprobada') {
         self.mod_aprobar = false;
         self.mod_cdp = true;
       } else {

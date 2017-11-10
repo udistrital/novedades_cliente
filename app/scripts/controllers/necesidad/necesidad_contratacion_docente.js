@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('NecesidadContratacionDocenteCtrl', function (administrativaRequest, $scope, agoraRequest, oikosRequest, coreRequest, financieraRequest) {
+  .controller('NecesidadContratacionDocenteCtrl', function (administrativaRequest, $scope, agoraRequest, oikosRequest, coreRequest, financieraRequest, $translate) {
     var self = this;
     self.documentos=[];
     self.formuIncompleto = true;
@@ -418,16 +418,25 @@ angular.module('contractualClienteApp')
       Ffapropiacion: self.f_apropiaciones,
       DependenciaNecesidad: self.dep_ned
     };
-  
-  
-    administrativaRequest.post("tr_necesidad", self.tr_necesidad).then(function(response) {
+
+
+    administrativaRequest.post("tr_necesidad_docente", self.tr_necesidad).then(function(response) {
       self.alerta = "";
       for (var i = 1; i < response.data.length; i++) {
         self.alerta = self.alerta + response.data[i] + "\n";
       }
-      swal("", self.alerta, response.data[0]);
+      //swal("", self.alerta, response.data[0]);
+      swal({
+        text: self.alerta,
+        type: response.data[0],
+        confirmButtonColor: "#449D44",
+        confirmButtonText: $translate.instant('CONFIRMAR')
+      }).then(function() {
+        //si da click en ir a contratistas
+        if(response.data[0]=="success"){
+          location.href = '#/necesidades';
+        }
+      })
     });
-  
-    console.log(self.tr_necesidad);
   };  
   });

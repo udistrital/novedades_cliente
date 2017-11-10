@@ -8,7 +8,7 @@
 * Controller of the contractualClienteApp
 */
 angular.module('contractualClienteApp')
-.controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope, agoraRequest, oikosRequest, coreRequest, financieraRequest) {
+.controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope, agoraRequest, oikosRequest, coreRequest, financieraRequest, $translate) {
   var self = this;
   self.documentos=[];
   self.formuIncompleto = true;
@@ -233,6 +233,7 @@ agoraRequest.get('informacion_persona_natural', $.param({
 });
 
 self.necesidad = {};
+self.necesidad.TipoContratoNecesidad = {};
 self.necesidad.TipoNecesidad = {
   Id : 1
 };
@@ -558,8 +559,8 @@ self.crear_solicitud = function() {
   }
 
   console.log(self.necesidad);
-  if (self.necesidad.TipoContratoNecesidad.Nombre === 'Servicio') {
-    if (self.valor_inv !== self.valorTotalEspecificaciones) {
+  if (self.necesidad.TipoFinanciacionNecesidad.Nombre === 'Inversión') {
+    if (self.valor_inv !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Nombre === 'Compras') {
       swal(
         'Error',
         'El valor del contrato ('+self.valorTotalEspecificaciones+') debe ser igual que el de la financiación('+self.valor_inv+')' ,
@@ -580,7 +581,7 @@ self.crear_solicitud = function() {
     }
     self.necesidad.Valor = self.valor_inv;
   } else {
-    if (self.valor_fun !== self.valorTotalEspecificaciones) {
+    if (self.valor_fun !== self.valorTotalEspecificaciones  && self.necesidad.TipoContratoNecesidad.Nombre === 'Compras') {
       swal(
         'Error',
         'El valor del contrato ('+self.valorTotalEspecificaciones+') debe ser igual que el de la financiación('+self.valor_fun+')' ,
@@ -613,10 +614,19 @@ self.crear_solicitud = function() {
     for (var i = 1; i < response.data.length; i++) {
       self.alerta = self.alerta + response.data[i] + "\n";
     }
-    swal("", self.alerta, response.data[0]);
+    //swal("", self.alerta, response.data[0]);
+    swal({
+      text: self.alerta,
+      type: response.data[0],
+      confirmButtonColor: "#449D44",
+      confirmButtonText: $translate.instant('CONFIRMAR')
+    }).then(function() {
+      //si da click en ir a contratistas
+      if(response.data[0]=="success"){
+        location.href = '#/necesidades';
+      }
+    })
   });
-
-  console.log(self.tr_necesidad);
 };
 
 
