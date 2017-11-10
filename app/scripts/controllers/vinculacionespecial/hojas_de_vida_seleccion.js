@@ -219,8 +219,10 @@ angular.module('contractualClienteApp')
 
       //Se almacenan los datos en un arreglo de estructuras
       self.personasSeleccionadas.forEach(function(personaSeleccionada){
+        console.log("personaSeleccionada");  
+        console.log(personaSeleccionada);  
         var vinculacionDocente = {
-          IdPersona: personaSeleccionada.Id,
+          IdPersona: personaSeleccionada.Id.toString(),
           NumeroHorasSemanales: self.datosValor.NumHorasSemanales,
           NumeroSemanas: self.datosValor.NumSemanas,
           IdResolucion: {Id: parseInt(self.resolucion.Id)},
@@ -235,7 +237,9 @@ angular.module('contractualClienteApp')
 
       //Se envía en arreglo de estructuras a la transacción encargadade almacenar los datos
       amazonAdministrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
-          if(typeof(response.data)=="object"){
+        console.log("VinculacionesData:");  
+        console.log(vinculacionesData);  
+        if(typeof(response.data)=="object"){
             self.persona=null;
             swal({
               text: $translate.instant('VINCULACION_EXITOSA'),
