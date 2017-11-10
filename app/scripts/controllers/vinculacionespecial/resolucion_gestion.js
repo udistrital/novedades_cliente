@@ -135,7 +135,9 @@ angular.module('contractualClienteApp')
 
     //Se cargan los datos de las resoluciones de vinculación especial almacenadas
     amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
+
         self.resolucionesInscritas.data=response.data;
+        console.log(self.resolucionesInscritas.data)
         if(self.resolucionesInscritas.data!=null){
             self.resolucionesInscritas.data.forEach(function(resolucion){
                 if(resolucion.FechaExpedicion!=null){
@@ -188,6 +190,7 @@ angular.module('contractualClienteApp')
         self.resolucion.NivelAcademico_nombre = row.entity.NivelAcademico;
         self.resolucion.NivelAcademico = auxNivelAcademico
         self.resolucion.IdFacultad = self.datos_docentes.IdFacultad
+        self.resolucion.NumeroSemanas = 18; 
         if(self.datos_docentes.Dedicacion == "TCO-MTO"){
             self.resolucion.Dedicacion = "TCO|MTO"
         }else{

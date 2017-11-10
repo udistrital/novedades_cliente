@@ -215,6 +215,9 @@ angular.module('contractualClienteApp')
       //Función para almacenar los datos de las vinculaciones realizadas
     self.agregarPrecontratos = function(){
 
+      console.log("numero de semanas por resolucion")
+      console.log(self.resolucion.NumeroSemanas)
+
       var vinculacionesData=[];
 
       //Se almacenan los datos en un arreglo de estructuras
@@ -222,7 +225,7 @@ angular.module('contractualClienteApp')
         var vinculacionDocente = {
           IdPersona: personaSeleccionada.Id,
           NumeroHorasSemanales: self.datosValor.NumHorasSemanales,
-          NumeroSemanas: self.datosValor.NumSemanas,
+          NumeroSemanas: self.resolucion.NumeroSemanas,
           IdResolucion: {Id: parseInt(self.resolucion.Id)},
           IdDedicacion: {Id: parseInt(self.dedicacion)},
           IdProyectoCurricular: parseInt(self.datosValor.proyectoCurricular)
