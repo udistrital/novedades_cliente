@@ -43,7 +43,7 @@ angular.module('contractualClienteApp')
     //solicitud por resolucion
     if(self.disponibilidad.length > 0 && self.resolucion.length > 0){
       self.solicitudresolucion_bool=true;
-      
+      console.log(self.disponibilidad);
       // si es una solicitud de rp por resolucion se escoje automaticamente la primera y unica disponibilidad apropiacion
       
     financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad[0].Id).then(function(response) {
@@ -350,6 +350,9 @@ if(self.contrato.length>1){
 }else{
   self.masivo_seleccion=false;
 }        
+        if(self.solicitudresolucion_bool===true){
+        self.disponibilidad=self.disponibilidad[0];
+        }
         for(var x=0;x<self.contrato.length;x++){
           Solicitud_rp = {};
           //se agrega el campo de monto para que se pueda iterar en la peticion de disponibilidad_apropiacion_solicitud_rp
@@ -368,6 +371,7 @@ if(self.contrato.length>1){
           solicitudes.push(Solicitud_rp);
         }
 
+        console.log(solicitudes);
         angular.forEach(solicitudes, function(solicitud_rp) {
           administrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
             respuestas_solicitudes.push(response.data);
