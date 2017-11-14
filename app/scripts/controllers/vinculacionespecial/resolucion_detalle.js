@@ -200,6 +200,8 @@ self.guardarCambios = function(){
           type: "success",
           confirmButtonText: $translate.instant('ACEPTAR'),
           showLoaderOnConfirm: true
+        }).then(function() {
+            $window.location.href = '#/necesidades';
         });
       }else{
         swal({

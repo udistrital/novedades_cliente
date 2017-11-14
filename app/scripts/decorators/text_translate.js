@@ -470,6 +470,7 @@ var text_es = {
     GUARDADO_EXITO: "Los cambios se han guardado exitosamente",
     PROBLEMA_ALMACENAMIENTO: "Ha habido un problema en el almacenamiento de los cambios",
     REVISE_DATOS_RESOLUCION: "Revise los datos de la resolución",
+    CREAR_RESOLUCION: "Crear resolución de vinculación especial",
     /*
     resolucion_administracion.js
     */
