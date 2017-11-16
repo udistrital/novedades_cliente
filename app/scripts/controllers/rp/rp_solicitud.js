@@ -86,9 +86,11 @@ angular.module('contractualClienteApp')
         {field: 'Vigencia',   displayName:$translate.instant('VIGENCIA')},
         {field: 'NumeroDisponibilidad',   width:'10%',displayName:$translate.instant('ID')},
         {field: 'Estado.Descripcion',   displayName: $translate.instant('DESCRIPCION')},
-        {field: 'Solicitud',   displayName: $translate.instant('SOLICITUD')},
+        {field: 'Solicitud.Id',   displayName: $translate.instant('SOLICITUD')},
       ]};
-        financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
+
+      amazonAdministrativaRequest.get('contrato_disponibilidad','query=NumeroContrato:'+self.contrato[0].Numero_contrato+',Vigencia:'+self.contrato[0].Vigencia_contrato).then(function(response) {
+        financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado,NumeroDisponibilidad:'+response.data[0].NumeroCdp+',Vigencia:'+response.data[0].VigenciaCdp).then(function(response) {
           self.gridOptions_cdp.data = response.data;
           angular.forEach(self.gridOptions_cdp.data, function(data){
      
@@ -97,6 +99,8 @@ angular.module('contractualClienteApp')
             });
          });
       });
+    });
+
     self.gridOptions_cdp.onRegisterApi = function(gridApiCdp){
 
     gridApiCdp.selection.on.rowSelectionChanged($scope,function(row){
