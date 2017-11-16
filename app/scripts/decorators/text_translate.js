@@ -52,6 +52,7 @@ var text_es = {
   SOLICITUD_NECESIDAD_CONTRATACION_DOCENTES: "Solicitud de Necesidad de Contratación Docentes",
   SOLICITUD: "Solicitud",
   SOLICITUD_NECESIDAD: "Solicitud de Necesidad",
+  VIGENCIA_NECESIDAD: "Vigencia de la Necesidad",
   SOLICITUD_NECESIDAD_EXTERNA: "Solicitud de Necesidad Externa",
   DURACION: "Duración",
   UNICO_PAGO: "Único Pago",
@@ -255,7 +256,7 @@ var text_es = {
     /*
     Contrato_registro.html
     */
-    DATOS_BASICOS: "Información básica del contrato",
+    DATOS_BASICOS: "Información básica",
     DISPONIBILIDAD: "Disponibilidad",
     JUSTIFICACION_Y_OBSERVACIONES: "Justificación y observaciones",
     /*
@@ -604,6 +605,7 @@ var text_en = {
   RUBRO:"Item",
   SOLICITUD: "Request",
   SOLICITUD_NECESIDAD: "Need Request",
+  VIGENCIA_NECESIDAD: "Need Validity",
   DURACION: "Duration",
   UNICO_PAGO: "Single Payment",
   HASTA_AGOTAR_PRESUPUESTO: "Until the Budget Had Been Used Up",
@@ -795,7 +797,7 @@ var text_en = {
     /*
     Contrato_registro.html
     */
-    DATOS_BASICOS: "Basic contract information",
+    DATOS_BASICOS: "Basic information",
     DISPONIBILIDAD: "Availability",
     JUSTIFICACION_Y_OBSERVACIONES: "Justification and observations",
     /*
