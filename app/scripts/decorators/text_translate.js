@@ -129,6 +129,7 @@ var text_es = {
   //visualizar_necesidad
   DE: "de",
   MONTO: "Monto",
+
   //SOLICITUD RP
   ERROR: "Error",
   SALIR:"Salir",
@@ -249,6 +250,7 @@ var text_es = {
     DEDICACION: "Dedicación",
     HORAS_SEMANALES: "Horas semanales",
     PERIODO_VINCULACION: "Periodo vinculación",
+    VINCULACION:"Vinculación",
     VALOR_CONTRATO: "Valor del contrato",
     /*
     Contrato_registro.html
@@ -788,6 +790,7 @@ var text_en = {
     DEDICACION: "Dedication",
     HORAS_SEMANALES: "Weekly hours",
     PERIODO_VINCULACION: "Entailment period",
+    VINCULACION:"Entailment",
     VALOR_CONTRATO: "Value of contract",
     /*
     Contrato_registro.html

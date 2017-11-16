@@ -56,10 +56,10 @@ angular.module('contractualClienteApp')
       columnDefs: [
 
         {field: 'Id',             visible : false},
-        {field: 'Numero_contrato',   width:'10%',displayName: $translate.instant('CONTRATO'),},
-        {field: 'Vigencia_contrato',  width:'10%' ,displayName: $translate.instant('VIGENCIA')},
+        {field: 'Numero_contrato',   width:'14%',displayName: $translate.instant('VINCULACION'),},
+        {field: 'Vigencia_contrato',  width:'12%' ,displayName: $translate.instant('VIGENCIA')},
         {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
-        {field: 'Id', width:'20%'  ,displayName: $translate.instant('DOCUMENTO')},
+        {field: 'Id', width:'14%'  ,displayName: $translate.instant('DOCUMENTO')},
         {field: 'Valor_contrato', width:'20%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
       ],
       onRegisterApi: function(gridApi) {

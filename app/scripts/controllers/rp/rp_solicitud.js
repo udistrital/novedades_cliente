@@ -41,7 +41,8 @@ angular.module('contractualClienteApp')
     }
 
     //solicitud por resolucion
-    if(self.disponibilidad.length > 0 && self.resolucion.length > 0){
+    if(self.disponibilidad.length > 0 && self.resolucion.length > 0){    
+
       self.solicitudresolucion_bool=true;
       console.log(self.disponibilidad);
       // si es una solicitud de rp por resolucion se escoje automaticamente la primera y unica disponibilidad apropiacion
@@ -143,21 +144,39 @@ angular.module('contractualClienteApp')
       self.dependencia_solicitante_data = response.data;
     });
 
-    self.gridOptions_contratos = {
-      enableRowSelection: true,
-      enableRowHeaderSelection: false,
-      enableFiltering: true,
- 
-   columnDefs : [
-     {field: 'Id',             visible : false},
-     {field: 'Numero_contrato',   width:'10%',displayName: $translate.instant('CONTRATO')},
-     {field: 'Vigencia_contrato',  width:'10%' ,displayName: $translate.instant('VIGENCIA')},
-     {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
-     {field: 'Id', width:'20%'  ,displayName: $translate.instant('DOCUMENTO')},
-     {field: 'Valor_contrato', width:'20%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
-   ]
- 
- };
+
+    if(self.solicitudresolucion_bool===true){
+      self.gridOptions_contratos = {
+        enableRowSelection: true,
+        enableRowHeaderSelection: false,
+        enableFiltering: true,
+   
+     columnDefs : [
+       {field: 'Id',             visible : false},
+       {field: 'Numero_contrato',   width:'15%',displayName: $translate.instant('VINCULACION')},
+       {field: 'Vigencia_contrato',  width:'15%' ,displayName: $translate.instant('VIGENCIA')},
+       {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
+       {field: 'Id', width:'15%'  ,displayName: $translate.instant('DOCUMENTO')},
+       {field: 'Valor_contrato', width:'15%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
+     ]
+    };
+    }else{
+      self.gridOptions_contratos = {
+        enableRowSelection: true,
+        enableRowHeaderSelection: false,
+        enableFiltering: true,
+   
+     columnDefs : [
+       {field: 'Id',             visible : false},
+       {field: 'Numero_contrato',   width:'15%',displayName: $translate.instant('CONTRATO')},
+       {field: 'Vigencia_contrato',  width:'16%' ,displayName: $translate.instant('VIGENCIA')},
+       {field: 'Nombre_completo', width:'42%'  ,displayName:$translate.instant('NOMBRE')},
+       {field: 'Id', width:'15%'  ,displayName: $translate.instant('DOCUMENTO')},
+       {field: 'Valor_contrato', width:'12%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
+     ]
+    };
+    }
+
 
  self.gridOptions_contratos.data = self.contrato;
 
