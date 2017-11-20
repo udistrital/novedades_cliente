@@ -41,9 +41,10 @@ angular.module('contractualClienteApp')
     }
 
     //solicitud por resolucion
-    if(self.disponibilidad.length > 0 && self.resolucion.length > 0){
+    if(self.disponibilidad.length > 0 && self.resolucion.length > 0){    
+
       self.solicitudresolucion_bool=true;
-      
+      console.log(self.disponibilidad);
       // si es una solicitud de rp por resolucion se escoje automaticamente la primera y unica disponibilidad apropiacion
       
     financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad[0].Id).then(function(response) {
@@ -85,9 +86,11 @@ angular.module('contractualClienteApp')
         {field: 'Vigencia',   displayName:$translate.instant('VIGENCIA')},
         {field: 'NumeroDisponibilidad',   width:'10%',displayName:$translate.instant('ID')},
         {field: 'Estado.Descripcion',   displayName: $translate.instant('DESCRIPCION')},
-        {field: 'Solicitud',   displayName: $translate.instant('SOLICITUD')},
+        {field: 'Solicitud.Id',   displayName: $translate.instant('SOLICITUD')},
       ]};
-        financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
+
+      amazonAdministrativaRequest.get('contrato_disponibilidad','query=NumeroContrato:'+self.contrato[0].Numero_contrato+',Vigencia:'+self.contrato[0].Vigencia_contrato).then(function(response) {
+        financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado,NumeroDisponibilidad:'+response.data[0].NumeroCdp+',Vigencia:'+response.data[0].VigenciaCdp).then(function(response) {
           self.gridOptions_cdp.data = response.data;
           angular.forEach(self.gridOptions_cdp.data, function(data){
      
@@ -96,6 +99,8 @@ angular.module('contractualClienteApp')
             });
          });
       });
+    });
+
     self.gridOptions_cdp.onRegisterApi = function(gridApiCdp){
 
     gridApiCdp.selection.on.rowSelectionChanged($scope,function(row){
@@ -143,21 +148,39 @@ angular.module('contractualClienteApp')
       self.dependencia_solicitante_data = response.data;
     });
 
-    self.gridOptions_contratos = {
-      enableRowSelection: true,
-      enableRowHeaderSelection: false,
-      enableFiltering: true,
- 
-   columnDefs : [
-     {field: 'Id',             visible : false},
-     {field: 'Numero_contrato',   width:'10%',displayName: $translate.instant('CONTRATO')},
-     {field: 'Vigencia_contrato',  width:'10%' ,displayName: $translate.instant('VIGENCIA')},
-     {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
-     {field: 'Id', width:'20%'  ,displayName: $translate.instant('DOCUMENTO')},
-     {field: 'Valor_contrato', width:'20%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
-   ]
- 
- };
+
+    if(self.solicitudresolucion_bool===true){
+      self.gridOptions_contratos = {
+        enableRowSelection: true,
+        enableRowHeaderSelection: false,
+        enableFiltering: true,
+   
+     columnDefs : [
+       {field: 'Id',             visible : false},
+       {field: 'Numero_contrato',   width:'15%',displayName: $translate.instant('VINCULACION')},
+       {field: 'Vigencia_contrato',  width:'15%' ,displayName: $translate.instant('VIGENCIA')},
+       {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
+       {field: 'Id', width:'15%'  ,displayName: $translate.instant('DOCUMENTO')},
+       {field: 'Valor_contrato', width:'15%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
+     ]
+    };
+    }else{
+      self.gridOptions_contratos = {
+        enableRowSelection: true,
+        enableRowHeaderSelection: false,
+        enableFiltering: true,
+   
+     columnDefs : [
+       {field: 'Id',             visible : false},
+       {field: 'Numero_contrato',   width:'15%',displayName: $translate.instant('CONTRATO')},
+       {field: 'Vigencia_contrato',  width:'16%' ,displayName: $translate.instant('VIGENCIA')},
+       {field: 'Nombre_completo', width:'42%'  ,displayName:$translate.instant('NOMBRE')},
+       {field: 'Id', width:'15%'  ,displayName: $translate.instant('DOCUMENTO')},
+       {field: 'Valor_contrato', width:'12%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
+     ]
+    };
+    }
+
 
  self.gridOptions_contratos.data = self.contrato;
 
@@ -350,6 +373,9 @@ if(self.contrato.length>1){
 }else{
   self.masivo_seleccion=false;
 }        
+        if(self.solicitudresolucion_bool===true){
+        self.disponibilidad=self.disponibilidad[0];
+        }
         for(var x=0;x<self.contrato.length;x++){
           Solicitud_rp = {};
           //se agrega el campo de monto para que se pueda iterar en la peticion de disponibilidad_apropiacion_solicitud_rp
@@ -368,6 +394,7 @@ if(self.contrato.length>1){
           solicitudes.push(Solicitud_rp);
         }
 
+        console.log(solicitudes);
         angular.forEach(solicitudes, function(solicitud_rp) {
           administrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
             respuestas_solicitudes.push(response.data);
