@@ -23,7 +23,6 @@ angular.module('contractualClienteApp')
      var seleccion;
      $scope.vigenciaModel = null;
      $scope.vigencias=null;
-     self.longitud_grid = 0;
      $scope.busquedaSinResultados = false;
      $scope.banderaValores = true;
      $scope.fields = {
@@ -68,6 +67,8 @@ angular.module('contractualClienteApp')
        ],
        onRegisterApi: function(gridApi) {
          self.gridApi = gridApi;
+         self.gridApi.core.handleWindowResize();
+         self.gridApi.core.refresh();
        }
      };
 
@@ -79,17 +80,15 @@ angular.module('contractualClienteApp')
 
          agoraRequest.directGet('proveedor_contrato_persona',vigenciaActual).then(function(response) {
           self.gridOptions.data = response.data;
-           self.longitud_grid = self.gridOptions.data.length;
+          
          });
      });
      //se buscan los contratos por la vigencia seleccionada
      self.buscar_contratos_vigencia = function() {
-       self.longitud_grid = 0;
        query = "";
        if ($scope.vigenciaModel !== undefined || $scope.vigenciaModel === null) {
         agoraRequest.directGet('proveedor_contrato_persona',$scope.vigenciaModel).then(function(response) {
           self.gridOptions.data = response.data;
-           self.longitud_grid = self.gridOptions.data.length;
          });
 
        }

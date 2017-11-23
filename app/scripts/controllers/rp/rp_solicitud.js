@@ -12,7 +12,6 @@ angular.module('contractualClienteApp')
     var self = this;
 
     $scope.rubroVacio=false;
-  
     self.resolucion = resolucion;
     self.contrato = contrato;
     self.boton_registrar=false;

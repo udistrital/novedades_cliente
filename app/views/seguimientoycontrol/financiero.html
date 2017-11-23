@@ -1,10 +1,6 @@
-<br>
-<div class="panel panel-default">
-  <div class="panel-body">
-          <center><h3>{{'SEGUIMIENTO_FINANCIERO' | translate}}</h3></center>
-    <div class="panel panel-body">
-      <br />
-      <div class="row">
+  <div class="col-md-12">
+      <center><h3>{{'SEGUIMIENTO_FINANCIERO' | translate}}</h3></center>
+      <br>
         <div class="col-md-2 col-md-offset-3">
           <div ng-if="vigenciaModel=== null">
             <label>{{'VIGENCIA_ACTUAL' | translate}} <b>2017</b> </label>
@@ -20,34 +16,27 @@
           </div>
           <div class="col-md-2">
             <select class="form-control" ng-change="sFinanciero.buscar_contratos_vigencia()" ng-model="vigenciaModel">
-              <option ng-repeat="vigencia in vigencias" >{{vigencia}}</option>
+              <option ng-repeat="vigencia in vigencias">{{vigencia}}</option>
             </select>
           </div>
-
         </div>
-      </div>
-      <br>
+    </div>
 
-      <table style="width:70%;" align="center">
-        <tr>
-          <td>
-            <div ui-grid="sFinanciero.gridOptions" ui-grid-selection class="myGrid">
-              <div class="well grid-loading" ng-show="sFinanciero.longitud_grid == 0">
-                  <i class="fa fa-spin fa-spinner"></i>
-                <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
-              </div>
+      <div align="center" class="col-md-10 col-md-offset-1">
+        <br>
+        <div ng-if="sFinanciero.gridOptions.data.length">
+            <div ui-grid="sFinanciero.gridOptions" ui-grid-selection class="myGrid col-md-11">
             </div>
-          </td>
-        </tr>
-        <tr>
-          <td align="center">
             <br><br>
             <button ng-click="sFinanciero.mostrar_estadisticas()"  class="btn btn-primary btn-lg " ng-disabled="sFinanciero.saving"> <i class="" ng-show="sFinanciero.saving"></i>
               {{'VER_SEGUIMIENTO_FINANCIERO' | translate }}
             </button>
-          </td>
-        </tr>
-      </table>
-    </div>
-    </div>
-</div>
+        </div>
+        <br>
+        
+        <div class="well grid-loading" ng-if="!sFinanciero.gridOptions.data.length">
+          <h2><i class="fa fa-spin fa-spinner"></i>
+            <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
+            </h2>
+        </div>
+      </div>
