@@ -26,7 +26,6 @@ angular.module('contractualClienteApp')
     self.solicitudcdp_bool = false;
     self.solicitudresolucion_bool=false;
     self.disponibilidad = disponibilidad;
-    var monto = 0;
     var solicitudes = [];
     var respuestas_solicitudes = [];
     var Solicitud_rp;
@@ -264,17 +263,17 @@ angular.module('contractualClienteApp')
 
     if (self.disponibilidad.Id !== null) {
       for (var i = 0; i < self.rubros.length; i++) {
-        var saldo = self.DescripcionRubro(rubros[i].Id);
-        rubros[i].saldo = saldo;
+        var saldo = self.DescripcionRubro(self.rubros[i].Id);
+       self.rubros[i].saldo = saldo;
       }
     }
 
-    self.agregarRubro = function(id) {
+    self.agregarRubro = function() {
       var rubro_seleccionado = self.selectRubro;
       var bandera = true;
 
       $scope.seleccionado= rubro_seleccionado;
-      if(rubro_seleccionado!=undefined){
+      if(rubro_seleccionado !== undefined){
         for (var i = 0; i < self.rubros_seleccionados.length; i++) {
           if (self.rubros_seleccionados[i].Id === rubro_seleccionado.Id) {
             bandera = false;
@@ -288,7 +287,7 @@ angular.module('contractualClienteApp')
       }else{
         swal("Alertas", "Debe seleccionar un rubro para agregar", "error");
       }
-    }
+    };
 
     self.quitarRubro = function(id) {
 
@@ -299,13 +298,13 @@ angular.module('contractualClienteApp')
           self.rubros_select.splice(i, 1);
         }
       }
-      for (var i = 0; i < self.rubros_seleccionados.length; i++) {
+      for (i = 0; i < self.rubros_seleccionados.length; i++) {
 
         if (self.rubros_seleccionados[i].Id === id) {
-          self.rubros_seleccionados.splice(i, 1)
+          self.rubros_seleccionados.splice(i, 1);
         }
       }
-    }
+    };
 
     self.DescripcionRubro = function(id) {
       var rubro;
@@ -315,7 +314,7 @@ angular.module('contractualClienteApp')
           rubro = self.rubros[i];
         }
       }
-      return rubro
+      return rubro;
     };
 
     $scope.saldosValor = function() {
@@ -403,7 +402,7 @@ if(self.contrato.length>1){
                // Monto: self.rubros_seleccionados[i].ValorAsignado,
                Monto:solicitud_rp.Monto
               };
-              administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function(responseD) {
+              administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function() {
                 var imprimir = "<h2>Solicitudes creadas correctamente !</h2>"; 
                 imprimir=imprimir + "<div style='height:150px;overflow:auto'><table class='col-md-8 col-md-offset-2'><tr><td style='height:20px;width:120px'><b>Numero solicitud rp</b></td><td style='height:10px;width:80px'><b>Numero contrato</b></td><td style='height:10px;width:80px'><b>Numero vigencia</b></td></tr>";
                 for(var x=0;x<respuestas_solicitudes.length;x++){
@@ -411,7 +410,7 @@ if(self.contrato.length>1){
                   imprimir=imprimir+"<tr style='height:20px'><td>"+respuestas_solicitudes[x].Id+
                   "</td><td>"+respuestas_solicitudes[x].NumeroContrato+
                   "</td><td>"+respuestas_solicitudes[x].VigenciaContrato;
-                };
+                }
                 imprimir=imprimir+"</td></tr></table></div>";
                 swal({
                   html:imprimir,
@@ -445,7 +444,7 @@ if(self.contrato.length>1){
           },
           Resolucion:self.resolucion
         };
-        amazonAdministrativaRequest.post('resolucion_estado',resolucion_estado).then(function(response) {
+        amazonAdministrativaRequest.post('resolucion_estado',resolucion_estado).then(function() {
           
         });
       }

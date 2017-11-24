@@ -61,7 +61,7 @@
     <div class="row" ng-show="rpSolicitudPersonas.contrato_bool">
         <div class="panel panel-default col-md-10 col-md-offset-1">
           <div class="panel-body">
-            <div class="form-group" ng-show="rpSolicitudPersonas.longitud_grid > 0">
+            <div class="form-group" ng-show="rpSolicitudPersonas.gridOptions.data.length > 0">
               <div class="col-md-2 col-md-offset-3">
                   <div ng-if="vigenciaModel=== null">
                     <label>{{'VIGENCIA_ACTUAL' | translate}} <b>2017</b> </label>
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="col-md-12" align="center">   
-                  <div ng-show="rpSolicitudPersonas.longitud_grid > 0">
+                  <div ng-show="rpSolicitudPersonas.gridOptions.data.length > 0">
                       <div ui-grid="rpSolicitudPersonas.gridOptions" ui-grid-selection ui-grid-auto-resize class="myGrid" >
                       </div>
                       <div align="center">
@@ -94,7 +94,7 @@
                           </button>
                         </div>
                   </div>
-                    <div class="well grid-loading" ng-show="rpSolicitudPersonas.longitud_grid === 0">
+                    <div class="well grid-loading" ng-show="rpSolicitudPersonas.gridOptions.data.length === 0">
                         <h2><i class="fa fa-spin fa-spinner"></i>
                           <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
                           </h2>
@@ -167,8 +167,8 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4><b>{{'RESOLUCION' | translate }} {{'NUMERO' | translate }} -</b>{{rpSolicitudPersonas.resolucionId}}</h4>
-          <h4><b>{{'VIGENCIA' | translate }}-</b>{{rpSolicitudPersonas.resolucionVigencia}} </h4>
+          <h4><b>{{'RESOLUCION' | translate }} {{'NUMERO' | translate }}: </b>{{rpSolicitudPersonas.resolucionId}}</h4>
+          <h4><b>{{'VIGENCIA' | translate }}: </b>{{rpSolicitudPersonas.resolucionVigencia}} </h4>
         </div>
         <div class="modal-body">
           <div>
@@ -180,11 +180,15 @@
            </div>
           </div>
 
-           <div ng-show="rpSolicitudPersonas.gridOptionsResolucionPersonas.data.length === 0" align="center">
+           <div ng-show="rpSolicitudPersonas.gridOptionsResolucionPersonas.data.length === 0 && rpSolicitudPersonas.no_datos" align="center">
               <h2><i class="fa fa-spin fa-spinner"></i>
               <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
               </h2>
             </div>
+
+            <div class="alert alert-danger" ng-show="!rpSolicitudPersonas.no_datos">
+                <h3 align="center"><b>Esta resolución no tiene vinculaciones para mostrar</b></h3>
+              </div>
 
           </div>
           
