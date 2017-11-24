@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
 .factory("contrato",function(){
       return {};
 })
-.controller('RpSolicitudPersonasCtrl', function($window, administrativaRequest,$scope,contratoRequest, contrato,resolucion,financieraRequest,amazonAdministrativaRequest, adminMidRequest,$translate,disponibilidad) {
+.controller('RpSolicitudPersonasCtrl', function($window, administrativaRequest,$scope, contrato,resolucion,financieraRequest,amazonAdministrativaRequest, adminMidRequest,$translate,disponibilidad) {
     var self = this;
     var query;
     var seleccion;
@@ -67,8 +67,6 @@ angular.module('contractualClienteApp')
       }
     };
 
-
-/*    
     //GRID CONTRATISTAS
     self.gridOptions = {
       enableSelectAll: false,
@@ -109,48 +107,6 @@ angular.module('contractualClienteApp')
         self.gridAp = gridApi;
       }
     };
-*/
-
-self.gridOptions = {
-  enableSelectAll: false,
-  enableRowHeaderSelection: false,
-  enableSorting: true,
-  enableFiltering: true,
-  multiSelect: false,
-  columnDefs: [{
-      field: 'numero_contrato',
-      displayName: $translate.instant('CONTRATO'),
-      width: "15%",
-      cellTemplate: '<div align="center">{{row.entity.numero_contrato}}</div>'
-    },
-    {
-      field: 'vigencia',
-      displayName: $translate.instant('VIGENCIA_CONTRATO'),
-      visible: true,
-      width: "15%",
-    },
-    {
-      field: 'Nombre_completo',
-      displayName: $translate.instant('NOMBRE_CONTRATISTA'),
-      width: "30%"
-    },
-    {
-      field: 'contratista',
-      displayName: $translate.instant('DOCUMENTO_CONTRATISTA'),
-      cellTemplate: '<div align="center">{{row.entity.contratista}}</div>',
-      width: "20%",
-    },
-    {
-      field: 'valor_contrato',
-      displayName: $translate.instant('VALOR'),
-      cellTemplate: '<div align="right">{{row.entity.valor_contrato | currency:undefined:0 }}</div>'
-    },
-  ],
-  onRegisterApi: function(gridApi) {
-    self.gridAp = gridApi;
-  }
-};
-
 
     //<RESOLUCION GRID
     self.gridOptionsResolucion = {
@@ -268,13 +224,8 @@ self.gridOptions = {
         //selecciona la vigencia actual
         var vigenciaActual=$scope.vigencias[0];
     
-        /*amazonAdministrativaRequest.get('proveedor_contrato_persona/'+vigenciaActual).then(function(response) {
+        amazonAdministrativaRequest.get('proveedor_contrato_persona/'+vigenciaActual).then(function(response) {
              self.gridOptions.data = response.data;
-              self.longitud_grid = self.gridOptions.data.length;
-            });*/
-            contratoRequest.getAll('contrato','').then(function(response) {
-              console.log(response.data.contratos.contrato);
-              self.gridOptions.data = response.data.contratos.contrato;
               self.longitud_grid = self.gridOptions.data.length;
             });
         });
@@ -288,7 +239,6 @@ self.gridOptions = {
 
         financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado').then(function(response) {
           self.gridOptions_cdp.data = response.data;
-          console.log(self.gridOptions_cdp.data);
         });
       }
 
@@ -336,6 +286,7 @@ self.gridOptions = {
          self.gridOptions.data = response.data;
           self.longitud_grid = self.gridOptions.data.length;
         });
+
       }
     };
 
@@ -367,12 +318,17 @@ self.gridOptions = {
                 }
               if(resoluciones.length===vinculacion_docente.length){
                 self.gridOptionsResolucionPersonas.data=resoluciones;
+
               }
              });
           }
+
          };
         }
+         
        });
+           
+           //self.gridOptionsResolucionPersonas.longitud_grid=self.gridOptionsResolucionPersonas.length;
     };
 
     self.mostrar_estadisticas = function() {

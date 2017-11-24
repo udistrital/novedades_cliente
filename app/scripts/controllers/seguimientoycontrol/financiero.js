@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroCtrl', function ($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate,orden,disponibilidad,registro,agoraRequest) {
+  .controller('SeguimientoycontrolFinancieroCtrl', function ($window, $scope, contrato,financieraRequest,administrativaRequest, $routeParams, adminMidRequest,$translate,orden,disponibilidad,registro,agoraRequest,amazonAdministrativaRequest) {
     var self = this;
      var query;
      self.dato = [1];
@@ -72,15 +72,14 @@ angular.module('contractualClienteApp')
        }
      };
 
-     administrativaRequest.get('vigencia_contrato').then(function(response) {
+     amazonAdministrativaRequest.get('vigencia_contrato').then(function(response) {
        $scope.vigencias = response.data;
 
      //selecciona la vigencia actual
      var vigenciaActual=$scope.vigencias[0];
 
-         agoraRequest.directGet('proveedor_contrato_persona',vigenciaActual).then(function(response) {
+     amazonAdministrativaRequest.get('proveedor_contrato_persona/'+vigenciaActual,'').then(function(response) {
           self.gridOptions.data = response.data;
-          
          });
      });
      //se buscan los contratos por la vigencia seleccionada
@@ -90,7 +89,6 @@ angular.module('contractualClienteApp')
         agoraRequest.directGet('proveedor_contrato_persona',$scope.vigenciaModel).then(function(response) {
           self.gridOptions.data = response.data;
          });
-
        }
      };
 
