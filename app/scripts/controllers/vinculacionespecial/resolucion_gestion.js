@@ -11,10 +11,11 @@ angular.module('contractualClienteApp')
   .factory("resolucion",function(){
      return {};
   })
-  .controller('ResolucionGestionCtrl', function (resolucion,amazonAdministrativaRequest,$scope,$window,$mdDialog,$translate) {
+  .controller('ResolucionGestionCtrl', function (resolucion,amazonAdministrativaRequest,$scope,$window,$mdDialog,$translate,$localStorage) {
 
   	var self = this;
     self.datos_docentes;
+
     //Tabla para mostrar los datos básicos de las resoluciones almacenadas dentro del sistema
 	self.resolucionesInscritas = {
       paginationPageSizes: [10, 15, 20],
@@ -184,13 +185,19 @@ angular.module('contractualClienteApp')
         auxNivelAcademico=15;
       }
 
+
+
+
         self.resolucion = resolucion;
         self.resolucion.Id = row.entity.Id;
         self.resolucion.Numero = row.entity.Numero;
         self.resolucion.NivelAcademico_nombre = row.entity.NivelAcademico;
-        self.resolucion.NivelAcademico = auxNivelAcademico
-        self.resolucion.IdFacultad = self.datos_docentes.IdFacultad
-        self.resolucion.NumeroSemanas = 18; 
+        self.resolucion.NivelAcademico = auxNivelAcademico;
+        self.resolucion.IdFacultad = self.datos_docentes.IdFacultad;
+        self.resolucion.Vigencia = row.entity.Vigencia;
+        self.resolucion.Periodo = 1;                         //--- se deja quemado, debe incluirse ne tabla resolucion
+        self.resolucion.NumeroSemanas = 18;                 //--- se deja quemado, debe incluirse ne tabla resolucion
+
         if(self.datos_docentes.Dedicacion == "TCO-MTO"){
             self.resolucion.Dedicacion = "TCO|MTO"
         }else{
@@ -198,6 +205,7 @@ angular.module('contractualClienteApp')
         }
 
 
+      $localStorage.resolucion = self.resolucion;
       $window.location.href = '#/vinculacionespecial/hojas_de_vida_seleccion/'+row.entity.Id.toString();
 
     }
@@ -219,5 +227,7 @@ angular.module('contractualClienteApp')
     self.generarNuevaResolucion = function(){
         $window.location.href = '#/vinculacionespecial/resolucion_generacion';
     }
+
+
 
   });

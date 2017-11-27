@@ -1,21 +1,19 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-  .controller('HojasDeVidaSeleccionCtrl', function (resolucion,amazonAdministrativaRequest,adminMidRequest,oikosAmazonRequest,contratacion_mid_request,$scope,$mdDialog,$routeParams,$translate) {
+  .controller('HojasDeVidaSeleccionCtrl', function (resolucion,amazonAdministrativaRequest,adminMidRequest,oikosAmazonRequest,contratacion_mid_request,$localStorage,$scope,$mdDialog,$routeParams,$translate) {
 
     var self = this;
 
     self.datosFiltro;
-    self.resolucion = resolucion
 
+    self.resolucion = $localStorage.resolucion
     self.estado = false;
     //Lectura del parámetro de resolución de entrada
     self.idResolucion=$routeParams.idResolucion;
-
     self.dedicaciones;
     self.proyectos=[];
-
-
+  /*
     self.datosPersonas = {
       paginationPageSizes: [10, 15, 20],
       paginationPageSize: 10,
@@ -52,8 +50,7 @@ angular.module('contractualClienteApp')
                '<a class="ver" ng-click="grid.appScope.verHistoriaLaboral(row)">' +
                '<i title="{{\'VER_EXP_LABORAL\' | translate }}" class="fa fa-pencil fa-lg faa-shake animated-hover"></i></a> ' +
                '<a class="editar" ng-click="grid.appScope.verTrabajosInvestigacion(row)">' +
-               '<i title="{{\'VER_TRABAJOS_INVESTIGACION\' | translate }}" class="fa fa-book fa-lg fa-lg animated-hover"></i></a> ' */+
-               '</center>'
+               '<i title="{{\'VER_TRABAJOS_INVESTIGACION\' | translate }}" class="fa fa-book fa-lg fa-lg animated-hover"></i></a> ''</center>'
         }
       ],
       onRegisterApi : function(gridApi){
@@ -82,15 +79,80 @@ angular.module('contractualClienteApp')
         });
       }
     };
+    */
 
+
+    self.datosDocentesCargaLectiva = {
+      paginationPageSizes: [10, 15, 20],
+      paginationPageSize: 10,
+      enableRowSelection: true,
+      enableRowHeaderSelection: true,
+      enableFiltering: true,
+      enableHorizontalScrollbar: 0,
+      enableVerticalScrollbar: true,
+      useExternalPagination: false,
+      enableSelectAll: false,
+      columnDefs : [
+        {
+          field: 'docente_apellido',
+          displayName: "Apellidos"
+        },
+        {
+          field: 'docente_nombre',
+          displayName: "Nombres"
+        },
+        {
+          field: 'docente_documento',
+          displayName: "Documento"
+        },
+        {
+          field: 'horas_lectivas',
+          displayName: "Horas lectivas"
+        },
+        {
+          field: 'proyecto_nombre',
+          displayName: "Proyecto curricular"
+        },
+        {
+          field: 'CategoriaNombre',
+          displayName: "Categoria"
+        },
+        {
+          field: 'tipo_vinculacion_nombre',
+          displayName: "Dedicación"
+        },
+        {
+          field: 'id_tipo_vinculacion',
+          displayName: "id_tipo_vinculacion"
+        }
+
+      ],
+
+      onRegisterApi : function(gridApi){
+        self.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope,function(row){
+          self.personasSeleccionadas1=gridApi.selection.getSelectedRows();
+
+        });
+      }
+    };
+
+
+
+    /*
     //Se leen los datos básicos de la resolucion de vinculación especial
     amazonAdministrativaRequest.get("persona_escalafon/persona_escalafon_"+self.resolucion.NivelAcademico_nombre.toLowerCase()).then(function(response){
       self.datosPersonas.data=response.data;
       self.datosPersonas.data.forEach(function(row){
-
-        //El nombre completo se guarda en una sola variable
+      //El nombre completo se guarda en una sola variable
         row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
       });
+    });
+    */
+    adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia.toString()+"&periodo="+self.resolucion.Periodo.toString()+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad.toString()).then(function(response){
+      console.log("docentes carga desde académica")
+      self.datosDocentesCargaLectiva.data = response.data
+
     });
 
     self.RecargarDatosPersonas = function(){
@@ -104,6 +166,7 @@ angular.module('contractualClienteApp')
       });
     }
 
+    /*
     oikosAmazonRequest.get("dependencia_padre","query=Padre%3A"+self.resolucion.IdFacultad+"&fields=Hija&limit=-1").then(function(response){
       if(response.data==null){
         //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
@@ -147,6 +210,7 @@ angular.module('contractualClienteApp')
       }
     });
 
+    */
 
     //Se cargan los datos de los docentes que han sido asociados previamente a la resolucion
     self.precontratados = {
@@ -215,15 +279,29 @@ angular.module('contractualClienteApp')
       //Función para almacenar los datos de las vinculaciones realizadas
     self.agregarPrecontratos = function(){
 
-      console.log("numero de semanas por resolucion")
-      console.log(self.resolucion.NumeroSemanas)
+      var vinculacionesData=[];
 
+      self.personasSeleccionadas1.forEach(function(personaSeleccionada){
+        var vinculacionDocente = {
+          //IdPersona: personaSeleccionada.Id.toString(),
+          NumeroHorasSemanales: personaSeleccionada.horas_lectivas,
+          NumeroSemanas: self.resolucion.NumeroSemanas,
+          IdResolucion: {Id: parseInt(self.resolucion.Id)},
+          IdDedicacion: {Id: parseInt(personaSeleccionada.id_tipo_vinculacion)},
+          IdProyectoCurricular: parseInt(personaSeleccionada.id_proyecto)
+        };
+
+        vinculacionesData.push(vinculacionDocente);
+        console.log("Aqui ando");
+        console.log(vinculacionDocente);
+      })
+      /*
       var vinculacionesData=[];
 
       //Se almacenan los datos en un arreglo de estructuras
       self.personasSeleccionadas.forEach(function(personaSeleccionada){
-        console.log("personaSeleccionada");  
-        console.log(personaSeleccionada);  
+        console.log("personaSeleccionada");
+        console.log(personaSeleccionada);
         var vinculacionDocente = {
           IdPersona: personaSeleccionada.Id.toString(),
           NumeroHorasSemanales: self.datosValor.NumHorasSemanales,
@@ -240,8 +318,8 @@ angular.module('contractualClienteApp')
 
       //Se envía en arreglo de estructuras a la transacción encargadade almacenar los datos
       amazonAdministrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
-        console.log("VinculacionesData:");  
-        console.log(vinculacionesData);  
+        console.log("VinculacionesData:");
+        console.log(vinculacionesData);
         if(typeof(response.data)=="object"){
             self.persona=null;
             swal({
@@ -265,8 +343,9 @@ angular.module('contractualClienteApp')
       self.datosValor.NumSemanas = "";
       self.datosValor.NumHorasSemanales = "";
       self.RecargarDatosPersonas();
-
+      */
     }
+
 
 
     $scope.verCancelarInscripcionDocente=function(row){
