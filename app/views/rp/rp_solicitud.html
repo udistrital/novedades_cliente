@@ -10,7 +10,7 @@
             <span style="float:right" class="glyphicon glyphicon glyphicon-minus" ng-show="panelCdp"></span>
           </h4>
       </div>
-      <div ng-show="panelCdp" class="panel-body panel-collapse">
+      <div ng-if="panelCdp" class="panel-body panel-collapse">
         <div ui-grid='rpSolicitud.gridOptions_cdp' ui-grid-selection ui-grid-auto-resize class="myGrid"> </div>
       </div>
     </div>
@@ -21,7 +21,7 @@
               <span style="float:right" class="glyphicon glyphicon glyphicon-minus" ng-show="panelApro"></span>
             </h4>
       </div>
-      <div ng-show="panelApro" class="panel-body panel-collapse">
+      <div ng-if="panelApro" class="panel-body panel-collapse">
         <div ui-grid='rpSolicitud.gridOptions_compromiso' ui-grid-selection ui-grid-auto-resize class="myGrid"> </div>
       </div>
     </div>

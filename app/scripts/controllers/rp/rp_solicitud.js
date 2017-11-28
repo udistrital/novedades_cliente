@@ -88,6 +88,12 @@ angular.module('contractualClienteApp')
       amazonAdministrativaRequest.get('contrato_disponibilidad','query=NumeroContrato:'+self.contrato[0].Numero_contrato+',Vigencia:'+self.contrato[0].Vigencia_contrato).then(function(response) {
         financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado,NumeroDisponibilidad:'+response.data[0].NumeroCdp+',Vigencia:'+response.data[0].VigenciaCdp).then(function(response) {
           self.gridOptions_cdp.data = response.data;
+
+          if(response.data === null || response.status !== 200){
+            swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_CDP'), "error").then(function() {
+              $window.location.href = '#/rp_solicitud_personas';
+            });
+          }
           angular.forEach(self.gridOptions_cdp.data, function(data){
      
             administrativaRequest.get('solicitud_disponibilidad','query=Id:'+data.Solicitud).then(function(response) {
@@ -153,7 +159,7 @@ angular.module('contractualClienteApp')
    
      columnDefs : [
        {field: 'Id',             visible : false},
-       {field: 'Numero_contrato',   width:'15%',displayName: $translate.instant('VINCULACION')},
+       {field: 'Numero_suscrito',   width:'15%',displayName: $translate.instant('VINCULACION')},
        {field: 'Vigencia_contrato',  width:'15%' ,displayName: $translate.instant('VIGENCIA')},
        {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
        {field: 'Id', width:'15%'  ,displayName: $translate.instant('DOCUMENTO')},
@@ -168,7 +174,7 @@ angular.module('contractualClienteApp')
    
      columnDefs : [
        {field: 'Id',             visible : false},
-       {field: 'Numero_contrato',   width:'15%',displayName: $translate.instant('CONTRATO')},
+       {field: 'Numero_suscrito',   width:'15%',displayName: $translate.instant('CONTRATO')},
        {field: 'Vigencia_contrato',  width:'16%' ,displayName: $translate.instant('VIGENCIA')},
        {field: 'Nombre_completo', width:'42%'  ,displayName:$translate.instant('NOMBRE')},
        {field: 'Id', width:'15%'  ,displayName: $translate.instant('DOCUMENTO')},

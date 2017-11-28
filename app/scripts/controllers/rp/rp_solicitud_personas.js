@@ -55,7 +55,7 @@ angular.module('contractualClienteApp')
       columnDefs: [
 
         {field: 'Id',             visible : false},
-        {field: 'Numero_contrato',   width:'14%',displayName: $translate.instant('VINCULACION'),},
+        {field: 'Numero_suscrito',   width:'14%',displayName: $translate.instant('VINCULACION'),},
         {field: 'Vigencia_contrato',  width:'12%' ,displayName: $translate.instant('VIGENCIA')},
         {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
         {field: 'Id', width:'14%'  ,displayName: $translate.instant('DOCUMENTO')},
@@ -77,7 +77,7 @@ angular.module('contractualClienteApp')
           field: 'Id',
           displayName: $translate.instant('CONTRATO'),
           width: "15%",
-          cellTemplate: '<div align="center">{{row.entity.Numero_contrato}}</div>'
+          cellTemplate: '<div align="center">{{row.entity.Numero_suscrito}}</div>'
         },
         {
           field: 'Vigencia_contrato',
@@ -216,13 +216,13 @@ angular.module('contractualClienteApp')
         self.cdp_bool=false;
         self.contrato_bool = true;
 
-        amazonAdministrativaRequest.get('vigencia_contrato').then(function(response) {
+        amazonAdministrativaRequest.get('vigencia_contrato',"").then(function(response) {
           $scope.vigencias = response.data;
     
         //selecciona la vigencia actual
         var vigenciaActual=$scope.vigencias[0];
     
-        amazonAdministrativaRequest.get('proveedor_contrato_persona/'+vigenciaActual).then(function(response) {
+        amazonAdministrativaRequest.get('proveedor_contrato_persona/'+vigenciaActual,"").then(function(response) {
              self.gridOptions.data = response.data;
             });
         });
@@ -351,6 +351,7 @@ angular.module('contractualClienteApp')
       for(var i=0;i<seleccion.length;i++){
         contrato_unidad = [];
         contrato_unidad.Numero_contrato = seleccion[i].Numero_contrato;
+        contrato_unidad.Numero_suscrito = seleccion[i].Numero_suscrito;
         contrato_unidad.Vigencia_contrato= seleccion[i].Vigencia_contrato;
         contrato_unidad.Id= seleccion[i].Id;
         contrato_unidad.Valor_contrato= seleccion[i].Valor_contrato;
