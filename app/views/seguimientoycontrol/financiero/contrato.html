@@ -1,7 +1,7 @@
 <br>
 <div class="panel panel-default">
   <div class="panel-body">
-          <center><h3 class="titulo-centrado">{{'SEGUIMIENTO_FINANCIERO' | translate}} {{sFcontrato.contrato.Id}}</h3></center>
+          <center><h3 class="titulo-centrado">{{'SEGUIMIENTO_FINANCIERO' | translate}} {{sFcontrato.contrato.NumeroSuscrito}} - {{sFcontrato.contrato.Vigencia}}</h3></center>
           <ul class="nav nav-tabs">
             <li class="active"><a href="#/seguimientoycontrol/financiero/contrato" data-toggle="tab" ng-show="sFcontrato.cambio">{{'DATOS_CONTRATO' | translate}}</a>
             </li>
@@ -16,11 +16,11 @@
            <div class="panel-heading row"><div class="col-md-12"><center><h4><b>{{'DATOS_CONTRATISTA' | translate}}</b></h4></center></div></div>
            <div class="panel-body">
              <div class="col-md-6"><b>{{'APELLIDOS' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.persona.PrimerApellido}} {{sFcontrato.persona.SegundoApellido}}<br><br/></div>
+             <div class="col-md-6">{{sFcontrato.contrato.PrimerApellido}} {{sFcontrato.contrato.SegundoApellido}}<br><br/></div>
              <div class="col-md-6"><b>{{'NOMBRES' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.persona.PrimerNombre}} {{sFcontrato.persona.SegundoNombre}}<br><br/></div>
+             <div class="col-md-6">{{sFcontrato.contrato.PrimerNombre}} {{sFcontrato.contrato.SegundoNombre}}<br><br/></div>
              <div class="col-md-6"><b>{{'TIPO_DOCUMENTO' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.persona.TipoDocumento.ValorParametro}}<br><br/></div>
+             <div class="col-md-6">{{sFcontrato.contrato.TipoDocumento.ValorParametro}}<br><br/></div>
              <div class="col-md-6"><b>{{'NUMERO_DOCUMENTO' | translate}}</b></div>
              <div class="col-md-6">{{sFcontrato.contrato.ContratistaId}}<br><br/></div>
              <div class="col-md-6"><b>{{'CARGO' | translate}}</b></div>
@@ -78,19 +78,19 @@
         </div>
         </div>
 
-        <div class="col-md-3 panel panel-primary paneles">
+        <div class="col-md-6 panel panel-primary paneles">
            <div class="panel-heading row"><div class="col-md-12"><center><h4><b>{{'DATOS_CONTRATO' | translate}}</b></h4></center></div></div>
            <div class="panel-body">
-             <div class="col-md-6"><b>{{'CONTRATO' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.contrato.Id}}<br><br/></div>
-             <div class="col-md-6"><b>{{'VIGENCIA' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.contrato.Vigencia}}<br><br/></div>
-             <div class="col-md-6"><b>{{'OBJETO' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.contrato.ObjetoContrato}}<br><br/></div>
-             <div class="col-md-6"><b>{{'FECHA_REGISTRO' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.contrato.FechaRegistro | date:"yyyy-MM-dd":"+0900"}}<br><br/></div>
-             <div class="col-md-6"><b>{{'VALOR' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.contrato.ValorContrato | currency}}<br><br/></div>
+             <div class="col-md-3"><b>{{'CONTRATO' | translate}}</b></div>
+             <div class="col-md-9">{{sFcontrato.contrato.NumeroSuscrito}}<br><br/></div>
+             <div class="col-md-3"><b>{{'VIGENCIA' | translate}}</b></div>
+             <div class="col-md-9">{{sFcontrato.contrato.Vigencia}}<br><br/></div>
+             <div class="col-md-3"><b>{{'OBJETO' | translate}}</b></div>
+             <div class="col-md-9">{{sFcontrato.contrato.ObjetoContrato}}<br><br/></div>
+             <div class="col-md-3"><b>{{'FECHA_REGISTRO' | translate}}</b></div>
+             <div class="col-md-9">{{sFcontrato.contrato.FechaRegistro | date:"yyyy-MM-dd":"+0900"}}<br><br/></div>
+             <div class="col-md-3"><b>{{'VALOR' | translate}}</b></div>
+             <div class="col-md-9">{{sFcontrato.contrato.ValorContrato | currency}}<br><br/></div>
            </div>
       </div>
     </div>

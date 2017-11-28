@@ -42,7 +42,7 @@ angular.module('contractualClienteApp')
            field: 'Id',
            displayName: $translate.instant('CONTRATO'),
            width: "10%",
-           cellTemplate: '<div align="center">{{row.entity.Numero_contrato}}</div>'
+           cellTemplate: '<div align="center">{{row.entity.Numero_suscrito}}</div>'
          },
          {
            field: 'Vigencia_contrato',
@@ -86,7 +86,7 @@ angular.module('contractualClienteApp')
      self.buscar_contratos_vigencia = function() {
        query = "";
        if ($scope.vigenciaModel !== undefined || $scope.vigenciaModel === null) {
-        agoraRequest.directGet('proveedor_contrato_persona',$scope.vigenciaModel).then(function(response) {
+        amazonAdministrativaRequest.get('proveedor_contrato_persona',$scope.vigenciaModel).then(function(response) {
           self.gridOptions.data = response.data;
          });
        }
@@ -98,12 +98,13 @@ angular.module('contractualClienteApp')
          swal("Alertas", "Debe seleccionar un contratista", "error");
        }else{
          self.contrato.Id = seleccion[0].Numero_contrato;
-         self.contrato.Vigencia= seleccion[0].Vigencia_contrato;
-         self.contrato.ContratistaId= seleccion[0].Id;
-         self.contrato.ValorContrato= seleccion[0].Valor_contrato;
-         self.contrato.NombreContratista= seleccion[0].Nombre_completo;
-         self.contrato.ObjetoContrato= seleccion[0].Objeto_contrato;
-         self.contrato.FechaRegistro= seleccion[0].Fecha_registro;
+         self.contrato.Vigencia = seleccion[0].Vigencia_contrato;
+         self.contrato.ContratistaId = seleccion[0].Id;
+         self.contrato.ValorContrato = seleccion[0].Valor_contrato;
+         self.contrato.NombreContratista = seleccion[0].Nombre_completo;
+         self.contrato.ObjetoContrato = seleccion[0].Objeto_contrato;
+         self.contrato.FechaRegistro  = seleccion[0].Fecha_registro;
+         self.contrato.NumeroSuscrito = seleccion[0].Numero_suscrito;
          self.saving = true;
          self.btnGenerartxt = "Generando...";
          self.saving = false;

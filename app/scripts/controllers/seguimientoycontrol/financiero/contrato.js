@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroContratoCtrl', function ($timeout,$window,contrato,registro,disponibilidad,agoraRequest,orden,sicapitalRequest,administrativaRequest,$scope,$rootScope,$translate) {
+  .controller('SeguimientoycontrolFinancieroContratoCtrl', function ($timeout,$window,contrato,amazonAdministrativaRequest,registro,disponibilidad,agoraRequest,orden,sicapitalRequest,administrativaRequest,$scope,$rootScope,$translate) {
     var self = this;
     self.cambio = false;
     self.contrato=contrato;
@@ -23,7 +23,7 @@ angular.module('contractualClienteApp')
     self.cdp=null;
     self.cargando_datos = true;
     $scope.banderaRP = true;
-    var query = "query=NumeroContrato:"+self.contrato.Id;
+    var query = "query=NumeroContrato:"+self.contrato.Id +",Vigencia:"+self.contrato.Vigencia;
     self.registro_presupuestal=[];
     var t1;
     var t0;
@@ -36,10 +36,12 @@ angular.module('contractualClienteApp')
       });
     }
 
+    console.log(self.contrato);
+
     t0 = performance.now();
     //CDP asociado a un contrato
     if(disponibilidad.length===0){
-    administrativaRequest.get('contrato_disponibilidad',query).then(function(response) {
+      amazonAdministrativaRequest.get('contrato_disponibilidad',query).then(function(response) {
       self.cdps=response.data;
       if(self.cdps !== null){
       //petición para traer los rp por cdp de sicapital vigencia/cdp/cedula
@@ -123,13 +125,6 @@ angular.module('contractualClienteApp')
         return false;
       }
     };
-
-    agoraRequest.get('informacion_persona_natural', 'query=Id:'+contrato.ContratistaId).then(function(response) {
-      self.persona=response.data[0];
-    agoraRequest.get('parametro_estandar', 'query=Id:'+self.persona.TipoDocumento.Id).then(function(response) {
-          self.persona.TipoDocumento.ValorParametro=response.data[0].ValorParametro;
-        });
-    });
 
     self.seleccionarValores = function(){
       if(disponibilidad.length===0){
