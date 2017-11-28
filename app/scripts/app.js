@@ -48,7 +48,8 @@ angular
         'titan_service',
         'amazonAdministrativaService',
         'academicaService',
-        'contratoService'
+        'contratoService',
+        'nvd3',
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');

@@ -65,6 +65,7 @@ angular.module('contractualClienteApp')
           for (var x = 0; x < self.registro_presupuestal.length; x++) {
           url = self.contrato.ContratistaId+"/"+self.registro_presupuestal[x].NUMERO_DISPONIBILIDAD+"/"+self.registro_presupuestal[x].NUMERO_REGISTRO+"/"+self.registro_presupuestal[x].VIGENCIA;
             sicapitalRequest.get('ordenpago/opgsyc', url).then(function(response) {
+              console.log(response.data);
               if(response.data[0]!== "<"){
                 self.ordenes_pago = self.ordenes_pago.concat(response.data);
               }else{
@@ -123,7 +124,7 @@ angular.module('contractualClienteApp')
 
   }
     t1 = performance.now();
-    total = (t1 - t0) +2500;
+    total = (t1 - t0) +3500;
 
     self.reloj = function(){
       if($scope.banderaRP === true && self.cargando_datos === true){
