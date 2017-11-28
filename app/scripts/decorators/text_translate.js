@@ -9,7 +9,8 @@
  */
 var text_es = {
     SEGUNDO_NOMBRE:"Segundo nombre",
-
+    NO_HAY_DATOS_REDIRIGIR_RP: "No hay datos de registro presupuestal para este contratista",
+    NO_HAY_DATOS_REDIRIGIR_ORDEN: "No hay datos de ordenes de pago para este contratista",
     SELECCIONAR_FILTRO:"Seleccione el tipo de filtro por el cual quiere generar la solicitud del RP",
     BUSCAR:"Buscar",
     INGRESE_IDENTIFICACION_PROVEEDOR:"Ingrese identificación del proveedor",
@@ -557,7 +558,8 @@ var text_en = {
   SELECCIONAR_RESOLUCION:"Select the resolution",
   CONTRATISTAS_RESOLUCION:"Contractors at this resolution",
   SELECCIONE_CDP:"Select the CDP",
-
+  NO_HAY_DATOS_REDIRIGIR_RP: "There is not budget register for this contractor",
+  NO_HAY_DATOS_REDIRIGIR_ORDEN: "There are not pay orders for this contractor",
   SEGUNDO_NOMBRE:"Middle name",
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Now get to start to develop ...",

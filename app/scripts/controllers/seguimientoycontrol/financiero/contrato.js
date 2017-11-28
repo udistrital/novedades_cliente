@@ -36,8 +36,6 @@ angular.module('contractualClienteApp')
       });
     }
 
-    console.log(self.contrato);
-
     t0 = performance.now();
     //CDP asociado a un contrato
     if(disponibilidad.length===0){
@@ -57,6 +55,10 @@ angular.module('contractualClienteApp')
           self.cargando_datos = false;
         }else{
           $scope.banderaRP = false;
+          swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_RP'), "error").then(function() {
+            //si da click en ir a contratistas
+            $window.location.href = '#/seguimientoycontrol/financiero';
+          });
         }
         if(i === self.cdps.length){
           //recorre los rps y busca las ordenes de pago de este
@@ -65,6 +67,11 @@ angular.module('contractualClienteApp')
             sicapitalRequest.get('ordenpago/opgsyc', url).then(function(response) {
               if(response.data[0]!== "<"){
                 self.ordenes_pago = self.ordenes_pago.concat(response.data);
+              }else{
+                swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_ORDEN'), "error").then(function() {
+                  //si da click en ir a contratistas
+                  $window.location.href = '#/seguimientoycontrol/financiero';
+                });
               }
               if(x===self.registro_presupuestal.length){
                 for (var i = 0; i < self.ordenes_pago.length; i++) {
@@ -116,7 +123,7 @@ angular.module('contractualClienteApp')
 
   }
     t1 = performance.now();
-    total = (t1 - t0) +500;
+    total = (t1 - t0) +2500;
 
     self.reloj = function(){
       if($scope.banderaRP === true && self.cargando_datos === true){
@@ -172,8 +179,9 @@ angular.module('contractualClienteApp')
           self.orden_pago.push(temp);
           temp = [];
         }
-        self.cambio = true;
+            self.cambio = true;
       }, total);
+
       }
 
     };

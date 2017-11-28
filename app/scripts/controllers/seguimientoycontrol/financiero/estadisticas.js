@@ -92,6 +92,7 @@ angular.module('contractualClienteApp')
     return parseFloat((actual/total)*100).toFixed(2);
   };
 
+  console.log(self.ordenes_pago);
   angular.forEach(self.ordenes_pago, function(op) {
     valor_actual=parseInt(op.valor_orden);
     valor_actual_total=valor_actual_total+valor_actual;

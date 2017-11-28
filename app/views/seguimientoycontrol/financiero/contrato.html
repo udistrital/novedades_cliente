@@ -15,16 +15,10 @@
         <div class="col-md-3 panel panel-primary paneles">
            <div class="panel-heading row"><div class="col-md-12"><center><h4><b>{{'DATOS_CONTRATISTA' | translate}}</b></h4></center></div></div>
            <div class="panel-body">
-             <div class="col-md-6"><b>{{'APELLIDOS' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.contrato.PrimerApellido}} {{sFcontrato.contrato.SegundoApellido}}<br><br/></div>
-             <div class="col-md-6"><b>{{'NOMBRES' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.contrato.PrimerNombre}} {{sFcontrato.contrato.SegundoNombre}}<br><br/></div>
-             <div class="col-md-6"><b>{{'TIPO_DOCUMENTO' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.contrato.TipoDocumento.ValorParametro}}<br><br/></div>
-             <div class="col-md-6"><b>{{'NUMERO_DOCUMENTO' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.contrato.ContratistaId}}<br><br/></div>
-             <div class="col-md-6"><b>{{'CARGO' | translate}}</b></div>
-             <div class="col-md-6">{{sFcontrato.persona.Cargo}}<br><br/></div>
+             <div class="col-md-3"><b>{{'NOMBRE' | translate}}</b></div>
+             <div class="col-md-8 col-md-offset-1">{{sFcontrato.contrato.NombreContratista}} {{sFcontrato.contrato.SegundoNombre}}<br><br/></div>
+             <div class="col-md-3"><b>{{'NUMERO_DOCUMENTO' | translate}}</b></div>
+             <div class="col-md-8 col-md-offset-1">{{sFcontrato.contrato.ContratistaId}}<br><br/></div>
            </div>
         </div>
         <div class="col-md-3 paneles">
