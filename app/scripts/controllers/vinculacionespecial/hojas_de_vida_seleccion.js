@@ -5,82 +5,10 @@ angular.module('contractualClienteApp')
 
     var self = this;
 
-    self.datosFiltro;
-
     self.resolucion = $localStorage.resolucion
     self.estado = false;
-    //Lectura del parámetro de resolución de entrada
-    self.idResolucion=$routeParams.idResolucion;
-    self.dedicaciones;
     self.proyectos=[];
-  /*
-    self.datosPersonas = {
-      paginationPageSizes: [10, 15, 20],
-      paginationPageSize: 10,
-      enableRowSelection: true,
-      enableRowHeaderSelection: true,
-      enableFiltering: true,
-      enableHorizontalScrollbar: 0,
-      enableVerticalScrollbar: true,
-      useExternalPagination: false,
-      enableSelectAll: false,
-      columnDefs : [
-        {
-          field: 'Id',
-          displayName: $translate.instant('DOCUMENTO')
-        },
-        {
-          field: 'NombreCompleto',
-          width: '40%', displayName:
-          $translate.instant('NOMBRE')
-        },
-        {
-          field: 'Escalafon',
-          displayName: $translate.instant('CATEGORIA')
-        },
-        {
-            name: $translate.instant('OPCIONES'),
-            enableFiltering: false,
-            width: '15%',
-            cellTemplate: '<center>' +
-               '<a class="ver" ng-click="grid.appScope.verInformacionPersonal(row)">' +
-               '<i title="{{\'VER_INFO_PERSONAL_BTN\' | translate }}" class="fa fa-user fa-lg  faa-shake animated-hover"></i></a> ' /*+
-               '<a class="editar" ng-click="grid.appScope.verFormacionAcademica(row)">' +
-               '<i title="{{\'VER_INFO_ACADEMICA\' | translate }}" class="fa fa-graduation-cap fa-lg  faa-shake animated-hover"></i></a> ' +
-               '<a class="ver" ng-click="grid.appScope.verHistoriaLaboral(row)">' +
-               '<i title="{{\'VER_EXP_LABORAL\' | translate }}" class="fa fa-pencil fa-lg faa-shake animated-hover"></i></a> ' +
-               '<a class="editar" ng-click="grid.appScope.verTrabajosInvestigacion(row)">' +
-               '<i title="{{\'VER_TRABAJOS_INVESTIGACION\' | translate }}" class="fa fa-book fa-lg fa-lg animated-hover"></i></a> ''</center>'
-        }
-      ],
-      onRegisterApi : function(gridApi){
-        self.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope,function(row){
-          self.personasSeleccionadas=gridApi.selection.getSelectedRows();
-          if(self.personasSeleccionadas.length==0){
-            self.persona=null;
-          }else{
-            amazonAdministrativaRequest.get("informacion_persona_natural/"+row.entity.Id).then(function(response){
-              if(typeof(response.data)=="object"){
-                self.persona=row.entity;
-                self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');
-              }else{
-                swal({
-                  title: $translate.instant('PROBLEMA'),
-                  text: $translate.instant('MENSAJE_ERROR'),
-                  type: "danger",
-                  confirmButtonText: $translate.instant('ACEPTAR'),
-                  closeOnConfirm: false,
-                  showLoaderOnConfirm: true,
-                });
-              }
-            });
-          }
-        });
-      }
-    };
-    */
-
+    var vinculacionesData=[];
 
     self.datosDocentesCargaLectiva = {
       paginationPageSizes: [10, 15, 20],
@@ -123,7 +51,18 @@ angular.module('contractualClienteApp')
         },
         {
           field: 'id_tipo_vinculacion',
-          displayName: "id_tipo_vinculacion"
+          displayName: "id_tipo_vinculacion",
+          visible:false
+        },
+        {
+          field: 'id_proyecto',
+          displayName: "id_proyecto_curricular",
+
+        },
+        {
+          field: 'tipo_vinculacion_nombre',
+          displayName: "nombre vinculacion",
+
         }
 
       ],
@@ -138,35 +77,19 @@ angular.module('contractualClienteApp')
     };
 
 
-
-    /*
-    //Se leen los datos básicos de la resolucion de vinculación especial
-    amazonAdministrativaRequest.get("persona_escalafon/persona_escalafon_"+self.resolucion.NivelAcademico_nombre.toLowerCase()).then(function(response){
-      self.datosPersonas.data=response.data;
-      self.datosPersonas.data.forEach(function(row){
-      //El nombre completo se guarda en una sola variable
-        row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
-      });
-    });
-    */
     adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia.toString()+"&periodo="+self.resolucion.Periodo.toString()+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad.toString()).then(function(response){
-      console.log("docentes carga desde académica")
-      self.datosDocentesCargaLectiva.data = response.data
+        self.datosDocentesCargaLectiva.data = response.data
 
     });
 
     self.RecargarDatosPersonas = function(){
-      amazonAdministrativaRequest.get("persona_escalafon/persona_escalafon_"+self.resolucion.NivelAcademico_nombre.toLowerCase()).then(function(response){
-        self.datosPersonas.data=response.data;
-        self.datosPersonas.data.forEach(function(row){
+      adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia.toString()+"&periodo="+self.resolucion.Periodo.toString()+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad.toString()).then(function(response){
+          self.datosDocentesCargaLectiva.data = response.data
 
-          //El nombre completo se guarda en una sola variable
-          row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
-        });
       });
     }
 
-    /*
+
     oikosAmazonRequest.get("dependencia_padre","query=Padre%3A"+self.resolucion.IdFacultad+"&fields=Hija&limit=-1").then(function(response){
       if(response.data==null){
         //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
@@ -188,7 +111,7 @@ angular.module('contractualClienteApp')
                 if(auxNum==auxProyectos.length){
                   if(self.proyectos.length==0){
                     //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
-                    oikosAmazonRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
+                    oikosAmazonRequest.get("dependencia/"+self.resolucion.IdFacultad).then(function(response){
                       self.proyectos=[response.data]
                     });
                   }
@@ -204,13 +127,6 @@ angular.module('contractualClienteApp')
 
     });
 
-    amazonAdministrativaRequest.get("dedicacion","limit=-1&query=NombreDedicacion__in:"+self.resolucion.Dedicacion).then(function(response){
-      if(typeof(response.data)=="object"){
-        self.dedicaciones=response.data;
-      }
-    });
-
-    */
 
     //Se cargan los datos de los docentes que han sido asociados previamente a la resolucion
     self.precontratados = {
@@ -223,14 +139,15 @@ angular.module('contractualClienteApp')
       columnDefs : [
         {field: 'Id', visible : false},
         {field: 'NombreCompleto', width: '25%', displayName: $translate.instant('NOMBRE')},
-        {field: 'Documento', displayName: $translate.instant('CEDULA')},
+        {field: 'IdPersona', displayName: $translate.instant('CEDULA')},
         {field: 'Expedicion', displayName: $translate.instant('EXPEDICION')},
         {field: 'Categoria', displayName: $translate.instant('CATEGORIA')},
-        {field: 'Dedicacion', displayName: $translate.instant('DEDICACION')},
-        {field: 'HorasSemanales', displayName: $translate.instant('HORAS_SEMANALES')},
-        {field: 'Semanas', displayName: $translate.instant('SEMANAS')},
+        {field: 'IdDedicacion.NombreDedicacion', displayName: $translate.instant('DEDICACION')},
+        {field: 'IdDedicacion.Id', visible:false,displayName: $translate.instant('DEDICACION')},
+        {field: 'NumeroHorasSemanales', displayName: $translate.instant('HORAS_SEMANALES')},
+        {field: 'NumeroSemanas', displayName: $translate.instant('SEMANAS')},
         {field: 'ValorContrato', displayName: $translate.instant('VALOR_CONTRATO'), cellClass:"valorEfectivo"},
-        {field: 'ProyectoCurricular', visible:false,filter: {
+        {field: 'IdProyectoCurricular', visible:false,filter: {
                         term: self.term
                     }},
         {
@@ -247,103 +164,75 @@ angular.module('contractualClienteApp')
       ]
     };
 
-
-/*
-    amazonAdministrativaRequest.get("precontratado/"+self.resolucion.Id.toString()).then(function(response){
+    /*
+    amazonAdministrativaRequest.get("vinculacion_docente", "limit=-1&query=IdResolucion.Id:"+self.resolucion.Id).then(function(response){
       self.precontratados.data=response.data;
-      if(self.precontratados.data != null){
-        self.precontratados.data.forEach(function(row){
-            row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
-          });
-      }else{
-        self.precontratados.data=[]
-      }
+
     });
-*/
+    */
 
-
-
-
-    self.get_proyecto=function(){
+    self.get_docentes_vinculados=function(){
 
       self.estado = true;
-      adminMidRequest.post("calculo_salario/Precontratacion/"+self.resolucion.Id.toString()+"/"+self.resolucion.NivelAcademico_nombre).then(function(response){
-        self.precontratados.data=response.data
-        self.precontratados.ValorContrato=self.FormatoNumero(response.data,0);
+      amazonAdministrativaRequest.get("vinculacion_docente", "limit=-1&query=IdResolucion.Id:"+self.resolucion.Id).then(function(response){
+        self.precontratados.data=response.data;
         self.estado = false;
+
       });
-      self.precontratados.columnDefs[9].filter.term = self.term;
+
+      self.precontratados.columnDefs[10].filter.term = self.term;
+
 
     }
 
       //Función para almacenar los datos de las vinculaciones realizadas
     self.agregarPrecontratos = function(){
 
-      var vinculacionesData=[];
 
       self.personasSeleccionadas1.forEach(function(personaSeleccionada){
         var vinculacionDocente = {
-          //IdPersona: personaSeleccionada.Id.toString(),
-          NumeroHorasSemanales: personaSeleccionada.horas_lectivas,
-          NumeroSemanas: self.resolucion.NumeroSemanas,
+          IdPersona: personaSeleccionada.docente_documento.toString(),
+          NumeroHorasSemanales: parseInt(personaSeleccionada.horas_lectivas),
+          NumeroSemanas: parseInt(self.resolucion.NumeroSemanas),
           IdResolucion: {Id: parseInt(self.resolucion.Id)},
           IdDedicacion: {Id: parseInt(personaSeleccionada.id_tipo_vinculacion)},
-          IdProyectoCurricular: parseInt(personaSeleccionada.id_proyecto)
+          IdProyectoCurricular: parseInt(personaSeleccionada.id_proyecto),
+          Categoria: personaSeleccionada.CategoriaNombre.toString().toUpperCase(),
+          Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toString().toUpperCase(),
+          NivelAcademico: self.resolucion.NivelAcademico_nombre.toString()
         };
 
         vinculacionesData.push(vinculacionDocente);
-        console.log("Aqui ando");
-        console.log(vinculacionDocente);
-      })
-      /*
-      var vinculacionesData=[];
 
-      //Se almacenan los datos en un arreglo de estructuras
-      self.personasSeleccionadas.forEach(function(personaSeleccionada){
-        console.log("personaSeleccionada");
-        console.log(personaSeleccionada);
-        var vinculacionDocente = {
-          IdPersona: personaSeleccionada.Id.toString(),
-          NumeroHorasSemanales: self.datosValor.NumHorasSemanales,
-          NumeroSemanas: self.resolucion.NumeroSemanas,
-          IdResolucion: {Id: parseInt(self.resolucion.Id)},
-          IdDedicacion: {Id: parseInt(self.dedicacion)},
-          IdProyectoCurricular: parseInt(self.datosValor.proyectoCurricular)
-        };
 
-        vinculacionesData.push(vinculacionDocente);
-        console.log("Aqui ando");
-        console.log(vinculacionDocente);
-      })
+        })
 
-      //Se envía en arreglo de estructuras a la transacción encargadade almacenar los datos
-      amazonAdministrativaRequest.post("vinculacion_docente/InsertarVinculaciones",vinculacionesData).then(function(response){
-        console.log("VinculacionesData:");
-        console.log(vinculacionesData);
-        if(typeof(response.data)=="object"){
-            self.persona=null;
-            swal({
-              text: $translate.instant('VINCULACION_EXITOSA'),
-              type: 'success',
-              confirmButtonText: $translate.instant('ACEPTAR')
 
-              })
-              self.term = self.datosValor.proyectoCurricular
-              self.get_proyecto();
-            }else{
-            swal({
-              title: $translate.instant('ERROR'),
-              text: $translate.instant('CONTRATO_NO_ALMACENADO'),
-              type: 'info',
-              confirmButtonText: $translate.instant('ACEPTAR')
-            })
-          }
-      })
+          adminMidRequest.post("calculo_salario/Contratacion/insertar_previnculaciones",vinculacionesData).then(function(response){
 
-      self.datosValor.NumSemanas = "";
-      self.datosValor.NumHorasSemanales = "";
-      self.RecargarDatosPersonas();
-      */
+            if(response.data=="OK"){
+                self.persona=null;
+                swal({
+                  text: $translate.instant('VINCULACION_EXITOSA'),
+                  type: 'success',
+                  confirmButtonText: $translate.instant('ACEPTAR')
+
+                  })
+                  self.RecargarDatosPersonas();
+                  self.get_docentes_vinculados();
+                }else{
+                swal({
+                  title: $translate.instant('ERROR'),
+                  text: $translate.instant('CONTRATO_NO_ALMACENADO'),
+                  type: 'info',
+                  confirmButtonText: $translate.instant('ACEPTAR')
+                })
+              }
+          })
+
+        //self.RecargarDatosPersonas();
+
+
     }
 
 
@@ -375,30 +264,17 @@ angular.module('contractualClienteApp')
     }
 
     self.desvincularDocente = function(row){
-      var idDedicacion;
-      switch(row.entity.Dedicacion){
-        case "TCO":
-          idDedicacion=4;
-          break;
-        case "MTO":
-          idDedicacion=3;
-          break;
-        case "HCH":
-          idDedicacion=1;
-          break;
-        case "HCP":
-          idDedicacion=2;
-          break;
-      }
+
 
       var vinculacionCancelada = {
-        IdPersona: row.entity.Documento,
-        NumeroHorasSemanales: row.entity.HorasSemanales,
-        NumeroSemanas: row.entity.Semanas,
-        IdResolucion: {Id: parseInt(self.idResolucion)},
-        IdDedicacion: {Id: parseInt(idDedicacion)},
-        IdProyectoCurricular: parseInt(row.entity.ProyectoCurricular),
+        IdPersona: row.entity.IdPersona,
+        NumeroHorasSemanales: row.entity.NumeroHorasSemanales,
+        NumeroSemanas: row.entity.NumeroSemanas,
+        IdResolucion: {Id: parseInt(self.resolucion.Id)},
+        IdDedicacion: {Id: parseInt(row.entity.IdDedicacion.Id)},
+        IdProyectoCurricular: parseInt(row.entity.IdProyectoCurricular),
         Estado: false
+
       };
 
       amazonAdministrativaRequest.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
@@ -410,7 +286,7 @@ angular.module('contractualClienteApp')
             confirmButtonText: $translate.instant('ACEPTAR')
 
             })
-            self.get_proyecto();
+            self.get_docentes_vinculados();
           }else{
           swal({
             title: $translate.instant('ERROR'),
@@ -423,26 +299,8 @@ angular.module('contractualClienteApp')
       })
     }
 
-    self.inscribirContratos = function(){
-      self.contratosInscritos = self.contratados.data;
-      self.verCalcularSalario();
-    }
 
-    self.asignarContrato = function(){
-      self.verCalcularSalario();
-    }
 
-    self.verCalcularSalario = function(){
-       $mdDialog.show({
-        controller: "ContratoRegistroCtrl",
-        controllerAs: "contratoRegistro",
-        templateUrl: 'views/vinculacionespecial/contrato_registro.html',
-        parent: angular.element(document.body),
-        clickOutsideToClose:true,
-        fullscreen: true,
-        locals: {persona: self.persona, nivelAcademico: self.nivelAcademico, idFacultad: self.idFacultad, idProyectoCurricular: self.idProyectoCurricular,contratados: self.contratosInscritos}
-      })
-    };
 
     self.mostrarReglas = function(){
       var textoReglas="";
