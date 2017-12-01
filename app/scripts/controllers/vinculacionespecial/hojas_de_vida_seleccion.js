@@ -140,7 +140,6 @@ angular.module('contractualClienteApp')
         {field: 'Id', visible : false},
         {field: 'NombreCompleto', width: '25%', displayName: $translate.instant('NOMBRE')},
         {field: 'IdPersona', displayName: $translate.instant('CEDULA')},
-        {field: 'Expedicion', displayName: $translate.instant('EXPEDICION')},
         {field: 'Categoria', displayName: $translate.instant('CATEGORIA')},
         {field: 'IdDedicacion.NombreDedicacion', displayName: $translate.instant('DEDICACION')},
         {field: 'IdDedicacion.Id', visible:false,displayName: $translate.instant('DEDICACION')},
@@ -174,13 +173,13 @@ angular.module('contractualClienteApp')
     self.get_docentes_vinculados=function(){
 
       self.estado = true;
-      amazonAdministrativaRequest.get("vinculacion_docente", "limit=-1&query=IdResolucion.Id:"+self.resolucion.Id).then(function(response){
+      adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.resolucion.Id.toString()).then(function(response){
         self.precontratados.data=response.data;
         self.estado = false;
 
       });
 
-      self.precontratados.columnDefs[10].filter.term = self.term;
+      self.precontratados.columnDefs[9].filter.term = self.term;
 
 
     }
@@ -212,6 +211,7 @@ angular.module('contractualClienteApp')
 
             if(response.data=="OK"){
                 self.persona=null;
+                self.datosDocentesCargaLectiva.data = []
                 swal({
                   text: $translate.instant('VINCULACION_EXITOSA'),
                   type: 'success',
@@ -300,28 +300,6 @@ angular.module('contractualClienteApp')
     }
 
 
-
-
-    self.mostrarReglas = function(){
-      var textoReglas="";
-      switch(self.resolucion.Dedicacion){
-        case "HCH":
-          textoReglas=textoReglas+'<p><b>'+$translate.instant('HCH')+'</b>'+ $translate.instant('HCH1')+'</p>'
-          break;
-        case "HCP":
-          textoReglas=textoReglas+'<p><b>'+$translate.instant('HCP')+'</b>'+$translate.instant('HCP1')+'</p>'
-          break;
-        case "TCO|MTO":
-          textoReglas=textoReglas+'<p><b>'+$translate.instant('MTO')+'</b>'+$translate.instant('MTO1')+'</p>'+
-                                  '<p><b>'+$translate.instant('TCO')+'</b>'+$translate.instant('TCO1')+'</p>'
-          break;
-      }
-      swal({
-        title: $translate.instant('REGLAS'),
-        type: 'info',
-        html: textoReglas
-      })
-    }
 
     $scope.verInformacionPersonal = function(row){
       $mdDialog.show({

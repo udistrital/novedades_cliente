@@ -43,11 +43,17 @@ angular.module('contractualClienteApp')
 
         }
       });
-      */
+
+
       adminMidRequest.post("calculo_salario/Precontratacion/"+self.idResolucion.toString()+"/"+resolucion.NivelAcademico).then(function(response){
         self.contratados=response.data;
         });
+        */
+      adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.idResolucion.toString()).then(function(response){
 
+          self.contratados=response.data;
+
+        });
       coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.datosFiltro.IdFacultad.toString()).then(function(response){
         if(response.data==null){
           coreRequest.get("ordenador_gasto/1").then(function(response){
@@ -217,16 +223,16 @@ angular.module('contractualClienteApp')
           var cdp=JSON.parse(JSON.stringify(self.contratoGeneralBase.Cdp));
           var actaI=JSON.parse(JSON.stringify(self.acta));
           cdp.NumeroCdp=self.contratoGeneralBase.Cdp.cdp.NumeroDisponibilidad;
-          contratoGeneral.Contratista=contratado.Documento;
-          contratoGeneral.DependenciaSolicitante=contratado.ProyectoCurricular.toString();
-          contratoGeneral.PlazoEjecucion=contratado.Semanas*7;
+          contratoGeneral.Contratista=parseInt(contratado.IdPersona);
+          contratoGeneral.DependenciaSolicitante=contratado.IdProyectoCurricular.toString();
+          contratoGeneral.PlazoEjecucion=parseInt(contratado.NumeroHorasSemanales*7);
           contratoGeneral.OrdenadorGasto=self.ordenadorGasto.Id;
-          contratoGeneral.ValorContrato=contratado.ValorContrato;
+          contratoGeneral.ValorContrato=parseInt(contratado.ValorContrato);
           var contratoVinculacion={
             ContratoGeneral: contratoGeneral,
             Cdp: cdp,
             ActaInicio: actaI,
-            VinculacionDocente: {Id: contratado.Id}
+            VinculacionDocente: {Id: parseInt(contratado.Id)}
           }
           if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
             contratoVinculacion.VinculacionDocente.IdPuntoSalarial=self.punto_salarial.Id;
