@@ -132,9 +132,11 @@ angular.module('contractualClienteApp')
 
     self.getContenidoDocumento = function(){
                     amazonAdministrativaRequest.get("contenido_resolucion/"+self.idResolucion).then(function(response){
+                      console.log("contenido")
                       self.contenidoResolucion=response.data;
                       //Se carga el ordenador del gasto asocciado a la dependencia solicitante de los docentes de vinculación especial
                       coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.datosFiltro.IdFacultad.toString()).then(function(response){
+                        console.log("ordenador")
                         if(response.data==null){
                           coreRequest.get("ordenador_gasto/1").then(function(response){
                             self.contenidoResolucion.ordenadorGasto=response.data;
@@ -144,35 +146,21 @@ angular.module('contractualClienteApp')
                         }
                         //Se verifica si la resolución ha sido expedida o no
                         if(self.resolucion.FechaExpedicion == null){
+                            console.log("no fue expedida")
                           //Se cargan los docentes previamente vinculados con la resolución
-                          amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
+                            adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.idResolucion.toString()).then(function(response){
                             self.contratados=response.data;
-                            if(self.contratados){
-                              var auxSalarios=0;
-                              self.contratados.forEach(function(row){
-                                row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
-                                adminMidRequest.get("calculo_salario/Contratacion/"+row.Id).then(function(response){
-                                  auxSalarios++;
-                                  row.ValorContrato=self.FormatoNumero(response.data);
-                                  if(auxSalarios==self.contratados.length){
-                                    self.generarResolucion()
-                                  }
-                                });
-                              });
-                            }else{
-                              //Se llama la función para generar el pdf con la resoleución
-                              self.generarResolucion()
-                            }
+                            self.generarResolucion();
+
                           });
                         }else{
+                          console.log("fecha no nula")
+                          console.log(self.resolucion.FechaExpedicion)
                           //Se cargan los docentes contratdos si la resolucion ya fue expedida
-                          amazonAdministrativaRequest.get("precontratado/Contratado/"+self.idResolucion.toString()).then(function(response){
+                          adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.idResolucion.toString()).then(function(response){
                             self.contratados=response.data;
                             if(self.contratados){
-                              self.contratados.forEach(function(row){
-                                //El nombre completode los docentes es almacenado en una sola variable para poder ser visualizado en la tabla
-                                row.NombreCompleto = row.PrimerNombre + ' ' + row.SegundoNombre + ' ' + row.PrimerApellido + ' ' + row.SegundoApellido;
-                              });
+
                               self.generarResolucion();
                             }else{
                               //Se llama la función para generar el pdf con la resoleución
@@ -199,12 +187,13 @@ self.imagen='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAbgAAAHGCAYAAAAG4p4CA
 //Función para obtener el contenido de las tablas por proyecto currícular de los docentes asociados a la resolución
 self.getCuerpoTabla=function(idProyecto, datos, columnas) {
   var cuerpo=[];
-  var encabezado=[{ text: 'Nombre', style: 'encabezado' }, { text: 'Cédula', style: 'encabezado'}, { text: 'Expedida', style: 'encabezado'}, { text: 'Categoría', style: 'encabezado'}, { text: 'Dedicación', style: 'encabezado'}, { text: 'Horas semanales', style: 'encabezado'}, { text: 'Periodo vinculación', style: 'encabezado'}, { text: 'Valor contrato ', style: 'encabezado'}];
+  var encabezado=[{ text: 'Nombre', style: 'encabezado' }, { text: 'Cédula', style: 'encabezado'}, { text: 'Valor contrato ', style: 'encabezado'}
+];
   cuerpo.push(encabezado);
   if(datos){
     datos.forEach(function(fila) {
       //Se veriica que el docente este asociado al proyecto curricular actual
-      if(fila.ProyectoCurricular==idProyecto){
+      if(fila.IdProyectoCurricular==idProyecto){
         var datoFila = [];
         columnas.forEach(function(columna) {
           //Cada dato es almacenado como un String dentro de la matriz de la tabla
@@ -286,7 +275,7 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
           var proyectoVisible=false;
           if(contratados){
             contratados.forEach(function(fila) {
-              if(fila.ProyectoCurricular==proyecto.Id){
+              if(fila.IdProyectoCurricular==proyecto.Id){
                 proyectoVisible=true;
               }
             });
@@ -295,8 +284,10 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
             contenido.push({ text: proyecto.Nombre,
               style: 'proyecto'});
             //Definicion de los encabezados en base a las claves almacenadas dentro de la estructura de los datos
-            contenido.push(self.getTabla(proyecto.Id, contratados, ['NombreCompleto', 'Documento', 'Expedicion', 'Categoria', 'Dedicacion', 'HorasSemanales', 'Semanas', 'ValorContrato']));
+            contenido.push(self.getTabla(proyecto.Id, contratados, ['NombreCompleto', 'IdPersona', 'ValorContrato']));
           }
+          console.log("contenido final")
+          console.log(contenido)
         });
       }
       index++;
