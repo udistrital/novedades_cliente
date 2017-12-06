@@ -58,8 +58,20 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-        	width: '15%',
+        	width: '5%',
         	displayName: $translate.instant('VIGENCIA')
+        },
+        {
+        	field: 'Periodo',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                if (row.entity.Estado=="Cancelada") {
+                    return 'resolucionCancelada';
+                }else if(row.entity.Estado=="Expedida"){
+                    return 'resolucionExpedida';
+                }
+            },
+        	width: '5%',
+        	displayName: "Periodo"
         },
         {
         	field: 'Facultad',
@@ -96,6 +108,18 @@ angular.module('contractualClienteApp')
             },
         	width: '15%',
         	displayName: $translate.instant('DEDICACION')
+        },
+        {
+        	field: 'NumeroSemanas',
+            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                if (row.entity.Estado=="Cancelada") {
+                    return 'resolucionCancelada';
+                }else if(row.entity.Estado=="Expedida"){
+                    return 'resolucionExpedida';
+                }
+            },
+        	width: '5%',
+        	displayName: "Número de semanas"
         },
         {
             field: 'Estado',
@@ -195,8 +219,8 @@ angular.module('contractualClienteApp')
         self.resolucion.NivelAcademico = auxNivelAcademico;
         self.resolucion.IdFacultad = self.datos_docentes.IdFacultad;
         self.resolucion.Vigencia = row.entity.Vigencia;
-        self.resolucion.Periodo = 1;                         //--- se deja quemado, debe incluirse ne tabla resolucion
-        self.resolucion.NumeroSemanas = 18;                 //--- se deja quemado, debe incluirse ne tabla resolucion
+        self.resolucion.Periodo = row.entity.Periodo;                         //--- se deja quemado, debe incluirse ne tabla resolucion
+        self.resolucion.NumeroSemanas = row.entity.NumeroSemanas;                 //--- se deja quemado, debe incluirse ne tabla resolucion
 
         if(self.datos_docentes.Dedicacion == "TCO-MTO"){
             self.resolucion.Dedicacion = "TCO|MTO"

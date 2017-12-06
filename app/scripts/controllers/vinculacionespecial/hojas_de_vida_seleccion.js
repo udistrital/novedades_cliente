@@ -6,6 +6,8 @@ angular.module('contractualClienteApp')
     var self = this;
 
     self.resolucion = $localStorage.resolucion
+    console.log("resolucion")
+    console.log(self.resolucion)
     self.estado = false;
     self.proyectos=[];
     var vinculacionesData=[];

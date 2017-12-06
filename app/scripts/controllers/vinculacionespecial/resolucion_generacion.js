@@ -73,7 +73,10 @@ angular.module('contractualClienteApp')
         NumeroResolucion: self.resolucion.numero,
         IdDependencia: parseInt(self.resolucion.facultad),
         PreambuloResolucion: self.resolucion.preambulo,
-        ConsideracionResolucion: self.resolucion.consideracion
+        ConsideracionResolucion: self.resolucion.consideracion,
+        NumeroSemanas : parseInt(self.resolucion.numeroSemanas),
+        Periodo: parseInt(self.resolucion.Periodo)
+
       }
       amazonAdministrativaRequest.post("resolucion/GenerarResolucion",resolucionData).then(function(response){
         var resolucionVinculacionDocenteData={

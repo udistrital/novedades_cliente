@@ -30,30 +30,18 @@
                 <select class="form-control" ng-model="resolucionGeneracion.resolucion.dedicacion" required>
                   <option value="">--{{ 'SELECCIONE' | translate }}--</option>
                   <option value="HCH">HCH</option>
-                  <option value="HCP">HCP</option>                                        
+                  <option value="HCP">HCP</option>
                   <option ng-if="resolucionGeneracion.resolucion.nivelAcademico=='PREGRADO'" value="TCO-MTO">TCO-MTO</option>
                 </select>
               </div>
-              <div class="col-lg-6">
-                            <form role="form">
-                                  <div class="row">
-                                      <div class="form-group col-lg-12">
-                                          <label>{{ 'PREAMBULO' | translate }}</label>
-                                          <textarea rows="7" class="form-control" ng-model="resolucionGeneracion.resolucion.preambulo" required></textarea>
-                                      </div>
-                                  </div>
-                              </form>
-                      </div>
-                      <div class="col-lg-6">
-                            <form role="form">
-                                  <div class="row">
-                                      <div class="form-group col-lg-12">
-                                          <label>{{ 'CONSIDERACION' | translate }}</label>
-                                          <textarea rows="7" class="form-control" ng-model="resolucionGeneracion.resolucion.consideracion" required></textarea>
-                                      </div>
-                                  </div>
-                              </form>
-                      </div>
+              <div class="form-group col-lg-6">
+                <label>Número de semanas</label>
+                <input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionGeneracion.resolucion.numeroSemanas" required>
+              </div>
+              <div class="form-group col-lg-6">
+                <label>Periodo</label>
+                <input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionGeneracion.resolucion.Periodo" required>
+              </div>
                 <div class="form-group col-lg-8 col-lg-offset-2">
                     <label></label>
                     <input type="submit" class="form-control btn btn-success" value="{{'GENERAR_RESOLUCION' | translate }}" ng-click="resolucionGeneracion.crearResolucion()">
