@@ -47,7 +47,9 @@ angular
         'contratacion_mid_service',
         'titan_service',
         'amazonAdministrativaService',
-        'academicaService'
+        'academicaService',
+        'contratoService',
+        'nvd3',
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');

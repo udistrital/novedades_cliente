@@ -26,7 +26,8 @@
         "chart.js": "^2.6.0",
         "vis": "^4.20.0",
         "font-awesome": "^4.7.0",
-        "font-awesome-animation": "^0.1.0"
+        "font-awesome-animation": "^0.1.0",
+        "angular-nvd3": "^1.0.9"
     },
     "resolutions": {
         "angular": "1.6.6"

@@ -14,7 +14,6 @@ angular.module('contractualClienteApp')
   self.contrato=contrato;
   var data1 = [];
   var data2 = [];
-  var data3 = [];
   self.ordenActual={};
   var valor_actual=0;
   var valor_actual_total=0;
@@ -54,7 +53,7 @@ angular.module('contractualClienteApp')
       yAxis: {
         axisLabel: 'Monto',
         axisLabelDistance: 35,
-        tickFormat:function(d){return '$' + d3.format(',f')(d) },
+        //tickFormat:function(d){return '$' + d3.format(',f')(d) },
       },
       multibar:{
         dispatch: {
@@ -124,15 +123,6 @@ angular.module('contractualClienteApp')
       series:2,
       yAxis:1,
     });
-    data3.push({
-      x: i,
-      op:op.consecutivo_orden+"-"+op.vigencia,
-      valor: valor_contrato,
-      tipo: $translate.instant('TOTAL'),
-      porcentaje : 100,
-      fecha: fecha,
-      yAxis:3,
-    });
     i++;
   });
 //se agrega un arreglo para cada stack de la grafica
@@ -146,11 +136,6 @@ angular.module('contractualClienteApp')
     key: $translate.instant('ACUMULADO'),
     color: '#6BB9F0',
     values: data2,
-  },
-  {
-    key: $translate.instant('TOTAL'),
-    color: '#1E8BC3',
-    values: data3,
   }
 ];
   };

@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroContratoCtrl', function ($timeout,$window,contrato,registro,disponibilidad,agoraRequest,orden,sicapitalRequest,administrativaRequest,$scope,$rootScope,$translate) {
+  .controller('SeguimientoycontrolFinancieroContratoCtrl', function ($timeout,$window,contrato,amazonAdministrativaRequest,registro,disponibilidad,agoraRequest,orden,sicapitalRequest,administrativaRequest,$scope,$rootScope,$translate) {
     var self = this;
     self.cambio = false;
     self.contrato=contrato;
@@ -23,7 +23,7 @@ angular.module('contractualClienteApp')
     self.cdp=null;
     self.cargando_datos = true;
     $scope.banderaRP = true;
-    var query = "query=NumeroContrato:"+self.contrato.Id;
+    var query = "query=NumeroContrato:"+self.contrato.Id +",Vigencia:"+self.contrato.Vigencia;
     self.registro_presupuestal=[];
     var t1;
     var t0;
@@ -39,7 +39,7 @@ angular.module('contractualClienteApp')
     t0 = performance.now();
     //CDP asociado a un contrato
     if(disponibilidad.length===0){
-    administrativaRequest.get('contrato_disponibilidad',query).then(function(response) {
+      amazonAdministrativaRequest.get('contrato_disponibilidad',query).then(function(response) {
       self.cdps=response.data;
       if(self.cdps !== null){
       //petición para traer los rp por cdp de sicapital vigencia/cdp/cedula
@@ -55,14 +55,24 @@ angular.module('contractualClienteApp')
           self.cargando_datos = false;
         }else{
           $scope.banderaRP = false;
+          swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_RP'), "error").then(function() {
+            //si da click en ir a contratistas
+            $window.location.href = '#/seguimientoycontrol/financiero';
+          });
         }
         if(i === self.cdps.length){
           //recorre los rps y busca las ordenes de pago de este
           for (var x = 0; x < self.registro_presupuestal.length; x++) {
           url = self.contrato.ContratistaId+"/"+self.registro_presupuestal[x].NUMERO_DISPONIBILIDAD+"/"+self.registro_presupuestal[x].NUMERO_REGISTRO+"/"+self.registro_presupuestal[x].VIGENCIA;
             sicapitalRequest.get('ordenpago/opgsyc', url).then(function(response) {
+              console.log(response.data);
               if(response.data[0]!== "<"){
                 self.ordenes_pago = self.ordenes_pago.concat(response.data);
+              }else{
+                swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_ORDEN'), "error").then(function() {
+                  //si da click en ir a contratistas
+                  $window.location.href = '#/seguimientoycontrol/financiero';
+                });
               }
               if(x===self.registro_presupuestal.length){
                 for (var i = 0; i < self.ordenes_pago.length; i++) {
@@ -114,7 +124,7 @@ angular.module('contractualClienteApp')
 
   }
     t1 = performance.now();
-    total = (t1 - t0) +500;
+    total = (t1 - t0) +3500;
 
     self.reloj = function(){
       if($scope.banderaRP === true && self.cargando_datos === true){
@@ -123,13 +133,6 @@ angular.module('contractualClienteApp')
         return false;
       }
     };
-
-    agoraRequest.get('informacion_persona_natural', 'query=Id:'+contrato.ContratistaId).then(function(response) {
-      self.persona=response.data[0];
-    agoraRequest.get('parametro_estandar', 'query=Id:'+self.persona.TipoDocumento.Id).then(function(response) {
-          self.persona.TipoDocumento.ValorParametro=response.data[0].ValorParametro;
-        });
-    });
 
     self.seleccionarValores = function(){
       if(disponibilidad.length===0){
@@ -177,8 +180,9 @@ angular.module('contractualClienteApp')
           self.orden_pago.push(temp);
           temp = [];
         }
-        self.cambio = true;
+            self.cambio = true;
       }, total);
+
       }
 
     };

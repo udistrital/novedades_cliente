@@ -1,7 +1,7 @@
 <br>
 <div class="panel panel-default">
   <div class="panel-body">
-          <center><h3 class="titulo-centrado">{{'SEGUIMIENTO_FINANCIERO' | translate}} {{sFestadisticas.contrato.Id}}</h3></center>
+    <center><h3 class="titulo-centrado">{{'SEGUIMIENTO_FINANCIERO' | translate}} {{sFestadisticas.contrato.NumeroSuscrito}} - {{sFestadisticas.contrato.Vigencia}}</h3></center>
           <ul class="nav nav-tabs">
               <li><a href="#/seguimientoycontrol/financiero/contrato" data-toggle="tab">{{'DATOS_CONTRATO' | translate}}</a>
               </li>
@@ -49,11 +49,11 @@
               <div class="panel-heading row"><h4><b><div class="col-md-12"><center>{{'GRAFICO_BARRAS_CONTRATO' | translate}}</center></div></b></h4></div>
               <div class="panel-body row">
                 <div ng-click="sFestadisticas.seleccionar()" id="grafico">
-                <nvd3 options='options' data='data' ></nvd3>
+                <nvd3 options='options' data='data'></nvd3>
                 </div>
               </div>
             </div>
-
+            
             <div class="col-md-3" ng-show="sFestadisticas.orden[0].vigencia==''">
             </div>
 

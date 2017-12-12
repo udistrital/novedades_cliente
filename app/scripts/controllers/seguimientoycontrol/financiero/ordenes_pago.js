@@ -8,10 +8,11 @@
 * Controller of the contractualClienteApp
 */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function($http,$window, $scope,$translate,registro,orden, disponibilidad,contrato) {
+.controller('SeguimientoycontrolFinancieroOrdenesPagoCtrl', function($http,contrato,$window, $scope,$translate,registro,orden, disponibilidad,contrato) {
   var self = this;
   self.contrato = contrato;
   self.items = [];
+  self.contrato = contrato;
   self.registro = registro;
   self.disponibilidad = disponibilidad;
   self.ordenes_pago =orden;
