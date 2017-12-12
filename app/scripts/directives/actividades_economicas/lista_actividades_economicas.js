@@ -29,7 +29,7 @@ angular.module('contractualClienteApp')
           enableSelectAll: false,
           columnDefs: [{
               field: 'Id',
-              displayName: $translate.instant('CODIGO'),
+              displayName: $translate.instant('ID'),
               headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
               cellTooltip: function(row) {
                 return row.entity.Id;
@@ -53,8 +53,9 @@ angular.module('contractualClienteApp')
           });
         };
 
-        coreRequest.get('ciiu_subclase',$.param({
+        coreRequest.get('actividad_economica',$.param({
           limit:-1,
+          query="ClasificacionCiiu.Nombre:Subclase,Activo=true",
           sortby:"Id",
           order:"asc",
         })).then(function(response) {
