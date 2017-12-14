@@ -150,13 +150,14 @@ angular.module('contractualClienteApp')
       enableRowHeaderSelection: false,
       columnDefs : [
         {field: 'Id', visible : false},
-        {field: 'NombreCompleto', width: '25%', displayName: $translate.instant('NOMBRE')},
+        {field: 'NombreCompleto', width: '20%', displayName: $translate.instant('NOMBRE')},
         {field: 'IdPersona', displayName: $translate.instant('CEDULA')},
         {field: 'Categoria', displayName: $translate.instant('CATEGORIA')},
         {field: 'IdDedicacion.NombreDedicacion', displayName: $translate.instant('DEDICACION')},
         {field: 'IdDedicacion.Id', visible:false,displayName: $translate.instant('DEDICACION')},
-        {field: 'NumeroHorasSemanales', displayName: $translate.instant('HORAS_SEMANALES')},
-        {field: 'NumeroSemanas', displayName: $translate.instant('SEMANAS')},
+        {field: 'NumeroHorasSemanales', width: '5%',displayName: $translate.instant('HORAS_SEMANALES')},
+        {field: 'NumeroSemanas', width: '5%',displayName: $translate.instant('SEMANAS')},
+        {field: 'NumeroDisponibilidad', displayName: "Número de Disponibilidad" },
         {field: 'ValorContrato', displayName: $translate.instant('VALOR_CONTRATO'), cellClass:"valorEfectivo"},
         {field: 'IdProyectoCurricular', visible:false,filter: {
                         term: self.term
@@ -191,7 +192,7 @@ angular.module('contractualClienteApp')
 
       });
 
-      self.precontratados.columnDefs[9].filter.term = self.term;
+      self.precontratados.columnDefs[10].filter.term = self.term;
 
 
     }
@@ -211,7 +212,7 @@ angular.module('contractualClienteApp')
           Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
           Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
           NivelAcademico: self.resolucion.NivelAcademico_nombre,
-          IdCDP: self.id_cdp.Id
+          Disponibilidad: self.id_cdp.Id
         };
 
         vinculacionesData.push(vinculacionDocente);
