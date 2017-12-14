@@ -1,15 +1,14 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-  .controller('HojasDeVidaSeleccionCtrl', function (resolucion,amazonAdministrativaRequest,adminMidRequest,oikosAmazonRequest,contratacion_mid_request,$localStorage,$scope,$mdDialog,$routeParams,$translate) {
+  .controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,financieraRequest,resolucion,amazonAdministrativaRequest,adminMidRequest,oikosAmazonRequest,contratacion_mid_request,$localStorage,$scope,$mdDialog,$routeParams,$translate) {
 
     var self = this;
 
     self.resolucion = $localStorage.resolucion
-    console.log("resolucion")
-    console.log(self.resolucion)
     self.estado = false;
     self.proyectos=[];
+    self.vigencia_data = self.resolucion.Vigencia;
     var vinculacionesData=[];
 
     self.datosDocentesCargaLectiva = {
@@ -73,23 +72,34 @@ angular.module('contractualClienteApp')
         self.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope,function(row){
           self.personasSeleccionadas1=gridApi.selection.getSelectedRows();
-
+          self.persona = true;
         });
       }
     };
 
 
-    adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia.toString()+"&periodo="+self.resolucion.Periodo.toString()+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad.toString()).then(function(response){
+    adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
         self.datosDocentesCargaLectiva.data = response.data
 
     });
 
     self.RecargarDatosPersonas = function(){
-      adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia.toString()+"&periodo="+self.resolucion.Periodo.toString()+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad.toString()).then(function(response){
+      adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
           self.datosDocentesCargaLectiva.data = response.data
 
       });
     }
+
+
+    financieraRequest.get('disponibilidad', $.param({
+        query: 'Vigencia:'+self.vigencia_data,
+        limit: -1
+      })).then(function(response) {
+        self.lista_cdp = response.data;
+      });
+
+
+
 
 
     oikosAmazonRequest.get("dependencia_padre","query=Padre%3A"+self.resolucion.IdFacultad+"&fields=Hija&limit=-1").then(function(response){
@@ -103,9 +113,9 @@ angular.module('contractualClienteApp')
         var auxProyectos=response.data;
         var auxNum=0;
         auxProyectos.forEach(function(aux){
-          oikosAmazonRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A1&limit=-1").then(function(response){
+          oikosAmazonRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id+"%2CTipoDependenciaId.Id%3A1&limit=-1").then(function(response){
             if(response.data!=null){
-              oikosAmazonRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A"+self.resolucion.NivelAcademico.toString()+"&limit=-1").then(function(response){
+              oikosAmazonRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id+"%2CTipoDependenciaId.Id%3A"+self.resolucion.NivelAcademico+"&limit=-1").then(function(response){
                 auxNum++;
                 if(response.data!=null){
                   self.proyectos.push(response.data[0].DependenciaId);
@@ -175,7 +185,7 @@ angular.module('contractualClienteApp')
     self.get_docentes_vinculados=function(){
 
       self.estado = true;
-      adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.resolucion.Id.toString()).then(function(response){
+      adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
         self.precontratados.data=response.data;
         self.estado = false;
 
@@ -192,22 +202,21 @@ angular.module('contractualClienteApp')
 
       self.personasSeleccionadas1.forEach(function(personaSeleccionada){
         var vinculacionDocente = {
-          IdPersona: personaSeleccionada.docente_documento.toString(),
+          IdPersona: personaSeleccionada.docente_documento,
           NumeroHorasSemanales: parseInt(personaSeleccionada.horas_lectivas),
           NumeroSemanas: parseInt(self.resolucion.NumeroSemanas),
           IdResolucion: {Id: parseInt(self.resolucion.Id)},
           IdDedicacion: {Id: parseInt(personaSeleccionada.id_tipo_vinculacion)},
           IdProyectoCurricular: parseInt(personaSeleccionada.id_proyecto),
-          Categoria: personaSeleccionada.CategoriaNombre.toString().toUpperCase(),
-          Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toString().toUpperCase(),
-          NivelAcademico: self.resolucion.NivelAcademico_nombre.toString()
+          Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
+          Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
+          NivelAcademico: self.resolucion.NivelAcademico_nombre,
+          IdCDP: self.id_cdp.Id
         };
 
         vinculacionesData.push(vinculacionDocente);
 
-
         })
-
 
           adminMidRequest.post("calculo_salario/Contratacion/insertar_previnculaciones",vinculacionesData).then(function(response){
 

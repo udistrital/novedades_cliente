@@ -162,7 +162,7 @@ angular.module('contractualClienteApp')
     amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
 
         self.resolucionesInscritas.data=response.data;
-        console.log(self.resolucionesInscritas.data)
+        
         if(self.resolucionesInscritas.data!=null){
             self.resolucionesInscritas.data.forEach(function(resolucion){
                 if(resolucion.FechaExpedicion!=null){
@@ -190,47 +190,43 @@ angular.module('contractualClienteApp')
 
     //Función para redireccionar la página web a la vista de edición del contenido de la resolución, donde se pasa por parámetro el id de la resolucion seleccionada
     $scope.verEditarResolucion = function(row){
-    	$window.location.href = '#/vinculacionespecial/resolucion_detalle/'+row.entity.Id.toString();
+    	$window.location.href = '#/vinculacionespecial/resolucion_detalle/'+row.entity.Id;
     }
 
     //Función para redireccionar la página web a la vista de adición y eliminación de docentes en la resolucion, donde se pasa por parámetro el id de la resolucion seleccionada
     $scope.verEditarDocentes = function(row){
+      var auxNivelAcademico;
 
-      amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+row.entity.Id.toString()).then(function(response){
+      amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+row.entity.Id).then(function(response){
           self.datos_docentes = response.data
+          if(row.entity.NivelAcademico.toLowerCase()=="pregrado"){
+            auxNivelAcademico=14;
+          }else if(row.entity.NivelAcademico.toLowerCase()=="posgrado"){
+            auxNivelAcademico=15;
+          }
+          self.resolucion = resolucion;
+          self.resolucion.Id = row.entity.Id;
+          self.resolucion.Numero = row.entity.Numero;
+          self.resolucion.NivelAcademico_nombre = row.entity.NivelAcademico;
+          self.resolucion.NivelAcademico = auxNivelAcademico;
+          self.resolucion.IdFacultad = self.datos_docentes.IdFacultad;
+          self.resolucion.Vigencia = row.entity.Vigencia;
+          self.resolucion.Periodo = row.entity.Periodo;                         //--- se deja quemado, debe incluirse ne tabla resolucion
+          self.resolucion.NumeroSemanas = row.entity.NumeroSemanas;                 //--- se deja quemado, debe incluirse ne tabla resolucion
+
+          if(self.datos_docentes.Dedicacion == "TCO-MTO"){
+              self.resolucion.Dedicacion = "TCO|MTO"
+          }else{
+            self.resolucion.Dedicacion = self.datos_docentes.Dedicacion;
+          }
+
+
+        $localStorage.resolucion = self.resolucion;
+        $window.location.href = '#/vinculacionespecial/hojas_de_vida_seleccion/'+row.entity.Id;
+
 
       });
 
-      var auxNivelAcademico;
-
-      if(row.entity.NivelAcademico.toLowerCase()=="pregrado"){
-        auxNivelAcademico=14;
-      }else if(row.entity.NivelAcademico.toLowerCase()=="posgrado"){
-        auxNivelAcademico=15;
-      }
-
-
-
-
-        self.resolucion = resolucion;
-        self.resolucion.Id = row.entity.Id;
-        self.resolucion.Numero = row.entity.Numero;
-        self.resolucion.NivelAcademico_nombre = row.entity.NivelAcademico;
-        self.resolucion.NivelAcademico = auxNivelAcademico;
-        self.resolucion.IdFacultad = self.datos_docentes.IdFacultad;
-        self.resolucion.Vigencia = row.entity.Vigencia;
-        self.resolucion.Periodo = row.entity.Periodo;                         //--- se deja quemado, debe incluirse ne tabla resolucion
-        self.resolucion.NumeroSemanas = row.entity.NumeroSemanas;                 //--- se deja quemado, debe incluirse ne tabla resolucion
-
-        if(self.datos_docentes.Dedicacion == "TCO-MTO"){
-            self.resolucion.Dedicacion = "TCO|MTO"
-        }else{
-          self.resolucion.Dedicacion = self.datos_docentes.Dedicacion;
-        }
-
-
-      $localStorage.resolucion = self.resolucion;
-      $window.location.href = '#/vinculacionespecial/hojas_de_vida_seleccion/'+row.entity.Id.toString();
 
     }
 

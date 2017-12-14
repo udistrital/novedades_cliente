@@ -8,52 +8,28 @@
 						 <div class="panel-heading">
 							 <h4 class="intro-text"> {{ 'HOJAS_VIDA_INSCRITAS' | translate }} </h4>
 						 </div>
-						 <div class="panel-body">
-						   <div ui-grid="hojasDeVidaSeleccion.datosPersonas" ui-grid-selection ui-grid-pagination class="grid"></div>
-					   </div>
-						 <div class="panel-body">
+						<div class="panel-body">
 						   <div ui-grid="hojasDeVidaSeleccion.datosDocentesCargaLectiva" ui-grid-selection ui-grid-pagination class="grid"></div>
 					   </div>
 				   </div>
 			   </div>
 			   <div class="col-lg-12" ng-show="hojasDeVidaSeleccion.persona">
-				   <div class="panel panel-default check-element funky-show-hide">
-					   <div class="panel-heading">
-							 <h4 class="intro-text"> {{ 'INFORMACION_BASICA_CONTRATO' | translate }} </h4>
-						 </div>
-					   <div class="panel-body">
-							   <form role="form">
-								   <div class="row">
-									   <div class="col-lg-12">
-									   
-									   <div class="form-group col-lg-12">
-										   <label>{{ 'PROYECTO_CURRICULAR' | translate }}</label>
-										   <select class="form-control" ng-model="hojasDeVidaSeleccion.term" title="Proyecto curricular de los docentes seleccionados" required>
-											   <option value="">--SELECCIONE--</option>
-											   <option ng-repeat="proyecto in hojasDeVidaSeleccion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
-										   </select>
-									   </div>
-									   <div class="form-group col-lg-6">
-										   <label>{{ 'NUMERO_HORAS_SEMANALES' | translate }}</label>
-										   <input type="number" class="form-control" ng-model="hojasDeVidaSeleccion.datosValor.NumHorasSemanales" title="Horas semanales para los docentes seleccionados" required>
-									   </div>
-									   <div class="form-group col-lg-6">
-										   <label>{{ 'DEDICACION' | translate }}</label>
-										   <select class="form-control" ng-model="hojasDeVidaSeleccion.dedicacion" title="Dedicación de los docentes seleccionados" required>
-											   <option value="">--SELECCIONE--</option>
-											   <option ng-repeat="dedicacion in hojasDeVidaSeleccion.dedicaciones" value="{{dedicacion.Id}}">{{dedicacion.Descripcion}}</option>
-										   </select>
-									   </div>
-									   <div ng-if="hojasDeVidaSeleccion.datosFiltro.NivelAcademico=='posgrado'" class="form-group col-lg-6">
-										   <label>{{ 'DOCENTE_PLANTA' | translate }}</label>
-										   <input type="checkbox" ng-model="hojasDeVidaSeleccion.datosValor.esDocentePlanta" title="Seleccione si las personas seleccionadas tienen contrato como docentes de planta" required>
-									   </div>
-									   </div>
+					 <legend class="text-primary" ng-click="info_disponibilidad=!info_disponibilidad">{{ 'DISPONIBILIDAD' | translate }}<span class="fa fa-plus pull-right" ng-show="!info_disponibilidad"></span> <span class="fa fa-minus pull-right" ng-show="info_disponibilidad"></span></legend>
+							 <div class="panel-body" ng-show="info_disponibilidad">
+									 <form role="form">
+											 <div class="row">
+													 <div class="form-group col-lg-6">
+															 	 <div class="form-group" ng-show="hojasDeVidaSeleccion.vigencia_data!=undefined">
+																	 <label>{{ 'NUMERO_CDP' | translate }}</label>
+																	 <select class="form-control" ng-model="hojasDeVidaSeleccion.id_cdp" value="{{cdps.Id}}" ng-options="cdps.NumeroDisponibilidad for cdps in hojasDeVidaSeleccion.lista_cdp" required>
+																	 <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"CDP" | translate}}</option>
+																	 </select>
+															 </div>
+													 </div>
 
-								   </div>
-							   </form>
-					   </div>
-				   </div>
+											 </div>
+									 </form>
+							 </div>
 			   </div>
 				 <div class="form-group col-lg-8 col-lg-offset-2">
 					 <label></label>
