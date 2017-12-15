@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionVistaCtrl', function (amazonAdministrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,idResolucion,$http) {
+  .controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,idResolucion,$http) {
 
   	var self=this;
 
@@ -23,11 +23,11 @@ angular.module('contractualClienteApp')
     });
 
     //Se cargan los datos almacenados en la tabla resolucion
-    amazonAdministrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){
+    administrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){
       self.resolucion=response.data;
       self.numero=self.resolucion.NumeroResolucion;
       //Se cargan los datos almacenados en la tabla resolucion_vinculacion_docente donde se encuentran los elementos filtro para obtener los docentes asociados a la resolución
-      amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
+      administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
         self.datosFiltro=response.data;
         if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
           var auxNivelAcademico=14;
@@ -44,7 +44,7 @@ angular.module('contractualClienteApp')
     });
 
     self.getContenidoDocumento = function(){
-                    amazonAdministrativaRequest.get("contenido_resolucion/"+self.idResolucion).then(function(response){
+                    administrativaRequest.get("contenido_resolucion/"+self.idResolucion).then(function(response){
                       self.contenidoResolucion=response.data;
                       //Se carga el ordenador del gasto asocciado a la dependencia solicitante de los docentes de vinculación especial
                       coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.datosFiltro.IdFacultad.toString()).then(function(response){

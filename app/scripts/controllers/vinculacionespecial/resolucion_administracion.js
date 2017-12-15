@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionAdministracionCtrl', function (amazonAdministrativaRequest,adminMidRequest,titan_request,$scope,$window,$mdDialog,$translate) {
+  .controller('ResolucionAdministracionCtrl', function (administrativaRequest,adminMidRequest,titan_request,$scope,$window,$mdDialog,$translate) {
 
     var self = this;
 
@@ -133,7 +133,7 @@ angular.module('contractualClienteApp')
 
     //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
     self.cargarDatosResolucion=function(){
-        amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
+        administrativaRequest.get("resolucion_vinculacion").then(function(response){
             self.resolucionesInscritas.data=response.data;
         });
     }
@@ -195,12 +195,12 @@ angular.module('contractualClienteApp')
         //Se verifica que no existan liquidaciones asoociadas a los contratos pertenecientes a la resolucion
         adminMidRequest.post("cancelacion_valida/"+row.entity.Id).then(function(response){
             if(response.data=="OK"){
-                amazonAdministrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
+                administrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
                     var nuevaResolucion=response.data;
                     //Cambio de estado
                     nuevaResolucion.Estado=false;
                     //Se actualiza el estado de la resolución
-                    amazonAdministrativaRequest.put("resolucion/CancelarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
+                    administrativaRequest.put("resolucion/CancelarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
                         if(response.data=="OK"){
                             self.cargarDatosResolucion();
                         }
@@ -258,13 +258,13 @@ angular.module('contractualClienteApp')
 
     //Función para realizar la restauración y verificación de la resolución
     self.restaurarResolucion = function(row){
-        amazonAdministrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
+        administrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
             var nuevaResolucion=response.data;
             //Cambio de estado y fecha de expedicion de la resolucion en caso de que ya hubiese sido expedida.
             nuevaResolucion.Estado=true;
             nuevaResolucion.FechaExpedicion=null;
             //Se actualizan los datos de la resolución
-            amazonAdministrativaRequest.put("resolucion/RestaurarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
+            administrativaRequest.put("resolucion/RestaurarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
                 if(response.data=="OK"){
                     self.cargarDatosResolucion();
                 }

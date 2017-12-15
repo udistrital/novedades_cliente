@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionGeneracionCtrl', function (amazonAdministrativaRequest,oikosRequest,$mdDialog,$scope,$routeParams,$window) {
+  .controller('ResolucionGeneracionCtrl', function (administrativaRequest,oikosRequest,$mdDialog,$scope,$routeParams,$window) {
 
   	var self=this;
 
@@ -20,15 +20,15 @@ angular.module('contractualClienteApp')
 
   	self.resolucion={};
 
-    amazonAdministrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
+    administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
       self.resolucion.preambulo=response.data.Preambulo;
     })
 
-    amazonAdministrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
+    administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
       self.resolucion.consideracion=response.data.Consideracion;
     })
 
-    amazonAdministrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
+    administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
       self.resolucion.articulos=response.data.Articulos;
     })
 
@@ -78,14 +78,14 @@ angular.module('contractualClienteApp')
         Periodo: parseInt(self.resolucion.Periodo)
 
       }
-      amazonAdministrativaRequest.post("resolucion/GenerarResolucion",resolucionData).then(function(response){
+      administrativaRequest.post("resolucion/GenerarResolucion",resolucionData).then(function(response){
         var resolucionVinculacionDocenteData={
           Id: response.data.Id,
           IdFacultad: parseInt(self.resolucion.facultad),
           Dedicacion: self.resolucion.dedicacion,
           NivelAcademico: self.resolucion.nivelAcademico
         }
-        amazonAdministrativaRequest.post("resolucion_vinculacion_docente",resolucionVinculacionDocenteData).then(function(response){
+        administrativaRequest.post("resolucion_vinculacion_docente",resolucionVinculacionDocenteData).then(function(response){
           var numeroArticulo=1;
           self.resolucion.articulos.forEach(function(articulo){
             var articuloData={
@@ -94,7 +94,7 @@ angular.module('contractualClienteApp')
               Texto: articulo.Texto,
               TipoComponente: "Articulo"
             }
-            amazonAdministrativaRequest.post("componente_resolucion",articuloData).then(function(response){
+           administrativaRequest.post("componente_resolucion",articuloData).then(function(response){
               var numeroParagrafo=1;
               if(articulo.Paragrafos){
                 articulo.Paragrafos.forEach(function(paragrafo){
@@ -105,7 +105,7 @@ angular.module('contractualClienteApp')
                     TipoComponente: "Paragrafo",
                     ComponentePadre: {Id: response.data.Id}
                   }
-                  amazonAdministrativaRequest.post("componente_resolucion",paragrafoData).then(function(response){
+                  administrativaRequest.post("componente_resolucion",paragrafoData).then(function(response){
                   })
                   numeroParagrafo++;
                 })

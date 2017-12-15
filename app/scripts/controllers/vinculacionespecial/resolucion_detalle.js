@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
  angular.module('contractualClienteApp')
- .controller('ResolucionDetalleCtrl', function (amazonAdministrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$routeParams,$translate,$window) {
+ .controller('ResolucionDetalleCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$routeParams,$translate,$window) {
 
    var self=this;
 
@@ -18,20 +18,20 @@
     self.facultades=response.data;
   });
 
-   amazonAdministrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){
+   administrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){
     self.resolucion=response.data
     self.numero=resolucion.NumeroResolucion;
   });
 
    self.proyectos=[];
-   amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
+   administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
     self.datosFiltro=response.data;
     if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
       var auxNivelAcademico=14;
     }else if(self.datosFiltro.NivelAcademico.toLowerCase()=="posgrado"){
       var auxNivelAcademico=15;
     }
-    amazonAdministrativaRequest.get("contenido_resolucion/"+self.idResolucion).then(function(response){
+    administrativaRequest.get("contenido_resolucion/"+self.idResolucion).then(function(response){
       self.contenidoResolucion=response.data;
       coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.datosFiltro.IdFacultad.toString()).then(function(response){
         if(response.data==null){
@@ -49,7 +49,7 @@
           self.proyectos = response.data;
     });
 
-    amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
+    administrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
       self.contratados=response.data;
       if(self.contratados){
         self.contratados.forEach(function(row){
@@ -88,7 +88,7 @@ self.agregarArticulo = function() {
 }
 
 self.adicionarArticulo = function(texto){
-  amazonAdministrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){
+  administrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){
     if(self.contenidoResolucion.Articulos){
       self.contenidoResolucion.Articulos.push({Texto: texto,
         Paragrafos: null});
@@ -140,7 +140,7 @@ self.agregarParagrafo = function(num){
 }
 
 self.adicionarParagrafo = function(num,texto){
-  amazonAdministrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){
+  administrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){
     if(self.contenidoResolucion.Articulos[num].Paragrafos){
       self.contenidoResolucion.Articulos[num].Paragrafos.push({Texto: texto})
     }else{
@@ -154,7 +154,7 @@ self.guardarCambios = function(){
     var vinculacionData = JSON.parse(JSON.stringify(self.datosFiltro));
     vinculacionData.IdFacultad=parseInt(self.datosFiltro.IdFacultad);
     self.contenidoResolucion.Vinculacion = vinculacionData;
-    amazonAdministrativaRequest.put("contenido_resolucion",self.idResolucion,self.contenidoResolucion).then(function(response){
+    administrativaRequest.put("contenido_resolucion",self.idResolucion,self.contenidoResolucion).then(function(response){
       if(response.data=="OK"){
         swal({
           title: $translate.instant('GUARDADO'),
