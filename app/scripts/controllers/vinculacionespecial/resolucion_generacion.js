@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionGeneracionCtrl', function (amazonAdministrativaRequest,oikosRequest,contratacion_request,$mdDialog,$scope,$routeParams,$window) {
+  .controller('ResolucionGeneracionCtrl', function (amazonAdministrativaRequest,oikosRequest,$mdDialog,$scope,$routeParams,$window) {
 
   	var self=this;
 

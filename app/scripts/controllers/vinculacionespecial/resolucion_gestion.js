@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
   .factory("resolucion",function(){
      return {};
   })
-  .controller('ResolucionGestionCtrl', function (resolucion,amazonAdministrativaRequest,$scope,$window,$mdDialog,$translate,$localStorage) {
+  .controller('ResolucionGestionCtrl', function (resolucion,administrativaRequest,$scope,$window,$mdDialog,$translate,$localStorage) {
 
   	var self = this;
     self.datos_docentes;
@@ -159,10 +159,10 @@ angular.module('contractualClienteApp')
     };
 
     //Se cargan los datos de las resoluciones de vinculación especial almacenadas
-    amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
+    administrativaRequest.get("resolucion_vinculacion").then(function(response){
 
         self.resolucionesInscritas.data=response.data;
-        
+
         if(self.resolucionesInscritas.data!=null){
             self.resolucionesInscritas.data.forEach(function(resolucion){
                 if(resolucion.FechaExpedicion!=null){
@@ -197,7 +197,7 @@ angular.module('contractualClienteApp')
     $scope.verEditarDocentes = function(row){
       var auxNivelAcademico;
 
-      amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+row.entity.Id).then(function(response){
+      administrativaRequest.get("resolucion_vinculacion_docente/"+row.entity.Id).then(function(response){
           self.datos_docentes = response.data
           if(row.entity.NivelAcademico.toLowerCase()=="pregrado"){
             auxNivelAcademico=14;

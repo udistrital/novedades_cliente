@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
  angular.module('contractualClienteApp')
- .controller('ResolucionDetalleCtrl', function (amazonAdministrativaRequest,oikosRequest,coreRequest,adminMidRequest,contratacion_request,contratacion_mid_request,$mdDialog,$scope,$routeParams,$translate,$window) {
+ .controller('ResolucionDetalleCtrl', function (amazonAdministrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$routeParams,$translate,$window) {
 
    var self=this;
 
@@ -48,7 +48,7 @@
     oikosRequest.get("dependencia/ProyectosPorFacultad/"+self.datosFiltro.IdFacultad,"").then(function(response){
           self.proyectos = response.data;
     });
-    
+
     amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
       self.contratados=response.data;
       if(self.contratados){
