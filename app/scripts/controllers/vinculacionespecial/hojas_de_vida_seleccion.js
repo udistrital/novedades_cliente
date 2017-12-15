@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-  .controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,financieraRequest,resolucion,amazonAdministrativaRequest,adminMidRequest,oikosAmazonRequest,contratacion_mid_request,$localStorage,$scope,$mdDialog,$routeParams,$translate) {
+  .controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,financieraRequest,resolucion,amazonAdministrativaRequest,adminMidRequest,oikosRequest,contratacion_mid_request,$localStorage,$scope,$mdDialog,$routeParams,$translate) {
 
     var self = this;
 
@@ -100,45 +100,9 @@ angular.module('contractualClienteApp')
 
 
 
-
-
-    oikosAmazonRequest.get("dependencia_padre","query=Padre%3A"+self.resolucion.IdFacultad+"&fields=Hija&limit=-1").then(function(response){
-      if(response.data==null){
-        //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
-        oikosAmazonRequest.get("dependencia/"+self.resolucion.IdFacultad).then(function(response){
-          self.proyectos=[response.data]
-        });
-      }
-      else{
-        var auxProyectos=response.data;
-        var auxNum=0;
-        auxProyectos.forEach(function(aux){
-          oikosAmazonRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id+"%2CTipoDependenciaId.Id%3A1&limit=-1").then(function(response){
-            if(response.data!=null){
-              oikosAmazonRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id+"%2CTipoDependenciaId.Id%3A"+self.resolucion.NivelAcademico+"&limit=-1").then(function(response){
-                auxNum++;
-                if(response.data!=null){
-                  self.proyectos.push(response.data[0].DependenciaId);
-                }
-                if(auxNum==auxProyectos.length){
-                  if(self.proyectos.length==0){
-                    //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
-                    oikosAmazonRequest.get("dependencia/"+self.resolucion.IdFacultad).then(function(response){
-                      self.proyectos=[response.data]
-                    });
-                  }
-                }
-              });
-            }else{
-              auxNum++;
-            }
-          });
-        });
-      }
-
-
-    });
-
+      oikosRequest.get("dependencia/ProyectosPorFacultad/"+self.resolucion.IdFacultad,"").then(function(response){
+        self.proyectos = response.data;
+      });
 
     //Se cargan los datos de los docentes que han sido asociados previamente a la resolucion
     self.precontratados = {

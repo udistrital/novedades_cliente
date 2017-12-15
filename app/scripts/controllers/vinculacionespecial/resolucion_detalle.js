@@ -18,13 +18,13 @@
     self.facultades=response.data;
   });
 
-   amazonAdministrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){  
+   amazonAdministrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){
     self.resolucion=response.data
     self.numero=resolucion.NumeroResolucion;
   });
 
    self.proyectos=[];
-   amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
+   amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
     self.datosFiltro=response.data;
     if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
       var auxNivelAcademico=14;
@@ -37,57 +37,19 @@
         if(response.data==null){
           coreRequest.get("ordenador_gasto/1").then(function(response){
             self.contenidoResolucion.ordenadorGasto=response.data;
-          })     
+          })
         }else{
           self.contenidoResolucion.ordenadorGasto=response.data[0];
         }
       });
     });
     self.datosFiltro.IdFacultad=self.datosFiltro.IdFacultad.toString();
-    oikosRequest.get("dependencia_padre","query=Padre%3A"+self.datosFiltro.IdFacultad+"&fields=Hija&limit=-1").then(function(response){
-      if(response.data==null){
-        //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
-        oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
-          self.proyectos=[response.data]
-        });
-      }
-      else{
-        var auxProyectos=response.data;
-        var auxNum=0;
-        auxProyectos.forEach(function(aux){
-          oikosRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A1&limit=-1").then(function(response){
-            if(response.data!=null){
-              oikosRequest.get("dependencia_tipo_dependencia","query=DependenciaId.Id%3A"+aux.Hija.Id.toString()+"%2CTipoDependenciaId.Id%3A"+auxNivelAcademico.toString()+"&limit=-1").then(function(response){
-                auxNum++;
-                if(response.data!=null){
-                  self.proyectos.push(response.data[0].DependenciaId);
-                }
-                if(auxNum==auxProyectos.length){
-                    if(self.proyectos.length==0){
-                      //En caso de que no existan proyectos curriculares asociados a la facultad, la facultad es asignada como la dependencia donde se asocian los docentes
-                      oikosRequest.get("dependencia/"+self.datosFiltro.IdFacultad).then(function(response){
-                        self.proyectos=[response.data]
-                      });
-                    }
-                  }
-              });
-            }else{
-              auxNum++;
-            }
-          });
-        });
-      }
+
+    oikosRequest.get("dependencia/ProyectosPorFacultad/"+self.datosFiltro.IdFacultad,"").then(function(response){
+          self.proyectos = response.data;
     });
-    /*oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
-      if(response.data==null){
-        oikosRequest.get("facultad/"+self.datosFiltro.IdFacultad).then(function(response){
-          self.proyectos=[response.data]
-        });
-      }else{
-        self.proyectos=response.data;
-      }
-    });*/
-    amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){    
+    
+    amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
       self.contratados=response.data;
       if(self.contratados){
         self.contratados.forEach(function(row){
@@ -129,7 +91,7 @@ self.adicionarArticulo = function(texto){
   amazonAdministrativaRequest.get("resolucion/"+self.idResolucion).then(function(response){
     if(self.contenidoResolucion.Articulos){
       self.contenidoResolucion.Articulos.push({Texto: texto,
-        Paragrafos: null});  
+        Paragrafos: null});
     }else{
       self.contenidoResolucion.Articulos=[{Texto: texto,
         Paragrafos: null}]
@@ -139,7 +101,7 @@ self.adicionarArticulo = function(texto){
 
 self.eliminarArticulo = function(num) {
   if(self.contenidoResolucion.Articulos.length>1){
-    self.contenidoResolucion.Articulos.splice(num,1); 
+    self.contenidoResolucion.Articulos.splice(num,1);
   }else{
     swal({
       text: $translate.instant('ALMENOS_UNO'),
@@ -149,7 +111,7 @@ self.eliminarArticulo = function(num) {
 }
 
 self.eliminarParagrafo = function(num1, num2) {
-  self.contenidoResolucion.Articulos[num1].Paragrafos.splice(num2,1);  
+  self.contenidoResolucion.Articulos[num1].Paragrafos.splice(num2,1);
 }
 
 self.agregarParagrafo = function(num){
@@ -494,7 +456,7 @@ self.getDecenas = function(numero){
   var decena = Math.floor(numero/10);
   var unidad = numero-(decena*10);
   switch(decena)
-  {   
+  {
     case 0: return self.getUnidades(unidad);
     case 1: return 'DECIMO'+self.getUnidades(unidad);
     case 2: return 'VIGÉSIMO '+self.getUnidades(unidad);
@@ -519,12 +481,12 @@ self.numeroALetras = function(numero) {
 
 self.FormatoNumero=function(amount, decimals) {
 
-        amount += ''; 
-        amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); 
+        amount += '';
+        amount = parseFloat(amount.replace(/[^0-9\.]/g, ''));
 
-        decimals = decimals || 0; 
+        decimals = decimals || 0;
 
-        if (isNaN(amount) || amount === 0) 
+        if (isNaN(amount) || amount === 0)
             return parseFloat(0).toFixed(decimals);
 
         amount = '' + amount.toFixed(decimals);
