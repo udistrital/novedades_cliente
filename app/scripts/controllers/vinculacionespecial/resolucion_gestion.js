@@ -148,9 +148,9 @@ angular.module('contractualClienteApp')
             cellTemplate: '<center>' +
                '<a class="ver" ng-click="grid.appScope.verVisualizarResolucion(row)">' +
                '<i title="{{\'VER_BTN\' | translate }}" class="fa fa-eye fa-lg  faa-shake animated-hover"></i></a> ' +
-               '<a ng-if="row.entity.Estado==\'Expedible\'" class="editar" ng-click="grid.appScope.verEditarDocentes(row)">' +
+               '<a ng-if="row.entity.Estado==\'Solicitada\'" class="editar" ng-click="grid.appScope.verEditarDocentes(row)">' +
                '<i title="{{\'EDITAR_BTN\' | translate }}" class="fa fa-users fa-lg  faa-shake animated-hover"></i></a> ' +
-               '<a ng-if="row.entity.Estado==\'Expedible\'" class="configuracion" ng-click="grid.appScope.verEditarResolucion(row)">' +
+               '<a ng-if="row.entity.Estado==\'Solicitada\'" class="configuracion" ng-click="grid.appScope.verEditarResolucion(row)">' +
                '<i title="{{\'CONFIGURAR_BTN\' | translate }}" class="fa fa-cog fa-lg faa-spin animated-hover"></i></a> ' +
                '</center>'
 

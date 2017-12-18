@@ -2,15 +2,17 @@
 
 /**
  * @ngdoc function
- * @name clienteApp.controller:ResolucionAdministracionCtrl
+ * @name clienteApp.controller:ResolucionAprobacionCtrl
  * @description
- * # ResolucionAdministracionCtrl
+ * # ResolucionAprobacionCtrl
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionAdministracionCtrl', function (administrativaRequest,adminMidRequest,titan_request,$scope,$window,$mdDialog,$translate) {
+  .controller('ResolucionAprobacionCtrl', function (amazonAdministrativaRequest,adminMidRequest,contratacion_mid_request,titan_request,$scope,$window,$mdDialog,$translate) {
 
     var self = this;
+    self.CurrentDate = new Date();
+    self.Aprobado;
 
     //Tabla para mostrar los datos básicos de las resoluciones almacenadas dentro del sistema
 	self.resolucionesInscritas = {
@@ -116,16 +118,12 @@ angular.module('contractualClienteApp')
             },
             enableFiltering: false,
             width: '10%',
-            //Los botones son mostrados de acuerdo alestado de las resoluciones (ver,expedir,cancelar,restaurar)
+            //Los botones son mostrados de acuerdo alestado de las resoluciones (ver,aprobar)
             cellTemplate: '<center>' +
                '<a class="ver" ng-click="grid.appScope.verVisualizarResolucion(row)">' +
                '<i title="{{\'VER_BTN\' | translate }}" class="fa fa-eye fa-lg  faa-shake animated-hover"></i></a> ' +
-               '<a ng-if="row.entity.Estado==\'Solicitada\'" class="ver" ng-click="grid.appScope.verRealizarExpedicion(row)">' +
-               '<i title="{{\'EXPEDIR_BTN\' | translate }}" class="fa fa-file-text fa-lg  faa-shake animated-hover"></i></a> ' +
-               '<a ng-if="row.entity.Estado==\'Expedida\'" class="editar" ng-click="grid.appScope.verCancelarResolucion(row)">' +
-               '<i title="{{\'CANCELAR_BTN\' | translate }}" class="fa fa-remove fa-lg  faa-shake animated-hover"></i></a> ' +
-               '<a ng-if="row.entity.Estado==\'Cancelada\'" class="configuracion" ng-click="grid.appScope.verRestaurarResolucion(row)">' +
-               '<i title="{{\'RESTAURAR_BTN\' | translate }}" class="fa fa-refresh fa-lg faa-spin animated-hover"></i></a> ' +
+               '<a ng-if="row.entity.Estado==\'Solicitada\'" class="ver" ng-click="grid.appScope.verRealizarAprobacion(row)">' +
+               '<i title="{{\'APROBAR_BTN\' | translate }}" class="fa fa-check fa-lg  faa-shake animated-hover"></i></a> ' +
                '</center>'
         }
       ]
@@ -133,87 +131,45 @@ angular.module('contractualClienteApp')
 
     //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
     self.cargarDatosResolucion=function(){
-        administrativaRequest.get("resolucion_vinculacion").then(function(response){
+        amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
             self.resolucionesInscritas.data=response.data;
         });
     }
 
-    //Función para asignar controlador de la vista contrato_registro.html (expedición de la resolución), donde se pasa por parámetro el id de la resolucion seleccionada, la lista de resoluciones paraque sea recargada y los datos completos de la resolución con ayuda de $mdDialog
-    $scope.verRealizarExpedicion = function(row){
-        $mdDialog.show({
-            controller: "ContratoRegistroCtrl",
-            controllerAs: 'contratoRegistro',
-            templateUrl: 'views/vinculacionespecial/contrato_registro.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose:true,
-            fullscreen: true,
-            locals: {idResolucion: row.entity.Id, lista: self, resolucion: row.entity}
-        })
+    //Función para realizar la aprobación de la resolución
+    $scope.verRealizarAprobacion = function(row){
+        console.log(row.entity);
+        amazonAdministrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
+            var Resolucion=response.data;
+            console.log(Resolucion);
+            var resolucion_estado ={
+                FechaRegistro:self.CurrentDate,
+                Usuario:"",
+                Estado:{
+                  Id:5,
+                },
+                Resolucion:Resolucion
+              };
+              swal({
+                title: 'Confirmar aprobación',
+                html: $translate.instant('CONFIRMAR_APROBAR')+'<br>'+
+                      $translate.instant('IRREVERSIBLE')+'<br>'+
+                      $translate.instant('NUMERO_RESOLUCION')+'<br>'+
+                      Resolucion.NumeroResolucion,
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: $translate.instant('APROBAR_BTN')
+              }).then((result) => {
+                if (result) {
+                    self.cambiarEstado(resolucion_estado)
+                }
+              })
+          });
     }
 
-    //Función donde se despliega un mensaje de alerta previo a la cancelación de la resolución
-	$scope.verCancelarResolucion = function(row){
-        $mdDialog.show({
-            controller: "CancelarContratoDocenteCtrl",
-            controllerAs: "cancelarContratoDocente",
-            templateUrl: 'views/vinculacionespecial/cancelar_contrato_docente.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose:true,
-            fullscreen: true,
-            locals: {idResolucion: row.entity.Id}
-          })
-        /*
-    	swal({
-		  title: $translate.instant('CANCELAR_RESOLUCION'),
-          html:
-            '<p><b>Número: </b>'+row.entity.Numero.toString()+'</p>'+
-            '<p><b>Facultad: </b>'+row.entity.Facultad+'</p>'+
-            '<p><b>Nivel académico: </b>'+row.entity.NivelAcademico+'</p>'+
-            '<p><b>Dedicación: </b>'+row.entity.Dedicacion+'</p>',
-		  type: 'warning',
-		  showCancelButton: true,
-		  confirmButtonText: $translate.instant('ACEPTAR'),
-		  cancelButtonText: $translate.instant('CANCELAR'),
-		  confirmButtonClass: 'btn btn-success',
-		  cancelButtonClass: 'btn btn-danger',
-		  buttonsStyling: false
-		}).then(function () {
-            self.cancelarResolucion(row);
-            }, function (dismiss) {
-            if (dismiss === 'cancel') {
-                swal({
-                    text: $translate.instant('NO_CANCELACION_RESOLUCION'),
-                    type: 'error'
-                })
-            }
-        })*/
-    }
-
-    //Función para realizar la cancelación y verificación de la resolución
-    self.cancelarResolucion = function(row){
-        var cancelacionPosible = true;
-        //Se verifica que no existan liquidaciones asoociadas a los contratos pertenecientes a la resolucion
-        adminMidRequest.post("cancelacion_valida/"+row.entity.Id).then(function(response){
-            if(response.data=="OK"){
-                administrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
-                    var nuevaResolucion=response.data;
-                    //Cambio de estado
-                    nuevaResolucion.Estado=false;
-                    //Se actualiza el estado de la resolución
-                    administrativaRequest.put("resolucion/CancelarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
-                        if(response.data=="OK"){
-                            self.cargarDatosResolucion();
-                        }
-                    })
-                })
-            }else{
-                swal({
-                    text: $translate.instant('NO_CANCELADA_PAGOS'),
-                    type: 'warning'
-                })
-            }
-        })
-    }
+    
 
     //Función donde se despliega un mensaje de alerta previo a la restauración de la resolución
     $scope.verRestaurarResolucion = function(row){
@@ -258,19 +214,39 @@ angular.module('contractualClienteApp')
 
     //Función para realizar la restauración y verificación de la resolución
     self.restaurarResolucion = function(row){
-        administrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
+        amazonAdministrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
             var nuevaResolucion=response.data;
             //Cambio de estado y fecha de expedicion de la resolucion en caso de que ya hubiese sido expedida.
             nuevaResolucion.Estado=true;
             nuevaResolucion.FechaExpedicion=null;
             //Se actualizan los datos de la resolución
-            administrativaRequest.put("resolucion/RestaurarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
+            amazonAdministrativaRequest.put("resolucion/RestaurarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
                 if(response.data=="OK"){
                     self.cargarDatosResolucion();
                 }
             })
         })
     }
+    self.cambiarEstado = function(resolucion_estado){
+        amazonAdministrativaRequest.post("resolucion_estado", resolucion_estado).then(function(response){
+            console.log(response);
+            if(response.statusText=="Created"){
+                swal(
+                    'Felicidades',
+                    $translate.instant('APROBADA'),
+                    'success'
+                  )
+            } else {
+                swal(
+                    'Error',
+                    'Ocurrió un error',
+                    'error'
+                  )
+            }
+        })
+        self.cargarDatosResolucion();
+}
+    
 
     //Se hace el llamado de la función para cargar datos de resoluciones
     self.cargarDatosResolucion();

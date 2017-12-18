@@ -148,6 +148,11 @@ angular
                 controller: 'ResolucionAdministracionCtrl',
                 controllerAs: 'resolucionAdministracion'
             })
+            .when('/vinculacionespecial/resolucion_aprobacion', {
+                templateUrl: 'views/vinculacionespecial/resolucion_aprobacion.html',
+                controller: 'ResolucionAprobacionCtrl',
+                controllerAs: 'resolucionAprobacion'
+            })
             .when('/plantillas/generacion_minuta', {
                 templateUrl: 'views/plantillas/generacion_plantilla.html',
                 controller: 'GeneracionPlantillaCtrl',

@@ -84,6 +84,12 @@ angular.module('contractualClienteApp')
                     },
                     {
                         "Id": 6,
+                        "Nombre": "Aprobación de resoluciones",
+                        "Url": "vinculacionespecial/resolucion_aprobacion",
+                        "Opciones": null
+                    },
+                    {
+                        "Id": 6,
                         "Nombre": "Administración de resoluciones",
                         "Url": "vinculacionespecial/resolucion_administracion",
                         "Opciones": null
