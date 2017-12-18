@@ -231,6 +231,7 @@ angular.module('contractualClienteApp')
         administrativaRequest.post("resolucion_estado", resolucion_estado).then(function(response){
             console.log(response);
             if(response.statusText=="Created"){
+                self.cargarDatosResolucion();
                 swal(
                     'Felicidades',
                     $translate.instant('APROBADA'),
@@ -244,7 +245,6 @@ angular.module('contractualClienteApp')
                   )
             }
         })
-        self.cargarDatosResolucion();
 }
     
 

@@ -120,8 +120,8 @@ angular.module('contractualClienteApp')
             cellTemplate: '<center>' +
                '<a class="ver" ng-click="grid.appScope.verVisualizarResolucion(row)">' +
                '<i title="{{\'VER_BTN\' | translate }}" class="fa fa-eye fa-lg  faa-shake animated-hover"></i></a> ' +
-               '<a ng-if="row.entity.Estado==\'Solicitada\'" class="ver" ng-click="grid.appScope.verRealizarExpedicion(row)">' +
-               '<i title="{{\'EXPEDIR_BTN\' | translate }}" class="fa fa-file-text fa-lg  faa-shake animated-hover"></i></a> ' +
+               '<a ng-if="row.entity.Estado==\'Aprobada\'" class="ver" ng-click="grid.appScope.verRealizarExpedicion(row)">' +
+               '<i title="{{\'EXPEDIR_BTN\' | translate }}" class="fa fa-money fa-lg  faa-shake animated-hover"></i></a> ' +
                '<a ng-if="row.entity.Estado==\'Expedida\'" class="editar" ng-click="grid.appScope.verCancelarResolucion(row)">' +
                '<i title="{{\'CANCELAR_BTN\' | translate }}" class="fa fa-remove fa-lg  faa-shake animated-hover"></i></a> ' +
                '<a ng-if="row.entity.Estado==\'Cancelada\'" class="configuracion" ng-click="grid.appScope.verRestaurarResolucion(row)">' +
@@ -133,7 +133,9 @@ angular.module('contractualClienteApp')
 
     //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
     self.cargarDatosResolucion=function(){
-        administrativaRequest.get("resolucion_vinculacion").then(function(response){
+        administrativaRequest.get("resolucion_vinculacion/Aprobada", $.param({
+            limit: -1
+        })).then(function(response){
             self.resolucionesInscritas.data=response.data;
         });
     }
