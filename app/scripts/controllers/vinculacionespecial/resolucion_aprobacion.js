@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionAprobacionCtrl', function (amazonAdministrativaRequest,adminMidRequest,contratacion_mid_request,titan_request,$scope,$window,$mdDialog,$translate) {
+  .controller('ResolucionAprobacionCtrl', function (administrativaRequest,adminMidRequest,contratacion_mid_request,titan_request,$scope,$window,$mdDialog,$translate) {
 
     var self = this;
     self.CurrentDate = new Date();
@@ -131,7 +131,7 @@ angular.module('contractualClienteApp')
 
     //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
     self.cargarDatosResolucion=function(){
-        amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
+        administrativaRequest.get("resolucion_vinculacion").then(function(response){
             self.resolucionesInscritas.data=response.data;
         });
     }
@@ -139,7 +139,7 @@ angular.module('contractualClienteApp')
     //Función para realizar la aprobación de la resolución
     $scope.verRealizarAprobacion = function(row){
         console.log(row.entity);
-        amazonAdministrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
+        administrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
             var Resolucion=response.data;
             console.log(Resolucion);
             var resolucion_estado ={
@@ -214,13 +214,13 @@ angular.module('contractualClienteApp')
 
     //Función para realizar la restauración y verificación de la resolución
     self.restaurarResolucion = function(row){
-        amazonAdministrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
+        administrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
             var nuevaResolucion=response.data;
             //Cambio de estado y fecha de expedicion de la resolucion en caso de que ya hubiese sido expedida.
             nuevaResolucion.Estado=true;
             nuevaResolucion.FechaExpedicion=null;
             //Se actualizan los datos de la resolución
-            amazonAdministrativaRequest.put("resolucion/RestaurarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
+            administrativaRequest.put("resolucion/RestaurarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
                 if(response.data=="OK"){
                     self.cargarDatosResolucion();
                 }
@@ -228,7 +228,7 @@ angular.module('contractualClienteApp')
         })
     }
     self.cambiarEstado = function(resolucion_estado){
-        amazonAdministrativaRequest.post("resolucion_estado", resolucion_estado).then(function(response){
+        administrativaRequest.post("resolucion_estado", resolucion_estado).then(function(response){
             console.log(response);
             if(response.statusText=="Created"){
                 swal(
