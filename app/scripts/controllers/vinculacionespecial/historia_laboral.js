@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('HistoriaLaboralCtrl', function ($scope,$mdDialog,kyronRequest,idPersona) {
+  .controller('HistoriaLaboralCtrl', function ($scope,$mdDialog,kyronRequest/*,idPersona*/) {
      
     var self = this;
     
@@ -34,7 +34,7 @@ angular.module('contractualClienteApp')
           }
         }
         return numeros;
-      }
+      };
       
       $scope.hide = function() {
         $mdDialog.hide();

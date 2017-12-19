@@ -10,11 +10,11 @@ angular.module('contractualClienteApp')
   .directive('textoEnriquecido', function () {
     return {
       restrict: 'E',
-      scope:{
+      /*scope:{
           texto:'='
-        },
+        },*/
       templateUrl: 'views/directives/plantillas/texto_enriquecido.html',
-      controller:function($scope){
+      controller:function(/*$scope*/){
         var ctrl = this;
         ctrl.opcionesTexto = ['Texto','HTML'];
         ctrl.op = ctrl.opcionesTexto[0];
@@ -36,7 +36,7 @@ angular.module('contractualClienteApp')
             ctrl.textoHtml = !ctrl.textoNormal;
             break;
           }
-        }
+        };
       },
       controllerAs:'textoEnriquecido'
     };

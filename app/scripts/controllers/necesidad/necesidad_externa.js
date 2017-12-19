@@ -105,10 +105,10 @@ angular.module('contractualClienteApp')
                                         angular.forEach(tipo.Requisitos, function(data) {
                                             data.SolicitudTipoAvance = { Id: tipo.Id };
                                             data.RequisitoTipoAvance = { Id: data.Id };
-                                            if (data.RequisitoAvance.EtapaAvance.Id == 1) { //Solicitud
+                                            if (data.RequisitoAvance.EtapaAvance.Id === 1) { //Solicitud
                                                 sol++;
                                             }
-                                            if (data.RequisitoAvance.EtapaAvance.Id == 2) { //Legalización
+                                            if (data.RequisitoAvance.EtapaAvance.Id === 2) { //Legalización
                                                 leg++;
                                             }
                                             tipo.n_solicitar = sol;

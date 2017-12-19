@@ -16,6 +16,6 @@ angular.module('contractualClienteApp')
     amazonAdministrativaRequest.get("informacion_persona_natural","query=Id%3A"+self.idPersona).then(function(response){
     	self.persona=response.data[0];
     	self.persona.FechaExpedicionDocumento = new Date(self.persona.FechaExpedicionDocumento).toLocaleDateString('es');
-    })
+    });
 
   });

@@ -369,12 +369,12 @@ angular.module('contractualClienteApp')
           self.rubros_seleccionados[i].ValorAsignado = parseFloat(self.rubros_seleccionados[i].ValorAsignado);
         }
 
-//se envian todas las solicitudes de rp
-if(self.contrato.length>1){
-  self.masivo_seleccion=true;
-}else{
-  self.masivo_seleccion=false;
-}        
+        //se envian todas las solicitudes de rp
+        if(self.contrato.length>1){
+          self.masivo_seleccion=true;
+        }else{
+          self.masivo_seleccion=false;
+        }        
         if(self.solicitudresolucion_bool===true){
         self.disponibilidad=self.disponibilidad[0];
         }
@@ -408,35 +408,7 @@ if(self.contrato.length>1){
                // Monto: self.rubros_seleccionados[i].ValorAsignado,
                Monto:solicitud_rp.Monto
               };
-              administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function() {
-                var imprimir = "<h2>Solicitudes creadas correctamente !</h2>"; 
-                imprimir=imprimir + "<div style='height:150px;overflow:auto'><table class='col-md-8 col-md-offset-2'><tr><td style='height:20px;width:120px'><b>Numero solicitud rp</b></td><td style='height:10px;width:80px'><b>Numero contrato</b></td><td style='height:10px;width:80px'><b>Numero vigencia</b></td></tr>";
-                for(var x=0;x<respuestas_solicitudes.length;x++){
-                  
-                  imprimir=imprimir+"<tr style='height:20px'><td>"+respuestas_solicitudes[x].Id+
-                  "</td><td>"+respuestas_solicitudes[x].NumeroContrato+
-                  "</td><td>"+respuestas_solicitudes[x].VigenciaContrato;
-                }
-                imprimir=imprimir+"</td></tr></table></div>";
-                swal({
-                  html:imprimir,
-                  type: "success",
-                  showCancelButton: true,
-                  confirmButtonColor: "#449D44",
-                  cancelButtonColor: "#C9302C",
-                  confirmButtonText: $translate.instant('VOLVER_CONTRATOS'),
-                  cancelButtonText: $translate.instant('SALIR'),
-                }).then(function() {
-                  //si da click en ir a contratistas
-                  $window.location.href = '#/rp_solicitud_personas';
-                }, function(dismiss) {
-    
-                  if (dismiss === 'cancel') {
-                    //si da click en Salir
-                    $window.location.href = '#';
-                  }
-                });
-              });
+              self.crear_solicitud_rp(Disponibilidad_apropiacion_solicitud_rp);
             }
           });
 
@@ -454,6 +426,38 @@ if(self.contrato.length>1){
           
         });
       }
+    };
+
+    self.crear_solicitud_rp = function(Disponibilidad_apropiacion_solicitud_rp){
+      administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function() {
+        var imprimir = "<h2>Solicitudes creadas correctamente !</h2>"; 
+        imprimir=imprimir + "<div style='height:150px;overflow:auto'><table class='col-md-8 col-md-offset-2'><tr><td style='height:20px;width:120px'><b>Numero solicitud rp</b></td><td style='height:10px;width:80px'><b>Numero contrato</b></td><td style='height:10px;width:80px'><b>Numero vigencia</b></td></tr>";
+        for(var x=0;x<respuestas_solicitudes.length;x++){
+          
+          imprimir=imprimir+"<tr style='height:20px'><td>"+respuestas_solicitudes[x].Id+
+          "</td><td>"+respuestas_solicitudes[x].NumeroContrato+
+          "</td><td>"+respuestas_solicitudes[x].VigenciaContrato;
+        }
+        imprimir=imprimir+"</td></tr></table></div>";
+        swal({
+          html:imprimir,
+          type: "success",
+          showCancelButton: true,
+          confirmButtonColor: "#449D44",
+          cancelButtonColor: "#C9302C",
+          confirmButtonText: $translate.instant('VOLVER_CONTRATOS'),
+          cancelButtonText: $translate.instant('SALIR'),
+        }).then(function() {
+          //si da click en ir a contratistas
+          $window.location.href = '#/rp_solicitud_personas';
+        }, function(dismiss) {
+
+          if (dismiss === 'cancel') {
+            //si da click en Salir
+            $window.location.href = '#';
+          }
+        });
+      });
     };
 
     self.gridOptions_compromiso.onRegisterApi = function(gridApi) {

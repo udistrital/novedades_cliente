@@ -5,7 +5,7 @@ angular.module('contractualClienteApp')
 
     var self = this;
 
-    self.resolucion = $localStorage.resolucion
+    self.resolucion = $localStorage.resolucion;
     self.estado = false;
     self.proyectos=[];
     self.vigencia_data = self.resolucion.Vigencia;
@@ -70,7 +70,7 @@ angular.module('contractualClienteApp')
 
       onRegisterApi : function(gridApi){
         self.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope,function(row){
+        gridApi.selection.on.rowSelectionChanged($scope,function(/*row*/){
           self.personasSeleccionadas1=gridApi.selection.getSelectedRows();
           self.persona = true;
         });
@@ -79,16 +79,16 @@ angular.module('contractualClienteApp')
 
 
     adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
-        self.datosDocentesCargaLectiva.data = response.data
+        self.datosDocentesCargaLectiva.data = response.data;
 
     });
 
     self.RecargarDatosPersonas = function(){
       adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
-          self.datosDocentesCargaLectiva.data = response.data
+          self.datosDocentesCargaLectiva.data = response.data;
 
       });
-    }
+    };
 
 
     financieraRequest.get('disponibilidad', $.param({
@@ -159,7 +159,7 @@ angular.module('contractualClienteApp')
       self.precontratados.columnDefs[10].filter.term = self.term;
 
 
-    }
+    };
 
       //Función para almacenar los datos de las vinculaciones realizadas
     self.agregarPrecontratos = function(){
@@ -181,19 +181,19 @@ angular.module('contractualClienteApp')
 
         vinculacionesData.push(vinculacionDocente);
 
-        })
+        });
 
           adminMidRequest.post("calculo_salario/Contratacion/insertar_previnculaciones",vinculacionesData).then(function(response){
 
-            if(response.data=="OK"){
+            if(response.data==="OK"){
                 self.persona=null;
-                self.datosDocentesCargaLectiva.data = []
+                self.datosDocentesCargaLectiva.data = [];
                 swal({
                   text: $translate.instant('VINCULACION_EXITOSA'),
                   type: 'success',
                   confirmButtonText: $translate.instant('ACEPTAR')
 
-                  })
+                  });
                   self.RecargarDatosPersonas();
                   self.get_docentes_vinculados();
                 }else{
@@ -202,14 +202,14 @@ angular.module('contractualClienteApp')
                   text: $translate.instant('CONTRATO_NO_ALMACENADO'),
                   type: 'info',
                   confirmButtonText: $translate.instant('ACEPTAR')
-                })
+                });
               }
-          })
+          });
 
         //self.RecargarDatosPersonas();
 
 
-    }
+    };
 
 
 
@@ -234,10 +234,10 @@ angular.module('contractualClienteApp')
             $translate.instant('CANCELADO'),
             $translate.instant('DESVINCULACION_CANCELADA'),
             'error'
-          )
+          );
         }
-      })
-    }
+      });
+    };
 
     self.desvincularDocente = function(row){
 
@@ -254,14 +254,14 @@ angular.module('contractualClienteApp')
       };
 
       amazonAdministrativaRequest.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
-        if(response.data=="OK"){
+        if(response.data==="OK"){
           self.persona=null;
           swal({
             text: $translate.instant('DESVINCULACION_EXITOSA'),
             type: 'success',
             confirmButtonText: $translate.instant('ACEPTAR')
 
-            })
+            });
             self.get_docentes_vinculados();
           }else{
           swal({
@@ -269,11 +269,11 @@ angular.module('contractualClienteApp')
             text: $translate.instant('DESVINCULACION_NOEXITOSA'),
             type: 'error',
             confirmButtonText: $translate.instant('ACEPTAR')
-          })
+          });
 
         }
-      })
-    }
+      });
+    };
 
 
 
@@ -286,8 +286,8 @@ angular.module('contractualClienteApp')
         clickOutsideToClose:true,
         fullscreen: true,
         locals: {idPersona: row.entity.Id}
-      })
-    }
+      });
+    };
 
     $scope.verHistoriaLaboral = function(row){
       $mdDialog.show({
@@ -298,8 +298,8 @@ angular.module('contractualClienteApp')
         clickOutsideToClose:true,
         fullscreen: true,
         locals: {idPersona: row.entity.Id}
-      })
-    }
+      });
+    };
 
     $scope.verFormacionAcademica = function(row){
       $mdDialog.show({
@@ -310,7 +310,7 @@ angular.module('contractualClienteApp')
         clickOutsideToClose:true,
         fullscreen: true,
         locals: {idPersona: row.entity.Id}
-      })
+      });
     };
 
     $scope.verTrabajosInvestigacion = function(row){
@@ -322,7 +322,7 @@ angular.module('contractualClienteApp')
         clickOutsideToClose:true,
         fullscreen: true,
         locals: {idPersona: row.entity.Id}
-      })
+      });
     };
 
     self.Unidades = function(num){
@@ -340,7 +340,7 @@ angular.module('contractualClienteApp')
       }
 
       return "";
-    }
+    };
 
     self.Decenas = function(num){
 
@@ -363,7 +363,7 @@ angular.module('contractualClienteApp')
             case 8: return $translate.instant('DIECIOCHO');
             case 9: return $translate.instant('DIECINUEVE');
             //default: return "DIECI" + self.Unidades(unidad);
-          }
+          } break;
         case 2:
           switch(unidad)
           {
@@ -378,7 +378,7 @@ angular.module('contractualClienteApp')
             case 8: return $translate.instant('VEINTIOCHO');
             case 9: return $translate.instant('VEINTINUEVE');
             //default: return "VEINTI" + self.Unidades(unidad);
-          }
+          } break;
         case 3: return self.DecenasY($translate.instant('TREINTA'), unidad);
         case 4: return self.DecenasY($translate.instant('CUARENTA'), unidad);
         case 5: return self.DecenasY($translate.instant('CINCUENTA'), unidad);
@@ -388,14 +388,16 @@ angular.module('contractualClienteApp')
         case 9: return self.DecenasY($translate.instant('NOVENTA'), unidad);
         case 0: return self.Unidades(unidad);
       }
-    }
+    };
 
     self.DecenasY = function(strSin, numUnidades){
       if (numUnidades > 0)
-        return strSin + $translate.instant('Y') + self.Unidades(numUnidades)
+        {
+          return strSin + $translate.instant('Y') + self.Unidades(numUnidades);
+        }
 
       return strSin;
-    }
+    };
 
     self.Centenas = function(num){
 
@@ -406,7 +408,9 @@ angular.module('contractualClienteApp')
       {
         case 1:
           if (decenas > 0)
-            return $translate.instant('CIENTO')+ self.Decenas(decenas);
+            {
+              return $translate.instant('CIENTO')+ self.Decenas(decenas);
+            }
           return $translate.instant('CIEN');
         case 2: return $translate.instant('DOSCIENTOS') + self.Decenas(decenas);
         case 3: return $translate.instant('TRESCIENTOS') + self.Decenas(decenas);
@@ -419,55 +423,67 @@ angular.module('contractualClienteApp')
       }
 
       return self.Decenas(decenas);
-    }
+    };
 
     self.Seccion = function(num, divisor, strSingular, strPlural){
-      var cientos = Math.floor(num / divisor)
-      var resto = num - (cientos * divisor)
+      var cientos = Math.floor(num / divisor);
+      var resto = num - (cientos * divisor);
 
       var letras = "";
 
       if (cientos > 0)
-        if (cientos > 1)
-          letras = self.Centenas(cientos) + " " + strPlural;
+        {
+          if (cientos > 1)
+          {
+            letras = self.Centenas(cientos) + " " + strPlural;
+          }
+        }
         else
-          letras = strSingular;
+          {
+            letras = strSingular;
+          }
 
       if (resto > 0)
-        letras += "";
+        {
+          letras += "";
+        }
 
       return letras;
-    }
+    };
 
     self.Miles = function(num){
       var divisor = 1000;
-      var cientos = Math.floor(num / divisor)
-      var resto = num - (cientos * divisor)
+      var cientos = Math.floor(num / divisor);
+      var resto = num - (cientos * divisor);
 
       var strMiles = self.Seccion(num, divisor, $translate.instant('UN_MIL'), $translate.instant('MIL'));
       var strCentenas = self.Centenas(resto);
 
-      if(strMiles == "")
-        return strCentenas;
+      if(strMiles === "")
+        {
+          return strCentenas;
+        }
 
       return strMiles + " " + strCentenas;
 
-    }
+    };
 
     self.Millones = function(num){
       var divisor = 1000000;
-      var cientos = Math.floor(num / divisor)
-      var resto = num - (cientos * divisor)
+      var cientos = Math.floor(num / divisor);
+      var resto = num - (cientos * divisor);
 
       var strMillones = self.Seccion(num, divisor, $translate.instant('UN_MILLON'), $translate.instant('MILLONES'));
       var strMiles = self.Miles(resto);
 
-      if(strMillones == "")
-        return strMiles;
+      if(strMillones === "")
+        {
+          return strMiles;
+        }
 
       return strMillones + " " + strMiles;
 
-    }
+    };
 
     self.NumeroALetras = function(num){
       var data = {
@@ -480,15 +496,23 @@ angular.module('contractualClienteApp')
       };
 
       if (data.centavos > 0)
-        data.letrasCentavos = $translate.instant('CON')+ data.centavos + "/100";
+        {
+          data.letrasCentavos = $translate.instant('CON')+ data.centavos + "/100";
+        }
 
-      if(data.enteros == 0)
-        return $translate.instant('CERO') + data.letrasMonedaPlural + " " + data.letrasCentavos;
-      if (data.enteros == 1)
-        return self.Millones(data.enteros) + " " + data.letrasMonedaSingular + " " + data.letrasCentavos;
+      else if(data.enteros === 0)
+        {
+          return $translate.instant('CERO') + data.letrasMonedaPlural + " " + data.letrasCentavos;
+        }
+      else if (data.enteros === 1)
+        {
+          return self.Millones(data.enteros) + " " + data.letrasMonedaSingular + " " + data.letrasCentavos;
+        }
       else
-        return self.Millones(data.enteros) + " " + data.letrasMonedaPlural + " " + data.letrasCentavos;
-    }
+        {
+          return self.Millones(data.enteros) + " " + data.letrasMonedaPlural + " " + data.letrasCentavos;
+        }
+    };
 
     self.FormatoNumero=function(amount, decimals) {
 
@@ -498,7 +522,9 @@ angular.module('contractualClienteApp')
         decimals = decimals || 0;
 
         if (isNaN(amount) || amount === 0)
-            return parseFloat(0).toFixed(decimals);
+            {
+              return parseFloat(0).toFixed(decimals);
+            }
 
         amount = '' + amount.toFixed(decimals);
 
@@ -506,10 +532,12 @@ angular.module('contractualClienteApp')
             regexp = /(\d+)(\d{3})/;
 
         while (regexp.test(amount_parts[0]))
-            amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+            {
+              amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+            }
 
         return amount_parts.join('.');
-    }
+    };
 
 
 });

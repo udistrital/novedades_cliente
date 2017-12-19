@@ -8,10 +8,10 @@
 * Controller of the contractualClienteApp
 */
 angular.module('contractualClienteApp')
-.controller('GeneracionPlantillaCtrl', function ($translate, $timeout, $scope, administrativaRequest) {
+.controller('GeneracionPlantillaCtrl', function ($translate, $timeout, $scope, administrativaRequest,pdfMake) {
   var self = this;
-  var anchoImg = 70;
-  var altoImg = 70;
+  //var anchoImg = 70;
+  //var altoImg = 70;
   self.opcionesTexto = ['Texto','HTML'];
   self.textoNormal = true;
 
@@ -50,7 +50,7 @@ angular.module('contractualClienteApp')
 
   // Agregar clausula
   self.agregarClausula = function() {
-    if (typeof self.tituloClausula != 'undefined') {
+    if (typeof self.tituloClausula !== 'undefined') {
       if (self.tituloClausula) {
         self.contenidoMinuta.Clausulas.push({Titulo: self.tituloClausula, Texto: self.textoClausula, Imagen: self.imagen, Paragrafos: []});
         $('#modal_add_clausula').modal('hide');
@@ -75,7 +75,7 @@ angular.module('contractualClienteApp')
 
   self.pruebas = function() {
     console.log(':DDD');
-  }
+  };
 
   // Agrega las variables al texto de cláusulas o paragrafos
   self.agregarVariable = function(componente) {
@@ -116,12 +116,12 @@ angular.module('contractualClienteApp')
 
     }
 
-  }
+  };
 
   // Adiciona paragrafo
   self.adicionarParagrafo = function(){
-    if(typeof self.textoParagrafo != 'undefined') {
-      if(self.textoParagrafo != '') {
+    if(typeof self.textoParagrafo !== 'undefined') {
+      if(self.textoParagrafo !== '') {
         self.contenidoMinuta.Clausulas[self.idClausula].Paragrafos.push({Texto: self.textoParagrafo});
         $('#modal_add_paragrafo').modal('hide');
         self.limpiarModal();
@@ -143,7 +143,7 @@ angular.module('contractualClienteApp')
         numeros.push(i);
       }
     }
-    return numeros
+    return numeros;
   };
 
   administrativaRequest.get('tipo_contrato','query=Estado:true').then(function(response) {
@@ -251,11 +251,11 @@ angular.module('contractualClienteApp')
       TipoContrato: self.singleTipoContrato,
       Clausulas: plantilla.Clausulas
     };
-  }
+  };
 
   self.guardarCambios = function() {
     console.log(self.contenidoMinuta);
-  }
+  };
 
   // pdfMake
   self.crearPdf = function(op) {
@@ -279,7 +279,7 @@ angular.module('contractualClienteApp')
       console.log('Opción no implementada');
       break;
     }
-  }
+  };
 
   function getBase64(file) {
    var reader = new FileReader();
@@ -292,15 +292,15 @@ angular.module('contractualClienteApp')
    };
 }
 
-  self.mostrarModal = function(modal) {
-    if (typeof self.encabezado != 'undefined' && self.encabezado.length > 0) {
+  self.mostrarModal = function(/*modal*/) {
+    if (typeof self.encabezado !== 'undefined' && self.encabezado.length > 0) {
       $('#modal_vista_previa').modal();
-      self.crearPdf(1)
+      self.crearPdf(1);
       $('#validador').hide(1000);
     } else {
       $('#validador').show('fast');
     }
-  }
+  };
 
   function setInfoPlantilla() {
     if (self.imagenEncabezado) {

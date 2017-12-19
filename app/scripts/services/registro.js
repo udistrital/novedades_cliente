@@ -9,5 +9,5 @@
  */
 angular.module('contractualClienteApp')
   .factory('registro', function () {
-    return []
+    return [];
     });

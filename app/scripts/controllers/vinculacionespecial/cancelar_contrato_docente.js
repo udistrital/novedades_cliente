@@ -45,10 +45,10 @@ self.datosPersonas={
   ],
   onRegisterApi : function(gridApi){
     self.gridApi = gridApi;
-    gridApi.selection.on.rowSelectionChanged($scope,function(row){
+    gridApi.selection.on.rowSelectionChanged($scope,function(/*row*/){
       self.personasSeleccionadas=gridApi.selection.getSelectedRows();
     });
-    amazonAdministrativaRequest.get("vinculacion_docente","limit=-1&query=IdResolucion.Id:"+self.ResolucionId).then(function(response){      
+    amazonAdministrativaRequest.get("vinculacion_docente", $.param({limit: -1,query: "IdResolucion.Id:" + self.ResolucionId})).then(function(response){      
       self.vinculacion=response.data;
       console.log(self.vinculacion);
         if(self.vinculacion[0]!==null){
@@ -56,7 +56,7 @@ self.datosPersonas={
         self.vinculacion.forEach(function(vinc) {
           amazonAdministrativaRequest.get("informacion_persona_natural/","query=Id:"+vinc.IdPersona).then(function(response){
             if(response.data[0] !== null){
-              if(response.data[0].SegundoNombre=""){
+              if(response.data[0].SegundoNombre===""){
                 response.data[0].NombreCompleto=response.data[0].PrimerNombre+" "+response.data[0].PrimerApellido+" "+response.data[0].SegundoApellido;
               }else{
                 response.data[0].NombreCompleto=response.data[0].PrimerNombre+" "+response.data[0].SegundoNombre+" "+response.data[0].PrimerApellido+" "+response.data[0].SegundoApellido;
@@ -92,7 +92,7 @@ self.datosPersonas={
         FechaRegistro:FechaRegistro,
         Estado:{Id: 7},
         Usuario:"",
-      }
+      };
       amazonAdministrativaRequest.post("contrato_estado",cancelacion).then(function(response){
         console.log(response.data);
         console.log(cancelacion);

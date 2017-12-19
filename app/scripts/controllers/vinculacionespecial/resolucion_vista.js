@@ -8,12 +8,12 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,idResolucion,$http) {
+  .controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,idResolucion,$http,pdfMake) {
 
-  	var self=this;
+    var self=this;
 
     self.idResolucion=idResolucion;
-    self.imagen;
+    //self.imagen;
     self.proyectos=[];
 
     $http.get("scripts/models/imagen_ud.json")
@@ -29,10 +29,11 @@ angular.module('contractualClienteApp')
       //Se cargan los datos almacenados en la tabla resolucion_vinculacion_docente donde se encuentran los elementos filtro para obtener los docentes asociados a la resolución
       administrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
         self.datosFiltro=response.data;
-        if(self.datosFiltro.NivelAcademico.toLowerCase()=="pregrado"){
-          var auxNivelAcademico=14;
-        }else if(self.datosFiltro.NivelAcademico.toLowerCase()=="posgrado"){
-          var auxNivelAcademico=15;
+        var auxNivelAcademico;
+        if(self.datosFiltro.NivelAcademico.toLowerCase()==="pregrado"){
+          auxNivelAcademico=14;
+        }else if(self.datosFiltro.NivelAcademico.toLowerCase()==="posgrado"){
+          auxNivelAcademico=15;
         }
         self.datosFiltro.IdFacultad=self.datosFiltro.IdFacultad.toString();
 
@@ -49,15 +50,15 @@ angular.module('contractualClienteApp')
                       //Se carga el ordenador del gasto asocciado a la dependencia solicitante de los docentes de vinculación especial
                       coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.datosFiltro.IdFacultad.toString()).then(function(response){
 
-                        if(response.data==null){
+                        if(response.data===null){
                           coreRequest.get("ordenador_gasto/1").then(function(response){
                             self.contenidoResolucion.ordenadorGasto=response.data;
-                          })
+                          });
                         }else{
                           self.contenidoResolucion.ordenadorGasto=response.data[0];
                         }
                         //Se verifica si la resolución ha sido expedida o no
-                        if(self.resolucion.FechaExpedicion == null){
+                        if(self.resolucion.FechaExpedicion === null){
                             //Se cargan los docentes previamente vinculados con la resolución
                             adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.idResolucion.toString()).then(function(response){
                             self.contratados=response.data;
@@ -73,13 +74,13 @@ angular.module('contractualClienteApp')
                               self.generarResolucion();
                             }else{
                               //Se llama la función para generar el pdf con la resoleución
-                              self.generarResolucion()
+                              self.generarResolucion();
                             }
                           });
                         }
                       });
                     });
-    }
+    };
 
     //Función para generar el pdf de la resolución con la información almacenada en la base de datos
   	self.generarResolucion = function() {
@@ -88,7 +89,7 @@ angular.module('contractualClienteApp')
       pdfMake.createPdf(documento).getDataUrl(function(outDoc){
 	      document.getElementById('vistaPDF').src = outDoc;
 	    });
-	 }
+	 };
 
 //Función para obtener el contenido de las tablas por proyecto currícular de los docentes asociados a la resolución
 self.getCuerpoTabla=function(idProyecto, datos, columnas) {
@@ -99,19 +100,19 @@ self.getCuerpoTabla=function(idProyecto, datos, columnas) {
   if(datos){
     datos.forEach(function(fila) {
       //Se veriica que el docente este asociado al proyecto curricular actual
-      if(fila.IdProyectoCurricular==idProyecto){
+      if(fila.IdProyectoCurricular===idProyecto){
         var datoFila = [];
         columnas.forEach(function(columna) {
           //Cada dato es almacenado como un String dentro de la matriz de la tabla
           datoFila.push(fila[columna].toString());
-        })
+        });
         //La fila es agregada a la tablacon los datos correspondientes
         cuerpo.push(datoFila);
       }
     });
   }
   return cuerpo;
-}
+};
 
 //Función para obtener la estructura de la tabla de contratados
 self.getTabla=function(idProyecto, datos, columnas) {
@@ -122,7 +123,7 @@ self.getTabla=function(idProyecto, datos, columnas) {
       body: self.getCuerpoTabla(idProyecto, datos, columnas)
     }
   };
-}
+};
 
 //Función para obtener el texto del preámbulo dentro de una estructura
 self.getPreambuloTexto=function(preambulo){
@@ -130,7 +131,7 @@ self.getPreambuloTexto=function(preambulo){
     text: preambulo,
     style: 'texto'
   };
-}
+};
 
 //Función para obtener el texto de la consideración dentro de una estructura
 self.getConsideracionTexto=function(consideracion){
@@ -138,26 +139,26 @@ self.getConsideracionTexto=function(consideracion){
     text: consideracion,
     style: 'texto'
   };
-}
+};
 
 //Funcion para obtener el texto de los artiulos consu paragrafos dentro de una estructura
 self.getArticuloTexto=function(articulo, numero){
   var aux=[{text: 'ARTÍCULO '+self.numeroALetras(numero+1)+' - ', bold: true}, articulo.Texto];
-  if(articulo.Paragrafos!=null){
+  if(articulo.Paragrafos!==null){
     var numeroParagrafo=1;
     //Cada paragrafo se inserta dentro del texto del articulo
     articulo.Paragrafos.forEach(function(paragrafo){
       aux.push({text: ' PARAGRAFO '+self.numeroALetras(numeroParagrafo)+' - ', bold: true});
       aux.push(paragrafo.Texto);
       numeroParagrafo++;
-    })
+    });
   }
 
   return {
     text: aux,
     style: 'texto'
   };
-}
+};
 
 //Función que devuelve en contenido de la resolución en un arreglo de estructuras
 self.getContenido=function(contenidoResolucion, contratados, proyectos){
@@ -176,12 +177,12 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
     var index=1;
     contenidoResolucion.Articulos.forEach(function(articulo){
       contenido.push(self.getArticuloTexto(articulo, numero));
-      if(index==1){
+      if(index===1){
         proyectos.forEach(function(proyecto){
           var proyectoVisible=false;
           if(contratados){
             contratados.forEach(function(fila) {
-              if(fila.IdProyectoCurricular==proyecto.Id){
+              if(fila.IdProyectoCurricular===proyecto.Id){
                 proyectoVisible=true;
               }
             });
@@ -197,7 +198,7 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
       }
       index++;
       numero++;
-    })
+    });
   }
   contenido.push({ text: 'COMUNIQUESE Y CUMPLASE',
     style: 'finalizacion'});
@@ -263,7 +264,7 @@ self.getDocumento=function(contenidoResolucion, contratados, proyectos){
       }
     },
     //Pie de página de la resolución
-    footer: function(currentPage, pageCount) {return {text: currentPage.toString()+' de '+pageCount, alignment: 'right', margin: [70, 5]}},
+    footer: function(currentPage, pageCount) {return {text: currentPage.toString()+' de '+pageCount, alignment: 'right', margin: [70, 5]};},
     defaultStyle: {
       alignment: 'justify'
     }
@@ -290,7 +291,7 @@ self.getUnidades = function(num){
     case 9: return 'NOVENO';
   }
   return '';
-}
+};
 
 //Función que retorna las decenas del número en texto
 self.getDecenas = function(numero){
@@ -310,16 +311,16 @@ self.getDecenas = function(numero){
     case 9: return 'NONAGÉSIMO '+self.getUnidades(unidad);
   }
   return '';
-}
+};
 
 //Función que retorna los números de entrada en texto formato orden
 self.numeroALetras = function(numero) {
-  if(numero == 0){
+  if(numero === 0){
     return 'CERO ';
   }else{
     return self.getDecenas(numero);
   }
-}
+};
 
 //Función que retorna un número en formato monetario "99.999.999"
 self.FormatoNumero=function(amount, decimals) {
@@ -330,7 +331,9 @@ self.FormatoNumero=function(amount, decimals) {
         decimals = decimals || 0;
 
         if (isNaN(amount) || amount === 0)
-            return parseFloat(0).toFixed(decimals);
+           { 
+             return parseFloat(0).toFixed(decimals);
+            }
 
         amount = '' + amount.toFixed(decimals);
 
@@ -338,9 +341,11 @@ self.FormatoNumero=function(amount, decimals) {
             regexp = /(\d+)(\d{3})/;
 
         while (regexp.test(amount_parts[0]))
-            amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+            {
+              amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+            }
 
         return amount_parts.join('.');
-    }
+    };
 
   });

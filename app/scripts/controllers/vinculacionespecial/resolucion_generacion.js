@@ -22,25 +22,25 @@ angular.module('contractualClienteApp')
 
     administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
       self.resolucion.preambulo=response.data.Preambulo;
-    })
+    });
 
     administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
       self.resolucion.consideracion=response.data.Consideracion;
-    })
+    });
 
     administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response){
       self.resolucion.articulos=response.data.Articulos;
-    })
+    });
 
     self.getNombreFacultad = function(index){
       var nombreFacultad;
       self.facultades.forEach(function(facultad){
-        if(facultad.DependenciaId.Id==parseInt(index)){
+        if(facultad.DependenciaId.Id===parseInt(index)){
           nombreFacultad=facultad.DependenciaId.Nombre;
         }
-      })
+      });
       return nombreFacultad;
-    }
+    };
 
   	self.crearResolucion = function(){
       if(self.resolucion.numero && self.resolucion.facultad && self.resolucion.nivelAcademico && self.resolucion.dedicacion && self.resolucion.preambulo && self.resolucion.consideracion){
@@ -63,10 +63,10 @@ angular.module('contractualClienteApp')
           buttonsStyling: false
         }).then(function () {
           self.guardarResolucion();
-        }, function (dismiss) {
-        })
+        }, function (/*dismiss*/) {
+        });
       }
-  	}
+  	};
 
     self.guardarResolucion = function(){
       var resolucionData={
@@ -77,14 +77,14 @@ angular.module('contractualClienteApp')
         NumeroSemanas : parseInt(self.resolucion.numeroSemanas),
         Periodo: parseInt(self.resolucion.Periodo)
 
-      }
+      };
       administrativaRequest.post("resolucion/GenerarResolucion",resolucionData).then(function(response){
         var resolucionVinculacionDocenteData={
           Id: response.data.Id,
           IdFacultad: parseInt(self.resolucion.facultad),
           Dedicacion: self.resolucion.dedicacion,
           NivelAcademico: self.resolucion.nivelAcademico
-        }
+        };
         administrativaRequest.post("resolucion_vinculacion_docente",resolucionVinculacionDocenteData).then(function(response){
           var numeroArticulo=1;
           self.resolucion.articulos.forEach(function(articulo){
@@ -93,7 +93,7 @@ angular.module('contractualClienteApp')
               ResolucionId: {Id: response.data.Id},
               Texto: articulo.Texto,
               TipoComponente: "Articulo"
-            }
+            };
            administrativaRequest.post("componente_resolucion",articuloData).then(function(response){
               var numeroParagrafo=1;
               if(articulo.Paragrafos){
@@ -104,18 +104,18 @@ angular.module('contractualClienteApp')
                     Texto: paragrafo.Texto,
                     TipoComponente: "Paragrafo",
                     ComponentePadre: {Id: response.data.Id}
-                  }
-                  administrativaRequest.post("componente_resolucion",paragrafoData).then(function(response){
-                  })
+                  };
+                  administrativaRequest.post("componente_resolucion",paragrafoData).then(function(/*response*/){
+                  });
                   numeroParagrafo++;
-                })
+                });
               }
-            })
+            });
             numeroArticulo++;
-          })
+          });
           $window.location.href = '#/vinculacionespecial/resolucion_gestion';
         });
 });
-}
+};
 
 });

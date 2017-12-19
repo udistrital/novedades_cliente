@@ -76,11 +76,11 @@ angular.module('contractualClienteApp')
           }
         }
       } else {
-        for (var i = 0; i < plantillas.length; i++) {
-          if(!plantillas[i].Activo) {
-            self.gridOptions.data.push(plantillas[i]);
+        for (var j = 0; j < plantillas.length; j++) {
+          if(!plantillas[j].Activo) {
+            self.gridOptions.data.push(plantillas[j]);
           }
         }
       }
-    }
+    };
   });

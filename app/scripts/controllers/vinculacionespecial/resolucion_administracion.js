@@ -35,10 +35,10 @@ angular.module('contractualClienteApp')
         },
         {
             field: 'Numero',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -47,10 +47,10 @@ angular.module('contractualClienteApp')
         },
         {
             field: 'Vigencia',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -59,10 +59,10 @@ angular.module('contractualClienteApp')
         },
         {
             field: 'Facultad',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -71,10 +71,10 @@ angular.module('contractualClienteApp')
         },
         {
             field: 'NivelAcademico',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -83,10 +83,10 @@ angular.module('contractualClienteApp')
         },
         {
             field: 'Dedicacion',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -95,10 +95,10 @@ angular.module('contractualClienteApp')
         },
         {
             field: 'Estado',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -107,10 +107,10 @@ angular.module('contractualClienteApp')
         },
         {
             name: $translate.instant('OPCIONES'),
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -138,7 +138,7 @@ angular.module('contractualClienteApp')
         })).then(function(response){
             self.resolucionesInscritas.data=response.data;
         });
-    }
+    };
 
     //Función para asignar controlador de la vista contrato_registro.html (expedición de la resolución), donde se pasa por parámetro el id de la resolucion seleccionada, la lista de resoluciones paraque sea recargada y los datos completos de la resolución con ayuda de $mdDialog
     $scope.verRealizarExpedicion = function(row){
@@ -150,8 +150,8 @@ angular.module('contractualClienteApp')
             clickOutsideToClose:true,
             fullscreen: true,
             locals: {idResolucion: row.entity.Id, lista: self, resolucion: row.entity}
-        })
-    }
+        });
+    };
 
     //Función donde se despliega un mensaje de alerta previo a la cancelación de la resolución
 	$scope.verCancelarResolucion = function(row){
@@ -163,7 +163,7 @@ angular.module('contractualClienteApp')
             clickOutsideToClose:true,
             fullscreen: true,
             locals: {idResolucion: row.entity.Id}
-          })
+          });
         /*
     	swal({
 		  title: $translate.instant('CANCELAR_RESOLUCION'),
@@ -189,33 +189,33 @@ angular.module('contractualClienteApp')
                 })
             }
         })*/
-    }
+    };
 
     //Función para realizar la cancelación y verificación de la resolución
     self.cancelarResolucion = function(row){
-        var cancelacionPosible = true;
+        //var cancelacionPosible = true;
         //Se verifica que no existan liquidaciones asoociadas a los contratos pertenecientes a la resolucion
         adminMidRequest.post("cancelacion_valida/"+row.entity.Id).then(function(response){
-            if(response.data=="OK"){
+            if(response.data==="OK"){
                 administrativaRequest.get("resolucion/"+ row.entity.Id).then(function(response){
                     var nuevaResolucion=response.data;
                     //Cambio de estado
                     nuevaResolucion.Estado=false;
                     //Se actualiza el estado de la resolución
                     administrativaRequest.put("resolucion/CancelarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
-                        if(response.data=="OK"){
+                        if(response.data==="OK"){
                             self.cargarDatosResolucion();
                         }
-                    })
-                })
+                    });
+                });
             }else{
                 swal({
                     text: $translate.instant('NO_CANCELADA_PAGOS'),
                     type: 'warning'
-                })
+                });
             }
-        })
-    }
+        });
+    };
 
     //Función donde se despliega un mensaje de alerta previo a la restauración de la resolución
     $scope.verRestaurarResolucion = function(row){
@@ -240,10 +240,10 @@ angular.module('contractualClienteApp')
                 swal({
                     text: $translate.instant('NO_RESTAURACION_RESOLUCION'),
                     type: 'error'
-                })
+                });
             }
-        })
-    }
+        });
+    };
 
     //Función para asignar controlador de la vista resolucion_vista.html, donde se pasa por parámetro el id de la resolucion seleccionada con ayuda de $mdDialog
     $scope.verVisualizarResolucion = function(row){
@@ -255,8 +255,8 @@ angular.module('contractualClienteApp')
             clickOutsideToClose:true,
             fullscreen: true,
             locals: {idResolucion: row.entity.Id}
-        })
-    }
+        });
+    };
 
     //Función para realizar la restauración y verificación de la resolución
     self.restaurarResolucion = function(row){
@@ -267,12 +267,12 @@ angular.module('contractualClienteApp')
             nuevaResolucion.FechaExpedicion=null;
             //Se actualizan los datos de la resolución
             administrativaRequest.put("resolucion/RestaurarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function(response){
-                if(response.data=="OK"){
+                if(response.data==="OK"){
                     self.cargarDatosResolucion();
                 }
-            })
-        })
-    }
+            });
+        });
+    };
 
     //Se hace el llamado de la función para cargar datos de resoluciones
     self.cargarDatosResolucion();

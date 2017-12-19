@@ -48,7 +48,7 @@ angular.module('contractualClienteApp')
             title: 'Complete todos los campos obligatorios en el formulario',
             showConfirmButton: false,
             timer: 2000
-          })
+          });
         } else {
           $scope.info_responsables = false;
           self.formuIncompleto = false;
@@ -68,7 +68,7 @@ angular.module('contractualClienteApp')
             title: 'Complete todos los campos obligatorios en el formulario',
             showConfirmButton: false,
             timer: 2000
-          })
+          });
         } else {
           $scope.info_general = false;
           self.formuIncompleto = false;
@@ -88,7 +88,7 @@ angular.module('contractualClienteApp')
             title: 'Complete todos los campos obligatorios en el formulario',
             showConfirmButton: false,
             timer: 2000
-          })
+          });
         } else {
           $scope.info_objeto = false;
           self.formuIncompleto = false;
@@ -114,7 +114,7 @@ angular.module('contractualClienteApp')
             title: 'Complete todos los campos obligatorios en el formulario',
             showConfirmButton: false,
             timer: 1500
-          })
+          });
         } else {
           $scope.info_espf = false;
           self.formuIncompleto = false;
@@ -127,7 +127,7 @@ angular.module('contractualClienteApp')
         self.formuIncompleto = true;
         break;
     }
-  }
+  };
 
   $scope.$watch('solicitudNecesidad.dependencia_destino',function(){
     coreRequest.get('jefe_dependencia', $.param({
@@ -426,13 +426,13 @@ self.eliminarRubro = function(rubro) {
       }
     }
   } else {
-    for (var i = 0; i < self.f_apropiacion_inv.length; i++) {
-      if (self.f_apropiacion_inv[i] === rubro) {
-        self.f_apropiacion_inv.splice(i,1);
+    for (var j = 0; j < self.f_apropiacion_inv.length; j++) {
+      if (self.f_apropiacion_inv[j] === rubro) {
+        self.f_apropiacion_inv.splice(j,1);
       }
     }
   }
-}
+};
 
 self.eliminarRequisito = function(requisito) {
     for (var i = 0; i < self.requisitos_minimos.length; i++) {
@@ -440,7 +440,7 @@ self.eliminarRequisito = function(requisito) {
         self.requisitos_minimos.splice(i,1);
       }
     }
-}
+};
 
 self.eliminarActividad = function(actividad) {
   for (var i = 0; i < self.ActividadEspecifica.length; i++) {
@@ -448,7 +448,7 @@ self.eliminarActividad = function(actividad) {
       self.ActividadEspecifica.splice(i,1);
     }
   }
-}
+};
 
 $scope.$watch('solicitudNecesidad.f_apropiacion_inv', function() {
   self.valor_inv = 0;
@@ -478,7 +478,7 @@ $scope.$watch('solicitudNecesidad.productos', function() {
 }, true);
 
 $scope.$watch('solicitudNecesidad.necesidad.TipoContratoNecesidad.Nombre', function() {
-  if (self.necesidad.TipoContratoNecesidad.Nombre == 'Compra') {
+  if (self.necesidad.TipoContratoNecesidad.Nombre === 'Compra') {
     self.MostrarTotalEspc  = true;
   } else {
     self.MostrarTotalEspc  = false;
@@ -533,9 +533,9 @@ self.submitForm = function(form) {
       'Faltan datos en el formulario',
       'Completa todos los datos obligatorios del formulario',
       'warning'
-    )
+    );
   }
-}
+};
 
 self.crear_solicitud = function() {
   self.marcos_legales = [];
@@ -565,7 +565,7 @@ self.crear_solicitud = function() {
         'Error',
         'El valor del contrato ('+self.valorTotalEspecificaciones+') debe ser igual que el de la financiación('+self.valor_inv+')' ,
         'warning'
-      )
+      );
       return;
     }
     for (var h = 0; h < self.f_apropiacion_inv.length; h++) {
@@ -586,7 +586,7 @@ self.crear_solicitud = function() {
         'Error',
         'El valor del contrato ('+self.valorTotalEspecificaciones+') debe ser igual que el de la financiación('+self.valor_fun+')' ,
         'warning'
-      )
+      );
       return;
     }
     self.f_apropiaciones = self.f_apropiacion_fun;
@@ -622,10 +622,10 @@ self.crear_solicitud = function() {
       confirmButtonText: $translate.instant('CONFIRMAR')
     }).then(function() {
       //si da click en ir a contratistas
-      if(response.data[0]=="success"){
+      if(response.data[0]==="success"){
         location.href = '#/necesidades';
       }
-    })
+    });
   });
 };
 
