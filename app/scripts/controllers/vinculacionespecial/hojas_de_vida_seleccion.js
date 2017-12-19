@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-  .controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,financieraRequest,resolucion,amazonAdministrativaRequest,adminMidRequest,oikosRequest,contratacion_mid_request,$localStorage,$scope,$mdDialog,$routeParams,$translate) {
+  .controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,financieraRequest,resolucion,amazonAdministrativaRequest,adminMidRequest,oikosRequest,$localStorage,$scope,$mdDialog,$routeParams,$translate) {
 
     var self = this;
 
@@ -77,6 +77,29 @@ angular.module('contractualClienteApp')
       }
     };
 
+    self.Disponibilidades = {
+      paginationPageSizes: [10, 15, 20],
+      paginationPageSize: 10,
+      enableRowSelection: false,
+      enableRowHeaderSelection: false,
+      enableFiltering: true,
+      enableHorizontalScrollbar: 0,
+      enableVerticalScrollbar: true,
+      useExternalPagination: false,
+      enableSelectAll: false,
+      columnDefs : [
+        {
+          field: 'NumeroDisponibilidad',
+          displayName: "Número de Disponibilidad"
+        },
+        {
+          field: 'Id',
+          displayName: "Id"
+        }
+      ],
+
+    };
+
 
     adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
         self.datosDocentesCargaLectiva.data = response.data
@@ -91,10 +114,8 @@ angular.module('contractualClienteApp')
     }
 
 
-    financieraRequest.get('disponibilidad', $.param({
-        query: 'Vigencia:'+self.vigencia_data,
-        limit: -1
-      })).then(function(response) {
+    financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:"+self.vigencia_data).then(function(response) {
+        self.Disponibilidades.data = response.data;
         self.lista_cdp = response.data;
       });
 
@@ -164,6 +185,7 @@ angular.module('contractualClienteApp')
       //Función para almacenar los datos de las vinculaciones realizadas
     self.agregarPrecontratos = function(){
 
+      //$('#modal_disponibilidad').modal('show');
 
       self.personasSeleccionadas1.forEach(function(personaSeleccionada){
         var vinculacionDocente = {
@@ -196,6 +218,7 @@ angular.module('contractualClienteApp')
                   })
                   self.RecargarDatosPersonas();
                   self.get_docentes_vinculados();
+                  vinculacionesData = [];
                 }else{
                 swal({
                   title: $translate.instant('ERROR'),
@@ -203,6 +226,7 @@ angular.module('contractualClienteApp')
                   type: 'info',
                   confirmButtonText: $translate.instant('ACEPTAR')
                 })
+                vinculacionesData = [];
               }
           })
 

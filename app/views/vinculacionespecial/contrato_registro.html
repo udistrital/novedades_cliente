@@ -43,14 +43,14 @@
                                     <select class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Cdp.VigenciaCdp" ng-options="vig for vig in contratoRegistro.vigencia_data" required>
                                         <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"VIGENCIA" | translate}}</option>
                                     </select>
-                                    <div class="form-group" ng-show="contratoRegistro.contratoGeneralBase.Cdp.VigenciaCdp!=undefined">                                        
+                                    <div class="form-group" ng-show="contratoRegistro.contratoGeneralBase.Cdp.VigenciaCdp!=undefined">
                                         <label>{{ 'NUMERO_CDP' | translate }}</label>
                                         <select class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Cdp.cdp" ng-options="cdps.NumeroDisponibilidad for cdps in contratoRegistro.lista_cdp" required>
                                         <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"CDP" | translate}}</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group" ng-show="contratoRegistro.contratoGeneralBase.Cdp.cdp!=0">                                        
+                                <div class="form-group" ng-show="contratoRegistro.contratoGeneralBase.Cdp.cdp!=0">
                                     <div class="form-group col-lg-6">
                                         <label>{{ 'NUMERO_NECESIDAD' | translate }}</label>
                                         <input type="text" class="form-control" ng-model="contratoRegistro.necesidad.Numero" disabled>
