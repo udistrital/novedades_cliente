@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,idResolucion,$http,pdfMake) {
+  .controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,idResolucion,$http) {
 
     var self=this;
 
@@ -37,7 +37,7 @@ angular.module('contractualClienteApp')
         }
         self.datosFiltro.IdFacultad=self.datosFiltro.IdFacultad.toString();
 
-       oikosRequest.get("dependencia/ProyectosPorFacultad/"+self.datosFiltro.IdFacultad,"").then(function(response){
+       oikosRequest.get("dependencia/proyectosPorFacultad/"+self.datosFiltro.IdFacultad+"/"+self.datosFiltro.NivelAcademico,"").then(function(response){
             self.proyectos = response.data;
             self.getContenidoDocumento();
         });
@@ -331,7 +331,7 @@ self.FormatoNumero=function(amount, decimals) {
         decimals = decimals || 0;
 
         if (isNaN(amount) || amount === 0)
-           { 
+           {
              return parseFloat(0).toFixed(decimals);
             }
 

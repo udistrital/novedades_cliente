@@ -46,7 +46,7 @@
     });
     self.datosFiltro.IdFacultad=self.datosFiltro.IdFacultad.toString();
 
-    oikosRequest.get("dependencia/ProyectosPorFacultad/"+self.datosFiltro.IdFacultad,"").then(function(response){
+    oikosRequest.get("dependencia/ProyectosPorFacultad/"+self.datosFiltro.IdFacultad+"/"+self.datosFiltro.NivelAcademico,"").then(function(response){
           self.proyectos = response.data;
     });
 
