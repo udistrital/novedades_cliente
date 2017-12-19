@@ -16,7 +16,7 @@ angular.module('contractualClienteApp')
       */
       templateUrl: 'add-view.html',
       controller:function(){
-        var ctrl = this;
+        //var ctrl = this;
       },
       controllerAs:'d_catalogosElementos/fichaTecnicaElemento'
     };

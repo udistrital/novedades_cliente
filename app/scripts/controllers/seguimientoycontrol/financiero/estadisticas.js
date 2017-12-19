@@ -71,9 +71,9 @@ angular.module('contractualClienteApp')
           var valor = d.data.valor;
           valor = '$'+valor.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
           return "<h5><b>"+d.data.op+"</b></h5><h5><b>"+$translate.instant('VALOR')+
-          ": </b></h5>"+valor+"</br><h5><b>"+$translate.instant('FECHA')+": </h5></b>"
-          +d.data.fecha+"</br><h5><b>"+$translate.instant('PORCENTAJE')+": </b></h5>"+d.data.porcentaje+"%"
-          +"</br><h5><b>"+$translate.instant('TIPO')+": </b></h5>"+d.data.tipo;
+          ": </b></h5>"+valor+"</br><h5><b>"+$translate.instant('FECHA')+": </h5></b>"+
+          d.data.fecha+"</br><h5><b>"+$translate.instant('PORCENTAJE')+": </b></h5>"+d.data.porcentaje+"%"+
+          "</br><h5><b>"+$translate.instant('TIPO')+": </b></h5>"+d.data.tipo;
         },
       },
       zoom: {

@@ -14,7 +14,7 @@ angular.module('contractualClienteApp')
   .controller('ResolucionGestionCtrl', function (resolucion,administrativaRequest,$scope,$window,$mdDialog,$translate,$localStorage) {
 
   	var self = this;
-    self.datos_docentes;
+    //self.datos_docentes;
 
     //Tabla para mostrar los datos básicos de las resoluciones almacenadas dentro del sistema
 	self.resolucionesInscritas = {
@@ -39,10 +39,10 @@ angular.module('contractualClienteApp')
         },
         {
         	field: 'Numero',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -51,10 +51,10 @@ angular.module('contractualClienteApp')
         },
         {
         	field: 'Vigencia',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -63,10 +63,10 @@ angular.module('contractualClienteApp')
         },
         {
         	field: 'Periodo',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -75,10 +75,10 @@ angular.module('contractualClienteApp')
         },
         {
         	field: 'Facultad',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -87,10 +87,10 @@ angular.module('contractualClienteApp')
         },
         {
         	field: 'NivelAcademico',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -99,10 +99,10 @@ angular.module('contractualClienteApp')
         },
         {
         	field: 'Dedicacion',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -111,10 +111,10 @@ angular.module('contractualClienteApp')
         },
         {
         	field: 'NumeroSemanas',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -123,10 +123,10 @@ angular.module('contractualClienteApp')
         },
         {
             field: 'Estado',
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -135,10 +135,10 @@ angular.module('contractualClienteApp')
         },
         {
             name: $translate.instant('OPCIONES'),
-            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                if (row.entity.Estado=="Cancelada") {
+            cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
-                }else if(row.entity.Estado=="Expedida"){
+                }else if(row.entity.Estado==="Expedida"){
                     return 'resolucionExpedida';
                 }
             },
@@ -163,11 +163,11 @@ angular.module('contractualClienteApp')
 
         self.resolucionesInscritas.data=response.data;
 
-        if(self.resolucionesInscritas.data!=null){
+        if(self.resolucionesInscritas.data!==null){
             self.resolucionesInscritas.data.forEach(function(resolucion){
-                if(resolucion.FechaExpedicion!=null){
+                if(resolucion.FechaExpedicion!==null){
                     //dado que el servicio no está almacenando la Feha de expedición directamente como null, se toma el valor "0001-01-01T00:00:00Z" como tal
-                    if(resolucion.FechaExpedicion.toString()=="0001-01-01T00:00:00Z"){
+                    if(resolucion.FechaExpedicion.toString()==="0001-01-01T00:00:00Z"){
                         resolucion.FechaExpedicion=null;
                         resolucion.EstadoTexto="Creada";
                     }else{
@@ -184,24 +184,24 @@ angular.module('contractualClienteApp')
                         resolucion.EstadoTexto="Cancelada";
                     }
                 }
-            })
+            });
         }
     });
 
     //Función para redireccionar la página web a la vista de edición del contenido de la resolución, donde se pasa por parámetro el id de la resolucion seleccionada
     $scope.verEditarResolucion = function(row){
     	$window.location.href = '#/vinculacionespecial/resolucion_detalle/'+row.entity.Id;
-    }
+    };
 
     //Función para redireccionar la página web a la vista de adición y eliminación de docentes en la resolucion, donde se pasa por parámetro el id de la resolucion seleccionada
     $scope.verEditarDocentes = function(row){
       var auxNivelAcademico;
 
       administrativaRequest.get("resolucion_vinculacion_docente/"+row.entity.Id).then(function(response){
-          self.datos_docentes = response.data
-          if(row.entity.NivelAcademico.toLowerCase()=="pregrado"){
+          self.datos_docentes = response.data;
+          if(row.entity.NivelAcademico.toLowerCase()==="pregrado"){
             auxNivelAcademico=14;
-          }else if(row.entity.NivelAcademico.toLowerCase()=="posgrado"){
+          }else if(row.entity.NivelAcademico.toLowerCase()==="posgrado"){
             auxNivelAcademico=15;
           }
           self.resolucion = resolucion;
@@ -214,8 +214,8 @@ angular.module('contractualClienteApp')
           self.resolucion.Periodo = row.entity.Periodo;                         //--- se deja quemado, debe incluirse ne tabla resolucion
           self.resolucion.NumeroSemanas = row.entity.NumeroSemanas;                 //--- se deja quemado, debe incluirse ne tabla resolucion
 
-          if(self.datos_docentes.Dedicacion == "TCO-MTO"){
-              self.resolucion.Dedicacion = "TCO|MTO"
+          if(self.datos_docentes.Dedicacion === "TCO-MTO"){
+              self.resolucion.Dedicacion = "TCO|MTO";
           }else{
             self.resolucion.Dedicacion = self.datos_docentes.Dedicacion;
           }
@@ -228,7 +228,7 @@ angular.module('contractualClienteApp')
       });
 
 
-    }
+    };
 
     //Función para asignar controlador de la vista resolucion_vista.html, donde se pasa por parámetro el id de la resolucion seleccionada con ayuda de $mdDialog
 	$scope.verVisualizarResolucion = function(row){
@@ -240,13 +240,13 @@ angular.module('contractualClienteApp')
             clickOutsideToClose:true,
             fullscreen: true,
             locals: {idResolucion: row.entity.Id}
-        })
-    }
+        });
+    };
 
     //Función para redireccionar la página web a la vista de creación de una nueva resolución
     self.generarNuevaResolucion = function(){
         $window.location.href = '#/vinculacionespecial/resolucion_generacion';
-    }
+    };
 
 
 

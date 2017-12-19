@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolFinancieroContratoCtrl', function ($timeout,$window,contrato,amazonAdministrativaRequest,registro,disponibilidad,agoraRequest,orden,sicapitalRequest,administrativaRequest,$scope,$rootScope,$translate) {
+  .controller('SeguimientoycontrolFinancieroContratoCtrl', function ($timeout,$window,contrato,amazonAdministrativaRequest,registro,disponibilidad,agoraRequest,orden,sicapitalRequest,administrativaRequest,$scope,$rootScope,$translate,performance) {
     var self = this;
     self.cambio = false;
     self.contrato=contrato;
@@ -46,59 +46,7 @@ angular.module('contractualClienteApp')
       for (var i = 0; i < self.cdps.length; i++) {
         self.cdp=self.cdps[i];
         //caso real
-
-        sicapitalRequest.get('registro/rpxcdp', self.cdp.Vigencia+"/"+self.cdp.NumeroCdp+"/"+contrato.ContratistaId).then(function(response) {
-        //caso prueba
-        //sicapitalRequest.get('registro/rpxcdp', self.cdp.Vigencia+"/"+self.cdp.NumeroCdp).then(function(response) {
-        if(response.data[0]!== "<"){
-          self.registro_presupuestal=self.registro_presupuestal.concat(response.data);
-          self.cargando_datos = false;
-        }else{
-          $scope.banderaRP = false;
-          swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_RP'), "error").then(function() {
-            //si da click en ir a contratistas
-            $window.location.href = '#/seguimientoycontrol/financiero';
-          });
-        }
-        if(i === self.cdps.length){
-          //recorre los rps y busca las ordenes de pago de este
-          for (var x = 0; x < self.registro_presupuestal.length; x++) {
-          url = self.contrato.ContratistaId+"/"+self.registro_presupuestal[x].NUMERO_DISPONIBILIDAD+"/"+self.registro_presupuestal[x].NUMERO_REGISTRO+"/"+self.registro_presupuestal[x].VIGENCIA;
-            sicapitalRequest.get('ordenpago/opgsyc', url).then(function(response) {
-              console.log(response.data);
-              if(response.data[0]!== "<"){
-                self.ordenes_pago = self.ordenes_pago.concat(response.data);
-              }else{
-                swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_ORDEN'), "error").then(function() {
-                  //si da click en ir a contratistas
-                  $window.location.href = '#/seguimientoycontrol/financiero';
-                });
-              }
-              if(x===self.registro_presupuestal.length){
-                for (var i = 0; i < self.ordenes_pago.length; i++) {
-                  temp.numero_disponibilidad = self.ordenes_pago[i].NUMERO_DISPONIBILIDAD;
-                  temp.numero_registro = self.ordenes_pago[i].NUMERO_REGISTRO;
-                  temp.unidad_ejecutora = self.ordenes_pago[i].UNIDAD_EJECUTORA;
-                  temp.beneficiario = self.ordenes_pago[i].BENEFICIARIO;
-                  temp.cod_rubro = self.ordenes_pago[i].COD_RUBRO;
-                  temp.consecutivo_orden = self.ordenes_pago[i].CONSECUTIVO_ORDEN;
-                  temp.descripcion_rubro = self.ordenes_pago[i].DESCRIPCION_RUBRO;
-                  temp.estado = self.ordenes_pago[i].ESTADO;
-                  temp.fecha_orden = self.ordenes_pago[i].FECHA_ORDEN;
-                  temp.valor_bruto = self.ordenes_pago[i].VALOR_BRUTO;
-                  temp.valor_neto = self.ordenes_pago[i].VALOR_NETO;
-                  temp.valor_orden = self.ordenes_pago[i].VALOR_ORDEN;
-                  temp.vigencia_presupuesto = self.ordenes_pago[i].VIGENCIA_PRESUPUESTO;
-                  temp.vigencia = self.ordenes_pago[i].VIGENCIA;
-                  self.orden.push(temp);
-                  temp=[];
-                }
-              }
-
-            });
-          }
-        }
-        });
+        self.busqueda_cdp();
       }
     }else{
       //comentariar la siguiente linea para ver el reloj
@@ -132,6 +80,64 @@ angular.module('contractualClienteApp')
       }else{
         return false;
       }
+    };
+
+    self.busqueda_url = function(x,url){
+      sicapitalRequest.get('ordenpago/opgsyc', url).then(function(response) {
+        console.log(response.data);
+        if(response.data[0]!== "<"){
+          self.ordenes_pago = self.ordenes_pago.concat(response.data);
+        }else{
+          swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_ORDEN'), "error").then(function() {
+            //si da click en ir a contratistas
+            $window.location.href = '#/seguimientoycontrol/financiero';
+          });
+        }
+        if(x===self.registro_presupuestal.length){
+          for (var i = 0; i < self.ordenes_pago.length; i++) {
+            temp.numero_disponibilidad = self.ordenes_pago[i].NUMERO_DISPONIBILIDAD;
+            temp.numero_registro = self.ordenes_pago[i].NUMERO_REGISTRO;
+            temp.unidad_ejecutora = self.ordenes_pago[i].UNIDAD_EJECUTORA;
+            temp.beneficiario = self.ordenes_pago[i].BENEFICIARIO;
+            temp.cod_rubro = self.ordenes_pago[i].COD_RUBRO;
+            temp.consecutivo_orden = self.ordenes_pago[i].CONSECUTIVO_ORDEN;
+            temp.descripcion_rubro = self.ordenes_pago[i].DESCRIPCION_RUBRO;
+            temp.estado = self.ordenes_pago[i].ESTADO;
+            temp.fecha_orden = self.ordenes_pago[i].FECHA_ORDEN;
+            temp.valor_bruto = self.ordenes_pago[i].VALOR_BRUTO;
+            temp.valor_neto = self.ordenes_pago[i].VALOR_NETO;
+            temp.valor_orden = self.ordenes_pago[i].VALOR_ORDEN;
+            temp.vigencia_presupuesto = self.ordenes_pago[i].VIGENCIA_PRESUPUESTO;
+            temp.vigencia = self.ordenes_pago[i].VIGENCIA;
+            self.orden.push(temp);
+            temp=[];
+          }
+        }
+      });
+    };
+
+    self.busqueda_cdp = function(){
+      sicapitalRequest.get('registro/rpxcdp', self.cdp.Vigencia+"/"+self.cdp.NumeroCdp+"/"+contrato.ContratistaId).then(function(response) {
+        //caso prueba
+        //sicapitalRequest.get('registro/rpxcdp', self.cdp.Vigencia+"/"+self.cdp.NumeroCdp).then(function(response) {
+        if(response.data[0]!== "<"){
+          self.registro_presupuestal=self.registro_presupuestal.concat(response.data);
+          self.cargando_datos = false;
+        }else{
+          $scope.banderaRP = false;
+          swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_RP'), "error").then(function() {
+            //si da click en ir a contratistas
+            $window.location.href = '#/seguimientoycontrol/financiero';
+          });
+        }
+        if(i === self.cdps.length){
+          //recorre los rps y busca las ordenes de pago de este
+          for (var x = 0; x < self.registro_presupuestal.length; x++) {
+          url = self.contrato.ContratistaId+"/"+self.registro_presupuestal[x].NUMERO_DISPONIBILIDAD+"/"+self.registro_presupuestal[x].NUMERO_REGISTRO+"/"+self.registro_presupuestal[x].VIGENCIA;
+          self.busqueda_url(x,url);
+          }
+        }
+        });
     };
 
     self.seleccionarValores = function(){

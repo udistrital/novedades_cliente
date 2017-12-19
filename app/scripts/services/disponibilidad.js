@@ -9,5 +9,5 @@
  */
 angular.module('contractualClienteApp')
   .factory('disponibilidad', function () {
-    return []
+    return [];
     });

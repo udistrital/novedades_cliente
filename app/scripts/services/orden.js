@@ -9,5 +9,5 @@
  */
 angular.module('contractualClienteApp')
   .factory('orden', function () {
-    return []
+    return [];
     });

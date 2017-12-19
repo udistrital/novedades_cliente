@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('FormacionAcademicaCtrl', function ($scope,$mdDialog,kyronRequest,idPersona) {
+  .controller('FormacionAcademicaCtrl', function ($scope,$mdDialog,kyronRequest/*,idPersona*/) {
   	
   	var self = this;
 
@@ -39,7 +39,7 @@ angular.module('contractualClienteApp')
           }
         }
         return numeros;
-      }
+      };
       
       //Definición de la función para cerrar la ventana una vez se ha realizado el proceso
       $scope.hide = function() {

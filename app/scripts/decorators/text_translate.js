@@ -8,7 +8,6 @@
  * Decorator of the contractualClienteApp
  */
 var text_es = {
-    SEGUNDO_NOMBRE:"Segundo nombre",
     NO_HAY_DATOS_REDIRIGIR_RP: "No hay datos de registro presupuestal para este contratista",
     NO_HAY_DATOS_REDIRIGIR_ORDEN: "No hay datos de ordenes de pago para este contratista",
     SELECCIONAR_FILTRO:"Seleccione el tipo de filtro por el cual quiere generar la solicitud del RP",
@@ -491,7 +490,6 @@ var text_es = {
     APROBAR_BTN:"Aprobar",
     CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
     IRREVERSIBLE: "Esta acción es irreversible",
-    NUMERO_RESOLUCION: "Resolución Número:",
     APROBADA: "Resolución Aprobada",
     CONFIGURAR_BTN:"Configurar",
     EXPEDIR_BTN:"Expedir",
@@ -598,7 +596,6 @@ var text_en = {
   SOLICITUD_NECESIDAD_CONTRATO: "Need Request Contract",
   SOLICITUD_NECESIDAD_CONTRATACION_DOCENTES: "Need Request Teacher Recruitment",
   SOLICITUD_NECESIDAD_EXTERNA: "Extern Need Request",
-  OBLIGATORIO: "Required field",
   PRECIO_MAS_IVA: "Value + IVA",
   //SOLICITUD RP
   TIPO_PERSONA:"Kind of person",
@@ -853,7 +850,6 @@ var text_en = {
     DOCUMENTO: "Document",
     FECHA_EXPEDICION: "Expedition date",
     PRIMER_NOMBRE: "First name",
-    SEGUNDO_NOMBRE: "Second name",
     PRIMER_APELLIDO: "Surname",
     SEGUNDO_APELLIDO: "Second surname",
     PAIS_NACIMIENTO: "Country of birth",

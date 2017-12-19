@@ -34,23 +34,23 @@ angular.module('contractualClienteApp')
         {field: 'ProyectoCurricular', visible: false, filter: {
                         noTerm: true,
                         condition: function(searchTerm, cellValue) {
-                            return (cellValue == self.getNumeroProyecto(self.selectedIndex));
+                            return (cellValue === self.getNumeroProyecto(self.selectedIndex));
                         }
                     }}
       ]
     };
 
     self.refresh = function(){
-      self.precontratados.data=JSON.parse(JSON.stringify(self.precontratados.data))
-    }
+      self.precontratados.data=JSON.parse(JSON.stringify(self.precontratados.data));
+    };
 
     amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
 	    self.datosFiltro=response.data;
 	    self.datosFiltro.IdFacultad=self.datosFiltro.IdFacultad.toString();
 	    oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
-	      if(response.data==null){
+	      if(response.data===null){
 	        oikosRequest.get("facultad/"+self.datosFiltro.IdFacultad).then(function(response){
-	          self.proyectos=[response.data]
+	          self.proyectos=[response.data];
 	        });
 	      }else{
 	        self.proyectos=response.data;
@@ -71,11 +71,11 @@ angular.module('contractualClienteApp')
 
 	self.getNumeroProyecto=function(num){
       if(self.proyectos[num]){
-        return self.proyectos[num].Id
+        return self.proyectos[num].Id;
       }else{
-        return 0
+        return 0;
       }
-    }
+    };
 
 	self.FormatoNumero=function(amount, decimals) {
 
@@ -85,7 +85,9 @@ angular.module('contractualClienteApp')
         decimals = decimals || 0; 
 
         if (isNaN(amount) || amount === 0) 
-            return parseFloat(0).toFixed(decimals);
+            {
+              return parseFloat(0).toFixed(decimals);
+            }
 
         amount = '' + amount.toFixed(decimals);
 
@@ -93,10 +95,12 @@ angular.module('contractualClienteApp')
             regexp = /(\d+)(\d{3})/;
 
         while (regexp.test(amount_parts[0]))
-            amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+            {
+              amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+            }
 
         return amount_parts.join('.');
-    }
+    };
 
 	$scope.hide = function() {
 	   $mdDialog.hide();

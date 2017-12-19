@@ -43,7 +43,7 @@ angular.module('contractualClienteApp')
               title: 'Complete todos los campos obligatorios en el formulario',
               showConfirmButton: false,
               timer: 2000
-            })
+            });
           } else {
             $scope.info_responsables = false;
             self.formuIncompleto = false;
@@ -63,7 +63,7 @@ angular.module('contractualClienteApp')
               title: 'Complete todos los campos obligatorios en el formulario',
               showConfirmButton: false,
               timer: 2000
-            })
+            });
           } else {
             $scope.info_general = false;
             self.formuIncompleto = false;
@@ -83,7 +83,7 @@ angular.module('contractualClienteApp')
               title: 'Complete todos los campos obligatorios en el formulario',
               showConfirmButton: false,
               timer: 2000
-            })
+            });
           } else {
             $scope.info_objeto = false;
             self.formuIncompleto = false;
@@ -103,7 +103,7 @@ angular.module('contractualClienteApp')
           self.formuIncompleto = true;
           break;
       }
-    }
+    };
   /*
     $scope.$watch('necesidadContratacionDocente.dependencia_destino',function(){
       coreRequest.get('jefe_dependencia', $.param({
@@ -344,7 +344,7 @@ angular.module('contractualClienteApp')
         }
       }
     }*/
-  }
+  };
   
 
   
@@ -377,9 +377,9 @@ angular.module('contractualClienteApp')
         'Faltan datos en el formulario',
         'Completa todos los datos obligatorios del formulario',
         'warning'
-      )
+      );
     }
-  }
+  };
   
   self.crear_solicitud = function() {
     self.marcos_legales = [];
@@ -433,10 +433,10 @@ angular.module('contractualClienteApp')
         confirmButtonText: $translate.instant('CONFIRMAR')
       }).then(function() {
         //si da click en ir a contratistas
-        if(response.data[0]=="success"){
+        if(response.data[0]==="success"){
           location.href = '#/necesidades';
         }
-      })
+      });
     });
   };  
   });

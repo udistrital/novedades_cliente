@@ -304,26 +304,28 @@ angular.module('contractualClienteApp')
           vigenciaContrato = vinculacion_docente[x].Vigencia;
 
           if(numContrato!=="" || vigenciaContrato!=="" || vigenciaContrato!==0){
-            amazonAdministrativaRequest.get('proveedor_contrato_persona/'+numContrato+"/"+vigenciaContrato,"","").then(function(response) { 
-              if(response.data !== null){
-                existe_contrato=true;
-                  resoluciones.push(response.data[0]);          
-                }
-                console.log(resoluciones.length + " "+ vinculacion_docente.length);
-              if(resoluciones.length===vinculacion_docente.length || resoluciones.length===0){
-                self.gridOptionsResolucionPersonas.data=resoluciones;
-                if(existe_contrato === false){
-                  self.no_datos=false;
-                }
-              }
-             });
+            self.buscar_personas(numContrato,vigenciaContrato,existe_contrato,vinculacion_docente);
           }
 
          }
         } 
        });
-           
-           
+    };
+
+    self.buscar_personas = function(numContrato,vigenciaContrato,existe_contrato,vinculacion_docente){
+      amazonAdministrativaRequest.get('proveedor_contrato_persona/'+numContrato+"/"+vigenciaContrato,"","").then(function(response) { 
+        if(response.data !== null){
+          existe_contrato=true;
+            resoluciones.push(response.data[0]);          
+          }
+          console.log(resoluciones.length + " "+ vinculacion_docente.length);
+        if(resoluciones.length===vinculacion_docente.length || resoluciones.length===0){
+          self.gridOptionsResolucionPersonas.data=resoluciones;
+          if(existe_contrato === false){
+            self.no_datos=false;
+          }
+        }
+       });
     };
 
     self.mostrar_estadisticas = function() {
@@ -375,18 +377,7 @@ angular.module('contractualClienteApp')
           self.boton_solicitar=false;
         }else{
         for(var x =0;x<contratos_disponibilidades.length;x++){
-          amazonAdministrativaRequest.get('proveedor_contrato_persona/'+contratos_disponibilidades[x].NumeroContrato+"/"+contratos_disponibilidades[x].Vigencia,"").then(function(response) { 
-            if(response.data !== null){
-              self.contrato.push(response.data[0]); 
-              if(contratos_disponibilidades.length===x){
-                self.saving = true;
-                self.btnGenerartxt = "Generando...";
-                self.saving = false;
-                self.btnGenerartxt = "Generar";
-                $window.location.href = '#/rp/rp_solicitud/';
-              }
-            }
-          });
+          self.generar_txt(x);
         }
       }
       });
@@ -402,32 +393,51 @@ angular.module('contractualClienteApp')
             numContrato = vinculacion_docente[x].NumeroContrato;
             vigenciaContrato = vinculacion_docente[x].Vigencia;
             if(numContrato!=="" || vigenciaContrato!=="" || vigenciaContrato!==0){
-              amazonAdministrativaRequest.get('proveedor_contrato_persona/'+numContrato+"/"+vigenciaContrato,"").then(function(response) { 
-                if(response.data !== null){
-                    self.contrato.push(response.data[0]); 
-                  }else{
-                    swal("Alertas", "No existen contratos asociados a esta resolución", "error");
-                    self.boton_solicitar=false;
-                  }
-                if(self.contrato.length===vinculacion_docente.length){
-                  amazonAdministrativaRequest.get('contrato_disponibilidad',"query=NumeroContrato:"+self.contrato[0].Numero_contrato+",Vigencia:"+self.contrato[0].Vigencia_contrato).then(function(response) {
-                    
-                    financieraRequest.get('disponibilidad',"query=NumeroDisponibilidad:"+response.data[0].NumeroCdp+",Vigencia:"+response.data[0].VigenciaCdp).then(function(response) {
-                      self.disponibilidad.push(response.data[0]);
-                      self.saving = true;
-                      self.btnGenerartxt = "Generando...";
-                      self.saving = false;
-                      self.btnGenerartxt = "Generar";
-                      $window.location.href = '#/rp/rp_solicitud/';
-                    });
-                  });
-                }
-               });
+              self.generar_txt_cdp(numContrato,vigenciaContrato,vinculacion_docente);
             }
            }
           } 
          });     
         }
       }
+    };
+
+    self.generar_txt = function(x){
+      amazonAdministrativaRequest.get('proveedor_contrato_persona/'+contratos_disponibilidades[x].NumeroContrato+"/"+contratos_disponibilidades[x].Vigencia,"").then(function(response) { 
+        if(response.data !== null){
+          self.contrato.push(response.data[0]); 
+          if(contratos_disponibilidades.length===x){
+            self.saving = true;
+            self.btnGenerartxt = "Generando...";
+            self.saving = false;
+            self.btnGenerartxt = "Generar";
+            $window.location.href = '#/rp/rp_solicitud/';
+          }
+        }
+      });
+    };
+
+    self.generar_txt_cdp = function(numContrato,vigenciaContrato,vinculacion_docente){
+      amazonAdministrativaRequest.get('proveedor_contrato_persona/'+numContrato+"/"+vigenciaContrato,"").then(function(response) { 
+        if(response.data !== null){
+            self.contrato.push(response.data[0]); 
+          }else{
+            swal("Alertas", "No existen contratos asociados a esta resolución", "error");
+            self.boton_solicitar=false;
+          }
+        if(self.contrato.length===vinculacion_docente.length){
+          amazonAdministrativaRequest.get('contrato_disponibilidad',"query=NumeroContrato:"+self.contrato[0].Numero_contrato+",Vigencia:"+self.contrato[0].Vigencia_contrato).then(function(response) {
+            
+            financieraRequest.get('disponibilidad',"query=NumeroDisponibilidad:"+response.data[0].NumeroCdp+",Vigencia:"+response.data[0].VigenciaCdp).then(function(response) {
+              self.disponibilidad.push(response.data[0]);
+              self.saving = true;
+              self.btnGenerartxt = "Generando...";
+              self.saving = false;
+              self.btnGenerartxt = "Generar";
+              $window.location.href = '#/rp/rp_solicitud/';
+            });
+          });
+        }
+       });
     };
 });
