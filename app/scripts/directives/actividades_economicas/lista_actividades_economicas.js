@@ -55,7 +55,7 @@ angular.module('contractualClienteApp')
 
         coreRequest.get('actividad_economica',$.param({
           limit:-1,
-          query:"ClasificacionCiiu.Nombre:Subclase,Activo=true",
+          query:"ClasificacionCiiu.Nombre:Subclase,Activo:true",
           sortby:"Id",
           order:"asc",
         })).then(function(response) {
