@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
  angular.module('contractualClienteApp')
- .controller('ResolucionDetalleCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$routeParams,$translate,$window,pdfMake) {
+ .controller('ResolucionDetalleCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$routeParams,$translate,$window) {
 
    var self=this;
 

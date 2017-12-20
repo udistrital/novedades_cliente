@@ -80,9 +80,10 @@ angular.module('contractualClienteApp')
     self.Disponibilidades = {
       paginationPageSizes: [10, 15, 20],
       paginationPageSize: 10,
-      enableRowSelection: false,
+      enableRowSelection: true,
       enableRowHeaderSelection: false,
       enableFiltering: true,
+      multiSelect: false,
       enableHorizontalScrollbar: 0,
       enableVerticalScrollbar: true,
       useExternalPagination: false,
@@ -93,12 +94,26 @@ angular.module('contractualClienteApp')
           displayName: "Número de Disponibilidad"
         },
         {
-          field: 'NumeroDisponibilidad',
-          displayName: "Número de Disponibilidad"
+          field: 'Vigencia',
+          displayName: "Vigencia"
+        },
+        {
+          field: 'FechaRegistro',
+          displayName: "Fecha de registro",
+          cellTemplate: '<span>{{row.entity.FechaRegistro| date:"yyyy-MM-dd":"+0900"}}</span>'
         }
       ],
 
+      onRegisterApi : function(gridApi){
+        self.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope,function(row){
+          self.disponibilidad_elegida=gridApi.selection.getSelectedRows();
+
+        });
+      }
     };
+
+
 
 
     adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
@@ -115,8 +130,7 @@ angular.module('contractualClienteApp')
 
 
     financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:"+self.vigencia_data).then(function(response) {
-        self.Disponibilidades = response.data;
-        console.log(self.Disponibilidades)
+        self.Disponibilidades.data = response.data;
         //self.lista_cdp = response.data;
       });
 
@@ -198,7 +212,7 @@ angular.module('contractualClienteApp')
           Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
           Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
           NivelAcademico: self.resolucion.NivelAcademico_nombre,
-          Disponibilidad: self.id_cdp.Id
+          Disponibilidad: parseInt(self.disponibilidad_elegida[0].Id)
         };
 
         vinculacionesData.push(vinculacionDocente);
