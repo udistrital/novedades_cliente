@@ -108,12 +108,48 @@ angular.module('contractualClienteApp')
         self.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope,function(row){
           self.disponibilidad_elegida=gridApi.selection.getSelectedRows();
+          self.listar_apropiaciones();
+          self.DisponibilidadApropiacion = self.disponibilidad_elegida[0].DisponibilidadApropiacion;
 
         });
       }
     };
 
+    self.Apropiaciones = {
+      paginationPageSizes: [10, 15, 20],
+      paginationPageSize: 10,
+      enableRowSelection: true,
+      enableRowHeaderSelection: false,
+      enableFiltering: true,
+      multiSelect: false,
+      enableHorizontalScrollbar: 0,
+      enableVerticalScrollbar: true,
+      useExternalPagination: false,
+      enableSelectAll: false,
+      columnDefs : [
+        {
+          field: 'Id',
+          displayName: "Id de Apropiacion"
+        },
+        {
+          field: 'Valor',
+          displayName: "Valor"
+        },
+        {
+          field: 'saldo',
+          displayName: "Saldo"
+        }
+      ],
 
+      onRegisterApi : function(gridApi){
+        self.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope,function(row){
+          //self.apropiacion_elegida=gridApi.selection.getSelectedRows();
+
+            //self.verificarDisponibilidad();
+        });
+      }
+    };
 
 
     adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
@@ -197,6 +233,11 @@ angular.module('contractualClienteApp')
 
     }
 
+    self.mostrar_modal_disponibilidad=function(){
+
+        $('#modal_disponibilidad').modal('show');
+    }
+
       //Función para almacenar los datos de las vinculaciones realizadas
     self.agregarPrecontratos = function(){
 
@@ -233,6 +274,7 @@ angular.module('contractualClienteApp')
                   self.RecargarDatosPersonas();
                   self.get_docentes_vinculados();
                   vinculacionesData = [];
+                  $('#modal_disponibilidad').modal('hide');
                 }else{
                 swal({
                   title: $translate.instant('ERROR'),
@@ -241,6 +283,7 @@ angular.module('contractualClienteApp')
                   confirmButtonText: $translate.instant('ACEPTAR')
                 })
                 vinculacionesData = [];
+                $('#modal_disponibilidad').modal('hide');
               }
           })
 
@@ -313,55 +356,54 @@ angular.module('contractualClienteApp')
       })
     }
 
+    self.listar_apropiaciones = function(){
 
+      var disponibilidadAp = self.DisponibilidadApropiacion
+      adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones",disponibilidadAp).then(function(response){
 
-    $scope.verInformacionPersonal = function(row){
-      $mdDialog.show({
-        controller: "InformacionPersonalCtrl",
-        controllerAs: 'informacionPersonal',
-        templateUrl: 'views/vinculacionespecial/informacion_personal.html',
-        parent: angular.element(document.body),
-        clickOutsideToClose:true,
-        fullscreen: true,
-        locals: {idPersona: row.entity.Id}
+        console.log(response.data)
+
       })
+      /*
+        var DisponibilidadApropiacion = self.DisponibilidadApropiacion[0];
+        console.log(DisponibilidadApropiacion);
+        self.Apropiaciones.data = self.DisponibilidadApropiacion.Apropiacion
+          financieraRequest.post('disponibilidad/SaldoCdp', DisponibilidadApropiacion).then(function(response) {
+              console.log(response.data)
+              //self.lista_cdp = response.data;
+        });
+        */
     }
 
-    $scope.verHistoriaLaboral = function(row){
-      $mdDialog.show({
-        controller: "HistoriaLaboralCtrl",
-        controllerAs: 'historiaLaboral',
-        templateUrl: 'views/vinculacionespecial/experiencia_laboral_detalle.html',
-        parent: angular.element(document.body),
-        clickOutsideToClose:true,
-        fullscreen: true,
-        locals: {idPersona: row.entity.Id}
+    self.verificarDisponibilidad=function(){
+
+
+      self.personasSeleccionadas1.forEach(function(personaSeleccionada){
+        var vinculacionDocente = {
+          IdPersona: personaSeleccionada.docente_documento,
+          NumeroHorasSemanales: parseInt(personaSeleccionada.horas_lectivas),
+          NumeroSemanas: parseInt(self.resolucion.NumeroSemanas),
+          IdResolucion: {Id: parseInt(self.resolucion.Id)},
+          IdDedicacion: {Id: parseInt(personaSeleccionada.id_tipo_vinculacion)},
+          IdProyectoCurricular: parseInt(personaSeleccionada.id_proyecto),
+          Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
+          Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
+          NivelAcademico: self.resolucion.NivelAcademico_nombre,
+          Disponibilidad: parseInt(self.disponibilidad_elegida[0].Id)
+        };
+
+        vinculacionesData.push(vinculacionDocente);
+
+        })
+
+      adminMidRequest.post("calculo_salario/Contratacion/calcular_valor_contratos",vinculacionesData).then(function(response){
+
+        console.log("sumatoria")
+        console.log(response.data)
+        vinculacionesData = [];
       })
+
     }
-
-    $scope.verFormacionAcademica = function(row){
-      $mdDialog.show({
-        controller: "FormacionAcademicaCtrl",
-        controllerAs: "formacionAcademica",
-        templateUrl: 'views/vinculacionespecial/formacion_academica_detalle.html',
-        parent: angular.element(document.body),
-        clickOutsideToClose:true,
-        fullscreen: true,
-        locals: {idPersona: row.entity.Id}
-      })
-    };
-
-    $scope.verTrabajosInvestigacion = function(row){
-       $mdDialog.show({
-        controller: "TrabajosInvestigacionCtrl",
-        controllerAs: "trabajosInvestigacion",
-        templateUrl: 'views/vinculacionespecial/trabajos_investigacion_detalle.html',
-        parent: angular.element(document.body),
-        clickOutsideToClose:true,
-        fullscreen: true,
-        locals: {idPersona: row.entity.Id}
-      })
-    };
 
     self.Unidades = function(num){
       switch(num)

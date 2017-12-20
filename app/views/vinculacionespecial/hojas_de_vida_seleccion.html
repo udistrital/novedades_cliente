@@ -1,6 +1,6 @@
 <div class="panel panel-primary panel-body">
 		<h2 class="page-header text-center">{{ 'TITULO_VIN_DOC' | translate }} <br> {{ 'TITULO_RES' | translate }} {{hojasDeVidaSeleccion.resolucion.Numero}} <br> {{hojasDeVidaSeleccion.resolucion.Dedicacion}} </h2>
-		
+
 		 <div class="panel-body">
 		   <div class="row">
 			   <div class="col-lg-12">
@@ -13,20 +13,10 @@
 					   </div>
 				   </div>
 			   </div>
-				 <div class="col-lg-6">
-				 <div class="panel panel-default">
-						 <div class="panel-heading">
-							 <h4 class="intro-text"> Disponibilidades </h4>
-						 </div>
-						<div class="panel-body">
-						   <div ui-grid="hojasDeVidaSeleccion.Disponibilidades" ui-grid-selection ui-grid-pagination class="grid"></div>
-					   </div>
-				   </div>
-			   </div>
 
 				 <div class="form-group col-lg-8 col-lg-offset-2">
 					 <label></label>
-					 <input type="submit" class="form-control btn btn-success" value="{{'VINCULAR_DOCENTES_SELECCIONADOS' | translate }}" ng-click="hojasDeVidaSeleccion.agregarPrecontratos()">
+					 <input type="submit" class="form-control btn btn-success" value="Elegir disponibilidades" ng-click="hojasDeVidaSeleccion.mostrar_modal_disponibilidad()">
 				 </div>
 			   <div class="col-lg-12">
 				 <div class="panel panel-default">
@@ -52,3 +42,33 @@
 			   </div>
 	   </div>
    </div>
+
+	 <div id="modal_disponibilidad" class="modal fade" role="dialog">
+
+	     <div class="modal-content col-md-10 col-md-offset-1" style="margin-top: 5%">
+	         <div class="modal-header">
+	             <button type="button" class="btn btn-outline btn-danger btn-xs pull-right" data-dismiss="modal">&times</button><br>
+	         </div>
+	         <div class="modal-body">
+	             <div class="panel panel-default">
+	                 <div class="panel-heading">
+	                     <h3 class="panel-title">Disponibilidad</h3>
+	                 </div>
+	                 <div class="panel-body">
+	                     <form name="formplan" ng-submit="formplan.$valid">
+	                         <div ui-grid="hojasDeVidaSeleccion.Disponibilidades" ui-grid-selection ui-grid-pagination class="grid"></div>
+													 <div ui-grid="hojasDeVidaSeleccion.Apropiaciones" ui-grid-selection ui-grid-pagination class="grid"></div>
+
+	                             <center><input type="submit" class="form-control btn btn-success" value="{{'VINCULAR_DOCENTES_SELECCIONADOS' | translate }}" ng-click="hojasDeVidaSeleccion.agregarPrecontratos()"></center>
+
+
+	                         </fieldset>
+	                     </form>
+	                 </div>
+	             </div>
+	             <div>
+	                 </form>
+	             </div>
+	         </div>
+	     </div>
+	 </div>
