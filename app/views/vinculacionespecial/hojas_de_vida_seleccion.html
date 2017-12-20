@@ -1,13 +1,6 @@
 <div class="panel panel-primary panel-body">
 		<h2 class="page-header text-center">{{ 'TITULO_VIN_DOC' | translate }} <br> {{ 'TITULO_RES' | translate }} {{hojasDeVidaSeleccion.resolucion.Numero}} <br> {{hojasDeVidaSeleccion.resolucion.Dedicacion}} </h2>
-		<legend class="text-primary" ng-click="info_basico=!info_basico">{{ 'HOJAS_VIDA_INSCRITAS' | translate }}<span class="fa fa-plus pull-right" ng-show="!info_basico"></span> <span class="fa fa-minus pull-right" ng-show="info_basico"></span></legend>
-		 <div class="panel-body" ng-show="info_basico">
-			 <div class="col-lg-18">
-			 <div class="panel-body">
-					<div ui-grid="hojasDeVidaSeleccion.datosDocentesCargaLectiva" ui-grid-selection ui-grid-pagination class="grid"></div>
-				</div>
-		 </div>
-	 </div>
+		
 		 <div class="panel-body">
 		   <div class="row">
 			   <div class="col-lg-12">
