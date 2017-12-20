@@ -43,7 +43,7 @@ angular.module('contractualClienteApp')
     };
 
   	self.crearResolucion = function(){
-      if(self.resolucion.numero && self.resolucion.facultad && self.resolucion.nivelAcademico && self.resolucion.dedicacion && self.resolucion.preambulo && self.resolucion.consideracion){
+      if(self.resolucion.numero && self.resolucion.facultad && self.resolucion.nivelAcademico && self.resolucion.dedicacion && self.resolucion.preambulo && self.resolucion.consideracion &&self.resolucion.numeroSemanas){
     		swal({
           title: 'Datos de la resolución',
           html:
