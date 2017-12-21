@@ -4,7 +4,6 @@ angular.module('contractualClienteApp')
   .controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,financieraRequest,resolucion,amazonAdministrativaRequest,adminMidRequest,oikosRequest,$localStorage,$scope,$mdDialog,$routeParams,$translate) {
 
     var self = this;
-
     self.resolucion = $localStorage.resolucion
     self.estado = false;
     self.proyectos=[];
@@ -77,106 +76,6 @@ angular.module('contractualClienteApp')
       }
     };
 
-    self.Disponibilidades = {
-      paginationPageSizes: [10, 15, 20],
-      paginationPageSize: 10,
-      enableRowSelection: true,
-      enableRowHeaderSelection: false,
-      enableFiltering: true,
-      multiSelect: false,
-      enableHorizontalScrollbar: 0,
-      enableVerticalScrollbar: true,
-      useExternalPagination: false,
-      enableSelectAll: false,
-      columnDefs : [
-        {
-          field: 'NumeroDisponibilidad',
-          displayName: "Número de Disponibilidad"
-        },
-        {
-          field: 'Vigencia',
-          displayName: "Vigencia"
-        },
-        {
-          field: 'FechaRegistro',
-          displayName: "Fecha de registro",
-          cellTemplate: '<span>{{row.entity.FechaRegistro| date:"yyyy-MM-dd":"+0900"}}</span>'
-        }
-      ],
-
-      onRegisterApi : function(gridApi){
-        self.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope,function(row){
-          self.disponibilidad_elegida=gridApi.selection.getSelectedRows();
-          self.listar_apropiaciones();
-          self.DisponibilidadApropiacion = self.disponibilidad_elegida[0].DisponibilidadApropiacion;
-
-        });
-      }
-    };
-
-    self.Apropiaciones = {
-      paginationPageSizes: [10, 15, 20],
-      paginationPageSize: 10,
-      enableRowSelection: true,
-      enableRowHeaderSelection: false,
-      enableFiltering: true,
-      multiSelect: false,
-      enableHorizontalScrollbar: 0,
-      enableVerticalScrollbar: true,
-      useExternalPagination: false,
-      enableSelectAll: false,
-      columnDefs : [
-        {
-          field: 'Id',
-          displayName: "Id de Apropiacion"
-        },
-        {
-          field: 'Valor',
-          displayName: "Valor"
-        },
-        {
-          field: 'saldo',
-          displayName: "Saldo"
-        }
-      ],
-
-      onRegisterApi : function(gridApi){
-        self.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope,function(row){
-          //self.apropiacion_elegida=gridApi.selection.getSelectedRows();
-
-            //self.verificarDisponibilidad();
-        });
-      }
-    };
-
-
-    adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
-        self.datosDocentesCargaLectiva.data = response.data
-
-    });
-
-    self.RecargarDatosPersonas = function(){
-      adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
-          self.datosDocentesCargaLectiva.data = response.data
-
-      });
-    }
-
-
-    financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:"+self.vigencia_data).then(function(response) {
-        self.Disponibilidades.data = response.data;
-        //self.lista_cdp = response.data;
-      });
-
-
-
-      oikosRequest.get("dependencia/proyectosPorFacultad/"+self.resolucion.IdFacultad+"/"+self.resolucion.NivelAcademico_nombre,"").then(function(response){
-        self.proyectos = response.data;
-      });
-
-    //Se cargan los datos de los docentes que han sido asociados previamente a la resolucion
     self.precontratados = {
       paginationPageSizes: [10, 15, 20],
       paginationPageSize: 10,
@@ -212,13 +111,94 @@ angular.module('contractualClienteApp')
       ]
     };
 
-    /*
-    amazonAdministrativaRequest.get("vinculacion_docente", "limit=-1&query=IdResolucion.Id:"+self.resolucion.Id).then(function(response){
-      self.precontratados.data=response.data;
+    self.Disponibilidades = {
+      paginationPageSizes: [10, 15, 20],
+      paginationPageSize: 10,
+      enableRowSelection: true,
+      enableRowHeaderSelection: false,
+      enableFiltering: true,
+      multiSelect: false,
+      enableHorizontalScrollbar: 0,
+      enableVerticalScrollbar: true,
+      useExternalPagination: false,
+      enableSelectAll: false,
+      columnDefs : [
+        {
+          field: 'NumeroDisponibilidad',
+          displayName: "Número de Disponibilidad"
+        },
+        {
+          field: 'Vigencia',
+          displayName: "Vigencia"
+        },
+        {
+          field: 'FechaRegistro',
+          displayName: "Fecha de registro",
+          cellTemplate: '<span>{{row.entity.FechaRegistro| date:"yyyy-MM-dd":"+0900"}}</span>'
+        }
+      ],
+
+      onRegisterApi : function(gridApi){
+        self.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope,function(row){
+          self.disponibilidad_elegida=gridApi.selection.getSelectedRows();
+          self.DisponibilidadApropiacion = self.disponibilidad_elegida[0].DisponibilidadApropiacion;
+          self.listar_apropiaciones();
+
+
+        });
+      }
+    };
+
+    self.Apropiaciones = {
+      paginationPageSizes: [10, 15, 20],
+      paginationPageSize: 10,
+      enableRowSelection: true,
+      enableRowHeaderSelection: false,
+      enableFiltering: true,
+      multiSelect: false,
+      enableHorizontalScrollbar: 0,
+      enableVerticalScrollbar: true,
+      useExternalPagination: false,
+      enableSelectAll: false,
+      columnDefs : [
+
+        {
+          field: 'Apropiacion.Valor',
+          displayName: "Valor"
+        },
+        {
+          field: 'Apropiacion.Saldo',
+          displayName: "Saldo"
+        }
+      ],
+
+      onRegisterApi : function(gridApi){
+        self.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope,function(row){
+          self.apropiacion_elegida=gridApi.selection.getSelectedRows();
+          console.log("apropiacion elegida")
+          console.log(self.apropiacion_elegida)
+          self.verificarDisponibilidad();
+        });
+      }
+    };
+
+
+    adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
+        self.datosDocentesCargaLectiva.data = response.data
 
     });
-    */
 
+    financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:"+self.vigencia_data).then(function(response) {
+        self.Disponibilidades.data = response.data;
+    });
+
+    oikosRequest.get("dependencia/proyectosPorFacultad/"+self.resolucion.IdFacultad+"/"+self.resolucion.NivelAcademico_nombre,"").then(function(response){
+        self.proyectos = response.data;
+      });
+
+//Función para visualizar docentes ya vinculados a resolución
     self.get_docentes_vinculados=function(){
 
       self.estado = true;
@@ -233,15 +213,10 @@ angular.module('contractualClienteApp')
 
     }
 
-    self.mostrar_modal_disponibilidad=function(){
-
-        $('#modal_disponibilidad').modal('show');
-    }
-
-      //Función para almacenar los datos de las vinculaciones realizadas
+//Función para almacenar los datos de las vinculaciones realizadas
     self.agregarPrecontratos = function(){
 
-
+    if(self.saldo_disponible){
       self.personasSeleccionadas1.forEach(function(personaSeleccionada){
         var vinculacionDocente = {
           IdPersona: personaSeleccionada.docente_documento,
@@ -253,7 +228,7 @@ angular.module('contractualClienteApp')
           Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
           Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
           NivelAcademico: self.resolucion.NivelAcademico_nombre,
-          Disponibilidad: parseInt(self.disponibilidad_elegida[0].Id)
+          Disponibilidad: self.apropiacion_elegida[0].Apropiacion.Id
         };
 
         vinculacionesData.push(vinculacionDocente);
@@ -272,7 +247,10 @@ angular.module('contractualClienteApp')
 
                   })
                   self.RecargarDatosPersonas();
+                  self.RecargarDisponibilidades();
+                  self.RecargarApropiaciones();
                   self.get_docentes_vinculados();
+                  self.personasSeleccionadas1 = [];
                   vinculacionesData = [];
                   $('#modal_disponibilidad').modal('hide');
                 }else{
@@ -282,18 +260,29 @@ angular.module('contractualClienteApp')
                   type: 'info',
                   confirmButtonText: $translate.instant('ACEPTAR')
                 })
+                self.RecargarDatosPersonas();
+                self.RecargarDisponibilidades();
+                self.RecargarApropiaciones();
+                self.get_docentes_vinculados();
+                self.personasSeleccionadas1 = [];
                 vinculacionesData = [];
                 $('#modal_disponibilidad').modal('hide');
               }
           })
 
-        //self.RecargarDatosPersonas();
-
+      }else{
+        swal({
+          title: $translate.instant('ERROR'),
+          text: "Error en la disponibilidad",
+          type: 'info',
+          confirmButtonText: $translate.instant('ACEPTAR')
+        })
+      }
 
     }
 
 
-
+//*-------Funciones para la desvinculación de docentes ------ *//
     $scope.verCancelarInscripcionDocente=function(row){
       swal({
         title: $translate.instant('PREGUNTA_SEGURO'),
@@ -356,27 +345,37 @@ angular.module('contractualClienteApp')
       })
     }
 
+//*------ Funciones para manejo y verificación de disponibilidades elegidas ----- *//
+
+//Función que muestra modal que permite elegir Disponibilidades y sus apropiaciones
+    self.mostrar_modal_disponibilidad=function(){
+      if(self.personasSeleccionadas1==null){
+        swal({
+          text: "Seleccione docentes",
+          type: 'error',
+          confirmButtonText: $translate.instant('ACEPTAR')
+          })
+        }else{
+            $('#modal_disponibilidad').modal('show');
+      }
+    }
+
+//Función que lista las apropiaciones  del cdp elegido junto con su saldo y su valor
     self.listar_apropiaciones = function(){
 
       var disponibilidadAp = self.DisponibilidadApropiacion
       adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones",disponibilidadAp).then(function(response){
-
+        console.log("apropiaciones")
         console.log(response.data)
+        self.Apropiaciones.data = response.data
+        //self.Apropiaciones.data = response.data;
 
       })
-      /*
-        var DisponibilidadApropiacion = self.DisponibilidadApropiacion[0];
-        console.log(DisponibilidadApropiacion);
-        self.Apropiaciones.data = self.DisponibilidadApropiacion.Apropiacion
-          financieraRequest.post('disponibilidad/SaldoCdp', DisponibilidadApropiacion).then(function(response) {
-              console.log(response.data)
-              //self.lista_cdp = response.data;
-        });
-        */
+
     }
 
+//Función que verifica si la apropiación elegida cubre los docentes elegidos
     self.verificarDisponibilidad=function(){
-
 
       self.personasSeleccionadas1.forEach(function(personaSeleccionada){
         var vinculacionDocente = {
@@ -389,7 +388,7 @@ angular.module('contractualClienteApp')
           Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
           Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
           NivelAcademico: self.resolucion.NivelAcademico_nombre,
-          Disponibilidad: parseInt(self.disponibilidad_elegida[0].Id)
+          Disponibilidad: self.apropiacion_elegida[0].Apropiacion.Id
         };
 
         vinculacionesData.push(vinculacionDocente);
@@ -397,199 +396,35 @@ angular.module('contractualClienteApp')
         })
 
       adminMidRequest.post("calculo_salario/Contratacion/calcular_valor_contratos",vinculacionesData).then(function(response){
-
-        console.log("sumatoria")
-        console.log(response.data)
-        vinculacionesData = [];
+        if(300000 > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)){
+          self.saldo_disponible = false;
+          console.log("no se puede elgir esa apropiacion")
+        }else{
+          self.saldo_disponible = true;
+          console.log("si se puede elegir")
+        }
       })
-
+      vinculacionesData = [];
     }
 
-    self.Unidades = function(num){
-      switch(num)
-      {
-        case 1: return $translate.instant('UN');
-        case 2: return $translate.instant('DOS');
-        case 3: return $translate.instant('TRES');
-        case 4: return $translate.instant('CUATRO');
-        case 5: return $translate.instant('CINCO');
-        case 6: return $translate.instant('SEIS');
-        case 7: return $translate.instant('SIETE');
-        case 8: return $translate.instant('OCHO');
-        case 9: return $translate.instant('NUEVE');
-      }
+//*--------------Funciones para recargar grids que han sido seleccionados -------------* //
+    self.RecargarDatosPersonas = function(){
+      adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
+          self.datosDocentesCargaLectiva.data = response.data
 
-      return "";
+      });
     }
 
-    self.Decenas = function(num){
+    self.RecargarDisponibilidades = function(){
+      financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:"+self.vigencia_data).then(function(response) {
+          self.Disponibilidades.data = response.data;
 
-      var decena = Math.floor(num/10);
-      var unidad = num - (decena * 10);
-
-      switch(decena)
-      {
-        case 1:
-          switch(unidad)
-          {
-            case 0: return $translate.instant('DIEZ');
-            case 1: return $translate.instant('ONCE');
-            case 2: return $translate.instant('DOCE');
-            case 3: return $translate.instant('TRECE');
-            case 4: return $translate.instant('CATORCE');
-            case 5: return $translate.instant('QUINCE');
-            case 6: return $translate.instant('DIECISEIS');
-            case 7: return $translate.instant('DIECISIETE');
-            case 8: return $translate.instant('DIECIOCHO');
-            case 9: return $translate.instant('DIECINUEVE');
-            //default: return "DIECI" + self.Unidades(unidad);
-          }
-        case 2:
-          switch(unidad)
-          {
-            case 0: return $translate.instant('VEINTE');
-            case 1: return $translate.instant('VEINTIUNO');
-            case 2: return $translate.instant('VEINTIDOS');
-            case 3: return $translate.instant('VEINTITRES');
-            case 4: return $translate.instant('VEINTICUATRO');
-            case 5: return $translate.instant('VEINTICINCO');
-            case 6: return $translate.instant('VEINTISEIS');
-            case 7: return $translate.instant('VEINTISIETE');
-            case 8: return $translate.instant('VEINTIOCHO');
-            case 9: return $translate.instant('VEINTINUEVE');
-            //default: return "VEINTI" + self.Unidades(unidad);
-          }
-        case 3: return self.DecenasY($translate.instant('TREINTA'), unidad);
-        case 4: return self.DecenasY($translate.instant('CUARENTA'), unidad);
-        case 5: return self.DecenasY($translate.instant('CINCUENTA'), unidad);
-        case 6: return self.DecenasY($translate.instant('SESENTA'), unidad);
-        case 7: return self.DecenasY($translate.instant('SETENTA'), unidad);
-        case 8: return self.DecenasY($translate.instant('OCHENTA'), unidad);
-        case 9: return self.DecenasY($translate.instant('NOVENTA'), unidad);
-        case 0: return self.Unidades(unidad);
-      }
+        });
     }
 
-    self.DecenasY = function(strSin, numUnidades){
-      if (numUnidades > 0)
-        return strSin + $translate.instant('Y') + self.Unidades(numUnidades)
-
-      return strSin;
-    }
-
-    self.Centenas = function(num){
-
-      var centenas = Math.floor(num / 100);
-      var decenas = num - (centenas * 100);
-
-      switch(centenas)
-      {
-        case 1:
-          if (decenas > 0)
-            return $translate.instant('CIENTO')+ self.Decenas(decenas);
-          return $translate.instant('CIEN');
-        case 2: return $translate.instant('DOSCIENTOS') + self.Decenas(decenas);
-        case 3: return $translate.instant('TRESCIENTOS') + self.Decenas(decenas);
-        case 4: return $translate.instant('CUATROCIENTOS') + self.Decenas(decenas);
-        case 5: return $translate.instant('QUINIENTOS') + self.Decenas(decenas);
-        case 6: return $translate.instant('SEISCIENTOS') + self.Decenas(decenas);
-        case 7: return $translate.instant('SETECIENTOS') + self.Decenas(decenas);
-        case 8: return $translate.instant('OCHOCIENTOS') + self.Decenas(decenas);
-        case 9: return $translate.instant('NOVECIENTOS') + self.Decenas(decenas);
-      }
-
-      return self.Decenas(decenas);
-    }
-
-    self.Seccion = function(num, divisor, strSingular, strPlural){
-      var cientos = Math.floor(num / divisor)
-      var resto = num - (cientos * divisor)
-
-      var letras = "";
-
-      if (cientos > 0)
-        if (cientos > 1)
-          letras = self.Centenas(cientos) + " " + strPlural;
-        else
-          letras = strSingular;
-
-      if (resto > 0)
-        letras += "";
-
-      return letras;
-    }
-
-    self.Miles = function(num){
-      var divisor = 1000;
-      var cientos = Math.floor(num / divisor)
-      var resto = num - (cientos * divisor)
-
-      var strMiles = self.Seccion(num, divisor, $translate.instant('UN_MIL'), $translate.instant('MIL'));
-      var strCentenas = self.Centenas(resto);
-
-      if(strMiles == "")
-        return strCentenas;
-
-      return strMiles + " " + strCentenas;
+    self.RecargarApropiaciones = function(){
+          self.Apropiaciones.data = [];
 
     }
-
-    self.Millones = function(num){
-      var divisor = 1000000;
-      var cientos = Math.floor(num / divisor)
-      var resto = num - (cientos * divisor)
-
-      var strMillones = self.Seccion(num, divisor, $translate.instant('UN_MILLON'), $translate.instant('MILLONES'));
-      var strMiles = self.Miles(resto);
-
-      if(strMillones == "")
-        return strMiles;
-
-      return strMillones + " " + strMiles;
-
-    }
-
-    self.NumeroALetras = function(num){
-      var data = {
-        numero: num,
-        enteros: Math.floor(num),
-        centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
-        letrasCentavos: "",
-        letrasMonedaPlural: $translate.instant('PESOS'),
-        letrasMonedaSingular: $translate.instant('PESO')
-      };
-
-      if (data.centavos > 0)
-        data.letrasCentavos = $translate.instant('CON')+ data.centavos + "/100";
-
-      if(data.enteros == 0)
-        return $translate.instant('CERO') + data.letrasMonedaPlural + " " + data.letrasCentavos;
-      if (data.enteros == 1)
-        return self.Millones(data.enteros) + " " + data.letrasMonedaSingular + " " + data.letrasCentavos;
-      else
-        return self.Millones(data.enteros) + " " + data.letrasMonedaPlural + " " + data.letrasCentavos;
-    }
-
-    self.FormatoNumero=function(amount, decimals) {
-
-        amount += '';
-        amount = parseFloat(amount.replace(/[^0-9\.]/g, ''));
-
-        decimals = decimals || 0;
-
-        if (isNaN(amount) || amount === 0)
-            return parseFloat(0).toFixed(decimals);
-
-        amount = '' + amount.toFixed(decimals);
-
-        var amount_parts = amount.split('.'),
-            regexp = /(\d+)(\d{3})/;
-
-        while (regexp.test(amount_parts[0]))
-            amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
-
-        return amount_parts.join('.');
-    }
-
 
 });
