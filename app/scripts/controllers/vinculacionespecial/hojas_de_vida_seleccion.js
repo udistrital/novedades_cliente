@@ -23,31 +23,38 @@ angular.module('contractualClienteApp')
       columnDefs : [
         {
           field: 'docente_apellido',
-          displayName: "Apellidos"
+          displayName: "Apellidos",
+          width: '15%'
         },
         {
           field: 'docente_nombre',
-          displayName: "Nombres"
+          displayName: "Nombres",
+          width: '15%'
         },
         {
           field: 'docente_documento',
-          displayName: "Documento"
+          displayName: "Documento",
+          width: '10%'
         },
         {
           field: 'horas_lectivas',
-          displayName: "Horas lectivas"
+          displayName: "Horas lectivas",
+          width: '10%'
         },
         {
           field: 'proyecto_nombre',
-          displayName: "Proyecto curricular"
+          displayName: "Proyecto curricular",
+          width: '20%'
         },
         {
           field: 'CategoriaNombre',
-          displayName: "Categoria"
+          displayName: "Categoria",
+          width: '15%'
         },
         {
           field: 'tipo_vinculacion_nombre',
-          displayName: "Dedicación"
+          displayName: "Dedicación",
+          width: '13%'
         },
         {
           field: 'id_tipo_vinculacion',
@@ -57,12 +64,7 @@ angular.module('contractualClienteApp')
         {
           field: 'id_proyecto',
           displayName: "id_proyecto_curricular",
-
-        },
-        {
-          field: 'tipo_vinculacion_nombre',
-          displayName: "nombre vinculacion",
-
+          visible:false
         }
 
       ],
@@ -85,15 +87,15 @@ angular.module('contractualClienteApp')
       enableRowHeaderSelection: false,
       columnDefs : [
         {field: 'Id', visible : false},
-        {field: 'NombreCompleto', width: '20%', displayName: $translate.instant('NOMBRE')},
-        {field: 'IdPersona', displayName: $translate.instant('CEDULA')},
-        {field: 'Categoria', displayName: $translate.instant('CATEGORIA')},
-        {field: 'IdDedicacion.NombreDedicacion', displayName: $translate.instant('DEDICACION')},
-        {field: 'IdDedicacion.Id', visible:false,displayName: $translate.instant('DEDICACION')},
-        {field: 'NumeroHorasSemanales', width: '5%',displayName: $translate.instant('HORAS_SEMANALES')},
-        {field: 'NumeroSemanas', width: '5%',displayName: $translate.instant('SEMANAS')},
-        {field: 'NumeroDisponibilidad', displayName: "Número de Disponibilidad" },
-        {field: 'ValorContrato', displayName: $translate.instant('VALOR_CONTRATO'), cellClass:"valorEfectivo"},
+        {field: 'NombreCompleto', width: '15%', displayName: $translate.instant('NOMBRE')},
+        {field: 'IdPersona', width: '10%',displayName: $translate.instant('CEDULA')},
+        {field: 'Categoria', width: '10%',displayName: $translate.instant('CATEGORIA')},
+        {field: 'IdDedicacion.NombreDedicacion', width: '10%',displayName: $translate.instant('DEDICACION')},
+        {field: 'IdDedicacion.Id',visible:false,displayName: $translate.instant('DEDICACION')},
+        {field: 'NumeroHorasSemanales', width: '8%',displayName: $translate.instant('HORAS_SEMANALES')},
+        {field: 'NumeroSemanas', width: '7%',displayName: $translate.instant('SEMANAS')},
+        {field: 'NumeroDisponibilidad', width: '15%',displayName: "Número de Disponibilidad" },
+        {field: 'ValorContrato', width: '15%',displayName: $translate.instant('VALOR_CONTRATO'), cellClass:"valorEfectivo", cellFilter:"currency"},
         {field: 'IdProyectoCurricular', visible:false,filter: {
                         term: self.term
                     }},
@@ -101,8 +103,8 @@ angular.module('contractualClienteApp')
           field: 'cancelar',
           enableSorting: false,
           enableFiltering: false,
-          width: '5%',
-          displayName: '',
+          width: '15%',
+          displayName: 'Opciones',
           cellTemplate: '<center>' +
             '<a class="borrar" ng-click="grid.appScope.verCancelarInscripcionDocente(row)">' +
             '<i title="{{\'BORRAR_BTN\' | translate }}" class="fa fa-trash fa-lg  faa-shake animated-hover"></i></a></div>' +
@@ -190,9 +192,7 @@ angular.module('contractualClienteApp')
 
     });
 
-    financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:"+self.vigencia_data).then(function(response) {
-        self.Disponibilidades.data = response.data;
-    });
+
 
     oikosRequest.get("dependencia/proyectosPorFacultad/"+self.resolucion.IdFacultad+"/"+self.resolucion.NivelAcademico_nombre,"").then(function(response){
         self.proyectos = response.data;
@@ -356,7 +356,10 @@ angular.module('contractualClienteApp')
           confirmButtonText: $translate.instant('ACEPTAR')
           })
         }else{
-            $('#modal_disponibilidad').modal('show');
+          financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:"+self.vigencia_data).then(function(response) {
+              self.Disponibilidades.data = response.data;
+          });
+          $('#modal_disponibilidad').modal('show');
       }
     }
 

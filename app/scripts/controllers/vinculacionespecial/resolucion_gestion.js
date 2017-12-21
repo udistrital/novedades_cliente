@@ -58,7 +58,7 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-        	width: '5%',
+        	width: '8%',
         	displayName: $translate.instant('VIGENCIA')
         },
         {
@@ -70,7 +70,7 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-        	width: '5%',
+        	width: '8%',
         	displayName: "Periodo"
         },
         {
@@ -94,7 +94,7 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-        	width: '15%',
+        	width: '8%',
         	displayName: $translate.instant('NIVEL')
         },
         {
@@ -106,7 +106,7 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-        	width: '15%',
+        	width: '10%',
         	displayName: $translate.instant('DEDICACION')
         },
         {
@@ -118,7 +118,7 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-        	width: '5%',
+        	width: '15%',
         	displayName: "Número de semanas"
         },
         {
@@ -130,7 +130,7 @@ angular.module('contractualClienteApp')
                     return 'resolucionExpedida';
                 }
             },
-            width: '15%',
+            width: '10%',
             displayName: $translate.instant('ESTADO')
         },
         {
@@ -143,7 +143,7 @@ angular.module('contractualClienteApp')
                 }
             },
             enableFiltering: false,
-            width: '10%',
+            width: '11%',
             //Los botones son mostrados de acuerdo alestado de las resoluciones (ver,editar,configurar)
             cellTemplate: '<center>' +
                '<a class="ver" ng-click="grid.appScope.verVisualizarResolucion(row)">' +
