@@ -312,18 +312,9 @@ angular.module('contractualClienteApp')
     self.desvincularDocente = function(row){
 
 
-      var vinculacionCancelada = {
-        IdPersona: row.entity.IdPersona,
-        NumeroHorasSemanales: row.entity.NumeroHorasSemanales,
-        NumeroSemanas: row.entity.NumeroSemanas,
-        IdResolucion: {Id: parseInt(self.resolucion.Id)},
-        IdDedicacion: {Id: parseInt(row.entity.IdDedicacion.Id)},
-        IdProyectoCurricular: parseInt(row.entity.IdProyectoCurricular),
-        Estado: false
-
-      };
-
-      amazonAdministrativaRequest.put("vinculacion_docente",row.entity.Id,vinculacionCancelada).then(function(response){
+      administrativaRequest.delete("vinculacion_docente",row.entity.Id).then(function(response){
+        console.log("respuesta")
+        console.log(response.data)
         if(response.data=="OK"){
           self.persona=null;
           swal({
