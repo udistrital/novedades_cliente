@@ -95,7 +95,7 @@ angular.module('contractualClienteApp')
 //Función para obtener el contenido de las tablas por proyecto currícular de los docentes asociados a la resolución
 self.getCuerpoTabla=function(idProyecto, datos, columnas) {
   var cuerpo=[];
-  var encabezado=[{ text: 'Nombre', style: 'encabezado' }, { text: 'Cédula', style: 'encabezado'}, { text: 'Categoría', style: 'encabezado'},{ text: 'Dedicación', style: 'encabezado'},{ text: 'Valor contrato ', style: 'encabezado'}
+  var encabezado=[{ text: 'Nombre', style: 'encabezado' }, { text: 'Cédula', style: 'encabezado'},  { text: 'Lugar de expedición', style: 'encabezado'},{ text: 'Categoría', style: 'encabezado'},{ text: 'Dedicación', style: 'encabezado'},{ text: 'Valor contrato ', style: 'encabezado'}
 ];
   cuerpo.push(encabezado);
   if(datos){
@@ -192,7 +192,7 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
             contenido.push({ text: proyecto.Nombre,
               style: 'proyecto'});
             //Definicion de los encabezados en base a las claves almacenadas dentro de la estructura de los datos
-            contenido.push(self.getTabla(proyecto.Id, contratados, ['NombreCompleto', 'IdPersona', 'Categoria','Dedicacion','ValorContrato']));
+            contenido.push(self.getTabla(proyecto.Id, contratados, ['NombreCompleto', 'IdPersona', 'LugarExpedicionCedula','Categoria','Dedicacion','ValorContrato']));
           }
 
         });
