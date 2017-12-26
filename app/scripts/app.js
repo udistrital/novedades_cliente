@@ -50,6 +50,7 @@ angular
         'academicaService',
         'contratoService',
         'nvd3',
+        'gridOptionsService',
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');
