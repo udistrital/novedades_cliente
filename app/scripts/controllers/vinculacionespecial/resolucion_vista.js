@@ -13,7 +13,6 @@ angular.module('contractualClienteApp')
     var self=this;
 
     self.idResolucion=idResolucion;
-    //self.imagen;
     self.proyectos=[];
 
     $http.get("scripts/models/imagen_ud.json")
@@ -57,28 +56,14 @@ angular.module('contractualClienteApp')
                         }else{
                           self.contenidoResolucion.ordenadorGasto=response.data[0];
                         }
-                        //Se verifica si la resolución ha sido expedida o no
-                        if(self.resolucion.FechaExpedicion === null){
-                            //Se cargan los docentes previamente vinculados con la resolución
-                            adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.idResolucion.toString()).then(function(response){
+
+                                                  //Se cargan los docentes contratdos si la resolucion ya fue expedida
+                          adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.idResolucion.toString()).then(function(response){
                             self.contratados=response.data;
                             self.generarResolucion();
 
                           });
-                        }else{
-                                                  //Se cargan los docentes contratdos si la resolucion ya fue expedida
-                          adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.idResolucion.toString()).then(function(response){
-                            self.contratados=response.data;
-                            if(self.contratados){
-                              console.log("contratados")
-                              console.log(self.contratados)
-                              self.generarResolucion();
-                            }else{
-                              //Se llama la función para generar el pdf con la resoleución
-                              self.generarResolucion();
-                            }
-                          });
-                        }
+
                       });
                     });
     };
