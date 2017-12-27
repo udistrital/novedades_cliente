@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-.controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,financieraRequest,resolucion,amazonAdministrativaRequest,adminMidRequest,oikosRequest,$localStorage,$scope,$mdDialog,$translate) {
+.controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,financieraRequest,resolucion,adminMidRequest,oikosRequest,$localStorage,$scope,$mdDialog,$translate) {
 
   var self = this;
   console.log("fabrica")
