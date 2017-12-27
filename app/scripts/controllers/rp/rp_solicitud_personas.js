@@ -13,6 +13,7 @@ angular.module('contractualClienteApp')
 })
 .controller('RpSolicitudPersonasCtrl', function($window,gridOptionsService, contratoRequest,administrativaRequest,$scope, contrato,resolucion,financieraRequest,financieraMidRequest,amazonAdministrativaRequest, adminMidRequest,$translate,disponibilidad) {
     var self = this;
+    self.offset=0;
     var query;
     var seleccion;
     var contrato_unidad={};
@@ -70,10 +71,9 @@ angular.module('contractualClienteApp')
       enableFiltering: true,
       multiSelect: false,
       columnDefs: [{
-          field: 'Id',
+          field: 'ContratoSuscrito[0].NumeroContratoSuscrito',
           displayName: $translate.instant('CONTRATO'),
-          width: "15%",
-          cellTemplate: '<div align="center">{{row.entity.ContratoSuscrito[0].NumeroContratoSuscrito}}</div>'
+          width: "15%"
         },
         {
           field: 'VigenciaContrato',
@@ -82,14 +82,13 @@ angular.module('contractualClienteApp')
           width: "15%",
         },
         {
-          field: 'NombreCompleto',
+          field: 'Contratista.NomProveedor',
           displayName: $translate.instant('NOMBRE_CONTRATISTA'),
           width: "30%"
         },
         {
-          field: 'Id',
+          field: 'Contratista.NumDocumento',
           displayName: $translate.instant('DOCUMENTO_CONTRATISTA'),
-          cellTemplate: '<div align="center">{{row.entity.Id}}</div>',
           width: "20%",
         },
         {
@@ -215,13 +214,7 @@ angular.module('contractualClienteApp')
         var vigenciaActual=$scope.vigencias[0];
         self.gridOptions = {};
         self.carga = true;
-        gridOptionsService.build(amazonAdministrativaRequest,'contrato_general','limit=10&query=ContratoSuscrito.NumeroContratoSuscrito:658,ContratoSuscrito.Vigencia:'+vigenciaActual+",VigenciaContrato:"+vigenciaActual,self.gridOptionsContratistas).then(function(data){
-          self.gridOptions = data;
-          self.gridOptions.onRegisterApi = function(gridApi) {
-              self.gridApi = gridApi;
-         };
-          self.carga = false;
-        });
+        self.cargarDatos(adminMidRequest,'contrato_general/ListaContratoContratoSuscrito/'+vigenciaActual,'limit=10',self.gridOptionsContratistas,self.offset,'');
         // amazonAdministrativaRequest.get('proveedor_contrato_persona/'+vigenciaActual,"").then(function(response) {
         //      self.gridOptions.data = response.data;
         //      console.log(response.data);
@@ -296,6 +289,47 @@ angular.module('contractualClienteApp')
 
     };
 
+    self.cargarDatos= function(service,endpoint,params,grid,offset,query){
+      gridOptionsService.build(service,endpoint,params+"&offset="+offset+query,grid).then(function(data){
+        self.gridOptions = data;
+        self.gridOptions.onRegisterApi = function(gridApi) {
+            self.gridApi = gridApi;
+            self.gridApi.core.on.filterChanged($scope, function() {
+              console.log("change");
+                var grid = this.grid;
+                var query = '';
+                angular.forEach(grid.columns, function(value, key) {
+                    if (value.filters[0].term) {
+                        var formtstr = value.colDef.name.replace('[0]','');
+                        query = query + '&query='+ formtstr + '__icontains:' + value.filters[0].term;
+                    }
+                });
+                self.cargarDatos(service,endpoint,params,grid,self.offset,query);
+            });
+            self.gridApi.pagination.on.paginationChanged($scope, function(newPage, pageSize) {
+
+                //self.gridOptions.data = {};
+
+                var inicio = $filter('date')(self.fechaInicio, "yyyy-MM-dd");
+                var fin = $filter('date')(self.fechaFin, "yyyy-MM-dd");
+                var query = '';
+                if (inicio !== undefined && fin !== undefined) {
+                    query = '&rangoinicio=' + inicio + "&rangofin=" + fin;
+                }
+                var grid = this.grid;
+                angular.forEach(grid.columns, function(value, key) {
+                    if (value.filters[0].term) {
+                        var formtstr = value.colDef.name.replace('[0]','');
+                        query = query + '&query='+ formtstr + '__icontains:' + value.filters[0].term;
+
+                    }
+                });
+                self.offset = (newPage - 1) * pageSize;
+                self.cargarDatos(service,endpoint,params,grid,self.offset,query);
+            });
+       };
+       });
+    };
     //se buscan los contratos por la vigencia seleccionada
     self.buscar_resoluciones_vigencia = function() {
       query = "";
