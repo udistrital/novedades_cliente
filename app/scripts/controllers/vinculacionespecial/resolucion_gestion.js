@@ -70,7 +70,7 @@ angular.module('contractualClienteApp')
           }
         },
         width: '8%',
-        displayName: "Periodo"
+        displayName: $translate.instant('PERIODO')
       },
       {
         field: 'Facultad',
@@ -118,7 +118,7 @@ angular.module('contractualClienteApp')
           }
         },
         width: '15%',
-        displayName: "Número de semanas"
+        displayName: $translate.instant('SEMANAS')
       },
       {
         field: 'Estado',
@@ -274,7 +274,7 @@ angular.module('contractualClienteApp')
   self.generarNuevaResolucion = function(){
     $window.location.href = '#/vinculacionespecial/resolucion_generacion';
   };
-  
+
 
 
 });

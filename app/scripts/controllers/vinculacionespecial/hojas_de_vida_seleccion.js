@@ -25,47 +25,45 @@ angular.module('contractualClienteApp')
     columnDefs : [
       {
         field: 'docente_apellido',
-        displayName: "Apellidos",
+        displayName: $translate.instant('APELLIDO_DOCENTES'),
         width: '15%'
       },
       {
         field: 'docente_nombre',
-        displayName: "Nombres",
+        displayName: $translate.instant('NOMBRES_DOCENTES'),
         width: '15%'
       },
       {
         field: 'docente_documento',
-        displayName: "Documento",
+        displayName: $translate.instant('DOCUMENTO_DOCENTES'),
         width: '10%'
       },
       {
         field: 'horas_lectivas',
-        displayName: "Horas lectivas",
+        displayName: $translate.instant('HORAS_LECTIVAS'),
         width: '10%'
       },
       {
         field: 'proyecto_nombre',
-        displayName: "Proyecto curricular",
+        displayName: $translate.instant('PROYECTO_CURRICULAR'),
         width: '20%'
       },
       {
         field: 'CategoriaNombre',
-        displayName: "Categoria",
+        displayName: $translate.instant('CATEGORIA'),
         width: '15%'
       },
       {
         field: 'tipo_vinculacion_nombre',
-        displayName: "Dedicación",
+        displayName: $translate.instant('DEDICACION'),
         width: '13%'
       },
       {
         field: 'id_tipo_vinculacion',
-        displayName: "id_tipo_vinculacion",
         visible:false
       },
       {
         field: 'id_proyecto',
-        displayName: "id_proyecto_curricular",
         visible:false
       }
 
@@ -90,13 +88,13 @@ angular.module('contractualClienteApp')
     columnDefs : [
       {field: 'Id', visible : false},
       {field: 'NombreCompleto', width: '15%', displayName: $translate.instant('NOMBRE')},
-      {field: 'IdPersona', width: '10%',displayName: $translate.instant('CEDULA')},
+      {field: 'IdPersona', width: '10%',displayName: $translate.instant('DOCUMENTO_DOCENTES')},
       {field: 'Categoria', width: '10%',displayName: $translate.instant('CATEGORIA')},
       {field: 'IdDedicacion.NombreDedicacion', width: '10%',displayName: $translate.instant('DEDICACION')},
-      {field: 'IdDedicacion.Id',visible:false,displayName: $translate.instant('DEDICACION')},
+      {field: 'IdDedicacion.Id',visible:false},
       {field: 'NumeroHorasSemanales', width: '8%',displayName: $translate.instant('HORAS_SEMANALES')},
       {field: 'NumeroSemanas', width: '7%',displayName: $translate.instant('SEMANAS')},
-      {field: 'NumeroDisponibilidad', width: '15%',displayName: "Número de Disponibilidad" },
+      {field: 'NumeroDisponibilidad', width: '15%',displayName: $translate.instant('NUM_DISPO_DOCENTE') },
       {field: 'ValorContrato', width: '15%',displayName: $translate.instant('VALOR_CONTRATO'), cellClass:"valorEfectivo", cellFilter:"currency"},
       {field: 'IdProyectoCurricular', visible:false,filter: {
         term: self.term
@@ -106,7 +104,7 @@ angular.module('contractualClienteApp')
         enableSorting: false,
         enableFiltering: false,
         width: '15%',
-        displayName: 'Opciones',
+        displayName:  $translate.instant('OPCIONES'),
         cellTemplate: '<center>' +
         '<a class="borrar" ng-click="grid.appScope.verCancelarInscripcionDocente(row)">' +
         '<i title="{{\'BORRAR_BTN\' | translate }}" class="fa fa-trash fa-lg  faa-shake animated-hover"></i></a></div>' +
@@ -129,15 +127,15 @@ angular.module('contractualClienteApp')
     columnDefs : [
       {
         field: 'NumeroDisponibilidad',
-        displayName: "Número de Disponibilidad"
+        displayName: $translate.instant('NUM_DISPO_DOCENTE')
       },
       {
         field: 'Vigencia',
-        displayName: "Vigencia"
+        displayName: $translate.instant('VIGENCIA_DISP')
       },
       {
         field: 'FechaRegistro',
-        displayName: "Fecha de registro",
+        displayName: $translate.instant('FECHA_DISP'),
         cellTemplate: '<span>{{row.entity.FechaRegistro| date:"yyyy-MM-dd":"+0900"}}</span>'
       }
     ],
@@ -169,11 +167,11 @@ angular.module('contractualClienteApp')
 
       {
         field: 'Apropiacion.Valor',
-        displayName: "Valor"
+        displayName: $translate.instant('VALOR_APROPIACION')
       },
       {
         field: 'Apropiacion.Saldo',
-        displayName: "Saldo"
+        displayName: $translate.instant('SALDO_APROPIACION')
       }
     ],
 
@@ -276,7 +274,7 @@ angular.module('contractualClienteApp')
     }else{
       swal({
         title: $translate.instant('ERROR'),
-        text: "Error en la disponibilidad",
+        text: $translate.instant('ERROR_DISP'),
         type: 'info',
         confirmButtonText: $translate.instant('ACEPTAR')
       })
@@ -294,7 +292,7 @@ angular.module('contractualClienteApp')
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: $translate.instant('DEVINCULAR_DOCENTE'),
+      confirmButtonText: $translate.instant('DESVINCULAR_DOCENTE'),
       cancelButtonText: $translate.instant('CANCELAR'),
       confirmButtonClass: 'btn btn-success',
       cancelButtonClass: 'btn btn-danger',
