@@ -73,16 +73,16 @@ angular.module('contractualClienteApp')
           field: 'Id',
           displayName: $translate.instant('CONTRATO'),
           width: "15%",
-          cellTemplate: '<div align="center">{{row.entity.Numero_suscrito}}</div>'
+          cellTemplate: '<div align="center">{{row.entity.ContratoSuscrito[0].NumeroContratoSuscrito}}</div>'
         },
         {
-          field: 'Vigencia_contrato',
+          field: 'VigenciaContrato',
           displayName: $translate.instant('VIGENCIA_CONTRATO'),
           visible: true,
           width: "15%",
         },
         {
-          field: 'Nombre_completo',
+          field: 'NombreCompleto',
           displayName: $translate.instant('NOMBRE_CONTRATISTA'),
           width: "30%"
         },
@@ -93,9 +93,9 @@ angular.module('contractualClienteApp')
           width: "20%",
         },
         {
-          field: 'ContratoGeneral.ValorContrato',
+          field: 'ValorContrato',
           displayName: $translate.instant('VALOR'),
-          cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>'
+          cellTemplate: '<div align="right">{{row.entity.ValorContrato | currency:undefined:0 }}</div>'
         },
       ],
       onRegisterApi : function(gridApi) {
@@ -215,7 +215,7 @@ angular.module('contractualClienteApp')
         var vigenciaActual=$scope.vigencias[0];
         self.gridOptions = {};
         self.carga = true;
-        gridOptionsService.build(contratoRequest,'contrato','',self.gridOptionsContratistas).then(function(data){
+        gridOptionsService.build(amazonAdministrativaRequest,'contrato_general','limit=10&query=ContratoSuscrito.NumeroContratoSuscrito:658,ContratoSuscrito.Vigencia:'+vigenciaActual+",VigenciaContrato:"+vigenciaActual,self.gridOptionsContratistas).then(function(data){
           self.gridOptions = data;
           self.gridOptions.onRegisterApi = function(gridApi) {
               self.gridApi = gridApi;
@@ -372,6 +372,7 @@ angular.module('contractualClienteApp')
       self.contrato.splice(0,self.contrato.length);
       self.resolucion.splice(0,self.resolucion.length);
       seleccion = self.gridApi.selection.getSelectedRows();
+      console.log(seleccion);
       if(seleccion.length===0){
         swal("Alertas", "Debe seleccionar un parametro para solicitar el registro presupuestal", "error");
       }else{
@@ -380,16 +381,17 @@ angular.module('contractualClienteApp')
       if($scope.radioB ===1){
       for(var i=0;i<seleccion.length;i++){
         contrato_unidad = [];
-        contrato_unidad.Numero_contrato = seleccion[i].Numero_contrato;
-        contrato_unidad.Numero_suscrito = seleccion[i].Numero_suscrito;
-        contrato_unidad.Vigencia_contrato= seleccion[i].Vigencia_contrato;
+        contrato_unidad.Numero_contrato = seleccion[i].Id;
+        contrato_unidad.Numero_suscrito = seleccion[i].ContratoSuscrito[0].NumeroContratoSuscrito;
+        contrato_unidad.Vigencia_contrato= seleccion[i].VigenciaContrato;
         contrato_unidad.Id= seleccion[i].Id;
-        contrato_unidad.Valor_contrato= seleccion[i].Valor_contrato;
-        contrato_unidad.Nombre_completo= seleccion[i].Nombre_completo;
-        contrato_unidad.Objeto_contrato= seleccion[i].Objeto_contrato;
-        contrato_unidad.Fecha_registro= seleccion[i].Fecha_registro;
+        contrato_unidad.Valor_contrato= seleccion[i].ValorContrato;
+        contrato_unidad.Nombre_completo= seleccion[i].NombreCompleto;
+        contrato_unidad.Objeto_contrato= seleccion[i].ObjetoContrato;
+        contrato_unidad.Fecha_registro= seleccion[i].FechaRegistro;
         self.contrato.push(contrato_unidad);
       }
+      console.log(self.contrato);
         self.saving = true;
         self.btnGenerartxt = "Generando...";
         self.saving = false;
@@ -404,6 +406,7 @@ angular.module('contractualClienteApp')
           swal("Alertas", "No existen contratos asociados a este cdp", "error");
           self.boton_solicitar=false;
         }else{
+          //console.log("solicitud cdp");
         for(var x =0;x<contratos_disponibilidades.length;x++){
           self.generar_txt(x);
         }
@@ -431,7 +434,9 @@ angular.module('contractualClienteApp')
     };
 
     self.generar_txt = function(x){
+
       amazonAdministrativaRequest.get('proveedor_contrato_persona/'+contratos_disponibilidades[x].NumeroContrato+"/"+contratos_disponibilidades[x].Vigencia,"").then(function(response) {
+
         if(response.data !== null){
           self.contrato.push(response.data[0]);
           if(contratos_disponibilidades.length===x){

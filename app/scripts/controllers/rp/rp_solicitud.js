@@ -39,10 +39,10 @@ angular.module('contractualClienteApp')
     }
 
     //solicitud por resolucion
-    if(self.disponibilidad.length > 0 && self.resolucion.length > 0){    
+    if(self.disponibilidad.length > 0 && self.resolucion.length > 0){
       self.solicitudresolucion_bool=true;
       // si es una solicitud de rp por resolucion se escoje automaticamente la primera y unica disponibilidad apropiacion
-      
+
     financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad[0].Id).then(function(response) {
       self.rubros_seleccionados.push(response.data[0]);
       });
@@ -63,7 +63,7 @@ angular.module('contractualClienteApp')
             financieraRequest.post('disponibilidad/SaldoCdp',rp).then(function(response){
               data.Saldo  = response.data;
             });
-  
+
           });
       });
 
@@ -84,7 +84,6 @@ angular.module('contractualClienteApp')
         {field: 'Estado.Descripcion',   displayName: $translate.instant('DESCRIPCION')},
         {field: 'Solicitud.Id',   displayName: $translate.instant('SOLICITUD')},
       ]};
-
       amazonAdministrativaRequest.get('contrato_disponibilidad','query=NumeroContrato:'+self.contrato[0].Numero_contrato+',Vigencia:'+self.contrato[0].Vigencia_contrato).then(function(response) {
         financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado,NumeroDisponibilidad:'+response.data[0].NumeroCdp+',Vigencia:'+response.data[0].VigenciaCdp).then(function(response) {
           self.gridOptions_cdp.data = response.data;
@@ -95,7 +94,7 @@ angular.module('contractualClienteApp')
             });
           }
           angular.forEach(self.gridOptions_cdp.data, function(data){
-     
+
             administrativaRequest.get('solicitud_disponibilidad','query=Id:'+data.Solicitud).then(function(response) {
               data.Solicitud = response.data[0];
             });
@@ -113,7 +112,7 @@ angular.module('contractualClienteApp')
      administrativaRequest.get('solicitud_disponibilidad','query=Id:'+CdpId).then(function(response){
       $scope.necesidad=response.data[0];
      });
- 
+
      amazonAdministrativaRequest.get('informacion_persona_natural', 'query=Id:'+self.disponibilidad[0].Responsable).then(function(response) {
        if(response.data !== null){
        self.responsable = response.data[0];
@@ -121,7 +120,7 @@ angular.module('contractualClienteApp')
          self.responsable = "";
      }
      });
- 
+
      financieraRequest.get('disponibilidad_apropiacion','limit=-1&query=Disponibilidad.Id:'+self.disponibilidad[0].Id).then(function(response) {
        $scope.rubros = response.data;
        self.gridOptions_rubros.data = response.data;
@@ -133,7 +132,7 @@ angular.module('contractualClienteApp')
            financieraRequest.post('disponibilidad/SaldoCdp',rp).then(function(response){
              data.Saldo  = response.data;
            });
- 
+
          });
      });
    });
@@ -156,7 +155,7 @@ angular.module('contractualClienteApp')
         enableRowSelection: true,
         enableRowHeaderSelection: false,
         enableFiltering: true,
-   
+
      columnDefs : [
        {field: 'Id',             visible : false},
        {field: 'Numero_suscrito',   width:'15%',displayName: $translate.instant('VINCULACION')},
@@ -171,7 +170,7 @@ angular.module('contractualClienteApp')
         enableRowSelection: true,
         enableRowHeaderSelection: false,
         enableFiltering: true,
-   
+
      columnDefs : [
        {field: 'Id',             visible : false},
        {field: 'Numero_suscrito',   width:'15%',displayName: $translate.instant('CONTRATO')},
@@ -333,7 +332,7 @@ angular.module('contractualClienteApp')
           }
         });
 
-      //este caso es cuando se ingresan los valores en la interfaz  
+      //este caso es cuando se ingresan los valores en la interfaz
       }else{
         angular.forEach(self.rubros_seleccionados, function(v) {
           if (v.Valor < v.ValorAsignado || v.ValorAsignado===0 || isNaN(v.ValorAsignado) || v.ValorAsignado === undefined) {
@@ -374,7 +373,7 @@ angular.module('contractualClienteApp')
           self.masivo_seleccion=true;
         }else{
           self.masivo_seleccion=false;
-        }        
+        }
         if(self.solicitudresolucion_bool===true){
         self.disponibilidad=self.disponibilidad[0];
         }
@@ -423,17 +422,17 @@ angular.module('contractualClienteApp')
           Resolucion:self.resolucion
         };
         amazonAdministrativaRequest.post('resolucion_estado',resolucion_estado).then(function() {
-          
+
         });
       }
     };
 
     self.crear_solicitud_rp = function(Disponibilidad_apropiacion_solicitud_rp){
       administrativaRequest.post('disponibilidad_apropiacion_solicitud_rp', Disponibilidad_apropiacion_solicitud_rp).then(function() {
-        var imprimir = "<h2>Solicitudes creadas correctamente !</h2>"; 
+        var imprimir = "<h2>Solicitudes creadas correctamente !</h2>";
         imprimir=imprimir + "<div style='height:150px;overflow:auto'><table class='col-md-8 col-md-offset-2'><tr><td style='height:20px;width:120px'><b>Numero solicitud rp</b></td><td style='height:10px;width:80px'><b>Numero contrato</b></td><td style='height:10px;width:80px'><b>Numero vigencia</b></td></tr>";
         for(var x=0;x<respuestas_solicitudes.length;x++){
-          
+
           imprimir=imprimir+"<tr style='height:20px'><td>"+respuestas_solicitudes[x].Id+
           "</td><td>"+respuestas_solicitudes[x].NumeroContrato+
           "</td><td>"+respuestas_solicitudes[x].VigenciaContrato;
