@@ -8,14 +8,12 @@
  * Controller of the clienteApp
  */
  angular.module('contractualClienteApp')
- .controller('ResolucionDetalleCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$routeParams,$translate,$window,$localStorage,$http) {
+ .controller('ResolucionDetalleCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$translate,$window,$localStorage,$http) {
 
    var self=this;
 
-   self.resolucion = $localStorage.resolucion;
-   self.Numero = self.resolucion.Numero;
-   self.Nivel_Academico = self.resolucion.NivelAcademico_nombre;
-   self.Dedicacion = self.resolucion.Dedicacion;
+   self.resolucion = JSON.parse(localStorage.getItem("resolucion"))
+
    self.proyectos=[];
 
     oikosRequest.get("dependencia","query=Id:"+self.resolucion.IdFacultad+"&limit=-1").then(function(response){
@@ -26,6 +24,11 @@
         self.proyectos = response.data;
       });
 
+
+    adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
+        self.contratados=response.data;
+
+    });
 
   administrativaRequest.get("contenido_resolucion/"+self.resolucion.Id).then(function(response){
       self.contenidoResolucion=response.data;
@@ -40,10 +43,7 @@
       });
     });
 
-    adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
-      self.contratados=response.data;
 
-    });
 
     $http.get("scripts/models/imagen_ud.json")
         .then(function(response) {
@@ -51,6 +51,7 @@
 
     });
 
+//*------------Funciones para editar la resolución -----------------*//
 self.agregarArticulo = function() {
   swal({
     title: $translate.instant('ESCRIBA_TEXTO'),

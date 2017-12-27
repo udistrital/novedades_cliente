@@ -118,7 +118,7 @@ angular
                 controller: 'ResolucionGeneracionCtrl',
                 controllerAs: 'resolucionGeneracion'
             })
-            .when('/vinculacionespecial/hojas_de_vida_seleccion/:idResolucion', {
+            .when('/vinculacionespecial/hojas_de_vida_seleccion', {
                 templateUrl: 'views/vinculacionespecial/hojas_de_vida_seleccion.html',
                 controller: 'HojasDeVidaSeleccionCtrl',
                 controllerAs: 'hojasDeVidaSeleccion'
@@ -133,7 +133,7 @@ angular
                 controller: 'ResolucionGestionCtrl',
                 controllerAs: 'resolucionGestion'
             })
-            .when('/vinculacionespecial/resolucion_detalle/:idResolucion', {
+            .when('/vinculacionespecial/resolucion_detalle', {
                 templateUrl: 'views/vinculacionespecial/resolucion_detalle.html',
                 controller: 'ResolucionDetalleCtrl',
                 controllerAs: 'resolucionDetalle'

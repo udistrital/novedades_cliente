@@ -25,13 +25,17 @@
 					<div class="panel-heading">
 						<h4 class="intro-text"> {{ 'DOCENTE_VINCULADOS' | translate }} </h4>
 					</div>
-
-
-					<div class="panel-body">
-						<select class="form-control" ng-model="hojasDeVidaSeleccion.term" ng-change="hojasDeVidaSeleccion.get_docentes_vinculados()" required>
-							<option value="">--SELECCIONE--</option>
-							<option ng-repeat="proyecto in hojasDeVidaSeleccion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
+						<br>
+						<div class="col-md-2">
+							<center><label>Seleccione el proyecto curricular</label></center>
+						</div>
+						<div class="col-md-10">
+						<select class="form-control" ng-model="hojasDeVidaSeleccion.term" ng-change="hojasDeVidaSeleccion.get_docentes_vinculados()">
+							<option ng-selected="{{proyecto.Id == HojasDeVidaSeleccion.defaultSelectedPrecont}}" ng-repeat="proyecto in hojasDeVidaSeleccion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
 						</select>
+					 </div>
+						<br>
+						<div class="panel-body">
 						<br>
 						<div ui-grid="hojasDeVidaSeleccion.precontratados" ui-grid-selection ui-grid-pagination class="grid" ng-hide="hojasDeVidaSeleccion.estado"></div>
 						<center><loading load="hojasDeVidaSeleccion.estado" tam="5"></loading><center>
