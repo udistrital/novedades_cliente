@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudCtrl', function(coreRequest,resolucion,$window,contrato,disponibilidad,administrativaRequest,amazonAdministrativaRequest,$scope,financieraRequest,$translate) {
+  .controller('RpSolicitudCtrl', function(coreRequest,resolucion,$window,contrato,disponibilidad,administrativaRequest,amazonAdministrativaRequest,$scope,financieraRequest,financieraMidRequest,$translate) {
     var self = this;
 
     $scope.rubroVacio=false;
@@ -32,7 +32,7 @@ angular.module('contractualClienteApp')
     var resolucion_estado ={};
 
     //si no hay contratos devuelve a la anterior interfaz
-    if(self.contrato.length === 0){
+    if(self.contrato.length === 0 && self.resolucion.length === 0 && self.disponibilidad.length === 0){
       swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR'), "error").then(function() {
         $window.location.href = '#/rp_solicitud_personas';
       });
@@ -82,24 +82,27 @@ angular.module('contractualClienteApp')
         {field: 'Vigencia',   displayName:$translate.instant('VIGENCIA')},
         {field: 'NumeroDisponibilidad',   width:'10%',displayName:$translate.instant('ID')},
         {field: 'Estado.Nombre',   displayName: $translate.instant('ESTADO')},
-        {field: 'Solicitud.Id',   displayName: $translate.instant('SOLICITUD')},
+        {field: 'Solicitud.SolicitudDisponibilidad.Numero',   displayName: $translate.instant('SOLICITUD')},
       ]};
       amazonAdministrativaRequest.get('contrato_disponibilidad','query=NumeroContrato:'+self.contrato[0].Numero_contrato+',Vigencia:'+self.contrato[0].Vigencia_contrato).then(function(response) {
-        financieraRequest.get('disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado,NumeroDisponibilidad:'+response.data[0].NumeroCdp+',Vigencia:'+response.data[0].VigenciaCdp).then(function(response) {
-          self.gridOptions_cdp.data = response.data;
+        self.gridOptions_cdp.data = [];
+        angular.forEach(response.data,function(data){
+          financieraMidRequest.get('disponibilidad/ListaDisponibilidades/'+response.data[0].VigenciaCdp,'limit=1&query=Estado.Nombre__not_in:Agotado,NumeroDisponibilidad:'+data.NumeroCdp+"&UnidadEjecutora="+1).then(function(response) {
+              self.gridOptions_cdp.data.push(response.data[0]);
+              console.log(response.data);
+              if(response.data === null || response.status !== 200){
+                swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_CDP'), "error").then(function() {
+                  $window.location.href = '#/rp_solicitud_personas';
+                });
+              }
+              /*angular.forEach(self.gridOptions_cdp.data, function(data){
 
-          if(response.data === null || response.status !== 200){
-            swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_CDP'), "error").then(function() {
-              $window.location.href = '#/rp_solicitud_personas';
-            });
-          }
-          angular.forEach(self.gridOptions_cdp.data, function(data){
-
-            administrativaRequest.get('solicitud_disponibilidad','query=Id:'+data.Solicitud).then(function(response) {
-              data.Solicitud = response.data[0];
-            });
-         });
-      });
+                administrativaRequest.get('solicitud_disponibilidad','query=Id:'+data.Solicitud).then(function(response) {
+                  data.Solicitud = response.data[0];
+                });
+             });*/
+          });
+        });
     });
 
     self.gridOptions_cdp.onRegisterApi = function(gridApiCdp){

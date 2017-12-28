@@ -449,18 +449,11 @@ angular.module('contractualClienteApp')
     // si es solicitud por cdp
     }else if($scope.radioB ===2){
       self.disponibilidad.push(seleccion[0]);
-      amazonAdministrativaRequest.get('contrato_disponibilidad',"query=NumeroCdp:"+self.disponibilidad[0].Id+",VigenciaCdp:"+self.disponibilidad[0].Vigencia).then(function(response) {
-        contratos_disponibilidades= response.data;
-        if(contratos_disponibilidades === null){
-          swal("Alertas", "No existen contratos asociados a este cdp", "error");
-          self.boton_solicitar=false;
-        }else{
-          //console.log("solicitud cdp");
-        for(var x =0;x<contratos_disponibilidades.length;x++){
-          self.generar_txt(x);
-        }
-      }
-      });
+       self.saving = true;
+        self.btnGenerartxt = "Generando...";
+        self.saving = false;
+        self.btnGenerartxt = "Generar";
+         $window.location.href = '#/rp/rp_solicitud/';
 
     // si es solicitud por resolucion
     }else if($scope.radioB===3){
