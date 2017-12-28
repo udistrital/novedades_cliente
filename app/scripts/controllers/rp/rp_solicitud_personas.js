@@ -11,9 +11,10 @@ angular.module('contractualClienteApp')
 .factory("contrato",function(){
       return {};
 })
-.controller('RpSolicitudPersonasCtrl', function($window,gridOptionsService, contratoRequest,administrativaRequest,$scope, contrato,resolucion,financieraRequest,financieraMidRequest,amazonAdministrativaRequest, adminMidRequest,$translate,disponibilidad) {
+.controller('RpSolicitudPersonasCtrl', function($window,$filter,gridOptionsService, contratoRequest,administrativaRequest,$scope, contrato,resolucion,financieraRequest,financieraMidRequest,amazonAdministrativaRequest, adminMidRequest,$translate,disponibilidad) {
     var self = this;
     self.offset=0;
+    self.filter = '';
     var query;
     var seleccion;
     var contrato_unidad={};
@@ -70,31 +71,39 @@ angular.module('contractualClienteApp')
       enableSorting: true,
       enableFiltering: true,
       multiSelect: false,
+      paginationPageSizes: [25, 50, 75],
+      paginationPageSize: 10,
+      useExternalPagination: true,
       columnDefs: [{
           field: 'ContratoSuscrito[0].NumeroContratoSuscrito',
           displayName: $translate.instant('CONTRATO'),
-          width: "15%"
+          width: "15%",
+          enableFiltering: true
         },
         {
           field: 'VigenciaContrato',
           displayName: $translate.instant('VIGENCIA_CONTRATO'),
           visible: true,
           width: "15%",
+          enableFiltering: false
         },
         {
           field: 'Contratista.NomProveedor',
           displayName: $translate.instant('NOMBRE_CONTRATISTA'),
-          width: "30%"
+          width: "30%",
+          enableFiltering: false
         },
         {
           field: 'Contratista.NumDocumento',
           displayName: $translate.instant('DOCUMENTO_CONTRATISTA'),
           width: "20%",
+          enableFiltering: false
         },
         {
           field: 'ValorContrato',
           displayName: $translate.instant('VALOR'),
-          cellTemplate: '<div align="right">{{row.entity.ValorContrato | currency:undefined:0 }}</div>'
+          cellTemplate: '<div align="right">{{row.entity.ValorContrato | currency:undefined:0 }}</div>',
+          enableFiltering: false
         },
       ],
       onRegisterApi : function(gridApi) {
@@ -182,12 +191,15 @@ angular.module('contractualClienteApp')
       enableRowHeaderSelection: false,
       enableFiltering: true,
       multiSelect: false,
+       paginationPageSizes: [25, 50, 75],
+      paginationPageSize: 10,
+      useExternalPagination: true,
       columnDefs : [
         {field: 'Id',             visible : false},
-        {field: 'Vigencia',   displayName:$translate.instant('VIGENCIA')},
+        {field: 'Vigencia',   displayName:$translate.instant('VIGENCIA'),enableFiltering: false},
         {field: 'NumeroDisponibilidad',  displayName:$translate.instant('DISPONIBILIDAD')},
         {field: 'Estado.Nombre',   displayName: $translate.instant('ESTADO')},
-        {field: 'Solicitud.SolicitudDisponibilidad.Numero',   displayName: $translate.instant('SOLICITUD')},
+        {field: 'Solicitud.SolicitudDisponibilidad.Numero',   displayName: $translate.instant('SOLICITUD'),enableFiltering: false},
         {field: 'FechaRegistro',   displayName: $translate.instant('FECHA_REGISTRO'),
         cellTemplate: '<div align="center">{{row.entity.FechaRegistro | date:"yyyy-MM-dd":"+0900" }}</div>'},
     ],
@@ -214,12 +226,14 @@ angular.module('contractualClienteApp')
         var vigenciaActual=$scope.vigencias[0];
         self.gridOptions = {};
         self.carga = true;
-        self.cargarDatos(adminMidRequest,'contrato_general/ListaContratoContratoSuscrito/'+vigenciaActual,'limit=10',self.gridOptionsContratistas,self.offset,'');
+        self.filter ='';
+        self.cargarDatos(adminMidRequest,'contrato_general/ListaContratoContratoSuscrito/'+vigenciaActual,'limit=10',self.gridOptionsContratistas,self.offset,self.filter);
         // amazonAdministrativaRequest.get('proveedor_contrato_persona/'+vigenciaActual,"").then(function(response) {
         //      self.gridOptions.data = response.data;
         //      console.log(response.data);
         //     });
          });
+
       }
 
       //si es filtro por cdp
@@ -234,13 +248,9 @@ angular.module('contractualClienteApp')
 
         //selecciona la vigencia actual
         var vigenciaActual=$scope.vigencias[0];
-          gridOptionsService.build(financieraMidRequest, 'disponibilidad/ListaDisponibilidades/'+vigenciaActual,'limit=' + 0 + '&offset=' + 0 + '&query=Estado.Nombre__not_in:Agotado,DisponibilidadProcesoExterno.TipoDisponibilidad.Id:1' + "&UnidadEjecutora=" + 1,self.gridOptions_cdp).then(function(data){
-            self.gridOptions =data;
-            self.gridOptions.onRegisterApi = function(gridApi) {
-                self.gridApi = gridApi;
-           };
-           self.carga = false;
-        });
+          //gridOptionsService.build(financieraMidRequest, 'disponibilidad/ListaDisponibilidades/'+vigenciaActual,'limit=' + 0 + '&offset=' + 0 + '&query=Estado.Nombre__not_in:Agotado,DisponibilidadProcesoExterno.TipoDisponibilidad.Id:1' + "&UnidadEjecutora=" + 1,self.gridOptions_cdp)
+        self.filter= 'Estado.Nombre__not_in:Agotado,DisponibilidadProcesoExterno.TipoDisponibilidad.Id:1';
+        self.cargarDatos(financieraMidRequest,'disponibilidad/ListaDisponibilidades/'+vigenciaActual,'limit=10&UnidadEjecutora=' + 1,self.gridOptions_cdp,self.offset,self.filter);
 
 
         });
@@ -290,43 +300,48 @@ angular.module('contractualClienteApp')
     };
 
     self.cargarDatos= function(service,endpoint,params,grid,offset,query){
-      gridOptionsService.build(service,endpoint,params+"&offset="+offset+query,grid).then(function(data){
+      gridOptionsService.build(service,endpoint,params+"&offset="+offset+"&query="+query,grid).then(function(data){
         self.gridOptions = data;
         self.gridOptions.onRegisterApi = function(gridApi) {
             self.gridApi = gridApi;
             self.gridApi.core.on.filterChanged($scope, function() {
               console.log("change");
                 var grid = this.grid;
-                var query = '';
+                var query = self.filter;
                 angular.forEach(grid.columns, function(value, key) {
                     if (value.filters[0].term) {
                         var formtstr = value.colDef.name.replace('[0]','');
-                        query = query + '&query='+ formtstr + '__icontains:' + value.filters[0].term;
+                        if (query === ''){
+                          query = formtstr + '__icontains:' + value.filters[0].term ;
+                        }else{
+                          query = query+','+formtstr + '__icontains:' + value.filters[0].term ;
+                        }
                     }
                 });
+                self.offset=0;
                 self.cargarDatos(service,endpoint,params,grid,self.offset,query);
             });
             self.gridApi.pagination.on.paginationChanged($scope, function(newPage, pageSize) {
 
                 //self.gridOptions.data = {};
-
-                var inicio = $filter('date')(self.fechaInicio, "yyyy-MM-dd");
-                var fin = $filter('date')(self.fechaFin, "yyyy-MM-dd");
-                var query = '';
-                if (inicio !== undefined && fin !== undefined) {
-                    query = '&rangoinicio=' + inicio + "&rangofin=" + fin;
-                }
+                console.log("change p");
+                var query = self.filter;
                 var grid = this.grid;
                 angular.forEach(grid.columns, function(value, key) {
                     if (value.filters[0].term) {
                         var formtstr = value.colDef.name.replace('[0]','');
-                        query = query + '&query='+ formtstr + '__icontains:' + value.filters[0].term;
+                        if (query === ''){
+                          query = formtstr + '__icontains:' + value.filters[0].term ;
+                        }else{
+                          query = query+','+formtstr + '__icontains:' + value.filters[0].term ;
+                        }
 
                     }
                 });
                 self.offset = (newPage - 1) * pageSize;
                 self.cargarDatos(service,endpoint,params,grid,self.offset,query);
             });
+            self.gridOptions.totalItems = 50000;
        };
        });
     };
@@ -418,9 +433,9 @@ angular.module('contractualClienteApp')
         contrato_unidad.Numero_contrato = seleccion[i].Id;
         contrato_unidad.Numero_suscrito = seleccion[i].ContratoSuscrito[0].NumeroContratoSuscrito;
         contrato_unidad.Vigencia_contrato= seleccion[i].VigenciaContrato;
-        contrato_unidad.Id= seleccion[i].Id;
+        contrato_unidad.Documento= seleccion[i].Contratista.NumDocumento;
         contrato_unidad.Valor_contrato= seleccion[i].ValorContrato;
-        contrato_unidad.Nombre_completo= seleccion[i].NombreCompleto;
+        contrato_unidad.Nombre_completo= seleccion[i].Contratista.NomProveedor;
         contrato_unidad.Objeto_contrato= seleccion[i].ObjetoContrato;
         contrato_unidad.Fecha_registro= seleccion[i].FechaRegistro;
         self.contrato.push(contrato_unidad);

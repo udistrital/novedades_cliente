@@ -84,8 +84,8 @@
                 </div>
 
                 <div class="col-md-12" align="center">
-                  <div ng-show="rpSolicitudPersonas.gridOptions.data.length > 0">
-                      <div ui-grid="rpSolicitudPersonas.gridOptions" ui-grid-selection ui-grid-auto-resize ui-grid-pagination class="myGrid" >
+                  <div ng-if="rpSolicitudPersonas.gridOptions.data.length > 0">
+                      <div ui-grid="rpSolicitudPersonas.gridOptions" ui-grid-selection ui-grid-pagination class="myGrid" ng-model-options="{ updateOn: 'keyup', debounce : 1000 }" >
                       </div>
                       <div align="center">
                           <br><br>
@@ -94,11 +94,11 @@
                           </button>
                         </div>
                   </div>
-                    <div ng-show="rpSolicitudPersonas.carga">
+                    <!--div ng-show="rpSolicitudPersonas.carga">
                         <h2><i class="fa fa-spin fa-spinner"></i>
                           <strong>{{'CARGANDO_DATOS' | translate}}...</strong>
                           </h2>
-                      </div>
+                      </div-->
                   </div>
           </div>
         </div>

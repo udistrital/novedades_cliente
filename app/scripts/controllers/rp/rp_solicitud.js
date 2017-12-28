@@ -81,7 +81,7 @@ angular.module('contractualClienteApp')
         {field: 'Id',             visible : false},
         {field: 'Vigencia',   displayName:$translate.instant('VIGENCIA')},
         {field: 'NumeroDisponibilidad',   width:'10%',displayName:$translate.instant('ID')},
-        {field: 'Estado.Descripcion',   displayName: $translate.instant('DESCRIPCION')},
+        {field: 'Estado.Nombre',   displayName: $translate.instant('ESTADO')},
         {field: 'Solicitud.Id',   displayName: $translate.instant('SOLICITUD')},
       ]};
       amazonAdministrativaRequest.get('contrato_disponibilidad','query=NumeroContrato:'+self.contrato[0].Numero_contrato+',Vigencia:'+self.contrato[0].Vigencia_contrato).then(function(response) {
@@ -161,7 +161,7 @@ angular.module('contractualClienteApp')
        {field: 'Numero_suscrito',   width:'15%',displayName: $translate.instant('VINCULACION')},
        {field: 'Vigencia_contrato',  width:'15%' ,displayName: $translate.instant('VIGENCIA')},
        {field: 'Nombre_completo', width:'40%'  ,displayName:$translate.instant('NOMBRE')},
-       {field: 'Id', width:'15%'  ,displayName: $translate.instant('DOCUMENTO')},
+       {field: 'Documento', width:'15%'  ,displayName: $translate.instant('DOCUMENTO')},
        {field: 'Valor_contrato', width:'15%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
      ]
     };
@@ -176,7 +176,7 @@ angular.module('contractualClienteApp')
        {field: 'Numero_suscrito',   width:'15%',displayName: $translate.instant('CONTRATO')},
        {field: 'Vigencia_contrato',  width:'16%' ,displayName: $translate.instant('VIGENCIA')},
        {field: 'Nombre_completo', width:'42%'  ,displayName:$translate.instant('NOMBRE')},
-       {field: 'Id', width:'15%'  ,displayName: $translate.instant('DOCUMENTO')},
+       {field: 'Documento', width:'15%'  ,displayName: $translate.instant('DOCUMENTO')},
        {field: 'Valor_contrato', width:'12%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
      ]
     };
@@ -189,20 +189,24 @@ angular.module('contractualClienteApp')
       enableRowSelection: true,
       enableRowHeaderSelection: false,
       multiSelect: false,
+      enableFiltering: true,
       columnDefs: [{
           field: 'Id',
           displayName: $translate.instant('NUMERO'),
-          width: '20%'
+          width: '20%',
+          enableFiltering: true
         },
         {
           field: 'Vigencia',
           displayName: $translate.instant('VIGENCIA'),
-          width: '20%'
+          width: '20%',
+          enableFiltering: false
         },
         {
           field: 'Objeto',
           displayName: $translate.instant('OBJETO'),
-          width: '60%'
+          width: '60%',
+          enableFiltering: false
         }
       ],
       onRegisterApi: function(gridApi) {
