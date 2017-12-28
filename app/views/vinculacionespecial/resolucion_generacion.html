@@ -73,3 +73,21 @@
 
 </div>
 </div>
+
+<div ng-show="resolucionGeneracion.tipo_resolucion_elegida == 2">
+
+    <h2 class="page-header text-center">{{ 'RESOLUCIONES' | translate }}</h2>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="intro-text"> {{ 'LISTA_RESOLUCIONES' | translate }} </h4>
+            </div>
+            <div ui-grid="resolucionGeneracion.resolucionesInscritas" ui-grid-selection ui-grid-pagination ui-grid-auto-resize class="grid"></div>
+          </div>
+        </div>
+        </div>
+    </div>
+
+</div>
