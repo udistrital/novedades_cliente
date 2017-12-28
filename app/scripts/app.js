@@ -10,8 +10,11 @@
  */
 angular
     .module('contractualClienteApp', [
+        // Librerias
+        'angular-loading-bar',
         'ngAnimate',
         'ngCookies',
+        'ngMessages',
         'ngResource',
         'ngRoute',
         'ngSanitize',
@@ -33,6 +36,11 @@ angular
         'angularMoment',
         'ui.utils.masks',
         'pascalprecht.translate',
+        'nvd3',
+        'ui.grid.expandable',
+        'ui.grid.pinning',
+        'ui.knob',
+        // Servicios
         'financieraService',
         'coreService',
         'coreAmazonService',
@@ -49,11 +57,19 @@ angular
         'amazonAdministrativaService',
         'academicaService',
         'contratoService',
-        'nvd3',
         'gridOptionsService',
+        'configuracionService'
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');
+    })
+    .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+        cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+    }])
+    .config(function($mdDateLocaleProvider) {
+        $mdDateLocaleProvider.formatDate = function(date) {
+            return date ? moment.utc(date).format('YYYY-MM-DD') : '';
+        };
     })
     .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
         $locationProvider.hashPrefix("");
@@ -175,9 +191,9 @@ angular
                 controllerAs: 'necesidadExterna'
             })
             .when('/necesidad/necesidad_contratacion_docente', {
-              templateUrl: 'views/necesidad/necesidad_contratacion_docente.html',
-              controller: 'NecesidadContratacionDocenteCtrl',
-              controllerAs: 'necesidadContratacionDocente'
+                templateUrl: 'views/necesidad/necesidad_contratacion_docente.html',
+                controller: 'NecesidadContratacionDocenteCtrl',
+                controllerAs: 'necesidadContratacionDocente'
             })
             .otherwise({
                 redirectTo: '/'
