@@ -507,16 +507,16 @@ angular.module('contractualClienteApp')
                   rubros: [],
                   solicitudRp: {}
                 };
-          administrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
-            respuestas_solicitudes.push(response.data);
+          //administrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
+            //respuestas_solicitudes.push(response.data);
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
               var Disponibilidad_apropiacion_solicitud_rp = {};
               if (self.solicitudresolucion_bool === true){
                 Disponibilidad_apropiacion_solicitud_rp = {
                     DisponibilidadApropiacion: self.rubros_seleccionados[i].Id,
-                    SolicitudRp :{
+                    /*SolicitudRp :{
                       Id: response.data.Id,
-                    },
+                    },*/
                     //este campo debe generalizarse para utilzarlo tambien con los filtros de contrato y cdp
                    // Monto: self.rubros_seleccionados[i].ValorAsignado,
                    Monto:solicitud_rp.Monto
@@ -524,9 +524,9 @@ angular.module('contractualClienteApp')
               }else{
                  Disponibilidad_apropiacion_solicitud_rp = {
                     DisponibilidadApropiacion: self.rubros_seleccionados[i].Id,
-                    SolicitudRp :{
+                   /* SolicitudRp :{
                       Id: response.data.Id,
-                    },
+                    },*/
                     //este campo debe generalizarse para utilzarlo tambien con los filtros de contrato y cdp
                     Monto: self.rubros_seleccionados[i].ValorAsignado
                    //Monto:solicitud_rp.Monto
@@ -538,11 +538,54 @@ angular.module('contractualClienteApp')
             }
             dataRegistro.solicitudRp = solicitud_rp;
             registrosSolicitud.push(dataRegistro);
-          });
+          //});
           
         });
         console.log("_______________")
           console.log(registrosSolicitud);
+          administrativaRequest.post('solicitud_rp/AddSolicitudRpTr', registrosSolicitud).then(function(response) {
+            console.log(response.data);
+            self.alerta = response.data;
+          console.log(self.alerta);
+          var templateAlert = "<table class='table table-bordered'><th>" + $translate.instant('SOLICITUD') + "</th><th>" + $translate.instant('CDP');
+          if (self.solicitudcdp_bool === false){
+            templateAlert = "<table class='table table-bordered'><th>" + $translate.instant('SOLICITUD') + "</th><th>" + $translate.instant('CDP')+"<th>"+$translate.instant('CONTRATO')+"</th>"+"<th>"+$translate.instant('VIGENCIA_CONTRATO')+"</th>";
+          }
+          angular.forEach(self.alerta, function(data) {
+            if (data.Type === "error") {
+              //templateAlert = templateAlert + "<tr class='danger'><td> N/A </td>" + "<td> " + data.Body. + " </td>" + "<td>" + $translate.instant(data.Code) + "</td>";
+            } else if (data.Type === "success") {
+              if (self.solicitudcdp_bool === false){
+                templateAlert = templateAlert + "<tr class='success'><td>" + data.Body.Id + "</td>" + "<td>" + data.Body.Cdp + "</td>"+ "<td>" + data.Body.NumeroContrato + "</td>"+ "<td>" + data.Body.VigenciaContrato + "</td>";
+              }else{
+                templateAlert = templateAlert + "<tr class='success'><td>" + data.Body.Id + "</td>" + "<td>" + data.Body.Cdp + "</td>"
+              }
+            }
+
+          });
+          templateAlert = templateAlert + "</table>";
+          
+          swal({
+          html:templateAlert,
+          type: "success",
+          showCancelButton: true,
+          confirmButtonColor: "#449D44",
+          cancelButtonColor: "#C9302C",
+          confirmButtonText: $translate.instant('VOLVER_CONTRATOS'),
+          cancelButtonText: $translate.instant('SALIR'),
+        }).then(function() {
+          //si da click en ir a contratistas
+          $window.location.href = '#/rp_solicitud_personas';
+        }, function(dismiss) {
+
+          if (dismiss === 'cancel') {
+            //si da click en Salir
+            $window.location.href = '#';
+          }
+        });
+          
+
+          });
         //esta peticion debe quedar fuera del foreach para que solo se guarde un registro en resolucion estado
         if(self.solicitudresolucion_bool===true){
           resolucion_estado ={
