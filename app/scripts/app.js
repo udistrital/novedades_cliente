@@ -118,6 +118,11 @@ angular
                 controller: 'ResolucionGeneracionCtrl',
                 controllerAs: 'resolucionGeneracion'
             })
+            .when('/vinculacionespecial/resolucion_cancelacion', {
+                templateUrl: 'views/vinculacionespecial/resolucion_cancelacion.html',
+                controller: 'ResolucionCancelacionCtrl',
+                controllerAs: 'resolucionCancelacion'
+            })
             .when('/vinculacionespecial/hojas_de_vida_seleccion', {
                 templateUrl: 'views/vinculacionespecial/hojas_de_vida_seleccion.html',
                 controller: 'HojasDeVidaSeleccionCtrl',

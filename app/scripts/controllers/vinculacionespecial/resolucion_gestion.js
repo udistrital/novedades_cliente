@@ -81,7 +81,7 @@ angular.module('contractualClienteApp')
             return 'resolucionExpedida';
           }
         },
-        width: '20%',
+        width: '15%',
         displayName: $translate.instant('FACULTAD')
       },
       {
@@ -117,7 +117,7 @@ angular.module('contractualClienteApp')
             return 'resolucionExpedida';
           }
         },
-        width: '15%',
+        width: '10%',
         displayName: $translate.instant('SEMANAS')
       },
       {
@@ -131,6 +131,18 @@ angular.module('contractualClienteApp')
         },
         width: '10%',
         displayName: $translate.instant('ESTADO')
+      },
+      {
+        field: 'TipoResolucion',
+        cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+          if (row.entity.Estado==="Cancelada") {
+            return 'resolucionCancelada';
+          }else if(row.entity.Estado==="Expedida"){
+            return 'resolucionExpedida';
+          }
+        },
+        width: '10%',
+        displayName: $translate.instant('TIPO_RESOLUCION')
       },
       {
         name: $translate.instant('OPCIONES'),
@@ -234,7 +246,15 @@ angular.module('contractualClienteApp')
 
     var local = JSON.stringify(resolucion)
     localStorage.setItem('resolucion', local);
-    $window.location.href = '#/vinculacionespecial/hojas_de_vida_seleccion';
+
+    if(row.entity.TipoResolucion == "Vinculación"){
+      $window.location.href = '#/vinculacionespecial/hojas_de_vida_seleccion';
+    }
+    if(row.entity.TipoResolucion == "Cancelación"){
+      $window.location.href = '#/vinculacionespecial/resolucion_cancelacion';
+    }
+
+
 
   };
 

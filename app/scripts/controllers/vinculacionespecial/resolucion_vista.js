@@ -34,13 +34,15 @@ angular.module('contractualClienteApp')
       }else{
         self.contenidoResolucion.ordenadorGasto=response.data[0];
       }
+
+      adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
+        self.contratados=response.data;
+        self.generarResolucion();
+      });
     });
   });
 
-  adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
-    self.contratados=response.data;
-    self.generarResolucion();
-  });
+
 
 
   //Función para generar el pdf de la resolución con la información almacenada en la base de datos

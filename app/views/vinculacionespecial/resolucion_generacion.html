@@ -1,10 +1,10 @@
 <div class="panel panel-primary panel-body">
   <h2 class="page-header text-center">{{ 'GENERACION_RESOLUCION' | translate }}</h2>
   <div class="row">
-    <div class="col-md-2 col-md-offset-1">
+    <div class="col-md-2 col-md-offset-4">
       <center><label> Seleccione el tipo de resolución a crear </label></center>
     </div>
-    <div class="col-md-8 col-md-offset-1">
+    <div class="col-md-6">
     <select ng-model="resolucionGeneracion.tipo_resolucion_elegida">
       <option value="">{{'SELECCIONE' | translate }}</option>
       <option ng-repeat="tipos in resolucionGeneracion.tipos_resolucion" value="{{tipos.Id}}">{{tipos.NombreTipoResolucion}}</option>
@@ -77,10 +77,17 @@
 
 <div ng-show="resolucionGeneracion.tipo_resolucion_elegida == 2">
 
-    <h2 class="page-header text-center">{{ 'RESOLUCIONES' | translate }}</h2>
     <div class="panel-body">
       <div class="row">
+      <div class="col-md-2 col-md-offset-2">
+        <label>{{ 'NUMERO_RESOLUCION' | translate }}</label>
+      </div>
+        <div class="col-md-3">
+        <input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionGeneracion.resolucion.numero" required>
+      </div>
+
         <div class="col-md-8 col-md-offset-2">
+          <br>
           <div class="panel panel-default">
             <div class="panel-heading">
               <h4 class="intro-text"> {{ 'LISTA_RESOLUCIONES' | translate }} </h4>
@@ -93,5 +100,5 @@
         </div>
         </div>
     </div>
-
+  </div>
 </div>

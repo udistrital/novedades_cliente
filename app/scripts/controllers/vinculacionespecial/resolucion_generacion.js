@@ -14,6 +14,7 @@ angular.module('contractualClienteApp')
 
     self.CurrentDate = new Date();
     self.anioPeriodo = new Date().getFullYear();
+    self.objeto_facultad = {}
 
     self.resolucionesExpedidasPeriodo = {
       paginationPageSizes: [10, 15, 20],
@@ -75,6 +76,7 @@ angular.module('contractualClienteApp')
           width: '12%',
           displayName: $translate.instant('ESTADO')
         },
+
 
       ]
     };
@@ -215,8 +217,25 @@ angular.module('contractualClienteApp')
 };
 
 self.AsociarResolucionCancelacion = function(){
-  console.log("res seleccionada")
-  console.log(self.resolucion_a_cancelar_seleccionada)
+
+  if(self.resolucion_a_cancelar_seleccionada && self.resolucion.numero){
+    self.resolucion.nivelAcademico = self.resolucion_a_cancelar_seleccionada.NivelAcademico;
+    self.resolucion.dedicacion = self.resolucion_a_cancelar_seleccionada.Dedicacion;
+    self.tipo_resolucion_elegida = 2;
+    self.resolucion.numeroSemanas = self.resolucion_a_cancelar_seleccionada.NumeroSemanas;
+    self.resolucion.Periodo = self.resolucion_a_cancelar_seleccionada.Periodo;
+    self.objeto_facultad.Id = self.resolucion_a_cancelar_seleccionada.Facultad;
+    self.guardarResolucion();
+  }else{
+    swal({
+      title: $translate.instant('ERROR'),
+      text: "Seleccione una resolución para cancelar",
+      type: 'info',
+      confirmButtonText: $translate.instant('ACEPTAR')
+    })
+  }
+
+//
 }
 
 });
