@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('RpSolicitudCtrl', function(coreRequest,resolucion,$window,contrato,disponibilidad,administrativaRequest,amazonAdministrativaRequest,$scope,financieraRequest,financieraMidRequest,$translate) {
+  .controller('RpSolicitudCtrl', function(coreRequest,gridOptionsService,resolucion,$window,contrato,disponibilidad,administrativaRequest,amazonAdministrativaRequest,$scope,financieraRequest,financieraMidRequest,$translate) {
     var self = this;
 
     $scope.rubroVacio=false;
@@ -30,7 +30,33 @@ angular.module('contractualClienteApp')
     var respuestas_solicitudes = [];
     var Solicitud_rp;
     var resolucion_estado ={};
-
+     self.gridApiProv = {};
+     self.gridOptions_proveedor = {
+        enableRowSelection: true,
+        enableRowHeaderSelection: false,
+        enableFiltering: true,
+        multiSelect: false,
+        columnDefs : [
+        {
+          field: 'Id',
+          displayName: $translate.instant('ID'),
+          visible: false
+        },
+        {
+          field: 'NumDocumento',
+          displayName: $translate.instant('NUMERO_DOCUMENTO'),
+        },
+        {
+          field: 'Tipopersona',
+          displayName: $translate.instant('TIPO_PERSONA'),
+        },
+        {
+          field: 'NomProveedor',
+          displayName: $translate.instant('NOMBRE_PROVEEDOR'),
+          width: "50%",
+        }
+      ]
+    };
     //si no hay contratos devuelve a la anterior interfaz
     if(self.contrato.length === 0 && self.resolucion.length === 0 && self.disponibilidad.length === 0){
       swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR'), "error").then(function() {
@@ -65,6 +91,18 @@ angular.module('contractualClienteApp')
             });
 
           });
+      });
+      
+
+      gridOptionsService.build(amazonAdministrativaRequest,'informacion_proveedor','limit=-1',self.gridOptions_proveedor).then(function(data){
+       self.gridOptions = data;
+       self.gridOptions.onRegisterApi = function(gridApi) {
+            console.log("reg");
+            gridApi.selection.on.rowSelectionChanged($scope,function(row){
+              self.gridOptions_contratos.data.length = 0;
+                   self.gridOptions_contratos.data.push(row.entity);
+                  });
+        };
       });
 
     } else{
@@ -167,6 +205,33 @@ angular.module('contractualClienteApp')
        {field: 'Documento', width:'15%'  ,displayName: $translate.instant('DOCUMENTO')},
        {field: 'Valor_contrato', width:'15%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>',displayName: $translate.instant('VALOR')}
      ]
+    };
+    }else if(self.solicitudcdp_bool===true){
+      self.gridOptions_contratos = {
+        enableRowSelection: true,
+        enableRowHeaderSelection: false,
+        enableFiltering: true,
+
+     columnDefs : [
+       {
+          field: 'Id',
+          displayName: $translate.instant('ID'),
+          visible: false
+        },
+        {
+          field: 'NumDocumento',
+          displayName: $translate.instant('NUMERO_DOCUMENTO'),
+        },
+        {
+          field: 'Tipopersona',
+          displayName: $translate.instant('TIPO_PERSONA'),
+        },
+        {
+          field: 'NomProveedor',
+          displayName: $translate.instant('NOMBRE_PROVEEDOR'),
+          width: "50%",
+        }
+        ]
     };
     }else{
       self.gridOptions_contratos = {
