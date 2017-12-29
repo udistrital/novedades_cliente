@@ -7,13 +7,51 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('menuCtrl', function($location, $http, $scope, token_service, notificacion, $translate, $route) {
+    .controller('menuCtrl', function($location, $http, $window, $q, $scope, $rootScope, token_service, configuracionRequest, notificacion, $translate, $route, $mdSidenav) {
         var paths = [];
         $scope.language = {
             es: "btn btn-primary btn-circle btn-outline active",
             en: "btn btn-primary btn-circle btn-outline"
         };
-
+        $scope.menu_app = [{
+                id: "kronos",
+                title: "KRONOS",
+                url: "http://10.20.0.254/kronos"
+            },
+            {
+                id: "agora",
+                title: "AGORA",
+                url: "https://pruebasfuncionarios.intranetoas.udistrital.edu.co/agora"
+            }, {
+                id: "argo",
+                title: "ARGO",
+                url: "https://pruebasfuncionarios.intranetoas.udistrital.edu.co/argo"
+            }, {
+                id: "arka",
+                title: "ARKA",
+                url: "https://pruebasfuncionarios.intranetoas.udistrital.edu.co/arka"
+            }, {
+                id: "temis",
+                title: "TEMIS",
+                url: "https://pruebasfuncionarios.intranetoas.udistrital.edu.co/gefad"
+            }, {
+                id: "polux",
+                title: "POLUX",
+                url: "http://10.20.0.254/polux"
+            }, {
+                id: "jano",
+                title: "JANO",
+                url: "http://10.20.0.254/kronos"
+            }, {
+                id: "kyron",
+                title: "KYRON",
+                url: "http://10.20.0.254/kronos"
+            }, {
+                id: "sga",
+                title: "SGA",
+                url: "http://10.20.0.254/kronos"
+            }
+        ];
         $scope.notificacion = notificacion;
         $scope.actual = "";
         $scope.token_service = token_service;
@@ -46,8 +84,7 @@ angular.module('contractualClienteApp')
                 "Id": 2,
                 "Nombre": "Necesidad",
                 "Url": "url_nivel_1",
-                "Opciones": [
-                    {
+                "Opciones": [{
                         "Id": 3,
                         "Nombre": "Gestion de Necesidades",
                         "Url": "necesidades",
@@ -103,7 +140,6 @@ angular.module('contractualClienteApp')
                 "Opciones": null
             }
         ];
-
         var recorrerArbol = function(item, padre) {
             var padres = "";
             for (var i = 0; i < item.length; i++) {
@@ -119,7 +155,15 @@ angular.module('contractualClienteApp')
             }
             return padres;
         };
+        $scope.perfil = "ADMINISTRADOR ARGO";
+        configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + $scope.perfil).then(function(response) {
 
+            $rootScope.my_menu = response.data;
+            console.log($rootScope.my_menu);
+            /*configuracionRequest.update_menu(https://10.20.0.162:9443/store/apis/authenticate response.data);
+            console.log("get menu");
+            $scope.menu_service = configuracionRequest.get_menu();*/
+        });
 
 
         var update_url = function() {
@@ -132,10 +176,23 @@ angular.module('contractualClienteApp')
                 }
             }
         };
+
+        $scope.redirect_url = function(path) {
+            var path_sub = path.substring(0, 4);
+            switch (path_sub.toUpperCase()) {
+                case "HTTP":
+                    $window.open(path, "_blank");
+                    break;
+                default:
+                    $location.path(path);
+                    break;
+            }
+        };
+
         recorrerArbol($scope.menu_service, "");
         paths.push({ padre: ["", "Notificaciones", "Ver Notificaciones"], path: "notificaciones" });
 
-        $scope.$on('$routeChangeStart', function(/*next, current*/) {
+        $scope.$on('$routeChangeStart', function( /*next, current*/ ) {
             $scope.actual = $location.path();
             update_url();
         });
@@ -155,6 +212,16 @@ angular.module('contractualClienteApp')
             }
             $route.reload();
         };
+
+        function buildToggler(componentId) {
+            return function() {
+                $mdSidenav(componentId).toggle();
+            };
+        }
+
+        $scope.toggleLeft = buildToggler('left');
+        $scope.toggleRight = buildToggler('right');
+
         //Pendiente por definir json del menu
         (function($) {
             $(document).ready(function() {

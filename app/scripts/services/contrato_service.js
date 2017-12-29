@@ -20,7 +20,11 @@ angular.module('contratoService',[])
     // Public API here
     return {
       get: function (tabla,params) {
-        return $http.get(path+tabla+'/'+params,cabecera);
+        var url = path+tabla;
+        if (params !== ''){
+          url = url + +'/'+params
+        }
+        return $http.get(url,cabecera);
       },
       getAll: function (tabla) {
         return $http.get(path+tabla,cabecera);
