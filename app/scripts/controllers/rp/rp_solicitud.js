@@ -101,6 +101,8 @@ angular.module('contractualClienteApp')
             gridApi.selection.on.rowSelectionChanged($scope,function(row){
               self.gridOptions_contratos.data.length = 0;
                    self.gridOptions_contratos.data.push(row.entity);
+                   //self.contrato.push(row.entity);
+                   console.log(self.contrato);
                   });
         };
       });
@@ -396,9 +398,12 @@ angular.module('contractualClienteApp')
 
     $scope.saldosValor = function() {
       $scope.banderaRubro = true;
+      console.log("fn");
       //si es una solicitud por resolucion se hara la comparacion con los valores de los contratos
-      if(self.resolucion.Id !== "undefined"){
+      if(self.resolucion.length > 0){
         angular.forEach(self.contrato, function(v) {
+          console.log("err");
+          console.log(self.resolucion);
           if (v.Valor < v.Valor_contrato || v.Valor_contrato===0 || isNaN(v.Valor_contrato) || v.Valor_contrato === undefined) {
             $scope.banderaRubro = false;
           }
@@ -407,6 +412,7 @@ angular.module('contractualClienteApp')
       //este caso es cuando se ingresan los valores en la interfaz
       }else{
         angular.forEach(self.rubros_seleccionados, function(v) {
+          
           if (v.Valor < v.ValorAsignado || v.ValorAsignado===0 || isNaN(v.ValorAsignado) || v.ValorAsignado === undefined) {
             $scope.banderaRubro = false;
           }
@@ -416,6 +422,7 @@ angular.module('contractualClienteApp')
 
     self.Registrar = function() {
       $scope.saldosValor();
+      var registrosSolicitud = [];
       self.alerta_registro_rp = ["No se pudo solicitar el rp"];
       if (self.disponibilidad.NumeroDisponibilidad === null) {
         swal("Alertas", "Debe seleccionar el CDP objetivo del RP", "error");
@@ -452,40 +459,93 @@ angular.module('contractualClienteApp')
         for(var x=0;x<self.contrato.length;x++){
           Solicitud_rp = {};
           //se agrega el campo de monto para que se pueda iterar en la peticion de disponibilidad_apropiacion_solicitud_rp
-          Solicitud_rp = {
-            Vigencia: 2017,
-            FechaSolicitud: self.CurrentDate,
-            Cdp: self.disponibilidad.Id,
-            Expedida: false,
-            NumeroContrato: self.contrato[x].Numero_contrato,
-            VigenciaContrato: self.contrato[x].Vigencia_contrato,
-            Monto:parseInt(self.contrato[x].Valor_contrato),
-            Compromiso: self.compromiso.Id,
-            Justificacion_rechazo: 0,
-            Masivo : self.masivo_seleccion
-          };
+          if(self.solicitudcdp_bool === true ){
+            Solicitud_rp = {
+              Vigencia: 2017,
+              FechaSolicitud: self.CurrentDate,
+              Cdp: self.disponibilidad[0].Id,
+              Expedida: false,
+              Proveedor: self.contrato[x].Id,
+              Compromiso: self.compromiso.Id,
+              Justificacion_rechazo: 0,
+              Masivo : self.masivo_seleccion
+            };
+          }else if (self.solicitudresolucion_bool === true){
+            Solicitud_rp = {
+              Vigencia: 2017,
+              FechaSolicitud: self.CurrentDate,
+              Cdp: self.disponibilidad.Id,
+              Expedida: false,
+              NumeroContrato: self.contrato[x].Numero_contrato,
+              VigenciaContrato: self.contrato[x].Vigencia_contrato,
+              Monto:parseInt(self.contrato[x].Valor_contrato),
+              Compromiso: self.compromiso.Id,
+              Justificacion_rechazo: 0,
+              Masivo : self.masivo_seleccion,
+              Proveedor: parseInt(self.contrato[x].Id_proveedor),
+            };
+          }else{
+            Solicitud_rp = {
+              Vigencia: 2017,
+              FechaSolicitud: self.CurrentDate,
+              Cdp: self.disponibilidad[0].Id,
+              Expedida: false,
+              NumeroContrato: self.contrato[x].Numero_contrato,
+              VigenciaContrato: self.contrato[x].Vigencia_contrato,
+              Monto:parseInt(self.contrato[x].Valor_contrato),
+              Compromiso: self.compromiso.Id,
+              Justificacion_rechazo: 0,
+              Masivo : self.masivo_seleccion,
+              Proveedor: self.contrato[x].Contratista.Id,
+            };
+          }
+          
           solicitudes.push(Solicitud_rp);
         }
         angular.forEach(solicitudes, function(solicitud_rp) {
+           var dataRegistro = {
+                  rubros: [],
+                  solicitudRp: {}
+                };
           administrativaRequest.post('solicitud_rp', solicitud_rp).then(function(response) {
             respuestas_solicitudes.push(response.data);
             for (var i = 0; i < self.rubros_seleccionados.length; i++) {
-              var Disponibilidad_apropiacion_solicitud_rp = {
-                DisponibilidadApropiacion: self.rubros_seleccionados[i].Id,
-                SolicitudRp :{
-                  Id: response.data.Id,
-                },
-                //este campo debe generalizarse para utilzarlo tambien con los filtros de contrato y cdp
-               // Monto: self.rubros_seleccionados[i].ValorAsignado,
-               Monto:solicitud_rp.Monto
-              };
+              var Disponibilidad_apropiacion_solicitud_rp = {};
+              if (self.solicitudresolucion_bool === true){
+                Disponibilidad_apropiacion_solicitud_rp = {
+                    DisponibilidadApropiacion: self.rubros_seleccionados[i].Id,
+                    SolicitudRp :{
+                      Id: response.data.Id,
+                    },
+                    //este campo debe generalizarse para utilzarlo tambien con los filtros de contrato y cdp
+                   // Monto: self.rubros_seleccionados[i].ValorAsignado,
+                   Monto:solicitud_rp.Monto
+                };
+              }else{
+                 Disponibilidad_apropiacion_solicitud_rp = {
+                    DisponibilidadApropiacion: self.rubros_seleccionados[i].Id,
+                    SolicitudRp :{
+                      Id: response.data.Id,
+                    },
+                    //este campo debe generalizarse para utilzarlo tambien con los filtros de contrato y cdp
+                    Monto: self.rubros_seleccionados[i].ValorAsignado
+                   //Monto:solicitud_rp.Monto
+                };
+              }
+              dataRegistro.rubros.push(Disponibilidad_apropiacion_solicitud_rp);
+              
               self.crear_solicitud_rp(Disponibilidad_apropiacion_solicitud_rp);
             }
+            dataRegistro.solicitudRp = solicitud_rp;
+            registrosSolicitud.push(dataRegistro);
           });
-
+          
         });
+        console.log("_______________")
+          console.log(registrosSolicitud);
         //esta peticion debe quedar fuera del foreach para que solo se guarde un registro en resolucion estado
-        resolucion_estado ={
+        if(self.solicitudresolucion_bool===true){
+          resolucion_estado ={
           FechaRegistro:self.CurrentDate,
           Usuario:"",
           Estado:{
@@ -496,6 +556,7 @@ angular.module('contractualClienteApp')
         amazonAdministrativaRequest.post('resolucion_estado',resolucion_estado).then(function() {
 
         });
+        }
       }
     };
 

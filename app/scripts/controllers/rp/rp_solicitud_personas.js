@@ -436,6 +436,7 @@ angular.module('contractualClienteApp')
         contrato_unidad.Documento= seleccion[i].Contratista.NumDocumento;
         contrato_unidad.Valor_contrato= seleccion[i].ValorContrato;
         contrato_unidad.Nombre_completo= seleccion[i].Contratista.NomProveedor;
+        contrato_unidad.Contratista = seleccion[i].Contratista;
         contrato_unidad.Objeto_contrato= seleccion[i].ObjetoContrato;
         contrato_unidad.Fecha_registro= seleccion[i].FechaRegistro;
         self.contrato.push(contrato_unidad);
