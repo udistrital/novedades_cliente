@@ -14,7 +14,7 @@
 
 			<div class="col-md-4 col-md-offset-4">
 				<label></label>
-				<input type="submit" class="form-control btn btn-success" value="Elegir disponibilidades" ng-click="hojasDeVidaSeleccion.mostrar_modal_disponibilidad()">
+				<input type="submit" class="form-control btn btn-success" value="{{'ELEGIR_DISP' | translate }}" ng-click="hojasDeVidaSeleccion.mostrar_modal_disponibilidad()">
 			</div>
 			</div>
 		<br>
@@ -25,13 +25,17 @@
 					<div class="panel-heading">
 						<h4 class="intro-text"> {{ 'DOCENTE_VINCULADOS' | translate }} </h4>
 					</div>
-
-
-					<div class="panel-body">
-						<select class="form-control" ng-model="hojasDeVidaSeleccion.term" ng-change="hojasDeVidaSeleccion.get_docentes_vinculados()" required>
-							<option value="">--SELECCIONE--</option>
-							<option ng-repeat="proyecto in hojasDeVidaSeleccion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
+						<br>
+						<div class="col-md-2">
+							<center><label> {{ 'SELECCIONE_PROY' | translate }}</label></center>
+						</div>
+						<div class="col-md-10">
+						<select class="form-control" ng-model="hojasDeVidaSeleccion.term" ng-change="hojasDeVidaSeleccion.get_docentes_vinculados()">
+							<option ng-selected="{{proyecto.Id == HojasDeVidaSeleccion.defaultSelectedPrecont}}" ng-repeat="proyecto in hojasDeVidaSeleccion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
 						</select>
+					 </div>
+						<br>
+						<div class="panel-body">
 						<br>
 						<div ui-grid="hojasDeVidaSeleccion.precontratados" ui-grid-selection ui-grid-pagination class="grid" ng-hide="hojasDeVidaSeleccion.estado"></div>
 						<center><loading load="hojasDeVidaSeleccion.estado" tam="5"></loading><center>
@@ -51,7 +55,7 @@
 				<div class="modal-body">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3 class="panel-title">Disponibilidad</h3>
+							<h3 class="panel-title">{{ 'TITULO_DISP' | translate }}</h3>
 						</div>
 						<div class="panel-body">
 							<form name="formplan" ng-submit="formplan.$valid">
