@@ -254,6 +254,10 @@ angular.module('contractualClienteApp')
       $window.location.href = '#/vinculacionespecial/resolucion_cancelacion';
     }
 
+    if(row.entity.TipoResolucion == "Adición"){
+      $window.location.href = '#/vinculacionespecial/resolucion_adicion';
+    }
+
 
 
   };
