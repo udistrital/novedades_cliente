@@ -1,5 +1,5 @@
 'use strict';
-  
+
   /**
    * @ngdoc service
    * @name administrativaService.amazonAdministrativa
@@ -11,9 +11,9 @@
     .factory('amazonAdministrativaRequest', function ($http) {
       // Service logic
       // ...
-  
+
       var path = "http://10.20.0.254/administrativa_amazon_api/v1/";
-      //var path = "http://localhost:8080/v1/";
+      //var path = "http://localhost:8104/v1/";
       // Public API here
       return {
         get: function (tabla,params) {
@@ -30,4 +30,3 @@
         }
       };
     });
-  
