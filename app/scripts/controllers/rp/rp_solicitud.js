@@ -466,9 +466,10 @@ angular.module('contractualClienteApp')
               Cdp: self.disponibilidad[0].Id,
               Expedida: false,
               Proveedor: self.contrato[x].Id,
-              Compromiso: self.compromiso.Id,
+              TipoCompromiso: self.compromiso.Id,
               Justificacion_rechazo: 0,
-              Masivo : self.masivo_seleccion
+              Masivo : self.masivo_seleccion,
+               NumeroCompromiso: parseInt(self.NumeroCompromiso)
             };
           }else if (self.solicitudresolucion_bool === true){
             Solicitud_rp = {
@@ -479,10 +480,11 @@ angular.module('contractualClienteApp')
               NumeroContrato: self.contrato[x].Numero_contrato,
               VigenciaContrato: self.contrato[x].Vigencia_contrato,
               Monto:parseInt(self.contrato[x].Valor_contrato),
-              Compromiso: self.compromiso.Id,
+              TipoCompromiso: self.compromiso.Id,
               Justificacion_rechazo: 0,
               Masivo : self.masivo_seleccion,
               Proveedor: parseInt(self.contrato[x].Id_proveedor),
+               NumeroCompromiso: parseInt(self.NumeroCompromiso)
             };
           }else{
             Solicitud_rp = {
@@ -493,10 +495,11 @@ angular.module('contractualClienteApp')
               NumeroContrato: self.contrato[x].Numero_contrato,
               VigenciaContrato: self.contrato[x].Vigencia_contrato,
               Monto:parseInt(self.contrato[x].Valor_contrato),
-              Compromiso: self.compromiso.Id,
+              TipoCompromiso: self.compromiso.Id,
               Justificacion_rechazo: 0,
               Masivo : self.masivo_seleccion,
               Proveedor: self.contrato[x].Contratista.Id,
+              NumeroCompromiso: parseInt(self.NumeroCompromiso)
             };
           }
           
@@ -553,7 +556,7 @@ angular.module('contractualClienteApp')
           }
           angular.forEach(self.alerta, function(data) {
             if (data.Type === "error") {
-              //templateAlert = templateAlert + "<tr class='danger'><td> N/A </td>" + "<td> " + data.Body. + " </td>" + "<td>" + $translate.instant(data.Code) + "</td>";
+              templateAlert = templateAlert + "<tr class='danger'><td> N/A </td>" + "<td> " + $translate.instant(data.Code) + " </td>";
             } else if (data.Type === "success") {
               if (self.solicitudcdp_bool === false){
                 templateAlert = templateAlert + "<tr class='success'><td>" + data.Body.Id + "</td>" + "<td>" + data.Body.Cdp + "</td>"+ "<td>" + data.Body.NumeroContrato + "</td>"+ "<td>" + data.Body.VigenciaContrato + "</td>";
