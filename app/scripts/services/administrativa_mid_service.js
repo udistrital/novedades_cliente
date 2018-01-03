@@ -17,9 +17,9 @@
      // Public API here
      var cancelSearch ; //defer object
      var promise;
- 
+
      return {
-       get: function (tabla,params) { 
+       get: function (tabla,params) {
         cancelSearch = $q.defer(); //create new defer for new request
         return $http.get(path+tabla+"/?"+params,{timeout:cancelSearch.promise});
        },

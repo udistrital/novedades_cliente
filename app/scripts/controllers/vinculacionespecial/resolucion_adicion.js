@@ -54,7 +54,7 @@ angular.module('contractualClienteApp')
   self.get_docentes_vinculados=function(){
 
     self.estado = true;
-    adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
+    adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
       self.precontratados.data=response.data;
       self.estado = false;
 
