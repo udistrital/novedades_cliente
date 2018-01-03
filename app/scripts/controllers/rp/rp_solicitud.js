@@ -12,6 +12,7 @@ angular.module('contractualClienteApp')
     var self = this;
 
     $scope.rubroVacio=false;
+    self.NumeroCompromiso == null;
     self.resolucion = resolucion;
     self.contrato = contrato;
     self.boton_registrar=false;
@@ -423,8 +424,12 @@ angular.module('contractualClienteApp')
     self.Registrar = function() {
       $scope.saldosValor();
       var registrosSolicitud = [];
+      console.log(self.NumeroCompromiso);
       self.alerta_registro_rp = ["No se pudo solicitar el rp"];
-      if (self.disponibilidad.NumeroDisponibilidad === null) {
+      if (self.NumeroCompromiso === null || self.NumeroCompromiso === undefined || self.NumeroCompromiso <= 0){
+        swal("Alertas", "Debe digitar el numero del compromiso.", "error");
+        self.alerta_registro_rp = ["Debe seleccionar el CDP objetivo del RP"];
+      }else if (self.disponibilidad.NumeroDisponibilidad === null) {
         swal("Alertas", "Debe seleccionar el CDP objetivo del RP", "error");
         self.alerta_registro_rp = ["Debe seleccionar el CDP objetivo del RP"];
       } else if (self.rubros_seleccionados.length === 0) {

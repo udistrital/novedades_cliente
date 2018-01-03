@@ -25,6 +25,7 @@ angular.module('contractualClienteApp')
     self.contrato = contrato;
     self.disponibilidad = disponibilidad;
     $scope.vigenciaModel = null;
+    $scope.vigencias = null;
     $scope.vigencias_resoluciones=null;
     $scope.contrato_int = $translate.instant('CONTRATO');
     $scope.vigencia_contrato = $translate.instant('VIGENCIA_CONTRATO');
@@ -45,6 +46,10 @@ angular.module('contractualClienteApp')
     self.disponibilidad.splice(0,self.disponibilidad.length);
     self.resolucion.splice(0,self.resolucion.length);
     self.gridOptions = {};
+    amazonAdministrativaRequest.get('vigencia_contrato',"").then(function(response) {
+          $scope.vigencias = response.data;
+
+    });
     //grid modal
     self.gridOptionsResolucionPersonas ={
       enableSelectAll: false,
@@ -214,16 +219,19 @@ angular.module('contractualClienteApp')
 
     self.cargar_filtro = function(){
       //si es filtro por contrato
+      self.buscar = true;
+      var vigenciaActual;
+        if ($scope.vigenciaModel === null){
+          vigenciaActual=$scope.vigencias[0];
+        }else{
+          vigenciaActual=$scope.vigenciaModel;
+        }
       if ($scope.radioB === 1){
         self.resolucion_bool=false;
         self.cdp_bool=false;
         self.contrato_bool = true;
 
-        amazonAdministrativaRequest.get('vigencia_contrato',"").then(function(response) {
-          $scope.vigencias = response.data;
-
-        //selecciona la vigencia actual
-        var vigenciaActual=$scope.vigencias[1];
+        
         self.gridOptions = {};
         self.carga = true;
         self.filter ='';
@@ -232,7 +240,7 @@ angular.module('contractualClienteApp')
         //      self.gridOptions.data = response.data;
         //      console.log(response.data);
         //     });
-         });
+        
 
       }
 
@@ -243,17 +251,16 @@ angular.module('contractualClienteApp')
         self.contrato_bool = false;
         self.gridOptions = {};
         self.carga = true;
-        amazonAdministrativaRequest.get('vigencia_contrato',"").then(function(response) {
-          $scope.vigencias = response.data;
+       
+       
 
         //selecciona la vigencia actual
-        var vigenciaActual=$scope.vigencias[1];
+       
           //gridOptionsService.build(financieraMidRequest, 'disponibilidad/ListaDisponibilidades/'+vigenciaActual,'limit=' + 0 + '&offset=' + 0 + '&query=Estado.Nombre__not_in:Agotado,DisponibilidadProcesoExterno.TipoDisponibilidad.Id:1' + "&UnidadEjecutora=" + 1,self.gridOptions_cdp)
         self.filter= 'Estado.Nombre__not_in:Agotado,DisponibilidadProcesoExterno.TipoDisponibilidad.Id:1';
         self.cargarDatos(financieraMidRequest,'disponibilidad/ListaDisponibilidades/'+vigenciaActual,'limit=10&UnidadEjecutora=' + 1,self.gridOptions_cdp,self.offset,self.filter);
 
 
-        });
        //  gridOptionsService.build(financieraRequest,'disponibilidad','limit=-1&query=Estado.Nombre__not_in:Agotado',self.gridOptions_cdp).then(function(data){
        //    self.grid =data;
        //    console.log(self.grid);
@@ -266,11 +273,11 @@ angular.module('contractualClienteApp')
       //si es filtro por resolucion
       if ($scope.radioB === 3){
 
-        amazonAdministrativaRequest.get('resolucion/vigencia_resolucion').then(function(response) {
-          $scope.vigencias_resoluciones = response.data;
+       
+      
 
         //selecciona la vigencia actual
-        var vigenciaActual=$scope.vigencias_resoluciones[1];
+       
         self.gridOptions = {};
         self.carga = true;
         gridOptionsService.build(amazonAdministrativaRequest, 'resolucion/resolucion_por_estado/'+vigenciaActual+'/'+'/2','',self.gridOptionsResolucion).then(function(data){
@@ -288,7 +295,7 @@ angular.module('contractualClienteApp')
         //   self.gridOptionsResolucion.data=response.data;
         //     });
 
-        });
+      
 
         self.resolucion_bool=true;
         self.cdp_bool=false;
