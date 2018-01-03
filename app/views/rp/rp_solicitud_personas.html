@@ -58,11 +58,11 @@
     </div-->
 
 <!-- CONTRATO  ng-show="rpSolicitudPersonas.contrato_bool"-->
-    <div class="row" ng-if="rpSolicitudPersonas.gridOptions.data.length >= 0">
+    <div class="row">
         <div class="panel panel-default col-md-10 col-md-offset-1">
           <div class="panel-body">
-            <div class="form-group" ng-show="rpSolicitudPersonas.gridOptions.data.length > 0">
-              <div class="col-md-2 col-md-offset-3">
+            <div class="form-group" ng-show="rpSolicitudPersonas.buscar">
+              <div class="col-md-2 col-md-offset-3" >
                   <div ng-if="vigenciaModel=== null">
                     <label>{{'VIGENCIA_ACTUAL' | translate}} <b>2017</b> </label>
                   </div>
@@ -76,7 +76,7 @@
                       <label>{{'SELECCIONE_UNA_VIGENCIA' | translate}}</label>
                     </div>
                     <div class="col-md-2">
-                      <select class="form-control" ng-change="rpSolicitudPersonas.buscar_contratos_vigencia()" ng-model="vigenciaModel">
+                      <select class="form-control" ng-change="rpSolicitudPersonas.cargar_filtro()" ng-model="vigenciaModel">
                         <option ng-repeat="vigencia in vigencias" >{{vigencia}}</option>
                       </select>
                     </div>
