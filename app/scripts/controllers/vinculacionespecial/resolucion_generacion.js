@@ -170,6 +170,7 @@ angular.module('contractualClienteApp')
         Id: parseInt(self.tipo_resolucion_elegida)
       }
 
+
       var resolucionData={
         NumeroResolucion: self.resolucion.numero,
         IdDependencia: self.objeto_facultad.Id,
@@ -191,7 +192,6 @@ angular.module('contractualClienteApp')
         ResolucionVinculacionDocente: resolucionVinculacionDocenteData,
         ResolucionVieja: self.resolucion_a_cancelar_seleccionada.Id
       };
-
 
 
     adminMidRequest.post("gestion_resoluciones/insertar_resolucion_completa",objeto_resolucion).then(function(response){
@@ -229,7 +229,6 @@ self.AsociarResolucionCancelacion = function(){
   if(self.resolucion_a_cancelar_seleccionada && self.resolucion.numero){
     self.resolucion.nivelAcademico = self.resolucion_a_cancelar_seleccionada.NivelAcademico;
     self.resolucion.dedicacion = self.resolucion_a_cancelar_seleccionada.Dedicacion;
-    self.tipo_resolucion_elegida = 2;
     self.resolucion.numeroSemanas = self.resolucion_a_cancelar_seleccionada.NumeroSemanas;
     self.resolucion.Periodo = self.resolucion_a_cancelar_seleccionada.Periodo;
     self.objeto_facultad.Id = self.resolucion_a_cancelar_seleccionada.Facultad;

@@ -1,5 +1,5 @@
 <div class="panel panel-primary panel-body">
-	<h2 class="page-header text-center">{{ 'TITULO_VIN_DOC' | translate }} <br> {{ 'TITULO_RES' | translate }} {{ResolucionAdicion.resolucion.Numero}} <br> {{ResolucionAdicion.resolucion.Dedicacion}} </h2>
+	<h2 class="page-header text-center">{{ 'TITULO_VIN_DOC' | translate }} <br> {{ 'TITULO_RES' | translate }} {{resolucionAdicion.resolucion.Numero}} <br> {{resolucionAdicion.resolucion.Dedicacion}} </h2>
 
 		<div class="row">
 			<div class="col-md-12">
@@ -12,15 +12,19 @@
 							<center><label> {{ 'SELECCIONE_PROY' | translate }}</label></center>
 						</div>
 						<div class="col-md-10">
-						<select class="form-control" ng-model="ResolucionAdicion.term" ng-change="ResolucionAdicion.get_docentes_vinculados()">
-							<option ng-selected="{{proyecto.Id == ResolucionAdicion.defaultSelectedPrecont}}" ng-repeat="proyecto in ResolucionAdicion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
+						<select class="form-control" ng-model="resolucionAdicion.term" ng-change="resolucionAdicion.get_docentes_vinculados()">
+							<option ng-selected="{{proyecto.Id == resolucionAdicion.defaultSelectedPrecont}}" ng-repeat="proyecto in resolucionAdicion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
 						</select>
 					 </div>
 						<br>
 						<div class="panel-body">
 						<br>
-						<div ui-grid="ResolucionAdicion.precontratados" ui-grid-selection ui-grid-pagination class="grid" ng-hide="ResolucionAdicion.estado"></div>
-						<center><loading load="ResolucionAdicion.estado" tam="5"></loading><center>
+						<div ui-grid="resolucionAdicion.precontratados" ui-grid-selection ui-grid-pagination class="grid" ng-hide="resolucionAdicion.estado"></div>
+						<center><loading load="resolucionAdicion.estado" tam="5"></loading><center>
+						</div>
+						<div class="form-group col-lg-6 col-lg-offset-3">
+								<label></label>
+								<input type="submit" class="form-control btn btn-success" value="Desvincular docentes seleccionados" ng-click="resolucionAdicion.verCancelarInscripcionDocente()">
 						</div>
 
 					</div>
