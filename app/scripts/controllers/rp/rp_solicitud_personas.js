@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
 .factory("contrato",function(){
       return {};
 })
-.controller('RpSolicitudPersonasCtrl', function($window,$filter,gridOptionsService, contratoRequest,administrativaRequest,$scope, contrato,resolucion,financieraRequest,financieraMidRequest,amazonAdministrativaRequest, adminMidRequest,$translate,disponibilidad) {
+.controller('RpSolicitudPersonasCtrl', function($window,$filter,gridOptionsService, contratoRequest,requestRequest,administrativaRequest,$scope, contrato,resolucion,financieraRequest,financieraMidRequest,amazonAdministrativaRequest, adminMidRequest,$translate,disponibilidad) {
     var self = this;
     self.offset=0;
     self.filter = '';
@@ -223,7 +223,7 @@ angular.module('contractualClienteApp')
           $scope.vigencias = response.data;
 
         //selecciona la vigencia actual
-        var vigenciaActual=$scope.vigencias[0];
+        var vigenciaActual=$scope.vigencias[1];
         self.gridOptions = {};
         self.carga = true;
         self.filter ='';
@@ -247,7 +247,7 @@ angular.module('contractualClienteApp')
           $scope.vigencias = response.data;
 
         //selecciona la vigencia actual
-        var vigenciaActual=$scope.vigencias[0];
+        var vigenciaActual=$scope.vigencias[1];
           //gridOptionsService.build(financieraMidRequest, 'disponibilidad/ListaDisponibilidades/'+vigenciaActual,'limit=' + 0 + '&offset=' + 0 + '&query=Estado.Nombre__not_in:Agotado,DisponibilidadProcesoExterno.TipoDisponibilidad.Id:1' + "&UnidadEjecutora=" + 1,self.gridOptions_cdp)
         self.filter= 'Estado.Nombre__not_in:Agotado,DisponibilidadProcesoExterno.TipoDisponibilidad.Id:1';
         self.cargarDatos(financieraMidRequest,'disponibilidad/ListaDisponibilidades/'+vigenciaActual,'limit=10&UnidadEjecutora=' + 1,self.gridOptions_cdp,self.offset,self.filter);
@@ -305,7 +305,7 @@ angular.module('contractualClienteApp')
         self.gridOptions.onRegisterApi = function(gridApi) {
             self.gridApi = gridApi;
             self.gridApi.core.on.filterChanged($scope, function() {
-              console.log("change");
+                service.cancel();
                 var grid = this.grid;
                 var query = self.filter;
                 angular.forEach(grid.columns, function(value, key) {

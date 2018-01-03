@@ -61,7 +61,7 @@
                   {{'NUMERO' | translate}}
                 </th>
                 <td>
-                  {{rpSolicitud.compromiso.Id}}
+                  <input placeholder="Número" class="form-control input-md" required="true" ng-model="rpSolicitud.NumeroCompromiso">
                 </td>
               </tr>
               <tr>
@@ -74,7 +74,7 @@
               </tr>
               <tr>
                 <th>
-                  {{'OBJETO' | translate}}
+                  {{'TIPO' | translate}}
                 </th>
                 <td>
                   {{rpSolicitud.compromiso.Objeto}}
