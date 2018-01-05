@@ -466,9 +466,9 @@ angular.module('contractualClienteApp')
           //se agrega el campo de monto para que se pueda iterar en la peticion de disponibilidad_apropiacion_solicitud_rp
           if(self.solicitudcdp_bool === true ){
             Solicitud_rp = {
-              Vigencia: 2017,
+              Vigencia: self.contrato[x].Vigencia_contrato,
               FechaSolicitud: self.CurrentDate,
-              Cdp: self.disponibilidad[0].Id,
+              Cdp: self.disponibilidad[0].NumeroDisponibilidad,
               Expedida: false,
               Proveedor: self.contrato[x].Id,
               TipoCompromiso: self.compromiso.Id,
@@ -478,9 +478,9 @@ angular.module('contractualClienteApp')
             };
           }else if (self.solicitudresolucion_bool === true){
             Solicitud_rp = {
-              Vigencia: 2017,
+              Vigencia: self.contrato[x].Vigencia_contrato,
               FechaSolicitud: self.CurrentDate,
-              Cdp: self.disponibilidad.Id,
+              Cdp: self.disponibilidad.NumeroDisponibilidad,
               Expedida: false,
               NumeroContrato: self.contrato[x].Numero_contrato,
               VigenciaContrato: self.contrato[x].Vigencia_contrato,
@@ -493,11 +493,11 @@ angular.module('contractualClienteApp')
             };
           }else{
             Solicitud_rp = {
-              Vigencia: 2017,
+              Vigencia: self.contrato[x].Vigencia_contrato,
               FechaSolicitud: self.CurrentDate,
-              Cdp: self.disponibilidad[0].Id,
+              Cdp: self.disponibilidad[0].NumeroDisponibilidad,
               Expedida: false,
-              NumeroContrato: self.contrato[x].Numero_contrato,
+              NumeroContrato: self.contrato[x].Numero_suscrito,
               VigenciaContrato: self.contrato[x].Vigencia_contrato,
               Monto:parseInt(self.contrato[x].Valor_contrato),
               TipoCompromiso: self.compromiso.Id,
@@ -563,6 +563,7 @@ angular.module('contractualClienteApp')
             if (data.Type === "error") {
               templateAlert = templateAlert + "<tr class='danger'><td> N/A </td>" + "<td> " + $translate.instant(data.Code) + " </td>";
             } else if (data.Type === "success") {
+              console.log(data.Body);
               if (self.solicitudcdp_bool === false){
                 templateAlert = templateAlert + "<tr class='success'><td>" + data.Body.Id + "</td>" + "<td>" + data.Body.Cdp + "</td>"+ "<td>" + data.Body.NumeroContrato + "</td>"+ "<td>" + data.Body.VigenciaContrato + "</td>";
               }else{
