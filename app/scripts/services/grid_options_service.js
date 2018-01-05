@@ -17,8 +17,12 @@ angular.module('gridOptionsService',[])
         gridOptions = gridOptionsSource;
         gridOptions.columnDefs = gridOptionsSource.columnDefs;
         service.get(endPoint,params).then(function(response) {
-          console.log(response.data);
-          gridOptions.data = response.data;
+          if (Array.isArray(response.data)){
+            gridOptions.data = response.data;
+          }else{
+            gridOptions.data = null;
+          }
+          
           deferred.resolve(gridOptions);
 
         });
