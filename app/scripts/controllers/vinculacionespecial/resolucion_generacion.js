@@ -166,6 +166,10 @@ angular.module('contractualClienteApp')
 
     self.guardarResolucion = function(){
 
+      if (self.tipo_resolucion_elegida == 1){
+        self.resolucion_a_cancelar_seleccionada = [];
+      }
+
       var tipoResolucion = {
         Id: parseInt(self.tipo_resolucion_elegida)
       }
