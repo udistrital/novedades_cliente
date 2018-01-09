@@ -338,6 +338,11 @@ var text_es = {
     RESOLUCIONES:"Resoluciones",
     LISTA_RESOLUCIONES:"Lista de resoluciones",
     /*
+    resolucion_cancelacion.html
+    */
+    SELEC_VIN_BTN:"Seleccionar vinculaciones",
+
+    /*
     trabajos_investigacion.html
     */
     NOMBRE_INVESTIGACION:"Nombre de la investigación",
@@ -376,6 +381,11 @@ var text_es = {
     VISTA_PREVIA_RESOLUCION:"Vista previa de la resolución",
     NIVEL:"Nivel",
     /*
+    resolucion_cancelacion.js
+    */
+    SELECCION_VIN_EXITOSA:"Vinculaciones seleccionadas exitosamente",
+    SELECCION_VIN_NO_EXITOSA:"Error al seleccionar desvinculaciones",
+    /*
     contrato_registro.js
     */
     NO_CALCULADO_SALARIO:"El salario no ha podido ser calculado",
@@ -410,12 +420,18 @@ var text_es = {
     CANCELAR_RESOLUCION:"¿Cancelar la resolución?",
     OPCIONES:"Opciones",
     VER_BTN:"Ver",
-    EDITAR_BTN:"Editar",
+    VER_DOC_BTN: "Ver documento",
+    VINCULAR_BTN:"Vincular docentes",
+    VER_DOCENTES_VIN_BTN: "Ver docentes vinculados",
+    ADICIONAR_HORAS_BTN: "Adicionar horas",
+    REDUCIR_HORAS_BTN: "Reducir horas",
+    CANCELAR_VIN_BTN: "Cancelar vinculación",
     APROBAR_BTN:"Aprobar",
     CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
     IRREVERSIBLE: "Esta acción es irreversible",
     APROBADA: "Resolución Aprobada",
     CONFIGURAR_BTN:"Configurar",
+    CONFIGURAR_DOC_BTN:"Configurar documento",
     EXPEDIR_BTN:"Expedir",
     CANCELAR_BTN:"Cancelar resolución",
     RESTAURAR_BTN:"Restaurar resolución",
@@ -809,6 +825,10 @@ var text_en = {
     RESOLUCIONES: "Resolutions",
     LISTA_RESOLUCIONES: "List of resolutions",
     /*
+    resolucion_cancelacion.html
+    */
+    SELEC_VIN_BTN:"Select connections",
+    /*
     trabajos_investigacion.html
     */
     NOMBRE_INVESTIGACION: "Name of research",
@@ -849,6 +869,11 @@ var text_en = {
     VISTA_PREVIA_RESOLUCION: "Preview resolution",
     NIVEL: "Level",
     /*
+    resolucion_cancelacion.js
+    */
+    SELECCION_VIN_EXITOSA:"Connections correctly selected",
+    SELECCION_VIN_NO_EXITOSA:"Error on selected connections",
+    /*
     contrato_registro.js
     */
     NO_CALCULADO_SALARIO: "The salary could not be calculated",
@@ -882,12 +907,18 @@ var text_en = {
     CANCELAR_RESOLUCION: "Cancel the resolution?",
     OPCIONES: "Options",
     VER_BTN: "See",
-    EDITAR_BTN: "Edit",
+    VER_DOC_BTN: "See document",
+    VINCULAR_BTN:"Associate teachers",
+    VER_DOCENTES_VIN_BTN: "See associated teachers",
+    ADICIONAR_HORAS_BTN: "Add hours",
+    REDUCIR_HORAS_BTN: "Remove hours",
+    CANCELAR_VIN_BTN: "Cancel connection",
     APROBAR_BTN: "Approve",
     CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
     IRREVERSIBLE: "Esta acción es irreversible",
     DATOS_RESOLUCION: "Datos de la resolución:",
     CONFIGURAR_BTN: "Set up",
+    CONFIGURAR_DOC_BTN:"Set up document",
     EXPEDIR_BTN: "Issue",
     CANCELAR_BTN: "Cancel resolution",
     RESTAURAR_BTN: "Restore resolution",

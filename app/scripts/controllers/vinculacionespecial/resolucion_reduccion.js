@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-.controller('ResolucionAdicionCtrl', function (administrativaRequest,financieraRequest,resolucion,adminMidRequest,oikosRequest,$localStorage,$scope,$mdDialog,$translate,$window) {
+.controller('ResolucionReduccionCtrl', function (administrativaRequest,financieraRequest,resolucion,adminMidRequest,oikosRequest,$localStorage,$scope,$mdDialog,$translate,$window) {
 
   var self = this;
 
@@ -61,78 +61,6 @@ angular.module('contractualClienteApp')
     }
   };
 
-  self.Disponibilidades = {
-    paginationPageSizes: [10, 15, 20],
-    paginationPageSize: 10,
-    enableRowSelection: true,
-    enableRowHeaderSelection: false,
-    enableFiltering: true,
-    multiSelect: false,
-    enableHorizontalScrollbar: 0,
-    enableVerticalScrollbar: true,
-    useExternalPagination: false,
-    enableSelectAll: false,
-    columnDefs : [
-      {
-        field: 'NumeroDisponibilidad',
-        displayName: $translate.instant('NUM_DISPO_DOCENTE')
-      },
-      {
-        field: 'Vigencia',
-        displayName: $translate.instant('VIGENCIA_DISP')
-      },
-      {
-        field: 'FechaRegistro',
-        displayName: $translate.instant('FECHA_DISP'),
-        cellTemplate: '<span>{{row.entity.FechaRegistro| date:"yyyy-MM-dd":"+0900"}}</span>'
-      }
-    ],
-
-    onRegisterApi : function(gridApi){
-      self.gridApi = gridApi;
-      gridApi.selection.on.rowSelectionChanged($scope,function(row){
-        self.disponibilidad_elegida=gridApi.selection.getSelectedRows();
-        self.DisponibilidadApropiacion = self.disponibilidad_elegida[0].DisponibilidadApropiacion;
-        self.listar_apropiaciones();
-
-
-      });
-    }
-  };
-
-  self.Apropiaciones = {
-    paginationPageSizes: [10, 15, 20],
-    paginationPageSize: 10,
-    enableRowSelection: true,
-    enableRowHeaderSelection: false,
-    enableFiltering: true,
-    multiSelect: false,
-    enableHorizontalScrollbar: 0,
-    enableVerticalScrollbar: true,
-    useExternalPagination: false,
-    enableSelectAll: false,
-    columnDefs : [
-
-      {
-        field: 'Apropiacion.Valor',
-        displayName: $translate.instant('VALOR_APROPIACION')
-      },
-      {
-        field: 'Apropiacion.Saldo',
-        displayName: $translate.instant('SALDO_APROPIACION')
-      }
-    ],
-
-    onRegisterApi : function(gridApi){
-      self.gridApi = gridApi;
-      gridApi.selection.on.rowSelectionChanged($scope,function(row){
-        self.apropiacion_elegida=gridApi.selection.getSelectedRows();
-        console.log("apropiacion elegida")
-        console.log(self.apropiacion_elegida)
-        self.verificarDisponibilidad();
-      });
-    }
-  };
 
   oikosRequest.get("dependencia/proyectosPorFacultad/"+self.resolucion.IdFacultad+"/"+self.resolucion.NivelAcademico_nombre,"").then(function(response){
     self.proyectos = response.data;
@@ -160,100 +88,21 @@ angular.module('contractualClienteApp')
 
   }
 
-
   $scope.mostrar_modal_adicion=function(row){
     self.horas_actuales = row.entity.NumeroHorasSemanales;
-    self.disponibilidad_actual = row.entity.NumeroDisponibilidad;
     self.persona_a_modificar = row.entity;
-    self.disponibilidad_actual_id = row.entity.Disponibilidad;
-    self.disponibilidad_nueva_id = row.entity.Disponibilidad;
-    financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:"+self.vigencia_data).then(function(response) {
-        self.Disponibilidades.data = response.data;
-      });
-
       $('#modal_adicion').modal('show');
-
-
   }
 
-  self.listar_apropiaciones = function(){
 
-    var disponibilidadAp = self.DisponibilidadApropiacion
-    adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones",disponibilidadAp).then(function(response){
-      console.log("apropiaciones")
-      console.log(response.data)
-      self.Apropiaciones.data = response.data
-    })
-
-  }
-
-  self.verificarDisponibilidad=function(){
-
-    var vinculacionDocente = {
-
-      IdPersona: self.persona_a_modificar.IdPersona,
-      NumeroHorasSemanales: parseInt(self.horas_actuales),
-      NumeroHorasNuevas: parseInt(self.horas_totales),
-      NumeroSemanas: parseInt(self.persona_a_modificar.NumeroSemanas),
-      IdResolucion: {Id: parseInt(self.resolucion.Id)},
-      IdDedicacion: {Id: parseInt(self.persona_a_modificar.IdDedicacion.Id)},
-      IdProyectoCurricular: parseInt(self.persona_a_modificar.IdProyectoCurricular),
-      Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
-      Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
-      NivelAcademico: self.resolucion.NivelAcademico_nombre,
-      Disponibilidad: self.apropiacion_elegida[0].Apropiacion.Id
-    };
-
-    desvinculacionesData.push(vinculacionDocente);
-    console.log("verificacion de disponibilidad")
-    console.log(desvinculacionesData)
-
-
-    adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos",desvinculacionesData).then(function(response){
-      if(300000 > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)){
-        self.saldo_disponible = false;
-        console.log("no se puede elgir esa apropiacion")
-      }else{
-        self.saldo_disponible = true;
-        self.disponibilidad_nueva_id = self.apropiacion_elegida[0].Apropiacion.Id
-        console.log("si se puede elegir")
-      }
-    })
-
-    desvinculacionesData = [];
-  }
-
-  self.RecargarDatosPersonas = function(){
-    adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
-      self.datosDocentesCargaLectiva.data = response.data
-
-    });
-  }
-
-  self.RecargarDisponibilidades = function(){
-    financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:"+self.vigencia_data).then(function(response) {
-      self.Disponibilidades.data = response.data;
-
-    });
-  }
-
-  self.RecargarApropiaciones = function(){
-    self.Apropiaciones.data = [];
-
-  }
 
   self.Calcular_horas_totales = function(){
-    self.horas_totales = parseInt(self.horas_actuales) + parseInt(self.horas_a_adicionar);
+    self.horas_totales = parseInt(self.horas_actuales) - parseInt(self.horas_a_reducir);
 
-  }
-
-  self.cambiar_disponibilidad = function(){
-    self.cambio_disp = true;
   }
 
   self.realizar_nueva_vinculacion = function(){
-    if(self.saldo_disponible){
-      console.log("saldo disponible")
+
 
     var vinculacionDocente = {
       Id: self.persona_a_modificar.Id,
@@ -311,14 +160,7 @@ angular.module('contractualClienteApp')
       //  $('#modal_adicion').modal('hide');
       }
     })
-  }else{
-    swal({
-      title: $translate.instant('ERROR'),
-      text: $translate.instant('ERROR_DISP'),
-      type: 'info',
-      confirmButtonText: $translate.instant('ACEPTAR')
-    })
-  }
+
   }
 
 });

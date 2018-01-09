@@ -129,13 +129,13 @@ angular.module('contractualClienteApp')
       IdModificacionResolucion : self.id_modificacion_resolucion,
       DocentesDesvincular : desvinculacionesData
     }
-    
+
 
     adminMidRequest.post("gestion_desvinculaciones/actualizar_vinculaciones",objeto_a_enviar).then(function(response){
       if(response.data=="OK"){
         self.persona=null;
         swal({
-          text: $translate.instant('DESVINCULACION_EXITOSA'),
+          text: $translate.instant('SELECCION_VIN_EXITOSA'),
           type: 'success',
           confirmButtonText: $translate.instant('ACEPTAR')
 
@@ -144,7 +144,7 @@ angular.module('contractualClienteApp')
       }else{
         swal({
           title: $translate.instant('ERROR'),
-          text: $translate.instant('DESVINCULACION_NOEXITOSA'),
+          text: $translate.instant('SELECCION_VIN_NO_EXITOSA'),
           type: 'error',
           confirmButtonText: $translate.instant('ACEPTAR')
         })

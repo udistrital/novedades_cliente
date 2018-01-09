@@ -87,7 +87,7 @@ angular.module('contractualClienteApp')
     enableRowHeaderSelection: false,
     columnDefs : [
       {field: 'Id', visible : false},
-      {field: 'NombreCompleto', width: '15%', displayName: $translate.instant('NOMBRE')},
+      {field: 'NombreCompleto', width: '20%', displayName: $translate.instant('NOMBRE')},
       {field: 'IdPersona', width: '10%',displayName: $translate.instant('DOCUMENTO_DOCENTES')},
       {field: 'Categoria', width: '10%',displayName: $translate.instant('CATEGORIA')},
       {field: 'IdDedicacion.NombreDedicacion', width: '10%',displayName: $translate.instant('DEDICACION')},
@@ -103,7 +103,7 @@ angular.module('contractualClienteApp')
         field: 'cancelar',
         enableSorting: false,
         enableFiltering: false,
-        width: '15%',
+        width: '5%',
         displayName:  $translate.instant('OPCIONES'),
         cellTemplate: '<center>' +
         '<a class="borrar" ng-click="grid.appScope.verCancelarInscripcionDocente(row)">' +

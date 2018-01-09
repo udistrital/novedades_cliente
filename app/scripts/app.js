@@ -146,6 +146,21 @@ angular
                 controller: 'ResolucionAdicionCtrl',
                 controllerAs: 'resolucionAdicion'
             })
+            .when('/vinculacionespecial/resolucion_reduccion', {
+                templateUrl: 'views/vinculacionespecial/resolucion_reduccion.html',
+                controller: 'ResolucionReduccionCtrl',
+                controllerAs: 'resolucionReduccion'
+            })
+            .when('/vinculacionespecial/resolucion_adicion_detalle', {
+                templateUrl: 'views/vinculacionespecial/resolucion_adicion_detalle.html',
+                controller: 'ResolucionAdicionDetalleCtrl',
+                controllerAs: 'resolucionAdicionDetalle'
+            })
+            .when('/vinculacionespecial/resolucion_reduccion_detalle', {
+                templateUrl: 'views/vinculacionespecial/resolucion_reduccion_detalle.html',
+                controller: 'ResolucionReduccionDetalleCtrl',
+                controllerAs: 'resolucionReduccionDetalle'
+            })
             .when('/vinculacionespecial/hojas_de_vida_seleccion', {
                 templateUrl: 'views/vinculacionespecial/hojas_de_vida_seleccion.html',
                 controller: 'HojasDeVidaSeleccionCtrl',

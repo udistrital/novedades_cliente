@@ -32,36 +32,6 @@
 		</div>
 	</div>
 
-
-
-	<div class="row">
-			<div class="col-md-12">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h4 class="intro-text"> Docentes vinculados a resolución de adicion </h4>
-					</div>
-					<br>
-					<div class="col-md-2">
-						<center><label> {{ 'SELECCIONE_PROY' | translate }}</label></center>
-					</div>
-					<div class="col-md-10">
-						<select class="form-control" ng-model="resolucionAdicion.term" ng-change="resolucionAdicion.get_docentes_vinculados_adicion()">
-							<option ng-selected="{{proyecto.Id == resolucionAdicion.defaultSelectedPrecont}}" ng-repeat="proyecto in resolucionAdicion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
-						</select>
-					</div>
-					<br>
-					<div class="panel-body">
-						<br>
-						<div ui-grid="resolucionAdicion.precontratados_adicion" ui-grid-selection ui-grid-pagination class="grid" ng-hide="resolucionAdicion.estado"></div>
-						<center><loading load="resolucionAdicion.estado" tam="5"></loading><center>
-						</div>
-
-
-					</div>
-				</div>
-			</div>
-
-
 	<div id="modal_adicion" class="modal fade" role="dialog">
 
 
