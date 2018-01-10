@@ -46,7 +46,7 @@ angular.module('contractualClienteApp')
         width: '15%',
         displayName:  $translate.instant('OPCIONES'),
         cellTemplate: '<center>' +
-        '<a class="borrar" ng-click="grid.appScope.mostrar_modal_adicion(row)">' +
+        '<a class="borrar" ng-click="grid.appScope.verAnularAdicion(row)">' +
         '<i title="{{\'BORRAR_BTN\' | translate }}" class="fa fa-trash fa-lg  faa-shake animated-hover"></i></a></div>' +
         '</center>'
       }
@@ -84,8 +84,85 @@ angular.module('contractualClienteApp')
 
     });
 
-    self.precontratados_adicion_data.columnDefs[12].filter.term = self.term;
+    self.precontratados_adicion.columnDefs[12].filter.term = self.term;
 
+
+  }
+
+  $scope.verAnularAdicion=function(row){
+    swal({
+      title: $translate.instant('PREGUNTA_SEGURO'),
+      text: "¿Está seguro de que desea anular la adicion?",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: "Anular adición",
+      cancelButtonText: $translate.instant('CANCELAR'),
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      buttonsStyling: false
+    }).then(function () {
+      self.AnularAdicionDocente(row);
+    }, function (dismiss) {
+      if (dismiss === 'cancel') {
+        swal(
+          $translate.instant('CANCELADO'),
+
+          'error'
+        )
+      }
+    })
+  }
+
+  self.AnularAdicionDocente = function(row){
+
+
+    var docente_a_anular = {
+      Id :              row.entity.Id,
+      IdPersona :           row.entity.IdPersona,
+      NumeroHorasSemanales : row.entity.NumeroHorasSemanales,
+      NumeroSemanas  :     row.entity.NumeroSemanas,
+      IdResolucion     : {Id: self.resolucion.Id},
+      IdDedicacion     :   {Id: row.entity.IdDedicacion.Id},
+      IdProyectoCurricular : row.entity.IdProyectoCurricular,
+      Estado              : Boolean(true),
+      FechaRegistro: self.fecha,
+      ValorContrato        : row.entity.ValorContrato,
+      Categoria: row.entity.Categoria,
+      Disponibilidad: row.entity.Disponibilidad
+      };
+
+      desvinculacionesData.push(docente_a_anular);
+
+      var objeto_a_enviar = {
+        IdModificacionResolucion : self.id_modificacion_resolucion,
+        DocentesDesvincular : desvinculacionesData
+      }
+
+
+  adminMidRequest.post("gestion_desvinculaciones/anular_adicion",objeto_a_enviar).then(function(response){
+      if(response.data=="OK"){
+
+
+      swal({
+          text:"Anulación exitosa",
+          type: 'success',
+          confirmButtonText: $translate.instant('ACEPTAR')
+
+        })
+         $window.location.reload();
+      }else{
+        swal({
+          title: $translate.instant('ERROR'),
+          text: "Error en anulación",
+          type: 'error',
+          confirmButtonText: $translate.instant('ACEPTAR')
+        })
+
+      }
+
+    });
 
   }
 

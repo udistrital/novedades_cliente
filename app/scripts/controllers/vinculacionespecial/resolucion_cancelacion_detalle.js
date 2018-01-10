@@ -88,12 +88,12 @@ angular.module('contractualClienteApp')
   $scope.verAnularDesvinculacion=function(row){
     swal({
       title: $translate.instant('PREGUNTA_SEGURO'),
-      text: $translate.instant('CONFIRMAR_DESVINCULACION'),
+      text: "¿Está seguro de que desea anular la desvinculación?",
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: $translate.instant('DESVINCULAR_DOCENTE'),
+      confirmButtonText: "Anular desvinculación",
       cancelButtonText: $translate.instant('CANCELAR'),
       confirmButtonClass: 'btn btn-success',
       cancelButtonClass: 'btn btn-danger',
@@ -104,7 +104,7 @@ angular.module('contractualClienteApp')
       if (dismiss === 'cancel') {
         swal(
           $translate.instant('CANCELADO'),
-          $translate.instant('DESVINCULACION_CANCELADA'),
+
           'error'
         )
       }
@@ -143,7 +143,7 @@ angular.module('contractualClienteApp')
 
 
       swal({
-          text: $translate.instant('SELECCION_VIN_EXITOSA'),
+          text:"Anulación exitosa",
           type: 'success',
           confirmButtonText: $translate.instant('ACEPTAR')
 
@@ -152,11 +152,11 @@ angular.module('contractualClienteApp')
       }else{
         swal({
           title: $translate.instant('ERROR'),
-          text: $translate.instant('SELECCION_VIN_NO_EXITOSA'),
+          text: "Error en anulación",
           type: 'error',
           confirmButtonText: $translate.instant('ACEPTAR')
         })
-          
+
       }
 
     });
