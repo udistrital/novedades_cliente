@@ -229,7 +229,7 @@ angular.module('contractualClienteApp')
           Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
           Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
           NivelAcademico: self.resolucion.NivelAcademico_nombre,
-          Disponibilidad: self.apropiacion_elegida[0].Apropiacion.Id
+          Disponibilidad: self.apropiacion_elegida[0].Id
         };
 
         vinculacionesData.push(vinculacionDocente);
@@ -237,7 +237,8 @@ angular.module('contractualClienteApp')
       })
 
       adminMidRequest.post("gestion_previnculacion/Precontratacion/insertar_previnculaciones",vinculacionesData).then(function(response){
-
+        console.log("tipo respuesta")
+        console.log(typeof response.data)
         if(response.data=="OK"){
           self.persona=null;
           self.datosDocentesCargaLectiva.data = []
@@ -359,6 +360,8 @@ angular.module('contractualClienteApp')
   self.listar_apropiaciones = function(){
 
     var disponibilidadAp = self.DisponibilidadApropiacion
+    console.log("disponibilidad apropiacion")
+    console.log(disponibilidadAp)
     adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones",disponibilidadAp).then(function(response){
       console.log("apropiaciones")
       console.log(response.data)
