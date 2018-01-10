@@ -158,11 +158,28 @@ angular.module('contractualClienteApp')
         //Los botones son mostrados de acuerdo alestado de las resoluciones (ver,editar,configurar)
         cellTemplate: '<center>' +
         '<a class="ver" ng-click="grid.appScope.verVisualizarResolucion(row)">' +
-        '<i title="{{\'VER_BTN\' | translate }}" class="fa fa-eye fa-lg  faa-shake animated-hover"></i></a> ' +
-        '<a ng-if="row.entity.Estado==\'Solicitada\'" class="editar" ng-click="grid.appScope.verEditarDocentes(row)">' +
-        '<i title="{{\'EDITAR_BTN\' | translate }}" class="fa fa-users fa-lg  faa-shake animated-hover"></i></a> ' +
-        '<a ng-if="row.entity.Estado==\'Solicitada\'" class="configuracion" ng-click="grid.appScope.verEditarResolucion(row)">' +
-        '<i title="{{\'CONFIGURAR_BTN\' | translate }}" class="fa fa-cog fa-lg faa-spin animated-hover"></i></a> ' +
+        '<i title="{{\'VER_DOC_BTN\' | translate }}" class="fa fa-file-pdf-o fa-lg  faa-shake animated-hover"></i></a> ' +
+
+        '<a ng-if="row.entity.TipoResolucion==\'Vinculación\' && row.entity.Estado==\'Solicitada\' " class="editar" ng-click="grid.appScope.verEditarDocentes(row)">' +
+        '<i title="{{\'VINCULAR_BTN\' | translate }}" class="fa fa-user-plus fa-lg faa-shake animated-hover"></i></a> ' +
+
+        '<a ng-if="row.entity.TipoResolucion==\'Cancelación\' && row.entity.Estado==\'Solicitada\'" class="editar" ng-click="grid.appScope.verEditarDocentes(row)">' +
+        '<i title="{{\'CANCELAR_VIN_BTN\' | translate }}" class="fa fa-user-times fa-lg faa-shake animated-hover"></i></a> ' +
+
+
+        '<a ng-if="row.entity.TipoResolucion==\'Adición\' && row.entity.Estado==\'Solicitada\' "  class="editar" ng-click="grid.appScope.verEditarDocentes(row)">' +
+        '<i title="{{\'ADICIONAR_HORAS_BTN\' | translate }}" class="fa fa-plus-circle fa-lg  faa-shake animated-hover"></i></a> ' +
+        '<a ng-if="row.entity.TipoResolucion==\'Adición\' && row.entity.Estado==\'Solicitada\' " class="editar" ng-click="grid.appScope.verListarDocentesAdicion(row)">' +
+        '<i title="{{\'VER_DOCENTES_VIN_BTN\' | translate }}" class="fa fa-table fa-lg  faa-shake animated-hover"></i></a> ' +
+
+        '<a ng-if="row.entity.TipoResolucion==\'Reducción\' && row.entity.Estado==\'Solicitada\' "  class="editar" ng-click="grid.appScope.verEditarDocentes(row)">' +
+        '<i title="{{\'REDUCIR_HORAS_BTN\' | translate }}" class="fa fa-minus-circle fa-lg  faa-shake animated-hover"></i></a> ' +
+        '<a ng-if="row.entity.TipoResolucion==\'Reducción\'&& row.entity.Estado==\'Solicitada\' "  class="editar" ng-click="grid.appScope.verListarDocentesReduccion(row)">' +
+        '<i title="{{\'VER_DOCENTES_VIN_BTN\' | translate }}" class="fa fa-table fa-lg  faa-shake animated-hover""></i></a> ' +
+
+        '<a ng-if="row.entity.Estado==\'Solicitada\'" class="editar" ng-click="grid.appScope.verEditarResolucion(row)">' +
+        '<i title="{{\'CONFIGURAR_DOC_BTN\' | translate }}" class="fa fa-pencil-square-o fa-lg faa-shake animated-hover"></i></a> ' +
+
         '</center>'
 
       }
@@ -254,9 +271,24 @@ angular.module('contractualClienteApp')
       $window.location.href = '#/vinculacionespecial/resolucion_cancelacion';
     }
 
+    if(row.entity.TipoResolucion == "Adición"){
+      $window.location.href = '#/vinculacionespecial/resolucion_adicion';
+    }
+
+    if(row.entity.TipoResolucion == "Reducción"){
+      $window.location.href = '#/vinculacionespecial/resolucion_reduccion';
+    }
 
 
   };
+
+  $scope.verListarDocentesAdicion = function(row){
+    $window.location.href = '#/vinculacionespecial/resolucion_adicion_detalle';
+  }
+
+  $scope.verListarDocentesReduccion = function(row){
+    $window.location.href = '#/vinculacionespecial/resolucion_reduccion_detalle';
+  }
 
   //Función para asignar controlador de la vista resolucion_vista.html, donde se pasa por parámetro el id de la resolucion seleccionada con ayuda de $mdDialog
   $scope.verVisualizarResolucion = function(row){

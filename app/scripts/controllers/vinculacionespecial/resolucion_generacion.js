@@ -26,7 +26,6 @@ angular.module('contractualClienteApp')
       columnDefs : [
         {
           field: 'Id',
-          visible : false
         },
         {
           field: 'FechaExpedicion',
@@ -91,7 +90,7 @@ angular.module('contractualClienteApp')
 
     };
     //CALCULAR EN QUÉ PERIODO SE ESTÁ
-    administrativaRequest.get("resolucion_vinculacion/expedidas_vigencia_periodo","vigencia="+self.anioPeriodo+"&periodo=3").then(function(response){
+    administrativaRequest.get("resolucion_vinculacion/expedidas_vigencia_periodo","vigencia=2017&periodo=3").then(function(response){
       self.resolucionesExpedidasPeriodo.data=response.data;
       if(self.resolucionesExpedidasPeriodo.data!==null){
         self.resolucionesExpedidasPeriodo.data.forEach(function(resolucion){
@@ -167,9 +166,14 @@ angular.module('contractualClienteApp')
 
     self.guardarResolucion = function(){
 
+      if (self.tipo_resolucion_elegida == 1){
+        self.resolucion_a_cancelar_seleccionada = [];
+      }
+
       var tipoResolucion = {
         Id: parseInt(self.tipo_resolucion_elegida)
       }
+
 
       var resolucionData={
         NumeroResolucion: self.resolucion.numero,
@@ -189,11 +193,17 @@ angular.module('contractualClienteApp')
 
       var objeto_resolucion = {
         Resolucion: resolucionData,
-        ResolucionVinculacionDocente: resolucionVinculacionDocenteData
+        ResolucionVinculacionDocente: resolucionVinculacionDocenteData,
+        ResolucionVieja: self.resolucion_a_cancelar_seleccionada.Id
       };
 
+
     adminMidRequest.post("gestion_resoluciones/insertar_resolucion_completa",objeto_resolucion).then(function(response){
-        if(response.data=="OK"){
+      console.log(typeof response.data)
+      console.log("resolucion creada")
+      console.log(response.data)
+        if(response.data){
+          self.resolucion_creada = response.data
           swal({
             text: "Se insertó correctamente la resolución",
             type: 'success',
@@ -201,6 +211,7 @@ angular.module('contractualClienteApp')
           }).then(function() {
                   $window.location.href = '#/vinculacionespecial/resolucion_gestion';
           })
+
         }else{
           swal({
             title: $translate.instant('ERROR'),
@@ -214,6 +225,7 @@ angular.module('contractualClienteApp')
 
       });
 
+
 };
 
 self.AsociarResolucionCancelacion = function(){
@@ -221,11 +233,13 @@ self.AsociarResolucionCancelacion = function(){
   if(self.resolucion_a_cancelar_seleccionada && self.resolucion.numero){
     self.resolucion.nivelAcademico = self.resolucion_a_cancelar_seleccionada.NivelAcademico;
     self.resolucion.dedicacion = self.resolucion_a_cancelar_seleccionada.Dedicacion;
-    self.tipo_resolucion_elegida = 2;
     self.resolucion.numeroSemanas = self.resolucion_a_cancelar_seleccionada.NumeroSemanas;
     self.resolucion.Periodo = self.resolucion_a_cancelar_seleccionada.Periodo;
     self.objeto_facultad.Id = self.resolucion_a_cancelar_seleccionada.Facultad;
     self.guardarResolucion();
+
+
+
   }else{
     swal({
       title: $translate.instant('ERROR'),

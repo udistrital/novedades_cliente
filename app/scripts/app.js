@@ -10,8 +10,11 @@
  */
 angular
     .module('contractualClienteApp', [
+        // Librerias
+        'angular-loading-bar',
         'ngAnimate',
         'ngCookies',
+        'ngMessages',
         'ngResource',
         'ngRoute',
         'ngSanitize',
@@ -33,6 +36,11 @@ angular
         'angularMoment',
         'ui.utils.masks',
         'pascalprecht.translate',
+        'nvd3',
+        'ui.grid.expandable',
+        'ui.grid.pinning',
+        'ui.knob',
+        // Servicios
         'financieraService',
         'coreService',
         'coreAmazonService',
@@ -49,10 +57,20 @@ angular
         'amazonAdministrativaService',
         'academicaService',
         'contratoService',
-        'nvd3',
+        'gridOptionsService',
+        'configuracionService',
+        'requestService'
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');
+    })
+    .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+        cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+    }])
+    .config(function($mdDateLocaleProvider) {
+        $mdDateLocaleProvider.formatDate = function(date) {
+            return date ? moment.utc(date).format('YYYY-MM-DD') : '';
+        };
     })
     .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
         $locationProvider.hashPrefix("");
@@ -123,6 +141,26 @@ angular
                 controller: 'ResolucionCancelacionCtrl',
                 controllerAs: 'resolucionCancelacion'
             })
+            .when('/vinculacionespecial/resolucion_adicion', {
+                templateUrl: 'views/vinculacionespecial/resolucion_adicion.html',
+                controller: 'ResolucionAdicionCtrl',
+                controllerAs: 'resolucionAdicion'
+            })
+            .when('/vinculacionespecial/resolucion_reduccion', {
+                templateUrl: 'views/vinculacionespecial/resolucion_reduccion.html',
+                controller: 'ResolucionReduccionCtrl',
+                controllerAs: 'resolucionReduccion'
+            })
+            .when('/vinculacionespecial/resolucion_adicion_detalle', {
+                templateUrl: 'views/vinculacionespecial/resolucion_adicion_detalle.html',
+                controller: 'ResolucionAdicionDetalleCtrl',
+                controllerAs: 'resolucionAdicionDetalle'
+            })
+            .when('/vinculacionespecial/resolucion_reduccion_detalle', {
+                templateUrl: 'views/vinculacionespecial/resolucion_reduccion_detalle.html',
+                controller: 'ResolucionReduccionDetalleCtrl',
+                controllerAs: 'resolucionReduccionDetalle'
+            })
             .when('/vinculacionespecial/hojas_de_vida_seleccion', {
                 templateUrl: 'views/vinculacionespecial/hojas_de_vida_seleccion.html',
                 controller: 'HojasDeVidaSeleccionCtrl',
@@ -179,9 +217,9 @@ angular
                 controllerAs: 'necesidadExterna'
             })
             .when('/necesidad/necesidad_contratacion_docente', {
-              templateUrl: 'views/necesidad/necesidad_contratacion_docente.html',
-              controller: 'NecesidadContratacionDocenteCtrl',
-              controllerAs: 'necesidadContratacionDocente'
+                templateUrl: 'views/necesidad/necesidad_contratacion_docente.html',
+                controller: 'NecesidadContratacionDocenteCtrl',
+                controllerAs: 'necesidadContratacionDocente'
             })
             .otherwise({
                 redirectTo: '/'

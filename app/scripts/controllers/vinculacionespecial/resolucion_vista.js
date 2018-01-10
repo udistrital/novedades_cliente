@@ -35,7 +35,7 @@ angular.module('contractualClienteApp')
         self.contenidoResolucion.ordenadorGasto=response.data[0];
       }
 
-      adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
+      adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
         self.contratados=response.data;
         self.generarResolucion();
       });

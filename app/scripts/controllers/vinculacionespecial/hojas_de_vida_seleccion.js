@@ -87,7 +87,7 @@ angular.module('contractualClienteApp')
     enableRowHeaderSelection: false,
     columnDefs : [
       {field: 'Id', visible : false},
-      {field: 'NombreCompleto', width: '15%', displayName: $translate.instant('NOMBRE')},
+      {field: 'NombreCompleto', width: '20%', displayName: $translate.instant('NOMBRE')},
       {field: 'IdPersona', width: '10%',displayName: $translate.instant('DOCUMENTO_DOCENTES')},
       {field: 'Categoria', width: '10%',displayName: $translate.instant('CATEGORIA')},
       {field: 'IdDedicacion.NombreDedicacion', width: '10%',displayName: $translate.instant('DEDICACION')},
@@ -103,7 +103,7 @@ angular.module('contractualClienteApp')
         field: 'cancelar',
         enableSorting: false,
         enableFiltering: false,
-        width: '15%',
+        width: '5%',
         displayName:  $translate.instant('OPCIONES'),
         cellTemplate: '<center>' +
         '<a class="borrar" ng-click="grid.appScope.verCancelarInscripcionDocente(row)">' +
@@ -187,7 +187,7 @@ angular.module('contractualClienteApp')
   };
 
 
-  adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
+  adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
     self.datosDocentesCargaLectiva.data = response.data
 
   });
@@ -203,7 +203,7 @@ angular.module('contractualClienteApp')
   self.get_docentes_vinculados=function(){
 
     self.estado = true;
-    adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
+    adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
       self.precontratados.data=response.data;
       self.estado = false;
 
@@ -236,7 +236,7 @@ angular.module('contractualClienteApp')
 
       })
 
-      adminMidRequest.post("calculo_salario/Contratacion/insertar_previnculaciones",vinculacionesData).then(function(response){
+      adminMidRequest.post("gestion_previnculacion/Precontratacion/insertar_previnculaciones",vinculacionesData).then(function(response){
 
         if(response.data=="OK"){
           self.persona=null;
@@ -390,7 +390,7 @@ angular.module('contractualClienteApp')
 
     })
 
-    adminMidRequest.post("calculo_salario/Contratacion/calcular_valor_contratos",vinculacionesData).then(function(response){
+    adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos",vinculacionesData).then(function(response){
       if(300000 > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)){
         self.saldo_disponible = false;
         console.log("no se puede elgir esa apropiacion")
@@ -404,7 +404,7 @@ angular.module('contractualClienteApp')
 
   //*--------------Funciones para recargar grids que han sido seleccionados -------------* //
   self.RecargarDatosPersonas = function(){
-    adminMidRequest.get("informacionDocentes/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
+    adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
       self.datosDocentesCargaLectiva.data = response.data
 
     });
