@@ -130,12 +130,19 @@ angular.module('contractualClienteApp')
       Disponibilidad: row.entity.Disponibilidad
       };
 
+      desvinculacionesData.push(docente_a_anular);
+
+      var objeto_a_enviar = {
+        IdModificacionResolucion : self.id_modificacion_resolucion,
+        DocentesDesvincular : desvinculacionesData
+      }
 
 
-    administrativaRequest.put("vinculacion_docente",row.entity.Id,docente_a_anular).then(function(response){
+  adminMidRequest.post("gestion_desvinculaciones/anular_desvinculacion",objeto_a_enviar).then(function(response){
       if(response.data=="OK"){
-        self.persona=null;
-        swal({
+
+
+      swal({
           text: $translate.instant('SELECCION_VIN_EXITOSA'),
           type: 'success',
           confirmButtonText: $translate.instant('ACEPTAR')
@@ -149,8 +156,9 @@ angular.module('contractualClienteApp')
           type: 'error',
           confirmButtonText: $translate.instant('ACEPTAR')
         })
-
+          
       }
+
     });
 
   }
