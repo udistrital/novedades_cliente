@@ -156,7 +156,7 @@ angular.module('contractualClienteApp')
             return padres;
         };
         $scope.perfil = "ADMINISTRADOR ARGO";
-        configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + $scope.perfil).then(function(response) {
+        configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + $scope.perfil + '/Argo' ).then(function(response) {
 
             $rootScope.my_menu = response.data;
             console.log($rootScope.my_menu);

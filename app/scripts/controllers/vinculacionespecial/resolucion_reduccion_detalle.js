@@ -86,11 +86,11 @@ angular.module('contractualClienteApp')
 
     });
 
-    self.precontratados.columnDefs[12].filter.term = self.term;
+    self.precontratados_adicion.columnDefs[12].filter.term = self.term;
 
 
   }
 
-  
+
 
 });
