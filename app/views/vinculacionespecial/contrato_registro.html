@@ -34,35 +34,6 @@
                             </div>
                         </form>
                     </div>
-                <legend class="text-primary" ng-click="info_disponibilidad=!info_disponibilidad">{{ 'DISPONIBILIDAD' | translate }}<span class="fa fa-plus pull-right" ng-show="!info_disponibilidad"></span> <span class="fa fa-minus pull-right" ng-show="info_disponibilidad"></span></legend>
-                    <div class="panel-body" ng-show="info_disponibilidad">
-                        <form role="form">
-                            <div class="row">
-                                <div class="form-group col-lg-6">
-                                    <label>{{ 'VIGENCIA' | translate }} {{ 'CDP' | translate }}</label>
-                                    <select class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Cdp.VigenciaCdp" ng-options="vig for vig in contratoRegistro.vigencia_data" required>
-                                        <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"VIGENCIA" | translate}}</option>
-                                    </select>
-                                    <div class="form-group" ng-show="contratoRegistro.contratoGeneralBase.Cdp.VigenciaCdp!=undefined">
-                                        <label>{{ 'NUMERO_CDP' | translate }}</label>
-                                        <select class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Cdp.cdp" ng-options="cdps.NumeroDisponibilidad for cdps in contratoRegistro.lista_cdp" required>
-                                        <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"CDP" | translate}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group" ng-show="contratoRegistro.contratoGeneralBase.Cdp.cdp!=0">
-                                    <div class="form-group col-lg-6">
-                                        <label>{{ 'NUMERO_NECESIDAD' | translate }}</label>
-                                        <input type="text" class="form-control" ng-model="contratoRegistro.necesidad.Numero" disabled>
-                                        <label>{{ 'VIGENCIA_NECESIDAD' | translate }}</label>
-                                        <input type="text" class="form-control" ng-model="contratoRegistro.necesidad.Vigencia" disabled>
-                                        <label>{{ 'OBJETO_CDP' | translate }}</label>
-                                        <textarea rows="5" type="text" class="form-control" ng-model="contratoRegistro.necesidad.Objeto" disabled></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
                 <legend class="text-primary" ng-click="info_secundarios=!info_secundarios">{{ 'JUSTIFICACION_Y_OBSERVACIONES' | translate }}<span class="fa fa-plus pull-right" ng-show="!info_secundarios"></span> <span class="fa fa-minus pull-right" ng-show="info_secundarios"></span></legend>
                     <div class="panel-body" ng-show="info_secundarios">
                         <form role="form">
@@ -85,10 +56,6 @@
                                 <div class="form-group col-lg-6">
                                     <label>{{ 'FECHA_INICIO' | translate }}</label>
                                     <md-datepicker ng-model="contratoRegistro.acta.FechaInicio" md-current-view="year" md-placeholder="Elija fecha inicio" required></md-datepicker>
-                                </div>
-                                <div class="form-group col-lg-6">
-                                    <label>{{ 'FECHA_FIN' | translate }}</label>
-                                    <md-datepicker ng-model="contratoRegistro.acta.FechaFin" md-current-view="year" md-placeholder="Elija fecha final" required></md-datepicker>
                                 </div>
                                 <div class="form-group col-lg-12">
                                         <label>{{ 'DESCRIPCION' | translate }}</label>

@@ -12,9 +12,7 @@ angular.module('contractualClienteApp')
 
     var self = this;
     self.contratoGeneralBase={};
-    self.contratoGeneralBase.Cdp={};
     self.contratoGeneralBase.Contrato={};
-    self.contratoGeneralBase.Cdp.cdp=0;
     self.acta={};
 
     self.idResolucion=idResolucion;
@@ -49,7 +47,7 @@ angular.module('contractualClienteApp')
         self.contratados=response.data;
         });
         */
-      adminMidRequest.get("informacionDocentes/docentes_previnculados", "id_resolucion="+self.idResolucion.toString()).then(function(response){
+      adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.idResolucion.toString()).then(function(response){
 
           self.contratados=response.data;
 
@@ -78,32 +76,6 @@ angular.module('contractualClienteApp')
     })).then(function(response) {
       self.vigencia_data = response.data;
     });
-
-    $scope.$watch('contratoRegistro.contratoGeneralBase.Cdp.VigenciaCdp',function(){
-      financieraRequest.get('disponibilidad', $.param({
-        query: 'Vigencia:'+self.contratoGeneralBase.Cdp.VigenciaCdp,
-        limit: -1
-      })).then(function(response) {
-        self.lista_cdp = response.data;
-      });
-    },true);
-
-    $scope.$watch('contratoRegistro.contratoGeneralBase.Cdp.cdp',function(){
-      administrativaRequest.get('solicitud_disponibilidad/'+self.contratoGeneralBase.Cdp.cdp.Solicitud, $.param({
-        limit: -1
-      })).then(function(response) {
-        self.solicitud_cdp = response.data;
-        administrativaRequest.get('necesidad/'+self.solicitud_cdp.Necesidad.Id, $.param({
-          limit: -1
-        })).then(function(response) {
-          self.necesidad = response.data;
-        });
-      });
-    },true);
-
-    /*sicapitalRequest.get("disponibilidad/cdpfiltro/2017/1/VIGENTE").then(function(response){
-      self.cdp_opciones=response.data;
-    });*/
 
     self.asignarValoresDefecto = function(){
       self.contratoGeneralBase.Contrato.Vigencia=new Date().getFullYear();
@@ -175,8 +147,6 @@ angular.module('contractualClienteApp')
     }*/
 
     self.realizarContrato = function(){
-      /*self.contratoGeneralBase.NumeroSolicitudNecesidad=parseInt(self.getNumeroDisponibilidadSeleccionada());
-      self.contratoGeneralBase.NumeroCdp=parseInt(self.getNumeroNecesidadDisponibilidadSeleccionada());*/
         if(self.datosFiltro.Dedicacion==="HCH"){
           self.contratoGeneralBase.Contrato.TipoContrato={Id: 3};
           self.contratoGeneralBase.Contrato.ObjetoContrato="Docente de Vinculación Especial - Honorarios";
@@ -220,9 +190,7 @@ angular.module('contractualClienteApp')
       if(self.contratados){
         self.contratados.forEach(function(contratado){
           var contratoGeneral=JSON.parse(JSON.stringify(self.contratoGeneralBase.Contrato));
-          var cdp=JSON.parse(JSON.stringify(self.contratoGeneralBase.Cdp));
           var actaI=JSON.parse(JSON.stringify(self.acta));
-          cdp.NumeroCdp=self.contratoGeneralBase.Cdp.cdp.NumeroDisponibilidad;
           contratoGeneral.Contratista=parseInt(contratado.IdPersona);
           contratoGeneral.DependenciaSolicitante=contratado.IdProyectoCurricular.toString();
           contratoGeneral.PlazoEjecucion=parseInt(contratado.NumeroHorasSemanales*7);
@@ -230,7 +198,6 @@ angular.module('contractualClienteApp')
           contratoGeneral.ValorContrato=parseInt(contratado.ValorContrato);
           var contratoVinculacion={
             ContratoGeneral: contratoGeneral,
-            Cdp: cdp,
             ActaInicio: actaI,
             VinculacionDocente: {Id: parseInt(contratado.Id)}
           };
@@ -247,14 +214,18 @@ angular.module('contractualClienteApp')
         };
         console.log("contratos a insertar");
         console.log(expedicionResolucion);
-        amazonAdministrativaRequest.post("contrato_general/InsertarContratos",expedicionResolucion).then(function(response){
+        adminMidRequest.post("expedir_resolucion/expedir",expedicionResolucion).then(function(response){
+          console.log("Soy el de expedicionResolucion");
+          console.log(expedicionResolucion);
+          console.log("Resolucion expedida, siiiiiiiiiiiiii");
+          console.log(response);
           //if(typeof(response.data)=="object"){ //xDD
-
+/*
               self.alerta = "";
               for (var i = 1; i < response.data.length; i++) {
                 self.alerta = self.alerta + response.data[i] + "\n";
-              }
-              swal("", self.alerta, response.data[0]);
+              }*/
+              //swal("", self.alerta, response.data[0]);
 
             //xD
         /*    swal({
