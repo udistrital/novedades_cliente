@@ -24,22 +24,12 @@ angular.module('contractualClienteApp')
     self.proyectos = response.data;
   });
 
-  administrativaRequest.get("contenido_resolucion/"+self.resolucion.Id).then(function(response){
-    self.contenidoResolucion=response.data;
-    coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.resolucion.IdFacultad).then(function(response){
-      if(response.data===null){
-        coreRequest.get("ordenador_gasto/1").then(function(response){
-          self.contenidoResolucion.ordenadorGasto=response.data;
-        });
-      }else{
-        self.contenidoResolucion.ordenadorGasto=response.data[0];
-      }
-
+  adminMidRequest.get("gestion_documento_resolucion/get_contenido_resolucion", "id_resolucion="+self.resolucion.Id+"&id_facultad="+self.resolucion.IdFacultad).then(function(response){
+      self.contenidoResolucion=response.data;
       adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
         self.contratados=response.data;
         self.generarResolucion();
       });
-    });
   });
 
 
@@ -165,8 +155,10 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
     }
     contenido.push({ text: 'COMUNIQUESE Y CUMPLASE',
     style: 'finalizacion'});
-    contenido.push({ text: '--'+contenidoResolucion.ordenadorGasto.Cargo+' --',
-    style: 'nombre'});
+    contenido.push({ text: contenidoResolucion.OrdenadorGasto.NombreOrdenador,
+    style: 'nombre_ordenador'});
+    contenido.push({ text: '--'+contenidoResolucion.OrdenadorGasto.Cargo+' --',
+    style: 'nombre_cargo'});
     return contenido;
   };
 
@@ -213,16 +205,22 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
           margin: [30, 5]
         },
         //Nombre del ordenador del gasto
-        nombre: {
+        nombre_cargo: {
           bold: true,
           fontSize: 10,
-          margin: [30, 50, 30,0],
+          margin: [30, 0, 30,0],
           alignment: 'center'
         },
         //Parte final de la resolución y complementos
         finalizacion: {
           bold: true,
           fontSize: 12,
+          alignment: 'center'
+        },
+        nombre_ordenador: {
+          bold: true,
+          fontSize: 10,
+          margin: [30, 50, 30,0],
           alignment: 'center'
         }
       },
