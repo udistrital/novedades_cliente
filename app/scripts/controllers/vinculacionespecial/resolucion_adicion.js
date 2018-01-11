@@ -201,7 +201,7 @@ angular.module('contractualClienteApp')
       Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
       Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
       NivelAcademico: self.resolucion.NivelAcademico_nombre,
-      Disponibilidad: self.apropiacion_elegida[0].Apropiacion.Id
+      Disponibilidad: self.apropiacion_elegida[0].Id
     };
 
     desvinculacionesData.push(vinculacionDocente);
@@ -215,7 +215,7 @@ angular.module('contractualClienteApp')
         console.log("no se puede elgir esa apropiacion")
       }else{
         self.saldo_disponible = true;
-        self.disponibilidad_nueva_id = self.apropiacion_elegida[0].Apropiacion.Id
+        self.disponibilidad_nueva_id = self.apropiacion_elegida[0].Id
         console.log("si se puede elegir")
       }
     })
@@ -268,6 +268,7 @@ angular.module('contractualClienteApp')
       IdDedicacion: {Id: parseInt(self.persona_a_modificar.IdDedicacion.Id)},
       IdProyectoCurricular: parseInt(self.persona_a_modificar.IdProyectoCurricular),
       Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
+      ValorContrato: self.persona_a_modificar.ValorContrato,
       Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
       NivelAcademico: self.resolucion.NivelAcademico_nombre,
       Disponibilidad: parseInt(self.disponibilidad_actual_id),

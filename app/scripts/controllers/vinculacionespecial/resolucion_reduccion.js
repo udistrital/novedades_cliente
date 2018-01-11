@@ -90,6 +90,9 @@ angular.module('contractualClienteApp')
 
   $scope.mostrar_modal_adicion=function(row){
     self.horas_actuales = row.entity.NumeroHorasSemanales;
+    self.disponibilidad_actual = row.entity.NumeroDisponibilidad;
+    self.disponibilidad_actual_id = row.entity.Disponibilidad;
+    self.disponibilidad_nueva_id = row.entity.Disponibilidad;
     self.persona_a_modificar = row.entity;
       $('#modal_adicion').modal('show');
   }
@@ -117,6 +120,7 @@ angular.module('contractualClienteApp')
       IdDedicacion: {Id: parseInt(self.persona_a_modificar.IdDedicacion.Id)},
       IdProyectoCurricular: parseInt(self.persona_a_modificar.IdProyectoCurricular),
       Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
+      ValorContrato: self.persona_a_modificar.ValorContrato,
       Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
       NivelAcademico: self.resolucion.NivelAcademico_nombre,
       Disponibilidad: parseInt(self.disponibilidad_actual_id),
