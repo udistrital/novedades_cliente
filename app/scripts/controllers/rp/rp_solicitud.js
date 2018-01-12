@@ -429,6 +429,9 @@ angular.module('contractualClienteApp')
       if (self.NumeroCompromiso === null || self.NumeroCompromiso === undefined || self.NumeroCompromiso <= 0){
         swal("Alertas", "Debe digitar el numero del compromiso.", "error");
         self.alerta_registro_rp = ["Debe seleccionar el CDP objetivo del RP"];
+      }else if(self.contrato.length === 0){
+        swal("Alertas", "Debe seleccionar el Proveedor del RP", "error");
+        self.alerta_registro_rp = ["Debe seleccionar el Proveedor del RP"];
       }else if (self.disponibilidad.NumeroDisponibilidad === null) {
         swal("Alertas", "Debe seleccionar el CDP objetivo del RP", "error");
         self.alerta_registro_rp = ["Debe seleccionar el CDP objetivo del RP"];
