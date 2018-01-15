@@ -141,19 +141,19 @@ angular.module('contractualClienteApp')
       self.objeto_facultad = JSON.parse(self.resolucion.facultad)
       if(self.resolucion.numero && self.resolucion.facultad && self.resolucion.nivelAcademico && self.resolucion.dedicacion &&self.resolucion.numeroSemanas){
     		swal({
-          title: 'Datos de la resolución',
+          title:  $translate.instant('DATOS_RESOLUCION'),
           html:
-            '<p><b>Número: </b>'+self.resolucion.numero.toString()+'</p>'+
-            '<p><b>Facultad: </b>'+self.objeto_facultad.Nombre+'</p>'+
-            '<p><b>Nivel académico: </b>'+self.resolucion.nivelAcademico+'</p>'+
-            '<p><b>Dedicación: </b>'+self.resolucion.dedicacion+'</p>'+
-            '<p><b>Los artículos son creados por defecto y pueden ser editados</b></p>',
+            '<p><b>'+$translate.instant('NUMERO')+': </b>'+self.resolucion.numero.toString()+'</p>'+
+            '<p><b>'+$translate.instant('FACULTAD')+': </b>'+self.objeto_facultad.Nombre+'</p>'+
+            '<p><b>'+$translate.instant('NIVEL')+': </b>'+self.resolucion.nivelAcademico+'</p>'+
+            '<p><b>'+$translate.instant('NIVEL')+': </b>'+self.resolucion.dedicacion+'</p>'+
+            '<p><b>'+$translate.instant('INFORMACION_CONTENIDO')+'</b></p>',
           type: 'info',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Guardar resolución',
-          cancelButtonText: 'Cancelar',
+          confirmButtonText: $translate.instant('CONFIRMAR_GUARDAR_RESOLUCION'),
+          cancelButtonText: $translate.instant('CANCELAR_GUARDAR_RESOLUCION'),
           confirmButtonClass: 'btn btn-success',
           cancelButtonClass: 'btn btn-danger',
           buttonsStyling: false
@@ -205,7 +205,7 @@ angular.module('contractualClienteApp')
         if(response.data){
           self.resolucion_creada = response.data
           swal({
-            text: "Se insertó correctamente la resolución",
+            text: $translate.instant('ALERTA_RESOLUCION_EXITOSA'),
             type: 'success',
             confirmButtonText: $translate.instant('ACEPTAR')
           }).then(function() {
@@ -215,7 +215,7 @@ angular.module('contractualClienteApp')
         }else{
           swal({
             title: $translate.instant('ERROR'),
-            text: "Error al insertar resolución",
+            text: $translate.instant('ALERTA_ERROR_RESOLUCION'),
             type: 'error',
             confirmButtonText: $translate.instant('ACEPTAR')
           }).then(function() {
@@ -243,7 +243,7 @@ self.AsociarResolucionCancelacion = function(){
   }else{
     swal({
       title: $translate.instant('ERROR'),
-      text: "Seleccione una resolución para cancelar",
+      text: $translate.instant('ALERTA_SELEC_RESOLUCION'),
       type: 'info',
       confirmButtonText: $translate.instant('ACEPTAR')
     })

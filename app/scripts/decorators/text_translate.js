@@ -1,45 +1,45 @@
 "use strict";
 
 /**
- * @ngdoc function
- * @name contractualClienteApp.decorator:TextTranslate
- * @description
- * # TextTranslate
- * Decorator of the contractualClienteApp
- */
+* @ngdoc function
+* @name contractualClienteApp.decorator:TextTranslate
+* @description
+* # TextTranslate
+* Decorator of the contractualClienteApp
+*/
 var text_es = {
-    NO_HAY_DATOS_REDIRIGIR_RP: "No hay datos de registro presupuestal para este contratista",
-    NO_HAY_DATOS_REDIRIGIR_ORDEN: "No hay datos de ordenes de pago para este contratista",
-    SELECCIONAR_FILTRO:"Seleccione el tipo de filtro por el cual quiere generar la solicitud del RP",
-    BUSCAR:"Buscar",
-    NO_HAY_DATOS_REDIRIGIR_CDP:"No hay datos de CDP para este contrato",
-    RESOLUCION_SIN_VINCULACIONES: "Esta resolución no tiene vinculaciones para mostrar",
-    INGRESE_IDENTIFICACION_PROVEEDOR:"Ingrese identificación del proveedor",
-    DATOS_PROVEEDOR:"Datos proveedor",
-    IDENTIFICACION:"Identificación",
-    SELECCIONAR_RESOLUCION:"Selecciona la resolución",
-    CONTRATISTAS_RESOLUCION:"Contratistas en esta resolución",
-    SELECCIONE_CDP:"Seleccione el CDP",
-    RUBRO:"Rubro",
-    VER:"Ver",
-    SELECCIONAR:"Seleccionar",
-    CANCELAR:"Cancelar",
-    CONFIRMAR:"Confirmar",
-    AGREGAR:"Agregar",
-    REGISTRAR:"Registrar",
-    SOLICITAR_RP:"Solicitar RP",
-    QUITAR_RUBRO:"Quitar",
-    VER_SEGUIMIENTO_FINANCIERO:"Ver seguimiento financiero",
-    APROBAR:"Aprobar",
-    RECHAZAR:"Rechazar",
-    SOLICITAR_CDP:"Solicitar CDP",
-    GENERAR_RESOLUCION:"Generar Resolución",
-    REALIZAR_EXPEDICION:"Realizar expedición de la resolución con los datos introducidos",
-    INFORMACION_PERSONA_NATURAL:"Información persona natural",
-    VINCULAR_DOCENTES_SELECCIONADOS:"Vincular docentes seleccionados a la resolución",
-    FORMACION_ACADEMICA:"Formación académica",
-    EXPERIENCIA_LABORAL_DOCENTE:"Experiencia laboral docente",
-    TRABAJOS_INVESTIGACION:"Trabajos de investigación",
+  NO_HAY_DATOS_REDIRIGIR_RP: "No hay datos de registro presupuestal para este contratista",
+  NO_HAY_DATOS_REDIRIGIR_ORDEN: "No hay datos de ordenes de pago para este contratista",
+  SELECCIONAR_FILTRO:"Seleccione el tipo de filtro por el cual quiere generar la solicitud del RP",
+  BUSCAR:"Buscar",
+  NO_HAY_DATOS_REDIRIGIR_CDP:"No hay datos de CDP para este contrato",
+  RESOLUCION_SIN_VINCULACIONES: "Esta resolución no tiene vinculaciones para mostrar",
+  INGRESE_IDENTIFICACION_PROVEEDOR:"Ingrese identificación del proveedor",
+  DATOS_PROVEEDOR:"Datos proveedor",
+  IDENTIFICACION:"Identificación",
+  SELECCIONAR_RESOLUCION:"Selecciona la resolución",
+  CONTRATISTAS_RESOLUCION:"Contratistas en esta resolución",
+  SELECCIONE_CDP:"Seleccione el CDP",
+  RUBRO:"Rubro",
+  VER:"Ver",
+  SELECCIONAR:"Seleccionar",
+  CANCELAR:"Cancelar",
+  CONFIRMAR:"Confirmar",
+  AGREGAR:"Agregar",
+  REGISTRAR:"Registrar",
+  SOLICITAR_RP:"Solicitar RP",
+  QUITAR_RUBRO:"Quitar",
+  VER_SEGUIMIENTO_FINANCIERO:"Ver seguimiento financiero",
+  APROBAR:"Aprobar",
+  RECHAZAR:"Rechazar",
+  SOLICITAR_CDP:"Solicitar CDP",
+  GENERAR_RESOLUCION:"Generar Resolución",
+  REALIZAR_EXPEDICION:"Realizar expedición de la resolución con los datos introducidos",
+  INFORMACION_PERSONA_NATURAL:"Información persona natural",
+  VINCULAR_DOCENTES_SELECCIONADOS:"Vincular docentes seleccionados a la resolución",
+  FORMACION_ACADEMICA:"Formación académica",
+  EXPERIENCIA_LABORAL_DOCENTE:"Experiencia laboral docente",
+  TRABAJOS_INVESTIGACION:"Trabajos de investigación",
   RP_MASIVO:"¿Es para una solicitud de registro presupuestal masiva?",
   NOMBRE_PROVEEDOR:"Nombre proveedor",
   TIPO_PERSONA:"Tipo persona",
@@ -133,7 +133,7 @@ var text_es = {
   DE:"de",
   MONTO:"Monto",
 
-  //SOLICITUD RP
+ //SOLICITUD RP
   ERROR:"Error",
   SALIR:"Salir",
   VOLVER_CONTRATOS:"Volver a contratos",
@@ -231,266 +231,254 @@ var text_es = {
   UNITARIO:"Unitario",
   NO_HAY_DATOS_REDIRIGIR:"No hay datos para mostrar, será redirigido al menú anterior",
 
-    /*
-      contrato_detalle.html
-      */
-    INFORMACION_CONTRATO:"Información Vinculación",
-    FORMA_PAGO:"Forma de pago",
-    SEDE_SOLICITANTE:"Sede solicitante",
-    NUMERO_CDP:"Número de CDP",
-    NUMERO_NECESIDAD:"Número de necesidad",
-    OBJETO_CDP:"Objeto del CDP",
-    JUSTIFICACION:"Justificación",
-    DESCRIPCION_FORMA_PAGO:"Descripción forma de pago",
-    OBSERVACIONES:"Observaciones",
-    /*
-    Contrato_resumen.html
-    */
-    DOCENTES_CONTRATADOS:"Docentes contratados - periodo actual",
-    CEDULA:"Cédula",
-    EXPEDICION:"Expedida",
-    CATEGORIA:"Categoría",
-    DEDICACION:"Dedicación",
-    HORAS_SEMANALES:"Horas semanales",
-    PERIODO_VINCULACION:"Periodo vinculación",
-    VINCULACION:"Vinculación",
-    VALOR_CONTRATO:"Valor del contrato",
-    /*
-    Contrato_registro.html
-    */
-    DATOS_BASICOS:"Información básica",
-    DISPONIBILIDAD:"Disponibilidad",
-    JUSTIFICACION_Y_OBSERVACIONES:"Justificación y observaciones",
-    /*
-    Experiencia_laboral_detalle.html
-    */
-    TIPO_ACTIVIDAD:"Tipo de actividad",
-    CAMPO_ENSENANZA:"Campo de enseñanza",
-    INICIO:"Inicio",
-    FINALIZACION:"Finalización",
-    INSTITUCION:"Institución",
-    PAIS:"País",
-    DEPARTAMENTO:"Departamento",
-    MUNICIPIO:"Municipio",
-    LOCALIDAD:"Localidad",
-    TIPO_DEDICACION:"Tipo de dedicación",
-    /*
-    formacion_academica.html
-    */
-    NOMBRE_PROYECTO:"Nombre del proyecto",
-    AREA_CONOCIMIENTO:"Área del conocimiento",
-    TITULO_DOCENTE:"Título",
-    /*
-    hojas_vida_seleccion.html
-    */
-    TITULO_VIN_DOC:"Vinculación de docentes.",
-    TITULO_RES:"Resolución #",
-    HOJAS_VIDA_INSCRITAS:"Docentes inscritos",
-    SELECCIONE_PROY:"Seleccione el proyecto curricular",
-    DOCENTE_VINCULADOS:"Docentes vinculados",
-    VINCULACION_EXITOSA:"Se ha vinculado el docente",
-    DESVINCULACION_EXITOSA:"Se ha desvinculado docente exitosamente",
-    DESVINCULACION_NOEXITOSA:"Error al desvincular docente",
-    TITULO_DISP: "Disponibilidad",
-    ELEGIR_DISP: "Elegir disponibilidad",
-    /*
-    Informacion_personal.html
-    */
-    INFORMACION_PERSONAL:"Información personal",
-    DOCUMENTO:"Documento",
-    FECHA_EXPEDICION:"Fecha de expedición",
-    PRIMER_NOMBRE:"Primer nombre",
-    SEGUNDO_NOMBRE:"Segundo nombre",
-    PRIMER_APELLIDO:"Primer apellido",
-    SEGUNDO_APELLIDO:"Segundo apellido",
-    PAIS_NACIMIENTO:"País de nacimiento",
-    ESTADO_CIVIL:"Estado civil",
+  //CONTRATO_DETALLE
+  INFORMACION_CONTRATO:"Información Vinculación",
+  FORMA_PAGO:"Forma de pago",
+  SEDE_SOLICITANTE:"Sede solicitante",
+  NUMERO_CDP:"Número de CDP",
+  NUMERO_NECESIDAD:"Número de necesidad",
+  OBJETO_CDP:"Objeto del CDP",
+  JUSTIFICACION:"Justificación",
+  DESCRIPCION_FORMA_PAGO:"Descripción forma de pago",
+  OBSERVACIONES:"Observaciones",
+  //CONTRATO_RESUMEN
+  DOCENTES_CONTRATADOS:"Docentes contratados - periodo actual",
+  CEDULA:"Cédula",
+  EXPEDICION:"Expedida",
+  CATEGORIA:"Categoría",
+  DEDICACION:"Dedicación",
+  HORAS_SEMANALES:"Horas semanales",
+  PERIODO_VINCULACION:"Periodo vinculación",
+  VINCULACION:"Vinculación",
+  VALOR_CONTRATO:"Valor del contrato",
+  DOCENTES_CONTRATADOS_ACTUAL:"DOCENTES CONTRATADOS - PERIODO ACTUAL",
+  BTN:{
+    VER:"Ver",
+    SOLICITAR:"Solicitar"
+  },
 
-    /*
-    persona_natural_detalle.html
-    */
-    CIUDAD_EXPEDICION:"Ciudad de expedición",
-    GENERO:"Genero",
-    /*
-    resolucion_detalle-html
-    */
-    RESOLUCION:"Resolución",
-    FORMATO_RESOLUCION:"Formato de resolución",
-    VER_DOCENTES:"Ver docentes contratados",
-    NUMERO_RESOLUCION:"Número de resolución",
-    FACULTAD:"Facultad",
-    NIVEL_ACADEMICO:"Nivel académico",
-    PREAMBULO:"Preámbulo",
-    CONSIDERANDO:"Considerando",
-    VISTA_RESOLUCION:"Vista de la resolución",
-    VISTA_RESOLUCION_ACTUALIZADA:"Vista de la resolución actualizada",
-    RESUELVE:"Resuelve",
-    ARTICULO:"Artículo",
-    TEXTO:"Texto",
-    PARAGRAFO:"Parágrafo",
-    ACTA_INICIO:"Acta Inicio",
-    /*
-    res_generacion.html
-    */
-    GENERACION_RESOLUCION:"Generación resolución",
-    SELECCIONE:"Seleccione",
-    CONSIDERACION:"Consideración",
-    RESOLUCIONES:"Resoluciones",
-    LISTA_RESOLUCIONES:"Lista de resoluciones",
-    /*
-    resolucion_cancelacion.html
-    */
-    SELEC_VIN_BTN:"Seleccionar vinculaciones",
+  //CONTRATO_REGISTRO
+  DATOS_BASICOS:"Información básica",
+  DISPONIBILIDAD:"Disponibilidad",
+  JUSTIFICACION_Y_OBSERVACIONES:"Justificación y observaciones",
+  NO_CALCULADO_SALARIO:"El salario no ha podido ser calculado",
+  EXPEDIR:"¿Expedir la resolución?",
+  SEGURO_EXPEDIR:"¿Está seguro que desea expedir la resolución?",
+  EXPEDICION_NO_REALIZADA:"No se ha realizado la expedición de la resolución",
+  EXPEDIDA:"La resolución ha sido expedida con éxito",
+  DATOS_REGISTRADOS:"Los datos de las vinculaciones realizadas han sido registradas con éxito",
+  PROBLEMA_EXPEDICION:"Se ha presentado un problema en la expedición de la resolución",
+  PROBLEMA_DOCENTE_CONTRATADOS:"Se ha presentado un problema en el registro de los datos de los docentes contratados",
+  NO_DOCENTES:"No hay docentes inscritos dentro de la resolución",
 
-    /*
-    trabajos_investigacion.html
-    */
-    NOMBRE_INVESTIGACION:"Nombre de la investigación",
-    AREA_INVESTIGACION:"Área de la investigación",
-    TIPO_INVESTIGACION:"Tipos de investigación",
+  //HOJAS_VIDA_SELECCION
+      /*---HTML---*/
+      TITULO_VIN_DOC:"Vinculación de docentes.",
+      TITULO_RES:"Resolución #",
+      HOJAS_VIDA_INSCRITAS:"Docentes inscritos",
+      DOCENTE_VINCULADOS:"Docentes vinculados",
+      SELECCIONE_PROY:"Seleccione el proyecto curricular",
+      TITULO_DISP: "Disponibilidad",
+      VINCULAR_DOCENTES_SELECCIONADOS: "Vincular docentes seleccionados",
+      ELEGIR_DISP: "Elegir disponibilidad",
+      /*---Script---*/
+      APELLIDO_DOCENTES:"Apellidos",
+      NOMBRES_DOCENTES: "Nombres",
+      DOCUMENTO_DOCENTES:"Documento",
+      HORAS_LECTIVAS: "Horas lectivas",
+      PROYECTO_CURRICULAR: "Proyecto curricular",
+      HORAS_SEMANALES: "Horas semanales",
+      SEMANAS:"Semanas",
+      NUM_DISPO_DOCENTE: "Disponibilidad",
+      VIGENCIA_DISP: "Vigencia",
+      FECHA_DISP: "Fecha de registro",
+      VALOR_APROPIACION: "Valor",
+      SALDO_APROPIACION: "Saldo",
+      VINCULACION_EXITOSA:"Se ha vinculado el docente",
+      ACEPTAR:"Aceptar",
+      PREGUNTA_SEGURO:"¿Está seguro?",
+      CONFIRMAR_DESVINCULACION:"¿Desea confirmar la desvinculación del docente?",
+      DESVINCULAR_DOCENTE:"Desvincular docente",
+      CANCELADO:"Cancelado",
+      DESVINCULACION_CANCELADA:"La desvinculación ha sido cancelada",
+      DESVINCULACION_EXITOSA:"Se ha desvinculado docente exitosamente",
+      DESVINCULACION_NOEXITOSA:"Error al desvincular docente",
+      BORRAR_BTN:"Borrar",
 
-    /*
-    Scrits
-    Hoja de vida seleccion.js
-    */
+  //RESOLUCION_ADICION_DETALLE
+      /*---HTML---*/
+      TITULO_DOC_VIN_RES_AD: "Docentes vinculados a resolución de adicion",
+      /*---Script---*/
+      ALERTA_SEGURO_ANULACION_ADICION:"¿Está seguro de que desea anular la adicion?",
+      CONFIRMACION_ANULACION_ADICION:"Anular adición",
+      ALERTA_ANULACION_EXITOSA: "Anulación exitosa",
+      ALERTA_ERROR_ANULACION:"Error en anulación",
+
+  //RESOLUCION_ADICION
+      /*---HTML---*/
+      TITULO_DOC_A_MODIFICAR_HORAS: "Docentes a los que se les desea modificar horas",
+      TITULO_ADICION_HORAS: "Adición de horas",
+      LABEL_HORAS_ACTUALES: "Horas actuales",
+      LABEL_HORAS_A_ADICIONAR: "Horas a adicionar",
+      LABEL_HORAS_TOTALES:"Horas totales",
+      LABEL_DISP_ACTUAL: "Disponibilidad actual",
+      BTN_CAMBIAR_DISP: "Cambiar disponibilidad",
+      BTN_REALIZAR_NUEVA_VIN: "Realizar nueva vinculación",
+      /*---Script---*/
+      ALERTA_ADICION_EXITOSA: "Adición realizada exitosamente",
+      ALERTA_ERROR_ADICION: "Error al realizar adición",
+
+  //RESOLUCION_ADMINISTRACION
+      NO_RESTAURACION_RESOLUCION:"No se ha realizado la restauración de la resolución",
+      NO_CANCELADA_PAGOS:"La resolución no puede ser cancelada debido a que hay pagos asociados a las vinculaciones.",
+      NO_CANCELACION_RESOLUCION:"No se ha realizado la cancelación de la resolución.",
+      PREGUNTA_RESTAURAR:"¿Restaurar la resolución?",
+      CANCELAR_RESOLUCION:"¿Cancelar la resolución?",
+      OPCIONES:"Opciones",
+      CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
+      IRREVERSIBLE: "Esta acción es irreversible",
+      APROBADA: "Resolución Aprobada",
+
+  //RESOLUCION_CANCELACION_DETALLE
+      /*---HTML---*/
+      SELEC_VIN_BTN:"Seleccionar vinculaciones",
+      /*---Script---*/
+      PREGUNTA_SEGURO_ANULAR_DESV: "¿Está seguro de que desea anular la desvinculación?",
+      CONFIRMACION_ANULAR_DESV: "Anular desvinculación",
+
+  //RESOLUCION_CANCELACION
+      /*---Script---*/
+      ALERTA_DESVIN_EXITOSA:"Desvinculación realizada correctamente",
+      ALERTA_ERROR_DESVIN: "Error al realizar desvinculación",
+
+  //RESOLUCION_DETALLE
+      /*---HTML---*/
+      RESOLUCION:"Resolución",
+      FORMATO_RESOLUCION:"Formato de resolución",
+      NUMERO_RESOLUCION:"Número de resolución",
+      FACULTAD:"Facultad",
+      NIVEL_ACADEMICO:"Nivel académico",
+      PREAMBULO:"Preámbulo",
+      CONSIDERANDO:"Considerando",
+      VISTA_RESOLUCION:"Vista de la resolución",
+      VISTA_RESOLUCION_ACTUALIZADA:"Vista de la resolución actualizada",
+      RESUELVE:"Resuelve",
+      ARTICULO:"Artículo",
+      TEXTO:"Texto",
+      PARAGRAFO:"Parágrafo",
+      /*---Script---*/
+      ESCRIBA_TEXTO:"Escriba el texto del artículo",
+      DEBE_INSERTAR:"Debe insertar texto.",
+      ALMENOS_UNO:"La resolución debe tener al menos un artículo",
+      ESCRIBA_PARAGRAFO:"Escriba el texto del paragrafo",
+      GUARDADO:"Guardado",
+      GUARDADO_EXITO:"Los cambios se han guardado exitosamente",
+      PROBLEMA_ALMACENAMIENTO:"Ha habido un problema en el almacenamiento de los cambios",
+      REVISE_DATOS_RESOLUCION:"Revise los datos de la resolución",
+      CREAR_RESOLUCION:"Crear resolución de vinculación especial",
+
+  //RESOLUCION_GENERACION
+      /*---HTML---*/
+      GENERACION_RESOLUCION:"Generación resolución",
+      SELECCIONE:"Seleccione",
+      SELECCIONE_TIPO_RES: "Seleccione el tipo de resolución a crear",
+      ASOCIAR_RESOLUCION: "Asociar resolución",
+      /*---Script---*/
+      INFORMACION_CONTENIDO: "Los artículos son creados por defecto y pueden ser editados",
+      CONFIRMAR_GUARDAR_RESOLUCION: "Guardar resolución",
+      CANCELAR_GUARDAR_RESOLUCION: "Cancelar",
+      ALERTA_RESOLUCION_EXITOSA: "Se insertó correctamente la resolución",
+      ALERTA_ERROR_RESOLUCION: "Error al insertar resolución",
+      ALERTA_SELEC_RESOLUCION:"Seleccione una resolución para cancelar",
+      DATOS_RESOLUCION: "Datos de la resolución",
+
+  //RESOLUCION_GESTION
+      /*---HTML---*/
+      RESOLUCIONES: "Resoluciones",
+      LISTA_RESOLUCIONES: "Lista de resoluciones",
+      /*---Script---*/
+      PERIODO: "Periodo",
+      NIVEL: "Nivel",
+      VER_BTN:"Ver",
+      VER_DOC_BTN: "Ver documento",
+      VINCULAR_BTN:"Vincular docentes",
+      VER_DOCENTES_VIN_BTN: "Ver docentes vinculados",
+      ADICIONAR_HORAS_BTN: "Adicionar horas",
+      REDUCIR_HORAS_BTN: "Reducir horas",
+      CANCELAR_VIN_BTN: "Cancelar vinculación",
+      APROBAR_BTN:"Aprobar",
+      CONFIGURAR_BTN:"Configurar",
+      CONFIGURAR_DOC_BTN:"Configurar documento",
+      EXPEDIR_BTN:"Expedir",
+      CANCELAR_BTN:"Cancelar resolución",
+      RESTAURAR_BTN:"Restaurar resolución",
+
+  //RESOLUCION_REDUCCION_DETALLE
+      /*---Script---*/
+      PREGUNTA_SEGURO_ANULAR_RED: "¿Está seguro de que desea anular la reducción?",
+      CONFIRMAR_ANULAR_REDUCCION: "Anular reducción",
+
+  //RESOLUCION_REDUCCION
+      /*---HTML---*/
+      TITULO_REDUCCION_HORAS: "Reducción de horas",
+      LABEL_HORAS_A_REDUCIR: "Horas a reducir",
+      ALERTA_REDUCCION_EXITOSA: "Reducción realizada exitosamente",
+      ALERTA_ERROR_REDUCCION: "Error al realizar reducción",
+
+  //RESOLUCION_VISTA
+      /*---Script---*/
+      VISTA_PREVIA_RESOLUCION:"Vista previa de la resolución",
+      NIVEL:"Nivel",
+      CIUDAD_EXPEDICION:"Ciudad de expedición",
+      COMUNIQUESE_Y_CUM: "COMUNÍQUESE Y CÚMPLASE",
+
+  // Minutas Plantillas
+  BTN_MINUTAS:{
+    GENERAR_MINUTA:"Generar Plantilla",
+    AGREGAR_CLAUSULA:"Agregar Clausula",
+    ELIMINAR_CLAUSULA:"Eliminar Clausula",
     ACEPTAR:"Aceptar",
-    VALIDAR_CONTRATO:"Los valores asignados no son validos para la resolución actual, por favor remitirse a la pestaña tenga en cuenta para poder ver las reglas.",
-    APELLIDO_DOCENTES:"Apellidos",
-    NOMBRES_DOCENTES: "Nombres",
-    DOCUMENTO_DOCENTES:"Documento",
-    HORAS_LECTIVAS: "Horas lectivas",
-    PROYECTO_CURRICULAR: "Proyecto curricular",
-    CANCELADO:"Cancelado",
-    PREGUNTA_SEGURO:"¿Está seguro?",
-    CONFIRMAR_DESVINCULACION:"Desea confirmar la desvinculación del docente",
-    DESVINCULAR_DOCENTE:"Desvincular docente",
-    DESVINCULACION_CANCELADA:"La desvinculación ha sido cancelada",
-    HORAS_SEMANALES: "Horas semanales",
-    NUM_DISPO_DOCENTE: "Disponibilidad",
-    VIGENCIA_DISP: "Vigencia",
-    FECHA_DISP: "Fecha de registro",
-    VALOR_APROPIACION: "Valor",
-    SALDO_APROPIACION: "Saldo",
-    SEMANAS:"Semanas",
-    BORRAR_BTN:"Borrar",
-    PERIODO: "Periodo",
-
-    /*
-    resolucion_lista.js
-    */
-    VISTA_PREVIA_RESOLUCION:"Vista previa de la resolución",
-    NIVEL:"Nivel",
-    /*
-    resolucion_cancelacion.js
-    */
-    SELECCION_VIN_EXITOSA:"Vinculaciones seleccionadas exitosamente",
-    SELECCION_VIN_NO_EXITOSA:"Error al seleccionar desvinculaciones",
-    /*
-    contrato_registro.js
-    */
-    NO_CALCULADO_SALARIO:"El salario no ha podido ser calculado",
-    EXPEDIR:"¿Expedir la resolución?",
-    SEGURO_EXPEDIR:"¿Está seguro que desea expedir la resolución?",
-    EXPEDICION_NO_REALIZADA:"No se ha realizado la expedición de la resolución",
-    EXPEDIDA:"La resolución ha sido expedida con éxito",
-    DATOS_REGISTRADOS:"Los datos de las vinculaciones realizadas han sido registradas con éxito",
-    PROBLEMA_EXPEDICION:"Se ha presentado un problema en la expedición de la resolución",
-    PROBLEMA_DOCENTE_CONTRATADOS:"Se ha presentado un problema en el registro de los datos de los docentes contratados",
-    NO_DOCENTES:"No hay docentes inscritos dentro de la resolución",
-
-    /*
-    resolucion_detalle.js
-    */
-    ESCRIBA_TEXTO:"Escriba el texto del artículo",
-    DEBE_INSERTAR:"Debe insertar texto.",
-    ALMENOS_UNO:"La resolución debe tener al menos un artículo",
-    ESCRIBA_PARAGRAFO:"Escriba el texto del paragrafo",
-    GUARDADO:"Guardado",
-    GUARDADO_EXITO:"Los cambios se han guardado exitosamente",
-    PROBLEMA_ALMACENAMIENTO:"Ha habido un problema en el almacenamiento de los cambios",
-    REVISE_DATOS_RESOLUCION:"Revise los datos de la resolución",
-    CREAR_RESOLUCION:"Crear resolución de vinculación especial",
-    /*
-    resolucion_administracion.js
-    */
-    NO_RESTAURACION_RESOLUCION:"No se ha realizado la restauración de la resolución",
-    NO_CANCELADA_PAGOS:"La resolución no puede ser cancelada debido a que hay pagos asociados a las vinculaciones.",
-    NO_CANCELACION_RESOLUCION:"No se ha realizado la cancelación de la resolución.",
-    PREGUNTA_RESTAURAR:"¿Restaurar la resolución?",
-    CANCELAR_RESOLUCION:"¿Cancelar la resolución?",
-    OPCIONES:"Opciones",
-    VER_BTN:"Ver",
-    VER_DOC_BTN: "Ver documento",
-    VINCULAR_BTN:"Vincular docentes",
-    VER_DOCENTES_VIN_BTN: "Ver docentes vinculados",
-    ADICIONAR_HORAS_BTN: "Adicionar horas",
-    REDUCIR_HORAS_BTN: "Reducir horas",
-    CANCELAR_VIN_BTN: "Cancelar vinculación",
-    APROBAR_BTN:"Aprobar",
-    CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
-    IRREVERSIBLE: "Esta acción es irreversible",
-    APROBADA: "Resolución Aprobada",
-    CONFIGURAR_BTN:"Configurar",
-    CONFIGURAR_DOC_BTN:"Configurar documento",
-    EXPEDIR_BTN:"Expedir",
-    CANCELAR_BTN:"Cancelar resolución",
-    RESTAURAR_BTN:"Restaurar resolución",
-    /*
-    contrato_resumen.html
-    */
-    DOCENTES_CONTRATADOS_ACTUAL:"DOCENTES CONTRATADOS - PERIODO ACTUAL",
-    BTN:{
-        VER:"Ver",
-        SOLICITAR:"Solicitar"
-    },
-
-    // Minutas Plantillas
-    BTN_MINUTAS:{
-        GENERAR_MINUTA:"Generar Plantilla",
-        AGREGAR_CLAUSULA:"Agregar Clausula",
-        ELIMINAR_CLAUSULA:"Eliminar Clausula",
-        ACEPTAR:"Aceptar",
-        AGREGAR_PARAGRAFO:"Agregar Parágrafo",
-        ELIMINAR_PARAGRAFO:"Eliminar Parágrafo",
-        GUARDAR:"Guardar",
-        VISTA_PREVIA:"Vista Previa Plantilla",
-        VISTA_PREVIA_ACTUALIZADA:"Vista Previa Actualizada",
-        BORRAR:"Borrar"
-    },
-    GENERACION_MINUTA:"Generación de Plantillas",
-    GESTION_PLANTILLAS:"Gestión de Plantillas",
-    DEPENDENCIA:"Dependencia",
-    TITULO_MINUTA:"Titulo de la Minuta",
-    TIPO_CONTRATO:"Tipo Contrato",
-    INTRODUCCION:"Introducción",
-    FORMATO_MINUTA:"Información de la Minuta",
-    VISTA_PREVIA:"Vista previa",
-    CLAUSULA:"Cláusula",
-    DESCRIPCION:"Descripción",
-    FORMATO_TEXTO:"Formato",
-    FECHA_ACTIVACION:"Fecha de Activación",
-    FECHA_INACTIVACION:"Fecha de Inactivación",
-    REGISTRAR_PLANTILLA:"Registrar Nueva Plantilla",
-    PLANTILLA_EXISTENTE:"Utilizar una Plantilla Existente",
-    GESTION_PLANTILLA:"Gestión",
-    FILTRAR_POR:"Filtrar Por",
-    ENCABEZADO_MINUTA:"Encabezado",
-    PIE_MINURA:"Píe de página",
-    PARAMETROS_PDF:"Parámetros del Pdf",
-    MARGENES:"Márgenes",
-    SUPERIOR:"Superior",
-    INFERIOR:"Inferior",
-    IZQUIERDA:"Izquierda",
-    DERECHA:"Derecha",
-    AGREGAR_COMODIN:"Agregar comodín",
-    //Directiva Avance
-    INFORMACION_AVANCE:"Información del Avance",
-    NUMERO_TELEFONICO:"Número de Teléfono",
-    DIRECCION:"Dirección",
-    CORREO_ELECTRONICO:"Correo Electrónico",
-    NUMERO_CELULAR:"Número de Celular",
-    CONVENIO:"Convenio",
-    PROYECTO_INVESTIGACION:"Proyecto de Investigación",
+    AGREGAR_PARAGRAFO:"Agregar Parágrafo",
+    ELIMINAR_PARAGRAFO:"Eliminar Parágrafo",
+    GUARDAR:"Guardar",
+    VISTA_PREVIA:"Vista Previa Plantilla",
+    VISTA_PREVIA_ACTUALIZADA:"Vista Previa Actualizada",
+    BORRAR:"Borrar"
+  },
+  GENERACION_MINUTA:"Generación de Plantillas",
+  GESTION_PLANTILLAS:"Gestión de Plantillas",
+  DEPENDENCIA:"Dependencia",
+  TITULO_MINUTA:"Titulo de la Minuta",
+  TIPO_CONTRATO:"Tipo Contrato",
+  INTRODUCCION:"Introducción",
+  FORMATO_MINUTA:"Información de la Minuta",
+  VISTA_PREVIA:"Vista previa",
+  CLAUSULA:"Cláusula",
+  DESCRIPCION:"Descripción",
+  FORMATO_TEXTO:"Formato",
+  FECHA_ACTIVACION:"Fecha de Activación",
+  FECHA_INACTIVACION:"Fecha de Inactivación",
+  REGISTRAR_PLANTILLA:"Registrar Nueva Plantilla",
+  PLANTILLA_EXISTENTE:"Utilizar una Plantilla Existente",
+  GESTION_PLANTILLA:"Gestión",
+  FILTRAR_POR:"Filtrar Por",
+  ENCABEZADO_MINUTA:"Encabezado",
+  PIE_MINURA:"Píe de página",
+  PARAMETROS_PDF:"Parámetros del Pdf",
+  MARGENES:"Márgenes",
+  SUPERIOR:"Superior",
+  INFERIOR:"Inferior",
+  IZQUIERDA:"Izquierda",
+  DERECHA:"Derecha",
+  AGREGAR_COMODIN:"Agregar comodín",
+  //Directiva Avance
+  INFORMACION_AVANCE:"Información del Avance",
+  NUMERO_TELEFONICO:"Número de Teléfono",
+  DIRECCION:"Dirección",
+  CORREO_ELECTRONICO:"Correo Electrónico",
+  NUMERO_CELULAR:"Número de Celular",
+  CONVENIO:"Convenio",
+  PROYECTO_INVESTIGACION:"Proyecto de Investigación",
 
 };
 
@@ -510,26 +498,26 @@ var text_en = {
   SEGUNDO_NOMBRE:"Middle name",
   TITULO: "GENERATOR-OAS",
   MENSAJE_INICIAL: "Now get to start to develop ...",
-    VER: "See",
-    SELECCIONAR: "Choose",
-    CANCELAR: "Cancel",
-    CONFIRMAR: "Confirm",
-    AGREGAR: "Add",
-    REGISTRAR: "Register",
-    SOLICITAR_RP: "RP request",
-    QUITAR_RUBRO: "Delete",
-    APROBAR: "Approbe",
-    RECHAZAR: "Reject",
-    SOLICITAR_CDP: "CDP Request",
-    VER_SEGUIMIENTO_FINANCIERO: "See financial monitoring",
-    CREAR_RESOLUCION: "Create new special entailment resolution",
-    GENERAR_RESOLUCION: "Generate Resolution",
-    REALIZAR_EXPEDICION: "Issue the resolution with the data entered",
-    INFORMACION_PERSONA_NATURAL: "Information natural person",
-    VINCULAR_DOCENTES_SELECCIONADOS: "Entailment selected teachers to resolution",
-    FORMACION_ACADEMICA: "Academic training",
-    EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
-    TRABAJOS_INVESTIGACION: "Investigation work",
+  VER: "See",
+  SELECCIONAR: "Choose",
+  CANCELAR: "Cancel",
+  CONFIRMAR: "Confirm",
+  AGREGAR: "Add",
+  REGISTRAR: "Register",
+  SOLICITAR_RP: "RP request",
+  QUITAR_RUBRO: "Delete",
+  APROBAR: "Approbe",
+  RECHAZAR: "Reject",
+  SOLICITAR_CDP: "CDP Request",
+  VER_SEGUIMIENTO_FINANCIERO: "See financial monitoring",
+  CREAR_RESOLUCION: "Create new special entailment resolution",
+  GENERAR_RESOLUCION: "Generate Resolution",
+  REALIZAR_EXPEDICION: "Issue the resolution with the data entered",
+  INFORMACION_PERSONA_NATURAL: "Information natural person",
+  VINCULAR_DOCENTES_SELECCIONADOS: "Entailment selected teachers to resolution",
+  FORMACION_ACADEMICA: "Academic training",
+  EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
+  TRABAJOS_INVESTIGACION: "Investigation work",
   NECESIDADES: "Needs",
   NECESIDAD: "Need",
   RECTOR: "Rector",
@@ -718,261 +706,55 @@ var text_en = {
   TOTAL:"Total",
   UNITARIO:"Unit",
   NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu",
-  /*
-    contrato_detalle.html
-    */
-    INFORMACION_CONTRATO: "Entailment information",
-    FORMA_PAGO: "Way to pay",
-    SEDE_SOLICITANTE: "Applicant seat",
-    NUMERO_CDP: "Number of CDP",
-    NUMERO_NECESIDAD: "Need number",
-    OBJETO_CDP: "Purpose of the CDP",
-    JUSTIFICACION: "Justification",
-    DESCRIPCION_FORMA_PAGO: "Description of payment method",
-    OBSERVACIONES: "Observations",
-    /*
-    Contrato_resumen.html
-    */
-    DOCENTES_CONTRATADOS: "Teachers hired - current period",
-    CEDULA: "Identification card",
-    EXPEDICION: "Issued",
-    CATEGORIA: "Category",
-    DEDICACION: "Dedication",
-    HORAS_SEMANALES: "Weekly hours",
-    PERIODO_VINCULACION: "Entailment period",
-    VINCULACION:"Entailment",
-    VALOR_CONTRATO: "Value of contract",
-    /*
-    Contrato_registro.html
-    */
-    DATOS_BASICOS: "Basic information",
-    DISPONIBILIDAD: "Availability",
-    JUSTIFICACION_Y_OBSERVACIONES: "Justification and observations",
-    /*
-    Experiencia_laboral_detalle.html
-    */
-    TIPO_ACTIVIDAD: "Type of activity",
-    CAMPO_ENSEÑANZA: "Field of instruction",
-    INICIO: "Start",
-    FINALIZACION: "Ending",
-    INSTITUCION: "Institution",
-    PAIS: "Country",
-    DEPARTAMENTO: "Department",
-    MUNICIPIO: "Municipality",
-    LOCALIDAD: "Location",
-    TIPO_DEDICACION: "Type of dedication",
-    /*
-    formacion_academica.html
-    */
-    NOMBRE_PROYECTO: "Project's name",
-    AREA_CONOCIMIENTO: "Area of knowledge",
-    TITULO_DOCENTE: "Degree",
-    /*
-    hojas_vida_seleccion.html
-    */
-    TITULO_VIN_DOC: "Professors' hiring",
-    TITULO_RES: "Resolution #",
-    HOJAS_VIDA_INSCRITAS: "Professors inscribed",
-    SELECCIONE_PROY: "Select Curricular Project",
-    DOCENTE_VINCULADOS: "Entailment professors",
-    VINCULACION_EXITOSA: "Professor inscribed",
-    DESVINCULACION_EXITOSA: "Professor was unsuscribed successfully",
-    DESVINCULACION_NOEXITOSA: "Error in unsuscribing professor",
-    TITULO_DISP: "Availability",
-    ELEGIR_DISP: "Choose Availability",
-    /*
-    Informacion_personal.html
-    */
-    INFORMACION_PERSONAL: "Personal information",
-    DOCUMENTO: "Document",
-    FECHA_EXPEDICION: "Expedition date",
-    PRIMER_NOMBRE: "First name",
-    PRIMER_APELLIDO: "Surname",
-    SEGUNDO_APELLIDO: "Second surname",
-    PAIS_NACIMIENTO: "Country of birth",
-    ESTADO_CIVIL: "Civil status",
 
 
-    /*
-    persona_natural_detalle.html
-    */
-    CIUDAD_EXPEDICION: "Expedition city",
-    GENERO: "Gender",
-    /*
-    resolucion_detalle-html
-    */
-    RESOLUCION: "Resolution",
-    FORMATO_RESOLUCION: "Resolution format",
-    VER_DOCENTES: "See teachers hired",
-    NUMERO_RESOLUCION: "Resolution number",
-    FACULTAD: "Faculty",
-    NIVEL_ACADEMICO: "Academic level",
-    PREAMBULO: "Preamble",
-    CONSIDERANDO: "Considering",
-    VISTA_RESOLUCION: "Resolution view",
-    VISTA_RESOLUCION_ACTUALIZADA: "View of updated resolution",
-    RESUELVE: "Resolves",
-    ARTICULO: "Article",
-    TEXTO: "Text",
-    PARAGRAFO: "Paragraph",
-    ACTA_INICIO: "Beginning Act",
-    /*
-    res_generacion.html
-    */
-    GENERACION_RESOLUCION: "Generation resolution",
-    SELECCIONE: "Select",
-    CONSIDERACION: "Consideration",
-    RESOLUCIONES: "Resolutions",
-    LISTA_RESOLUCIONES: "List of resolutions",
-    /*
-    resolucion_cancelacion.html
-    */
-    SELEC_VIN_BTN:"Select connections",
-    /*
-    trabajos_investigacion.html
-    */
-    NOMBRE_INVESTIGACION: "Name of research",
-    AREA_INVESTIGACION: "Area of research",
-    TIPO_INVESTIGACION: "Types of research",
-    /*
-    resolucion_lista.html
-    */
-    /*
-    Scrits
-    Hoja de vida seleccion.js
-    */
+
+  BTN_MINUTAS: {
+    GENERAR_MINUTA: "Generate",
+    AGREGAR_CLAUSULA: "Adding a Clause",
+    ELIMINAR_CLAUSULA: "Delete Clause",
     ACEPTAR: "Accept",
-    VALIDAR_CONTRATO: "The assigned values are not valid for the current resolution, please refer to the tab Keep in mind in order to see the rules.",
-    APELLIDO_DOCENTES:"Lastnames",
-    NOMBRES_DOCENTES: "Names",
-    DOCUMENTO_DOCENTES:"ID",
-    HORAS_LECTIVAS: "Teaching load",
-    PROYECTO_CURRICULAR: "Curricular Project",
-    DOCUMENTO_ID: "DOCUMENT",
-    CANCELADO: "Cancelled",
-    PREGUNTA_SEGURO: "Are you sure?",
-    CONFIRMAR_DESVINCULACION: "You wish to confirm the teacher's disengagement",
-    DEVINCULAR_DOCENTE: "Unveil teacher",
-    DESVINCULACION_CANCELADA: "Entailment has been canceled",
-    HORAS_SEMANALES: "Week hours",
-    NUM_DISPO_DOCENTE: "Availability",
-    VIGENCIA_DISP: "Validity",
-    FECHA_DISP: "Record date",
-    VALOR_APROPIACION: "Value",
-    SALDO_APROPIACION: "Remainder",
-    SEMANAS:"Weeks",
-    BORRAR_BTN:"Delete",
-    PERIODO: "Term",
-    /*
-    resolucion_lista.js
-    */
-    VISTA_PREVIA_RESOLUCION: "Preview resolution",
-    NIVEL: "Level",
-    /*
-    resolucion_cancelacion.js
-    */
-    SELECCION_VIN_EXITOSA:"Connections correctly selected",
-    SELECCION_VIN_NO_EXITOSA:"Error on selected connections",
-    /*
-    contrato_registro.js
-    */
-    NO_CALCULADO_SALARIO: "The salary could not be calculated",
-    EXPEDIR: "Issue the resolution?",
-    SEGURO_EXPEDIR: "Are you sure you want to issue the resolution?",
-    EXPEDICION_NO_REALIZADA: "No issuance of the resolution",
-    EXPEDIDA: "The resolution has been successfully issued",
-    DATOS_REGISTRADOS: "The data of the connections made have been successfully registered",
-    PROBLEMA_EXPEDICION: "A problem has arisen in the issuance of the resolution",
-    PROBLEMA_DOCENTE_CONTRATADOS: "A problem has arisen in the registration of the data of contracted teachers",
-    NO_DOCENTES: "There are no teachers enrolled within the resolution",
+    AGREGAR_PARAGRAFO: "Add Paragraph",
+    ELIMINAR_PARAGRAFO: "Delete Paragraph",
+    GUARDAR: "Save",
+    VISTA_PREVIA: "Template Preview",
+    VISTA_PREVIA_ACTUALIZADA: "Template Preview Update",
+    BORRAR: "Delete"
+  },
 
-    /*
-    resolucion_detalle.js
-    */
-    ESCRIBA_TEXTO: "Write the text of the article",
-    DEBE_INSERTAR: "You must enter text.",
-    ALMENOS_UNO: "The resolution must have at least one article",
-    ESCRIBA_PARAGRAFO: "Enter the text of the paragraph",
-    GUARDADO: "Saved",
-    GUARDADO_EXITO: "Changes saved successfully",
-    PROBLEMA_ALMACENAMIENTO: "There was a problem storing changes",
-    REVISE_DATOS_RESOLUCION: "Review the resolution data",
-    /*
-    resolucion_administracion.js
-    */
-    NO_RESTAURACION_RESOLUCION: "Restore of resolution has not been performed",
-    NO_CANCELADA_PAGOS: "The resolution can not be canceled because there are payments associated with the bindings.",
-    NO_CANCELACION_RESOLUCION: "No cancellation of the resolution.",
-    PREGUNTA_RESTAURAR: "Restore resolution?",
-    CANCELAR_RESOLUCION: "Cancel the resolution?",
-    OPCIONES: "Options",
-    VER_BTN: "See",
-    VER_DOC_BTN: "See document",
-    VINCULAR_BTN:"Associate teachers",
-    VER_DOCENTES_VIN_BTN: "See associated teachers",
-    ADICIONAR_HORAS_BTN: "Add hours",
-    REDUCIR_HORAS_BTN: "Remove hours",
-    CANCELAR_VIN_BTN: "Cancel connection",
-    APROBAR_BTN: "Approve",
-    CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
-    IRREVERSIBLE: "Esta acción es irreversible",
-    DATOS_RESOLUCION: "Datos de la resolución:",
-    CONFIGURAR_BTN: "Set up",
-    CONFIGURAR_DOC_BTN:"Set up document",
-    EXPEDIR_BTN: "Issue",
-    CANCELAR_BTN: "Cancel resolution",
-    RESTAURAR_BTN: "Restore resolution",
-    /*
-    contrato_resumen.html
-    */
-    DOCENTES_CONTRATADOS_ACTUAL: "TEACHERS CONTRACTED - CURRENT PERIOD",
-
-    BTN_MINUTAS: {
-        GENERAR_MINUTA: "Generate",
-        AGREGAR_CLAUSULA: "Adding a Clause",
-        ELIMINAR_CLAUSULA: "Delete Clause",
-        ACEPTAR: "Accept",
-        AGREGAR_PARAGRAFO: "Add Paragraph",
-        ELIMINAR_PARAGRAFO: "Delete Paragraph",
-        GUARDAR: "Save",
-        VISTA_PREVIA: "Template Preview",
-        VISTA_PREVIA_ACTUALIZADA: "Template Preview Update",
-        BORRAR: "Delete"
-    },
-
-    GENERACION_MINUTA: "Template Generator",
-    GESTION_PLANTILLAS: "Template Management",
-    TITULO_MINUTA: "Agreement Title",
-    TIPO_CONTRATO: "Agreement Type",
-    INTRODUCCION: "Introduction",
-    FORMATO_MINUTA: "Agreement Information",
-    VISTA_PREVIA: "Preview",
-    CLAUSULA: "Clause",
-    DESCRIPCION: "Description",
-    FORMATO_TEXTO: "Format",
-    FECHA_ACTIVACION: "Activate Date",
-    FECHA_INACTIVACION: "Inactive Date",
-    REGISTRAR_PLANTILLA: "New Template Register",
-    PLANTILLA_EXISTENTE: "Use an Old Template",
-    GESTION_PLANTILLA: "Options",
-    DEPENDENCIA: "Unit",
-    FILTRAR_POR: "Search By",
-    ENCABEZADO_MINUTA: "Header",
-    PIE_MINURA: "Footer",
-    PARAMETROS_PDF: "Pdf Parameters",
-    MARGENES: "Margins",
-    SUPERIOR: "Top",
-    INFERIOR: "Buttom",
-    IZQUIERDA: "Left",
-    DERECHA: "Right",
-    AGREGAR_COMODIN: "Add wildcard"
+  GENERACION_MINUTA: "Template Generator",
+  GESTION_PLANTILLAS: "Template Management",
+  TITULO_MINUTA: "Agreement Title",
+  TIPO_CONTRATO: "Agreement Type",
+  INTRODUCCION: "Introduction",
+  FORMATO_MINUTA: "Agreement Information",
+  VISTA_PREVIA: "Preview",
+  CLAUSULA: "Clause",
+  DESCRIPCION: "Description",
+  FORMATO_TEXTO: "Format",
+  FECHA_ACTIVACION: "Activate Date",
+  FECHA_INACTIVACION: "Inactive Date",
+  REGISTRAR_PLANTILLA: "New Template Register",
+  PLANTILLA_EXISTENTE: "Use an Old Template",
+  GESTION_PLANTILLA: "Options",
+  DEPENDENCIA: "Unit",
+  FILTRAR_POR: "Search By",
+  ENCABEZADO_MINUTA: "Header",
+  PIE_MINURA: "Footer",
+  PARAMETROS_PDF: "Pdf Parameters",
+  MARGENES: "Margins",
+  SUPERIOR: "Top",
+  INFERIOR: "Buttom",
+  IZQUIERDA: "Left",
+  DERECHA: "Right",
+  AGREGAR_COMODIN: "Add wildcard"
 };
 
 angular.module('contractualClienteApp')
-    .config(function($translateProvider) {
-        $translateProvider
-            .translations("es", text_es)
-            .translations("en", text_en);
-        $translateProvider.preferredLanguage("es");
-        $translateProvider.useSanitizeValueStrategy("sanitizeParameters");
-    });
+.config(function($translateProvider) {
+  $translateProvider
+  .translations("es", text_es)
+  .translations("en", text_en);
+  $translateProvider.preferredLanguage("es");
+  $translateProvider.useSanitizeValueStrategy("sanitizeParameters");
+});

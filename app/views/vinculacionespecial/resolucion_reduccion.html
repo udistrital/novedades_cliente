@@ -5,7 +5,7 @@
 		<div class="col-md-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4 class="intro-text"> Docentes a los que se les desea modificar horas </h4>
+					<h4 class="intro-text">{{ 'TITULO_DOC_A_MODIFICAR_HORAS' | translate }} </h4>
 				</div>
 				<br>
 				<div class="col-md-2">
@@ -22,12 +22,7 @@
 					<div ui-grid="resolucionReduccion.precontratados" ui-grid-selection ui-grid-pagination class="grid" ng-hide="resolucionReduccion.estado"></div>
 					<center><loading load="resolucionReduccion.estado" tam="5"></loading><center>
 					</div>
-					<div class="form-group col-lg-6 col-lg-offset-3">
-						<label></label>
-						<input type="submit" class="form-control btn btn-success" value="Desvincular docentes seleccionados" ng-click="resolucionReduccion.verCancelarInscripcionDocente()">
 					</div>
-
-				</div>
 			</div>
 		</div>
 	</div>
@@ -43,26 +38,26 @@
 			<div class="modal-body">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h3 class="panel-title">Adición de horas</h3>
+						<h3 class="panel-title">{{ 'TITULO_REDUCCION_HORAS' | translate }}</h3>
 					</div>
 					<div class="panel-body">
 						<form name="formplan" ng-submit="formplan.$valid">
 							<div class="row">
 								<div class="col-md-12">
 									<div class="col-md-2 col-md-offset-1">
-										<label>Horas actuales</label>
+										<label>{{ 'LABEL_HORAS_ACTUALES' | translate }}</label>
 									</div>
 									<div class="col-md-1">
 										<input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionReduccion.horas_actuales" readonly>
 									</div>
 									<div class="col-md-2">
-										<label>Horas a reducir</label>
+										<label>{{ 'LABEL_HORAS_A_REDUCIR' | translate }}</label>
 									</div>
 									<div class="col-md-1">
 										<input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionReduccion.horas_a_reducir" ng-change="resolucionReduccion.Calcular_horas_totales()" required="">
 									</div>
 									<div class="col-md-2">
-										<label>Horas totales</label>
+										<label>{{ 'LABEL_HORAS_TOTALES' | translate }}</label>
 									</div>
 									<div class="col-md-1">
 										<input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionReduccion.horas_totales" readonly>
@@ -71,13 +66,13 @@
 								<div class="col-md-12">
 									<br>
 									<div class="col-md-2 col-md-offset 3">
-										<label>Disponibilidad actual</label>
+										<label>{{ 'LABEL_DISP_ACTUAL' | translate}}</label>
 									</div>
 									<div class="col-md-2">
 										<input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionReduccion.disponibilidad_actual" readonly>
 									</div>
 									<div class="col-md-2">
-										<input type="submit" class="form-control btn btn-success" value="Realizar nueva vinculacion" ng-click="resolucionReduccion.realizar_nueva_vinculacion()">
+										<input type="submit" class="form-control btn btn-success" value="{{'BTN_REALIZAR_NUEVA_VIN' | translate }}" ng-click="resolucionReduccion.realizar_nueva_vinculacion()">
 									</div>
 								</div>
 								<br>

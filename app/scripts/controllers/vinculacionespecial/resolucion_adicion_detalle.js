@@ -25,7 +25,7 @@ angular.module('contractualClienteApp')
     enableSelectAll: false,
     columnDefs : [
       {field: 'Id', visible : false},
-      {field: 'FechaRegistr', visible : false},
+      {field: 'FechaRegistro', visible : false},
       {field: 'NombreCompleto', width: '15%', displayName: $translate.instant('NOMBRE')},
       {field: 'IdPersona', width: '10%',displayName: $translate.instant('DOCUMENTO_DOCENTES')},
       {field: 'Categoria', width: '10%',displayName: $translate.instant('CATEGORIA')},
@@ -92,12 +92,12 @@ angular.module('contractualClienteApp')
   $scope.verAnularAdicion=function(row){
     swal({
       title: $translate.instant('PREGUNTA_SEGURO'),
-      text: "¿Está seguro de que desea anular la adicion?",
+      text: $translate.instant('ALERTA_SEGURO_ANULACION_ADICION'),
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: "Anular adición",
+      confirmButtonText: $translate.instant('CONFIRMACION_ANULACION_ADICION'),
       cancelButtonText: $translate.instant('CANCELAR'),
       confirmButtonClass: 'btn btn-success',
       cancelButtonClass: 'btn btn-danger',
@@ -146,7 +146,7 @@ angular.module('contractualClienteApp')
 
 
       swal({
-          text:"Anulación exitosa",
+          text:$translate.instant('ALERTA_ANULACION_EXITOSA'),
           type: 'success',
           confirmButtonText: $translate.instant('ACEPTAR')
 
@@ -155,7 +155,7 @@ angular.module('contractualClienteApp')
       }else{
         swal({
           title: $translate.instant('ERROR'),
-          text: "Error en anulación",
+          text: $translate.instant('ALERTA_ERROR_ANULACION'),
           type: 'error',
           confirmButtonText: $translate.instant('ACEPTAR')
         })

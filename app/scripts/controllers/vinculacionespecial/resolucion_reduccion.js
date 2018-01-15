@@ -142,7 +142,7 @@ angular.module('contractualClienteApp')
 
       if(response.data=="OK"){
         swal({
-          text: $translate.instant('VINCULACION_EXITOSA'),
+          text: $translate.instant('ALERTA_REDUCCION_EXITOSA'),
           type: 'success',
           confirmButtonText: $translate.instant('ACEPTAR')
 
@@ -154,7 +154,7 @@ angular.module('contractualClienteApp')
       }else{
         swal({
           title: $translate.instant('ERROR'),
-          text: $translate.instant('CONTRATO_NO_ALMACENADO'),
+          text: $translate.instant('ALERTA_ERROR_REDUCCION'),
           type: 'info',
           confirmButtonText: $translate.instant('ACEPTAR')
         })

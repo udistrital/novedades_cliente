@@ -135,7 +135,7 @@ angular.module('contractualClienteApp')
       if(response.data=="OK"){
         self.persona=null;
         swal({
-          text: $translate.instant('SELECCION_VIN_EXITOSA'),
+          text: $translate.instant('ALERTA_DESVIN_EXITOSA'),
           type: 'success',
           confirmButtonText: $translate.instant('ACEPTAR')
 
@@ -144,7 +144,7 @@ angular.module('contractualClienteApp')
       }else{
         swal({
           title: $translate.instant('ERROR'),
-          text: $translate.instant('SELECCION_VIN_NO_EXITOSA'),
+          text: $translate.instant('ALERTA_ERROR_DESVIN'),
           type: 'error',
           confirmButtonText: $translate.instant('ACEPTAR')
         })

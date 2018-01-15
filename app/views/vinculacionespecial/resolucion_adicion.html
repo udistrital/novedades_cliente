@@ -5,7 +5,7 @@
 		<div class="col-md-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4 class="intro-text"> Docentes a los que se les desea modificar horas </h4>
+					<h4 class="intro-text">{{ 'TITULO_DOC_A_MODIFICAR_HORAS' | translate }}  </h4>
 				</div>
 				<br>
 				<div class="col-md-2">
@@ -43,26 +43,26 @@
 			<div class="modal-body">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h3 class="panel-title">Adición de horas</h3>
+						<h3 class="panel-title">{{ 'TITULO_ADICION_HORAS' | translate }}</h3>
 					</div>
 					<div class="panel-body">
 						<form name="formplan" ng-submit="formplan.$valid">
 							<div class="row">
 								<div class="col-md-12">
 									<div class="col-md-2 col-md-offset-1">
-										<label>Horas actuales</label>
+										<label>{{ 'LABEL_HORAS_ACTUALES' | translate }}</label>
 									</div>
 									<div class="col-md-1">
 										<input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionAdicion.horas_actuales" readonly>
 									</div>
 									<div class="col-md-2">
-										<label>Horas a adicionar</label>
+										<label>{{ 'LABEL_HORAS_A_ADICIONAR' | translate }}</label>
 									</div>
 									<div class="col-md-1">
 										<input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionAdicion.horas_a_adicionar" ng-change="resolucionAdicion.Calcular_horas_totales()" required="">
 									</div>
 									<div class="col-md-2">
-										<label>Horas totales</label>
+										<label>{{ 'LABEL_HORAS_TOTALES' | translate }}</label>
 									</div>
 									<div class="col-md-1">
 										<input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionAdicion.horas_totales" readonly>
@@ -71,16 +71,16 @@
 								<div class="col-md-12">
 									<br>
 									<div class="col-md-2 col-md-offset 3">
-										<label>Disponibilidad actual</label>
+										<label>{{'LABEL_DISP_ACTUAL' | translate}}</label>
 									</div>
 									<div class="col-md-2">
 										<input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionAdicion.disponibilidad_actual" readonly>
 									</div>
 									<div class="col-md-2">
-										<input type="submit" class="form-control btn btn-success" value="Cambiar disponibilidad" ng-click="resolucionAdicion.cambiar_disponibilidad()">
+										<input type="submit" class="form-control btn btn-success" value="{{'BTN_CAMBIAR_DISP' | translate }}" ng-click="resolucionAdicion.cambiar_disponibilidad()">
 									</div>
 									<div class="col-md-2">
-										<input type="submit" class="form-control btn btn-success" value="Realizar nueva vinculacion" ng-click="resolucionAdicion.realizar_nueva_vinculacion()">
+										<input type="submit" class="form-control btn btn-success" value="{{'BTN_REALIZAR_NUEVA_VIN' | translate }}" ng-click="resolucionAdicion.realizar_nueva_vinculacion()">
 									</div>
 								</div>
 								<br>

@@ -8,7 +8,7 @@
 * Controller of the clienteApp
 */
 angular.module('contractualClienteApp')
-.controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$http) {
+.controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$http,$translate) {
 
   var self=this;
   self.resolucion = JSON.parse(localStorage.getItem("resolucion"))
@@ -47,7 +47,7 @@ angular.module('contractualClienteApp')
   //Función para obtener el contenido de las tablas por proyecto currícular de los docentes asociados a la resolución
   self.getCuerpoTabla=function(idProyecto, datos, columnas) {
     var cuerpo=[];
-    var encabezado=[{ text: 'Nombre', style: 'encabezado' }, { text: 'Cédula', style: 'encabezado'},  { text: 'Lugar de expedición', style: 'encabezado'},{ text: 'Categoría', style: 'encabezado'},{ text: 'Dedicación', style: 'encabezado'},{ text: 'Valor contrato ', style: 'encabezado'}
+    var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('CIUDAD_EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'}
   ];
   cuerpo.push(encabezado);
   if(datos){
@@ -96,12 +96,12 @@ self.getConsideracionTexto=function(consideracion){
 
 //Funcion para obtener el texto de los artiulos consu paragrafos dentro de una estructura
 self.getArticuloTexto=function(articulo, numero){
-  var aux=[{text: 'ARTÍCULO '+self.numeroALetras(numero+1)+' - ', bold: true}, articulo.Texto];
+  var aux=[{text: $translate.instant('ARTICULO')+" "+self.numeroALetras(numero+1)+' - ', bold: true}, articulo.Texto];
   if(articulo.Paragrafos!==null){
     var numeroParagrafo=1;
     //Cada paragrafo se inserta dentro del texto del articulo
     articulo.Paragrafos.forEach(function(paragrafo){
-      aux.push({text: ' PARAGRAFO '+self.numeroALetras(numeroParagrafo)+' - ', bold: true});
+      aux.push({text: $translate.instant('PARAGRAFO')+" "+self.numeroALetras(numeroParagrafo)+' - ', bold: true});
       aux.push(paragrafo.Texto);
       numeroParagrafo++;
     });
@@ -116,13 +116,13 @@ self.getArticuloTexto=function(articulo, numero){
 //Función que devuelve en contenido de la resolución en un arreglo de estructuras
 self.getContenido=function(contenidoResolucion, contratados, proyectos){
   var contenido = [];
-  contenido.push({ text: 'RESOLUCIÓN No '+contenidoResolucion.Numero,
+  contenido.push({ text: $translate.instant('RESOLUCION')+" "+'No '+contenidoResolucion.Numero,
   style: 'titulo'});
   contenido.push(self.getPreambuloTexto(contenidoResolucion.Preambulo));
-  contenido.push({ text: 'CONSIDERANDO',
+  contenido.push({ text: $translate.instant('CONSIDERANDO'),
   style: 'titulo'});
   contenido.push(self.getConsideracionTexto(contenidoResolucion.Consideracion));
-  contenido.push({ text: 'RESUELVE',
+  contenido.push({ text: $translate.instant('RESUELVE'),
   style: 'titulo'});
   var numero=0;
   //Se agregan artículos al documento
@@ -153,7 +153,7 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
         numero++;
       });
     }
-    contenido.push({ text: 'COMUNIQUESE Y CUMPLASE',
+    contenido.push({ text: $translate.instant('COMUNIQUESE_Y_CUM'),
     style: 'finalizacion'});
     contenido.push({ text: contenidoResolucion.OrdenadorGasto.NombreOrdenador,
     style: 'nombre_ordenador'});
@@ -166,7 +166,7 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
   self.getDocumento=function(contenidoResolucion, contratados, proyectos){
     var documento={
       info: {
-        title: 'Resolución'
+        title: $translate.instant('RESOLUCION')
       },
       pageMargins: [40, 120, 40, 40],
       header: {

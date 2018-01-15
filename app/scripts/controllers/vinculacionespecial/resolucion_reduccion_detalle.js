@@ -94,12 +94,12 @@ angular.module('contractualClienteApp')
   $scope.verAnularReduccion=function(row){
     swal({
       title: $translate.instant('PREGUNTA_SEGURO'),
-      text: "¿Está seguro de que desea anular la reducción?",
+      text: $translate.instant('PREGUNTA_SEGURO_ANULAR_RED'),
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: "Anular adición",
+      confirmButtonText: $translate.instant('CONFIRMAR_ANULAR_REDUCCION'),
       cancelButtonText: $translate.instant('CANCELAR'),
       confirmButtonClass: 'btn btn-success',
       cancelButtonClass: 'btn btn-danger',
@@ -148,7 +148,7 @@ angular.module('contractualClienteApp')
 
 
       swal({
-          text:"Anulación exitosa",
+          text: $translate.instant('ALERTA_ANULACION_EXITOSA'),
           type: 'success',
           confirmButtonText: $translate.instant('ACEPTAR')
 
@@ -157,7 +157,7 @@ angular.module('contractualClienteApp')
       }else{
         swal({
           title: $translate.instant('ERROR'),
-          text: "Error en anulación",
+          text: $translate.instant('ALERTA_ERROR_ANULACION'),
           type: 'error',
           confirmButtonText: $translate.instant('ACEPTAR')
         })
