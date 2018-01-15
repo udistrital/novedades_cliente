@@ -39,6 +39,8 @@ angular.module('contractualClienteApp')
       {field: 'IdProyectoCurricular', visible:false,filter: {
         term: self.term
       }},
+      {field: 'Vigencia',visible:false},
+      {field: 'NumeroContrato',visible:false},
       {
         field: 'cancelar',
         enableSorting: false,
@@ -201,7 +203,9 @@ angular.module('contractualClienteApp')
       Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
       Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
       NivelAcademico: self.resolucion.NivelAcademico_nombre,
-      Disponibilidad: self.apropiacion_elegida[0].Id
+      Disponibilidad: self.apropiacion_elegida[0].Id,
+      Vigencia: personaSeleccionada.Vigencia,
+      NumeroContrato: personaSeleccionada.NumeroContrato 
     };
 
     desvinculacionesData.push(vinculacionDocente);

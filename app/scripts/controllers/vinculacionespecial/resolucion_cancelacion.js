@@ -35,7 +35,9 @@ angular.module('contractualClienteApp')
       {field: 'ValorContrato', width: '15%',displayName: $translate.instant('VALOR_CONTRATO'), cellClass:"valorEfectivo", cellFilter:"currency"},
       {field: 'IdProyectoCurricular', visible:false,filter: {
         term: self.term
-      }}
+      }},
+      {field: 'Vigencia',visible:false},
+      {field: 'NumeroContrato',visible:false},
     ],
 
     onRegisterApi : function(gridApi){
@@ -118,7 +120,9 @@ angular.module('contractualClienteApp')
       FechaRegistro: self.fecha,
       ValorContrato        : personaSeleccionada.ValorContrato,
       Categoria: personaSeleccionada.Categoria,
-      Disponibilidad: personaSeleccionada.Disponibilidad
+      Disponibilidad: personaSeleccionada.Disponibilidad,
+      Vigencia: personaSeleccionada.Vigencia,
+      NumeroContrato: personaSeleccionada.NumeroContrato 
       };
 
       desvinculacionesData.push(docente_a_desvincular);
