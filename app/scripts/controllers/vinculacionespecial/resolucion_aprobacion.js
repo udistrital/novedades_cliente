@@ -35,6 +35,10 @@ angular.module('contractualClienteApp')
             visible : false
         },
         {
+            field: 'Facultad',
+            visible : false
+        },
+        {
             field: 'Numero',
             cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
                 if (row.entity.Estado==="Cancelada") {
@@ -59,7 +63,7 @@ angular.module('contractualClienteApp')
             displayName: $translate.instant('VIGENCIA')
         },
         {
-            field: 'Facultad',
+            field: 'FacultadNombre',
             cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
                 if (row.entity.Estado==="Cancelada") {
                     return 'resolucionCancelada';
@@ -130,7 +134,7 @@ angular.module('contractualClienteApp')
 
     //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
     self.cargarDatosResolucion=function(){
-        administrativaRequest.get("resolucion_vinculacion").then(function(response){
+        adminMidRequest.get("gestion_resoluciones/get_resoluciones_inscritas").then(function(response){
             self.resolucionesInscritas.data=response.data;
         });
     };
@@ -160,11 +164,11 @@ angular.module('contractualClienteApp')
                 confirmButtonText: $translate.instant('APROBAR_BTN')
               }).then(function () {
                   self.cambiarEstado(resolucion_estado);
-                  });                          
+                  });
           });
     };
 
-    
+
 
     //Función donde se despliega un mensaje de alerta previo a la restauración de la resolución
     $scope.verRestaurarResolucion = function(row){
@@ -241,7 +245,7 @@ angular.module('contractualClienteApp')
             }
         });
 };
-    
+
 
     //Se hace el llamado de la función para cargar datos de resoluciones
     self.cargarDatosResolucion();

@@ -49,7 +49,7 @@ angular.module('contractualClienteApp')
         displayName:  $translate.instant('OPCIONES'),
         cellTemplate: '<center>' +
         '<a class="borrar" ng-click="grid.appScope.mostrar_modal_adicion(row)">' +
-        '<i title="{{\'BORRAR_BTN\' | translate }}" class="fa fa-trash fa-lg  faa-shake animated-hover"></i></a></div>' +
+        '<i title="{{\'ADICIONAR_BTN\' | translate }}" class="fa fa-plus-circle  faa-shake animated-hover"></i></a></div>' +
         '</center>'
       }
     ],
@@ -205,7 +205,7 @@ angular.module('contractualClienteApp')
       NivelAcademico: self.resolucion.NivelAcademico_nombre,
       Disponibilidad: self.apropiacion_elegida[0].Id,
       Vigencia: personaSeleccionada.Vigencia,
-      NumeroContrato: personaSeleccionada.NumeroContrato 
+      NumeroContrato: personaSeleccionada.NumeroContrato
     };
 
     desvinculacionesData.push(vinculacionDocente);

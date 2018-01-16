@@ -44,7 +44,7 @@ angular.module('contractualClienteApp')
         displayName:  $translate.instant('OPCIONES'),
         cellTemplate: '<center>' +
         '<a class="borrar" ng-click="grid.appScope.verAnularDesvinculacion(row)">' +
-        '<i title="{{\'BORRAR_BTN\' | translate }}" class="fa fa-trash fa-lg  faa-shake animated-hover"></i></a></div>' +
+        '<i title="{{\'ANULAR_BTN\' | translate }}" class="fa fa-times-circle-o fa-lg  faa-shake animated-hover"></i></a></div>' +
         '</center>'
       }
     ],
@@ -104,7 +104,7 @@ angular.module('contractualClienteApp')
       if (dismiss === 'cancel') {
         swal(
           $translate.instant('CANCELADO'),
-
+          $translate.instant('ANULACION_CANCELADA'),
           'error'
         )
       }
