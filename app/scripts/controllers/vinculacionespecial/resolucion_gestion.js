@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
 .factory("resolucion",function(){
   return {};
 })
-.controller('ResolucionGestionCtrl', function (resolucion,administrativaRequest,$scope,$window,$mdDialog,$translate,$localStorage) {
+.controller('ResolucionGestionCtrl', function (adminMidRequest,resolucion,administrativaRequest,$scope,$window,$mdDialog,$translate,$localStorage) {
 
   var self = this;
 
@@ -34,6 +34,10 @@ angular.module('contractualClienteApp')
       },
       {
         field: 'Estado',
+        visible : false
+      },
+      {
+        field: 'Facultad',
         visible : false
       },
       {
@@ -73,7 +77,7 @@ angular.module('contractualClienteApp')
         displayName: $translate.instant('PERIODO')
       },
       {
-        field: 'Facultad',
+        field: 'FacultadNombre',
         cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
           if (row.entity.Estado==="Cancelada") {
             return 'resolucionCancelada';
@@ -188,7 +192,7 @@ angular.module('contractualClienteApp')
   };
 
   //Se cargan los datos de las resoluciones de vinculación especial almacenadas
-  administrativaRequest.get("resolucion_vinculacion").then(function(response){
+  adminMidRequest.get("gestion_resoluciones/get_resoluciones_inscritas").then(function(response){
 
     self.resolucionesInscritas.data=response.data;
 
