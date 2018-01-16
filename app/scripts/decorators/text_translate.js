@@ -304,6 +304,7 @@ var text_es = {
       DESVINCULACION_EXITOSA:"Se ha desvinculado docente exitosamente",
       DESVINCULACION_NOEXITOSA:"Error al desvincular docente",
       BORRAR_BTN:"Borrar",
+      ERROR_DISP: "La apropación elegida no tiene saldo suficiente",
 
   //RESOLUCION_ADICION_DETALLE
       /*---HTML---*/
