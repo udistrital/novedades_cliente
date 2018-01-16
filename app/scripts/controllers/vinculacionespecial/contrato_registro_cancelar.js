@@ -17,6 +17,7 @@ angular.module('contractualClienteApp')
         self.acta={};
     
         self.idResolucion=idResolucion;
+        console.log("Aquiiiiii", idResolucion)
         amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
           self.datosFiltro=response.data;
     
@@ -264,5 +265,35 @@ angular.module('contractualClienteApp')
                     });
           }
         };
-    
+
+//HERE
+
+self.cancelados = {
+  paginationPageSizes: [10, 15, 20],
+  paginationPageSize: 10,
+  enableSorting: true,
+  enableFiltering : true,
+  enableRowSelection: false,
+  enableRowHeaderSelection: false,
+  columnDefs : [
+    {field: 'NombreCompleto', width: '20%', displayName: $translate.instant('NOMBRE')},
+    {field: 'IdPersona', width: '10%',displayName: $translate.instant('DOCUMENTO_DOCENTES')},
+    {field: 'Categoria', width: '10%',displayName: $translate.instant('CATEGORIA')},
+    {field: 'NumeroHorasSemanales', width: '8%',displayName: $translate.instant('HORAS_SEMANALES')},
+    {field: 'NumeroSemanas', width: '7%',displayName: $translate.instant('SEMANAS')},
+    {field: 'NumeroDisponibilidad', width: '15%',displayName: $translate.instant('NUM_DISPO_DOCENTE') },
+    {field: 'ValorContrato', width: '15%',displayName: $translate.instant('VALOR_CONTRATO'), cellClass:"valorEfectivo", cellFilter:"currency"}
+  ]
+};
+
+  //Función para visualizar docentes para cancelar su vinculacion resolución
+  self.get_docentes_cancelados=function(){
+    adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion="+self.idResolucion).then(function(response){
+      console.log("Admirad!: ",response.data)
+      self.cancelados.data=response.data;
+    });
+  }
+
+  self.get_docentes_cancelados();
+
     });

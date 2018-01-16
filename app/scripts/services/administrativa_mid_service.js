@@ -11,8 +11,8 @@
    .factory('adminMidRequest',function ($http,$q, requestRequest) {
      // Service logic
      // ...
-    var path = "http://10.20.0.254/administrativa_mid_api/v1/";
-    //var path = "http://localhost:8082/v1/";
+    //var path = "http://10.20.0.254/administrativa_mid_api/v1/";
+    var path = "http://localhost:8082/v1/";
     //var path = "http://10.20.0.138:8091/v1/";
      // Public API here
      var cancelSearch ; //defer object

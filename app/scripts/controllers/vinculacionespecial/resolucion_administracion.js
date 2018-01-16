@@ -13,7 +13,7 @@ angular.module('contractualClienteApp')
   var self = this;
 
   //Tabla para mostrar los datos básicos de las resoluciones almacenadas dentro del sistema
-  self.resolucionesInscritas = {
+  self.resolucionesAprobadas = {
     paginationPageSizes: [10, 15, 20],
     paginationPageSize: 10,
     enableSorting: true,
@@ -139,15 +139,11 @@ angular.module('contractualClienteApp')
         '<a ng-if="row.entity.Estado==\'Aprobada\'&&row.entity.TipoResolucion==\'Vinculación\'" class="ver" ng-click="grid.appScope.verRealizarExpedicion(row)">' +
         '<i title="{{\'EXPEDIR_BTN\' | translate }}" class="fa fa-file-text fa-lg  faa-shake animated-hover"></i></a> ' +
         '<a ng-if="row.entity.Estado==\'Aprobada\'&&row.entity.TipoResolucion==\'Adición\'" class="ver" ng-click="grid.appScope.verRealizarExpedicionHoras(row)">' +
-        '<i title="{{\'EXPEDIR_BTN\' | translate }}" class="fa fa-money fa-lg  faa-shake animated-hover"></i></a> ' +
+        '<i title="{{\'EXPEDIR_BTN\' | translate }}" class="fa fa-file-text fa-lg  faa-shake animated-hover"></i></a> ' +
         '<a ng-if="row.entity.Estado==\'Aprobada\'&&row.entity.TipoResolucion==\'Reducción\'" class="ver" ng-click="grid.appScope.verRealizarExpedicionHoras(row)">' +
-        '<i title="{{\'EXPEDIR_BTN\' | translate }}" class="fa fa-money fa-lg  faa-shake animated-hover"></i></a> ' +
+        '<i title="{{\'EXPEDIR_BTN\' | translate }}" class="fa fa-file-text fa-lg  faa-shake animated-hover"></i></a> ' +
         '<a ng-if="row.entity.Estado==\'Aprobada\'&&row.entity.TipoResolucion==\'Cancelación\'" class="ver" ng-click="grid.appScope.verRealizarExpedicionCancelar(row)">' +
-        '<i title="{{\'EXPEDIR_BTN\' | translate }}" class="fa fa-money fa-lg  faa-shake animated-hover"></i></a> ' +
-        '<a ng-if="row.entity.Estado==\'Expedida\'" class="editar" ng-click="grid.appScope.verCancelarResolucion(row)">' +
-        '<i title="{{\'CANCELAR_BTN\' | translate }}" class="fa fa-remove fa-lg  faa-shake animated-hover"></i></a> ' +
-        '<a ng-if="row.entity.Estado==\'Cancelada\'" class="configuracion" ng-click="grid.appScope.verRestaurarResolucion(row)">' +
-        '<i title="{{\'RESTAURAR_BTN\' | translate }}" class="fa fa-refresh fa-lg faa-spin animated-hover"></i></a> ' +
+        '<i title="{{\'EXPEDIR_BTN\' | translate }}" class="fa fa-file-text fa-lg  faa-shake animated-hover"></i></a> ' +
         '</center>'
       }
     ]
@@ -155,8 +151,8 @@ angular.module('contractualClienteApp')
 
   //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
   self.cargarDatosResolucion=function(){
-      adminMidRequest.get("gestion_resoluciones/get_resoluciones_inscritas").then(function(response){
-          self.resolucionesInscritas.data=response.data;
+      adminMidRequest.get("gestion_resoluciones/get_resoluciones_aprobadas").then(function(response){
+          self.resolucionesAprobadas.data=response.data;
       });
   };
 

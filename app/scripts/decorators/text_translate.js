@@ -486,7 +486,9 @@ var text_es = {
   NUMERO_CELULAR:"Número de Celular",
   CONVENIO:"Convenio",
   PROYECTO_INVESTIGACION:"Proyecto de Investigación",
-
+  DOCENTES_DESVINCULAR:"Docentes a desvincular",
+  CONVENIO:"Convenio",
+  FECHA_CANCELACION:"Fecha de Cancelacion",
 };
 
 var text_en = {
