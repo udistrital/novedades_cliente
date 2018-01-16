@@ -238,7 +238,8 @@ angular.module('contractualClienteApp')
       })
 
       adminMidRequest.post("gestion_previnculacion/Precontratacion/insertar_previnculaciones",vinculacionesData).then(function(response){
-
+        console.log("respuesta de vinculacion")
+        console.log(response.data)
         if(typeof response.data=="number"){
           self.persona=null;
           self.datosDocentesCargaLectiva.data = []
