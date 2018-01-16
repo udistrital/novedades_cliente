@@ -341,8 +341,7 @@ var text_es = {
       CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
       IRREVERSIBLE: "Esta acción es irreversible",
       APROBADA: "Resolución Aprobada",
-      ACTA_INICIO: "Acta de inicio",
-
+      
   //RESOLUCION_CANCELACION_DETALLE
       /*---HTML---*/
       SELEC_VIN_BTN:"Seleccionar vinculaciones a cancelar",
