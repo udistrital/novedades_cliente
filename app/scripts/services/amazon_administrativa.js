@@ -12,8 +12,8 @@
       // Service logic
       // ...
 
-      //var path = "http://10.20.0.254/administrativa_amazon_api/v1/";
-      var path = "http://localhost:8084/v1/";
+      var path = "http://10.20.0.254/administrativa_amazon_api/v1/";
+      //var path = "http://localhost:8084/v1/";
       // Public API here
       return {
         get: function (tabla,params) {
