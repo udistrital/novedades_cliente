@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-.controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,financieraRequest,resolucion,adminMidRequest,oikosRequest,$localStorage,$scope,$mdDialog,$translate) {
+.controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,financieraRequest,resolucion,adminMidRequest,oikosRequest,$localStorage,$scope,$mdDialog,$translate,$window) {
 
   var self = this;
   console.log("fabrica")
@@ -201,7 +201,8 @@ angular.module('contractualClienteApp')
 
   //Función para visualizar docentes ya vinculados a resolución
   self.get_docentes_vinculados=function(){
-
+    console.log("selfterm")
+    console.log(self.term)
     self.estado = true;
     adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
       self.precontratados.data=response.data;
@@ -237,9 +238,9 @@ angular.module('contractualClienteApp')
       })
 
       adminMidRequest.post("gestion_previnculacion/Precontratacion/insertar_previnculaciones",vinculacionesData).then(function(response){
-        console.log("tipo respuesta")
-        console.log(typeof response.data)
-        if(response.data=="OK"){
+        console.log("respuesta de vinculacion")
+        console.log(response.data)
+        if(typeof response.data=="number"){
           self.persona=null;
           self.datosDocentesCargaLectiva.data = []
           swal({
@@ -300,6 +301,7 @@ angular.module('contractualClienteApp')
       buttonsStyling: false
     }).then(function () {
       self.desvincularDocente(row);
+
     }, function (dismiss) {
       if (dismiss === 'cancel') {
         swal(
@@ -315,8 +317,6 @@ angular.module('contractualClienteApp')
 
 
     administrativaRequest.delete("vinculacion_docente",row.entity.Id).then(function(response){
-      console.log("respuesta")
-      console.log(response.data)
       if(response.data=="OK"){
         self.persona=null;
         swal({
@@ -324,8 +324,10 @@ angular.module('contractualClienteApp')
           type: 'success',
           confirmButtonText: $translate.instant('ACEPTAR')
 
+        }).then(function () {
+           $window.location.reload();
         })
-        self.get_docentes_vinculados();
+
       }else{
         swal({
           title: $translate.instant('ERROR'),
@@ -394,7 +396,9 @@ angular.module('contractualClienteApp')
     })
 
     adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos",vinculacionesData).then(function(response){
-      if(300000 > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)){
+      console.log("valor de contratos")
+      console.log(response.data)
+      if(response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)){
         self.saldo_disponible = false;
         console.log("no se puede elgir esa apropiacion")
       }else{

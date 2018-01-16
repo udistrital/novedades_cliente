@@ -304,6 +304,7 @@ var text_es = {
       DESVINCULACION_EXITOSA:"Se ha desvinculado docente exitosamente",
       DESVINCULACION_NOEXITOSA:"Error al desvincular docente",
       BORRAR_BTN:"Borrar",
+      ERROR_DISP: "La apropación elegida no tiene saldo suficiente",
 
   //RESOLUCION_ADICION_DETALLE
       /*---HTML---*/
@@ -313,6 +314,7 @@ var text_es = {
       CONFIRMACION_ANULACION_ADICION:"Anular adición",
       ALERTA_ANULACION_EXITOSA: "Anulación exitosa",
       ALERTA_ERROR_ANULACION:"Error en anulación",
+      ANULAR_BTN: "Anular",
 
   //RESOLUCION_ADICION
       /*---HTML---*/
@@ -327,6 +329,7 @@ var text_es = {
       /*---Script---*/
       ALERTA_ADICION_EXITOSA: "Adición realizada exitosamente",
       ALERTA_ERROR_ADICION: "Error al realizar adición",
+      ADICIONAR_BTN: "Adicionar",
 
   //RESOLUCION_ADMINISTRACION
       NO_RESTAURACION_RESOLUCION:"No se ha realizado la restauración de la resolución",
@@ -338,18 +341,21 @@ var text_es = {
       CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
       IRREVERSIBLE: "Esta acción es irreversible",
       APROBADA: "Resolución Aprobada",
+      ACTA_INICIO: "Acta de inicio",
 
   //RESOLUCION_CANCELACION_DETALLE
       /*---HTML---*/
-      SELEC_VIN_BTN:"Seleccionar vinculaciones",
+      SELEC_VIN_BTN:"Seleccionar vinculaciones a cancelar",
       /*---Script---*/
       PREGUNTA_SEGURO_ANULAR_DESV: "¿Está seguro de que desea anular la desvinculación?",
       CONFIRMACION_ANULAR_DESV: "Anular desvinculación",
+      ANULACION_CANCELADA: "Anulación cancelada",
 
   //RESOLUCION_CANCELACION
       /*---Script---*/
       ALERTA_DESVIN_EXITOSA:"Desvinculación realizada correctamente",
       ALERTA_ERROR_DESVIN: "Error al realizar desvinculación",
+      REDUCIR_BTN: "Reducir",
 
   //RESOLUCION_DETALLE
       /*---HTML---*/
@@ -412,6 +418,7 @@ var text_es = {
       EXPEDIR_BTN:"Expedir",
       CANCELAR_BTN:"Cancelar resolución",
       RESTAURAR_BTN:"Restaurar resolución",
+      CONSULTAR_CAN_BTN: "Consultar cancelaciones",
 
   //RESOLUCION_REDUCCION_DETALLE
       /*---Script---*/

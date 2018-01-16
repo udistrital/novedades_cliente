@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
 .factory("resolucion",function(){
   return {};
 })
-.controller('ResolucionGestionCtrl', function (resolucion,administrativaRequest,$scope,$window,$mdDialog,$translate,$localStorage) {
+.controller('ResolucionGestionCtrl', function (adminMidRequest,resolucion,administrativaRequest,$scope,$window,$mdDialog,$translate,$localStorage) {
 
   var self = this;
 
@@ -34,6 +34,10 @@ angular.module('contractualClienteApp')
       },
       {
         field: 'Estado',
+        visible : false
+      },
+      {
+        field: 'Facultad',
         visible : false
       },
       {
@@ -73,7 +77,7 @@ angular.module('contractualClienteApp')
         displayName: $translate.instant('PERIODO')
       },
       {
-        field: 'Facultad',
+        field: 'FacultadNombre',
         cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
           if (row.entity.Estado==="Cancelada") {
             return 'resolucionCancelada';
@@ -166,7 +170,7 @@ angular.module('contractualClienteApp')
         '<a ng-if="row.entity.TipoResolucion==\'Cancelación\' && row.entity.Estado==\'Solicitada\'" class="editar" ng-click="grid.appScope.verEditarDocentes(row)">' +
         '<i title="{{\'CANCELAR_VIN_BTN\' | translate }}" class="fa fa-user-times fa-lg faa-shake animated-hover"></i></a> ' +
         '<a ng-if="row.entity.TipoResolucion==\'Cancelación\' && row.entity.Estado==\'Solicitada\'" class="editar" ng-click="grid.appScope.verListarDocentesCancelacion(row)">' +
-        '<i title="{{\'CANCELAR_VIN_BTN\' | translate }}" class="fa fa-table fa-lg faa-shake animated-hover"></i></a> ' +
+        '<i title="{{\'CONSULTAR_CAN_BTN\' | translate }}" class="fa fa-table fa-lg faa-shake animated-hover"></i></a> ' +
 
         '<a ng-if="row.entity.TipoResolucion==\'Adición\' && row.entity.Estado==\'Solicitada\' "  class="editar" ng-click="grid.appScope.verEditarDocentes(row)">' +
         '<i title="{{\'ADICIONAR_HORAS_BTN\' | translate }}" class="fa fa-plus-circle fa-lg  faa-shake animated-hover"></i></a> ' +
@@ -188,7 +192,7 @@ angular.module('contractualClienteApp')
   };
 
   //Se cargan los datos de las resoluciones de vinculación especial almacenadas
-  administrativaRequest.get("resolucion_vinculacion").then(function(response){
+  adminMidRequest.get("gestion_resoluciones/get_resoluciones_inscritas").then(function(response){
 
     self.resolucionesInscritas.data=response.data;
 

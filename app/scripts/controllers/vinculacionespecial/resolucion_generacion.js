@@ -26,6 +26,7 @@ angular.module('contractualClienteApp')
       columnDefs : [
         {
           field: 'Id',
+          visible: false
         },
         {
           field: 'FechaExpedicion',
