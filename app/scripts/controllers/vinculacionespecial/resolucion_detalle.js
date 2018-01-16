@@ -25,23 +25,13 @@
       });
 
 
-    adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
-        self.contratados=response.data;
+      adminMidRequest.get("gestion_documento_resolucion/get_contenido_resolucion", "id_resolucion="+self.resolucion.Id+"&id_facultad="+self.resolucion.IdFacultad).then(function(response){
+          self.contenidoResolucion=response.data;
+          adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
+            self.contratados=response.data;
 
-    });
-
-  administrativaRequest.get("contenido_resolucion/"+self.resolucion.Id).then(function(response){
-      self.contenidoResolucion=response.data;
-      coreRequest.get("ordenador_gasto","query=DependenciaId%3A"+self.resolucion.IdFacultad).then(function(response){
-        if(response.data===null){
-          coreRequest.get("ordenador_gasto/1").then(function(response){
-            self.contenidoResolucion.ordenadorGasto=response.data;
           });
-        }else{
-          self.contenidoResolucion.ordenadorGasto=response.data[0];
-        }
       });
-    });
 
 
 
@@ -236,12 +226,13 @@ return numeros;
 
 self.getCuerpoTabla=function(idProyecto, datos, columnas) {
   var cuerpo=[];
-  var encabezado=[{ text: 'Nombre', style: 'encabezado' }, { text: 'Cédula', style: 'encabezado'},  { text: 'Lugar de expedición', style: 'encabezado'},{ text: 'Categoría', style: 'encabezado'},{ text: 'Dedicación', style: 'encabezado'},{ text: 'Valor contrato ', style: 'encabezado'}];
+  var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('CIUDAD_EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'}
+    ];
   cuerpo.push(encabezado);
   if(datos){
     datos.forEach(function(fila) {
       if(fila.IdProyectoCurricular===idProyecto){
-        console.log("entré")
+
         var datoFila = [];
         columnas.forEach(function(columna) {
           datoFila.push(fila[columna].toString());
@@ -278,11 +269,11 @@ self.getConsideracionTexto=function(consideracion){
 };
 
 self.getArticuloTexto=function(articulo, numero){
-  var aux=[{text: 'ARTÍCULO '+self.numeroALetras(numero+1)+' - ', bold: true}, articulo.Texto];
+  var aux=[{text: $translate.instant('ARTICULO')+" "+self.numeroALetras(numero+1)+' - ', bold: true}, articulo.Texto];
   if(articulo.Paragrafos!==null){
     var numeroParagrafo=1;
     articulo.Paragrafos.forEach(function(paragrafo){
-      aux.push({text: ' PARAGRAFO '+self.numeroALetras(numeroParagrafo)+' - ', bold: true});
+      aux.push({text: $translate.instant('PARAGRAFO')+" "+self.numeroALetras(numeroParagrafo)+' - ', bold: true});
       aux.push(paragrafo.Texto);
       numeroParagrafo++;
     });
@@ -296,13 +287,13 @@ self.getArticuloTexto=function(articulo, numero){
 
 self.getContenido=function(contenidoResolucion, contratados, proyectos){
   var contenido = [];
-  contenido.push({ text: 'RESOLUCIÓN No '+contenidoResolucion.Numero,
+  contenido.push({ text: $translate.instant('RESOLUCION')+" "+'No '+contenidoResolucion.Numero,
     style: 'titulo'});
   contenido.push(self.getPreambuloTexto(contenidoResolucion.Preambulo));
-  contenido.push({ text: 'CONSIDERANDO',
+  contenido.push({ text: $translate.instant('CONSIDERANDO'),
     style: 'titulo'});
   contenido.push(self.getConsideracionTexto(contenidoResolucion.Consideracion));
-  contenido.push({ text: 'RESUELVE',
+  contenido.push({ text: $translate.instant('RESUELVE'),
     style: 'titulo'});
   var numero=0;
   if(contenidoResolucion.Articulos){
@@ -330,13 +321,13 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
       numero++;
     });
   }
-  contenido.push({ text: 'COMUNIQUESE Y CUMPLASE',
-    style: 'finalizacion'});
-  contenido.push({ text: '--'+contenidoResolucion.ordenadorGasto.Cargo+' --',
-    style: 'nombre'});
-    //contenido.push({ text: 'DECANO',
-    //style: 'finalizacion'});
-return contenido;
+  contenido.push({ text: $translate.instant('COMUNIQUESE_Y_CUM'),
+  style: 'finalizacion'});
+  contenido.push({ text: contenidoResolucion.OrdenadorGasto.NombreOrdenador,
+  style: 'nombre_ordenador'});
+  contenido.push({ text: '--'+contenidoResolucion.OrdenadorGasto.Cargo+' --',
+  style: 'nombre_cargo'});
+  return contenido;
 };
 
 self.getDocumento=function(contenidoResolucion, contratados, proyectos){
@@ -352,37 +343,51 @@ self.getDocumento=function(contenidoResolucion, contratados, proyectos){
       alignment: 'center'
     },
     content: self.getContenido(contenidoResolucion, contratados, proyectos),
+
     styles: {
+      //Encabezados de las tablas
       encabezado: {
         fontSize: 9,
         alignment: 'center'
       },
+      //Contenido de las tablas
       tabla: {
         fontSize: 8,
         margin: [30, 5, 30,0]
       },
+      //Texto normal
       texto: {
         fontSize: 10,
         margin: [30, 5]
       },
+      //Títulos (Preámbulo, onsideración, ...)
       titulo: {
         bold: true,
         fontSize: 12,
         alignment: 'center'
       },
+      //Proyectos curriculares
       proyecto: {
         fontSize: 11,
         margin: [30, 5]
       },
-      nombre: {
+      //Nombre del ordenador del gasto
+      nombre_cargo: {
         bold: true,
         fontSize: 10,
-        margin: [30, 50, 30,0],
+        margin: [30, 0, 30,0],
         alignment: 'center'
       },
+      //Parte final de la resolución y complementos
       finalizacion: {
         bold: true,
         fontSize: 12,
+        alignment: 'center'
+      },
+      nombre_ordenador: {
+        bold: true,
+        fontSize: 10,
+        margin: [30, 50, 30,0],
         alignment: 'center'
       }
     },
