@@ -1,5 +1,5 @@
 <div class="panel panel-primary panel-body">
-    <h3 class="page-header text-center">{{ 'INFORMACION_VINCULACION' | translate }}</h3>
+    <h3 class="page-header text-center">{{ 'INFORMACION_CONTRATO' | translate }}</h3>
     <div class="panel-body">
         <div class="row">
             <div class="col-lg-12">
@@ -9,27 +9,27 @@
                             <div class="row">
                                 <div class="form-group col-lg-4">
                                     <label>{{ 'VIGENCIA' | translate }}</label>
-                                    <input type="number" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Contrato.Vigencia" disabled>
+                                    <input type="number" class="form-control" ng-model="contratoRegistroHoras.contratoGeneralBase.Contrato.Vigencia" disabled>
                                 </div>
                                 <div class="form-group col-lg-4">
                                     <label>{{ 'FORMA_PAGO' | translate }}</label>
-                                    <input type="text" class="form-control" ng-model="contratoRegistro.forma_pago_defecto.Descripcion" disabled>
+                                    <input type="text" class="form-control" ng-model="contratoRegistroHoras.forma_pago_defecto.Descripcion" disabled>
                                 </div>
                                 <div class="form-group col-lg-4">
                                     <label>{{ 'SEDE_SOLICITANTE' | translate }}</label>
-                                    <input type="text" class="form-control" ng-model="contratoRegistro.sede_solicitante_defecto" disabled>
+                                    <input type="text" class="form-control" ng-model="contratoRegistroHoras.sede_solicitante_defecto" disabled>
                                 </div>
                                 <div class="form-group col-lg-4">
                                     <label>{{ 'DESCRIPCION_FORMA_PAGO' | translate }}</label>
-                                    <input type="text" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Contrato.DescripcionFormaPago" disabled>
+                                    <input type="text" class="form-control" ng-model="contratoRegistroHoras.contratoGeneralBase.Contrato.DescripcionFormaPago" disabled>
                                 </div>
                                 <div class="form-group col-lg-4">
                                     <label>{{ 'UNIDAD_EJECUTORA' | translate }}</label>
-                                    <input type="text" class="form-control" ng-model="contratoRegistro.unidad_ejecutora_defecto.Nombre" disabled>
+                                    <input type="text" class="form-control" ng-model="contratoRegistroHoras.unidad_ejecutora_defecto.Nombre" disabled>
                                 </div>
                                 <div class="form-group col-lg-4">
                                     <label>{{ 'MARCO_LEGAL' | translate }}</label>
-                                    <input type="text" class="form-control" ng-model="contratoRegistro.regimen_contratacion_defecto.Descripcion" disabled>
+                                    <input type="text" class="form-control" ng-model="contratoRegistroHoras.regimen_contratacion_defecto.Descripcion" disabled>
                                 </div>
                             </div>
                         </form>
@@ -40,32 +40,32 @@
                             <div class="row">
                                 <div class="form-group col-lg-12">
                                     <label>{{ 'JUSTIFICACION' | translate }}</label>
-                                    <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Contrato.Justificacion"></textarea>
+                                    <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistroHoras.contratoGeneralBase.Contrato.Justificacion"></textarea>
                                 </div>
                                 <div class="form-group col-lg-12">
                                     <label>{{ 'OBSERVACIONES' | translate }}</label>
-                                    <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistro.contratoGeneralBase.Contrato.Observaciones" required></textarea>
+                                    <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistroHoras.contratoGeneralBase.Contrato.Observaciones" required></textarea>
                                 </div>
                             </div>
                         </form>
                     </div>
-                <legend class="text-primary" ng-click="info_acta=!info_acta">{{ 'PERIODO_VINCULACION' | translate }}<span class="fa fa-plus pull-right" ng-show="!info_acta"></span> <span class="fa fa-minus pull-right" ng-show="info_acta"></span></legend>
+                <legend class="text-primary" ng-click="info_acta=!info_acta">{{ 'ACTA_INICIO' | translate }}<span class="fa fa-plus pull-right" ng-show="!info_acta"></span> <span class="fa fa-minus pull-right" ng-show="info_acta"></span></legend>
                     <div class="panel-body" ng-show="info_acta">
                         <form role="form">
                             <div class="row">
                                 <div class="form-group col-lg-6">
                                     <label>{{ 'FECHA_INICIO' | translate }}</label>
-                                    <md-datepicker ng-model="contratoRegistro.acta.FechaInicio" md-current-view="year" md-placeholder="Elija fecha inicio" required></md-datepicker>
+                                    <md-datepicker ng-model="contratoRegistroHoras.acta.FechaInicio" md-current-view="year" md-placeholder="Elija fecha inicio" required></md-datepicker>
                                 </div>
                                 <div class="form-group col-lg-12">
                                         <label>{{ 'DESCRIPCION' | translate }}</label>
-                                        <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistro.acta.Descripcion" required></textarea>
+                                        <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistroHoras.acta.Descripcion" required></textarea>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
-                <div class="form-group col-lg-8 col-lg-offset-2"><input type="submit" class="form-control btn btn-success" value="{{'REALIZAR_EXPEDICION' | translate }}" ng-click="contratoRegistro.realizarContrato()">
+                <div class="form-group col-lg-8 col-lg-offset-2"><input type="submit" class="form-control btn btn-success" value="{{'REALIZAR_EXPEDICION' | translate }}" ng-click="contratoRegistroHoras.realizarContrato()">
                 </div>
             </div>
         </div>

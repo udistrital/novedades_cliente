@@ -176,6 +176,16 @@ angular
                 controller: 'ContratoRegistroCtrl',
                 controllerAs: 'contratoRegistro'
             })
+            .when('/vinculacionespecial/contrato_registro_horas', {
+                templateUrl: 'views/vinculacionespecial/contrato_registro_horas.html',
+                controller: 'ContratoRegistroHorasCtrl',
+                controllerAs: 'contratoRegistroHoras'
+            })
+            .when('/vinculacionespecial/contrato_registro_cancelar', {
+                templateUrl: 'views/vinculacionespecial/contrato_registro_cancelar.html',
+                controller: 'ContratoRegistroCancelarCtrl',
+                controllerAs: 'contratoRegistroCancelar'
+            })
             .when('/vinculacionespecial/resolucion_gestion', {
                 templateUrl: 'views/vinculacionespecial/resolucion_gestion.html',
                 controller: 'ResolucionGestionCtrl',
@@ -210,11 +220,6 @@ angular
                 templateUrl: 'views/plantillas/lista_plantillas.html',
                 controller: 'ListaPlantillasCtrl',
                 controllerAs: 'listaPlantillas'
-            })
-            .when('/vinculacionespecial/cancelar_contrato_docente', {
-                templateUrl: 'views/vinculacionespecial/cancelar_contrato_docente.html',
-                controller: 'CancelarContratoDocenteCtrl',
-                controllerAs: 'cancelarContratoDocente'
             })
             .when('/necesidad/necesidad_externa', {
                 templateUrl: 'views/necesidad/necesidad_externa.html',
