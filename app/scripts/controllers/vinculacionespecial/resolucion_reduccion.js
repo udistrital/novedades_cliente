@@ -126,8 +126,8 @@ angular.module('contractualClienteApp')
       Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
       NivelAcademico: self.resolucion.NivelAcademico_nombre,
       Disponibilidad: parseInt(self.disponibilidad_actual_id),
-      Vigencia: personaSeleccionada.Vigencia,
-      NumeroContrato: personaSeleccionada.NumeroContrato
+      Vigencia: self.persona_a_modificar.Vigencia,
+      NumeroContrato: self.persona_a_modificar.NumeroContrato
     };
 
     desvinculacionesData.push(vinculacionDocente);
