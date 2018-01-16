@@ -151,7 +151,7 @@ angular.module('contractualClienteApp')
 
   //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
   self.cargarDatosResolucion=function(){
-      adminMidRequest.get("gestion_resoluciones/get_resoluciones_aprobadas").then(function(response){
+      adminMidRequest.get("gestion_resoluciones/get_resoluciones_inscritas").then(function(response){
           self.resolucionesAprobadas.data=response.data;
       });
   };
