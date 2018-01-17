@@ -120,13 +120,13 @@ angular.module('contractualClienteApp')
 
                     $http.post(url, data, service.setting_basic)
                         .then(function(response) {
-                            window.location.replace(CONF.GENERAL.TOKEN.REDIRECT_URL);
+                            //window.location.replace(CONF.GENERAL.TOKEN.REDIRECT_URL);
+                            location.search = "";
                             $sessionStorage.$default(response.data);
-                            service.timer();
                             service.setExpiresAt();
                         });
                 }
-
+                service.timer();
             },
             setExpiresAt: function() {
                 if (angular.isUndefined($sessionStorage.expires_at) || $sessionStorage.expires_at === null) {
