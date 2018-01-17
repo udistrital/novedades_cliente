@@ -32,6 +32,7 @@ var conf_cloud = {
         SCOPE: "openid email",
         BUTTON_CLASS: "btn btn-warning btn-sm",
         SIGN_OUT_URL: "https://10.20.0.162:9443/oidc/logout",
+        REFRESH_TOKEN: "https://10.20.0.162:9443/oidc/logout",
         SIGN_OUT_REDIRECT_URL: "http://10.20.0.254/kronos/",
         SIGN_OUT_APPEND_TOKEN: "true"
     }
@@ -91,7 +92,8 @@ var conf_pruebas = {
         BUTTON_CLASS: "btn btn-warning btn-sm",
         SIGN_OUT_URL: "https://10.20.0.162:9443/oidc/logout",
         SIGN_OUT_REDIRECT_URL: "http://10.20.0.254/kronos/",
-        SIGN_OUT_APPEND_TOKEN: "true"
+        SIGN_OUT_APPEND_TOKEN: "true",
+        REFRESH_TOKEN: "https://10.20.0.162:9443/oidc/oauth2/token"
     }
 };
 var conf_local = {
@@ -114,14 +116,17 @@ var conf_local = {
     TITAN_SERVICE: "http://10.20.0.254/titan_api_crud/v1/",
     TOKEN: {
         AUTORIZATION_URL: "https://10.20.0.162:9443/oauth2/authorize",
+        URL_USER_INFO: "https://10.20.0.162:9443/oauth2/userinfo",
         CLIENTE_ID: "bfPMflsiPVN6WFjJZIpzjsLdlx8a",
         REDIRECT_URL: "http://localhost:9000/",
-        RESPONSE_TYPE: "id_token token",
+        RESPONSE_TYPE: "code",
         SCOPE: "openid email",
         BUTTON_CLASS: "btn btn-warning btn-sm",
         SIGN_OUT_URL: "https://10.20.0.162:9443/oidc/logout",
         SIGN_OUT_REDIRECT_URL: "http://localhost:9000/",
-        SIGN_OUT_APPEND_TOKEN: "true"
+        SIGN_OUT_APPEND_TOKEN: "true",
+        REFRESH_TOKEN: "https://10.20.0.162:9443/oauth2/token",
+        CLIENT_SECRET: "4C_HkdaZsMF4Fthfm6D2n5joLzEa"
     },
 };
 
@@ -129,6 +134,5 @@ var conf_local = {
 
 angular.module('contractualClienteApp')
     .constant('CONF', {
-        GENERAL: conf_pruebas
+        GENERAL: conf_local
     });
-

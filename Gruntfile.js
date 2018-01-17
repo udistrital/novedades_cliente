@@ -70,7 +70,7 @@ module.exports = function(grunt) {
         // The actual grunt server settings
         connect: {
             options: {
-                port: 9200,
+                port: 9000,
                 // Change this to 'localhost' to access the server from outside.
                 hostname: '0.0.0.0',
                 livereload: 35730
@@ -399,7 +399,7 @@ module.exports = function(grunt) {
                     cwd: '<%= yeoman.app %>/scripts',
                     src: '**/*.json',
                     dest: '<%= yeoman.dist %>/scripts'
-                  },{
+                }, {
                     expand: true,
                     cwd: '.tmp/images',
                     dest: '<%= yeoman.dist %>/images',
