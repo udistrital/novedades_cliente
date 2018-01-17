@@ -187,7 +187,7 @@ angular.module('contractualClienteApp')
   };
 
 
-  adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
+  adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad+"&nivel_academico="+self.resolucion.NivelAcademico_nombre).then(function(response){
     self.datosDocentesCargaLectiva.data = response.data
 
   });
@@ -230,7 +230,8 @@ angular.module('contractualClienteApp')
           Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
           Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
           NivelAcademico: self.resolucion.NivelAcademico_nombre,
-          Disponibilidad: self.apropiacion_elegida[0].Id
+          Disponibilidad: self.apropiacion_elegida[0].Id,
+          Vigencia: parseInt(self.resolucion.Vigencia)
         };
 
         vinculacionesData.push(vinculacionDocente);
