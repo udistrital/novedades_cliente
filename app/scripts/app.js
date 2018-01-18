@@ -18,7 +18,6 @@ angular
         'ngResource',
         'ngRoute',
         'ngSanitize',
-        'ngTouch',
         'afOAuth2',
         'treeControl',
         'ngMaterial',

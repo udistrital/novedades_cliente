@@ -23,7 +23,7 @@ angular.module('configuracionService', [])
  * Factory que permite gestionar los servicios para construir y gestion los elementos que se muestran por el cliente a traves del menú
  */
 
-.factory('configuracionRequest', function($http, $q, CONF) {
+.factory('configuracionRequest', function($http, $q, CONF, token_service) {
     // Service logic
     // ...
     var path = CONF.GENERAL.CONFIGURACION_SERVICE;
@@ -64,7 +64,7 @@ angular.module('configuracionService', [])
          * @description Metodo GET del servicio
          */
         get: function(tabla, params) {
-            return $http.get(path + tabla + "/?" + params);
+            return $http.get(path + tabla + "/?" + params, token_service.setting_bearer.headers);
         },
         /**
          * @ngdoc function
@@ -76,7 +76,7 @@ angular.module('configuracionService', [])
          * @description Metodo POST del servicio
          */
         post: function(tabla, elemento) {
-            return $http.post(path + tabla, elemento);
+            return $http.post(path + tabla, elemento, token_service.setting_bearer.headers);
         },
 
         /**
@@ -90,7 +90,7 @@ angular.module('configuracionService', [])
          * @description Metodo PUT del servicio
          */
         put: function(tabla, id, elemento) {
-            return $http.put(path + tabla + "/" + id, elemento);
+            return $http.put(path + tabla + "/" + id, elemento, token_service.setting_bearer.headers);
         },
 
         /**
@@ -103,7 +103,7 @@ angular.module('configuracionService', [])
          * @description Metodo DELETE del servicio
          */
         delete: function(tabla, id) {
-            return $http.delete(path + tabla + "/" + id);
+            return $http.delete(path + tabla + "/" + id, token_service.setting_bearer.headers);
         }
     };
 

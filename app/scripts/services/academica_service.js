@@ -18,8 +18,8 @@ angular.module('academicaService', [])
      * # academicaService
      * Fabrica sobre la cual se consumen los servicios proveidos por el API de financiera sobre los metodos GET, POST, PUT y DELETE
      */
-    .factory('academicaRequest', function($http, token) {
-        var path = "http://10.20.0.127/urano/index.php?data=B-7djBQWvIdLAEEycbH1n6e-3dACi5eLUOb63vMYhGq0kPBs7NGLYWFCL0RSTCu1yTlE5hH854MOgmjuVfPWyvdpaJDUOyByX-ksEPFIrrQQ7t1p4BkZcBuGD2cgJXeD";
+    .factory('academicaRequest', function($http, token_service, CONF) {
+        var path = CONF.GENERAL.ACADEMICA_SERVICE;
         // Public API here
         return {
             /**
@@ -31,7 +31,7 @@ angular.module('academicaService', [])
              * @description Metodo GET del servicio
              */
             get: function(params) {
-                return $http.get(path + "&" + params, token.setting_bearer);
+                return $http.get(path + "&" + params, token_service.setting_bearer.headers);
             },
 
             /**
@@ -43,7 +43,7 @@ angular.module('academicaService', [])
              * @description Metodo POST del servicio
              */
             post: function(elemento) {
-                return $http.post(path, elemento, token.setting_bearer);
+                return $http.post(path, elemento, token_service.setting_bearer.headers);
             }
         };
     });
