@@ -219,6 +219,8 @@ angular.module('contractualClienteApp')
   self.agregarPrecontratos = function(){
 
     if(self.saldo_disponible){
+      console.log("vigencia")
+      console.log(self.resolucion.Vigencia)
       self.personasSeleccionadas1.forEach(function(personaSeleccionada){
         var vinculacionDocente = {
           IdPersona: personaSeleccionada.docente_documento,
@@ -231,7 +233,7 @@ angular.module('contractualClienteApp')
           Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
           NivelAcademico: self.resolucion.NivelAcademico_nombre,
           Disponibilidad: self.apropiacion_elegida[0].Id,
-          Vigencia: {NullInt64: parseInt(self.resolucion.Vigencia)}
+          Vigencia: {Int64: parseInt(self.resolucion.Vigencia), valid:true}
         };
 
         vinculacionesData.push(vinculacionDocente);
@@ -389,7 +391,8 @@ angular.module('contractualClienteApp')
         Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
         Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
         NivelAcademico: self.resolucion.NivelAcademico_nombre,
-        Disponibilidad: self.apropiacion_elegida[0].Apropiacion.Id
+        Disponibilidad: self.apropiacion_elegida[0].Apropiacion.Id,
+        Vigencia: {Int64: parseInt(self.resolucion.Vigencia), valid:true}
       };
 
       vinculacionesData.push(vinculacionDocente);
@@ -412,7 +415,7 @@ angular.module('contractualClienteApp')
 
   //*--------------Funciones para recargar grids que han sido seleccionados -------------* //
   self.RecargarDatosPersonas = function(){
-    adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
+    adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad+"&nivel_academico="+self.resolucion.NivelAcademico_nombre).then(function(response){
       self.datosDocentesCargaLectiva.data = response.data;
 
     });
