@@ -26,15 +26,11 @@ angular.module('requestService', [])
             },
             cancel_all: function() {
                 angular.forEach(promises, function(p) {
-                    
+
                     if (!angular.isUndefined(p)) {
-                        console.log("cancel");
                         return p.reject('CANCELED');
                         /*if (p.promise.$$state.status) {
-                            console.log(p.promise);
-                           // console.log("URL: " + p.promise.$$state.value.config.url + ", STATUS: " + p.promise.$$state.value.xhrStatus);
                         } else {
-                            console.log("cancel");
                             p.resolve();
                         }*/
                     }

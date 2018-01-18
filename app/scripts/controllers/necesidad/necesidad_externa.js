@@ -49,14 +49,12 @@ angular.module('contractualClienteApp')
                     order: "asc"
                 }))
                 .then(function(response) {
-                    console.log(response.data);
                     ctrl.gridOptions.data = response.data;
                 });
         };
         ctrl.get_all_necesidad_externa();
 
         ctrl.get_avance = function(id) {
-            console.log(id);
             financieraRequest.get("solicitud_avance", $.param({
                     limit: -1,
                     query: "Id:" + id,
@@ -65,7 +63,6 @@ angular.module('contractualClienteApp')
                 }))
                 .then(function(response) {
                     ctrl.solicitud = response.data[0];
-                    console.log(ctrl.solicitud);
                     financieraRequest.get("avance_estado_avance", $.param({
                             query: "SolicitudAvance.Id:" + ctrl.solicitud.Id,
                             sortby: "FechaRegistro",
@@ -117,7 +114,6 @@ angular.module('contractualClienteApp')
                                     });
                             });
                         });
-                    console.log(ctrl.solicitud);
                 });
         };
 
