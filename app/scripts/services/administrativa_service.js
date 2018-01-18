@@ -1,4 +1,4 @@
-'use strict';
+git 'use strict';
 
 /**
  * @ngdoc service
