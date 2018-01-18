@@ -26,36 +26,13 @@ angular.module('contractualClienteApp')
 
   adminMidRequest.get("gestion_documento_resolucion/get_contenido_resolucion", "id_resolucion="+self.resolucion.Id+"&id_facultad="+self.resolucion.IdFacultad).then(function(response){
       self.contenidoResolucion=response.data;
-      adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
+      adminMidRequest.get("gestion_previnculacion/docentes_previnculados_all", "id_resolucion="+self.resolucion.Id).then(function(response){
         self.contratados=response.data;
         self.generarResolucion();
       });
   });
 
- /* adminMidRequest.get("gestion_documento_resolucion/get_contenido_resolucion", "id_resolucion="+self.resolucion.Id+"&id_facultad="+self.resolucion.IdFacultad).then(function(response){
-    self.contenidoResolucion=response.data;
-    console.log("El primero  ",response.data);
-    administrativaRequest.get("resolucion/"+self.resolucion.Id).then(function(response){
-      self.contenidoResolucion.TipoResolucion=response.data.IdTipoResolucion.Id;
-      console.log("Esteeeeeeeeeeeeeeeeeeeeeeeeee ",response.data);
-      if(response.data.IdTipoResolucion.Id === 2){
-        adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion="+self.resolucion.Id).then(function(response){
-          self.contratados=response.data;
-          self.generarResolucion();
-        });
-      } else {
-        adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
-          self.contratados=response.data;
-          self.generarResolucion();
-        });
-      }
-    });
-});*/
-
-
-
-
-  //Función para generar el pdf de la resolución con la información almacenada en la base de datos
+   //Función para generar el pdf de la resolución con la información almacenada en la base de datos
   self.generarResolucion = function() {
     var documento=self.getDocumento(self.contenidoResolucion,self.contratados,self.proyectos);
     //Se hace uso de la libreria pdfMake para generar el documento y se asigna a la etiqueta con el id vistaPDF

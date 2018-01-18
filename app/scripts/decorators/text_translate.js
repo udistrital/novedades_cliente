@@ -324,7 +324,7 @@ var text_es = {
       LABEL_HORAS_TOTALES:"Horas totales",
       LABEL_DISP_ACTUAL: "Disponibilidad actual",
       BTN_CAMBIAR_DISP: "Cambiar disponibilidad",
-      BTN_REALIZAR_NUEVA_VIN: "Realizar nueva vinculación",
+      BTN_MODIFICAR_HORAS: "Modificar horas",
       /*---Script---*/
       ALERTA_ADICION_EXITOSA: "Adición realizada exitosamente",
       ALERTA_ERROR_ADICION: "Error al realizar adición",
