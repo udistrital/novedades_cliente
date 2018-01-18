@@ -5,7 +5,7 @@ angular.module('contractualClienteApp')
 
         var self = this;
 
-        self.resolucion = JSON.parse(localStorage.getItem("resolucion"))
+        self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
         self.estado = false;
         self.proyectos = [];
         self.fecha = new Date();
@@ -59,8 +59,8 @@ angular.module('contractualClienteApp')
         });
 
         administrativaRequest.get("modificacion_resolucion", "limit=-1&query=ResolucionNueva:" + self.resolucion.Id).then(function(response) {
-            self.resolucion.Id = response.data[0].ResolucionAnterior
-            self.id_modificacion_resolucion = response.data[0].Id
+            self.resolucion.Id = response.data[0].ResolucionAnterior;
+            self.id_modificacion_resolucion = response.data[0].Id;
 
         });
         //Función para visualizar docentes ya vinculados a resolución
@@ -76,7 +76,7 @@ angular.module('contractualClienteApp')
             self.precontratados.columnDefs[11].filter.term = self.term;
 
 
-        }
+        };
 
 
 
@@ -101,13 +101,16 @@ angular.module('contractualClienteApp')
                         $translate.instant('CANCELADO'),
                         $translate.instant('DESVINCULACION_CANCELADA'),
                         'error'
-                    )
+                    );
                 }
-            })
-        }
+            });
+        };
 
 
         self.desvincularDocente = function(row) {
+
+            console.log("id de modificacion res");
+            console.log(self.id_modificacion_resolucion);
             self.personasSeleccionadas.forEach(function(personaSeleccionada) {
                 var docente_a_desvincular = {
                     Id: personaSeleccionada.Id,
@@ -137,14 +140,14 @@ angular.module('contractualClienteApp')
 
 
             adminMidRequest.post("gestion_desvinculaciones/actualizar_vinculaciones", objeto_a_enviar).then(function(response) {
-                if (response.data == "OK") {
+                if (response.data === "OK") {
                     self.persona = null;
                     swal({
                         text: $translate.instant('ALERTA_DESVIN_EXITOSA'),
                         type: 'success',
                         confirmButtonText: $translate.instant('ACEPTAR')
 
-                    })
+                    });
                     $window.location.reload();
                 } else {
                     swal({
@@ -152,13 +155,13 @@ angular.module('contractualClienteApp')
                         text: $translate.instant('ALERTA_ERROR_DESVIN'),
                         type: 'error',
                         confirmButtonText: $translate.instant('ACEPTAR')
-                    })
+                    });
 
                 }
             });
 
 
-        }
+        };
 
 
 

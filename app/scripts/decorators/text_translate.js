@@ -36,7 +36,6 @@ var text_es = {
   GENERAR_RESOLUCION:"Generar Resolución",
   REALIZAR_EXPEDICION:"Realizar expedición de la resolución con los datos introducidos",
   INFORMACION_PERSONA_NATURAL:"Información persona natural",
-  VINCULAR_DOCENTES_SELECCIONADOS:"Vincular docentes seleccionados a la resolución",
   FORMACION_ACADEMICA:"Formación académica",
   EXPERIENCIA_LABORAL_DOCENTE:"Experiencia laboral docente",
   TRABAJOS_INVESTIGACION:"Trabajos de investigación",
@@ -287,7 +286,6 @@ var text_es = {
       DOCUMENTO_DOCENTES:"Documento",
       HORAS_LECTIVAS: "Horas lectivas",
       PROYECTO_CURRICULAR: "Proyecto curricular",
-      HORAS_SEMANALES: "Horas semanales",
       SEMANAS:"Semanas",
       NUM_DISPO_DOCENTE: "Disponibilidad",
       VIGENCIA_DISP: "Vigencia",
@@ -305,6 +303,7 @@ var text_es = {
       DESVINCULACION_NOEXITOSA:"Error al desvincular docente",
       BORRAR_BTN:"Borrar",
       ERROR_DISP: "La apropación elegida no tiene saldo suficiente",
+      ALERTA_PREVIN_ERROR: "Error al previncular docente",
 
   //RESOLUCION_ADICION_DETALLE
       /*---HTML---*/
@@ -325,7 +324,7 @@ var text_es = {
       LABEL_HORAS_TOTALES:"Horas totales",
       LABEL_DISP_ACTUAL: "Disponibilidad actual",
       BTN_CAMBIAR_DISP: "Cambiar disponibilidad",
-      BTN_REALIZAR_NUEVA_VIN: "Realizar nueva vinculación",
+      BTN_MODIFICAR_HORAS: "Modificar horas",
       /*---Script---*/
       ALERTA_ADICION_EXITOSA: "Adición realizada exitosamente",
       ALERTA_ERROR_ADICION: "Error al realizar adición",
@@ -341,7 +340,7 @@ var text_es = {
       CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
       IRREVERSIBLE: "Esta acción es irreversible",
       APROBADA: "Resolución Aprobada",
-      
+
   //RESOLUCION_CANCELACION_DETALLE
       /*---HTML---*/
       SELEC_VIN_BTN:"Seleccionar vinculaciones a cancelar",
@@ -434,7 +433,6 @@ var text_es = {
   //RESOLUCION_VISTA
       /*---Script---*/
       VISTA_PREVIA_RESOLUCION:"Vista previa de la resolución",
-      NIVEL:"Nivel",
       CIUDAD_EXPEDICION:"Ciudad de expedición",
       COMUNIQUESE_Y_CUM: "COMUNÍQUESE Y CÚMPLASE",
 
@@ -483,11 +481,12 @@ var text_es = {
   DIRECCION:"Dirección",
   CORREO_ELECTRONICO:"Correo Electrónico",
   NUMERO_CELULAR:"Número de Celular",
-  CONVENIO:"Convenio",
   PROYECTO_INVESTIGACION:"Proyecto de Investigación",
   DOCENTES_DESVINCULAR:"Docentes a desvincular",
   CONVENIO:"Convenio",
   FECHA_CANCELACION:"Fecha de Cancelacion",
+  INFORMACION_VINCULACION:"Información de la Vinculación",
+  CANCELACION_VINCULACION: "Datos de la cancelación de la(s) vinculacion(es)",
 };
 
 var text_en = {

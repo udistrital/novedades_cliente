@@ -151,7 +151,7 @@ angular.module('contractualClienteApp')
 
   //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
   self.cargarDatosResolucion=function(){
-      adminMidRequest.get("gestion_resoluciones/get_resoluciones_inscritas").then(function(response){
+      adminMidRequest.get("gestion_resoluciones/get_resoluciones_aprobadas").then(function(response){
           self.resolucionesAprobadas.data=response.data;
       });
   };
@@ -292,9 +292,9 @@ $scope.verVisualizarResolucion = function(row){
     Periodo : row.entity.Periodo,                       //--- se deja quemado, debe incluirse ne tabla resolucion
     NumeroSemanas : row.entity.NumeroSemanas,
     Dedicacion : self.Dedicacion
-  }
+  };
 
-  var local = JSON.stringify(resolucion)
+  var local = JSON.stringify(resolucion);
   localStorage.setItem('resolucion', local);
   $mdDialog.show({
     controller: "ResolucionVistaCtrl",

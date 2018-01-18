@@ -5,7 +5,7 @@ angular.module('contractualClienteApp')
 
   var self = this;
 
-  self.resolucion = JSON.parse(localStorage.getItem("resolucion"))
+  self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
   self.estado = false;
   self.proyectos=[];
   self.vigencia_data = self.resolucion.Vigencia;
@@ -71,7 +71,7 @@ angular.module('contractualClienteApp')
   administrativaRequest.get("modificacion_resolucion","limit=-1&query=ResolucionNueva:"+self.resolucion.Id).then(function(response){
       self.resolucion.Id = response.data[0].ResolucionAnterior;
       self.resolucion_id_nueva = response.data[0].ResolucionNueva;
-      self.id_modificacion_resolucion = response.data[0].Id
+      self.id_modificacion_resolucion = response.data[0].Id;
 
   });
   //Función para visualizar docentes ya vinculados a resolución
@@ -87,7 +87,7 @@ angular.module('contractualClienteApp')
     self.precontratados_adicion.columnDefs[12].filter.term = self.term;
 
 
-  }
+  };
 
   $scope.verAnularAdicion=function(row){
     swal({
@@ -110,10 +110,10 @@ angular.module('contractualClienteApp')
           $translate.instant('CANCELADO'),
           $translate.instant('ANULACION_CANCELADA'),
           'error'
-        )
+        );
       }
-    })
-  }
+    });
+  };
 
   self.AnularAdicionDocente = function(row){
 
@@ -138,11 +138,11 @@ angular.module('contractualClienteApp')
       var objeto_a_enviar = {
         IdModificacionResolucion : self.id_modificacion_resolucion,
         DocentesDesvincular : desvinculacionesData
-      }
+      };
 
 
   adminMidRequest.post("gestion_desvinculaciones/anular_adicion",objeto_a_enviar).then(function(response){
-      if(response.data=="OK"){
+      if(response.data==="OK"){
 
 
       swal({
@@ -150,7 +150,7 @@ angular.module('contractualClienteApp')
           type: 'success',
           confirmButtonText: $translate.instant('ACEPTAR')
 
-        })
+        });
          $window.location.reload();
       }else{
         swal({
@@ -158,12 +158,12 @@ angular.module('contractualClienteApp')
           text: $translate.instant('ALERTA_ERROR_ANULACION'),
           type: 'error',
           confirmButtonText: $translate.instant('ACEPTAR')
-        })
+        });
 
       }
 
     });
 
-  }
+  };
 
 });

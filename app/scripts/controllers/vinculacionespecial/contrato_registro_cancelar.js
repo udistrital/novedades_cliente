@@ -9,12 +9,13 @@
  */
 
 angular.module('contractualClienteApp')
-    .controller('ContratoRegistroCancelarCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreRequest, financieraRequest, contratacion_request, contratacion_mid_request, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate, $scope) {
+    .controller('ContratoRegistroCancelarCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreRequest, financieraRequest, contratacion_request, contratacion_mid_request, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate) {
 
         var self = this;
         self.contratoGeneralBase = {};
         self.contratoGeneralBase.Contrato = {};
         self.acta = {};
+        self.info_desvincular = false;
 
         self.idResolucion = idResolucion;
         amazonAdministrativaRequest.get("resolucion_vinculacion_docente/" + self.idResolucion).then(function(response) {
@@ -31,7 +32,11 @@ angular.module('contractualClienteApp')
             self.contratados=response.data;
             if(self.contratados != null){
               self.contratados.forEach(function(row){
+                console.log("row");
+                console.log(row.Id);
                 adminMidRequest.get("calculo_salario/Contratacion/"+row.Id.toString()).then(function(response){
+                  console.log("SCA VOY");
+                  console.log(response);
                   row.ValorContrato=response.data;
                 });
               });
@@ -208,7 +213,13 @@ angular.module('contractualClienteApp')
                     Vinculaciones: conjuntoContratos,
                     idResolucion: self.idResolucion
                 };
+                console.log("contratos a insertar");
+                console.log(expedicionResolucion);
                 adminMidRequest.post("expedir_resolucion/expedir", expedicionResolucion).then(function(response) {
+                    console.log("Soy el de expedicionResolucion");
+                    console.log(expedicionResolucion);
+                    console.log("Resolucion expedida, siiiiiiiiiiiiii");
+                    console.log(response);
                     //if(typeof(response.data)=="object"){ //xDD
                     /*
                                   self.alerta = "";
@@ -264,11 +275,11 @@ angular.module('contractualClienteApp')
             enableRowSelection: false,
             enableRowHeaderSelection: false,
             columnDefs: [
-                { field: 'NombreCompleto', width: '20%', displayName: $translate.instant('NOMBRE') },
-                { field: 'IdPersona', width: '10%', displayName: $translate.instant('DOCUMENTO_DOCENTES') },
+                { field: 'NombreCompleto', width: '22%', displayName: $translate.instant('NOMBRE') },
+                { field: 'IdPersona', width: '13%', displayName: $translate.instant('DOCUMENTO_DOCENTES') },
                 { field: 'Categoria', width: '10%', displayName: $translate.instant('CATEGORIA') },
-                { field: 'NumeroHorasSemanales', width: '8%', displayName: $translate.instant('HORAS_SEMANALES') },
-                { field: 'NumeroSemanas', width: '7%', displayName: $translate.instant('SEMANAS') },
+                { field: 'NumeroHorasSemanales', width: '15%', displayName: $translate.instant('HORAS_SEMANALES') },
+                { field: 'NumeroSemanas', width: '10%', displayName: $translate.instant('SEMANAS') },
                 { field: 'NumeroDisponibilidad', width: '15%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
                 { field: 'ValorContrato', width: '15%', displayName: $translate.instant('VALOR_CONTRATO'), cellClass: "valorEfectivo", cellFilter: "currency" }
             ]
@@ -276,10 +287,12 @@ angular.module('contractualClienteApp')
 
         //Función para visualizar docentes para cancelar su vinculacion resolución
         self.get_docentes_cancelados = function() {
+            self.info_desvincular = !self.info_desvincular;
             adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion=" + self.idResolucion).then(function(response) {
+                //console.log("Admirad!: ",response.data)
                 self.cancelados.data = response.data;
             });
-        }
+        };
 
         self.get_docentes_cancelados();
 

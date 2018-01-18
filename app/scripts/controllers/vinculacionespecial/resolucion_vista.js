@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
 .controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$http,$translate) {
 
   var self=this;
-  self.resolucion = JSON.parse(localStorage.getItem("resolucion"))
+  self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
   self.proyectos=[];
 
   $http.get("scripts/models/imagen_ud.json")
@@ -26,16 +26,13 @@ angular.module('contractualClienteApp')
 
   adminMidRequest.get("gestion_documento_resolucion/get_contenido_resolucion", "id_resolucion="+self.resolucion.Id+"&id_facultad="+self.resolucion.IdFacultad).then(function(response){
       self.contenidoResolucion=response.data;
-      adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
+      adminMidRequest.get("gestion_previnculacion/docentes_previnculados_all", "id_resolucion="+self.resolucion.Id).then(function(response){
         self.contratados=response.data;
         self.generarResolucion();
       });
   });
 
-
-
-
-  //Función para generar el pdf de la resolución con la información almacenada en la base de datos
+   //Función para generar el pdf de la resolución con la información almacenada en la base de datos
   self.generarResolucion = function() {
     var documento=self.getDocumento(self.contenidoResolucion,self.contratados,self.proyectos);
     //Se hace uso de la libreria pdfMake para generar el documento y se asigna a la etiqueta con el id vistaPDF

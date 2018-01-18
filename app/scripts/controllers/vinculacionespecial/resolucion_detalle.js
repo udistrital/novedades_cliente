@@ -12,7 +12,7 @@
 
    var self=this;
 
-   self.resolucion = JSON.parse(localStorage.getItem("resolucion"))
+   self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
 
    self.proyectos=[];
 
@@ -27,7 +27,7 @@
 
       adminMidRequest.get("gestion_documento_resolucion/get_contenido_resolucion", "id_resolucion="+self.resolucion.Id+"&id_facultad="+self.resolucion.IdFacultad).then(function(response){
           self.contenidoResolucion=response.data;
-          adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
+          adminMidRequest.get("gestion_previnculacion/docentes_previnculados_all", "id_resolucion="+self.resolucion.Id).then(function(response){
             self.contratados=response.data;
 
           });
@@ -137,7 +137,7 @@ self.guardarCambios = function(){
       IdFacultad : self.resolucion.IdFacultad,
       Dedicacion: self.resolucion.Dedicacion,
       NivelAcademico: self.resolucion.NivelAcademico_nombre
-    }
+    };
     self.contenidoResolucion.Vinculacion = ResolucionVinculacionDocente;
     administrativaRequest.put("contenido_resolucion",self.idResolucion,self.contenidoResolucion).then(function(response){
       if(response.data==="OK"){

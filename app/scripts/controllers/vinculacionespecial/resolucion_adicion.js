@@ -5,7 +5,7 @@ angular.module('contractualClienteApp')
 
         var self = this;
 
-        self.resolucion = JSON.parse(localStorage.getItem("resolucion"))
+        self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
         self.estado = false;
         self.proyectos = [];
         self.vigencia_data = self.resolucion.Vigencia;
@@ -116,7 +116,9 @@ angular.module('contractualClienteApp')
             enableVerticalScrollbar: true,
             useExternalPagination: false,
             enableSelectAll: false,
-            columnDefs: [{
+            columnDefs: [
+
+                {
                     field: 'Apropiacion.Valor',
                     displayName: $translate.instant('VALOR_APROPIACION')
                 },
@@ -130,6 +132,8 @@ angular.module('contractualClienteApp')
                 self.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function(row) {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
+                    console.log("apropiacion elegida");
+                    console.log(self.apropiacion_elegida);
                     self.verificarDisponibilidad();
                 });
             }
@@ -143,17 +147,22 @@ angular.module('contractualClienteApp')
         administrativaRequest.get("modificacion_resolucion", "limit=-1&query=ResolucionNueva:" + self.resolucion.Id).then(function(response) {
             self.resolucion.Id = response.data[0].ResolucionAnterior;
             self.resolucion_id_nueva = response.data[0].ResolucionNueva;
-            self.id_modificacion_resolucion = response.data[0].Id
+            self.id_modificacion_resolucion = response.data[0].Id;
 
         });
         //Función para visualizar docentes ya vinculados a resolución
         self.get_docentes_vinculados = function() {
+
             self.estado = true;
             adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.resolucion.Id).then(function(response) {
                 self.precontratados.data = response.data;
                 self.estado = false;
+
             });
+
             self.precontratados.columnDefs[12].filter.term = self.term;
+
+
         };
 
 
@@ -166,14 +175,21 @@ angular.module('contractualClienteApp')
             financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:" + self.vigencia_data).then(function(response) {
                 self.Disponibilidades.data = response.data;
             });
+
             $('#modal_adicion').modal('show');
+
+
         };
 
         self.listar_apropiaciones = function() {
+
             var disponibilidadAp = self.DisponibilidadApropiacion;
             adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones", disponibilidadAp).then(function(response) {
+                console.log("apropiaciones");
+                console.log(response.data);
                 self.Apropiaciones.data = response.data;
             });
+
         };
 
         self.verificarDisponibilidad = function() {
@@ -196,13 +212,18 @@ angular.module('contractualClienteApp')
             };
 
             desvinculacionesData.push(vinculacionDocente);
+            console.log("verificacion de disponibilidad");
+            console.log(desvinculacionesData);
+
 
             adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", desvinculacionesData).then(function(response) {
                 if (300000 > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
                     self.saldo_disponible = false;
+                    console.log("no se puede elgir esa apropiacion");
                 } else {
                     self.saldo_disponible = true;
                     self.disponibilidad_nueva_id = self.apropiacion_elegida[0].Id;
+                    console.log("si se puede elegir");
                 }
             });
 
@@ -214,31 +235,33 @@ angular.module('contractualClienteApp')
                 self.datosDocentesCargaLectiva.data = response.data;
 
             });
-        }
+        };
 
         self.RecargarDisponibilidades = function() {
             financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:" + self.vigencia_data).then(function(response) {
                 self.Disponibilidades.data = response.data;
 
             });
-        }
+        };
 
         self.RecargarApropiaciones = function() {
             self.Apropiaciones.data = [];
 
-        }
+        };
 
         self.Calcular_horas_totales = function() {
             self.horas_totales = parseInt(self.horas_actuales) + parseInt(self.horas_a_adicionar);
 
-        }
+        };
 
         self.cambiar_disponibilidad = function() {
             self.cambio_disp = true;
-        }
+        };
 
         self.realizar_nueva_vinculacion = function() {
             if (self.saldo_disponible) {
+                console.log("saldo disponible");
+
                 var vinculacionDocente = {
                     Id: self.persona_a_modificar.Id,
                     FechaRegistro: self.persona_a_modificar.FechaRegistro,
@@ -266,40 +289,44 @@ angular.module('contractualClienteApp')
                     DisponibilidadNueva: self.disponibilidad_nueva_id,
                     DocentesDesvincular: desvinculacionesData
                 };
+
+                console.log("objeto a enviar");
+                console.log(objeto_a_enviar);
+
                 adminMidRequest.post("gestion_desvinculaciones/adicionar_horas", objeto_a_enviar).then(function(response) {
 
-                    if (response.data == "OK") {
+                    if (response.data === "OK") {
                         swal({
-                                text: $translate.instant('ALERTA_ADICION_EXITOSA'),
-                                type: 'success',
-                                confirmButtonText: $translate.instant('ACEPTAR')
+                            text: $translate.instant('ALERTA_ADICION_EXITOSA'),
+                            type: 'success',
+                            confirmButtonText: $translate.instant('ACEPTAR')
 
-                            })
-                            //LIMPIAR GRID
+                        });
+                        //LIMPIAR GRID
                         desvinculacionesData = [];
                         $window.location.reload();
                         //  $('#modal_adicion').modal('hide');
                     } else {
                         swal({
-                                title: $translate.instant('ERROR'),
-                                text: $translate.instant('ALERTA_ERROR_ADICION'),
-                                type: 'info',
-                                confirmButtonText: $translate.instant('ACEPTAR')
-                            })
-                            //LIMPIAR GRID
+                            title: $translate.instant('ERROR'),
+                            text: $translate.instant('ALERTA_ERROR_ADICION'),
+                            type: 'info',
+                            confirmButtonText: $translate.instant('ACEPTAR')
+                        });
+                        //LIMPIAR GRID
                         desvinculacionesData = [];
                         $window.location.reload();
                         //  $('#modal_adicion').modal('hide');
                     }
-                })
+                });
             } else {
                 swal({
                     title: $translate.instant('ERROR'),
                     text: $translate.instant('ERROR_DISP'),
                     type: 'info',
                     confirmButtonText: $translate.instant('ACEPTAR')
-                })
+                });
             }
-        }
+        };
 
     });
