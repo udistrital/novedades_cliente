@@ -9,7 +9,7 @@
  */
 
 angular.module('contractualClienteApp')
-  .controller('ContratoRegistroCancelarCtrl', function (amazonAdministrativaRequest,administrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate, $scope) {
+  .controller('ContratoRegistroCancelarCtrl', function (amazonAdministrativaRequest,administrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate) {
     
         var self = this;
         self.contratoGeneralBase={};
@@ -293,7 +293,7 @@ self.cancelados = {
       //console.log("Admirad!: ",response.data)
       self.cancelados.data=response.data;
     });
-  }
+  };
 
   self.get_docentes_cancelados();
 

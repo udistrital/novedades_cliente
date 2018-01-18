@@ -11,7 +11,7 @@ angular.module('requestService', [])
     .factory('requestRequest', function($q) {
         // Service logic
         // ...
-        var canceller = $q.defer();
+        //var canceller = $q.defer();
         var promises = [];
         // Public API here
         return {

@@ -14,7 +14,7 @@ angular.module('contractualClienteApp')
 
     self.CurrentDate = new Date();
     self.anioPeriodo = new Date().getFullYear();
-    self.objeto_facultad = {}
+    self.objeto_facultad = {};
 
     self.resolucionesExpedidasPeriodo = {
       paginationPageSizes: [10, 15, 20],
@@ -139,7 +139,7 @@ angular.module('contractualClienteApp')
 
 
     self.crearResolucion = function(){
-      self.objeto_facultad = JSON.parse(self.resolucion.facultad)
+      self.objeto_facultad = JSON.parse(self.resolucion.facultad);
       if(self.resolucion.numero && self.resolucion.facultad && self.resolucion.nivelAcademico && self.resolucion.dedicacion &&self.resolucion.numeroSemanas){
     		swal({
           title:  $translate.instant('DATOS_RESOLUCION'),
@@ -167,13 +167,13 @@ angular.module('contractualClienteApp')
 
     self.guardarResolucion = function(){
 
-      if (self.tipo_resolucion_elegida == 1){
+      if (self.tipo_resolucion_elegida === 1){
         self.resolucion_a_cancelar_seleccionada = [];
       }
 
       var tipoResolucion = {
         Id: parseInt(self.tipo_resolucion_elegida)
-      }
+      };
 
 
       var resolucionData={
@@ -200,18 +200,18 @@ angular.module('contractualClienteApp')
 
 
     adminMidRequest.post("gestion_resoluciones/insertar_resolucion_completa",objeto_resolucion).then(function(response){
-      console.log(typeof response.data)
-      console.log("resolucion creada")
-      console.log(response.data)
+      console.log(typeof response.data);
+      console.log("resolucion creada");
+      console.log(response.data);
         if(response.data){
-          self.resolucion_creada = response.data
+          self.resolucion_creada = response.data;
           swal({
             text: $translate.instant('ALERTA_RESOLUCION_EXITOSA'),
             type: 'success',
             confirmButtonText: $translate.instant('ACEPTAR')
           }).then(function() {
                   $window.location.href = '#/vinculacionespecial/resolucion_gestion';
-          })
+          });
 
         }else{
           swal({
@@ -221,7 +221,7 @@ angular.module('contractualClienteApp')
             confirmButtonText: $translate.instant('ACEPTAR')
           }).then(function() {
                 $window.location.href = '#/vinculacionespecial/resolucion_gestion';
-          })
+          });
         }
 
       });
@@ -247,10 +247,10 @@ self.AsociarResolucionCancelacion = function(){
       text: $translate.instant('ALERTA_SELEC_RESOLUCION'),
       type: 'info',
       confirmButtonText: $translate.instant('ACEPTAR')
-    })
+    });
   }
 
 //
-}
+};
 
 });

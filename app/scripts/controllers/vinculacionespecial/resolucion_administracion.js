@@ -292,9 +292,9 @@ $scope.verVisualizarResolucion = function(row){
     Periodo : row.entity.Periodo,                       //--- se deja quemado, debe incluirse ne tabla resolucion
     NumeroSemanas : row.entity.NumeroSemanas,
     Dedicacion : self.Dedicacion
-  }
+  };
 
-  var local = JSON.stringify(resolucion)
+  var local = JSON.stringify(resolucion);
   localStorage.setItem('resolucion', local);
   $mdDialog.show({
     controller: "ResolucionVistaCtrl",

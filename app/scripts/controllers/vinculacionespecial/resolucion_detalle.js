@@ -12,7 +12,7 @@
 
    var self=this;
 
-   self.resolucion = JSON.parse(localStorage.getItem("resolucion"))
+   self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
 
    self.proyectos=[];
 
@@ -137,7 +137,7 @@ self.guardarCambios = function(){
       IdFacultad : self.resolucion.IdFacultad,
       Dedicacion: self.resolucion.Dedicacion,
       NivelAcademico: self.resolucion.NivelAcademico_nombre
-    }
+    };
     self.contenidoResolucion.Vinculacion = ResolucionVinculacionDocente;
     administrativaRequest.put("contenido_resolucion",self.idResolucion,self.contenidoResolucion).then(function(response){
       if(response.data==="OK"){

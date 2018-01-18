@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
 .controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$http,$translate) {
 
   var self=this;
-  self.resolucion = JSON.parse(localStorage.getItem("resolucion"))
+  self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
   self.proyectos=[];
 
   $http.get("scripts/models/imagen_ud.json")
@@ -38,7 +38,7 @@ angular.module('contractualClienteApp')
     administrativaRequest.get("resolucion/"+self.resolucion.Id).then(function(response){
       self.contenidoResolucion.TipoResolucion=response.data.IdTipoResolucion.Id;
       console.log("Esteeeeeeeeeeeeeeeeeeeeeeeeee ",response.data);
-      if(response.data.IdTipoResolucion.Id === 15){
+      if(response.data.IdTipoResolucion.Id === 2){
         adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion="+self.resolucion.Id).then(function(response){
           self.contratados=response.data;
           self.generarResolucion();

@@ -12,7 +12,7 @@ angular.module('contractualClienteApp')
     var self = this;
 
     $scope.rubroVacio=false;
-    self.NumeroCompromiso == null;
+    self.NumeroCompromiso = null;
     self.resolucion = resolucion;
     self.contrato = contrato;
     self.boton_registrar=false;
@@ -552,7 +552,7 @@ angular.module('contractualClienteApp')
           //});
           
         });
-        console.log("_______________")
+        console.log("_______________");
           console.log(registrosSolicitud);
           administrativaRequest.post('solicitud_rp/AddSolicitudRpTr', registrosSolicitud).then(function(response) {
             console.log(response.data);
@@ -570,7 +570,7 @@ angular.module('contractualClienteApp')
               if (self.solicitudcdp_bool === false){
                 templateAlert = templateAlert + "<tr class='success'><td>" + data.Body.Id + "</td>" + "<td>" + data.Body.Cdp + "</td>"+ "<td>" + data.Body.NumeroContrato + "</td>"+ "<td>" + data.Body.VigenciaContrato + "</td>";
               }else{
-                templateAlert = templateAlert + "<tr class='success'><td>" + data.Body.Id + "</td>" + "<td>" + data.Body.Cdp + "</td>"
+                templateAlert = templateAlert + "<tr class='success'><td>" + data.Body.Id + "</td>" + "<td>" + data.Body.Cdp + "</td>";
               }
             }
 

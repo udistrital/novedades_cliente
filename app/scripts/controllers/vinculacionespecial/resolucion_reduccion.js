@@ -5,7 +5,7 @@ angular.module('contractualClienteApp')
 
   var self = this;
 
-  self.resolucion = JSON.parse(localStorage.getItem("resolucion"))
+  self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
   self.estado = false;
   self.proyectos=[];
   self.vigencia_data = self.resolucion.Vigencia;
@@ -72,7 +72,7 @@ angular.module('contractualClienteApp')
   administrativaRequest.get("modificacion_resolucion","limit=-1&query=ResolucionNueva:"+self.resolucion.Id).then(function(response){
       self.resolucion.Id = response.data[0].ResolucionAnterior;
       self.resolucion_id_nueva = response.data[0].ResolucionNueva;
-      self.id_modificacion_resolucion = response.data[0].Id
+      self.id_modificacion_resolucion = response.data[0].Id;
 
   });
   //Función para visualizar docentes ya vinculados a resolución
@@ -88,7 +88,7 @@ angular.module('contractualClienteApp')
     self.precontratados.columnDefs[12].filter.term = self.term;
 
 
-  }
+  };
 
   $scope.mostrar_modal_adicion=function(row){
     self.horas_actuales = row.entity.NumeroHorasSemanales;
@@ -97,14 +97,14 @@ angular.module('contractualClienteApp')
     self.disponibilidad_nueva_id = row.entity.Disponibilidad;
     self.persona_a_modificar = row.entity;
       $('#modal_adicion').modal('show');
-  }
+  };
 
 
 
   self.Calcular_horas_totales = function(){
     self.horas_totales = parseInt(self.horas_actuales) - parseInt(self.horas_a_reducir);
 
-  }
+  };
 
   self.realizar_nueva_vinculacion = function(){
 
@@ -113,8 +113,8 @@ angular.module('contractualClienteApp')
       Id: self.persona_a_modificar.Id,
       FechaRegistro: self.persona_a_modificar.FechaRegistro,
       IdPersona: self.persona_a_modificar.IdPersona,
-      NumeroContrato: null,
-      Vigencia:null,
+      //NumeroContrato: null,
+      //Vigencia:null,
       NumeroHorasSemanales: parseInt(self.horas_actuales),
       NumeroHorasNuevas: parseInt(self.horas_totales),
       NumeroSemanas: parseInt(self.persona_a_modificar.NumeroSemanas),
@@ -137,20 +137,20 @@ angular.module('contractualClienteApp')
       IdNuevaResolucion:   self.resolucion_id_nueva,
       DisponibilidadNueva: self.disponibilidad_nueva_id,
       DocentesDesvincular : desvinculacionesData
-    }
+    };
 
-    console.log("objeto a enviar")
-    console.log(objeto_a_enviar)
+    console.log("objeto a enviar");
+    console.log(objeto_a_enviar);
 
     adminMidRequest.post("gestion_desvinculaciones/adicionar_horas",objeto_a_enviar).then(function(response){
 
-      if(response.data=="OK"){
+      if(response.data==="OK"){
         swal({
           text: $translate.instant('ALERTA_REDUCCION_EXITOSA'),
           type: 'success',
           confirmButtonText: $translate.instant('ACEPTAR')
 
-        })
+        });
         //LIMPIAR GRID
         desvinculacionesData = [];
         $window.location.reload();
@@ -161,14 +161,14 @@ angular.module('contractualClienteApp')
           text: $translate.instant('ALERTA_ERROR_REDUCCION'),
           type: 'info',
           confirmButtonText: $translate.instant('ACEPTAR')
-        })
+        });
           //LIMPIAR GRID
         desvinculacionesData = [];
          $window.location.reload();
       //  $('#modal_adicion').modal('hide');
       }
-    })
+    });
 
-  }
+  };
 
 });

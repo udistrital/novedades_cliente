@@ -15,7 +15,7 @@ angular.module('financieraMidService',[])
     var path = "http://10.20.0.254/financiera_mid_api/v1/";
     // Public API here
     var cancelSearch ; //defer object
-    var promise;
+    //var promise;
     return {
       get: function (tabla,params) {
         cancelSearch = $q.defer(); 

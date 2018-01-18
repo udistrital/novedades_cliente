@@ -36,7 +36,6 @@ var text_es = {
   GENERAR_RESOLUCION:"Generar Resolución",
   REALIZAR_EXPEDICION:"Realizar expedición de la resolución con los datos introducidos",
   INFORMACION_PERSONA_NATURAL:"Información persona natural",
-  VINCULAR_DOCENTES_SELECCIONADOS:"Vincular docentes seleccionados a la resolución",
   FORMACION_ACADEMICA:"Formación académica",
   EXPERIENCIA_LABORAL_DOCENTE:"Experiencia laboral docente",
   TRABAJOS_INVESTIGACION:"Trabajos de investigación",
@@ -287,7 +286,6 @@ var text_es = {
       DOCUMENTO_DOCENTES:"Documento",
       HORAS_LECTIVAS: "Horas lectivas",
       PROYECTO_CURRICULAR: "Proyecto curricular",
-      HORAS_SEMANALES: "Horas semanales",
       SEMANAS:"Semanas",
       NUM_DISPO_DOCENTE: "Disponibilidad",
       VIGENCIA_DISP: "Vigencia",
@@ -434,7 +432,6 @@ var text_es = {
   //RESOLUCION_VISTA
       /*---Script---*/
       VISTA_PREVIA_RESOLUCION:"Vista previa de la resolución",
-      NIVEL:"Nivel",
       CIUDAD_EXPEDICION:"Ciudad de expedición",
       COMUNIQUESE_Y_CUM: "COMUNÍQUESE Y CÚMPLASE",
 
@@ -483,7 +480,6 @@ var text_es = {
   DIRECCION:"Dirección",
   CORREO_ELECTRONICO:"Correo Electrónico",
   NUMERO_CELULAR:"Número de Celular",
-  CONVENIO:"Convenio",
   PROYECTO_INVESTIGACION:"Proyecto de Investigación",
   DOCENTES_DESVINCULAR:"Docentes a desvincular",
   CONVENIO:"Convenio",

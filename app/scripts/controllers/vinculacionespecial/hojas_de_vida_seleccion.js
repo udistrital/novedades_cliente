@@ -4,9 +4,9 @@ angular.module('contractualClienteApp')
 .controller('HojasDeVidaSeleccionCtrl', function (administrativaRequest,financieraRequest,resolucion,adminMidRequest,oikosRequest,$localStorage,$scope,$mdDialog,$translate,$window) {
 
   var self = this;
-  console.log("fabrica")
+  console.log("fabrica");
 
-  self.resolucion = JSON.parse(localStorage.getItem("resolucion"))
+  self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
   self.estado = false;
   self.proyectos=[];
   self.vigencia_data = self.resolucion.Vigencia;
@@ -179,8 +179,8 @@ angular.module('contractualClienteApp')
       self.gridApi = gridApi;
       gridApi.selection.on.rowSelectionChanged($scope,function(row){
         self.apropiacion_elegida=gridApi.selection.getSelectedRows();
-        console.log("apropiacion elegida")
-        console.log(self.apropiacion_elegida)
+        console.log("apropiacion elegida");
+        console.log(self.apropiacion_elegida);
         self.verificarDisponibilidad();
       });
     }
@@ -188,7 +188,7 @@ angular.module('contractualClienteApp')
 
 
   adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad+"&nivel_academico="+self.resolucion.NivelAcademico_nombre).then(function(response){
-    self.datosDocentesCargaLectiva.data = response.data
+    self.datosDocentesCargaLectiva.data = response.data;
 
   });
 
@@ -201,8 +201,8 @@ angular.module('contractualClienteApp')
 
   //Función para visualizar docentes ya vinculados a resolución
   self.get_docentes_vinculados=function(){
-    console.log("selfterm")
-    console.log(self.term)
+    console.log("selfterm");
+    console.log(self.term);
     self.estado = true;
     adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
       self.precontratados.data=response.data;
@@ -213,7 +213,7 @@ angular.module('contractualClienteApp')
     self.precontratados.columnDefs[10].filter.term = self.term;
 
 
-  }
+  };
 
   //Función para almacenar los datos de las vinculaciones realizadas
   self.agregarPrecontratos = function(){
@@ -236,20 +236,20 @@ angular.module('contractualClienteApp')
 
         vinculacionesData.push(vinculacionDocente);
 
-      })
+      });
 
       adminMidRequest.post("gestion_previnculacion/Precontratacion/insertar_previnculaciones",vinculacionesData).then(function(response){
-        console.log("respuesta de vinculacion")
-        console.log(response.data)
-        if(typeof response.data=="number"){
+        console.log("respuesta de vinculacion");
+        console.log(response.data);
+        if(typeof response.data==="number"){
           self.persona=null;
-          self.datosDocentesCargaLectiva.data = []
+          self.datosDocentesCargaLectiva.data = [];
           swal({
             text: $translate.instant('VINCULACION_EXITOSA'),
             type: 'success',
             confirmButtonText: $translate.instant('ACEPTAR')
 
-          })
+          });
           self.RecargarDatosPersonas();
           self.RecargarDisponibilidades();
           self.RecargarApropiaciones();
@@ -263,7 +263,7 @@ angular.module('contractualClienteApp')
             text: $translate.instant('CONTRATO_NO_ALMACENADO'),
             type: 'info',
             confirmButtonText: $translate.instant('ACEPTAR')
-          })
+          });
           self.RecargarDatosPersonas();
           self.RecargarDisponibilidades();
           self.RecargarApropiaciones();
@@ -272,7 +272,7 @@ angular.module('contractualClienteApp')
           vinculacionesData = [];
           $('#modal_disponibilidad').modal('hide');
         }
-      })
+      });
 
     }else{
       swal({
@@ -280,10 +280,10 @@ angular.module('contractualClienteApp')
         text: $translate.instant('ERROR_DISP'),
         type: 'info',
         confirmButtonText: $translate.instant('ACEPTAR')
-      })
+      });
     }
 
-  }
+  };
 
 
   //*-------Funciones para la desvinculación de docentes ------ *//
@@ -309,16 +309,16 @@ angular.module('contractualClienteApp')
           $translate.instant('CANCELADO'),
           $translate.instant('DESVINCULACION_CANCELADA'),
           'error'
-        )
+        );
       }
-    })
-  }
+    });
+  };
 
   self.desvincularDocente = function(row){
 
 
     administrativaRequest.delete("vinculacion_docente",row.entity.Id).then(function(response){
-      if(response.data=="OK"){
+      if(response.data==="OK"){
         self.persona=null;
         swal({
           text: $translate.instant('DESVINCULACION_EXITOSA'),
@@ -327,7 +327,7 @@ angular.module('contractualClienteApp')
 
         }).then(function () {
            $window.location.reload();
-        })
+        });
 
       }else{
         swal({
@@ -335,45 +335,45 @@ angular.module('contractualClienteApp')
           text: $translate.instant('DESVINCULACION_NOEXITOSA'),
           type: 'error',
           confirmButtonText: $translate.instant('ACEPTAR')
-        })
+        });
 
       }
-    })
-  }
+    });
+  };
 
   //*------ Funciones para manejo y verificación de disponibilidades elegidas ----- *//
 
   //Función que muestra modal que permite elegir Disponibilidades y sus apropiaciones
   self.mostrar_modal_disponibilidad=function(){
-    if(self.personasSeleccionadas1==null){
+    if(self.personasSeleccionadas1===null){
       swal({
         text: "Seleccione docentes",
         type: 'error',
         confirmButtonText: $translate.instant('ACEPTAR')
-      })
+      });
     }else{
       financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:"+self.vigencia_data).then(function(response) {
         self.Disponibilidades.data = response.data;
       });
       $('#modal_disponibilidad').modal('show');
     }
-  }
+  };
 
   //Función que lista las apropiaciones  del cdp elegido junto con su saldo y su valor
   self.listar_apropiaciones = function(){
 
-    var disponibilidadAp = self.DisponibilidadApropiacion
-    console.log("disponibilidad apropiacion")
-    console.log(disponibilidadAp)
+    var disponibilidadAp = self.DisponibilidadApropiacion;
+    console.log("disponibilidad apropiacion");
+    console.log(disponibilidadAp);
     adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones",disponibilidadAp).then(function(response){
-      console.log("apropiaciones")
-      console.log(response.data)
-      self.Apropiaciones.data = response.data
+      console.log("apropiaciones");
+      console.log(response.data);
+      self.Apropiaciones.data = response.data;
       //self.Apropiaciones.data = response.data;
 
-    })
+    });
 
-  }
+  };
 
   //Función que verifica si la apropiación elegida cubre los docentes elegidos
   self.verificarDisponibilidad=function(){
@@ -394,40 +394,40 @@ angular.module('contractualClienteApp')
 
       vinculacionesData.push(vinculacionDocente);
 
-    })
+    });
 
     adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos",vinculacionesData).then(function(response){
-      console.log("valor de contratos")
-      console.log(response.data)
+      console.log("valor de contratos");
+      console.log(response.data);
       if(response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)){
         self.saldo_disponible = false;
-        console.log("no se puede elgir esa apropiacion")
+        console.log("no se puede elgir esa apropiacion");
       }else{
         self.saldo_disponible = true;
-        console.log("si se puede elegir")
+        console.log("si se puede elegir");
       }
-    })
+    });
     vinculacionesData = [];
-  }
+  };
 
   //*--------------Funciones para recargar grids que han sido seleccionados -------------* //
   self.RecargarDatosPersonas = function(){
     adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria","vigencia="+self.resolucion.Vigencia+"&periodo="+self.resolucion.Periodo+"&tipo_vinculacion="+self.resolucion.Dedicacion+"&facultad="+self.resolucion.IdFacultad).then(function(response){
-      self.datosDocentesCargaLectiva.data = response.data
+      self.datosDocentesCargaLectiva.data = response.data;
 
     });
-  }
+  };
 
   self.RecargarDisponibilidades = function(){
     financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:"+self.vigencia_data).then(function(response) {
       self.Disponibilidades.data = response.data;
 
     });
-  }
+  };
 
   self.RecargarApropiaciones = function(){
     self.Apropiaciones.data = [];
 
-  }
+  };
 
 });

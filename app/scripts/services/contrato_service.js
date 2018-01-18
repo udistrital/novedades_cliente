@@ -22,7 +22,7 @@ angular.module('contratoService',[])
       get: function (tabla,params) {
         var url = path+tabla;
         if (params !== ''){
-          url = url + +'/'+params
+          url = url + '/'+params;
         }
         return $http.get(url,cabecera);
       },
