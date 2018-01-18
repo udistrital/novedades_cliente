@@ -82,8 +82,8 @@ http: //10.20.0.254/agora_api/v1/
         WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
         ACADEMICA_SERVICE: "http://10.20.0.127/urano/index.php?data=B-7djBQWvIdLAEEycbH1n6e-3dACi5eLUOb63vMYhGq0kPBs7NGLYWFCL0RSTCu1yTlE5hH854MOgmjuVfPWyvdpaJDUOyByX-ksEPFIrrQQ7t1p4BkZcBuGD2cgJXeD",
         ADMINISTRATIVA_MID_SERVICE: "http://10.20.0.254/administrativa_mid_api/v1/",
-        ADMINISTRATIVA_SERVICE: "http://10.20.0.254/administrativa_amazon_api/v1/",
-        ADMINISTRATIVA_PRUEBAS_SERVICE: "http://10.20.0.254/administrativa_api/v1/",
+        ADMINISTRATIVA_SERVICE: "http://10.20.0.254/administrativa_api/v1/",
+        ADMINISTRATIVA_PRUEBAS_SERVICE: "http://10.20.0.254/administrativa_amazon_api/v1/",
         ARKA_SERVICE: "http://10.20.0.254/arka_api_crud/v1/",
         CONFIGURACION_SERVICE: "http://10.20.0.254/configuracion_api/v1/",
         CORE_SERVICE: "http://10.20.0.254/core_api/v1/",
@@ -117,8 +117,8 @@ http: //10.20.0.254/agora_api/v1/
 var conf_local = {
     WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
     ACADEMICA_SERVICE: "http://10.20.0.127/urano/index.php?data=B-7djBQWvIdLAEEycbH1n6e-3dACi5eLUOb63vMYhGq0kPBs7NGLYWFCL0RSTCu1yTlE5hH854MOgmjuVfPWyvdpaJDUOyByX-ksEPFIrrQQ7t1p4BkZcBuGD2cgJXeD",
-    ADMINISTRATIVA_MID_SERVICE: "http://10.20.0.254/administrativa_mid_api/v1/",
-    ADMINISTRATIVA_SERVICE: "http://10.20.0.254/administrativa_amazon_api/v1/",
+    ADMINISTRATIVA_MID_SERVICE: "http://localhost:8082/v1/",
+    ADMINISTRATIVA_SERVICE: "http://localhost:8085/v1/",
     ADMINISTRATIVA_PRUEBAS_SERVICE: "http://10.20.0.254/administrativa_api/v1/",
     ARKA_SERVICE: "http://10.20.0.254/arka_api_crud/v1/",
     CONFIGURACION_SERVICE: "http://10.20.0.254/configuracion_api/v1/",
@@ -154,5 +154,5 @@ var conf_local = {
 
 angular.module('contractualClienteApp')
     .constant('CONF', {
-        GENERAL: conf_local
+        GENERAL: conf_pruebas
     });

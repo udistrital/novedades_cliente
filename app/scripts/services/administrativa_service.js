@@ -11,7 +11,7 @@ angular.module('administrativaService', [])
     .factory('administrativaRequest', function($http, CONF, token_service) {
         // Service logic
         // ...
-        var path = CONF.GENERAL.ADMINISTRATIVA_PRUEBAS_SERVICE;
+        var path = CONF.GENERAL.ADMINISTRATIVA_SERVICE;
         //var path = "http://localhost:8085/v1/";
         //var path = "http://10.20.2.150:8082/v1/";
         //var path = "http://10.20.0.138:8090/v1/";
