@@ -15,9 +15,9 @@ angular.module('contractualClienteApp')
         self.contratoGeneralBase={};
         self.contratoGeneralBase.Contrato={};
         self.acta={};
+        self.info_desvincular=false;
     
         self.idResolucion=idResolucion;
-        console.log("Aquiiiiii", idResolucion)
         amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
           self.datosFiltro=response.data;
     
@@ -276,11 +276,11 @@ self.cancelados = {
   enableRowSelection: false,
   enableRowHeaderSelection: false,
   columnDefs : [
-    {field: 'NombreCompleto', width: '20%', displayName: $translate.instant('NOMBRE')},
-    {field: 'IdPersona', width: '10%',displayName: $translate.instant('DOCUMENTO_DOCENTES')},
+    {field: 'NombreCompleto', width: '22%', displayName: $translate.instant('NOMBRE')},
+    {field: 'IdPersona', width: '13%',displayName: $translate.instant('DOCUMENTO_DOCENTES')},
     {field: 'Categoria', width: '10%',displayName: $translate.instant('CATEGORIA')},
-    {field: 'NumeroHorasSemanales', width: '8%',displayName: $translate.instant('HORAS_SEMANALES')},
-    {field: 'NumeroSemanas', width: '7%',displayName: $translate.instant('SEMANAS')},
+    {field: 'NumeroHorasSemanales', width: '15%',displayName: $translate.instant('HORAS_SEMANALES')},
+    {field: 'NumeroSemanas', width: '10%',displayName: $translate.instant('SEMANAS')},
     {field: 'NumeroDisponibilidad', width: '15%',displayName: $translate.instant('NUM_DISPO_DOCENTE') },
     {field: 'ValorContrato', width: '15%',displayName: $translate.instant('VALOR_CONTRATO'), cellClass:"valorEfectivo", cellFilter:"currency"}
   ]
@@ -288,8 +288,9 @@ self.cancelados = {
 
   //Función para visualizar docentes para cancelar su vinculacion resolución
   self.get_docentes_cancelados=function(){
+    self.info_desvincular=!self.info_desvincular;
     adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion="+self.idResolucion).then(function(response){
-      console.log("Admirad!: ",response.data)
+      //console.log("Admirad!: ",response.data)
       self.cancelados.data=response.data;
     });
   }

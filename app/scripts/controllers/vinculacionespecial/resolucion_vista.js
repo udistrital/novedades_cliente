@@ -32,6 +32,26 @@ angular.module('contractualClienteApp')
       });
   });
 
+ /* adminMidRequest.get("gestion_documento_resolucion/get_contenido_resolucion", "id_resolucion="+self.resolucion.Id+"&id_facultad="+self.resolucion.IdFacultad).then(function(response){
+    self.contenidoResolucion=response.data;
+    console.log("El primero  ",response.data);
+    administrativaRequest.get("resolucion/"+self.resolucion.Id).then(function(response){
+      self.contenidoResolucion.TipoResolucion=response.data.IdTipoResolucion.Id;
+      console.log("Esteeeeeeeeeeeeeeeeeeeeeeeeee ",response.data);
+      if(response.data.IdTipoResolucion.Id === 15){
+        adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion="+self.resolucion.Id).then(function(response){
+          self.contratados=response.data;
+          self.generarResolucion();
+        });
+      } else {
+        adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
+          self.contratados=response.data;
+          self.generarResolucion();
+        });
+      }
+    });
+});*/
+
 
 
 

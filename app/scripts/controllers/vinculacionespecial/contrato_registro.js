@@ -8,12 +8,18 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ContratoRegistroCtrl', function (amazonAdministrativaRequest,administrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate, $scope) {
+  .controller('ContratoRegistroCtrl', function (amazonAdministrativaRequest,administrativaRequest,adminMidRequest,oikosRequest,coreRequest,financieraRequest,contratacion_request,contratacion_mid_request,sicapitalRequest,idResolucion,$mdDialog,lista,resolucion,$translate, $scope, $window,) {
 
     var self = this;
     self.contratoGeneralBase={};
     self.contratoGeneralBase.Contrato={};
     self.acta={};
+    self.estado = false;
+
+
+    oikosRequest.get('dependencia/'+resolucion.Facultad).then(function(response) {
+      resolucion.Facultad = response.data.Nombre;
+    });
 
     self.idResolucion=idResolucion;
     amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
@@ -185,6 +191,7 @@ angular.module('contractualClienteApp')
     };
 
     self.guardarContratos = function(){
+      self.estado = true;
       var conjuntoContratos=[];
       //var errorInsercion = false;
       if(self.contratados){
@@ -219,6 +226,7 @@ angular.module('contractualClienteApp')
           console.log(expedicionResolucion);
           console.log("Resolucion expedida, siiiiiiiiiiiiii");
           console.log(response);
+          self.estado = false;
           //if(typeof(response.data)=="object"){ //xDD
 /*
               self.alerta = "";
@@ -228,20 +236,15 @@ angular.module('contractualClienteApp')
               //swal("", self.alerta, response.data[0]);
 
             //xD
-        /*    swal({
+           swal({
                       title: $translate.instant('EXPEDIDA'),
                       text: $translate.instant('DATOS_REGISTRADOS'),
                       type: 'success',
                       confirmButtonText: $translate.instant('ACEPTAR')
-                    });*/
-                    amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response){
-                        lista.resolucionesInscritas.data=response.data;
-                        lista.resolucionesInscritas.data.forEach(function(resolucion){
-                            if(resolucion.FechaExpedicion.toString()==="0001-01-01T00:00:00Z"){
-                                resolucion.FechaExpedicion=null;
-                            }
-                        });
-                    });
+                    }).then(function() {
+                      $window.location.reload();
+              });
+
                   //  $mdDialog.hide()
                 /*  }else{
                     swal({

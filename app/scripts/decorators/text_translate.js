@@ -488,6 +488,8 @@ var text_es = {
   DOCENTES_DESVINCULAR:"Docentes a desvincular",
   CONVENIO:"Convenio",
   FECHA_CANCELACION:"Fecha de Cancelacion",
+  INFORMACION_VINCULACION:"Información de la Vinculación",
+  CANCELACION_VINCULACION: "Datos de la cancelación de la(s) vinculacion(es)",
 };
 
 var text_en = {
