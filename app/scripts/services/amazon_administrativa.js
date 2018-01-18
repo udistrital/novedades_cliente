@@ -9,7 +9,7 @@
  */
 angular.module('amazonAdministrativaService', [])
     .factory('amazonAdministrativaRequest', function($http, token_service, CONF) {
-        var path = CONF.GENERAL.ADMINISTRATIVA_SERVICE;
+        var path = CONF.GENERAL.ADMINISTRATIVA_PRUEBAS_SERVICE;
         //var path = "http://localhost:8084/v1/";
         // Public API here
         return {
