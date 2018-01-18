@@ -231,7 +231,7 @@ angular.module('contractualClienteApp')
           Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
           NivelAcademico: self.resolucion.NivelAcademico_nombre,
           Disponibilidad: self.apropiacion_elegida[0].Id,
-          Vigencia: parseInt(self.resolucion.Vigencia)
+          Vigencia: {NullInt64: parseInt(self.resolucion.Vigencia)}
         };
 
         vinculacionesData.push(vinculacionDocente);
@@ -260,7 +260,7 @@ angular.module('contractualClienteApp')
         }else{
           swal({
             title: $translate.instant('ERROR'),
-            text: $translate.instant('CONTRATO_NO_ALMACENADO'),
+            text: $translate.instant('ALERTA_PREVIN_ERROR'),
             type: 'info',
             confirmButtonText: $translate.instant('ACEPTAR')
           });

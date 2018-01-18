@@ -303,6 +303,7 @@ var text_es = {
       DESVINCULACION_NOEXITOSA:"Error al desvincular docente",
       BORRAR_BTN:"Borrar",
       ERROR_DISP: "La apropación elegida no tiene saldo suficiente",
+      ALERTA_PREVIN_ERROR: "Error al previncular docente",
 
   //RESOLUCION_ADICION_DETALLE
       /*---HTML---*/
@@ -339,7 +340,7 @@ var text_es = {
       CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
       IRREVERSIBLE: "Esta acción es irreversible",
       APROBADA: "Resolución Aprobada",
-      
+
   //RESOLUCION_CANCELACION_DETALLE
       /*---HTML---*/
       SELEC_VIN_BTN:"Seleccionar vinculaciones a cancelar",
