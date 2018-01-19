@@ -487,6 +487,8 @@ var text_es = {
   FECHA_CANCELACION:"Fecha de Cancelacion",
   INFORMACION_VINCULACION:"Información de la Vinculación",
   CANCELACION_VINCULACION: "Datos de la cancelación de la(s) vinculacion(es)",
+  NUMERO_CANCELACIONES: "Número de vinculaciones canceladas",
+  DATOS_CANCELADOS:"Las vinculaciones asociadas a esta resolución de cancelación han sido removidas",
 };
 
 var text_en = {

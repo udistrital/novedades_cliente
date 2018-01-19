@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('ContratoRegistroCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreRequest, financieraRequest, contratacion_request, contratacion_mid_request, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate, $window) {
+    .controller('ContratoRegistroCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreAmazonRequest, financieraRequest, contratacion_request, contratacion_mid_request, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate, $window) {
 
         var self = this;
         self.contratoGeneralBase = {};
@@ -22,8 +22,10 @@ angular.module('contractualClienteApp')
         });
 
         self.idResolucion = idResolucion;
-        amazonAdministrativaRequest.get("resolucion_vinculacion_docente/" + self.idResolucion).then(function(response) {
+        administrativaRequest.get("resolucion_vinculacion_docente/" + self.idResolucion).then(function(response) {
             self.datosFiltro = response.data;
+            console.log("Este es el id resolucion: ", self.idResolucion);
+            console.log("Que pasa aca?: ", self.datosFiltro);
 
             oikosRequest.get("dependencia/" + self.datosFiltro.IdFacultad.toString()).then(function(response) {
 
@@ -57,10 +59,11 @@ angular.module('contractualClienteApp')
 
                 self.contratados = response.data;
 
+
             });
-            coreRequest.get("ordenador_gasto", "query=DependenciaId%3A" + self.datosFiltro.IdFacultad.toString()).then(function(response) {
+            coreAmazonRequest.get("ordenador_gasto", "query=DependenciaId%3A" + self.datosFiltro.IdFacultad.toString()).then(function(response) {
                 if (response.data === null) {
-                    coreRequest.get("ordenador_gasto/1").then(function(response) {
+                    coreAmazonRequest.get("ordenador_gasto/1").then(function(response) {
                         self.ordenadorGasto = response.data;
                     });
                 } else {
@@ -69,11 +72,11 @@ angular.module('contractualClienteApp')
             });
         });
 
-        coreRequest.get("punto_salarial", "sortby=Vigencia&order=desc&limit=1").then(function(response) {
+        coreAmazonRequest.get("punto_salarial", "sortby=Vigencia&order=desc&limit=1").then(function(response) {
             self.punto_salarial = response.data[0];
         });
 
-        coreRequest.get("salario_minimo", "sortby=Vigencia&order=desc&limit=1").then(function(response) {
+        coreAmazonRequest.get("salario_minimo", "sortby=Vigencia&order=desc&limit=1").then(function(response) {
             self.salario_minimo = response.data[0];
         });
 
