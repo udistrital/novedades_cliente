@@ -9,11 +9,7 @@
  */
 
 angular.module('contractualClienteApp')
-<<<<<<< HEAD
     .controller('ContratoRegistroCancelarCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreRequest, financieraRequest, contratacion_mid_request, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate) {
-=======
-    .controller('ContratoRegistroCancelarCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreAmazonRequest, financieraRequest, contratacion_request, contratacion_mid_request, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate) {
->>>>>>> 4e71ee44cde60f1042a3850d67538271175303bd
 
         var self = this;
         self.contratoCanceladoBase = {};
@@ -32,36 +28,9 @@ angular.module('contractualClienteApp')
                 //self.contratoGeneralBase.Contrato.SedeSolicitante = response.data.Id.toString();
                 self.sede_solicitante_defecto = response.data.Nombre;
             });
-<<<<<<< HEAD
-            /*
-          amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
-
-            self.contratados=response.data;
-            if(self.contratados != null){
-              self.contratados.forEach(function(row){
-                console.log("row");
-                console.log(row.Id);
-                adminMidRequest.get("calculo_salario/Contratacion/"+row.Id.toString()).then(function(response){
-                  console.log("SCA VOY");
-                  console.log(response);
-                  row.ValorContrato=response.data;
-                });
-              });
-
-            }
-          });
-
-
-          adminMidRequest.post("calculo_salario/Precontratacion/"+self.idResolucion.toString()+"/"+resolucion.NivelAcademico).then(function(response){
-            self.contratados=response.data;
-            });
-            */
-            adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.idResolucion.toString()).then(function(response) {
-=======
 
 
             adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion=" + self.idResolucion.toString()).then(function(response) {
->>>>>>> 4e71ee44cde60f1042a3850d67538271175303bd
 
                 self.contratados = response.data;
                 var yeison = JSON.parse(JSON.stringify(self.contratados));
