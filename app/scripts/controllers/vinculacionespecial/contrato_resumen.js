@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ContratoResumenCtrl', function ($scope,$translate,amazonAdministrativaRequest,coreRequest,oikosRequest,adminMidRequest,contratacion_mid_request,idResolucion,$mdDialog) {
+  .controller('ContratoResumenCtrl', function ($scope,$translate,amazonAdministrativaRequest,coreRequest,oikosRequest,adminMidRequest,idResolucion,$mdDialog) {
 
   	var self = this;
 

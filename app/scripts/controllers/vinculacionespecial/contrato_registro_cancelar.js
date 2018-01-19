@@ -9,7 +9,7 @@
  */
 
 angular.module('contractualClienteApp')
-    .controller('ContratoRegistroCancelarCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreRequest, financieraRequest, contratacion_mid_request, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate) {
+    .controller('ContratoRegistroCancelarCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreRequest, financieraRequest, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate) {
 
         var self = this;
         self.contratoCanceladoBase = {};
