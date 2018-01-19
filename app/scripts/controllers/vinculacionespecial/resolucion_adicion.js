@@ -60,7 +60,7 @@ angular.module('contractualClienteApp')
 
             onRegisterApi: function(gridApi) {
                 self.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+                gridApi.selection.on.rowSelectionChanged($scope, function() {
                     self.personasSeleccionadas = gridApi.selection.getSelectedRows();
 
                 });
@@ -95,7 +95,7 @@ angular.module('contractualClienteApp')
 
             onRegisterApi: function(gridApi) {
                 self.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+                gridApi.selection.on.rowSelectionChanged($scope, function() {
                     self.disponibilidad_elegida = gridApi.selection.getSelectedRows();
                     self.DisponibilidadApropiacion = self.disponibilidad_elegida[0].DisponibilidadApropiacion;
                     self.listar_apropiaciones();
@@ -130,7 +130,7 @@ angular.module('contractualClienteApp')
 
             onRegisterApi: function(gridApi) {
                 self.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+                gridApi.selection.on.rowSelectionChanged($scope, function() {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
                     console.log("apropiacion elegida");
                     console.log(self.apropiacion_elegida);
@@ -207,8 +207,8 @@ angular.module('contractualClienteApp')
                 Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
                 NivelAcademico: self.resolucion.NivelAcademico_nombre,
                 Disponibilidad: self.apropiacion_elegida[0].Id,
-                Vigencia: personaSeleccionada.Vigencia,
-                NumeroContrato: personaSeleccionada.NumeroContrato
+                Vigencia: self.persona_a_modificar.Vigencia,
+                NumeroContrato: self.persona_a_modificar.NumeroContrato
             };
 
             desvinculacionesData.push(vinculacionDocente);
@@ -217,7 +217,7 @@ angular.module('contractualClienteApp')
 
 
             adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", desvinculacionesData).then(function(response) {
-                if (300000 > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
+                if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
                     self.saldo_disponible = false;
                     console.log("no se puede elgir esa apropiacion");
                 } else {

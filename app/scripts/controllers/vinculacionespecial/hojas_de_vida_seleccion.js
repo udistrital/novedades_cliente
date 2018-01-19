@@ -4,14 +4,13 @@ angular.module('contractualClienteApp')
     .controller('HojasDeVidaSeleccionCtrl', function(administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
 
         var self = this;
-        console.log("fabrica");
 
         self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
         self.estado = false;
         self.proyectos = [];
         self.vigencia_data = self.resolucion.Vigencia;
         var vinculacionesData = [];
-
+        self.datos = "";
         self.datosDocentesCargaLectiva = {
             paginationPageSizes: [10, 15, 20],
             paginationPageSize: 10,
@@ -22,7 +21,63 @@ angular.module('contractualClienteApp')
             enableVerticalScrollbar: true,
             useExternalPagination: false,
             enableSelectAll: false,
-            columnDefs: [{
+
+            onRegisterApi: function(gridApi) {
+                self.gridApi = gridApi;
+                gridApi.selection.on.rowSelectionChanged($scope, function() {
+                    self.personasSeleccionadas1 = gridApi.selection.getSelectedRows();
+                    self.persona = true;
+                });
+            }
+        };
+        switch (self.resolucion.NivelAcademico_nombre) {
+          case "PREGRADO":
+          self.datosDocentesCargaLectiva.columnDefs = [{
+                  field: 'docente_apellido',
+                  displayName: $translate.instant('APELLIDO_DOCENTES'),
+                  width: '15%'
+              },
+              {
+                  field: 'docente_nombre',
+                  displayName: $translate.instant('NOMBRES_DOCENTES'),
+                  width: '15%'
+              },
+              {
+                  field: 'docente_documento',
+                  displayName: $translate.instant('DOCUMENTO_DOCENTES'),
+                  width: '10%'
+              },
+              {
+                  field: 'horas_lectivas',
+                  displayName: $translate.instant('HORAS_LECTIVAS'),
+                  width: '10%'
+              },
+              {
+                  field: 'proyecto_nombre',
+                  displayName: $translate.instant('PROYECTO_CURRICULAR'),
+                  width: '20%'
+              },
+              {
+                  field: 'CategoriaNombre',
+                  displayName: $translate.instant('CATEGORIA'),
+                  width: '15%'
+              },
+              {
+                  field: 'tipo_vinculacion_nombre',
+                  displayName: $translate.instant('DEDICACION'),
+                  width: '13%'
+              },
+              {
+                  field: 'id_tipo_vinculacion',
+                  visible: false
+              },
+              {
+                  field: 'id_proyecto',
+                  visible: false
+              }];
+            break;
+            case "POSGRADO":
+            self.datosDocentesCargaLectiva.columnDefs = [{
                     field: 'docente_apellido',
                     displayName: $translate.instant('APELLIDO_DOCENTES'),
                     width: '15%'
@@ -45,7 +100,7 @@ angular.module('contractualClienteApp')
                 {
                     field: 'proyecto_nombre',
                     displayName: $translate.instant('PROYECTO_CURRICULAR'),
-                    width: '20%'
+                    width: '12%'
                 },
                 {
                     field: 'CategoriaNombre',
@@ -64,18 +119,23 @@ angular.module('contractualClienteApp')
                 {
                     field: 'id_proyecto',
                     visible: false
+                },
+                {
+                  field: 'opciones',
+                  enableSorting: false,
+                  enableFiltering: false,
+                  width: '8%',
+                  displayName:  $translate.instant('OPCIONES'),
+                  cellTemplate: '<center>' +
+                  '<a class="borrar" ng-click="grid.appScope.mostrar_modal_modificar_horas(row)">' +
+                  '<i title="{{\'ANULAR_BTN\' | translate }}" class="fa fa-times-circle-o fa-lg  faa-shake animated-hover"></i></a></div>' +
+                  '</center>'
                 }
+              ];
+            break;
+          default:
 
-            ],
-
-            onRegisterApi: function(gridApi) {
-                self.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope, function(row) {
-                    self.personasSeleccionadas1 = gridApi.selection.getSelectedRows();
-                    self.persona = true;
-                });
-            }
-        };
+        }
 
         self.precontratados = {
             paginationPageSizes: [10, 15, 20],
@@ -144,7 +204,7 @@ angular.module('contractualClienteApp')
 
             onRegisterApi: function(gridApi) {
                 self.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+                gridApi.selection.on.rowSelectionChanged($scope, function() {
                     self.disponibilidad_elegida = gridApi.selection.getSelectedRows();
                     self.DisponibilidadApropiacion = self.disponibilidad_elegida[0].DisponibilidadApropiacion;
                     self.listar_apropiaciones();
@@ -179,7 +239,7 @@ angular.module('contractualClienteApp')
 
             onRegisterApi: function(gridApi) {
                 self.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+                gridApi.selection.on.rowSelectionChanged($scope, function() {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
                     console.log("apropiacion elegida");
                     console.log(self.apropiacion_elegida);
@@ -190,7 +250,7 @@ angular.module('contractualClienteApp')
 
 
         adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria", "vigencia=" + self.resolucion.Vigencia + "&periodo=" + self.resolucion.Periodo + "&tipo_vinculacion=" + self.resolucion.Dedicacion + "&facultad=" + self.resolucion.IdFacultad + "&nivel_academico=" + self.resolucion.NivelAcademico_nombre).then(function(response) {
-            self.datosDocentesCargaLectiva.data = response.data;
+           self.datosDocentesCargaLectiva.data = response.data;
 
         });
 
@@ -221,8 +281,8 @@ angular.module('contractualClienteApp')
         self.agregarPrecontratos = function() {
 
             if (self.saldo_disponible) {
-                console.log("vigencia")
-                console.log(self.resolucion.Vigencia)
+                console.log("vigencia");
+                console.log(self.resolucion.Vigencia);
                 self.personasSeleccionadas1.forEach(function(personaSeleccionada) {
                     var vinculacionDocente = {
                         IdPersona: personaSeleccionada.docente_documento,
@@ -288,7 +348,16 @@ angular.module('contractualClienteApp')
             }
 
         };
+        //* ----------------------------- *//
+        $scope.mostrar_modal_modificar_horas = function(row){
+              self.horas_actuales = row.entity.horas_lectivas;
+              $('#modal_modificacion').modal('show');
+        };
 
+        self.modificar_horas = function (row){
+          console.log("horas nuevas");
+          self.horas_totales;
+        };
 
         //*-------Funciones para la desvinculación de docentes ------ *//
         $scope.verCancelarInscripcionDocente = function(row) {

@@ -46,7 +46,7 @@ angular.module('contractualClienteApp')
 
             onRegisterApi: function(gridApi) {
                 self.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+                gridApi.selection.on.rowSelectionChanged($scope, function() {
                     self.personasSeleccionadas = gridApi.selection.getSelectedRows();
 
                 });
@@ -107,7 +107,7 @@ angular.module('contractualClienteApp')
         };
 
 
-        self.desvincularDocente = function(row) {
+        self.desvincularDocente = function() {
 
             console.log("id de modificacion res");
             console.log(self.id_modificacion_resolucion);
