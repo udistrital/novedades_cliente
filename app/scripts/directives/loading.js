@@ -18,7 +18,7 @@ angular.module('contractualClienteApp')
             template: '<div class="loading" ng-show="load">' +
                 '<i class="fa fa-clock-o fa-spin fa-{{tam}}x faa-burst animated  text-info" aria-hidden="true" ></i>' +
                 '</div>',
-            controller: function($scope) {},
+            controller: function() {},
             controllerAs: 'd_loading'
         };
     });

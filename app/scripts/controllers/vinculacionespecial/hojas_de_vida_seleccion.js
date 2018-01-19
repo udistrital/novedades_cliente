@@ -93,10 +93,11 @@ angular.module('contractualClienteApp')
                     width: '10%'
                 },
                 {
+
                     field: 'horas_lectivas',
                     displayName: $translate.instant('HORAS_LECTIVAS'),
-                    width: '10%'
-                },
+                    width: '10%',
+                    cellTemplate: '<center><div ng-if="!row.entity.editrow">{{COL_FIELD}}</div><div ng-if="row.entity.editrow"><input type="text" style="height:30px" ng-model="MODEL_COL_FIELD"</div></center>'},
                 {
                     field: 'proyecto_nombre',
                     displayName: $translate.instant('PROYECTO_CURRICULAR'),
@@ -120,17 +121,23 @@ angular.module('contractualClienteApp')
                     field: 'id_proyecto',
                     visible: false
                 },
-                {
-                  field: 'opciones',
-                  enableSorting: false,
-                  enableFiltering: false,
-                  width: '8%',
-                  displayName:  $translate.instant('OPCIONES'),
-                  cellTemplate: '<center>' +
-                  '<a class="borrar" ng-click="grid.appScope.mostrar_modal_modificar_horas(row)">' +
-                  '<i title="{{\'ANULAR_BTN\' | translate }}" class="fa fa-times-circle-o fa-lg  faa-shake animated-hover"></i></a></div>' +
-                  '</center>'
-                }
+
+                  {
+                      name: 'Actions',
+                      field: 'edit',
+                      enableFiltering: false, enableSorting: false,
+                      cellTemplate: '<center>' +
+                      '<a class="ver"  ng-show="!row.entity.editrow" ng-click="grid.appScope.modificar_horas(row.entity)">' +
+                      '<i title="{{\'MODIFICAR_HORAS_BTN\' | translate }}" class="fa fa-pencil fa-lg  faa-shake animated-hover"></i></a> ' +
+
+                      '<a class="ver"  ng-show="row.entity.editrow" ng-click="grid.appScope.guardar_horas_modificadas(row.entity)">' +
+                      '<i title="{{\'GUARDAR_HORAS_BTN\' | translate }}" class="fa fa-floppy-o fa-lg  faa-shake animated-hover"></i></a> ' +
+
+                      '<a class="ver"  ng-show="row.entity.editrow" ng-click="grid.appScope.cancelar_modificacion(row.entity)">' +
+                      '<i title="{{\'CANCELAR_MOD_BTN\' | translate }}" class="fa fa-ban fa-lg  faa-shake animated-hover"></i></a> ' +
+
+                      '</center>'
+                   }
               ];
             break;
           default:
@@ -241,8 +248,6 @@ angular.module('contractualClienteApp')
                 self.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function() {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
-                    console.log("apropiacion elegida");
-                    console.log(self.apropiacion_elegida);
                     self.verificarDisponibilidad();
                 });
             }
@@ -263,8 +268,6 @@ angular.module('contractualClienteApp')
 
         //Función para visualizar docentes ya vinculados a resolución
         self.get_docentes_vinculados = function() {
-            console.log("selfterm");
-            console.log(self.term);
             self.estado = true;
             adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.resolucion.Id).then(function(response) {
                 self.precontratados.data = response.data;
@@ -281,8 +284,6 @@ angular.module('contractualClienteApp')
         self.agregarPrecontratos = function() {
 
             if (self.saldo_disponible) {
-                console.log("vigencia");
-                console.log(self.resolucion.Vigencia);
                 self.personasSeleccionadas1.forEach(function(personaSeleccionada) {
                     var vinculacionDocente = {
                         IdPersona: personaSeleccionada.docente_documento,
@@ -303,10 +304,8 @@ angular.module('contractualClienteApp')
                 });
 
                 adminMidRequest.post("gestion_previnculacion/Precontratacion/insertar_previnculaciones", vinculacionesData).then(function(response) {
-                    console.log("respuesta de vinculacion");
-                    console.log(response.data);
                     if (typeof response.data === "number") {
-                        self.persona = null;
+
                         self.datosDocentesCargaLectiva.data = [];
                         swal({
                             text: $translate.instant('VINCULACION_EXITOSA'),
@@ -349,15 +348,20 @@ angular.module('contractualClienteApp')
 
         };
         //* ----------------------------- *//
-        $scope.mostrar_modal_modificar_horas = function(row){
-              self.horas_actuales = row.entity.horas_lectivas;
-              $('#modal_modificacion').modal('show');
+
+        $scope.modificar_horas = function (row) {
+        //Get the index of selected row from row object
+            var index = self.datosDocentesCargaLectiva.data.indexOf(row);
+            //Use that to set the editrow attrbute value for seleted rows
+            self.datosDocentesCargaLectiva.data[index].editrow = !self.datosDocentesCargaLectiva.data[index].editrow;
         };
 
-        self.modificar_horas = function (row){
-          console.log("horas nuevas");
-          self.horas_totales;
+        $scope.guardar_horas_modificadas = function (row){
+         var index = self.datosDocentesCargaLectiva.data.indexOf(row);
+          self.datosDocentesCargaLectiva.data[index].editrow = false;
+
         };
+
 
         //*-------Funciones para la desvinculación de docentes ------ *//
         $scope.verCancelarInscripcionDocente = function(row) {
@@ -392,7 +396,6 @@ angular.module('contractualClienteApp')
 
             administrativaRequest.delete("vinculacion_docente", row.entity.Id).then(function(response) {
                 if (response.data === "OK") {
-                    self.persona = null;
                     swal({
                         text: $translate.instant('DESVINCULACION_EXITOSA'),
                         type: 'success',
@@ -436,11 +439,7 @@ angular.module('contractualClienteApp')
         self.listar_apropiaciones = function() {
 
             var disponibilidadAp = self.DisponibilidadApropiacion;
-            console.log("disponibilidad apropiacion");
-            console.log(disponibilidadAp);
             adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones", disponibilidadAp).then(function(response) {
-                console.log("apropiaciones");
-                console.log(response.data);
                 self.Apropiaciones.data = response.data;
                 //self.Apropiaciones.data = response.data;
 
@@ -471,14 +470,10 @@ angular.module('contractualClienteApp')
             });
 
             adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", vinculacionesData).then(function(response) {
-                console.log("valor de contratos");
-                console.log(response.data);
-                if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
+              if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
                     self.saldo_disponible = false;
-                    console.log("no se puede elgir esa apropiacion");
                 } else {
                     self.saldo_disponible = true;
-                    console.log("si se puede elegir");
                 }
             });
             vinculacionesData = [];

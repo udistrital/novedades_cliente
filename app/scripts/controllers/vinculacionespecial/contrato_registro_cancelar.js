@@ -9,7 +9,7 @@
  */
 
 angular.module('contractualClienteApp')
-    .controller('ContratoRegistroCancelarCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreRequest, financieraRequest, contratacion_request, contratacion_mid_request, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate) {
+    .controller('ContratoRegistroCancelarCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreRequest, financieraRequest, contratacion_mid_request, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate) {
 
         var self = this;
         self.contratoGeneralBase = {};
@@ -28,7 +28,7 @@ angular.module('contractualClienteApp')
             });
             /*
           amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
-    
+
             self.contratados=response.data;
             if(self.contratados != null){
               self.contratados.forEach(function(row){
@@ -40,11 +40,11 @@ angular.module('contractualClienteApp')
                   row.ValorContrato=response.data;
                 });
               });
-    
+
             }
           });
-    
-    
+
+
           adminMidRequest.post("calculo_salario/Precontratacion/"+self.idResolucion.toString()+"/"+resolucion.NivelAcademico).then(function(response){
             self.contratados=response.data;
             });

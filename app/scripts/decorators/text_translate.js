@@ -304,6 +304,8 @@ var text_es = {
       BORRAR_BTN:"Borrar",
       ERROR_DISP: "La apropación elegida no tiene saldo suficiente",
       ALERTA_PREVIN_ERROR: "Error al previncular docente",
+      MODIFICAR_BTN: "Modificar horas",
+      LABEL_HORAS_DEFINITIVAS: "Horas definitivas",
 
   //RESOLUCION_ADICION_DETALLE
       /*---HTML---*/

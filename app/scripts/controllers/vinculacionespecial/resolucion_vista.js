@@ -11,6 +11,8 @@ angular.module('contractualClienteApp')
 .controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$http,$translate) {
 
   var self=this;
+  var pdfmake;
+  
   self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
   self.proyectos=[];
 

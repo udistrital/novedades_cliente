@@ -196,9 +196,6 @@ angular.module('contractualClienteApp')
 
 
             adminMidRequest.post("gestion_resoluciones/insertar_resolucion_completa", objeto_resolucion).then(function(response) {
-                console.log(typeof response.data);
-                console.log("resolucion creada");
-                console.log(response.data);
                 if (response.data) {
                     self.resolucion_creada = response.data;
                     swal({

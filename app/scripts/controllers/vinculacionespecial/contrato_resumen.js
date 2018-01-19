@@ -8,8 +8,8 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ContratoResumenCtrl', function ($scope,$translate,amazonAdministrativaRequest,coreRequest,oikosRequest,adminMidRequest,contratacion_request,contratacion_mid_request,idResolucion,$mdDialog) {
-    
+  .controller('ContratoResumenCtrl', function ($scope,$translate,amazonAdministrativaRequest,coreRequest,oikosRequest,adminMidRequest,contratacion_mid_request,idResolucion,$mdDialog) {
+
   	var self = this;
 
   	self.idResolucion=idResolucion;
@@ -44,7 +44,7 @@ angular.module('contractualClienteApp')
       self.precontratados.data=JSON.parse(JSON.stringify(self.precontratados.data));
     };
 
-    amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){      
+    amazonAdministrativaRequest.get("resolucion_vinculacion_docente/"+self.idResolucion).then(function(response){
 	    self.datosFiltro=response.data;
 	    self.datosFiltro.IdFacultad=self.datosFiltro.IdFacultad.toString();
 	    oikosRequest.get("proyecto_curricular/"+self.datosFiltro.NivelAcademico.toLowerCase()+"/"+self.datosFiltro.IdFacultad).then(function(response){
@@ -56,7 +56,7 @@ angular.module('contractualClienteApp')
 	        self.proyectos=response.data;
 	      }
 	    });
-	    amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){  
+	    amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
 	      self.precontratados.data=response.data;
 	      if(self.precontratados.data){
 	        self.precontratados.data.forEach(function(row){
@@ -79,12 +79,12 @@ angular.module('contractualClienteApp')
 
 	self.FormatoNumero=function(amount, decimals) {
 
-        amount += ''; 
-        amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); 
+        amount += '';
+        amount = parseFloat(amount.replace(/[^0-9\.]/g, ''));
 
-        decimals = decimals || 0; 
+        decimals = decimals || 0;
 
-        if (isNaN(amount) || amount === 0) 
+        if (isNaN(amount) || amount === 0)
             {
               return parseFloat(0).toFixed(decimals);
             }

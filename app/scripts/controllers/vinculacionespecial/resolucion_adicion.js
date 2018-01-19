@@ -132,8 +132,6 @@ angular.module('contractualClienteApp')
                 self.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function() {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
-                    console.log("apropiacion elegida");
-                    console.log(self.apropiacion_elegida);
                     self.verificarDisponibilidad();
                 });
             }
@@ -185,8 +183,6 @@ angular.module('contractualClienteApp')
 
             var disponibilidadAp = self.DisponibilidadApropiacion;
             adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones", disponibilidadAp).then(function(response) {
-                console.log("apropiaciones");
-                console.log(response.data);
                 self.Apropiaciones.data = response.data;
             });
 
@@ -212,18 +208,15 @@ angular.module('contractualClienteApp')
             };
 
             desvinculacionesData.push(vinculacionDocente);
-            console.log("verificacion de disponibilidad");
-            console.log(desvinculacionesData);
-
 
             adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", desvinculacionesData).then(function(response) {
                 if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
                     self.saldo_disponible = false;
-                    console.log("no se puede elgir esa apropiacion");
+
                 } else {
                     self.saldo_disponible = true;
                     self.disponibilidad_nueva_id = self.apropiacion_elegida[0].Id;
-                    console.log("si se puede elegir");
+
                 }
             });
 
@@ -260,7 +253,6 @@ angular.module('contractualClienteApp')
 
         self.realizar_nueva_vinculacion = function() {
             if (self.saldo_disponible) {
-                console.log("saldo disponible");
 
                 var vinculacionDocente = {
                     Id: self.persona_a_modificar.Id,
@@ -289,9 +281,6 @@ angular.module('contractualClienteApp')
                     DisponibilidadNueva: self.disponibilidad_nueva_id,
                     DocentesDesvincular: desvinculacionesData
                 };
-
-                console.log("objeto a enviar");
-                console.log(objeto_a_enviar);
 
                 adminMidRequest.post("gestion_desvinculaciones/adicionar_horas", objeto_a_enviar).then(function(response) {
 

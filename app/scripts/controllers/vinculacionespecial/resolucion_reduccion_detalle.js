@@ -54,7 +54,7 @@ angular.module('contractualClienteApp')
 
     onRegisterApi : function(gridApi){
       self.gridApi = gridApi;
-      gridApi.selection.on.rowSelectionChanged($scope,function(row){
+      gridApi.selection.on.rowSelectionChanged($scope,function(){
         self.personasSeleccionadas=gridApi.selection.getSelectedRows();
 
       });

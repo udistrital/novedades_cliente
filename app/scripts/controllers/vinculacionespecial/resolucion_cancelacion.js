@@ -109,8 +109,6 @@ angular.module('contractualClienteApp')
 
         self.desvincularDocente = function() {
 
-            console.log("id de modificacion res");
-            console.log(self.id_modificacion_resolucion);
             self.personasSeleccionadas.forEach(function(personaSeleccionada) {
                 var docente_a_desvincular = {
                     Id: personaSeleccionada.Id,

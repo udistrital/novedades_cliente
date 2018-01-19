@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
 .factory("resolucion",function(){
   return {};
 })
-.controller('ResolucionGestionCtrl', function (adminMidRequest,resolucion,administrativaRequest,$scope,$window,$mdDialog,$translate,$localStorage) {
+.controller('ResolucionGestionCtrl', function (adminMidRequest,resolucion,administrativaRequest,$scope,$window,$mdDialog,$translate) {
 
   var self = this;
 
@@ -287,15 +287,15 @@ angular.module('contractualClienteApp')
 
   };
 
-  $scope.verListarDocentesAdicion = function(row){
+  $scope.verListarDocentesAdicion = function(){
     $window.location.href = '#/vinculacionespecial/resolucion_adicion_detalle';
   };
 
-  $scope.verListarDocentesReduccion = function(row){
+  $scope.verListarDocentesReduccion = function(){
     $window.location.href = '#/vinculacionespecial/resolucion_reduccion_detalle';
   };
 
-  $scope.verListarDocentesCancelacion = function(row){
+  $scope.verListarDocentesCancelacion = function(){
     $window.location.href = '#/vinculacionespecial/resolucion_cancelacion_detalle';
   };
   //Función para asignar controlador de la vista resolucion_vista.html, donde se pasa por parámetro el id de la resolucion seleccionada con ayuda de $mdDialog

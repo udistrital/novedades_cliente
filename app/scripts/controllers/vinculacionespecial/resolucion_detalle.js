@@ -11,7 +11,8 @@
  .controller('ResolucionDetalleCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$translate,$window,$localStorage,$http) {
 
    var self=this;
-
+   var pdfMake;
+   
    self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
 
    self.proyectos=[];
