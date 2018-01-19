@@ -304,7 +304,9 @@ var text_es = {
       BORRAR_BTN:"Borrar",
       ERROR_DISP: "La apropación elegida no tiene saldo suficiente",
       ALERTA_PREVIN_ERROR: "Error al previncular docente",
-      MODIFICAR_BTN: "Modificar horas",
+      MODIFICAR_HORAS_BTN: "Modificar horas",
+      GUARDAR_HORAS_BTN: "Guardar horas",
+      CANCELAR_MOD_BTN: "Cancelar modificación",
       LABEL_HORAS_DEFINITIVAS: "Horas definitivas",
 
   //RESOLUCION_ADICION_DETALLE
@@ -435,7 +437,6 @@ var text_es = {
   //RESOLUCION_VISTA
       /*---Script---*/
       VISTA_PREVIA_RESOLUCION:"Vista previa de la resolución",
-      CIUDAD_EXPEDICION:"Ciudad de expedición",
       COMUNIQUESE_Y_CUM: "COMUNÍQUESE Y CÚMPLASE",
 
   // Minutas Plantillas

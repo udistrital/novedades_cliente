@@ -123,7 +123,7 @@ angular.module('contractualClienteApp')
                 },
 
                   {
-                      name: 'Actions',
+                      displayName: $translate.instant('OPCIONES'),
                       field: 'edit',
                       enableFiltering: false, enableSorting: false,
                       cellTemplate: '<center>' +

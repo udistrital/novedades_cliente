@@ -12,7 +12,7 @@ angular.module('contractualClienteApp')
 
   var self=this;
   var pdfmake;
-  
+
   self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
   self.proyectos=[];
 
@@ -46,7 +46,7 @@ angular.module('contractualClienteApp')
   //Función para obtener el contenido de las tablas por proyecto currícular de los docentes asociados a la resolución
   self.getCuerpoTabla=function(idProyecto, datos, columnas) {
     var cuerpo=[];
-    var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('CIUDAD_EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'}
+    var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMANALES'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD'), style: 'encabezado'}
   ];
   cuerpo.push(encabezado);
   if(datos){
@@ -143,7 +143,7 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
             contenido.push({ text: proyecto.Nombre,
               style: 'proyecto'});
               //Definicion de los encabezados en base a las claves almacenadas dentro de la estructura de los datos
-              contenido.push(self.getTabla(proyecto.Id, contratados, ['NombreCompleto', 'IdPersona', 'LugarExpedicionCedula','Categoria','Dedicacion','ValorContrato']));
+              contenido.push(self.getTabla(proyecto.Id, contratados, ['NombreCompleto', 'IdPersona', 'LugarExpedicionCedula','Categoria','Dedicacion','NumeroHorasSemanales','ValorContrato','NumeroDisponibilidad']));
             }
 
           });
