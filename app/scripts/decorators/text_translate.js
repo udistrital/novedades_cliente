@@ -496,6 +496,9 @@ var text_es = {
   FECHA_EXPEDICION: "Fecha de Expedición",
   NUMERO_SEMANAS: "Número de Semanas",
   TITULO_RESOLUCION: "Título de la Resolución",
+  INFORMACION_CANCELAR: "Información de la cancelación",
+  INFORMACION_MODIFICACION: "Información de la modificación",
+  ACTA_INICIO: "Acta Inicio"
 };
 
 var text_en = {

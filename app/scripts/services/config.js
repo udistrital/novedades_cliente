@@ -65,7 +65,7 @@ var conf_presentacion = {
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
-        CLIENTE_ID: "bfPMflsiPVN6WFjJZIpzjsLdlx8a",
+        CLIENTE_ID: "XdBq4QOfEZYT0cl_8qDh3fmF5_Qa",
         REDIRECT_URL: "http://localhost:9000/",
         RESPONSE_TYPE: "code",
         SCOPE: "openid email",
@@ -74,7 +74,7 @@ var conf_presentacion = {
         SIGN_OUT_REDIRECT_URL: "http://localhost:9000/",
         SIGN_OUT_APPEND_TOKEN: "true",
         REFRESH_TOKEN: "https://autenticacion.udistrital.edu.co/oauth2/token",
-        CLIENT_SECRET: "4C_HkdaZsMF4Fthfm6D2n5joLzEa"
+        CLIENT_SECRET: "lrVuDATX1o8TfXxz_jrEzBA2iIoa"
     },
 };
 
@@ -139,7 +139,7 @@ var conf_local = {
         URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
         CLIENTE_ID: "2sbv8HxQIZCMC1CqPTP6yI6VPDca",
         REDIRECT_URL: "http://localhost:9000/",
-        RESPONSE_TYPE: "code",
+        RESPONSE_TYPE: "token id_token  ",
         SCOPE: "openid email",
         BUTTON_CLASS: "btn btn-warning btn-sm",
         SIGN_OUT_URL: "https://autenticacion.udistrital.edu.co/oidc/logout",
