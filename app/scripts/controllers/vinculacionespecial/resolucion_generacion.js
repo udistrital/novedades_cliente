@@ -90,7 +90,7 @@ angular.module('contractualClienteApp')
 
         };
         //CALCULAR EN QUÉ PERIODO SE ESTÁ
-        administrativaRequest.get("resolucion_vinculacion/expedidas_vigencia_periodo", "vigencia=2017&periodo=3").then(function(response) {
+        administrativaRequest.get("resolucion_vinculacion/expedidas_vigencia_periodo", "vigencia="+self.anioPeriodo+"&periodo=1").then(function(response) {
             self.resolucionesExpedidasPeriodo.data = response.data;
             if (self.resolucionesExpedidasPeriodo.data !== null) {
                 self.resolucionesExpedidasPeriodo.data.forEach(function(resolucion) {

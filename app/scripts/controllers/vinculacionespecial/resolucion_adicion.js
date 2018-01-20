@@ -170,7 +170,7 @@ angular.module('contractualClienteApp')
             self.persona_a_modificar = row.entity;
             self.disponibilidad_actual_id = row.entity.Disponibilidad;
             self.disponibilidad_nueva_id = row.entity.Disponibilidad;
-            financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:" + self.vigencia_data).then(function(response) {
+            financieraRequest.get('disponibilidad', "limit=-1&query=Vigencia:" + self.vigencia_data).then(function(response) {
                 self.Disponibilidades.data = response.data;
             });
 
@@ -211,7 +211,7 @@ angular.module('contractualClienteApp')
             desvinculacionesData.push(vinculacionDocente);
 
             adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", desvinculacionesData).then(function(response) {
-              
+
                 if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
                     self.saldo_disponible = false;
 
@@ -260,8 +260,6 @@ angular.module('contractualClienteApp')
                     Id: self.persona_a_modificar.Id,
                     FechaRegistro: self.persona_a_modificar.FechaRegistro,
                     IdPersona: self.persona_a_modificar.IdPersona,
-                    NumeroContrato: null,
-                    Vigencia: null,
                     NumeroHorasSemanales: parseInt(self.horas_actuales),
                     NumeroHorasNuevas: parseInt(self.horas_totales),
                     NumeroSemanas: parseInt(self.persona_a_modificar.NumeroSemanas),
@@ -273,7 +271,9 @@ angular.module('contractualClienteApp')
                     Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
                     NivelAcademico: self.resolucion.NivelAcademico_nombre,
                     Disponibilidad: parseInt(self.disponibilidad_actual_id),
-                    Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
+                    Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
+                    NumeroContrato: self.persona_a_modificar.NumeroContrato,
+
                 };
 
                 desvinculacionesData.push(vinculacionDocente);
