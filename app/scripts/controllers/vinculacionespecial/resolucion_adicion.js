@@ -170,7 +170,7 @@ angular.module('contractualClienteApp')
             self.persona_a_modificar = row.entity;
             self.disponibilidad_actual_id = row.entity.Disponibilidad;
             self.disponibilidad_nueva_id = row.entity.Disponibilidad;
-            financieraRequest.get('disponibilidad', "limit=-1?query=Vigencia:" + self.vigencia_data).then(function(response) {
+            financieraRequest.get('disponibilidad', "limit=-1&query=Vigencia:" + self.vigencia_data).then(function(response) {
                 self.Disponibilidades.data = response.data;
             });
 
@@ -211,7 +211,7 @@ angular.module('contractualClienteApp')
             desvinculacionesData.push(vinculacionDocente);
 
             adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", desvinculacionesData).then(function(response) {
-              
+
                 if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
                     self.saldo_disponible = false;
 
