@@ -23,7 +23,6 @@ var req = new XMLHttpRequest();
 var query = 'https://' + window.location.host + '?' + queryString;
 //console.log(query);
 req.open('GET', query, true);
-if (params.code !== undefined) {}
 req.onreadystatechange = function(e) {
     if (req.readyState === 4) {
         if (req.status === 200) {
