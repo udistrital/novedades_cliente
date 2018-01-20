@@ -85,7 +85,7 @@ var conf_pruebas = {
     ADMINISTRATIVA_SERVICE: "http://10.20.0.254/administrativa_api/v1/",
     ADMINISTRATIVA_PRUEBAS_SERVICE: "http://10.20.0.254/administrativa_amazon_api/v1/",
     ARKA_SERVICE: "http://10.20.0.254/arka_api_crud/v1/",
-    CONFIGURACION_SERVICE: "http://10.20.0.254/configuracion_api/v1/",
+    CONFIGURACION_SERVICE: "https://autenticacion.udistrital.edu.co:8244/configuracion_crud_api/",
     CORE_SERVICE: "http://10.20.0.254/core_api/v1/",
     CORE_AMAZON_SERVICE: "http://10.20.0.254/core_amazon_crud/v1/",
     FINANCIERA_MID_SERVICE: "http://10.20.0.254/financiera_mid_api/v1/",
@@ -101,16 +101,16 @@ var conf_pruebas = {
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
-        CLIENTE_ID: "bfPMflsiPVN6WFjJZIpzjsLdlx8a",
-        REDIRECT_URL: "http://localhost:9000/",
+        CLIENTE_ID: "XdBq4QOfEZYT0cl_8qDh3fmF5_Qa",
+        REDIRECT_URL: "http://administrativa.portaloas.udistrital.edu.co/",
         RESPONSE_TYPE: "code",
         SCOPE: "openid email",
         BUTTON_CLASS: "btn btn-warning btn-sm",
         SIGN_OUT_URL: "https://autenticacion.udistrital.edu.co/oidc/logout",
-        SIGN_OUT_REDIRECT_URL: "http://localhost:9000/",
+        SIGN_OUT_REDIRECT_URL: "http://administrativa.portaloas.udistrital.edu.co/",
         SIGN_OUT_APPEND_TOKEN: "true",
         REFRESH_TOKEN: "https://autenticacion.udistrital.edu.co/oauth2/token",
-        CLIENT_SECRET: "4C_HkdaZsMF4Fthfm6D2n5joLzEa"
+        CLIENT_SECRET: "lrVuDATX1o8TfXxz_jrEzBA2iIoa"
     },
 };
 
@@ -121,7 +121,7 @@ var conf_local = {
     ADMINISTRATIVA_SERVICE: "http://localhost:8085/v1/",
     ADMINISTRATIVA_PRUEBAS_SERVICE: "http://localhost:8084/v1/",
     ARKA_SERVICE: "http://10.20.0.254/arka_api_crud/v1/",
-    CONFIGURACION_SERVICE: "https://autenticacion.udistrital.edu.co:8244/configuracion_crud_api/v1/",
+    CONFIGURACION_SERVICE: "https://autenticacion.udistrital.edu.co:8244/configuracion_crud_api/",
     CORE_SERVICE: "http://10.20.0.254/core_api/v1/",
     CORE_AMAZON_SERVICE: "http://10.20.0.254/core_amazon_crud/v1/",
     FINANCIERA_MID_SERVICE: "http://10.20.0.254/financiera_mid_api/v1/",
@@ -139,7 +139,7 @@ var conf_local = {
         URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
         CLIENTE_ID: "2sbv8HxQIZCMC1CqPTP6yI6VPDca",
         REDIRECT_URL: "http://localhost:9000/",
-        RESPONSE_TYPE: "token id_token  ",
+        RESPONSE_TYPE: "code",
         SCOPE: "openid email",
         BUTTON_CLASS: "btn btn-warning btn-sm",
         SIGN_OUT_URL: "https://autenticacion.udistrital.edu.co/oidc/logout",
@@ -154,5 +154,5 @@ var conf_local = {
 
 angular.module('contractualClienteApp')
     .constant('CONF', {
-        GENERAL: conf_cloud
+        GENERAL: conf_pruebas
     });
