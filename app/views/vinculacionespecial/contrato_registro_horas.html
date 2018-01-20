@@ -1,5 +1,5 @@
 <div class="panel panel-primary panel-body">
-    <h3 class="page-header text-center">{{ 'INFORMACION_CONTRATO' | translate }}</h3>
+    <h3 class="page-header text-center">{{ 'INFORMACION_MODIFICACION' | translate }}</h3>
     <div class="panel-body">
         <div class="row">
             <div class="col-lg-12">
@@ -49,7 +49,7 @@
                             </div>
                         </form>
                     </div>
-                <legend class="text-primary" ng-click="info_acta=!info_acta">{{ 'ACTA_INICIO' | translate }}<span class="fa fa-plus pull-right" ng-show="!info_acta"></span> <span class="fa fa-minus pull-right" ng-show="info_acta"></span></legend>
+                <legend class="text-primary" ng-click="info_acta=!info_acta">{{ 'PERIODO_VINCULACION' | translate }}<span class="fa fa-plus pull-right" ng-show="!info_acta"></span> <span class="fa fa-minus pull-right" ng-show="info_acta"></span></legend>
                     <div class="panel-body" ng-show="info_acta">
                         <form role="form">
                             <div class="row">
@@ -60,6 +60,29 @@
                                 <div class="form-group col-lg-12">
                                         <label>{{ 'DESCRIPCION' | translate }}</label>
                                         <textarea rows="4" type="text" class="form-control" ng-model="contratoRegistroHoras.acta.Descripcion" required></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                <legend class="text-primary" ng-click="info_exp=!info_exp">{{ 'DATOS_EXPEDICION' | translate }}<span class="fa fa-plus pull-right" ng-show="!info_exp"></span> <span class="fa fa-minus pull-right" ng-show="info_exp"></span></legend>
+                    <div class="panel-body" ng-show="info_exp">
+                        <form role="form">
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label>{{ 'FECHA_EXPEDICION' | translate }}</label>
+                                    <md-datepicker ng-model="contratoRegistroHoras.FechaExpedicion" md-current-view="year" md-placeholder="Elija fecha" required></md-datepicker>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                        <label>{{ 'NUMERO_RESOLUCION' | translate }}</label>
+                                        <input type="text" class="form-control" ng-model="contratoRegistroHoras.resolucionActual.NumeroResolucion" disabled>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                        <label>{{ 'TIPO_RESOLUCION' | translate }}</label>
+                                        <input type="text" class="form-control" ng-model="contratoRegistroHoras.resolucionActual.IdTipoResolucion.NombreTipoResolucion" disabled>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                        <label>{{ 'NUMERO_SEMANAS' | translate }}</label>
+                                        <input type="text" class="form-control" ng-model="contratoRegistroHoras.resolucionActual.NumeroSemanas" disabled>
                                 </div>
                             </div>
                         </form>
