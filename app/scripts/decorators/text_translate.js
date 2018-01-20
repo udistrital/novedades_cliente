@@ -494,7 +494,8 @@ var text_es = {
   DATOS_CANCELADOS:"Las vinculaciones asociadas a esta resolución de cancelación han sido removidas",
   DATOS_EXPEDICION: "Datos de Expedición",
   FECHA_EXPEDICION: "Fecha de Expedición",
-  NUMERO_SEMANAS: "Número de Semanas"
+  NUMERO_SEMANAS: "Número de Semanas",
+  TITULO_RESOLUCION: "Título de la Resolución",
 };
 
 var text_en = {
