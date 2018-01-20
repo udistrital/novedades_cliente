@@ -260,8 +260,6 @@ angular.module('contractualClienteApp')
                     Id: self.persona_a_modificar.Id,
                     FechaRegistro: self.persona_a_modificar.FechaRegistro,
                     IdPersona: self.persona_a_modificar.IdPersona,
-                    NumeroContrato: null,
-                    Vigencia: null,
                     NumeroHorasSemanales: parseInt(self.horas_actuales),
                     NumeroHorasNuevas: parseInt(self.horas_totales),
                     NumeroSemanas: parseInt(self.persona_a_modificar.NumeroSemanas),
@@ -273,7 +271,9 @@ angular.module('contractualClienteApp')
                     Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
                     NivelAcademico: self.resolucion.NivelAcademico_nombre,
                     Disponibilidad: parseInt(self.disponibilidad_actual_id),
-                    Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
+                    Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
+                    NumeroContrato: self.persona_a_modificar.NumeroContrato,
+
                 };
 
                 desvinculacionesData.push(vinculacionDocente);
