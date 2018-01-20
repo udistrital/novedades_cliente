@@ -157,7 +157,7 @@ angular.module('contractualClienteApp')
             return 'resolucionExpedida';
           }
         },
-        enableFiltering: false,
+        enableFiltering: false, enableSorting: false,
         width: '11%',
         //Los botones son mostrados de acuerdo alestado de las resoluciones (ver,editar,configurar)
         cellTemplate: '<center>' +

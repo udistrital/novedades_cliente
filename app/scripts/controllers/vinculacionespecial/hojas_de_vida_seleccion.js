@@ -123,7 +123,7 @@ angular.module('contractualClienteApp')
                 },
 
                   {
-                      name: 'Actions',
+                      displayName: $translate.instant('OPCIONES'),
                       field: 'edit',
                       enableFiltering: false, enableSorting: false,
                       cellTemplate: '<center>' +
@@ -360,6 +360,11 @@ angular.module('contractualClienteApp')
          var index = self.datosDocentesCargaLectiva.data.indexOf(row);
           self.datosDocentesCargaLectiva.data[index].editrow = false;
 
+        };
+
+        $scope.cancelar_modificacion = function(row){
+          var index = self.datosDocentesCargaLectiva.data.indexOf(row);
+           self.datosDocentesCargaLectiva.data[index].editrow = false;
         };
 
 

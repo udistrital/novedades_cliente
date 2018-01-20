@@ -25,7 +25,7 @@ angular.module('contractualClienteApp')
             enableSelectAll: false,
             columnDefs: [
                 { field: 'Id', visible: false },
-                { field: 'FechaRegistr', visible: false },
+                { field: 'FechaRegistro', visible: false },
                 { field: 'NombreCompleto', width: '15%', displayName: $translate.instant('NOMBRE') },
                 { field: 'IdPersona', width: '10%', displayName: $translate.instant('DOCUMENTO_DOCENTES') },
                 { field: 'Categoria', width: '10%', displayName: $translate.instant('CATEGORIA') },
@@ -204,12 +204,14 @@ angular.module('contractualClienteApp')
                 NivelAcademico: self.resolucion.NivelAcademico_nombre,
                 Disponibilidad: self.apropiacion_elegida[0].Id,
                 Vigencia: self.persona_a_modificar.Vigencia,
-                NumeroContrato: self.persona_a_modificar.NumeroContrato
+                NumeroContrato: self.persona_a_modificar.NumeroContrato,
+                Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
             };
 
             desvinculacionesData.push(vinculacionDocente);
 
             adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", desvinculacionesData).then(function(response) {
+              
                 if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
                     self.saldo_disponible = false;
 
@@ -271,6 +273,7 @@ angular.module('contractualClienteApp')
                     Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
                     NivelAcademico: self.resolucion.NivelAcademico_nombre,
                     Disponibilidad: parseInt(self.disponibilidad_actual_id),
+                    Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
                 };
 
                 desvinculacionesData.push(vinculacionDocente);
