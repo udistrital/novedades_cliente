@@ -15,10 +15,10 @@
                                     <label>{{ 'NUMERO_RESOLUCION' | translate }}</label>
                                     <input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionDetalle.contenidoResolucion.Numero">
                                   </div>
-                                  <div class="form-group col-lg-6">
-                                    <label>{{ 'FACULTAD' | translate }}</label>
-                                    <input type="text" class="form-control" ng-model="resolucionDetalle.facultad" readonly>
-                                  </div>
+                                  <!--div class="form-group col-lg-6">
+                                    <label>{{ 'TITULO_RESOLUCION' | translate }}</label>
+                                    <input class="form-control" ng-model="resolucionDetalle.contenidoResolucion.Titulo" required>
+                                  </div-->
                                   <div class="form-group col-lg-6">
                                     <label>{{ 'NIVEL_ACADEMICO' | translate }}</label>
                                     <input type="text" class="form-control" ng-model="resolucionDetalle.resolucion.NivelAcademico_nombre" readonly>
@@ -26,6 +26,10 @@
                                   <div class="form-group col-lg-6">
                                     <label>{{ 'DEDICACION' | translate }}</label>
                                     <input type="text" class="form-control" ng-model="resolucionDetalle.resolucion.Dedicacion" readonly>
+                                  </div>
+                                  <div class="form-group col-lg-12">
+                                    <label>{{ 'FACULTAD' | translate }}</label>
+                                    <input type="text" class="form-control" ng-model="resolucionDetalle.facultad" readonly>
                                   </div>
                               </div>
                           </form>
