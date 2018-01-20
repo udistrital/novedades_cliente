@@ -362,6 +362,11 @@ angular.module('contractualClienteApp')
 
         };
 
+        $scope.cancelar_modificacion = function(row){
+          var index = self.datosDocentesCargaLectiva.data.indexOf(row);
+           self.datosDocentesCargaLectiva.data[index].editrow = false;
+        };
+
 
         //*-------Funciones para la desvinculación de docentes ------ *//
         $scope.verCancelarInscripcionDocente = function(row) {
