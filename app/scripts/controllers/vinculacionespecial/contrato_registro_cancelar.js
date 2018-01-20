@@ -9,7 +9,7 @@
  */
 
 angular.module('contractualClienteApp')
-    .controller('ContratoRegistroCancelarCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreRequest, financieraRequest, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate) {
+    .controller('ContratoRegistroCancelarCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreAmazonRequest, financieraRequest, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate,$window) {
 
         var self = this;
         self.contratoCanceladoBase = {};
@@ -18,6 +18,13 @@ angular.module('contractualClienteApp')
         self.idResolucion = idResolucion;
         self.estado = false;
         self.cantidad = 0;
+
+        administrativaRequest.get('resolucion/' +  self.idResolucion).then(function(response) {
+            self.resolucionActual = response.data;
+            administrativaRequest.get('tipo_resolucion/' +  self.resolucionActual.IdTipoResolucion.Id).then(function(response) {
+                self.resolucionActual.IdTipoResolucion.NombreTipoResolucion = response.data.NombreTipoResolucion;
+            });
+        });
 
 
         administrativaRequest.get("resolucion_vinculacion_docente/" + self.idResolucion).then(function(response) {
@@ -31,13 +38,9 @@ angular.module('contractualClienteApp')
 
 
             adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion=" + self.idResolucion.toString()).then(function(response) {
-
                 self.contratados = response.data;
                 var yeison = JSON.parse(JSON.stringify(self.contratados));
                 self.cantidad = Object.keys(yeison).length;
-                console.log("Yep ",yeison);
-                console.log("Nope ",self.cantidad);
-
             });
             coreAmazonRequest.get("ordenador_gasto", "query=DependenciaId%3A" + self.datosFiltro.IdFacultad.toString()).then(function(response) {
                 if (response.data === null) {
@@ -106,15 +109,10 @@ angular.module('contractualClienteApp')
                 });
                 var expedicionResolucion = {
                     Vinculaciones: conjuntoContratos,
-                    idResolucion: self.idResolucion
+                    idResolucion: self.idResolucion,
+                    FechaExpedicion: self.FechaExpedicion
                 };
-                console.log("contratos a insertar");
-                console.log(expedicionResolucion);
                 adminMidRequest.post("expedir_resolucion/cancelar", expedicionResolucion).then(function(response) {
-                    console.log("Soy el de expedicionResolucion");
-                    console.log(expedicionResolucion);
-                    console.log("Resolucion expedida, siiiiiiiiiiiiii");
-                    console.log(response);
                     self.estado = false;
                     swal({
                         title: $translate.instant('EXPEDIDA'),
@@ -160,7 +158,6 @@ angular.module('contractualClienteApp')
         self.get_docentes_cancelados = function() {
             self.info_desvincular = !self.info_desvincular;
             adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion=" + self.idResolucion).then(function(response) {
-                //console.log("Admirad!: ",response.data)
                 self.cancelados.data = response.data;
             });
         };

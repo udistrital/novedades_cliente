@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('ContratoRegistroCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreRequest, financieraRequest,sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate, $window) {
+    .controller('ContratoRegistroCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreAmazonRequest, financieraRequest,sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate, $window) {
 
         var self = this;
         self.contratoGeneralBase = {};
@@ -17,6 +17,14 @@ angular.module('contractualClienteApp')
         self.estado = false;
 
 
+
+        administrativaRequest.get('resolucion/' +  self.idResolucion).then(function(response) {
+            self.resolucionActual = response.data;
+            administrativaRequest.get('tipo_resolucion/' +  self.resolucionActual.IdTipoResolucion.Id).then(function(response) {
+                self.resolucionActual.IdTipoResolucion.NombreTipoResolucion = response.data.NombreTipoResolucion;
+            });
+        });
+
         oikosRequest.get('dependencia/' + resolucion.Facultad).then(function(response) {
             resolucion.Facultad = response.data.Nombre;
         });
@@ -24,9 +32,6 @@ angular.module('contractualClienteApp')
         self.idResolucion = idResolucion;
         administrativaRequest.get("resolucion_vinculacion_docente/" + self.idResolucion).then(function(response) {
             self.datosFiltro = response.data;
-            console.log("Este es el id resolucion: ", self.idResolucion);
-            console.log("Que pasa aca?: ", self.datosFiltro);
-
             oikosRequest.get("dependencia/" + self.datosFiltro.IdFacultad.toString()).then(function(response) {
 
                 self.contratoGeneralBase.Contrato.SedeSolicitante = response.data.Id.toString();
@@ -219,15 +224,10 @@ angular.module('contractualClienteApp')
                 });
                 var expedicionResolucion = {
                     Vinculaciones: conjuntoContratos,
-                    idResolucion: self.idResolucion
+                    idResolucion: self.idResolucion,
+                    FechaExpedicion: self.FechaExpedicion
                 };
-                console.log("contratos a insertar");
-                console.log(expedicionResolucion);
                 adminMidRequest.post("expedir_resolucion/expedir", expedicionResolucion).then(function(response) {
-                    console.log("Soy el de expedicionResolucion");
-                    console.log(expedicionResolucion);
-                    console.log("Resolucion expedida, siiiiiiiiiiiiii");
-                    console.log(response);
                     self.estado = false;
                     //if(typeof(response.data)=="object"){ //xDD
                     /*
