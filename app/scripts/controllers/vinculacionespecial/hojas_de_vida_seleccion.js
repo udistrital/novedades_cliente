@@ -467,13 +467,15 @@ angular.module('contractualClienteApp')
                     Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
                     NivelAcademico: self.resolucion.NivelAcademico_nombre,
                     Disponibilidad: self.apropiacion_elegida[0].Apropiacion.Id,
-                    Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
+                    Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
+                    Periodo: self.resolucion.Periodo
                 };
 
                 vinculacionesData.push(vinculacionDocente);
 
             });
-
+            console.log("apropiacion elegida")
+            console.log(self.apropiacion_elegida[0].Apropiacion.Id)
             adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", vinculacionesData).then(function(response) {
               if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
                     self.saldo_disponible = false;
