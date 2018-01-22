@@ -76,7 +76,7 @@ angular.module('contractualClienteApp')
                         service.setting_bearer = {
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                                "authorization": "Bearer " + $sessionStorage.access_token,
+                                "Authorization": "Bearer " + $sessionStorage.access_token,
                                 "cache-control": "no-cache",
                             }
                         };
