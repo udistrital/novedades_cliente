@@ -117,8 +117,8 @@ var conf_pruebas = {
 var conf_local = {
     WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
     ACADEMICA_SERVICE: "http://10.20.0.127/urano/index.php?data=B-7djBQWvIdLAEEycbH1n6e-3dACi5eLUOb63vMYhGq0kPBs7NGLYWFCL0RSTCu1yTlE5hH854MOgmjuVfPWyvdpaJDUOyByX-ksEPFIrrQQ7t1p4BkZcBuGD2cgJXeD",
-    ADMINISTRATIVA_MID_SERVICE: "https://autenticacion.udistrital.edu.co:8244/v1/",
-    ADMINISTRATIVA_SERVICE: "https://autenticacion.udistrital.edu.co:8244/v1/",
+    ADMINISTRATIVA_MID_SERVICE: "https://autenticacion.udistrital.edu.co:8244/administrativa_mid_api/v1/",
+    ADMINISTRATIVA_SERVICE: "https://autenticacion.udistrital.edu.co:8244/administrativa_mid_api/v1/",
     ADMINISTRATIVA_PRUEBAS_SERVICE: "http://localhost:8084/v1/",
     ARKA_SERVICE: "https://autenticacion.udistrital.edu.co:8244/arka_api_crud/v1/",
     CONFIGURACION_SERVICE: "https://autenticacion.udistrital.edu.co:8244/configuracion_crud_api/v1/",
@@ -137,7 +137,7 @@ var conf_local = {
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
-        CLIENTE_ID: "2sbv8HxQIZCMC1CqPTP6yI6VPDca",
+        CLIENTE_ID: "pszmROXqfec4pTShgF_fn2DAAX0a",
         REDIRECT_URL: "http://localhost:9000/",
         RESPONSE_TYPE: "code",
         SCOPE: "openid email",
@@ -146,13 +146,11 @@ var conf_local = {
         SIGN_OUT_REDIRECT_URL: "http://localhost:9000/",
         SIGN_OUT_APPEND_TOKEN: "true",
         REFRESH_TOKEN: "https://autenticacion.udistrital.edu.co/oauth2/token",
-        CLIENT_SECRET: "Y8WA3LDAH79QjiMvCkTfaiZsOtEa"
+        CLIENT_SECRET: "2crHq2IRkFHEVTBfpznLhKHyKVIa"
     },
 };
 
-
-
 angular.module('contractualClienteApp')
     .constant('CONF', {
-        GENERAL: conf_pruebas
+        GENERAL: conf_local
     });
