@@ -157,9 +157,7 @@ angular.module('contractualClienteApp')
         };
         $scope.perfil = "ADMINISTRADOR ARGO";
 
-        if(token_service.live_token()){
-            console.log(token_service.setting_bearer);
-            console.log(token_service.token);
+        if (token_service.live_token()) {
             configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + $scope.perfil + '/Argo', '').then(function(response) {
                 $rootScope.my_menu = response.data;
                 /*configuracionRequest.update_menu(https://10.20.0.162:9443/store/apis/authenticate response.data);
