@@ -37,10 +37,10 @@ req.onreadystatechange = function(e) {
 };
 
 angular.module('contractualClienteApp')
-    .factory('token_service', function($location, $http, $sessionStorage, CONF, $interval) {
+    .factory('token_service', function($location, $http, $localStorage, CONF, $interval) {
 
         var service = {
-            session: $sessionStorage.$default(params),
+            session: $localStorage.$default(params),
             header: null,
             token: null,
             setting_basic: {
@@ -67,7 +67,7 @@ angular.module('contractualClienteApp')
 
             live_token: function() {
                 if (service.session === null) {
-                    service.session = $sessionStorage.$default(params);
+                    service.session = $localStorage.$default(params);
                     return false;
                 } else {
                     if (!angular.isUndefined(service.session.id_token)) {
@@ -76,7 +76,7 @@ angular.module('contractualClienteApp')
                         service.setting_bearer = {
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                                "Authorization": "Bearer " + $sessionStorage.access_token,
+                                "Authorization": "Bearer " + $localStorage.access_token,
                                 "cache-control": "no-cache",
                             }
                         };
@@ -90,57 +90,57 @@ angular.module('contractualClienteApp')
                 url = url + '?id_token_hint=' + service.session.id_token;
                 url = url + '&post_logout_redirect_uri=' + CONF.GENERAL.TOKEN.SIGN_OUT_REDIRECT_URL;
                 service.token = null;
-                $sessionStorage.$reset();
+                $localStorage.$reset();
                 window.location.replace(url);
             },
             refresh: function() {
                 var url = CONF.GENERAL.TOKEN.REFRESH_TOKEN;
                 var data = {};
                 url += "?grant_type=refresh_token";
-                url += "&refresh_token=" + $sessionStorage.refresh_token;
+                url += "&refresh_token=" + $localStorage.refresh_token;
                 url += "&redirect_uri=" + CONF.GENERAL.TOKEN.REDIRECT_URL;
 
                 $http.post(url, data, service.setting_basic)
                     .then(function(response) {
-                        $sessionStorage.access_token = response.data.access_token;
-                        $sessionStorage.expires_in = response.data.expires_in;
-                        $sessionStorage.id_token = response.data.id_token;
-                        $sessionStorage.refresh_token = response.data.refresh_token;
-                        $sessionStorage.expires_at = null;
+                        $localStorage.access_token = response.data.access_token;
+                        $localStorage.expires_in = response.data.expires_in;
+                        $localStorage.id_token = response.data.id_token;
+                        $localStorage.refresh_token = response.data.refresh_token;
+                        $localStorage.expires_at = null;
                         service.setExpiresAt();
                     });
             },
             get_id_token: function() {
-                if ((!angular.isUndefined($sessionStorage.code)) && (angular.isUndefined($sessionStorage.id_token))) {
+                if ((!angular.isUndefined($localStorage.code)) && (angular.isUndefined($localStorage.id_token))) {
                     var url = CONF.GENERAL.TOKEN.REFRESH_TOKEN;
                     var data = {};
                     url += "?grant_type=authorization_code";
-                    url += "&code=" + $sessionStorage.code;
+                    url += "&code=" + $localStorage.code;
                     url += "&redirect_uri=" + CONF.GENERAL.TOKEN.REDIRECT_URL;
 
                     $http.post(url, data, service.setting_basic)
                         .then(function(response) {
                             //window.location.replace(CONF.GENERAL.TOKEN.REDIRECT_URL);
                             location.search = "";
-                            $sessionStorage.$default(response.data);
+                            $localStorage.$default(response.data);
                             service.setExpiresAt();
                         });
                 }
                 service.timer();
             },
             setExpiresAt: function() {
-                if (angular.isUndefined($sessionStorage.expires_at) || $sessionStorage.expires_at === null) {
+                if (angular.isUndefined($localStorage.expires_at) || $localStorage.expires_at === null) {
                     var expires_at = new Date();
-                    expires_at.setSeconds(expires_at.getSeconds() + parseInt($sessionStorage.expires_in) - 60); // 60 seconds less to secure browser and response latency
-                    $sessionStorage.expires_at = expires_at;
+                    expires_at.setSeconds(expires_at.getSeconds() + parseInt($localStorage.expires_in) - 60); // 60 seconds less to secure browser and response latency
+                    $localStorage.expires_at = expires_at;
                 }
             },
             expired: function() {
-                return (new Date($sessionStorage.expires_at) < new Date());
+                return (new Date($localStorage.expires_at) < new Date());
             },
 
             timer: function() {
-                if (!angular.isUndefined($sessionStorage.expires_at) || $sessionStorage.expires_at === null) {
+                if (!angular.isUndefined($localStorage.expires_at) || $localStorage.expires_at === null) {
                     $interval(function() {
                         if (service.expired()) {
                             service.refresh();
