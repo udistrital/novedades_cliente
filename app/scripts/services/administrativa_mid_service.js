@@ -20,7 +20,11 @@ angular.module('adminMidService', [])
         return {
             get: function(tabla, params) {
                 cancelSearch = $q.defer(); //create new defer for new request
-                return $http.get(path + tabla + "/?" + params, [{ timeout: cancelSearch.promise }, token_service.setting_bearer.headers]);
+                if(angular.isUndefined(params)){
+                    return $http.get(path + tabla, { timeout: cancelSearch.promise });
+                }else{
+                    return $http.get(path + tabla + "/?" + params, { timeout: cancelSearch.promise });
+                }
             },
             post: function(tabla, elemento) {
                 return $http.post(path + tabla, elemento, token_service.setting_bearer.headers);
