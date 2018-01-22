@@ -23,7 +23,7 @@ angular.module('adminMidService', [])
                 if(angular.isUndefined(params)){
                     return $http.get(path + tabla, { timeout: cancelSearch.promise });
                 }else{
-                    return $http.get(path + tabla + "/?" + params, { timeout: cancelSearch.promise });
+                    return $http.get(path + tabla + "?" + params, { timeout: cancelSearch.promise });
                 }
             },
             post: function(tabla, elemento) {
