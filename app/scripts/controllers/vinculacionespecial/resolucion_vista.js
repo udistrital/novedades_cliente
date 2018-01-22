@@ -115,8 +115,18 @@ self.getArticuloTexto=function(articulo, numero){
 //Función que devuelve en contenido de la resolución en un arreglo de estructuras
 self.getContenido=function(contenidoResolucion, contratados, proyectos){
   var contenido = [];
+  contenido.push({ text: "UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS",
+  style: 'titulo'});
+  contenido.push({ text: self.resolucion.FacultadNombre,
+  style: 'titulo'});
   contenido.push({ text: $translate.instant('RESOLUCION')+" "+'No '+contenidoResolucion.Numero,
   style: 'titulo'});
+  contenido.push({ text: "("+self.resolucion.FechaExpedicion+")",
+  style: 'titulo'});
+  contenido.push({ text: " ",
+  style: 'titulo'});
+  contenido.push({ text: contenidoResolucion.Titulo,
+  style: 'titulo_res'});
   contenido.push(self.getPreambuloTexto(contenidoResolucion.Preambulo));
   contenido.push({ text: $translate.instant('CONSIDERANDO'),
   style: 'titulo'});
@@ -167,11 +177,12 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
       info: {
         title: $translate.instant('RESOLUCION')
       },
-      pageMargins: [40, 120, 40, 40],
+      pageMargins: [40, 140, 40, 40],
       header: {
         height: 120,
         width: 120,
         image: self.imagen.imagen,
+        margin: [100, 15,5,5],
         alignment: 'center'
       },
       content: self.getContenido(contenidoResolucion, contratados, proyectos),
@@ -198,6 +209,11 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
           fontSize: 12,
           alignment: 'center'
         },
+        titulo_res: {
+          bold: true,
+          fontSize: 9,
+          alignment: 'center'
+        },
         //Proyectos curriculares
         proyecto: {
           fontSize: 11,
@@ -216,6 +232,10 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
           fontSize: 12,
           alignment: 'center'
         },
+        pie_pagina: {
+          fontSize: 8,
+          alignment: 'center'
+        },
         nombre_ordenador: {
           bold: true,
           fontSize: 10,
@@ -224,10 +244,23 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
         }
       },
       //Pie de página de la resolución
-      footer: function(currentPage, pageCount) {return {text: currentPage.toString()+' de '+pageCount, alignment: 'right', margin: [70, 5]};},
-      defaultStyle: {
-        alignment: 'justify'
-      }
+      footer: function(page, pages) {
+        return {
+          columns: [
+             $translate.instant('RESOLUCION')+" "+'No '+contenidoResolucion.Numero+" "+self.resolucion.NivelAcademico_nombre+" "+self.resolucion.Dedicacion+" "+"2018-III"+"\n"+self.resolucion.FacultadNombre,
+            {
+              alignment: 'right',
+              text: [
+                { text: page.toString(), italics: true },
+                ' de ',
+                { text: pages.toString(), italics: true }
+              ]
+            }
+          ],
+          margin: [10, 0],
+          style: "pie_pagina"
+        };
+      },
     };
     return documento;
   };

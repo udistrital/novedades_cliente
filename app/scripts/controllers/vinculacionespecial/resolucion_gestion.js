@@ -224,10 +224,12 @@ angular.module('contractualClienteApp')
   //Función para redireccionar la página web a la vista de edición del contenido de la resolución, donde se pasa por parámetro el id de la resolucion seleccionada
   $scope.verEditarResolucion = function(row){
 
-    if(row.entity.Dedicacion === "TCO-MTO"){
-      self.Dedicacion = "TCO|MTO";
+    if(row.entity.FechaExpedicion === null){
+      self.FechaParaPDF = "Fecha de expedición pendiente"
     }else{
-      self.Dedicacion = row.entity.Dedicacion;
+      var string1= row.entity.FechaExpedicion;
+      string1 = string1.split('T')[0];
+      self.FechaParaPDF =  string1;
     }
 
     var resolucion = {
@@ -236,10 +238,14 @@ angular.module('contractualClienteApp')
       NivelAcademico_nombre : row.entity.NivelAcademico,
       IdFacultad : row.entity.Facultad,
       Vigencia : row.entity.Vigencia,
-      Periodo : row.entity.Periodo,                       //--- se deja quemado, debe incluirse ne tabla resolucion
+      Periodo : row.entity.Periodo,
       NumeroSemanas : row.entity.NumeroSemanas,
-      Dedicacion : self.Dedicacion
+      Dedicacion : row.entity.Dedicacion,
+      FacultadNombre: row.entity.FacultadNombre,
+      FechaExpedicion: self.FechaParaPDF
     };
+    console.log("resolucion a enviar")
+    console.log(resolucion)
 
     var local = JSON.stringify(resolucion);
     localStorage.setItem('resolucion', local);
@@ -301,11 +307,14 @@ angular.module('contractualClienteApp')
   //Función para asignar controlador de la vista resolucion_vista.html, donde se pasa por parámetro el id de la resolucion seleccionada con ayuda de $mdDialog
   $scope.verVisualizarResolucion = function(row){
 
-    if(row.entity.Dedicacion === "TCO-MTO"){
-      self.Dedicacion = "TCO|MTO";
+    if(row.entity.FechaExpedicion === null){
+      self.FechaParaPDF = "Fecha de expedición pendiente"
     }else{
-      self.Dedicacion = row.entity.Dedicacion;
+      var string1= row.entity.FechaExpedicion;
+      string1 = string1.split('T')[0];
+      self.FechaParaPDF =  string1;
     }
+
 
     var resolucion = {
       Id: row.entity.Id,
@@ -315,7 +324,9 @@ angular.module('contractualClienteApp')
       Vigencia : row.entity.Vigencia,
       Periodo : row.entity.Periodo,                       //--- se deja quemado, debe incluirse ne tabla resolucion
       NumeroSemanas : row.entity.NumeroSemanas,
-      Dedicacion : self.Dedicacion
+      Dedicacion: row.entity.Dedicacion,
+      FacultadNombre: row.entity.FacultadNombre,
+      FechaExpedicion: self.FechaParaPDF
     };
 
     var local = JSON.stringify(resolucion);
