@@ -125,7 +125,7 @@ var conf_local = {
     CORE_SERVICE: "http://10.20.0.210/core_api/v1/",
     CORE_AMAZON_SERVICE: "http://10.20.0.210/core_amazon_crud/v1/",
     FINANCIERA_MID_SERVICE: "http://10.20.0.210/financiera_mid_api/v1/",
-    FINANCIERA_SERVICE: "http://10.20.0.210/financiera_api/v1/",
+    FINANCIERA_SERVICE: "http://10.20.0.254/financiera_api/v1/",
     MODELS_SERVICE: "scripts/models/",
     NOTIFICACION_WS: "ws://10.20.2.134:8080/ws/join",
     OIKOS_SERVICE: "http://10.20.0.210/oikos_api/v1/",
