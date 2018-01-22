@@ -130,11 +130,10 @@ angular.module('contractualClienteApp')
 
         administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response) {
             self.resolucion.preambulo = response.data.Preambulo;
-        });
-
-        administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response) {
             self.resolucion.consideracion = response.data.Consideracion;
         });
+
+
 
 
         self.crearResolucion = function() {
@@ -191,8 +190,9 @@ angular.module('contractualClienteApp')
             var objeto_resolucion = {
                 Resolucion: resolucionData,
                 ResolucionVinculacionDocente: resolucionVinculacionDocenteData,
-                ResolucionVieja: self.resolucion_a_cancelar_seleccionada.Id
-            };
+                ResolucionVieja: self.resolucion_a_cancelar_seleccionada.Id,
+                NomDependencia:  self.objeto_facultad.Nombre,
+              };
 
 
             adminMidRequest.post("gestion_resoluciones/insertar_resolucion_completa", objeto_resolucion).then(function(response) {
