@@ -415,7 +415,7 @@ self.getDocumento=function(contenidoResolucion, contratados, proyectos){
     footer: function(page, pages) {
       return {
         columns: [
-           $translate.instant('RESOLUCION')+" "+'No '+contenidoResolucion.Numero+" "+self.resolucion.NivelAcademico_nombre+" "+self.resolucion.Dedicacion+" "+"2018-III"+"\n"+self.resolucion.FacultadNombre,
+           $translate.instant('RESOLUCION')+" "+'No '+contenidoResolucion.Numero+" "+self.resolucion.NivelAcademico_nombre+" "+self.resolucion.Dedicacion+" "+"2018-I"+"\n"+self.resolucion.FacultadNombre,
           {
             alignment: 'right',
             text: [
