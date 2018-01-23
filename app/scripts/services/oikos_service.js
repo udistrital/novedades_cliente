@@ -16,7 +16,11 @@ angular.module('oikosService', [])
         // Public API here
         return {
             get: function(tabla, params) {
-                return $http.get(path + tabla + "/?" + params, token_service.setting_bearer.headers);
+              if(angular.isUndefined(params) || params == ""){
+                  return $http.get(path + tabla, token_service.setting_bearer.headers);
+              }else{
+                  return $http.get(path + tabla + "/?" + params, token_service.setting_bearer.headers);
+              }
             },
             post: function(tabla, elemento) {
                 return $http.post(path + tabla, elemento, token_service.setting_bearer.headers);
