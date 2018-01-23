@@ -433,7 +433,7 @@ angular.module('contractualClienteApp')
                     confirmButtonText: $translate.instant('ACEPTAR')
                 });
             } else {
-                financieraRequest.get('disponibilidad', "limit=-1&query=Vigencia:" + self.vigencia_data).then(function(response) {
+                financieraRequest.get('disponibilidad', "limit=100&query=Vigencia:" + self.vigencia_data).then(function(response) {
                     self.Disponibilidades.data = response.data;
                 });
                 $('#modal_disponibilidad').modal('show');
@@ -495,7 +495,7 @@ angular.module('contractualClienteApp')
         };
 
         self.RecargarDisponibilidades = function() {
-            financieraRequest.get('disponibilidad', "limit=-1&query=Vigencia:" + self.vigencia_data).then(function(response) {
+            financieraRequest.get('disponibilidad', "limit=100&query=Vigencia:" + self.vigencia_data).then(function(response) {
                 self.Disponibilidades.data = response.data;
 
             });
