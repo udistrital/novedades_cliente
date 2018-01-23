@@ -16,10 +16,11 @@ angular.module('contractualClienteApp')
         self.acta = {};
         self.estado = false;
 
-
+        self.idResolucion = idResolucion;
 
         administrativaRequest.get('resolucion/' +  self.idResolucion).then(function(response) {
             self.resolucionActual = response.data;
+            console.log(response.data);
             administrativaRequest.get('tipo_resolucion/' +  self.resolucionActual.IdTipoResolucion.Id).then(function(response) {
                 self.resolucionActual.IdTipoResolucion.NombreTipoResolucion = response.data.NombreTipoResolucion;
             });
@@ -29,7 +30,7 @@ angular.module('contractualClienteApp')
             resolucion.Facultad = response.data.Nombre;
         });
 
-        self.idResolucion = idResolucion;
+
         administrativaRequest.get("resolucion_vinculacion_docente/" + self.idResolucion).then(function(response) {
             self.datosFiltro = response.data;
             oikosRequest.get("dependencia/" + self.datosFiltro.IdFacultad.toString()).then(function(response) {
