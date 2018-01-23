@@ -117,8 +117,8 @@ var conf_pruebas = {
 var conf_local = {
     WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
     ACADEMICA_SERVICE: "http://10.20.0.127/urano/index.php?data=B-7djBQWvIdLAEEycbH1n6e-3dACi5eLUOb63vMYhGq0kPBs7NGLYWFCL0RSTCu1yTlE5hH854MOgmjuVfPWyvdpaJDUOyByX-ksEPFIrrQQ7t1p4BkZcBuGD2cgJXeD",
-    ADMINISTRATIVA_MID_SERVICE: "https://autenticacion.udistrital.edu.co:8244/administrativa_mid_api/v1/",
-    ADMINISTRATIVA_SERVICE: "https://autenticacion.udistrital.edu.co:8244/administrativa_mid_api/v1/",
+    ADMINISTRATIVA_MID_SERVICE: "http://localhost:8082/v1/",
+    ADMINISTRATIVA_SERVICE: "http://localhost:8085/v1/",
     ADMINISTRATIVA_PRUEBAS_SERVICE: "http://localhost:8084/v1/",
     ARKA_SERVICE: "https://autenticacion.udistrital.edu.co:8244/arka_api_crud/v1/",
     CONFIGURACION_SERVICE: "https://autenticacion.udistrital.edu.co:8244/configuracion_crud_api/v1/",
@@ -152,5 +152,5 @@ var conf_local = {
 
 angular.module('contractualClienteApp')
     .constant('CONF', {
-        GENERAL: conf_pruebas
+        GENERAL: conf_prueba
     });
