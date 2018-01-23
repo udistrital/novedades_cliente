@@ -64,7 +64,8 @@
 										<div ui-grid="hojasDeVidaSeleccion.Disponibilidades" ui-grid-selection ui-grid-pagination ui-grid-auto-resize class="grid"></div>
 									</div>
 									<div class="col-md-5">
-										<div ui-grid="hojasDeVidaSeleccion.Apropiaciones" ui-grid-selection ui-grid-pagination ui-grid-auto-resize class="grid"></div>
+										<div ng-show="hojasDeVidaSeleccion.ver" ui-grid="hojasDeVidaSeleccion.Apropiaciones" ui-grid-selection ui-grid-pagination ui-grid-auto-resize class="grid"></div>
+										<center><loading load="hojasDeVidaSeleccion.estado" tam="5"></loading><center>
 									</div>
 
 								</div>

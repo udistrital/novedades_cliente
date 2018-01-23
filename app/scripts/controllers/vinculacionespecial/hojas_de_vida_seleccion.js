@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .controller('HojasDeVidaSeleccionCtrl', function(administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
+    .controller('HojasDeVidaSeleccionCtrl', function(financieraMidRequest,administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
 
         var self = this;
 
@@ -11,6 +11,8 @@ angular.module('contractualClienteApp')
         self.vigencia_data = self.resolucion.Vigencia;
         var vinculacionesData = [];
         self.datos = "";
+        self.offset = 0;
+
         self.datosDocentesCargaLectiva = {
             paginationPageSizes: [10, 15, 20],
             paginationPageSize: 10,
@@ -192,7 +194,7 @@ angular.module('contractualClienteApp')
             multiSelect: false,
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: true,
-            useExternalPagination: false,
+            useExternalPagination: true,
             enableSelectAll: false,
             columnDefs: [{
                     field: 'NumeroDisponibilidad',
@@ -207,19 +209,64 @@ angular.module('contractualClienteApp')
                     displayName: $translate.instant('FECHA_DISP'),
                     cellTemplate: '<span>{{row.entity.FechaRegistro| date:"yyyy-MM-dd":"+0900"}}</span>'
                 }
-            ],
+            ]
 
-            onRegisterApi: function(gridApi) {
-                self.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope, function() {
-                    self.disponibilidad_elegida = gridApi.selection.getSelectedRows();
-                    self.DisponibilidadApropiacion = self.disponibilidad_elegida[0].DisponibilidadApropiacion;
-                    self.listar_apropiaciones();
-
-
-                });
-            }
         };
+
+        self.Disponibilidades.onRegisterApi = function(gridApi) {
+          gridApi.selection.on.rowSelectionChanged($scope, function() {
+              self.disponibilidad_elegida = gridApi.selection.getSelectedRows();
+              self.DisponibilidadApropiacion = self.disponibilidad_elegida[0].DisponibilidadApropiacion;
+              self.listar_apropiaciones();
+
+
+          });
+
+          gridApi.core.on.filterChanged($scope, function() {
+              var grid = this.grid;
+              var query = '';
+              angular.forEach(grid.columns, function(value, key) {
+                  if (value.filters[0].term) {
+                      var formtstr = value.colDef.name.replace('[0]','');
+                      query = query + '&query='+ formtstr + '__icontains:' + value.filters[0].term;
+
+                  }
+              });
+              self.actualizarLista(self.offset, query);
+          });
+          gridApi.pagination.on.paginationChanged($scope, function(newPage, pageSize) {
+
+              //self.gridOptions.data = {};
+
+              //var inicio = $filter('date')(self.fechaInicio, "yyyy-MM-dd");
+              //var fin = $filter('date')(self.fechaFin, "yyyy-MM-dd");
+              var query = '';
+              if (inicio !== undefined && fin !== undefined) {
+                  query = '&rangoinicio=' + inicio + "&rangofin=" + fin;
+              }
+              var grid = this.grid;
+              angular.forEach(grid.columns, function(value, key) {
+                  if (value.filters[0].term) {
+                      var formtstr = value.colDef.name.replace('[0]','');
+                      query = query + '&query='+ formtstr + '__icontains:' + value.filters[0].term;
+
+                  }
+              });
+              self.offset = (newPage - 1) * pageSize;
+              self.actualizarLista(self.offset, query);
+          });
+        };
+
+        self.actualizarLista = function(offset, query) {
+           financieraMidRequest.get('disponibilidad/ListaDisponibilidades/' + self.resolucion.Vigencia, 'limit=' + self.Disponibilidades.paginationPageSize + '&offset=' + offset + query + "&UnidadEjecutora=1").then(function(response) {
+               if (response.data.Type !== undefined) {
+                   self.Disponibilidades.data = [];
+               } else {
+                   console.log(response.data);
+                   self.Disponibilidades.data = response.data;
+               }
+           });
+         };
 
         self.Apropiaciones = {
             paginationPageSizes: [10, 15, 20],
@@ -236,11 +283,15 @@ angular.module('contractualClienteApp')
 
                 {
                     field: 'Apropiacion.Valor',
-                    displayName: $translate.instant('VALOR_APROPIACION')
+                    displayName: $translate.instant('VALOR_APROPIACION'),
+                    cellFilter: "currency",
+                    cellClass: "valorEfectivo"
                 },
                 {
                     field: 'Apropiacion.Saldo',
-                    displayName: $translate.instant('SALDO_APROPIACION')
+                    displayName: $translate.instant('SALDO_APROPIACION'),
+                    cellFilter: "currency",
+                    cellClass: "valorEfectivo"
                 }
             ],
 
@@ -433,19 +484,29 @@ angular.module('contractualClienteApp')
                     confirmButtonText: $translate.instant('ACEPTAR')
                 });
             } else {
-                financieraRequest.get('disponibilidad', "limit=100&query=Vigencia:" + self.vigencia_data).then(function(response) {
+
+              financieraRequest.get("disponibilidad/TotalDisponibilidades/" + self.resolucion.Vigencia, 'UnidadEjecutora=1') //formato de entrada  https://golang.org/src/time/format.go
+                    .then(function(response) { //error con el success
+                        self.Disponibilidades.totalItems = response.data;
+                        self.actualizarLista(self.offset, '');
+              });
+              /*financieraRequest.get('disponibilidad', "limit=100&query=Vigencia:" + self.vigencia_data).then(function(response) {
                     self.Disponibilidades.data = response.data;
                 });
+                */
                 $('#modal_disponibilidad').modal('show');
             }
         };
 
         //Función que lista las apropiaciones  del cdp elegido junto con su saldo y su valor
         self.listar_apropiaciones = function() {
-
+            self.estado = true;
+            self.ver = false;
             var disponibilidadAp = self.DisponibilidadApropiacion;
             adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones", disponibilidadAp).then(function(response) {
                 self.Apropiaciones.data = response.data;
+                self.ver = true;
+                self.estado = false;
                 //self.Apropiaciones.data = response.data;
 
             });
@@ -495,7 +556,7 @@ angular.module('contractualClienteApp')
         };
 
         self.RecargarDisponibilidades = function() {
-            financieraRequest.get('disponibilidad', "limit=100&query=Vigencia:" + self.vigencia_data).then(function(response) {
+            financieraRequest.get('disponibilidad', "limit=&query=Vigencia:" + self.vigencia_data).then(function(response) {
                 self.Disponibilidades.data = response.data;
 
             });

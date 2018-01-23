@@ -371,7 +371,8 @@ self.getDocumento=function(contenidoResolucion, contratados, proyectos){
       //Texto normal
       texto: {
         fontSize: 10,
-        margin: [30, 5]
+        margin: [30, 5],
+        alignment: 'justify',
       },
       //Títulos (Preámbulo, onsideración, ...)
       titulo: {

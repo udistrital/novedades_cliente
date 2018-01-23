@@ -277,11 +277,14 @@ $scope.verRestaurarResolucion = function(row){
 //Función para asignar controlador de la vista resolucion_vista.html, donde se pasa por parámetro el id de la resolucion seleccionada con ayuda de $mdDialog
 $scope.verVisualizarResolucion = function(row){
 
-  if(row.entity.Dedicacion === "TCO-MTO"){
-    self.Dedicacion = "TCO|MTO";
+  if(row.entity.FechaExpedicion === null || row.entity.FechaExpedicion.toString()==="0001-01-01T00:00:00Z"){
+    self.FechaParaPDF = "Fecha de expedición pendiente"
   }else{
-    self.Dedicacion = row.entity.Dedicacion;
+    var string1= row.entity.FechaExpedicion;
+    string1 = string1.split('T')[0];
+    self.FechaParaPDF =  string1;
   }
+
 
   var resolucion = {
     Id: row.entity.Id,
@@ -291,11 +294,14 @@ $scope.verVisualizarResolucion = function(row){
     Vigencia : row.entity.Vigencia,
     Periodo : row.entity.Periodo,                       //--- se deja quemado, debe incluirse ne tabla resolucion
     NumeroSemanas : row.entity.NumeroSemanas,
-    Dedicacion : self.Dedicacion
+    Dedicacion: row.entity.Dedicacion,
+    FacultadNombre: row.entity.FacultadNombre,
+    FechaExpedicion: self.FechaParaPDF
   };
 
   var local = JSON.stringify(resolucion);
   localStorage.setItem('resolucion', local);
+  
   $mdDialog.show({
     controller: "ResolucionVistaCtrl",
     controllerAs: 'resolucionVista',
