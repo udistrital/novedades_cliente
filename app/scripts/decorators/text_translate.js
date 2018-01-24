@@ -438,6 +438,7 @@ var text_es = {
       /*---Script---*/
       VISTA_PREVIA_RESOLUCION:"Vista previa de la resolución",
       COMUNIQUESE_Y_CUM: "COMUNÍQUESE Y CÚMPLASE",
+      HORAS_SEMESTRALES: "Horas semestrales",
 
   // Minutas Plantillas
   BTN_MINUTAS:{

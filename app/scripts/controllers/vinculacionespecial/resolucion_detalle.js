@@ -228,8 +228,14 @@ return numeros;
 
 self.getCuerpoTabla=function(idProyecto, datos, columnas) {
   var cuerpo=[];
-  var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMANALES'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD'), style: 'encabezado'}
-];
+  if(self.resolucion.NivelAcademico_nombre == 'PREGRADO'){
+    var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMANALES'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD'), style: 'encabezado'}];
+  }
+  if(self.resolucion.NivelAcademico_nombre == 'POSGRADO'){
+    var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMESTRALES'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD'), style: 'encabezado'}];
+  }
+
+  
   cuerpo.push(encabezado);
   if(datos){
     datos.forEach(function(fila) {
