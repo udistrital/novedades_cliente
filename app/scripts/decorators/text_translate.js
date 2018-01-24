@@ -439,6 +439,12 @@ var text_es = {
       VISTA_PREVIA_RESOLUCION:"Vista previa de la resolución",
       COMUNIQUESE_Y_CUM: "COMUNÍQUESE Y CÚMPLASE",
       HORAS_SEMESTRALES: "Horas semestrales",
+      NOMBRE_COMPLETO: "NOMBRE COMPLETO",
+      CARGO: "CARGO",
+      FIRMA: "FIRMA",
+      PROYECTO:"Proyecto",
+      REVISO: "Revisó",
+      OF_DOCENCIA: "OFICINA DE DOCENCIA",
 
   // Minutas Plantillas
   BTN_MINUTAS:{

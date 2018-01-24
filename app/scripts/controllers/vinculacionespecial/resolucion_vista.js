@@ -83,6 +83,23 @@ self.getTabla=function(idProyecto, datos, columnas) {
   };
 };
 
+//Obtener tabla del final
+
+self.getTablaRevision=function() {
+  return {
+    style: 'tabla',
+    table: {
+      headerRows: 1,
+      widths: [80, 150, 150, 80],
+      body: [
+					['', { text: $translate.instant('NOMBRE_COMPLETO'), style: 'tabla_revision' }, { text: $translate.instant('CARGO'), style: 'tabla_revision' }, { text: $translate.instant('FIRMA'), style: 'tabla_revision' }],
+					[{ text: $translate.instant('PROYECTO'), style: 'tabla_revision'}, '', '',''],
+          [{ text: $translate.instant('REVISO'), style: 'tabla_revision' }, {text: 'GERARDO CASTANG MONTIEL', style: 'tabla_revision' }, {text: $translate.instant('OF_DOCENCIA'), style: 'tabla_revision' },''],
+				]
+    }
+  };
+};
+
 //Función para obtener el texto del preámbulo dentro de una estructura
 self.getPreambuloTexto=function(preambulo){
   return {
@@ -174,6 +191,7 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
     style: 'nombre_ordenador'});
     contenido.push({ text: '--'+contenidoResolucion.OrdenadorGasto.Cargo+' --',
     style: 'nombre_cargo'});
+    contenido.push(self.getTablaRevision());
     return contenido;
   };
 
@@ -221,7 +239,10 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
           fontSize: 9,
           alignment: 'center'
         },
-        //Proyectos curriculares
+        tabla_revision: {
+          fontSize: 6,
+          alignment: 'center'
+        },        //Proyectos curriculares
         proyecto: {
           fontSize: 11,
           margin: [30, 5]
