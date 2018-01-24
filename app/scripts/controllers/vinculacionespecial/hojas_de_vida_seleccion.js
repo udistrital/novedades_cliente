@@ -7,6 +7,7 @@ angular.module('contractualClienteApp')
 
         self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
         self.estado = false;
+        self.estado_ap = false;
         self.proyectos = [];
         self.vigencia_data = self.resolucion.Vigencia;
         var vinculacionesData = [];
@@ -264,7 +265,6 @@ angular.module('contractualClienteApp')
                if (response.data.Type !== undefined) {
                    self.Disponibilidades.data = [];
                } else {
-                   console.log(response.data);
                    self.Disponibilidades.data = response.data;
                }
            });
@@ -369,7 +369,7 @@ angular.module('contractualClienteApp')
                         self.RecargarDatosPersonas();
                         self.RecargarDisponibilidades();
                         self.RecargarApropiaciones();
-                        self.get_docentes_vinculados();
+                        //self.get_docentes_vinculados();
                         self.personasSeleccionadas1 = [];
                         vinculacionesData = [];
                         $('#modal_disponibilidad').modal('hide');
@@ -383,7 +383,7 @@ angular.module('contractualClienteApp')
                         self.RecargarDatosPersonas();
                         self.RecargarDisponibilidades();
                         self.RecargarApropiaciones();
-                        self.get_docentes_vinculados();
+                        //self.get_docentes_vinculados();
                         self.personasSeleccionadas1 = [];
                         vinculacionesData = [];
                         $('#modal_disponibilidad').modal('hide');
@@ -502,13 +502,13 @@ angular.module('contractualClienteApp')
 
         //Función que lista las apropiaciones  del cdp elegido junto con su saldo y su valor
         self.listar_apropiaciones = function() {
-            self.estado = true;
+            self.estado_ap = true;
             self.ver = false;
             var disponibilidadAp = self.DisponibilidadApropiacion;
             adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones", disponibilidadAp).then(function(response) {
                 self.Apropiaciones.data = response.data;
                 self.ver = true;
-                self.estado = false;
+                self.estado_ap = false;
                 //self.Apropiaciones.data = response.data;
 
             });
@@ -529,7 +529,7 @@ angular.module('contractualClienteApp')
                     Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
                     Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
                     NivelAcademico: self.resolucion.NivelAcademico_nombre,
-                    Disponibilidad: self.apropiacion_elegida[0].Apropiacion.Id,
+                    Disponibilidad: self.apropiacion_elegida[0].Id,
                     Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
                     Periodo: self.resolucion.Periodo
                 };
@@ -537,8 +537,7 @@ angular.module('contractualClienteApp')
                 vinculacionesData.push(vinculacionDocente);
 
             });
-            console.log("apropiacion elegida")
-            console.log(self.apropiacion_elegida[0].Apropiacion.Id)
+
             adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", vinculacionesData).then(function(response) {
               if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
                     self.saldo_disponible = false;
