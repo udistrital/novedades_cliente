@@ -241,9 +241,11 @@ angular.module('contractualClienteApp')
               //var inicio = $filter('date')(self.fechaInicio, "yyyy-MM-dd");
               //var fin = $filter('date')(self.fechaFin, "yyyy-MM-dd");
               var query = '';
+              /*
               if (inicio !== undefined && fin !== undefined) {
                   query = '&rangoinicio=' + inicio + "&rangofin=" + fin;
               }
+              */
               var grid = this.grid;
               angular.forEach(grid.columns, function(value, key) {
                   if (value.filters[0].term) {

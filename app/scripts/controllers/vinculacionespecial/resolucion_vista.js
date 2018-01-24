@@ -100,7 +100,7 @@ self.getArticuloTexto=function(articulo, numero){
     var numeroParagrafo=1;
     //Cada paragrafo se inserta dentro del texto del articulo
     articulo.Paragrafos.forEach(function(paragrafo){
-      aux.push({text: $translate.instant('PARAGRAFO')+" "+self.numeroALetras(numeroParagrafo)+' - ', bold: true});
+      aux.push({text: " "+$translate.instant('PARAGRAFO')+" "+self.numeroALetras(numeroParagrafo)+' - ', bold: true});
       aux.push(paragrafo.Texto);
       numeroParagrafo++;
     });

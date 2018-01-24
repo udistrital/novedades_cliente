@@ -275,7 +275,7 @@ self.getArticuloTexto=function(articulo, numero){
   if(articulo.Paragrafos!==null){
     var numeroParagrafo=1;
     articulo.Paragrafos.forEach(function(paragrafo){
-      aux.push({text: $translate.instant('PARAGRAFO')+" "+self.numeroALetras(numeroParagrafo)+' - ', bold: true});
+      aux.push({text: " "+$translate.instant('PARAGRAFO')+" "+self.numeroALetras(numeroParagrafo)+' - ', bold: true});
       aux.push(paragrafo.Texto);
       numeroParagrafo++;
     });

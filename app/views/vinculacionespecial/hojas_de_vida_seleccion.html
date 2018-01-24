@@ -61,7 +61,7 @@
 							<form name="formplan" ng-submit="formplan.$valid">
 								<div class="row">
 									<div class="col-md-7">
-										<div ui-grid="hojasDeVidaSeleccion.Disponibilidades" ui-grid-selection ui-grid-pagination ui-grid-auto-resize class="grid"></div>
+										<div ui-grid="hojasDeVidaSeleccion.Disponibilidades" ui-grid-selection ui-grid-pagination ui-grid-auto-resize class="grid" ng-model-options="{ updateOn: 'keyup', debounce : 1000 }"></div>
 									</div>
 									<div class="col-md-5">
 										<div ng-show="hojasDeVidaSeleccion.ver" ui-grid="hojasDeVidaSeleccion.Apropiaciones" ui-grid-selection ui-grid-pagination ui-grid-auto-resize class="grid"></div>
