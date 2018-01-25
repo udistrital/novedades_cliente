@@ -53,22 +53,22 @@ angular.module('contractualClienteApp')
               {
                   field: 'horas_lectivas',
                   displayName: $translate.instant('HORAS_LECTIVAS'),
-                  width: '10%'
+                  width: '6%'
               },
               {
                   field: 'proyecto_nombre',
                   displayName: $translate.instant('PROYECTO_CURRICULAR'),
-                  width: '20%'
+                  width: '37%'
               },
               {
                   field: 'CategoriaNombre',
                   displayName: $translate.instant('CATEGORIA'),
-                  width: '15%'
+                  width: '7%'
               },
               {
                   field: 'tipo_vinculacion_nombre',
                   displayName: $translate.instant('DEDICACION'),
-                  width: '13%'
+                  width: '8%'
               },
               {
                   field: 'id_tipo_vinculacion',
@@ -366,9 +366,10 @@ angular.module('contractualClienteApp')
                             confirmButtonText: $translate.instant('ACEPTAR')
 
                         });
-                        self.RecargarDatosPersonas();
-                        self.RecargarDisponibilidades();
-                        self.RecargarApropiaciones();
+                        $window.location.reload();
+                        //self.RecargarDatosPersonas();
+                        //self.RecargarDisponibilidades();
+                        //self.RecargarApropiaciones();
                         //self.get_docentes_vinculados();
                         self.personasSeleccionadas1 = [];
                         vinculacionesData = [];
@@ -380,9 +381,10 @@ angular.module('contractualClienteApp')
                             type: 'info',
                             confirmButtonText: $translate.instant('ACEPTAR')
                         });
-                        self.RecargarDatosPersonas();
-                        self.RecargarDisponibilidades();
-                        self.RecargarApropiaciones();
+                          $window.location.reload();
+                        //self.RecargarDatosPersonas();
+                        //self.RecargarDisponibilidades();
+                        //self.RecargarApropiaciones();
                         //self.get_docentes_vinculados();
                         self.personasSeleccionadas1 = [];
                         vinculacionesData = [];

@@ -85,7 +85,7 @@ angular.module('contractualClienteApp')
             return 'resolucionExpedida';
           }
         },
-        width: '15%',
+        width: '18%',
         displayName: $translate.instant('FACULTAD')
       },
       {
@@ -109,7 +109,7 @@ angular.module('contractualClienteApp')
             return 'resolucionExpedida';
           }
         },
-        width: '10%',
+        width: '7%',
         displayName: $translate.instant('DEDICACION')
       },
       {
