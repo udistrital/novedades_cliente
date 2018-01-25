@@ -99,22 +99,22 @@ angular.module('contractualClienteApp')
 
                     field: 'horas_lectivas',
                     displayName: $translate.instant('HORAS_LECTIVAS'),
-                    width: '10%',
+                    width: '5%',
                     cellTemplate: '<center><div ng-if="!row.entity.editrow">{{COL_FIELD}}</div><div ng-if="row.entity.editrow"><input type="text" style="height:30px" ng-model="MODEL_COL_FIELD"</div></center>'},
                 {
                     field: 'proyecto_nombre',
                     displayName: $translate.instant('PROYECTO_CURRICULAR'),
-                    width: '12%'
+                    width: '33%'
                 },
                 {
                     field: 'CategoriaNombre',
                     displayName: $translate.instant('CATEGORIA'),
-                    width: '15%'
+                    width: '7%'
                 },
                 {
                     field: 'tipo_vinculacion_nombre',
                     displayName: $translate.instant('DEDICACION'),
-                    width: '13%'
+                    width: '5%'
                 },
                 {
                     field: 'id_tipo_vinculacion',
