@@ -365,30 +365,28 @@ angular.module('contractualClienteApp')
                             type: 'success',
                             confirmButtonText: $translate.instant('ACEPTAR')
 
-                        });
-                        $window.location.reload();
+                          }).then(function() {
+                            $window.location.reload();
+                            self.personasSeleccionadas1 = [];
+                            vinculacionesData = [];
+                          });
+
                         //self.RecargarDatosPersonas();
                         //self.RecargarDisponibilidades();
                         //self.RecargarApropiaciones();
                         //self.get_docentes_vinculados();
-                        self.personasSeleccionadas1 = [];
-                        vinculacionesData = [];
-                        $('#modal_disponibilidad').modal('hide');
+
                     } else {
                         swal({
                             title: $translate.instant('ERROR'),
                             text: $translate.instant('ALERTA_PREVIN_ERROR'),
                             type: 'info',
                             confirmButtonText: $translate.instant('ACEPTAR')
-                        });
-                          $window.location.reload();
-                        //self.RecargarDatosPersonas();
-                        //self.RecargarDisponibilidades();
-                        //self.RecargarApropiaciones();
-                        //self.get_docentes_vinculados();
-                        self.personasSeleccionadas1 = [];
-                        vinculacionesData = [];
-                        $('#modal_disponibilidad').modal('hide');
+                          }).then(function() {
+                            $window.location.reload();
+                            self.personasSeleccionadas1 = [];
+                            vinculacionesData = [];
+                          });
                     }
                 });
 
