@@ -130,7 +130,6 @@ angular.module('contractualClienteApp')
                 Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
                 NivelAcademico: self.resolucion.NivelAcademico_nombre,
                 Disponibilidad: parseInt(self.disponibilidad_actual_id),
-                Vigencia: self.persona_a_modificar.Vigencia,
                 NumeroContrato: self.persona_a_modificar.NumeroContrato,
                 Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
             };

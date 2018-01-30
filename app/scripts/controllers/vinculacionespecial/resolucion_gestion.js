@@ -225,7 +225,7 @@ angular.module('contractualClienteApp')
   $scope.verEditarResolucion = function(row){
 
     if(row.entity.FechaExpedicion === null || row.entity.FechaExpedicion.toString()==="0001-01-01T00:00:00Z"){
-      self.FechaParaPDF = "Fecha de expedición pendiente"
+      self.FechaParaPDF = "Fecha de expedición pendiente";
     }else{
       var string1= row.entity.FechaExpedicion;
       string1 = string1.split('T')[0];
@@ -244,8 +244,7 @@ angular.module('contractualClienteApp')
       FacultadNombre: row.entity.FacultadNombre,
       FechaExpedicion: self.FechaParaPDF
     };
-    console.log("resolucion a enviar")
-    console.log(resolucion)
+
 
     var local = JSON.stringify(resolucion);
     localStorage.setItem('resolucion', local);
@@ -308,7 +307,7 @@ angular.module('contractualClienteApp')
   $scope.verVisualizarResolucion = function(row){
 
     if(row.entity.FechaExpedicion === null || row.entity.FechaExpedicion.toString()==="0001-01-01T00:00:00Z"){
-      self.FechaParaPDF = "Fecha de expedición pendiente"
+      self.FechaParaPDF = "Fecha de expedición pendiente";
     }else{
       var string1= row.entity.FechaExpedicion;
       string1 = string1.split('T')[0];

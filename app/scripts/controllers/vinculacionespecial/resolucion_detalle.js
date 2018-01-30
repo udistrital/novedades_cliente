@@ -26,14 +26,14 @@
 
       adminMidRequest.get("gestion_documento_resolucion/get_contenido_resolucion", "id_resolucion="+self.resolucion.Id+"&id_facultad="+self.resolucion.IdFacultad).then(function(response){
           self.contenidoResolucion=response.data;
-          if(self.resolucion.NivelAcademico_nombre == "PREGRADO"){
+          if(self.resolucion.NivelAcademico_nombre === "PREGRADO"){
             adminMidRequest.get("gestion_previnculacion/docentes_previnculados_all", "id_resolucion="+self.resolucion.Id).then(function(response){
               self.contratados=response.data;
               self.generarResolucion();
             });
           }
 
-          if(self.resolucion.NivelAcademico_nombre == "POSGRADO"){
+          if(self.resolucion.NivelAcademico_nombre === "POSGRADO"){
             adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion="+self.resolucion.Id).then(function(response){
               self.contratados=response.data;
               self.generarResolucion();
@@ -237,11 +237,11 @@ return numeros;
 
 self.getCuerpoTabla=function(idProyecto, datos, columnas) {
   var cuerpo=[];
-  if(self.resolucion.NivelAcademico_nombre == 'PREGRADO'){
-    var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' },  { text: $translate.instant('TIPO_DOCUMENTO'), style: 'encabezado'},{ text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMANALES'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD'), style: 'encabezado'}];
+  if(self.resolucion.NivelAcademico_nombre === 'POSGRADO'){
+    var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' },  { text: $translate.instant('TIPO_DOCUMENTO'), style: 'encabezado'},{ text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMANALES'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado'}];
   }
-  if(self.resolucion.NivelAcademico_nombre == 'POSGRADO'){
-    var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('TIPO_DOCUMENTO'), style: 'encabezado'},  { text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMESTRALES'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD'), style: 'encabezado'}];
+  if(self.resolucion.NivelAcademico_nombre === 'PREGRADO'){
+    var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('TIPO_DOCUMENTO'), style: 'encabezado'},  { text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMESTRALES'), style: 'encabezado'},{ text:  $translate.instant('PERIODO_VINCULACION'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado'}];
   }
 
 
@@ -267,6 +267,21 @@ self.getTabla=function(idProyecto, datos, columnas) {
     table: {
       headerRows: 1,
       body: self.getCuerpoTabla(idProyecto, datos, columnas)
+    }
+  };
+};
+
+self.getTablaRevision=function() {
+  return {
+    style: 'tabla_revision',
+    table: {
+      headerRows: 1,
+      widths: [80, 150, 150, 80],
+      body: [
+					['', { text: $translate.instant('NOMBRE_COMPLETO'), style: 'tabla_revision' }, { text: $translate.instant('CARGO_PDF'), style: 'tabla_revision' }, { text: $translate.instant('FIRMA'), style: 'tabla_revision' }],
+					[{ text: $translate.instant('PROYECTO'), style: 'tabla_revision'}, '', '',''],
+          [{ text: $translate.instant('REVISO'), style: 'tabla_revision' }, {text: 'JORGE ADELMO HERNANDEZ PARDO', style: 'tabla_revision' }, {text: $translate.instant('OF_DOCENCIA'), style: 'tabla_revision' },''],
+				]
     }
   };
 };
@@ -340,7 +355,13 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
           if(proyectoVisible){
             contenido.push({ text: proyecto.Nombre,
               style: 'proyecto'});
-              contenido.push(self.getTabla(proyecto.Id, contratados, ['NombreCompleto','TipoDocumento', 'IdPersona', 'LugarExpedicionCedula','Categoria','Dedicacion','NumeroHorasSemanales','ValorContrato','NumeroDisponibilidad']));
+
+              if(self.resolucion.NivelAcademico_nombre === 'PREGRADO'){
+                contenido.push(self.getTabla(proyecto.Id, contratados, ['NombreCompleto','TipoDocumento', 'IdPersona', 'LugarExpedicionCedula','Categoria','Dedicacion','NumeroHorasSemanales','NumeroMeses','ValorContratoFormato','NumeroDisponibilidad']));
+              }
+              if(self.resolucion.NivelAcademico_nombre === 'POSGRADO'){
+                contenido.push(self.getTabla(proyecto.Id, contratados, ['NombreCompleto','TipoDocumento', 'IdPersona', 'LugarExpedicionCedula','Categoria','Dedicacion','NumeroHorasSemanales','ValorContratoFormato','NumeroDisponibilidad']));
+              }
           }
         });
       }
@@ -354,6 +375,7 @@ self.getContenido=function(contenidoResolucion, contratados, proyectos){
   style: 'nombre_ordenador'});
   contenido.push({ text: '--'+contenidoResolucion.OrdenadorGasto.Cargo+' --',
   style: 'nombre_cargo'});
+  contenido.push(self.getTablaRevision());
   return contenido;
 };
 
@@ -381,7 +403,7 @@ self.getDocumento=function(contenidoResolucion, contratados, proyectos){
       //Contenido de las tablas
       tabla: {
         fontSize: 8,
-        margin: [30, 5, 30,0]
+        margin: [-20, 5, -10, 0]
       },
       //Texto normal
       texto: {
@@ -398,6 +420,10 @@ self.getDocumento=function(contenidoResolucion, contratados, proyectos){
       titulo_res: {
         bold: true,
         fontSize: 9,
+        alignment: 'center'
+      },
+      tabla_revision: {
+        fontSize: 6,
         alignment: 'center'
       },      //Proyectos curriculares
       proyecto: {

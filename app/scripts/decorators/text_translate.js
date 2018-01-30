@@ -291,7 +291,7 @@ var text_es = {
       VIGENCIA_DISP: "Vigencia",
       FECHA_DISP: "Fecha de registro",
       VALOR_APROPIACION: "Valor",
-      SALDO_APROPIACION: "Saldo",
+      SALDO_APROPIACION: "Saldo del CDP",
       VINCULACION_EXITOSA:"Se ha vinculado el docente",
       ACEPTAR:"Aceptar",
       PREGUNTA_SEGURO:"¿Está seguro?",
@@ -440,11 +440,14 @@ var text_es = {
       COMUNIQUESE_Y_CUM: "COMUNÍQUESE Y CÚMPLASE",
       HORAS_SEMESTRALES: "Horas semestrales",
       NOMBRE_COMPLETO: "NOMBRE COMPLETO",
-      CARGO: "CARGO",
+      CARGO_PDF: "CARGO",
       FIRMA: "FIRMA",
       PROYECTO:"Proyecto",
       REVISO: "Revisó",
       OF_DOCENCIA: "OFICINA DE DOCENCIA",
+      TIPO_DOC: "Tipo de documento",
+      PERIODO_VINCULACION: "Periodo de vinculación",
+      DISPONIBILIDAD_PDF: "Dispo-\nnibilidad",
 
   // Minutas Plantillas
   BTN_MINUTAS:{

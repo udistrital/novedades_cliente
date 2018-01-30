@@ -13,6 +13,7 @@ angular.module('contractualClienteApp')
         var vinculacionesData = [];
         self.datos = "";
         self.offset = 0;
+        self.saldo_disponible = true;
 
         self.datosDocentesCargaLectiva = {
             paginationPageSizes: [10, 15, 20],
@@ -33,54 +34,8 @@ angular.module('contractualClienteApp')
                 });
             }
         };
-        switch (self.resolucion.NivelAcademico_nombre) {
-          case "PREGRADO":
+
           self.datosDocentesCargaLectiva.columnDefs = [{
-                  field: 'docente_apellido',
-                  displayName: $translate.instant('APELLIDO_DOCENTES'),
-                  width: '15%'
-              },
-              {
-                  field: 'docente_nombre',
-                  displayName: $translate.instant('NOMBRES_DOCENTES'),
-                  width: '15%'
-              },
-              {
-                  field: 'docente_documento',
-                  displayName: $translate.instant('DOCUMENTO_DOCENTES'),
-                  width: '10%'
-              },
-              {
-                  field: 'horas_lectivas',
-                  displayName: $translate.instant('HORAS_LECTIVAS'),
-                  width: '6%'
-              },
-              {
-                  field: 'proyecto_nombre',
-                  displayName: $translate.instant('PROYECTO_CURRICULAR'),
-                  width: '37%'
-              },
-              {
-                  field: 'CategoriaNombre',
-                  displayName: $translate.instant('CATEGORIA'),
-                  width: '7%'
-              },
-              {
-                  field: 'tipo_vinculacion_nombre',
-                  displayName: $translate.instant('DEDICACION'),
-                  width: '8%'
-              },
-              {
-                  field: 'id_tipo_vinculacion',
-                  visible: false
-              },
-              {
-                  field: 'id_proyecto',
-                  visible: false
-              }];
-            break;
-            case "POSGRADO":
-            self.datosDocentesCargaLectiva.columnDefs = [{
                     field: 'docente_apellido',
                     displayName: $translate.instant('APELLIDO_DOCENTES'),
                     width: '15%'
@@ -142,10 +97,9 @@ angular.module('contractualClienteApp')
                       '</center>'
                    }
               ];
-            break;
-          default:
 
-        }
+
+
 
         self.precontratados = {
             paginationPageSizes: [10, 15, 20],
@@ -301,7 +255,7 @@ angular.module('contractualClienteApp')
                 self.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function() {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
-                    self.verificarDisponibilidad();
+                  //  self.verificarDisponibilidad();
                 });
             }
         };
@@ -398,6 +352,7 @@ angular.module('contractualClienteApp')
                     confirmButtonText: $translate.instant('ACEPTAR')
                 });
             }
+
 
         };
         //* ----------------------------- *//
@@ -539,10 +494,13 @@ angular.module('contractualClienteApp')
             });
 
             adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", vinculacionesData).then(function(response) {
+
               if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
                     self.saldo_disponible = false;
+
                 } else {
                     self.saldo_disponible = true;
+
                 }
             });
             vinculacionesData = [];
