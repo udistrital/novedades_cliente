@@ -14,6 +14,7 @@ angular.module('contractualClienteApp')
         self.datos = "";
         self.offset = 0;
         self.saldo_disponible = true;
+        self.personasSeleccionadas1 = [];
 
         self.datosDocentesCargaLectiva = {
             paginationPageSizes: [10, 15, 20],
@@ -28,9 +29,20 @@ angular.module('contractualClienteApp')
 
             onRegisterApi: function(gridApi) {
                 self.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope, function() {
-                    self.personasSeleccionadas1 = gridApi.selection.getSelectedRows();
-                    self.persona = true;
+                gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+
+                    if(row.entity.CategoriaNombre === ""){
+                      swal({
+                          title: $translate.instant('ERROR'),
+                          text: $translate.instant('ALERTA_ERROR_CATEGORIA'),
+                          type: 'info',
+                          confirmButtonText: $translate.instant('ACEPTAR')
+                        })
+                        row.isSelected = false;
+                      }else{
+                        self.personasSeleccionadas1 = gridApi.selection.getSelectedRows();
+                      }
+
                 });
             }
         };
@@ -290,7 +302,7 @@ angular.module('contractualClienteApp')
         //Función para almacenar los datos de las vinculaciones realizadas
         self.agregarPrecontratos = function() {
 
-            if (self.saldo_disponible) {
+            if (self.saldo_disponible && self.apropiacion_elegida) {
                 self.personasSeleccionadas1.forEach(function(personaSeleccionada) {
                     var vinculacionDocente = {
                         IdPersona: personaSeleccionada.docente_documento,
@@ -347,7 +359,7 @@ angular.module('contractualClienteApp')
             } else {
                 swal({
                     title: $translate.instant('ERROR'),
-                    text: $translate.instant('ERROR_DISP'),
+                    text: $translate.instant('ERROR_ELEG_DISP'),
                     type: 'info',
                     confirmButtonText: $translate.instant('ACEPTAR')
                 });
@@ -434,9 +446,10 @@ angular.module('contractualClienteApp')
 
         //Función que muestra modal que permite elegir Disponibilidades y sus apropiaciones
         self.mostrar_modal_disponibilidad = function() {
-            if (self.personasSeleccionadas1 === null) {
+
+            if (self.personasSeleccionadas1.length === 0) {
                 swal({
-                    text: "Seleccione docentes",
+                    text: $translate.instant('ALERTA_SELEC_DOC'),
                     type: 'error',
                     confirmButtonText: $translate.instant('ACEPTAR')
                 });
@@ -451,6 +464,30 @@ angular.module('contractualClienteApp')
                     self.Disponibilidades.data = response.data;
                 });
                 */
+                self.personasSeleccionadas1.forEach(function(personaSeleccionada) {
+                    var vinculacionDocente = {
+                        IdPersona: personaSeleccionada.docente_documento,
+                        NumeroHorasSemanales: parseInt(personaSeleccionada.horas_lectivas),
+                        NumeroSemanas: parseInt(self.resolucion.NumeroSemanas),
+                        IdResolucion: { Id: parseInt(self.resolucion.Id) },
+                        IdDedicacion: { Id: parseInt(personaSeleccionada.id_tipo_vinculacion) },
+                        IdProyectoCurricular: parseInt(personaSeleccionada.id_proyecto),
+                        Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
+                        Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
+                        NivelAcademico: self.resolucion.NivelAcademico_nombre,
+                        Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
+                        Periodo: self.resolucion.Periodo
+                    };
+
+                    vinculacionesData.push(vinculacionDocente);
+
+                });
+
+                adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", vinculacionesData).then(function(response) {
+                    self.total_contratos_seleccionados = response.data
+
+                });
+
                 $('#modal_disponibilidad').modal('show');
             }
         };

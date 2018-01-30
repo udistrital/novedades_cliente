@@ -302,13 +302,16 @@ var text_es = {
       DESVINCULACION_EXITOSA:"Se ha desvinculado docente exitosamente",
       DESVINCULACION_NOEXITOSA:"Error al desvincular docente",
       BORRAR_BTN:"Borrar",
-      ERROR_DISP: "La apropación elegida no tiene saldo suficiente",
+      ERROR_DISP: "La apropiación elegida no tiene saldo suficiente",
+      ERROR_ELEG_DISP: "Elija una disponibilidad",
       ALERTA_PREVIN_ERROR: "Error al previncular docente",
       MODIFICAR_HORAS_BTN: "Modificar horas",
       GUARDAR_HORAS_BTN: "Guardar horas",
       CANCELAR_MOD_BTN: "Cancelar modificación",
       LABEL_HORAS_DEFINITIVAS: "Horas definitivas",
-
+      ALERTA_ERROR_CATEGORIA: "Debe seleccionar docentes con categoria asignada",
+      LABEL_TOTAL_CONTRATACION: "Valor total de contratos para docentes seleccionados",
+      ALERTA_SELEC_DOC: "Seleccione docentes",
   //RESOLUCION_ADICION_DETALLE
       /*---HTML---*/
       TITULO_DOC_VIN_RES_AD: "Docentes vinculados a resolución de adicion",
