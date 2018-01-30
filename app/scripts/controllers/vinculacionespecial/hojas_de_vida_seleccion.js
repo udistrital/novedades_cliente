@@ -483,7 +483,7 @@ angular.module('contractualClienteApp')
 
                 });
 
-                adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", vinculacionesData).then(function(response) {
+                adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos_seleccionados ", vinculacionesData).then(function(response) {
                     self.total_contratos_seleccionados = response.data
 
                 });
