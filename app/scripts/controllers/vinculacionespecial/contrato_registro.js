@@ -228,9 +228,11 @@ angular.module('contractualClienteApp')
                     idResolucion: self.idResolucion,
                     FechaExpedicion: self.FechaExpedicion
                 };
+                adminMidRequest.post("expedir_resolucion/validar_datos_expedicion", expedicionResolucion).then(function(response) {
+                    if(response.status==201){
+
                 adminMidRequest.post("expedir_resolucion/expedir", expedicionResolucion).then(function(response) {
                     self.estado = false;
-                    console.log("Admiraddddd el responseeeeeeeeeeeeee ", response);
                     //if(typeof(response.data)=="object"){ //xDD
                     /*
                                   self.alerta = "";
@@ -271,6 +273,17 @@ angular.module('contractualClienteApp')
                         });
                       }*/
                 });
+            } else {
+
+                swal({
+                    text: response.data,
+                    title: "Alerta",
+                    type: "error",
+                    confirmButtonText: $translate.instant('ACEPTAR'),
+                    showLoaderOnConfirm: true,
+                });
+                }
+        });
             } else {
                 swal({
                     text: $translate.instant('NO_DOCENTES'),
