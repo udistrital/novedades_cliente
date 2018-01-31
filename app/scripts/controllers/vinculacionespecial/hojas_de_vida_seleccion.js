@@ -41,6 +41,7 @@ angular.module('contractualClienteApp')
                         row.isSelected = false;
                       }else{
                         self.personasSeleccionadas1 = gridApi.selection.getSelectedRows();
+
                       }
 
                 });
@@ -267,6 +268,7 @@ angular.module('contractualClienteApp')
                 self.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function() {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
+
                   //  self.verificarDisponibilidad();
                 });
             }
@@ -302,25 +304,26 @@ angular.module('contractualClienteApp')
         //Función para almacenar los datos de las vinculaciones realizadas
         self.agregarPrecontratos = function() {
 
+            vinculacionesData = [];
             if (self.saldo_disponible && self.apropiacion_elegida) {
                 self.personasSeleccionadas1.forEach(function(personaSeleccionada) {
-                    var vinculacionDocente = {
-                        IdPersona: personaSeleccionada.docente_documento,
-                        NumeroHorasSemanales: parseInt(personaSeleccionada.horas_lectivas),
-                        NumeroSemanas: parseInt(self.resolucion.NumeroSemanas),
-                        IdResolucion: { Id: parseInt(self.resolucion.Id) },
-                        IdDedicacion: { Id: parseInt(personaSeleccionada.id_tipo_vinculacion) },
-                        IdProyectoCurricular: parseInt(personaSeleccionada.id_proyecto),
-                        Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
-                        Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
-                        NivelAcademico: self.resolucion.NivelAcademico_nombre,
-                        Disponibilidad: self.apropiacion_elegida[0].Id,
-                        Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
-                    };
+                  var vinculacionDocente = {
+                      IdPersona: personaSeleccionada.docente_documento,
+                      NumeroHorasSemanales: parseInt(personaSeleccionada.horas_lectivas),
+                      NumeroSemanas: parseInt(self.resolucion.NumeroSemanas),
+                      IdResolucion: { Id: parseInt(self.resolucion.Id) },
+                      IdDedicacion: { Id: parseInt(personaSeleccionada.id_tipo_vinculacion) },
+                      IdProyectoCurricular: parseInt(personaSeleccionada.id_proyecto),
+                      Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
+                      Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
+                      NivelAcademico: self.resolucion.NivelAcademico_nombre,
+                      Disponibilidad: self.apropiacion_elegida[0].Id,
+                      Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
+                  };
 
-                    vinculacionesData.push(vinculacionDocente);
+                  vinculacionesData.push(vinculacionDocente);
 
-                });
+              });
 
                 adminMidRequest.post("gestion_previnculacion/Precontratacion/insertar_previnculaciones", vinculacionesData).then(function(response) {
                     if (typeof response.data === "number") {
