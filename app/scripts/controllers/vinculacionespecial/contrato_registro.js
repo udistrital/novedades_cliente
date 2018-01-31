@@ -230,6 +230,7 @@ angular.module('contractualClienteApp')
                 };
                 adminMidRequest.post("expedir_resolucion/expedir", expedicionResolucion).then(function(response) {
                     self.estado = false;
+                    console.log("Admiraddddd el responseeeeeeeeeeeeee ", response);
                     //if(typeof(response.data)=="object"){ //xDD
                     /*
                                   self.alerta = "";
@@ -239,6 +240,16 @@ angular.module('contractualClienteApp')
                     //swal("", self.alerta, response.data[0]);
 
                     //xD
+                    if(response.status==233){
+                        swal({
+                            text: response.data,
+                            title: "Alerta",
+                            type: "error",
+                            confirmButtonText: $translate.instant('ACEPTAR'),
+                            showLoaderOnConfirm: true,
+                        });
+                    } else {
+
                     swal({
                         title: $translate.instant('EXPEDIDA'),
                         text: $translate.instant('DATOS_REGISTRADOS'),
@@ -247,6 +258,7 @@ angular.module('contractualClienteApp')
                     }).then(function() {
                         $window.location.reload();
                     });
+                }
 
                     //  $mdDialog.hide()
                     /*  }else{
