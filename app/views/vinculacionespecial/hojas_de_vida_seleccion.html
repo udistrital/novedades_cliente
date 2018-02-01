@@ -26,9 +26,19 @@
 						<h4 class="intro-text"> {{ 'DOCENTE_VINCULADOS' | translate }} </h4>
 					</div>
 						<br>
+						<div class="col-md-9 col-md-offset-3 ">
+								<div class="col-md-3">
+									<label><center>{{ 'LABEL_TOTAL_X_RESOLUCION' | translate }}</center></label>
+								</div>
+								<div class="col-md-4">
+									<span class="form-control valorEfectivo"> {{hojasDeVidaSeleccion.total_contratos_x_vin | currency}}</span>
+								</div>
+					</div>
+						<br>
 						<div class="col-md-2">
 							<center><label> {{ 'SELECCIONE_PROY' | translate }}</label></center>
 						</div>
+						<br>
 						<div class="col-md-10">
 						<select class="form-control" ng-model="hojasDeVidaSeleccion.term" ng-change="hojasDeVidaSeleccion.get_docentes_vinculados()">
 							<option ng-selected="{{proyecto.Id == HojasDeVidaSeleccion.defaultSelectedPrecont}}" ng-repeat="proyecto in hojasDeVidaSeleccion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>

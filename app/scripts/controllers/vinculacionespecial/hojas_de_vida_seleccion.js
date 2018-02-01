@@ -11,7 +11,6 @@ angular.module('contractualClienteApp')
         self.proyectos = [];
         self.vigencia_data = self.resolucion.Vigencia;
         var vinculacionesData = [];
-        self.datos = "";
         self.offset = 0;
         self.saldo_disponible = true;
         self.personasSeleccionadas1 = [];
@@ -280,6 +279,9 @@ angular.module('contractualClienteApp')
 
         });
 
+        administrativaRequest.get("vinculacion_docente/get_total_contratos_x_resolucion/"+self.resolucion.Id, "").then(function(response) {
+           self.total_contratos_x_vin = response.data;
+        });
 
 
         oikosRequest.get("dependencia/proyectosPorFacultad/" + self.resolucion.IdFacultad + "/" + self.resolucion.NivelAcademico_nombre, "").then(function(response) {
@@ -492,6 +494,7 @@ angular.module('contractualClienteApp')
                 });
 
                 $('#modal_disponibilidad').modal('show');
+                vinculacionesData = [];
             }
         };
 

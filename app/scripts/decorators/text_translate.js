@@ -280,6 +280,7 @@ var text_es = {
       TITULO_DISP: "Disponibilidad",
       VINCULAR_DOCENTES_SELECCIONADOS: "Vincular docentes seleccionados",
       ELEGIR_DISP: "Elegir disponibilidad",
+      LABEL_TOTAL_X_RESOLUCION: "Valor total de contratación:\n(Docentes vinculados) ",
       /*---Script---*/
       APELLIDO_DOCENTES:"Apellidos",
       NOMBRES_DOCENTES: "Nombres",
