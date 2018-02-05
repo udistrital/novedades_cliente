@@ -1,0 +1,243 @@
+<br>
+<div class="panel panel-default">
+  <div class="panel panel-primary panel-body">
+    <!--Cabecera del panel-->
+    <h2 class="page-header text-center">{{'TITULO_CARGA_LISTAS' | translate}}</h2>
+
+    <div class="panel-body">
+      <div class="row">
+        <div class="panel panel-default col-lg-10 col-lg-offset-1">
+          <div class="panel-body">
+            <form role="form">
+              <div class="row">
+                <div class="form-group col-lg-9">
+                  <label>{{'NUM_DOC_IDENTIDAD'| translate}}</label>
+                  <input type="text" ng-model="cargaDocumentosDocente.Documento" class="form-control" placeholder="{{'PLACE_NUM_DOC'| translate}}"
+                    required>
+                </div>
+                <div class="form-group col-lg-3">
+                  <label> </label>
+                  <input type="submit" class="form-control btn btn-success" value="{{'ACCION_CONSULTAR_NUM_DOC' | translate}}" ng-click="cargaDocumentosDocente.obtener_informacion_docente()">
+                </div>
+                <div class="form-group col-lg-6">
+                  <label>{{'NOM_DOCENTE'| translate}}</label>
+                  <input type="text" class="form-control" ng-model="cargaDocumentosDocente.nombre_docente">
+                </div>
+              </div>
+
+
+
+              <div class="row">
+
+                <div style="height: {{gridHeight}}px;" ui-grid="cargaDocumentosDocente.gridOptions1" align='center' ui-grid-auto-resize></div>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--Modal que tiene los items del informe de gestión de los docentes-->
+<div id="modal_informe_gestion_docente" class="modal fade" role="dialog">
+  <div class="modal-content col-md-10 col-md-offset-1" style="margin-top: 5%">
+
+    <div class="modal-header">
+      <button type="button" class="btn btn-outline btn-danger btn-xs pull-right" data-dismiss="modal">&times</button>
+      <br>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{'TITULO_MODAL_INFORME_DOC' | translate}}</h3>
+        </div>
+        <div class="panel-body">
+          <fieldset class="form-group">
+            <label for="horas_lectivas">{{'HORAS_LEC' | translate}}</label>
+            <input type="text" class="form-control" id="horas_lectivas" ng-model="cargaDocumentosDocente.horas_lectivas">
+          </fieldset>
+
+          <fieldset class="form-group">
+            <label for="investigacion">{{'INVESTIGACION' | translate }}</label>
+            <input type="text" class="form-control" id="investigacion" ng-model="cargaDocumentosDocente.investigacion">
+          </fieldset>
+
+          <fieldset class="form-group">
+            <label for="extension">{{'EXTENSION' | translate}}</label>
+            <input type="text" class="form-control" id="extension" ng-model="cargaDocumentosDocente.extension">
+          </fieldset>
+
+          <fieldset class="form-group">
+            <label for="publicaciones">{{'PUBLICACIONES' | translate}}</label>
+            <input type="text" class="form-control" id="publicaciones" ng-model="cargaDocumentosDocente.publicaciones">
+          </fieldset>
+
+          <fieldset class="form-group">
+            <label for="actividades">{{'ACTIVIDADES' | translate}}</label>
+            <textarea class="form-control" name="actividades_asignadas" rows="8" id="crp" ng-model="cargaDocumentosDocente.actividades"></textarea>
+          </fieldset>
+
+          <fieldset class="form-group col-lg-3">
+            <input type="submit" class="form-control btn btn-success" align="center" value="{{'ENVIAR' | translate}}" ng-click="cargaDocumentosDocente.obtenerInformeDocente()">
+
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal Para Cargar Soportes De Acuerdo A Las SOlicitudes Creadas-->
+<div id="modal_carga_listas_docente" class="modal fade" role="dialog">
+  <div class="modal-content col-md-10 col-md-offset-1" style="margin-top: 5%">
+
+    <div class="modal-header">
+      <button type="button" class="btn btn-outline btn-danger btn-xs pull-right" data-dismiss="modal">&times</button>
+      <br>
+    </div>
+
+    <div class="modal-body">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{'CARGAR_LISTAS' | translate}}</h3>
+        </div>
+
+        <br>
+
+        <div class="col-md-12">
+          <p>{{'PARRAFO_CARGAR_LISTAS' | translate }}</p>
+        </div>
+
+        <br>
+
+
+        <div class="panel-body">
+
+          <div style="height: {{gridHeight}}px;width:{{gridWidth}}px" ui-grid="cargaDocumentosDocente.gridOptions2" align='center'
+            ui-grid-selection ui-grid-auto-resize></div>
+
+          <br>
+          <br>
+
+          <div class="row" ng-if="cargaDocumentosDocente.seleccionado">
+
+            <div class="row">
+            <label> Archivo:
+              <input type="checkbox" ng-model="cargaDocumentosDocente.archivo" ng-change="cargaDocumentosDocente.cambiarCheckArchivo()">
+            </label>
+
+            <label> Enlace:
+              <input type="checkbox" ng-model="cargaDocumentosDocente.link"  ng-change="cargaDocumentosDocente.cambiarCheckLink()">
+            </label>
+           </div>
+
+
+
+            <div ng-if="cargaDocumentosDocente.archivo">
+
+              <div class="col-md-1">
+                <label class="control-label">Documentos</label>
+              </div>
+              <div class="col-md-2">
+                <input type="file" angular-bfi="{'showUpload':false, allowedFileExtensions:['pdf'], language:'es'}" file-model="cargaDocumentosDocente.fileModel"
+                  required> </input>
+              </div>
+            </div>
+
+            <div ng-if="cargaDocumentosDocente.link">
+              <div class="col-md-1">
+                <label class="control-label">Enlace</label>
+              </div>
+              <div class="col-md-2">
+                <input type="text" class="form-control"  ng-model="cargaDocumentosDocente.enlace" required> </input>
+              </div>
+
+            </div>
+
+            <div class="col-md-2">
+              <label for="select_item" class="col-form-label">Item</label>
+            </div>
+            <div class="col-md-2">
+              <select ng-model="cargaDocumentosDocente.item" class="form-control">
+                <option ng-repeat="iItem in cargaDocumentosDocente.items" ng-value="iItem">{{iItem.ItemInforme.Nombre}} </option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label for="observacion" class="col-form-label">Observaciones</label>
+            </div>
+            <div class="col-md-3">
+              <textarea ng-model="cargaDocumentosDocente.observaciones"></textarea>
+            </div>
+
+          </div>
+
+
+        </div>
+      </div>
+
+
+      <button ng-if="cargaDocumentosDocente.seleccionado" class="btn btn-success" ng-click="cargaDocumentosDocente.subir_documento()">
+        {{'CAR_SOP' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!--Modal de Crear la Solicitud-->
+<div id="modal_enviar_solicitud" class="modal fade" role="dialog">
+  <div class="modal-content col-md-10 col-md-offset-1" style="margin-top: 5%">
+
+    <div class="modal-header">
+      <button type="button" class="btn btn-outline btn-danger btn-xs pull-right" data-dismiss="modal">&times</button>
+      <br>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{'SOLICITAR_PAGO' | translate}}</h3>
+        </div>
+        <div class="panel-body">
+
+
+
+          <div class="row">
+
+            <div class="col-md-12">
+              <p>{{'PARRAFO_SOLICITAR_PAGO' | translate }}</p>
+            </div>
+
+            <div class="col-md-1">
+              <label>{{'MES_PRELIQ' | translate }}</label>
+            </div>
+            <div class="col-md-3">
+              <select ng-model="cargaDocumentosDocente.mes" class="form-control">
+                <option ng-repeat="iMes in cargaDocumentosDocente.meses" ng-value="iMes.Id">{{iMes.Nombre}} </option>
+              </select>
+            </div>
+
+            <div class="col-md-1">
+              <label>{{'ANO_PRELIQ' | translate }}</label>
+            </div>
+            <div class="col-md-3">
+              <select ng-model="cargaDocumentosDocente.anio" class="form-control">
+                <option ng-repeat="iAnio in cargaDocumentosDocente.anios" ng-value="iAnio">{{iAnio}} </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-success" ng-click="cargaDocumentosDocente.enviar_solicitud()">
+        {{'ENVIAR' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
