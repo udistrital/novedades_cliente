@@ -228,6 +228,9 @@ angular.module('contractualClienteApp')
                     idResolucion: self.idResolucion,
                     FechaExpedicion: self.FechaExpedicion
                 };
+                adminMidRequest.post("expedir_resolucion/validar_datos_expedicion", expedicionResolucion).then(function(response) {
+                    if(response.status==201){
+
                 adminMidRequest.post("expedir_resolucion/expedir", expedicionResolucion).then(function(response) {
                     self.estado = false;
                     //if(typeof(response.data)=="object"){ //xDD
@@ -239,6 +242,16 @@ angular.module('contractualClienteApp')
                     //swal("", self.alerta, response.data[0]);
 
                     //xD
+                    if(response.status==233){
+                        swal({
+                            text: response.data,
+                            title: "Alerta",
+                            type: "error",
+                            confirmButtonText: $translate.instant('ACEPTAR'),
+                            showLoaderOnConfirm: true,
+                        });
+                    } else {
+
                     swal({
                         title: $translate.instant('EXPEDIDA'),
                         text: $translate.instant('DATOS_REGISTRADOS'),
@@ -247,6 +260,7 @@ angular.module('contractualClienteApp')
                     }).then(function() {
                         $window.location.reload();
                     });
+                }
 
                     //  $mdDialog.hide()
                     /*  }else{
@@ -259,6 +273,17 @@ angular.module('contractualClienteApp')
                         });
                       }*/
                 });
+            } else {
+
+                swal({
+                    text: response.data,
+                    title: "Alerta",
+                    type: "error",
+                    confirmButtonText: $translate.instant('ACEPTAR'),
+                    showLoaderOnConfirm: true,
+                });
+                }
+        });
             } else {
                 swal({
                     text: $translate.instant('NO_DOCENTES'),

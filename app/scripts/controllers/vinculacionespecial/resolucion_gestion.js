@@ -85,7 +85,7 @@ angular.module('contractualClienteApp')
             return 'resolucionExpedida';
           }
         },
-        width: '15%',
+        width: '18%',
         displayName: $translate.instant('FACULTAD')
       },
       {
@@ -109,7 +109,7 @@ angular.module('contractualClienteApp')
             return 'resolucionExpedida';
           }
         },
-        width: '10%',
+        width: '7%',
         displayName: $translate.instant('DEDICACION')
       },
       {
@@ -224,8 +224,8 @@ angular.module('contractualClienteApp')
   //Función para redireccionar la página web a la vista de edición del contenido de la resolución, donde se pasa por parámetro el id de la resolucion seleccionada
   $scope.verEditarResolucion = function(row){
 
-    if(row.entity.FechaExpedicion === null){
-      self.FechaParaPDF = "Fecha de expedición pendiente"
+    if(row.entity.FechaExpedicion === null || row.entity.FechaExpedicion.toString()==="0001-01-01T00:00:00Z"){
+      self.FechaParaPDF = "Fecha de expedición pendiente";
     }else{
       var string1= row.entity.FechaExpedicion;
       string1 = string1.split('T')[0];
@@ -244,8 +244,7 @@ angular.module('contractualClienteApp')
       FacultadNombre: row.entity.FacultadNombre,
       FechaExpedicion: self.FechaParaPDF
     };
-    console.log("resolucion a enviar")
-    console.log(resolucion)
+
 
     var local = JSON.stringify(resolucion);
     localStorage.setItem('resolucion', local);
@@ -307,8 +306,8 @@ angular.module('contractualClienteApp')
   //Función para asignar controlador de la vista resolucion_vista.html, donde se pasa por parámetro el id de la resolucion seleccionada con ayuda de $mdDialog
   $scope.verVisualizarResolucion = function(row){
 
-    if(row.entity.FechaExpedicion === null){
-      self.FechaParaPDF = "Fecha de expedición pendiente"
+    if(row.entity.FechaExpedicion === null || row.entity.FechaExpedicion.toString()==="0001-01-01T00:00:00Z"){
+      self.FechaParaPDF = "Fecha de expedición pendiente";
     }else{
       var string1= row.entity.FechaExpedicion;
       string1 = string1.split('T')[0];

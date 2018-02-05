@@ -127,13 +127,14 @@ angular.module('contractualClienteApp')
             self.tipos_resolucion = response.data;
         });
 
+        /*
 
         administrativaRequest.get("contenido_resolucion/ResolucionTemplate").then(function(response) {
             self.resolucion.preambulo = response.data.Preambulo;
             self.resolucion.consideracion = response.data.Consideracion;
         });
 
-
+        */
 
 
         self.crearResolucion = function() {
@@ -177,8 +178,8 @@ angular.module('contractualClienteApp')
                 NumeroSemanas: parseInt(self.resolucion.numeroSemanas),
                 Periodo: parseInt(self.resolucion.Periodo),
                 IdTipoResolucion: tipoResolucion,
-                PreambuloResolucion: self.resolucion.preambulo,
-                ConsideracionResolucion: self.resolucion.consideracion,
+              //  PreambuloResolucion: self.resolucion.preambulo,
+                //ConsideracionResolucion: self.resolucion.consideracion,
             };
 
             var resolucionVinculacionDocenteData = {

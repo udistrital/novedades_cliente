@@ -280,6 +280,7 @@ var text_es = {
       TITULO_DISP: "Disponibilidad",
       VINCULAR_DOCENTES_SELECCIONADOS: "Vincular docentes seleccionados",
       ELEGIR_DISP: "Elegir disponibilidad",
+      LABEL_TOTAL_X_RESOLUCION: "Valor total de contratación:\n(Docentes vinculados) ",
       /*---Script---*/
       APELLIDO_DOCENTES:"Apellidos",
       NOMBRES_DOCENTES: "Nombres",
@@ -291,7 +292,7 @@ var text_es = {
       VIGENCIA_DISP: "Vigencia",
       FECHA_DISP: "Fecha de registro",
       VALOR_APROPIACION: "Valor",
-      SALDO_APROPIACION: "Saldo",
+      SALDO_APROPIACION: "Saldo del CDP",
       VINCULACION_EXITOSA:"Se ha vinculado el docente",
       ACEPTAR:"Aceptar",
       PREGUNTA_SEGURO:"¿Está seguro?",
@@ -302,13 +303,16 @@ var text_es = {
       DESVINCULACION_EXITOSA:"Se ha desvinculado docente exitosamente",
       DESVINCULACION_NOEXITOSA:"Error al desvincular docente",
       BORRAR_BTN:"Borrar",
-      ERROR_DISP: "La apropación elegida no tiene saldo suficiente",
+      ERROR_DISP: "La apropiación elegida no tiene saldo suficiente",
+      ERROR_ELEG_DISP: "Elija una disponibilidad",
       ALERTA_PREVIN_ERROR: "Error al previncular docente",
       MODIFICAR_HORAS_BTN: "Modificar horas",
       GUARDAR_HORAS_BTN: "Guardar horas",
       CANCELAR_MOD_BTN: "Cancelar modificación",
       LABEL_HORAS_DEFINITIVAS: "Horas definitivas",
-
+      ALERTA_ERROR_CATEGORIA: "Debe seleccionar docentes con categoria asignada",
+      LABEL_TOTAL_CONTRATACION: "Valor total de contratos para docentes seleccionados",
+      ALERTA_SELEC_DOC: "Seleccione docentes",
   //RESOLUCION_ADICION_DETALLE
       /*---HTML---*/
       TITULO_DOC_VIN_RES_AD: "Docentes vinculados a resolución de adicion",
@@ -438,6 +442,16 @@ var text_es = {
       /*---Script---*/
       VISTA_PREVIA_RESOLUCION:"Vista previa de la resolución",
       COMUNIQUESE_Y_CUM: "COMUNÍQUESE Y CÚMPLASE",
+      HORAS_SEMESTRALES: "Horas semestrales",
+      NOMBRE_COMPLETO: "NOMBRE COMPLETO",
+      CARGO_PDF: "CARGO",
+      FIRMA: "FIRMA",
+      PROYECTO:"Proyecto",
+      REVISO: "Revisó",
+      OF_DOCENCIA: "OFICINA DE DOCENCIA",
+      TIPO_DOC: "Tipo de documento",
+      PERIODO_VINCULACION: "Periodo de vinculación",
+      DISPONIBILIDAD_PDF: "Dispo-\nnibilidad",
 
   // Minutas Plantillas
   BTN_MINUTAS:{
