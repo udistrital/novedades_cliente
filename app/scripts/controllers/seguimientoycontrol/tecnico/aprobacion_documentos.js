@@ -25,17 +25,9 @@ angular.module('contractualClienteApp')
       enableFiltering: true,
       resizable: true,
       rowHeight: 40,
-      columnDefs: [{
-          field: 'nombre',
-          cellTemplate: tmpl,
-          displayName: $translate.instant('NAME_CONTR'),
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          },
-        },
+      columnDefs: [
         {
-          field: 'num_documento',
+          field: 'Persona',
           cellTemplate: tmpl,
           displayName: $translate.instant('DOCUMENTO'),
           sort: {
@@ -45,29 +37,47 @@ angular.module('contractualClienteApp')
           width: "15%"
         },
         {
-          field: 'dependencia',
+          field: 'Nombre',
           cellTemplate: tmpl,
-          displayName: $translate.instant('DEPENDENCIA'),
+          displayName: $translate.instant('NAME_TEACHER'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+        },
+
+        {
+          field: 'NumeroContrato',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('NUM_VIN'),
           sort: {
             direction: uiGridConstants.ASC,
             priority: 1
           },
         },
         {
-          field: 'cargo_supervision',
+          field: 'Mes',
           cellTemplate: tmpl,
-          displayName: $translate.instant('CAR_SUPER'),
+          displayName: $translate.instant('MES_SOLICITUD'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+        },
+        {
+          field: 'Ano',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('ANO_SOLICITUD'),
           sort: {
             direction: uiGridConstants.ASC,
             priority: 1
           },
         }
-
         ,
         {
           field: 'Acciones',
           displayName: $translate.instant('ACC'),
-          cellTemplate: ' <a type="button" title="Aprobar pago" type="button" class="fa fa-check fa-lg  faa-shake animated-hover" ng-if="!row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.validarCumplido(row.entity)">' +
+          cellTemplate: ' <a type="button" title="Aprobar pago" type="button" class="fa fa-check fa-lg  faa-shake animated-hover" ng-if="!row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.verificarDocumentos(row.entity)">' +
             '</a>&nbsp;' + '<a type="button" title="Rechazar pago" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
             'ng-if="row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.invalidarCumplido(row.entity)"></a>' +
             '<a type="button" title="Ver información" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
@@ -79,7 +89,7 @@ angular.module('contractualClienteApp')
 
 
 
-    self.gridOptions1.onRegisterApi = function(gridApi) {
+    self.gridOptions1.onRegisterApi = function (gridApi) {
       self.gridApi = gridApi;
     };
 
@@ -90,7 +100,7 @@ angular.module('contractualClienteApp')
       Eśta función extrae el arreglo y los procesa para adicionar un atributo de validación.
     */
 
-    self.procesar_contratistas = function(supervisor_contratistas) {
+    self.procesar_contratistas = function (supervisor_contratistas) {
 
       for (var i = 0; i < supervisor_contratistas.length; i++) {
         self.contratistas[i] = {
@@ -110,12 +120,12 @@ angular.module('contractualClienteApp')
 
 
 
-    self.obtener_informacion_supervisor = function() {
+    self.obtener_informacion_supervisor = function () {
       //Petición para obtener la información del supervisor del contrato
       self.gridOptions1.data = [];
       self.contratistas = [];
       try {
-        contratoRequest.get('supervisor_contratistas', self.Documento).then(function(response) {
+        contratoRequest.get('supervisor_contratistas', self.Documento).then(function (response) {
 
           self.respuesta_supervisor_contratistas = response.data;
 
@@ -129,7 +139,25 @@ angular.module('contractualClienteApp')
 
           self.supervisor = self.respuesta_supervisor_contratistas.supervisores.supervisor_contratista[0].supervisor;
 
-          self.gridOptions1.data = self.contratistas;
+
+          //Petición para obtener el Id de la relación de acuerdo a los campos
+          administrativaRequest.get('pago_mensual', $.param({
+            limit: 0,
+            query: 'Responsable:' + self.Documento + ',EstadoPagoMensual.CodigoAbreviacion:PAD'
+          })).then(function (response) {
+            self.documentos = response.data;
+            //self.obtener_informacion_docente();
+            angular.forEach(self.documentos, function (value) {
+              console.log(value);
+              contratoRequest.get('informacion_contrato_elaborado_contratista', value.NumeroContrato + '/' + value.VigenciaContrato).
+                then(function (response) {
+                  value.Nombre = response.data.informacion_contratista.nombre_completo;
+                });
+            });
+            self.gridOptions1.data = self.documentos;
+          });
+
+          // self.gridOptions1.data = self.contratistas;
 
 
         });
@@ -143,7 +171,7 @@ angular.module('contractualClienteApp')
     };
 
 
-    self.validarCumplido = function(contratista) {
+    self.validarCumplido = function (contratista) {
       swal({
         title: '¿Está seguro(a)?',
         text: "Podrá revertir la validación",
@@ -153,14 +181,14 @@ angular.module('contractualClienteApp')
         cancelButtonColor: '#d33',
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Validar'
-      }).then(function() {
+      }).then(function () {
         contratista.validacion = true;
         self.gridApi.core.refresh();
 
       });
     };
 
-    self.invalidarCumplido = function(contratista) {
+    self.invalidarCumplido = function (contratista) {
       swal({
         title: '¿Está seguro(a) de invalidar el cumplido?',
         text: "Podrá revertir la invalidación",
@@ -170,7 +198,7 @@ angular.module('contractualClienteApp')
         cancelButtonColor: '#d33',
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Invalidar'
-      }).then(function() {
+      }).then(function () {
         contratista.validacion = false;
         self.gridApi.core.refresh();
 
@@ -178,25 +206,25 @@ angular.module('contractualClienteApp')
     };
 
 
-    self.verInformacionContrato = function(contrato_contratista) {
+    self.verInformacionContrato = function (contrato_contratista) {
 
 
 
-      contratoRequest.get('informacion_contrato_elaborado_suscrito', contrato_contratista.contrato.numero_contrato + '/' + contrato_contratista.contrato.vigencia).then(function(response) {
+      contratoRequest.get('informacion_contrato_elaborado_suscrito', contrato_contratista.NumeroContrato + '/' + contrato_contratista.VigenciaContrato).then(function (response) {
 
         self.respuesta_informacion_contrato = response.data;
 
-        contratoRequest.get('acta_inicio_elaborado', contrato_contratista.contrato.numero_contrato + '/' + contrato_contratista.contrato.vigencia).then(function(response) {
+        contratoRequest.get('acta_inicio_elaborado', contrato_contratista.NumeroContrato + '/' + contrato_contratista.VigenciaContrato).then(function (response) {
 
 
           self.respuesta_acta_inicio = response.data;
 
           console.log(self.respuesta_acta_inicio);
 
-          amazonAdministrativaRequest.get('contrato_disponibilidad', $.param({
-            query: "NumeroContrato:" + contrato_contratista.contrato.numero_contrato + ",Vigencia:" + contrato_contratista.contrato.vigencia,
+          administrativaAmazonService.get('contrato_disponibilidad', $.param({
+            query: "NumeroContrato:" + contrato_contratista.NumeroContrato + ",Vigencia:" + contrato_contratista.VigenciaContrato,
             limit: 0
-          })).then(function(response) {
+          })).then(function (response) {
 
             self.cdp = response.data[0];
 
@@ -211,11 +239,12 @@ angular.module('contractualClienteApp')
                 fecha_inicio: self.respuesta_acta_inicio.actaInicio.fechaInicio,
                 fecha_fin: self.respuesta_acta_inicio.actaInicio.fechaFin
               }
-            } else {
+            }
+            else {
 
               self.objeto_modal = {
-                numero_contrato: contrato_contratista.contrato.numero_contrato,
-                vigencia: contrato_contratista.contrato.vigencia,
+                numero_contrato: contrato_contratista.numeroContrato,
+                vigencia: contrato_contratista.VigenciaContrato,
                 cdp: self.cdp.NumeroCdp,
                 fecha_cdp: "2017-01-01",
                 crp: "123456",
@@ -238,14 +267,65 @@ angular.module('contractualClienteApp')
 
     };
 
-    self.verificarDocumentos = function(contrato) {
-
+    self.verificarDocumentos = function (pago_mensual) {
+      self.aprobado = false;
+      self.aux_pago_mensual = pago_mensual;
       administrativaRequest.get('soporte_pago_mensual', $.param({
-        query: "PagoMensual.Persona:" + true,
+        query: "PagoMensual.NumeroContrato:" +    self.aux_pago_mensual.NumeroContrato + ",PagoMensual.VigenciaContrato:" +    self.aux_pago_mensual.VigenciaContrato + ",PagoMensual.Mes:" +    self.aux_pago_mensual.Mes + ",PagoMensual.Ano:" +    self.aux_pago_mensual.Ano,
         limit: 0
-      }))
+      })).then(function (response) {
 
+        var soportes = response.data;
+
+        if (soportes !== null) {
+
+          for (var i = 0; i < soportes.length; i++) {
+
+            if (!soportes[i].Aprobado) {
+              self.aprobado = false;
+              break;
+            } else {
+              self.aprobado = true;
+
+              administrativaRequest.get('estado_pago_mensual', $.param({
+                limit: 0,
+                query: 'CodigoAbreviacion:AD'
+              })).then(function (responseCod) {
+
+                var sig_estado = responseCod.data;
+
+                self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
+
+                administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
+
+                  if (response.data === "OK") {
+
+                    swal(
+                      'Documentos Aprobados',
+                      'Se ha registrado la aprobación de los documentos',
+                      'success'
+                    )
+                    self.obtener_informacion_supervisor();
+                    self.gridApi.core.refresh();
+                  } else {
+
+
+                    swal(
+                      'Error',
+                      'No se ha podido registrar el visto bueno',
+                      'error'
+                    );
+                  }
+
+                });
+
+              });
+
+            }
+          }
+        } else {
+          console.log("No existen soportes para el cumplido");
+        }
+      })
     }
-
-
   });
