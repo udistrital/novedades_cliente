@@ -236,29 +236,21 @@ angular.module('contractualClienteApp')
     //Petición para obtener la información del docente
     self.gridOptions1.data = [];
     self.contratos = [];
-    try {
-      adminMidRequest.get('aprobacion_pago/get_contratos_docente/' + self.Documento).then(function(response) {
-
-        //Contiene la respuesta de la petición
-        self.respuesta_docente = response.data;
-
-        console.log(self.respuesta_docente);
-
-        //Variable que contiene el nombre del docente
-        self.nombre_docente = self.respuesta_docente[0].NombreDocente;
-        console.log(self.nombre_docente);
-        console.log(self.respuesta_docente.NombreDocente);
-
-        //Carga la información en la tabla
-        self.gridOptions1.data = self.respuesta_docente;
+      //Petición para obtener las vinculaciones del docente
+      adminMidRequest.get('aprobacion_pago/get_contratos_docente/' + self.Documento)
+      .then(function(response) {
+        if(self.respuesta_docente !== null){
+          //Contiene la respuesta de la petición
+          self.respuesta_docente = response.data;
+          //Variable que contiene el nombre del docente
+          self.nombre_docente = self.respuesta_docente[0].NombreDocente;
+          //Carga la información en la tabla
+          self.gridOptions1.data = self.respuesta_docente;
+        }else{
+          alert("No se encontraron vinculaciones vigentes asociadas a su número de documento");
+        }
 
       });
-
-    } catch (error) {
-
-
-    }
-
     self.gridApi2.core.refresh();
   };
 
@@ -266,18 +258,17 @@ angular.module('contractualClienteApp')
   Función que permite realizar una solicitud de pago mensual
   */
   self.solicitar_pago = function(contrato) {
-    console.log(contrato);
     self.contrato = contrato;
     self.anios = [parseInt(self.contrato.Vigencia) - 1, parseInt(self.contrato.Vigencia), parseInt(self.contrato.Vigencia) + 1];
-
-  }
+    self.obtener_informacion_coordinador(self.contrato.IdDependencia);
+  };
 
 
   self.cargar_soportes = function(contrato) {
     self.seleccionado = false;
     self.gridOptions2.data = [];
     self.contrato = contrato;
-    administrativaCrudService.get("pago_mensual", $.param({
+    administrativaRequest.get("pago_mensual", $.param({
       query: "NumeroContrato:" + self.contrato.NumeroVinculacion + ",VigenciaContrato:" + self.contrato.Vigencia,
       limit: 0
     })).then(function(response) {
@@ -287,7 +278,7 @@ angular.module('contractualClienteApp')
         self.tipo_contrato = response_ce.data.contrato.tipo_contrato;
         console.log(self.tipo_contrato);
 
-        administrativaCrudService.get("item_informe_tipo_contrato", $.param({
+        administrativaRequest.get("item_informe_tipo_contrato", $.param({
           query: "TipoContrato:" + self.tipo_contrato,
           limit: 0
         })).then(function(response_iitc) {
@@ -304,21 +295,26 @@ angular.module('contractualClienteApp')
     });
   };
 
+  self.obtener_informacion_coordinador = function(IdDependencia){
+    adminMidRequest.get('aprobacion_pago/informacion_coordinador/'+ IdDependencia)
+    .then(function(response){
+      self.informacion = response.data;
+      self.informacion_coordinador = self.informacion.carreraSniesCollection.carreraSnies[0];
+      console.log(self.informacion_coordinador);
+    })
+  };
+
 
   self.enviar_solicitud = function() {
 
-    console.log(self.contrato);
+    //console.log(self.contrato);
+    //console.log(self.contrato.IdDependencia);
+    //self.obtener_informacion_docente(self.contrato.IdDependencia);
 
-    /*titanMidRequest.get('aprobacion_pago/informacion_coordinador', self.contrato.Id_Dependencia)
-    .then(function(response){
-      self.informacion_coordinador = response.data;
-      console.log(self.informacion_coordinador)
-      console.log(self.informacion_coordinador[0].Documento)
-    })*/
 
     if (self.mes !== undefined && self.anio !== undefined) {
       var pago_mensual = {
-        CargoResponsable: "Coordinador " + self.contrato.Dependencia,
+        CargoResponsable: "COORDINADOR " + self.contrato.Dependencia,
         EstadoPagoMensual: {
           Id: 2
         },
@@ -327,7 +323,7 @@ angular.module('contractualClienteApp')
         Ano: self.anio,
         NumeroContrato: self.contrato.NumeroVinculacion,
         Persona: self.Documento,
-        Responsable: "prueba",
+        Responsable: self.informacion_coordinador.numero_documento_coordinador,
         VigenciaContrato: parseInt(self.contrato.Vigencia)
       };
 

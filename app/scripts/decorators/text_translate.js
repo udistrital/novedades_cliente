@@ -590,6 +590,8 @@ var text_es = {
   PARRAFO_CARGAR_LISTAS:"Seleccione la solicitud de pago a la que le va a cargar los soportes.",
   CAR_SOP:"CARGAR SOPORTES",
   DED:"DEDICACION",
+  MES:"MES",
+  ANO:"ANO",
 
 
   //Modal informe de gestión docente
@@ -953,6 +955,8 @@ var text_en = {
   PARRAFO_CARGAR_LISTAS:"Select the payment request to which the media will be charged.",
   CAR_SOP:"LOAD SUPPORT",
   DED:"DEDICATION",
+  MES:"MONTH",
+  ANO:"YEAR",
 
   //Modal informe de gestión docente
   TITULO_MODAL_INFORME_DOC:"TEACHER MANAGEMENT REPORT",
