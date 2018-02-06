@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionDocumentosCtrl', function(oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaCrudService, administrativaAmazonService) {
+  .controller('AprobacionDocumentosCtrl', function(oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, amazonAdministrativaRequest) {
 
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
     var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
@@ -193,7 +193,7 @@ angular.module('contractualClienteApp')
 
           console.log(self.respuesta_acta_inicio);
 
-          administrativaAmazonService.get('contrato_disponibilidad', $.param({
+          amazonAdministrativaRequest.get('contrato_disponibilidad', $.param({
             query: "NumeroContrato:" + contrato_contratista.contrato.numero_contrato + ",Vigencia:" + contrato_contratista.contrato.vigencia,
             limit: 0
           })).then(function(response) {
@@ -240,7 +240,7 @@ angular.module('contractualClienteApp')
 
     self.verificarDocumentos = function(contrato) {
 
-      administrativaCrudService.get('soporte_pago_mensual', $.param({
+      administrativaRequest.get('soporte_pago_mensual', $.param({
         query: "PagoMensual.Persona:" + true,
         limit: 0
       }))

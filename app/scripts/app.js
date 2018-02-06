@@ -228,25 +228,25 @@ angular
                 controller: 'NecesidadContratacionDocenteCtrl',
                 controllerAs: 'necesidadContratacionDocente'
             })
-            .when('seguimientoycontrol/tecnico/aprobacion_coordinador', {
+            .when('/seguimientoycontrol/tecnico/aprobacion_coordinador', {
               templateUrl: 'views/seguimientoycontrol/tecnico/aprobacion_coordinador.html',
               controller: 'AprobacionCoordinadorCtrl',
               controllerAs: 'aprobacionCoordinador'
             })
-            .when('seguimientoycontrol/tecnico/aprobacion_documentos', {
+            .when('/seguimientoycontrol/tecnico/aprobacion_documentos', {
               templateUrl: 'views/seguimientoycontrol/tecnico/aprobacion_documentos.html',
               controller: 'AprobacionDocumentosCtrl',
               controllerAs: 'aprobacionDocumentos'
             })
-            .when('seguimientoycontrol/tecnico/aprobacion_pago', {
+            .when('/seguimientoycontrol/tecnico/aprobacion_pago', {
               templateUrl: 'views/seguimientoycontrol/tecnico/aprobacion_pago.html',
               controller: 'AprobacionPagoCtrl',
               controllerAs: 'aprobacionPago'
             })
-            .when('seguimientoycontrol/tecnico/carga_documentos_docentes', {
-              templateUrl: 'views/seguimientoycontrol/tecnico/carga_documentos_docentes.html',
-              controller: 'CargaDocumentosDocentesCtrl',
-              controllerAs: 'cargaDocumentosDocentes'
+            .when('/seguimientoycontrol/tecnico/carga_documentos_docente', {
+              templateUrl: 'views/seguimientoycontrol/tecnico/carga_documentos_docente.html',
+              controller: 'CargaDocumentosDocenteCtrl',
+              controllerAs: 'cargaDocumentosDocente'
             })
             .otherwise({
                 redirectTo: '/'

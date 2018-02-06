@@ -22,5 +22,5 @@ angular.module('contractualClienteApp')
             username: 'Administrator',
             password: 'S1st3m4s04S=Fr331P4'
         }
-});
+      });
   });

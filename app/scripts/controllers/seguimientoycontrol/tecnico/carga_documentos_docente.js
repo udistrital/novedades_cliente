@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name contractualClienteApp.controller:CargaDocumentosDocentesCtrl
+ * @name contractualClienteApp.controller:CargaDocumentosDocenteCtrl
  * @description
- * # CargaDocumentosDocentesCtrl
+ * # CargaDocumentosDocenteCtrl
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('CargaDocumentosDocentesCtrl', function ($scope, $http, $translate, uiGridConstants, contratoRequest, administrativaCrudService, nuxeo, $q, coreRequest, $window,$sce, administrativaMidService) {
+  .controller('CargaDocumentosDocenteCtrl', function ($scope, $http, $translate, uiGridConstants, contratoRequest, administrativaRequest, nuxeoService, $q, coreRequest, $window,$sce, adminMidRequest) {
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
   var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
 
@@ -234,10 +234,10 @@ angular.module('contractualClienteApp')
   */
   self.obtener_informacion_docente = function() {
     //Petición para obtener la información del docente
-    self.gridOptions1.data = [];ffsdf
+    self.gridOptions1.data = [];
     self.contratos = [];
     try {
-      administrativaMidService.get('aprobacion_pago/get_contratos_docente', self.Documento).then(function(response) {
+      adminMidRequest.get('aprobacion_pago/get_contratos_docente/' + self.Documento).then(function(response) {
 
         //Contiene la respuesta de la petición
         self.respuesta_docente = response.data;
@@ -331,7 +331,7 @@ angular.module('contractualClienteApp')
         VigenciaContrato: parseInt(self.contrato.Vigencia)
       };
 
-      administrativaCrudService.get("pago_mensual", $.param({
+      administrativaRequest.get("pago_mensual", $.param({
         query: "NumeroContrato:" + self.contrato.NumeroVinculacion +
           ",VigenciaContrato:" + self.contrato.Vigencia +
           ",Mes:" + self.mes +
@@ -343,7 +343,7 @@ angular.module('contractualClienteApp')
 
         if (response.data == null) {
 
-          administrativaCrudService.post("pago_mensual", pago_mensual).then(function(response) {
+          administrativaRequest.post("pago_mensual", pago_mensual).then(function(response) {
 
             console.log(response.data);
             swal(
@@ -406,7 +406,7 @@ angular.module('contractualClienteApp')
     var defered = $q.defer();
     var promise = defered.promise;
 
-    nuxeo.operation('Document.Create')
+    nuxeoService.operation('Document.Create')
       .params({
         type: 'File',
         name: nombre,
@@ -492,7 +492,7 @@ angular.module('contractualClienteApp')
             };
 
             //Post a la tabla soporte documento
-            administrativaCrudService.post('soporte_pago_mensual', self.objeto_soporte)
+            administrativaRequest.post('soporte_pago_mensual', self.objeto_soporte)
               .then(function(response) {
                 //Bandera de validacion
                 console.log("Se ha registrado el documento en el soporte mensual");
@@ -540,7 +540,7 @@ angular.module('contractualClienteApp')
           };
 
           //Post a la tabla soporte documento
-          administrativaCrudService.post('soporte_pago_mensual', self.objeto_soporte)
+          administrativaRequest.post('soporte_pago_mensual', self.objeto_soporte)
             .then(function(response) {
               //Bandera de validacion
               console.log("Se ha registrado el documento en el soporte mensual");
