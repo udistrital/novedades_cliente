@@ -8,7 +8,7 @@
  * Factory in the contractualClienteApp.
  */
 angular.module('contractualClienteApp')
-  .factory('nuxeoService', function ($q, CONF) {
+  .factory('nuxeo', function ($q, CONF) {
     // Service logic
     // ...
 

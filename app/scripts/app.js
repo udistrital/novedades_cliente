@@ -39,6 +39,8 @@ angular
         'ui.grid.expandable',
         'ui.grid.pinning',
         'ui.knob',
+        'file-model',
+        'angularBootstrapFileinput',
         // Servicios
         'financieraService',
         'coreService',
