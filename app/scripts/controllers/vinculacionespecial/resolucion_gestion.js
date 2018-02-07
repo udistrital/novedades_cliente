@@ -14,6 +14,7 @@ angular.module('contractualClienteApp')
 .controller('ResolucionGestionCtrl', function (adminMidRequest,resolucion,administrativaRequest,$scope,$window,$mdDialog,$translate) {
 
   var self = this;
+  self.CurrentDate = new Date();
 
   //Tabla para mostrar los datos básicos de las resoluciones almacenadas dentro del sistema
   self.resolucionesInscritas = {
@@ -184,6 +185,8 @@ angular.module('contractualClienteApp')
 
         '<a ng-if="row.entity.Estado==\'Solicitada\'" class="editar" ng-click="grid.appScope.verEditarResolucion(row)">' +
         '<i title="{{\'CONFIGURAR_DOC_BTN\' | translate }}" class="fa fa-pencil-square-o fa-lg faa-shake animated-hover"></i></a> ' +
+        '<a ng-if="row.entity.Estado==\'Solicitada\'" class="ver" ng-click="grid.appScope.verRealizarAnulacion(row)">' +
+        '<i title="{{\'ANULAR_BTN\' | translate }}" class="fa fa-times-circle fa-lg  faa-shake animated-hover"></i></a> ' +
 
         '</center>'
 
@@ -220,6 +223,13 @@ angular.module('contractualClienteApp')
       });
     }
   });
+
+          //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
+          self.cargarDatosResolucion = function() {
+            adminMidRequest.get("gestion_resoluciones/get_resoluciones_inscritas").then(function(response) {
+                self.resolucionesInscritas.data = response.data;
+            });
+        };
 
   //Función para redireccionar la página web a la vista de edición del contenido de la resolución, donde se pasa por parámetro el id de la resolucion seleccionada
   $scope.verEditarResolucion = function(row){
@@ -345,6 +355,56 @@ angular.module('contractualClienteApp')
     $window.location.href = '#/vinculacionespecial/resolucion_generacion';
   };
 
+          //Función para realizar la anulación de la resolución
+          $scope.verRealizarAnulacion = function(row) {
+            administrativaRequest.get("resolucion/" + row.entity.Id).then(function(response) {
+                var Resolucion = response.data;
+                var resolucion_estado = {
+                    FechaRegistro: self.CurrentDate,
+                    Usuario: "",
+                    Estado: {
+                        Id: 6,
+                    },
+                    Resolucion: Resolucion
+                };
+                swal({
+                    title: 'Confirmar anulación',
+                    html: $translate.instant('CONFIRMAR_ANULAR') + '<br>' +
+                        $translate.instant('IRREVERSIBLE') + '<br>' +
+                        $translate.instant('NUMERO_RESOLUCION') + '<br>' +
+                        Resolucion.NumeroResolucion,
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: $translate.instant('ANULAR_BTN')
+                }).then(function() {
+                    self.cambiarEstado(resolucion_estado);
+                });
+            });
+        };
+
+        //Función para cambiar el estado de la resolución
+        self.cambiarEstado = function(resolucion_estado) {
+          administrativaRequest.post("resolucion_estado", resolucion_estado).then(function(response) {
+              if (response.statusText === "Created") {
+                  self.cargarDatosResolucion();
+                  swal(
+                      'Felicidades',
+                      $translate.instant('ANULADA'),
+                      'success'
+                  ).then(function() {
+                    $window.location.reload();
+                });
+              } else {
+                  swal(
+                      'Error',
+                      'Ocurrió un error',
+                      'error'
+                  );
+              }
+          });
+      };
 
 
 });

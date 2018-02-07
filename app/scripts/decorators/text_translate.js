@@ -346,8 +346,10 @@ var text_es = {
       CANCELAR_RESOLUCION:"¿Cancelar la resolución?",
       OPCIONES:"Opciones",
       CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
+      CONFIRMAR_ANULAR: "¿Está seguro que quiere anular la resolución?",
       IRREVERSIBLE: "Esta acción es irreversible",
       APROBADA: "Resolución Aprobada",
+      ANULADA: "Resolución Anulada",
 
   //RESOLUCION_CANCELACION_DETALLE
       /*---HTML---*/
