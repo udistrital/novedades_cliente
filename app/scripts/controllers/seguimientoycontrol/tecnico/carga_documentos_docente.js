@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('CargaDocumentosDocenteCtrl', function ($scope, $http, $translate, uiGridConstants, contratoRequest, administrativaRequest, nuxeoService, $q, coreRequest, $window,$sce, adminMidRequest) {
+  .controller('CargaDocumentosDocenteCtrl', function ($scope, $http, $translate, uiGridConstants, contratoRequest, administrativaRequest, nuxeo, $q, coreRequest, $window,$sce, adminMidRequest) {
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
   var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
 
@@ -19,51 +19,51 @@ angular.module('contractualClienteApp')
 
   self.meses = [{
       Id: 1,
-      Nombre: "Enero"
+      Nombre: $translate.instant('ENERO')
     },
     {
       Id: 2,
-      Nombre: "Febrero"
+      Nombre: $translate.instant('FEBRERO')
     },
     {
       Id: 3,
-      Nombre: "Marzo"
+      Nombre: $translate.instant('MARZO')
     },
     {
       Id: 4,
-      Nombre: "Abril"
+      Nombre: $translate.instant('ABRIL')
     },
     {
       Id: 5,
-      Nombre: "Mayo"
+      Nombre: $translate.instant('MAYO')
     },
     {
       Id: 6,
-      Nombre: "Junio"
+      Nombre: $translate.instant('JUNIO')
     },
     {
       Id: 7,
-      Nombre: "Julio"
+      Nombre: $translate.instant('JULIO')
     },
     {
       Id: 8,
-      Nombre: "Agosto"
+      Nombre: $translate.instant('AGOSTO')
     },
     {
       Id: 9,
-      Nombre: "Septiembre"
+      Nombre: $translate.instant('SEPT')
     },
     {
       Id: 10,
-      Nombre: "Octubre"
+      Nombre: $translate.instant('OCTU')
     },
     {
       Id: 11,
-      Nombre: "Noviembre"
+      Nombre: $translate.instant('NOV')
     },
     {
       Id: 12,
-      Nombre: "Diciembre"
+      Nombre: $translate.instant('DIC')
     }
   ]
   /*
@@ -131,7 +131,7 @@ angular.module('contractualClienteApp')
       {
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
-        cellTemplate: '<a type="button" title="{{\'SOLICITAR_PAGO\'| translate }}" type="button" class="fa fa-money fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.solicitar_pago(row.entity)"   data-toggle="modal" data-target="#modal_enviar_solicitud" >' +
+        cellTemplate: '<a type="button" title="{{\'SOLICITAR_CUM\'| translate }}" type="button" class="fa fa-money fa-lg  faa-shake animated-hover" data-toggle="modal" data-target="#modal_ver_soportes" >' +
           '</a>&nbsp;' + ' <a type="button" title="{{\'CARGAR_LISTAS\'| translate }}" type="button" class="fa fa-upload fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.cargar_soportes(row.entity)"  data-toggle="modal" data-target="#modal_carga_listas_docente">',
         width: "10%"
       }
@@ -144,6 +144,33 @@ angular.module('contractualClienteApp')
     self.gridApi = gridApi;
   };
 
+  /*
+    Enviar solicitud de revisión de soportes a Coordinador
+  */
+  self.enviar_revision = function (solicitud) {
+    swal({
+      title: '¿Está seguro(a) de enviar a revisar los soportes por el coordinador?',
+      text: "No podrá revertir la validación",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Enviar'
+    }).then(function () {
+      console.log(solicitud);
+      jsonActualizado = solicitud;
+      console.log(jsonActualizado);
+      jsonActualizado.EstadoPagoMensual = {"Id":1};
+      console.log(jsonActualizado);
+      administrativaRequest.put('pago_mensual', solicitud.Id, jsonActualizado).
+      then(function(response){
+        console.log("Se realizó cambio de estado en la solicutd");
+      })
+      self.gridApi.core.refresh();
+
+    });
+  };
   /*
     Creación tabla que tendrá las solicitudes de pago de cada contrato
   */
@@ -162,7 +189,7 @@ angular.module('contractualClienteApp')
         },
       },
       {
-        field: 'Vigencia',
+        field: 'VigenciaContrato',
         cellTemplate: tmpl,
         displayName: $translate.instant('VIGENCIA'),
         sort: {
@@ -173,7 +200,7 @@ angular.module('contractualClienteApp')
       {
         field: 'Mes',
         cellTemplate: tmpl,
-        displayName: 'Mes',
+        displayName: $translate.instant('MES'),
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1
@@ -182,7 +209,7 @@ angular.module('contractualClienteApp')
       {
         field: 'Ano',
         cellTemplate: tmpl,
-        displayName: 'Año',
+        displayName: $translate.instant('ANO'),
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1
@@ -191,22 +218,19 @@ angular.module('contractualClienteApp')
       {
         field: 'EstadoPagoMensual.Nombre',
         cellTemplate: tmpl,
-        displayName: 'Estado Solicitud',
+        displayName: $translate.instant('EST_SOL'),
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1
         },
       },
-
-       {
-          field: 'descripcion_doc',
-          cellTemplate: tmpl,
-          displayName: 'Soportes',
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          },
-      },
+      {
+        field: 'Acciones',
+        displayName: $translate.instant('ACC'),
+        cellTemplate: '<a type="button" title="{{\'VER_SOP\'| translate }}" type="button" class="fa fa-folder-open-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.visualizar_docs(row.entity)" data-toggle="modal" data-target="#modal_carga_listas_docente">' +
+          '</a>&nbsp;' + ' <a type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision(row.entity)"  >',
+        width: "10%"
+      }
     ]
   };
 
@@ -239,7 +263,7 @@ angular.module('contractualClienteApp')
       //Petición para obtener las vinculaciones del docente
       adminMidRequest.get('aprobacion_pago/get_contratos_docente/' + self.Documento)
       .then(function(response) {
-        if(self.respuesta_docente !== null){
+        if(self.respuesta_docente !== null || self.respuesta_docente !== undefined){
           //Contiene la respuesta de la petición
           self.respuesta_docente = response.data;
           //Variable que contiene el nombre del docente
@@ -251,6 +275,7 @@ angular.module('contractualClienteApp')
         }
 
       });
+      console.log("Este es el resultado " + self.respuesta_docente);
     self.gridApi2.core.refresh();
   };
 
@@ -276,7 +301,7 @@ angular.module('contractualClienteApp')
       contratoRequest.get('contrato_elaborado', self.contrato.NumeroVinculacion + '/' + self.contrato.Vigencia).then(function(response_ce) {
 
         self.tipo_contrato = response_ce.data.contrato.tipo_contrato;
-        console.log(self.tipo_contrato);
+      console.log(response_ce.data);
 
         administrativaRequest.get("item_informe_tipo_contrato", $.param({
           query: "TipoContrato:" + self.tipo_contrato,
@@ -284,6 +309,7 @@ angular.module('contractualClienteApp')
         })).then(function(response_iitc) {
 
           self.items = response_iitc.data;
+          console.log(self.items);
 
         });
 
@@ -307,12 +333,14 @@ angular.module('contractualClienteApp')
 
   self.enviar_solicitud = function() {
 
-    //console.log(self.contrato);
-    //console.log(self.contrato.IdDependencia);
-    //self.obtener_informacion_docente(self.contrato.IdDependencia);
-
-
     if (self.mes !== undefined && self.anio !== undefined) {
+      //Petición para obtener id de estado pago mensual
+      administrativaCrudService.get("estado_pago_mensual", $.param({
+          query: "CodigoAbreviacion:CD",
+          limit: 0
+        })).then(function (response) {
+
+
       var pago_mensual = {
         CargoResponsable: "COORDINADOR " + self.contrato.Dependencia,
         EstadoPagoMensual: {
@@ -334,8 +362,6 @@ angular.module('contractualClienteApp')
           ",Ano:" + self.anio,
         limit: 0
       })).then(function(response) {
-
-
 
         if (response.data == null) {
 
@@ -367,7 +393,8 @@ angular.module('contractualClienteApp')
 
 
       //  console.log(pago_mensual);
-    } else {
+    });
+  }else {
       swal(
         'Error',
         'Debe seleccionar un mes y un año',
@@ -378,31 +405,13 @@ angular.module('contractualClienteApp')
   };
 
   /*
-    Función para visualizar modal con los items preestablecidos para los docentes de TCO/MTO
-  */
-  self.obtenerInformeDocente = function() {
-    //Objeto que se obtiene el contenido del informe
-    var contenido = {
-      horas_lectivas: self.horas_lectivas,
-      investigacion: self.investigacion,
-      extension: self.extension,
-      publicaciones: self.publicaciones,
-      actividades: self.actividades
-    };
-
-    console.log(contenido);
-
-
-  };
-
-  /*
     Función para cargar los documentos a la carpeta  destino
   */
   self.cargarDocumento = function(nombre, descripcion, documento, callback) {
     var defered = $q.defer();
     var promise = defered.promise;
 
-    nuxeoService.operation('Document.Create')
+    nuxeo.operation('Document.Create')
       .params({
         type: 'File',
         name: nombre,
