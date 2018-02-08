@@ -322,6 +322,7 @@ var text_es = {
       ALERTA_ANULACION_EXITOSA: "Anulación exitosa",
       ALERTA_ERROR_ANULACION:"Error en anulación",
       ANULAR_BTN: "Anular",
+      ANULADA_BTN: "Anular",
 
   //RESOLUCION_ADICION
       /*---HTML---*/
@@ -345,9 +346,13 @@ var text_es = {
       PREGUNTA_RESTAURAR:"¿Restaurar la resolución?",
       CANCELAR_RESOLUCION:"¿Cancelar la resolución?",
       OPCIONES:"Opciones",
-      CONFIRMAR_APROBAR: "¿Está seguro que quiere aprobar la resolución?",
+      CONFIRMAR_APROBADA: "¿Está seguro que quiere aprobar la resolución?",
+      CONFIRMAR_ANULADA: "¿Está seguro que quiere anular la resolución?",
+      CONFIRMAR_DESAPROBADA: "¿Está seguro que quiere desaprobar la resolución?",
       IRREVERSIBLE: "Esta acción es irreversible",
       APROBADA: "Resolución Aprobada",
+      ANULADA: "Resolución Anulada",
+      DESAPROBADA: "Resolución Desaprobada",
 
   //RESOLUCION_CANCELACION_DETALLE
       /*---HTML---*/
@@ -418,7 +423,8 @@ var text_es = {
       ADICIONAR_HORAS_BTN: "Adicionar horas",
       REDUCIR_HORAS_BTN: "Reducir horas",
       CANCELAR_VIN_BTN: "Cancelar vinculación",
-      APROBAR_BTN:"Aprobar",
+      APROBADA_BTN:"Aprobar",
+      DESAPROBADA_BTN:"Desaprobar",
       CONFIGURAR_BTN:"Configurar",
       CONFIGURAR_DOC_BTN:"Configurar documento",
       EXPEDIR_BTN:"Expedir",
