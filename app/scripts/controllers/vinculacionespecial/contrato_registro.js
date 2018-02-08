@@ -15,6 +15,7 @@ angular.module('contractualClienteApp')
         self.contratoGeneralBase.Contrato = {};
         self.acta = {};
         self.estado = false;
+        self.CurrentDate = new Date();
 
         self.idResolucion = idResolucion;
 
