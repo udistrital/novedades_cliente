@@ -39,6 +39,8 @@ angular
         'ui.grid.expandable',
         'ui.grid.pinning',
         'ui.knob',
+        'file-model',
+        'angularBootstrapFileinput',
         // Servicios
         'financieraService',
         'coreService',
@@ -227,6 +229,26 @@ angular
                 templateUrl: 'views/necesidad/necesidad_contratacion_docente.html',
                 controller: 'NecesidadContratacionDocenteCtrl',
                 controllerAs: 'necesidadContratacionDocente'
+            })
+            .when('/seguimientoycontrol/tecnico/aprobacion_coordinador', {
+              templateUrl: 'views/seguimientoycontrol/tecnico/aprobacion_coordinador.html',
+              controller: 'AprobacionCoordinadorCtrl',
+              controllerAs: 'aprobacionCoordinador'
+            })
+            .when('/seguimientoycontrol/tecnico/aprobacion_documentos', {
+              templateUrl: 'views/seguimientoycontrol/tecnico/aprobacion_documentos.html',
+              controller: 'AprobacionDocumentosCtrl',
+              controllerAs: 'aprobacionDocumentos'
+            })
+            .when('/seguimientoycontrol/tecnico/aprobacion_pago', {
+              templateUrl: 'views/seguimientoycontrol/tecnico/aprobacion_pago.html',
+              controller: 'AprobacionPagoCtrl',
+              controllerAs: 'aprobacionPago'
+            })
+            .when('/seguimientoycontrol/tecnico/carga_documentos_docente', {
+              templateUrl: 'views/seguimientoycontrol/tecnico/carga_documentos_docente.html',
+              controller: 'CargaDocumentosDocenteCtrl',
+              controllerAs: 'cargaDocumentosDocente'
             })
             .otherwise({
                 redirectTo: '/'
