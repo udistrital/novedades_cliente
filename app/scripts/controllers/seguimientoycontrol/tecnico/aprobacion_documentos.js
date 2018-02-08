@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionDocumentosCtrl', function(oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, amazonAdministrativaRequest) {
+  .controller('AprobacionDocumentosCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, amazonAdministrativaRequest) {
 
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
     var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
@@ -81,7 +81,9 @@ angular.module('contractualClienteApp')
             '</a>&nbsp;' + '<a type="button" title="Rechazar pago" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
             'ng-if="row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.invalidarCumplido(row.entity)"></a>' +
             '<a type="button" title="Ver información" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
-            'ng-click="grid.appScope.aprobacionDocumentos.verInformacionContrato(row.entity)" data-toggle="modal" data-target="#modal_informacion_contrato"></a>',
+            'ng-click="grid.appScope.aprobacionDocumentos.verInformacionContrato(row.entity)" data-toggle="modal" data-target="#modal_informacion_contrato"></a>' +
+            '<a type="button" title="Rechazar" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
+            'ng-click="grid.appScope.aprobacionDocumentos.rechazar(row.entity)"></a>',
           width: "10%"
         }
       ]
@@ -271,7 +273,7 @@ angular.module('contractualClienteApp')
       self.aprobado = false;
       self.aux_pago_mensual = pago_mensual;
       administrativaRequest.get('soporte_pago_mensual', $.param({
-        query: "PagoMensual.NumeroContrato:" +    self.aux_pago_mensual.NumeroContrato + ",PagoMensual.VigenciaContrato:" +    self.aux_pago_mensual.VigenciaContrato + ",PagoMensual.Mes:" +    self.aux_pago_mensual.Mes + ",PagoMensual.Ano:" +    self.aux_pago_mensual.Ano,
+        query: "PagoMensual.NumeroContrato:" + self.aux_pago_mensual.NumeroContrato + ",PagoMensual.VigenciaContrato:" + self.aux_pago_mensual.VigenciaContrato + ",PagoMensual.Mes:" + self.aux_pago_mensual.Mes + ",PagoMensual.Ano:" + self.aux_pago_mensual.Ano,
         limit: 0
       })).then(function (response) {
 
@@ -328,4 +330,51 @@ angular.module('contractualClienteApp')
         }
       })
     }
+
+
+    self.rechazar = function (pago_mensual) {
+
+      contratoRequest.get('contrato_elaborado', pago_mensual.NumeroContrato + '/' + pago_mensual.VigenciaContrato).then(function (response) {
+        self.aux_pago_mensual = pago_mensual;
+        // self.contrato = response.data.contrato;
+        //self.aux_pago_mensual.Responsable = self.contrato.supervisor.documento_identificacion;
+
+        administrativaRequest.get('estado_pago_mensual', $.param({
+          limit: 0,
+          query: 'CodigoAbreviacion:RD'
+        })).then(function (responseCod) {
+
+          var sig_estado = responseCod.data;
+          self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
+
+          administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
+
+            if (response.data === "OK") {
+
+              swal(
+                'Rechazo registrado',
+                'Se ha registrado el rechazo de los documentos',
+                'success'
+              )
+              self.obtener_informacion_supervisor();
+              self.gridApi.core.refresh();
+            } else {
+
+
+              swal(
+                'Error',
+                'No se ha podido registrar el rechazo',
+                'error'
+              );
+            }
+
+          });
+
+        })
+      });
+
+    };
+
+
+
   });

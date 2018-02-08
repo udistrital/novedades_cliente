@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionCoordinadorCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, administrativaAmazonService, academicaService) {
+  .controller('AprobacionCoordinadorCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, academicaWsoService) {
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
     var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
 
@@ -122,18 +122,18 @@ angular.module('contractualClienteApp')
     */
     self.obtener_informacion_coordinador = function (documento) {
       //Se realiza petición a servicio de academica que retorna la información del coordinador
-      academicaService.get('coordinador_carrera_snies', documento).
+      academicaWsoService.get('coordinador_carrera_snies', documento).
         then(function (response) {
           self.informacion_coordinador = response.data;
           console.log(self.informacion_coordinador);
           self.coordinador = self.informacion_coordinador.coordinadorCollection.coordinador[0];
-          console.log(self.coordinador.nombre_coordinador);
+         console.log(self.coordinador.nombre_coordinador);
         })
     };
 
 
     self.dar_visto_bueno = function (pago_mensual) {
-
+      console.log(pago_mensual);
       contratoRequest.get('contrato_elaborado', pago_mensual.NumeroContrato + '/' + pago_mensual.VigenciaContrato).then(function (response) {
         self.aux_pago_mensual = pago_mensual;
         self.contrato = response.data.contrato;
@@ -179,8 +179,8 @@ angular.module('contractualClienteApp')
 
       contratoRequest.get('contrato_elaborado', pago_mensual.NumeroContrato + '/' + pago_mensual.VigenciaContrato).then(function (response) {
         self.aux_pago_mensual = pago_mensual;
-        self.contrato = response.data.contrato;
-        self.aux_pago_mensual.Responsable = self.contrato.supervisor.documento_identificacion;
+       // self.contrato = response.data.contrato;
+        //self.aux_pago_mensual.Responsable = self.contrato.supervisor.documento_identificacion;
 
         administrativaRequest.get('estado_pago_mensual', $.param({
           limit: 0,
@@ -190,7 +190,7 @@ angular.module('contractualClienteApp')
           var sig_estado = responseCod.data;
           self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
 
-          adminis.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
+          administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
 
             if(response.data==="OK"){
 

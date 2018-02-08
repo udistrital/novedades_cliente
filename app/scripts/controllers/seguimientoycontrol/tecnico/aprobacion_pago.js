@@ -78,9 +78,9 @@ angular.module('contractualClienteApp')
           {
             field: 'Acciones',
             displayName: $translate.instant('ACC'),
-            cellTemplate: ' <button title="Aprobar pago" type="button" class="btn btn-success btn-circle" ng-if="!row.entity.validacion" ng-click="grid.appScope.aprobacionPago.validarCumplido(row.entity)" data-toggle="modal" data-target="#editarDependencia">' +
-              '<i class="glyphicon glyphicon-ok"></i></button>&nbsp;' + '<button title="Rechazar pago" type="button" class="btn btn-danger btn-circle"' +
-              'ng-if="row.entity.validacion" ng-click="grid.appScope.aprobacionPago.invalidarCumplido(row.entity)" data-toggle="modal" data-target="#vincularEspacios"><i class="glyphicon glyphicon-remove"></i></button>',
+            cellTemplate:  ' <a type="button" title="Aprobar pago" type="button" class="fa fa-check fa-lg  faa-shake animated-hover"  ng-click="grid.appScope.aprobacionPago.aprobarPago(row.entity)">'+
+            '<a type="button" title="Rechazar" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
+            'ng-click="grid.appScope.aprobacionPago.rechazarPago(row.entity)"></a>',
             width: "10%"
           }
         ]
@@ -209,6 +209,90 @@ angular.module('contractualClienteApp')
           self.gridApi.core.refresh();
 
         });
+      };
+
+      self.aprobarPago = function (pago_mensual) {
+
+        contratoRequest.get('contrato_elaborado', pago_mensual.NumeroContrato + '/' + pago_mensual.VigenciaContrato).then(function (response) {
+          self.aux_pago_mensual = pago_mensual;
+   
+  
+          administrativaRequest.get('estado_pago_mensual', $.param({
+            limit: 0,
+            query: 'CodigoAbreviacion:AP'
+          })).then(function (responseCod) {
+  
+            var sig_estado = responseCod.data;
+            self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
+  
+            administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
+  
+              if(response.data==="OK"){
+  
+                swal(
+                  'Pago aprobado',
+                  'Se ha registrado la aprobación del pago',
+                  'success'
+                )
+                self.obtener_informacion_ordenador();
+                self.gridApi.core.refresh();
+               }else{
+  
+  
+                swal(
+                  'Error',
+                  'No se ha podido registrar la aprobación del pago',
+                  'error'
+                );
+               }
+  
+            });
+  
+          })
+        });
+  
+      };
+
+      self.rechazarPago = function (pago_mensual) {
+
+        contratoRequest.get('contrato_elaborado', pago_mensual.NumeroContrato + '/' + pago_mensual.VigenciaContrato).then(function (response) {
+          self.aux_pago_mensual = pago_mensual;
+   
+  
+          administrativaRequest.get('estado_pago_mensual', $.param({
+            limit: 0,
+            query: 'CodigoAbreviacion:RP'
+          })).then(function (responseCod) {
+  
+            var sig_estado = responseCod.data;
+            self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
+  
+            administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
+  
+              if(response.data==="OK"){
+  
+                swal(
+                  'Pago rechazado',
+                  'Se ha registrado el rechazo del pago',
+                  'success'
+                )
+                self.obtener_informacion_ordenador();
+                self.gridApi.core.refresh();
+               }else{
+  
+  
+                swal(
+                  'Error',
+                  'No se ha podido registrar el rechazo del pago',
+                  'error'
+                );
+               }
+  
+            });
+  
+          })
+        });
+  
       };
 
   });

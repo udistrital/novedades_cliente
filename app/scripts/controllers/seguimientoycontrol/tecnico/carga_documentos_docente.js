@@ -159,11 +159,11 @@ angular.module('contractualClienteApp')
       confirmButtonText: 'Enviar'
     }).then(function () {
       console.log(solicitud);
-      jsonActualizado = solicitud;
-      console.log(jsonActualizado);
-      jsonActualizado.EstadoPagoMensual = {"Id":1};
-      console.log(jsonActualizado);
-      administrativaRequest.put('pago_mensual', solicitud.Id, jsonActualizado).
+      self.jsonActualizado = solicitud;
+      console.log(self.jsonActualizado);
+      self.jsonActualizado.EstadoPagoMensual = {"Id":1};
+      console.log(self.jsonActualizado);
+      administrativaRequest.put('pago_mensual', solicitud.Id, self.jsonActualizado).
       then(function(response){
         console.log("Se realizó cambio de estado en la solicutd");
       })
