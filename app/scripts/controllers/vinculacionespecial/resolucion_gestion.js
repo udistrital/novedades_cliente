@@ -186,7 +186,7 @@ angular.module('contractualClienteApp')
         '<a ng-if="row.entity.Estado==\'Solicitada\'" class="editar" ng-click="grid.appScope.verEditarResolucion(row)">' +
         '<i title="{{\'CONFIGURAR_DOC_BTN\' | translate }}" class="fa fa-pencil-square-o fa-lg faa-shake animated-hover"></i></a> ' +
         '<a ng-if="row.entity.Estado==\'Solicitada\'" class="ver" ng-click="grid.appScope.verRealizarAnulacion(row)">' +
-        '<i title="{{\'ANULAR_BTN\' | translate }}" class="fa fa-times-circle fa-lg  faa-shake animated-hover"></i></a> ' +
+        '<i title="{{\'ANULADA_BTN\' | translate }}" class="fa fa-times-circle fa-lg  faa-shake animated-hover"></i></a> ' +
 
         '</center>'
 
@@ -369,7 +369,7 @@ angular.module('contractualClienteApp')
                 };
                 swal({
                     title: 'Confirmar anulación',
-                    html: $translate.instant('CONFIRMAR_ANULAR') + '<br>' +
+                    html: $translate.instant('CONFIRMAR_ANULADA') + '<br>' +
                         $translate.instant('IRREVERSIBLE') + '<br>' +
                         $translate.instant('NUMERO_RESOLUCION') + '<br>' +
                         Resolucion.NumeroResolucion,
@@ -377,7 +377,7 @@ angular.module('contractualClienteApp')
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: $translate.instant('ANULAR_BTN')
+                    confirmButtonText: $translate.instant('ANULADA_BTN')
                 }).then(function() {
                     self.cambiarEstado(resolucion_estado);
                 });
