@@ -124,8 +124,12 @@ angular.module('contractualClienteApp')
                     cellTemplate: '<center>' +
                         '<a class="ver" ng-click="grid.appScope.verVisualizarResolucion(row)">' +
                         '<i title="{{\'VER_BTN\' | translate }}" class="fa fa-eye fa-lg  faa-shake animated-hover"></i></a> ' +
-                        '<a ng-if="row.entity.Estado==\'Solicitada\'" class="ver" ng-click="grid.appScope.verRealizarAprobacion(row)">' +
-                        '<i title="{{\'APROBAR_BTN\' | translate }}" class="fa fa-check fa-lg  faa-shake animated-hover"></i></a> ' +
+                        '<a ng-if="row.entity.Estado==\'Solicitada\'" class="ver" ng-click="grid.appScope.verModificarEstado(row,\'APROBADA\',5)">' +
+                        '<i title="{{\'APROBADA_BTN\' | translate }}" class="fa fa-check fa-lg  faa-shake animated-hover"></i></a> ' +
+                        '<a ng-if="row.entity.Estado==\'Aprobada\'" class="ver" ng-click="grid.appScope.verModificarEstado(row,\'DESAPROBADA\',1)">' +
+                        '<i title="{{\'DESAPROBADA_BTN\' | translate }}" class="fa fa-ban fa-lg  faa-shake animated-hover"></i></a> ' +
+                        '<a ng-if="row.entity.Estado==\'Aprobada\'" class="ver" ng-click="grid.appScope.verModificarEstado(row,\'ANULADA\',6)">' +
+                        '<i title="{{\'ANULADA_BTN\' | translate }}" class="fa fa-times-circle fa-lg  faa-shake animated-hover"></i></a> ' +
                         '</center>'
                 }
             ]
@@ -139,34 +143,32 @@ angular.module('contractualClienteApp')
         };
 
         //Función para realizar la aprobación de la resolución
-        $scope.verRealizarAprobacion = function(row) {
+        $scope.verModificarEstado = function(row,nombreEstado,idEstado) {
             administrativaRequest.get("resolucion/" + row.entity.Id).then(function(response) {
                 var Resolucion = response.data;
                 var resolucion_estado = {
                     FechaRegistro: self.CurrentDate,
                     Usuario: "",
                     Estado: {
-                        Id: 5,
+                        Id: idEstado,
                     },
                     Resolucion: Resolucion
                 };
                 swal({
-                    title: 'Confirmar aprobación',
-                    html: $translate.instant('CONFIRMAR_APROBAR') + '<br>' +
-                        $translate.instant('IRREVERSIBLE') + '<br>' +
+                    title: $translate.instant('CONFIRMAR_'+nombreEstado),
+                    html: 
                         $translate.instant('NUMERO_RESOLUCION') + '<br>' +
                         Resolucion.NumeroResolucion,
                     type: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: $translate.instant('APROBAR_BTN')
+                    confirmButtonText: $translate.instant(nombreEstado+'_BTN')
                 }).then(function() {
-                    self.cambiarEstado(resolucion_estado);
+                    self.cambiarEstado(resolucion_estado,nombreEstado);
                 });
             });
         };
-
 
 
         //Función donde se despliega un mensaje de alerta previo a la restauración de la resolución
@@ -249,27 +251,32 @@ angular.module('contractualClienteApp')
                 });
             });
         };
-        self.cambiarEstado = function(resolucion_estado) {
-            administrativaRequest.post("resolucion_estado", resolucion_estado).then(function(response) {
-                if (response.statusText === "Created") {
-                    self.cargarDatosResolucion();
-                    swal(
-                        'Felicidades',
-                        $translate.instant('APROBADA'),
-                        'success'
-                    );
-                } else {
-                    swal(
-                        'Error',
-                        'Ocurrió un error',
-                        'error'
-                    );
-                }
-            });
-        };
 
 
         //Se hace el llamado de la función para cargar datos de resoluciones
         self.cargarDatosResolucion();
+
+
+        //Función para cambiar el estado de la resolución
+        self.cambiarEstado = function(resolucion_estado, estadoNuevo) {
+          administrativaRequest.post("resolucion_estado", resolucion_estado).then(function(response) {
+              if (response.statusText === "Created") {
+                  self.cargarDatosResolucion();
+                  swal(
+                      'Felicidades',
+                      $translate.instant(estadoNuevo),
+                      'success'
+                  ).then(function() {
+                    $window.location.reload();
+                });
+              } else {
+                  swal(
+                      'Error',
+                      'Ocurrió un error',
+                      'error'
+                  );
+              }
+          });
+      };
 
     });
