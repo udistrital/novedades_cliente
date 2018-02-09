@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionCoordinadorCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, academicaWsoService) {
+  .controller('AprobacionCoordinadorCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, academicaWsoService, coreRequest, $q, $window, $sce, nuxeo) {
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
     var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
 
@@ -74,9 +74,9 @@ angular.module('contractualClienteApp')
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
         cellTemplate: '<a type="button" title="Ver soportes" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
-          'ng-click="grid.appScope.aprobacionDocumentos.verInformacionContrato(row.entity)" data-toggle="modal" data-target="#modal_visualizar_documentos"></a>' +
+          'ng-click="grid.appScope.aprobacionCoordinador.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes"</a>&nbsp;' +
           '<a type="button" title="Visto bueno" type="button" class="fa fa-check fa-lg  faa-shake animated-hover"' +
-          'ng-click="grid.appScope.aprobacionCoordinador.dar_visto_bueno(row.entity)"></a>'+
+          'ng-click="grid.appScope.aprobacionCoordinador.dar_visto_bueno(row.entity)"></a>&nbsp;'+
           '<a type="button" title="Rechazar" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
           'ng-click="grid.appScope.aprobacionCoordinador.rechazar(row.entity)"></a>',
         width: "10%"
@@ -146,6 +146,7 @@ angular.module('contractualClienteApp')
 
           var sig_estado = responseCod.data;
           self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
+          self.aux_pago_mensual.FechaModificacion = new Date();
 
           administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
 
@@ -189,6 +190,7 @@ angular.module('contractualClienteApp')
 
           var sig_estado = responseCod.data;
           self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
+          self.aux_pago_mensual.FechaModificacion = new Date();
 
           administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
 
@@ -217,4 +219,117 @@ angular.module('contractualClienteApp')
       });
 
     };
+
+    /*
+      Función para ver documentos de los docentes a cargo
+    */
+    self.obtener_doc = function (fila){
+      self.fila_sol_pago = fila;
+      var nombre_docs = self.fila_sol_pago.VigenciaContrato + self.fila_sol_pago.NumeroContrato + self.fila_sol_pago.Persona + self.fila_sol_pago.Mes + self.fila_sol_pago.Ano;
+      coreRequest.get('documento', $.param ({
+       query: "Nombre:" + nombre_docs + ",Activo:true",
+       limit:0
+     })).then(function(response){
+       self.documentos = response.data;
+       console.log(self.documentos);
+       angular.forEach(self.documentos, function(value) {
+         self.descripcion_doc = value.Descripcion;
+         console.log(self.descripcion_doc);
+         value.Contenido = JSON.parse(value.Contenido);
+
+         if (value.Contenido.Tipo === "Enlace") {
+             value.Contenido.NombreArchivo = value.Contenido.Tipo;
+         };
+       });
+     })
+   };
+
+   /*
+     Función para visualizar enlace
+   */
+   self.visualizar_enlace = function (url){
+     $window.open(url);
+   };
+
+   /*
+     Función que permite obtener un documento de nuxeo por el Id
+   */
+   self.getDocumento = function(docid){
+    nuxeo.header('X-NXDocumentProperties', '*');
+
+    self.obtenerDoc = function () {
+      var defered = $q.defer();
+
+      nuxeo.request('/id/'+docid)
+          .get()
+          .then(function(response) {
+            self.doc=response;
+            var aux=response.get('file:content');
+            self.document=response;
+            console.log(self.document);
+            defered.resolve(response);
+          })
+          .catch(function(error){
+              defered.reject(error)
+          });
+      return defered.promise;
+    };
+
+    self.obtenerFetch = function (doc) {
+      var defered = $q.defer();
+
+      doc.fetchBlob()
+        .then(function(res) {
+          defered.resolve(res.blob());
+
+        })
+        .catch(function(error){
+              defered.reject(error)
+          });
+      return defered.promise;
+    };
+
+      self.obtenerDoc().then(function(){
+
+         self.obtenerFetch(self.document).then(function(r){
+             self.blob=r;
+             var fileURL = URL.createObjectURL(self.blob);
+             console.log(fileURL);
+             self.content = $sce.trustAsResourceUrl(fileURL);
+             $window.open(fileURL);
+          });
+      });
+    };
+
+    /*
+      Función para "borrar" un documento
+    */
+    self.enviar_comentario = function(documento){
+        swal({
+          title: '¿Está seguro(a) de enviar la observación?',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Aceptar'
+        }).then(function () {
+         documento.Contenido = JSON.stringify(documento.Contenido);
+         coreRequest.put('documento', documento.Id, documento).
+         then(function(response){
+              console.log(documento);
+              console.log(response);
+              self.obtener_doc(self.fila_sol_pago);
+        });
+
+        });
+
+
+    };
+
+
+
+
+
+
   });

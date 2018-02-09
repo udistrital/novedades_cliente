@@ -12,8 +12,7 @@
               <div class="row">
                 <div class="form-group col-lg-9">
                   <label>{{'NUM_DOC_IDENTIDAD'| translate}}</label>
-                  <input type="text" ng-model="cargaDocumentosDocente.Documento" class="form-control" placeholder="{{'PLACE_NUM_DOC'| translate}}"
-                    required>
+                  <input type="text" ng-model="cargaDocumentosDocente.Documento" class="form-control" placeholder="{{'PLACE_NUM_DOC'| translate}}" required>
                 </div>
                 <div class="form-group col-lg-3">
                   <label> </label>
@@ -66,23 +65,22 @@
 
         <div class="panel-body">
 
-          <div style="height: {{gridHeight}}px;width:{{gridWidth}}px" ui-grid="cargaDocumentosDocente.gridOptions2" align='center'
-            ui-grid-selection ui-grid-auto-resize></div>
+          <div style="height: {{gridHeight}}px;width:{{gridWidth}}px" ui-grid="cargaDocumentosDocente.gridOptions2" align='center' ui-grid-selection ui-grid-auto-resize></div>
 
           <br>
           <br>
 
           <!--Div que se visualiza al seleccionar una vinculación y muestra los tipos de adjuntos que el usuario puede hacer-->
-          <div class="col-md-12" ng-if="cargaDocumentosDocente.seleccionado">
+          <div class="col-md-12" ng-if="cargaDocumentosDocente.seleccionado && cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.Nombre !== 'POR REVISAR COORDINADOR'">
             <p>{{'DESC_ADJ' | translate}}</p>
             <!--Campo que pinta la opción archivo-->
             <fieldset class="form-group">
               <label> {{'ARC' | translate}}</label>
-                <input type="checkbox" ng-model="cargaDocumentosDocente.archivo" ng-change="cargaDocumentosDocente.cambiarCheckArchivo()">
-            <!--Campo que pinta la opción de enlace-->
+              <input type="checkbox" ng-model="cargaDocumentosDocente.archivo" ng-change="cargaDocumentosDocente.cambiarCheckArchivo()">
+              <!--Campo que pinta la opción de enlace-->
               <label> {{'ENL' | translate}}</label>
-                <input type="checkbox" ng-model="cargaDocumentosDocente.link"  ng-change="cargaDocumentosDocente.cambiarCheckLink()">
-          </fieldset>
+              <input type="checkbox" ng-model="cargaDocumentosDocente.link" ng-change="cargaDocumentosDocente.cambiarCheckLink()">
+            </fieldset>
 
             <!--Div que se visualiza al seleccionar el check archivo-->
             <div ng-if="cargaDocumentosDocente.archivo">
@@ -91,8 +89,7 @@
                 <label class="control-label">{{'ARC' | translate}}</label>
               </div>
               <div class="col-md-3">
-                <input type="file" angular-bfi="{'showUpload':false, allowedFileExtensions:['pdf'], language:'es'}" file-model="cargaDocumentosDocente.fileModel"
-                  required> </input>
+                <input type="file" angular-bfi="{'showUpload':false, allowedFileExtensions:['pdf'], language:'es'}" file-model="cargaDocumentosDocente.fileModel" required> </input>
               </div>
             </div>
 
@@ -102,7 +99,7 @@
                 <label class="control-label">{{'ENL' | translate}}</label>
               </div>
               <div class="col-md-2">
-                <input type="text" class="form-control"  ng-model="cargaDocumentosDocente.enlace" required> </input>
+                <input type="text" class="form-control" ng-model="cargaDocumentosDocente.enlace" required> </input>
               </div>
 
             </div>
@@ -116,7 +113,7 @@
               </select>
             </div>
             <div class="col-md-1">
-              <label for="observacion" class="col-form-label">{{'OBSERVACIONES' | translate}}</label>
+              <label for="observacion" class="col-form-label">{{'OBSER' | translate}}</label>
             </div>
             <div class="col-md-4">
               <textarea rows="3" cols="50" ng-model="cargaDocumentosDocente.observaciones"></textarea>
@@ -129,7 +126,7 @@
       </div>
 
 
-      <button ng-if="cargaDocumentosDocente.seleccionado" class="btn btn-success" ng-click="cargaDocumentosDocente.subir_documento()">
+      <button ng-if="cargaDocumentosDocente.seleccionado && cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.Nombre !== 'POR REVISAR COORDINADOR' " class="btn btn-success" ng-click="cargaDocumentosDocente.subir_documento()">
         {{'CAR_SOP' | translate }}
       </button>
     </div>
@@ -190,8 +187,8 @@
 </div>
 
 <!--Modal de Visualizar los Soportes-->
-<div id="modal_ver_soportes" class="modal fade" role="dialog">
-  <div class="modal-content col-md-10 col-md-offset-1" style="margin-top: 5%">
+<div id="modal_ver_soportes" class="modal fade" role="dialog" style="z-index: 1600">
+  <div class="modal-content col-md-6 col-md-offset-3" style="margin-top: 5%" align="center">
 
     <div class="modal-header">
       <button type="button" class="btn btn-outline btn-danger btn-xs pull-right" data-dismiss="modal">&times</button>
@@ -206,36 +203,31 @@
         </div>
         <div class="panel-body">
 
-          <div class="row">
+          <div class="col-md-12">
+            <p>{{'PARRA_VER_SOP' | translate }}</p>
+          </div>
 
-            <div class="col-md-12">
-              <p>{{'PARRA_VER_SOP' | translate }}</p>
-            </div>
-
-            <div class="col-md-1">
-              <label>{{'MES' | translate }}</label>
-            </div>
-            <div class="col-md-3">
-              <select ng-model="cargaDocumentosDocente.mes" class="form-control">
-                <option ng-repeat="iMes in cargaDocumentosDocente.meses" ng-value="iMes.Id">{{iMes.Nombre}} </option>
-              </select>
-            </div>
-
-            <div class="col-md-1">
-              <label>{{'ANO' | translate }}</label>
-            </div>
-            <div class="col-md-3">
-              <select ng-model="cargaDocumentosDocente.anio" class="form-control">
-                <option ng-repeat="iAnio in cargaDocumentosDocente.anios" ng-value="iAnio">{{iAnio}} </option>
-              </select>
-            </div>
+          <div class="col-md-12" ng-model="cargaDocumentosDocente.documentos" ng-repeat="iDoc in cargaDocumentosDocente.documentos">
+            <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline"> {{iDoc.Contenido.NombreArchivo}}</span>
+                  <span class="md-subhead">{{iDoc.Descripcion}}</span>
+                </md-card-title-text>
+                <md-card-title-media>
+                  <div class="md-media-sm card-media"></div>
+                </md-card-title-media>
+              </md-card-title>
+              <md-card-actions layout="row" layout-align="end center">
+                <md-button ng-if="iDoc.Contenido.Tipo === 'Archivo'" ng-click="cargaDocumentosDocente.getDocumento(iDoc.Contenido.IdNuxeo)" class="md-primary">VER DOCUMENTO</md-button>
+                  <md-button ng-if="iDoc.Contenido.Tipo === 'Enlace'" ng-click="cargaDocumentosDocente.getDocumento(iDoc.Contenido.IdNuxeo); cargaDocumentosDocente.visualizar_enlace(iDoc.Contenido.Enlace)" class="md-primary">VER DOCUMENTO</md-button>
+                <md-button class="md-warn" ng-if="cargaDocumentosDocente.fila_sol_pago.EstadoPagoMensual.CodigoAbreviacion === 'CD' || cargaDocumentosDocente.fila_sol_pago.EstadoPagoMensual.CodigoAbreviacion === 'RD' || cargaDocumentosDocente.fila_sol_pago.EstadoPagoMensual.CodigoAbreviacion === 'RP' || cargaDocumentosDocente.fila_sol_pago.EstadoPagoMensual.CodigoAbreviacion ==='RC'" ng-click="cargaDocumentosDocente.borrar_doc(iDoc)">BORRAR</md-button>
+              </md-card-actions>
+            </md-card>
           </div>
         </div>
       </div>
-
-      <button class="btn btn-success" ng-click="cargaDocumentosDocente.enviar_solicitud()">
-        {{'ENVIAR' | translate }}
-      </button>
     </div>
   </div>
+</div>
 </div>

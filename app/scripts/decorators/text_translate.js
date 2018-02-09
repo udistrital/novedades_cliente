@@ -613,6 +613,7 @@ var text_es = {
   ENV_REV:"ENVIAR A REVISIÓN COORDINADOR",
   PARRA_VER_SOP:"A continuación se listan los soportes asociados al cumplido",
 
+
   //Modal informe de gestión docente
   TITULO_MODAL_INFORME_DOC:"INFORME DE GESTIÓN DOCENTE",
   HORAS_LEC:"HORAS LECTIVAS",

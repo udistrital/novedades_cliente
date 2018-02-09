@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionDocumentosCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, amazonAdministrativaRequest) {
+  .controller('AprobacionDocumentosCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, amazonAdministrativaRequest,nuxeo,coreRequest, $q, $sce, $window, adminMidRequest ) {
 
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
     var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
@@ -81,7 +81,7 @@ angular.module('contractualClienteApp')
             '</a>&nbsp;' + '<a type="button" title="Rechazar pago" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
             'ng-if="row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.invalidarCumplido(row.entity)"></a>' +
             '<a type="button" title="Ver información" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
-            'ng-click="grid.appScope.aprobacionDocumentos.verInformacionContrato(row.entity)" data-toggle="modal" data-target="#modal_informacion_contrato"></a>' +
+            'ng-click="grid.appScope.aprobacionDocumentos.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes"></a>' +
             '<a type="button" title="Rechazar" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
             'ng-click="grid.appScope.aprobacionDocumentos.rechazar(row.entity)"></a>',
           width: "10%"
@@ -223,7 +223,7 @@ angular.module('contractualClienteApp')
 
           console.log(self.respuesta_acta_inicio);
 
-          administrativaAmazonService.get('contrato_disponibilidad', $.param({
+          amazonAdministrativaRequest.get('contrato_disponibilidad', $.param({
             query: "NumeroContrato:" + contrato_contratista.NumeroContrato + ",Vigencia:" + contrato_contratista.VigenciaContrato,
             limit: 0
           })).then(function (response) {
@@ -280,6 +280,8 @@ angular.module('contractualClienteApp')
         var soportes = response.data;
 
         if (soportes !== null) {
+          adminMidRequest.get('aprobacion_pago/informacion_ordenador/'+self.aux_pago_mensual.NumeroContrato+'/'+self.aux_pago_mensual.VigenciaContrato).then(function(response){
+           self.ordenador = response.data;
 
           for (var i = 0; i < soportes.length; i++) {
 
@@ -297,6 +299,9 @@ angular.module('contractualClienteApp')
                 var sig_estado = responseCod.data;
 
                 self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
+                self.aux_pago_mensual.Responsable = self.ordenador.NumeroDocumento.toString();
+                self.aux_pago_mensual.CargoResponsable = self.ordenador.Cargo;
+                self.aux_pago_mensual.FechaModificacion = new Date();
 
                 administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
 
@@ -314,7 +319,7 @@ angular.module('contractualClienteApp')
 
                     swal(
                       'Error',
-                      'No se ha podido registrar el visto bueno',
+                      'No se ha podido registrar la aprobación de los documentos',
                       'error'
                     );
                   }
@@ -324,9 +329,14 @@ angular.module('contractualClienteApp')
               });
 
             }
-          }
+          }//
+          })
         } else {
-          console.log("No existen soportes para el cumplido");
+          swal(
+            'Error',
+            'No existen soportes aprobados para el cumplido',
+            'error'
+          );
         }
       })
     }
@@ -375,6 +385,137 @@ angular.module('contractualClienteApp')
 
     };
 
+
+    /*
+      Función para ver documentos de los docentes a cargo
+    */
+    self.obtener_doc = function (fila){
+      self.fila_sol_pago = fila;
+      var nombre_docs = self.fila_sol_pago.VigenciaContrato + self.fila_sol_pago.NumeroContrato + self.fila_sol_pago.Persona + self.fila_sol_pago.Mes + self.fila_sol_pago.Ano;
+      coreRequest.get('documento', $.param ({
+       query: "Nombre:" + nombre_docs + ",Activo:true",
+       limit:0
+     })).then(function(response){
+       self.documentos = response.data;
+       console.log(self.documentos);
+       angular.forEach(self.documentos, function(value) {
+         self.descripcion_doc = value.Descripcion;
+         console.log(self.descripcion_doc);
+         value.Contenido = JSON.parse(value.Contenido);
+
+         if (value.Contenido.Tipo === "Enlace") {
+             value.Contenido.NombreArchivo = value.Contenido.Tipo;
+         };
+       });
+     })
+   };
+
+   /*
+     Función para visualizar enlace
+   */
+   self.visualizar_enlace = function (url){
+     $window.open(url);
+   };
+
+   /*
+     Función que permite obtener un documento de nuxeo por el Id
+   */
+   self.getDocumento = function(docid){
+    nuxeo.header('X-NXDocumentProperties', '*');
+
+    self.obtenerDoc = function () {
+      var defered = $q.defer();
+
+      nuxeo.request('/id/'+docid)
+          .get()
+          .then(function(response) {
+            self.doc=response;
+            var aux=response.get('file:content');
+            self.document=response;
+            console.log(self.document);
+            defered.resolve(response);
+          })
+          .catch(function(error){
+              defered.reject(error)
+          });
+      return defered.promise;
+    };
+
+    self.obtenerFetch = function (doc) {
+      var defered = $q.defer();
+
+      doc.fetchBlob()
+        .then(function(res) {
+          defered.resolve(res.blob());
+
+        })
+        .catch(function(error){
+              defered.reject(error)
+          });
+      return defered.promise;
+    };
+
+      self.obtenerDoc().then(function(){
+
+         self.obtenerFetch(self.document).then(function(r){
+             self.blob=r;
+             var fileURL = URL.createObjectURL(self.blob);
+             console.log(fileURL);
+             self.content = $sce.trustAsResourceUrl(fileURL);
+             self.url = fileURL;
+
+             $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900');
+          });
+      });
+    };
+
+    /*
+      Función para "borrar" un documento
+    */
+    self.enviar_comentario = function(documento){
+        swal({
+          title: '¿Está seguro(a) de enviar la observación?',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Aceptar'
+        }).then(function () {
+         documento.Contenido = JSON.stringify(documento.Contenido);
+         coreRequest.put('documento', documento.Id, documento).
+         then(function(response){
+              console.log(documento);
+              console.log(response);
+              self.obtener_doc(self.fila_sol_pago);
+        });
+
+        });
+
+
+    };
+
+    self.aprobar_documentos = function(id_documento){
+      self.id_documento = id_documento;
+      administrativaRequest.get('soporte_pago_mensual', $.param({
+        query: "Documento:" + self.id_documento,
+        limit: 0
+      })).then(function(response){
+        self.soporte = response.data[0];
+
+        self.soporte.Aprobado=true;
+
+
+        administrativaRequest.put('soporte_pago_mensual',self.soporte.Id, self.soporte).
+        then(function(response){
+            console.log(response);
+       });
+
+
+      });
+
+
+    }
 
 
   });
