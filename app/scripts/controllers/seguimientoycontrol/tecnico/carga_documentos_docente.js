@@ -201,7 +201,7 @@ angular.module('contractualClienteApp')
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
         cellTemplate: '<a type="button" title="{{\'VER_SOP\'| translate }}" type="button" class="fa fa-folder-open-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes">' +
-          '</a>&nbsp;' + ' <a type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision(row.entity)"  >',
+          '</a>&nbsp;' + ' <a ng-if="(cargaDocumentosDocente.row.entity.EstadoPagoMensual.CodigoAbreviacion === \'CD\')" type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision(row.entity)"  >',
         width: "10%"
       }
     ]
@@ -399,6 +399,8 @@ angular.module('contractualClienteApp')
             )
 
             self.contrato = {};
+            self.mes = {};
+            self.anio = {};
 
           });
 
@@ -639,7 +641,7 @@ angular.module('contractualClienteApp')
             var fileURL = URL.createObjectURL(self.blob);
             console.log(fileURL);
             self.content = $sce.trustAsResourceUrl(fileURL);
-            $window.open(fileURL);
+            $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900');
          });
      });
    };

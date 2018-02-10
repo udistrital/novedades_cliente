@@ -464,7 +464,7 @@ angular.module('contractualClienteApp')
              self.content = $sce.trustAsResourceUrl(fileURL);
              self.url = fileURL;
 
-             $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900');
+             $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900', true);
           });
       });
     };

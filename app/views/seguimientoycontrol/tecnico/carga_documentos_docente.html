@@ -10,17 +10,23 @@
           <div class="panel-body">
             <form role="form">
               <div class="row">
-                <div class="form-group col-lg-9">
+
+                <div class="col-lg-12">
                   <label>{{'NUM_DOC_IDENTIDAD'| translate}}</label>
+                </div>
+
+                <div class="form-group col-lg-9">
                   <input type="text" ng-model="cargaDocumentosDocente.Documento" class="form-control" placeholder="{{'PLACE_NUM_DOC'| translate}}" required>
                 </div>
+
                 <div class="form-group col-lg-3">
-                  <label> </label>
                   <input type="submit" class="form-control btn btn-success" value="{{'ACCION_CONSULTAR_NUM_DOC' | translate}}" ng-click="cargaDocumentosDocente.obtener_informacion_docente()">
                 </div>
+
+
                 <div class="form-group col-lg-6">
                   <label>{{'NOM_DOCENTE'| translate}}</label>
-                  <input type="text" class="form-control" ng-model="cargaDocumentosDocente.nombre_docente">
+                  <span class="form-control" readonly> {{cargaDocumentosDocente.nombre_docente}}</span>
                 </div>
               </div>
 
@@ -71,7 +77,7 @@
           <br>
 
           <!--Div que se visualiza al seleccionar una vinculación y muestra los tipos de adjuntos que el usuario puede hacer-->
-          <div class="col-md-12" ng-if="cargaDocumentosDocente.seleccionado && cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.Nombre !== 'POR REVISAR COORDINADOR'">
+          <div class="col-md-12" ng-if="cargaDocumentosDocente.seleccionado && (cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'CD' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion == 'RD' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'RC' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'RP')">
             <p>{{'DESC_ADJ' | translate}}</p>
             <!--Campo que pinta la opción archivo-->
             <fieldset class="form-group">
@@ -126,7 +132,7 @@
       </div>
 
 
-      <button ng-if="cargaDocumentosDocente.seleccionado && cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.Nombre !== 'POR REVISAR COORDINADOR' " class="btn btn-success" ng-click="cargaDocumentosDocente.subir_documento()">
+      <button ng-if="cargaDocumentosDocente.seleccionado && (cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'CD' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion == 'RD' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'RC' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'RP') " class="btn btn-success" ng-click="cargaDocumentosDocente.subir_documento()">
         {{'CAR_SOP' | translate }}
       </button>
     </div>
@@ -179,7 +185,7 @@
         </div>
       </div>
 
-      <button class="btn btn-success" ng-click="cargaDocumentosDocente.enviar_solicitud()">
+      <button class="btn btn-success" ng-click="cargaDocumentosDocente.enviar_solicitud()" data-dismiss="modal">
         {{'ENVIAR' | translate }}
       </button>
     </div>
