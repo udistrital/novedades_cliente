@@ -101,7 +101,7 @@ var conf_pruebas = {
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
-        CLIENTE_ID: "pszmROXqfec4pTShgF_fn2DAAX0a",
+        CLIENTE_ID: "8rfoSQI5hu8SnQCGXNKjYg8RVlYa",
         REDIRECT_URL: "http://10.20.0.254/argo/",
         RESPONSE_TYPE: "code",
         SCOPE: "openid email",
@@ -110,7 +110,7 @@ var conf_pruebas = {
         SIGN_OUT_REDIRECT_URL: "http://10.20.0.254/argo/",
         SIGN_OUT_APPEND_TOKEN: "true",
         REFRESH_TOKEN: "https://autenticacion.udistrital.edu.co/oauth2/token",
-        CLIENT_SECRET: "2crHq2IRkFHEVTBfpznLhKHyKVIa"
+        CLIENT_SECRET: "Kr7FDwrtx7tP3MXL9xeMyfy3sFca"
     },
 };
 
