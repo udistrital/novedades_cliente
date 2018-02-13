@@ -231,7 +231,7 @@ angular
                 controller: 'NecesidadContratacionDocenteCtrl',
                 controllerAs: 'necesidadContratacionDocente'
             })
-            .when('/seguimientoycontrol/tecnico/aprobacion_coordinador', {
+            .when('/seguimientoycontrol/tecnico/aprobacion_coordinador/:docid', {
               templateUrl: 'views/seguimientoycontrol/tecnico/aprobacion_coordinador.html',
               controller: 'AprobacionCoordinadorCtrl',
               controllerAs: 'aprobacionCoordinador'

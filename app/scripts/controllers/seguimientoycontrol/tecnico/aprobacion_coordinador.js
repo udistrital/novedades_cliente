@@ -8,13 +8,24 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionCoordinadorCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, academicaWsoService, coreRequest, $q, $window, $sce, nuxeo) {
+  .controller('AprobacionCoordinadorCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, academicaWsoService, coreRequest, $q, $window, $sce, nuxeo, adminMidRequest, $routeParams) {
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
     var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
 
     //Se utiliza la variable self estandarizada
     var self = this;
+    self.Documento = $routeParams.docid;
     self.objeto_docente = [];
+    self.nombres_docentes_incumplidos = '';
+
+    /*
+      Función para obtener la imagen del escudo de la universidad
+    */
+    $http.get("scripts/models/imagen_ud.json")
+     .then(function(response) {
+       self.imagen = response.data;
+    });
+
     /*
       Creación tabla que tendrá todos los docentes relacionados al coordinador
     */
@@ -117,6 +128,7 @@ angular.module('contractualClienteApp')
     };
 
 
+
     /*
       Función que obtiene la información correspondiente al coordinador
     */
@@ -125,12 +137,11 @@ angular.module('contractualClienteApp')
       academicaWsoService.get('coordinador_carrera_snies', documento).
         then(function (response) {
           self.informacion_coordinador = response.data;
-          console.log(self.informacion_coordinador);
           self.coordinador = self.informacion_coordinador.coordinadorCollection.coordinador[0];
-         console.log(self.coordinador.nombre_coordinador);
         })
     };
 
+    self.obtener_docentes_coordinador();
 
     self.dar_visto_bueno = function (pago_mensual) {
       console.log(pago_mensual);
@@ -296,10 +307,11 @@ angular.module('contractualClienteApp')
              var fileURL = URL.createObjectURL(self.blob);
              console.log(fileURL);
              self.content = $sce.trustAsResourceUrl(fileURL);
-             $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900', true);            
+             $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900', true);
           });
       });
     };
+
 
     /*
       Función para "borrar" un documento
@@ -327,9 +339,70 @@ angular.module('contractualClienteApp')
 
     };
 
+    /*
+      Función que genera el documento de quienes no cumplieron con sus obligaciones
+    */
+    self.getContenido = function(){
+      var contenido = [];
+      contenido.push( {text:'EL SUSCRITO COORDINADOR DEL PROYECTO CURRICULAR DE ' + self.coordinador.nombre_proyecto_curricular + ' DE LA FACULTAD DE INGENIERÍA DE LA UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
+      contenido.push({text:'CERTIFICA QUE: ', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
+      contenido.push({text:'Los Docentes de Vinculación Especial contratados para el periodo Académico 2018-1, del Proyecto Curricular de ' + self.coordinador.nombre_proyecto_curricular + ' cumplieron a cabalidad con las funciones docentes durante el mes de FEBRERO de 2018 (según calendario académico).', style:'general_font'}, '\n\n')
+      if(self.docentes_incumplidos){
+        contenido.push({text:'A excepción de las siguientes novedades: ', style:'general_font'}, '\n')
+        angular.forEach(self.docentes_incumplidos, function(value) {
+         contenido.push({text: self.coordinador.nombre_proyecto_curricular +', ' + value.Nombre + ', ' + value.NumDocumento, style:'general_font'});
+       });
+      }
+      contenido.push('\n',{text:'La presente certificación se expide a los nueve días del mes de febrero de 2018.',  style:'general_font'}, '\n\n\n\n\n\n');
+      contenido.push({text:'' + self.coordinador.nombre_coordinador, style:'bottom_space'});
+      contenido.push({text:'Coodinador', style:'bottom_space'});
+      contenido.push({text:'Proyecto Curricular ' + self.coordinador.nombre_proyecto_curricular, style:'bottom_space'});
+      return contenido
+    }
 
+    /*
+      Función que genera el documento de quienes no cumplieron con sus obligaciones
+    */
+    self.generarPDF = function (){
+      //adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/*/**/*').
+      adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/72/2/2018').
+        then(function(response){
+          self.docentes_incumplidos = response.data;
 
+          //Generación documento
+          var docDefinition = {
+            pageMargins: [30, 140, 40, 40],
+            header: {
+             height: 120,
+             width: 120,
+             image: self.imagen.imagen,
+             margin: [100, 15,5,5],
+             alignment: 'center'
+           },
+           content: self.getContenido(),
+           styles: {
+             top_space: {
+               fontSize: 11,
+               marginTop: 30
+             },
+             bottom_space: {
+               fontSize: 12,
+               bold: true,
+               alignment:'center'
+               //marginBottom: 30
+             },
+             general_font:{
+               fontSize: 11,
+               alignment: 'justify'
+             }
+           }
+          }
+          //Variable para obtener la fecha y hora que se genera el dcoumento
+          var date = new Date();
+          date = moment(date).format('DD_MMM_YYYY_HH_mm_ss');
 
-
-
+          //Sirve para descargar el documento y setearle el nombre
+          pdfMake.createPdf(docDefinition).download('Certificación cumplido coordinación ' + date + '.pdf');
+         });
+    };
   });
