@@ -98,6 +98,7 @@ var conf_pruebas = {
     TITAN_SERVICE: "http://10.20.0.254/titan_api_crud/v1/",
     SICAPITAL_SERVICE: "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/",
     CONTRATO_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services/contratoSuscritoProxyService/",
+    NUXEO_SERVICE: "https://athento.udistritaloas.edu.co/nuxeo/",
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
