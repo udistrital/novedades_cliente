@@ -7,12 +7,13 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('menuCtrl', function($location, $http, $window, $q, $scope, $rootScope, token_service, configuracionRequest, notificacion, $translate, $route, $mdSidenav) {
+    .controller('menuCtrl', function($location, $http, $window, $q, $scope, cookie,$rootScope, token_service, configuracionRequest, notificacion, $translate, $route, $mdSidenav) {
         var paths = [];
         $scope.language = {
             es: "btn btn-primary btn-circle btn-outline active",
             en: "btn btn-primary btn-circle btn-outline"
         };
+       
         $scope.menu_app = [{
                 id: "kronos",
                 title: "KRONOS",
