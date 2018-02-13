@@ -85,7 +85,7 @@ var conf_pruebas = {
     ADMINISTRATIVA_SERVICE: "http://10.20.0.254/administrativa_api/v1/",
     ADMINISTRATIVA_PRUEBAS_SERVICE: "http://10.20.0.254/administrativa_amazon_api/v1/",
     ARKA_SERVICE: "https://autenticacion.udistrital.edu.co:8244/arka_api_crud/v1/",
-    CONFIGURACION_SERVICE: "http://10.20.0.254/configuracion_crud_api/v1/",
+    CONFIGURACION_SERVICE: "http://10.20.0.254/configuracion_api/v1/",
     CORE_SERVICE: "http://10.20.0.254/core_api/v1/",
     CORE_AMAZON_SERVICE: "http://10.20.0.254/core_amazon_api/v1/",
     FINANCIERA_MID_SERVICE: "http://10.20.0.254/financiera_mid_api/v1/",
