@@ -74,9 +74,28 @@ angular.module('contractualClienteApp')
                     },
                     {
                         "Id": 3,
-                        "Nombre": "Segumiento Tecnico",
-                        "Url": "",
-                        "Opciones": null
+                        "Nombre": "Seguimiento Técnico",
+                        "Url": "url_nivel_2",
+                        "Opciones": [{
+                              //Aprobación documentos
+                              "Id": 1,
+                              "Nombre": "Aprobar documentos",
+                              "Url": "seguimientoycontrol/tecnico/aprobacion_documentos",
+                              "Opciones": null
+                            },
+                            {
+                              "Id": 1,
+                              "Nombre": "Aprobar pago",
+                              "Url": "seguimientoycontrol/tecnico/aprobacion_pago",
+                              "Opciones": null
+                            },
+                            {
+                              //Aprobación documentos
+                              "Id": 1,
+                              "Nombre": "Carga soportes cumplido docente",
+                              "Url": "seguimientoycontrol/tecnico/carga_documentos_docente",
+                              "Opciones": null
+                          }]
                     }
                 ]
             },
@@ -157,16 +176,15 @@ angular.module('contractualClienteApp')
         };
         $scope.perfil = "ADMINISTRADOR ARGO";
 
-        if(token_service.live_token()){
+      /*  if(token_service.live_token()){
             token_service.token.role.pop();
             var roles = token_service.token.role.toString();
             //var e_roles = roles.replace(',', '%2C');
             configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + roles + '/Argo', '').then(function(response) {
-               
                 $rootScope.my_menu = response.data;
                 /*configuracionRequest.update_menu(https://10.20.0.162:9443/store/apis/authenticate response.data);
                 $scope.menu_service = configuracionRequest.get_menu();*/
-            });
+          /*  });
         }
         /*
         configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + "ADMINISTRADOR_ARGO" + '/Argo', '').then(function(response) {
