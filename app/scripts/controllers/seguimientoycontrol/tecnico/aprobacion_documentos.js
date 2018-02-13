@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionDocumentosCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, amazonAdministrativaRequest,nuxeo,coreRequest, $q, $sce, $window, adminMidRequest ) {
+  .controller('AprobacionDocumentosCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, amazonAdministrativaRequest,nuxeo,coreRequest, $q, $sce, $window, adminMidRequest,$routeParams) {
 
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
     var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
@@ -16,6 +16,7 @@ angular.module('contractualClienteApp')
     //Se utiliza la variable self estandarizada
     var self = this;
     self.contratistas = [];
+    self.Documento = $routeParams.docid;
 
     /*
       Creación tabla que tendrá todos los contratistas relacionados al supervisor
@@ -169,8 +170,9 @@ angular.module('contractualClienteApp')
 
       }
 
-      self.gridApi.core.refresh();
     };
+
+    self.obtener_informacion_supervisor ();
 
 
     self.validarCumplido = function (contratista) {
@@ -268,6 +270,8 @@ angular.module('contractualClienteApp')
 
 
     };
+
+
 
     self.verificarDocumentos = function (pago_mensual) {
       self.aprobado = false;

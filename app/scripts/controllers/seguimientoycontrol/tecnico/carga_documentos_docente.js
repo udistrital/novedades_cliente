@@ -8,12 +8,18 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('CargaDocumentosDocenteCtrl', function ($scope, $http, $translate, uiGridConstants, contratoRequest, administrativaRequest, nuxeo, $q, coreRequest, $window,$sce, adminMidRequest) {
+  .controller('CargaDocumentosDocenteCtrl', function ($scope, $http, $translate, uiGridConstants, contratoRequest, administrativaRequest, nuxeo, $q, coreRequest, $window,$sce, adminMidRequest,$routeParams) {
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
   var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
 
   //Se utiliza la variable self estandarizada
   var self = this;
+
+
+  self.Documento = $routeParams.docid;
+
+ 
+  
 
   self.anios = [];
 
@@ -137,7 +143,6 @@ angular.module('contractualClienteApp')
       }
     ]
   };
-
 
 
   self.gridOptions1.onRegisterApi = function(gridApi) {
@@ -303,9 +308,12 @@ angular.module('contractualClienteApp')
         }
 
       });
-      console.log("Este es el resultado " + self.respuesta_docente);
-    self.gridApi2.core.refresh();
+    //  console.log("Este es el resultado " + self.respuesta_docente);
+   // self.gridApi2.core.refresh();
   };
+
+  self.obtener_informacion_docente();
+
 
   /*
   Función que permite realizar una solicitud de pago mensual

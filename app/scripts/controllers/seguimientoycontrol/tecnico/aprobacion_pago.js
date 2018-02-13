@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionPagoCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest) {
+  .controller('AprobacionPagoCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest,$routeParams) {
 
 
       //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
@@ -16,6 +16,8 @@ angular.module('contractualClienteApp')
 
       //Se utiliza la variable self estandarizada
       var self = this;
+      self.Documento = $routeParams.docid;
+
       self.contratistas = [];
 
       /*
@@ -173,9 +175,10 @@ angular.module('contractualClienteApp')
                         }
         */
 
-        self.gridApi.core.refresh();
+       // self.gridApi.core.refresh();
       };
 
+      self.obtener_informacion_ordenador();
 
       self.validarCumplido = function (contratista) {
         swal({
