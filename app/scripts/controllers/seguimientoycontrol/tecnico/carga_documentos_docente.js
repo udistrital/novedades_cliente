@@ -201,7 +201,7 @@ angular.module('contractualClienteApp')
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
         cellTemplate: '<a type="button" title="{{\'VER_SOP\'| translate }}" type="button" class="fa fa-folder-open-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes">' +
-          '</a>&nbsp;' + ' <a ng-if="(cargaDocumentosDocente.row.entity.EstadoPagoMensual.CodigoAbreviacion === \'CD\')" type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision(row.entity)"  >',
+          '</a>&nbsp;' + ' <a ng-if="row.entity.EstadoPagoMensual.CodigoAbreviacion === \'CD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RC\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RD\'" type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision(row.entity)"  >',
         width: "10%"
       }
     ]
@@ -231,7 +231,6 @@ angular.module('contractualClienteApp')
   self.enviar_revision = function (solicitud) {
     swal({
       title: '¿Está seguro(a) de enviar a revisar los soportes por el coordinador?',
-      text: "No podrá revertir la validación",
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -242,17 +241,23 @@ angular.module('contractualClienteApp')
       var nombre_docs = solicitud.VigenciaContrato + solicitud.NumeroContrato + solicitud.Persona + solicitud.Mes + solicitud.Ano;
       self.validar_docs(nombre_docs, "HORAS LECTIVAS");
       console.log(self.docs, self.validar_docs);
-      console.log(solicitud);
+     // console.log(solicitud);
       solicitud.EstadoPagoMensual = {"Id":1};
       solicitud.Responsable = self.informacion_coordinador.numero_documento_coordinador;
       solicitud.CargoResponsable = "COORDINADOR " + self.contrato.Dependencia;
-      console.log(solicitud);
+     // console.log(solicitud);
       administrativaRequest.put('pago_mensual', solicitud.Id, solicitud).
       then(function(response){
-        console.log("Se realizó cambio de estado en la solicutd");
+        swal(
+          'Solicitud enviada',
+          'Su solicitud se encuentra a la espera de revisión',
+          'success'
+        )
       })
-      self.gridApi2.core.refresh();
+      self.cargar_soportes(self.contrato);
+      
     });
+    self.gridApi2.core.refresh();
   };
 
   /*
@@ -460,7 +465,7 @@ angular.module('contractualClienteApp')
           .then(function() {
             return nuxeo.repository().fetch(doc.uid, {
               schemas: ['dublincore', 'file']
-            });
+            });            
           })
           .then(function(doc) {
             var url = doc.uid;
@@ -483,11 +488,16 @@ angular.module('contractualClienteApp')
   self.subir_documento = function() {
 
     var nombre_doc = self.contrato.Vigencia + self.contrato.NumeroVinculacion + self.Documento + self.fila_seleccionada.Mes + self.fila_seleccionada.Ano;
-    var descripcion = self.item.ItemInforme.Nombre;
+    console.log(self.fileModel);
+   
 
     if (self.archivo) {
+      
+      if (self.fileModel!== undefined && self.item!==undefined) {
+        var descripcion = self.item.ItemInforme.Nombre;
       var aux = self.cargarDocumento(nombre_doc, descripcion, self.fileModel, function(url) {
         //Objeto documento
+     
         self.objeto_documento = {
           "Nombre": nombre_doc,
           "Descripcion": descripcion,
@@ -527,16 +537,30 @@ angular.module('contractualClienteApp')
             administrativaRequest.post('soporte_pago_mensual', self.objeto_soporte)
               .then(function(response) {
                 //Bandera de validacion
-                console.log("Se ha registrado el documento en el soporte mensual");
+                swal(
+                  'Documento guardado',
+                  'Se ha guardado el documento en el respositorio',
+                  'success'
+                );
               });
           });
 
 
       });
 
+    }else{
+
+      swal(
+        'Error',
+        'Debe subir un archivo y seleccionar un item',
+        'error'
+      );
+    }
+//
     } else if (self.link) {
+      if (self.enlace!== undefined && self.item!==undefined) {
 
-
+        var descripcion = self.item.ItemInforme.Nombre;
       //Objeto documento
       self.objeto_documento = {
         "Nombre": nombre_doc,
@@ -575,9 +599,22 @@ angular.module('contractualClienteApp')
           administrativaRequest.post('soporte_pago_mensual', self.objeto_soporte)
             .then(function(response) {
               //Bandera de validacion
-              console.log("Se ha registrado el documento en el soporte mensual");
-            });
+              swal(
+                'Enlace guardado',
+                'Se ha guardado el enlace',
+                'success'
+              );            });
         });
+
+      }else{
+
+        swal(
+          'Error',
+          'Debe copiar el enlace y seleccionar un item',
+          'error'
+        );
+
+      }
     }
     self.objeto_documento={};
 
