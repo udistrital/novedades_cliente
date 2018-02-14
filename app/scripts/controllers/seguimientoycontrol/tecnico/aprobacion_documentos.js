@@ -512,7 +512,20 @@ angular.module('contractualClienteApp')
 
         administrativaRequest.put('soporte_pago_mensual',self.soporte.Id, self.soporte).
         then(function(response){
-            console.log(response);
+          if (response.data === 'OK') {
+
+            swal(
+              'Documento Aprobado',
+              'Se ha aprobado el documento',
+              'success'
+            )
+          } else {
+            swal(
+              'Error',
+              'No se ha podido aprobar el documento',
+              'error'
+            );  
+          }
        });
 
 
