@@ -350,7 +350,7 @@ angular.module('contractualClienteApp')
       if(self.docentes_incumplidos){
         contenido.push({text:'A excepción de las siguientes novedades: ', style:'general_font'}, '\n')
         angular.forEach(self.docentes_incumplidos, function(value) {
-         contenido.push({text: self.coordinador.nombre_proyecto_curricular +', ' + value.Nombre + ', ' + value.NumDocumento, style:'general_font'});
+         contenido.push({text: self.coordinador.nombre_proyecto_curricular +', ' + value.NumeroContrato + ', ' + value.Nombre + ', ' + value.NumDocumento + ', No se le aprueba cumplido.', style:'lista'});
        });
       }
       contenido.push('\n',{text:'La presente certificación se expide a los nueve días del mes de febrero de 2018.',  style:'general_font'}, '\n\n\n\n\n\n');
@@ -394,6 +394,10 @@ angular.module('contractualClienteApp')
              general_font:{
                fontSize: 11,
                alignment: 'justify'
+             },
+             lista:{
+               fontSize: 9,
+               alignment:'justify'
              }
            }
           }

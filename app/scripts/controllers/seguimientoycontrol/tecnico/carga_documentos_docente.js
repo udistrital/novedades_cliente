@@ -18,8 +18,8 @@ angular.module('contractualClienteApp')
 
   self.Documento = $routeParams.docid;
 
- 
-  
+
+
 
   self.anios = [];
 
@@ -260,7 +260,7 @@ angular.module('contractualClienteApp')
         )
       })
       self.cargar_soportes(self.contrato);
-      
+
     });
     self.gridApi2.core.refresh();
   };
@@ -473,7 +473,7 @@ angular.module('contractualClienteApp')
           .then(function() {
             return nuxeo.repository().fetch(doc.uid, {
               schemas: ['dublincore', 'file']
-            });            
+            });
           })
           .then(function(doc) {
             var url = doc.uid;
@@ -497,15 +497,15 @@ angular.module('contractualClienteApp')
 
     var nombre_doc = self.contrato.Vigencia + self.contrato.NumeroVinculacion + self.Documento + self.fila_seleccionada.Mes + self.fila_seleccionada.Ano;
     console.log(self.fileModel);
-   
+
 
     if (self.archivo) {
-      
+
       if (self.fileModel!== undefined && self.item!==undefined) {
         var descripcion = self.item.ItemInforme.Nombre;
       var aux = self.cargarDocumento(nombre_doc, descripcion, self.fileModel, function(url) {
         //Objeto documento
-     
+
         self.objeto_documento = {
           "Nombre": nombre_doc,
           "Descripcion": descripcion,
@@ -547,7 +547,7 @@ angular.module('contractualClienteApp')
                 //Bandera de validacion
                 swal(
                   'Documento guardado',
-                  'Se ha guardado el documento en el respositorio',
+                  'Se ha guardado el documento en el repositorio',
                   'success'
                 );
               });
