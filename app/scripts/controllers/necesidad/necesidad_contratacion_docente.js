@@ -137,7 +137,7 @@ angular.module('contractualClienteApp')
         limit: -1
       })).then(function(response) {
         self.ordenador_gasto = response.data[0];
-        self.dep_ned.OrdenadorGasto=response.data[0].Id;
+        self.dep_ned.OrdenadorGasto=strconv.Atoi(response.data[0].Id);
       });
     });
   },true);
@@ -422,6 +422,7 @@ angular.module('contractualClienteApp')
 
     administrativaRequest.post("tr_necesidad_docente", self.tr_necesidad).then(function(response) {
       self.alerta = "";
+      console.log("Aqui esta-> ", response);
       for (var i = 1; i < response.data.length; i++) {
         self.alerta = self.alerta + response.data[i] + "\n";
       }

@@ -148,7 +148,7 @@
 
             <div class="form-group">
               <label for="supervisor" class="control-label">{{"SUPERVISOR" | translate}}</label>
-              <select class="form-control" ng-model="solicitudNecesidad.necesidad.Supervisor" ng-options="sup.Id as sup.PrimerNombre+' '+sup.SegundoNombre+' '+sup.PrimerApellido+' '+sup.SegundoApellido for sup in solicitudNecesidad.persona_data">
+              <select class="form-control" ng-model="solicitudNecesidad.necesidad.Supervisor" ng-options="strconv.Atoi(sup.Id) as sup.PrimerNombre+' '+sup.SegundoNombre+' '+sup.PrimerApellido+' '+sup.SegundoApellido for sup in solicitudNecesidad.persona_data">
                 <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"SUPERVISOR" | translate}}</option>
               </select>
             </div>
