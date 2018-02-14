@@ -15,46 +15,46 @@
   </div>
   <div id="navbar" class="navbar-collapse collapse in">
       <ul class="nav navbar-nav navbar-right">
-        <li ng-repeat="nivel_1 in menu_service">
-          <a ng-if="nivel_1.Opciones === null" ng-href="{{'#/' + nivel_1.Url}}">
-            {{nivel_1.Nombre}}
-          </a>
-        </li>
-        <li ng-repeat="nivel_1 in menu_service" class="dropdown">
-          <a ng-if="nivel_1.Opciones !== null" ng-href="{{actual}}" class="dropdown-toggle" data-toggle="dropdown">
-              {{nivel_1.Nombre}} <b class="caret">
-            </b>
-          </a>
-          <ul class="dropdown-menu">
-            <li ng-repeat="nivel_2 in nivel_1.Opciones">
-              <a ng-href="{{'#/' + nivel_2.Url}}" ng-if="nivel_2.Opciones === null">
-                {{nivel_2.Nombre}}
-              </a>
-            </li>
-            <li class="dropdown dropdown-submenu" ng-repeat="nivel_2 in nivel_1.Opciones">
-              <a ng-href="{{actual}}" class="dropdown-toggle" data-toggle="dropdown" ng-if="nivel_2.Opciones !== null">
-                {{nivel_2.Nombre}}
-              </a>
+          <li ng-repeat="nivel_1 in ::my_menu">
+              <a ng-if="nivel_1.Opciones === null && nivel_1.TipoOpcion === 'Menú'" ng-click="redirect_url('/' + nivel_1.Url)">
+      {{nivel_1.Nombre}}
+    </a>
+          </li>
+          <li ng-repeat="nivel_1 in ::my_menu" class="dropdown">
+              <a ng-if="nivel_1.Opciones !== null && nivel_1.TipoOpcion === 'Menú'" class="dropdown-toggle" data-toggle="dropdown">
+        {{nivel_1.Nombre}} <b class="caret">
+      </b>
+    </a>
               <ul class="dropdown-menu">
-                <li ng-repeat="nivel_3 in nivel_2.Opciones">
-                  <a ng-href="{{'#/' + nivel_3.Url}}" ng-if="nivel_3.Opciones === null">
-                    {{nivel_3.Nombre}}
-                  </a>
-                </li>
-                <li class="dropdown dropdown-submenu" ng-repeat="nivel_3 in nivel_2.Opciones">
-                  <a ng-href="{{actual}}" class="dropdown-toggle" data-toggle="dropdown" ng-if="nivel_3.Opciones !== null">{{nivel_3.Nombre}}
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li ng-repeat="nivel_4 in nivel_3.Opciones">
-                      <a ng-href="{{'#/' + nivel_4.Url}}">
-                        {{nivel_4.Nombre}}
-                      </a></li>
-                  </ul>
-                </li>
+                  <li ng-repeat="nivel_2 in nivel_1.Opciones">
+                      <a ng-click="redirect_url('/' + nivel_2.Url)" ng-if="nivel_2.Opciones === null && nivel_2.TipoOpcion === 'Menú'">
+          {{nivel_2.Nombre}}
+        </a>
+                  </li>
+                  <li class="dropdown dropdown-submenu" aria-haspopup="true" aria-expanded="false" ng-repeat="nivel_2 in nivel_1.Opciones">
+                      <a class="dropdown-toggle" data-toggle="dropdown" ng-if="nivel_2.Opciones !== null && nivel_2.TipoOpcion === 'Menú'">
+          {{nivel_2.Nombre}}
+        </a>
+                      <ul class="dropdown-menu ">
+                          <li ng-repeat="nivel_3 in nivel_2.Opciones ">
+                              <a ng-click="redirect_url('/' + nivel_3.Url)" ng-if="nivel_3.Opciones == null && nivel_3.TipoOpcion==='Menú' ">
+              {{nivel_3.Nombre}}
+            </a>
+                          </li>
+                          <li class="dropdown dropdown-submenu " aria-haspopup="true " aria-expanded="false " ng-repeat="nivel_3 in nivel_2.Opciones ">
+                              <a class="dropdown-toggle " data-toggle="dropdown " ng-if="nivel_3.Opciones !== null && nivel_3.TipoOpcion==='Menú' ">{{nivel_3.Nombre}}
+            </a>
+                              <ul class="dropdown-menu ">
+                                  <li ng-repeat="nivel_4 in nivel_3.Opciones ">
+                                      <a ng-click="redirect_url('/' + nivel_4.Url)" ng-if="nivel_4.TipoOpcion === 'Menú' ">
+                  {{nivel_4.Nombre}}
+                </a></li>
+                              </ul>
+                          </li>
+                      </ul>
+                  </li>
               </ul>
-            </li>
-          </ul>
-        </li>
+          </li>
 
           <!-- /.dropdown Notifications-->
           <li class="dropdown ">

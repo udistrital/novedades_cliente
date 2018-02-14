@@ -12,7 +12,7 @@ angular.module('agoraService', [])
         // Service logic
         // ...
         //var path = "http://10.20.0.254/administrativa_amazon_api/v1/";
-        var path = CONF.GENERAL.ADMINISTRATIVA_SERVICE;
+        var path = CONF.GENERAL.ADMINISTRATIVA_PRUEBAS_SERVICE;
         // Public API here
         return {
             get: function(tabla, params) {

@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope, agoraRequest, oikosRequest, coreRequest, financieraRequest, $translate) {
+    .controller('SolicitudNecesidadCtrl', function(administrativaRequest, $scope, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate) {
         var self = this;
         self.documentos = [];
         self.formuIncompleto = true;
@@ -130,7 +130,7 @@ angular.module('contractualClienteApp')
         };
 
         $scope.$watch('solicitudNecesidad.dependencia_destino', function() {
-            coreRequest.get('jefe_dependencia', $.param({
+            coreAmazonRequest.get('jefe_dependencia', $.param({
                 query: "DependenciaId:" + self.dependencia_destino,
                 limit: -1
             })).then(function(response2) {
@@ -144,7 +144,7 @@ angular.module('contractualClienteApp')
             });
         }, true);
 
-        coreRequest.get('jefe_dependencia/' + self.dep_ned.JefeDependenciaSolicitante, '').then(function(response) {
+        coreAmazonRequest.get('jefe_dependencia/' + self.dep_ned.JefeDependenciaSolicitante, '').then(function(response) {
             self.dependencia_solicitante_data = response.data;
         });
 
@@ -155,7 +155,7 @@ angular.module('contractualClienteApp')
         }, true);
 
         $scope.$watch('solicitudNecesidad.rol_ordenador_gasto', function() {
-            coreRequest.get('jefe_dependencia', $.param({
+            coreAmazonRequest.get('jefe_dependencia', $.param({
                 query: "DependenciaId:" + self.rol_ordenador_gasto,
                 limit: -1
             })).then(function(response) {
@@ -185,7 +185,7 @@ angular.module('contractualClienteApp')
             self.valor_total = (self.especificaciones.Valor * self.especificaciones.Cantidad) + self.valor_iva;
         }, true);
 
-        agoraRequest.get('snies_area', $.param({
+        coreAmazonRequest.get('snies_area', $.param({
             limit: -1,
             query: 'Estado:ACTIVO'
         })).then(function(response) {
@@ -193,7 +193,7 @@ angular.module('contractualClienteApp')
         });
 
         $scope.$watch('solicitudNecesidad.nucleoarea', function() {
-            agoraRequest.get('snies_nucleo_basico', $.param({
+            coreAmazonRequest.get('snies_nucleo_basico', $.param({
                 query: 'IdArea.Id:' + self.nucleoarea,
                 limit: -1
             })).then(function(response) {
@@ -209,7 +209,7 @@ angular.module('contractualClienteApp')
             self.dependencia_data = response.data;
         });
 
-        coreRequest.get('ordenador_gasto', $.param({
+        coreAmazonRequest.get('ordenador_gasto', $.param({
             limit: -1,
             sortby: "Cargo",
             order: "asc",
