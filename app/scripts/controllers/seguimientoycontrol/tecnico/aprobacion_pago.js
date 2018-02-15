@@ -38,7 +38,17 @@ angular.module('contractualClienteApp')
         rowHeight: 40,
         columnDefs: [
           {
-            field: 'Persona',
+            field: 'Dependencia.Nombre',
+            cellTemplate: tmpl,
+            displayName: $translate.instant('PRO_CURR'),
+            sort: {
+              direction: uiGridConstants.ASC,
+              priority: 1
+            },
+            width: "15%"
+          },
+          {
+            field: 'PagoMensual.Persona',
             cellTemplate: tmpl,
             displayName: $translate.instant('DOCUMENTO'),
             sort: {
@@ -48,7 +58,7 @@ angular.module('contractualClienteApp')
             width: "15%"
           },
           {
-            field: 'Nombre',
+            field: 'NombrePersona',
             cellTemplate: tmpl,
             displayName: $translate.instant('NAME_TEACHER'),
             sort: {
@@ -58,7 +68,7 @@ angular.module('contractualClienteApp')
           },
 
           {
-            field: 'NumeroContrato',
+            field: 'PagoMensual.NumeroContrato',
             cellTemplate: tmpl,
             displayName: $translate.instant('NUM_VIN'),
             sort: {
@@ -67,7 +77,7 @@ angular.module('contractualClienteApp')
             },
           },
           {
-            field: 'Mes',
+            field: 'PagoMensual.Mes',
             cellTemplate: tmpl,
             displayName: $translate.instant('MES_SOLICITUD'),
             sort: {
@@ -76,7 +86,7 @@ angular.module('contractualClienteApp')
             },
           },
           {
-            field: 'Ano',
+            field: 'PagoMensual.Ano',
             cellTemplate: tmpl,
             displayName: $translate.instant('ANO_SOLICITUD'),
             sort: {
@@ -88,9 +98,9 @@ angular.module('contractualClienteApp')
           {
             field: 'Acciones',
             displayName: $translate.instant('ACC'),
-            cellTemplate:  ' <a type="button" title="Aprobar pago" type="button" class="fa fa-check fa-lg  faa-shake animated-hover"  ng-click="grid.appScope.aprobacionPago.aprobarPago(row.entity)">'+
+            cellTemplate:  ' <a type="button" title="Aprobar pago" type="button" class="fa fa-check fa-lg  faa-shake animated-hover"  ng-click="grid.appScope.aprobacionPago.aprobarPago(row.entity.PagoMensual)">'+
             '<a type="button" title="Rechazar" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
-            'ng-click="grid.appScope.aprobacionPago.rechazarPago(row.entity)"></a>',
+            'ng-click="grid.appScope.aprobacionPago.rechazarPago(row.entity.PagoMensual)"></a>',
             width: "10%"
           }
         ]
@@ -139,19 +149,9 @@ angular.module('contractualClienteApp')
           console.log(self.ordenador);
 
           //Petición para obtener el Id de la relación de acuerdo a los campos
-          administrativaRequest.get('pago_mensual', $.param({
-            limit: 0,
-            query: 'Responsable:' + self.Documento + ',EstadoPagoMensual.CodigoAbreviacion:AD'
-          })).then(function (response) {
+          adminMidRequest.get('aprobacion_pago/solicitudes_ordenador/'+self.Documento).then(function (response) {
             self.documentos = response.data;
             //self.obtener_informacion_docente();
-            angular.forEach(self.documentos, function (value) {
-              console.log(value);
-              contratoRequest.get('informacion_contrato_elaborado_contratista', value.NumeroContrato + '/' + value.VigenciaContrato).
-                then(function (response) {
-                  value.Nombre = response.data.informacion_contratista.nombre_completo;
-                });
-            });
             self.gridOptions1.data = self.documentos;
           });
 

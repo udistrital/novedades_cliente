@@ -12,6 +12,13 @@ angular.module('contractualClienteApp')
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
   var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
 
+
+  $('body').on('hidden.bs.modal', '.modal', function (e) {
+    if($('.modal').hasClass('in')) {
+    $('body').addClass('modal-open');
+    }    
+});
+
   //Se utiliza la variable self estandarizada
   var self = this;
 
@@ -725,8 +732,10 @@ angular.module('contractualClienteApp')
   /*
     Función para "borrar" un documento
   */
-  self.borrar_doc = function(documento){
-      swal({
+  self.borrar_doc = function(){
+
+   var documento = self.doc;
+    /*  swal({
         title: '¿Está seguro(a) de eliminar el soporte?',
         text: "No podrá revertir esta acción",
         type: 'warning',
@@ -735,7 +744,7 @@ angular.module('contractualClienteApp')
         cancelButtonColor: '#d33',
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Aceptar'
-      }).then(function () {
+      }).then(function () {*/
        documento.Contenido = JSON.stringify(documento.Contenido)
        documento.Activo = false;
        coreRequest.put('documento', documento.Id, documento).
@@ -745,11 +754,15 @@ angular.module('contractualClienteApp')
             self.obtener_doc(self.fila_sol_pago);
       });
 
-      });
+    //  });
 
 
   };
 
+  self.set_doc = function (doc){
+
+    self.doc = doc;
+  }
 
 
 

@@ -28,7 +28,17 @@ angular.module('contractualClienteApp')
       rowHeight: 40,
       columnDefs: [
         {
-          field: 'Persona',
+          field: 'Dependencia.Nombre',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('PRO_CURR'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+          width: "15%"
+        },
+        {
+          field: 'PagoMensual.Persona',
           cellTemplate: tmpl,
           displayName: $translate.instant('DOCUMENTO'),
           sort: {
@@ -38,7 +48,7 @@ angular.module('contractualClienteApp')
           width: "15%"
         },
         {
-          field: 'Nombre',
+          field: 'NombrePersona',
           cellTemplate: tmpl,
           displayName: $translate.instant('NAME_TEACHER'),
           sort: {
@@ -48,7 +58,7 @@ angular.module('contractualClienteApp')
         },
 
         {
-          field: 'NumeroContrato',
+          field: 'PagoMensual.NumeroContrato',
           cellTemplate: tmpl,
           displayName: $translate.instant('NUM_VIN'),
           sort: {
@@ -57,7 +67,7 @@ angular.module('contractualClienteApp')
           },
         },
         {
-          field: 'Mes',
+          field: 'PagoMensual.Mes',
           cellTemplate: tmpl,
           displayName: $translate.instant('MES_SOLICITUD'),
           sort: {
@@ -66,7 +76,7 @@ angular.module('contractualClienteApp')
           },
         },
         {
-          field: 'Ano',
+          field: 'PagoMensual.Ano',
           cellTemplate: tmpl,
           displayName: $translate.instant('ANO_SOLICITUD'),
           sort: {
@@ -78,13 +88,13 @@ angular.module('contractualClienteApp')
         {
           field: 'Acciones',
           displayName: $translate.instant('ACC'),
-          cellTemplate: ' <a type="button" title="Aprobar pago" type="button" class="fa fa-check fa-lg  faa-shake animated-hover" ng-if="!row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.verificarDocumentos(row.entity)">' +
+          cellTemplate: ' <a type="button" title="Aprobar pago" type="button" class="fa fa-check fa-lg  faa-shake animated-hover" ng-if="!row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.verificarDocumentos(row.entity.PagoMensual)">' +
             '</a>&nbsp;' + '<a type="button" title="Rechazar pago" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
             'ng-if="row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.invalidarCumplido(row.entity)"></a>' +
             '<a type="button" title="Ver información" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
-            'ng-click="grid.appScope.aprobacionDocumentos.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes"></a>' +
+            'ng-click="grid.appScope.aprobacionDocumentos.obtener_doc(row.entity.PagoMensual)" data-toggle="modal" data-target="#modal_ver_soportes"></a>' +
             '<a type="button" title="Rechazar" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
-            'ng-click="grid.appScope.aprobacionDocumentos.rechazar(row.entity)"></a>',
+            'ng-click="grid.appScope.aprobacionDocumentos.rechazar(row.entity.PagoMensual)"></a>',
           width: "10%"
         }
       ]
@@ -136,30 +146,17 @@ angular.module('contractualClienteApp')
 
 
 
-          self.procesar_contratistas(self.respuesta_supervisor_contratistas.supervisores.supervisor_contratista);
-          console.log(self.contratistas);
 
 
           self.supervisor = self.respuesta_supervisor_contratistas.supervisores.supervisor_contratista[0].supervisor;
 
 
           //Petición para obtener el Id de la relación de acuerdo a los campos
-          administrativaRequest.get('pago_mensual', $.param({
-            limit: 0,
-            query: 'Responsable:' + self.Documento + ',EstadoPagoMensual.CodigoAbreviacion:PAD'
-          })).then(function (response) {
+          adminMidRequest.get('aprobacion_pago/solicitudes_supervisor/'+self.Documento).then(function (response) {
             self.documentos = response.data;
             //self.obtener_informacion_docente();
-            angular.forEach(self.documentos, function (value) {
-              console.log(value);
-              contratoRequest.get('informacion_contrato_elaborado_contratista', value.NumeroContrato + '/' + value.VigenciaContrato).
-                then(function (response) {
-                  value.Nombre = response.data.informacion_contratista.nombre_completo;
-                });
-            });
             self.gridOptions1.data = self.documentos;
           });
-
           // self.gridOptions1.data = self.contratistas;
 
 
