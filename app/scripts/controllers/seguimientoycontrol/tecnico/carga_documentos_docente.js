@@ -16,7 +16,7 @@ angular.module('contractualClienteApp')
   $('body').on('hidden.bs.modal', '.modal', function (e) {
     if($('.modal').hasClass('in')) {
     $('body').addClass('modal-open');
-    }    
+    }
 });
 
   //Se utiliza la variable self estandarizada
@@ -509,10 +509,13 @@ angular.module('contractualClienteApp')
     if (self.archivo) {
 
       if (self.fileModel!== undefined && self.item!==undefined) {
-        var descripcion = self.item.ItemInforme.Nombre;
+
+      var descripcion = self.item.ItemInforme.Nombre;
       var aux = self.cargarDocumento(nombre_doc, descripcion, self.fileModel, function(url) {
         //Objeto documento
-
+        var date = new Date();
+        date = moment(date).format('DD_MMM_YYYY_HH:mm:ss');
+        //var now = date
         self.objeto_documento = {
           "Nombre": nombre_doc,
           "Descripcion": descripcion,
@@ -521,6 +524,7 @@ angular.module('contractualClienteApp')
           },
           "Contenido": JSON.stringify({
             "NombreArchivo": self.fileModel.name,
+            "FechaCreacion": date,
             "Tipo": "Archivo",
             "IdNuxeo": url,
             "Observaciones": self.observaciones
