@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionCoordinadorCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, academicaWsoService, coreRequest, $q, $window, $sce, nuxeo, adminMidRequest, $routeParams) {
+  .controller('AprobacionCoordinadorCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, academicaWsoService, coreRequest, $q, $window, $sce, nuxeo, adminMidRequest, $routeParams, wso2GeneralService) {
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
     var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
 
@@ -17,6 +17,60 @@ angular.module('contractualClienteApp')
     self.Documento = $routeParams.docid;
     self.objeto_docente = [];
     self.nombres_docentes_incumplidos = '';
+    self.mes = '';
+
+    self.meses = [{
+        Id: 1,
+        Nombre: $translate.instant('ENERO')
+      },
+      {
+        Id: 2,
+        Nombre: $translate.instant('FEBRERO')
+      },
+      {
+        Id: 3,
+        Nombre: $translate.instant('MARZO')
+      },
+      {
+        Id: 4,
+        Nombre: $translate.instant('ABRIL')
+      },
+      {
+        Id: 5,
+        Nombre: $translate.instant('MAYO')
+      },
+      {
+        Id: 6,
+        Nombre: $translate.instant('JUNIO')
+      },
+      {
+        Id: 7,
+        Nombre: $translate.instant('JULIO')
+      },
+      {
+        Id: 8,
+        Nombre: $translate.instant('AGOSTO')
+      },
+      {
+        Id: 9,
+        Nombre: $translate.instant('SEPT')
+      },
+      {
+        Id: 10,
+        Nombre: $translate.instant('OCTU')
+      },
+      {
+        Id: 11,
+        Nombre: $translate.instant('NOV')
+      },
+      {
+        Id: 12,
+        Nombre: $translate.instant('DIC')
+      }
+    ];
+
+    self.d = new Date();
+    self.anios = [(self.d.getFullYear()), (self.d.getFullYear() + 1)];
 
     /*
       Función para obtener la imagen del escudo de la universidad
@@ -103,6 +157,8 @@ angular.module('contractualClienteApp')
       self.gridApi = gridApi;
     };
 
+
+
     /*
     Función que al recibir el número de documento del coordinador cargue los correspondientes
     */
@@ -142,6 +198,7 @@ angular.module('contractualClienteApp')
     };
 
     self.obtener_docentes_coordinador();
+
 
     self.dar_visto_bueno = function (pago_mensual) {
       console.log(pago_mensual);
@@ -335,9 +392,8 @@ angular.module('contractualClienteApp')
         });
 
         });
-
-
     };
+
 
     /*
       Función que genera el documento de quienes no cumplieron con sus obligaciones
@@ -355,7 +411,7 @@ angular.module('contractualClienteApp')
       }
       contenido.push('\n',{text:'La presente certificación se expide a los nueve días del mes de febrero de 2018.',  style:'general_font'}, '\n\n\n\n\n\n');
       contenido.push({text:'' + self.coordinador.nombre_coordinador, style:'bottom_space'});
-      contenido.push({text:'Coodinador', style:'bottom_space'});
+      contenido.push({text:'Coordinador', style:'bottom_space'});
       contenido.push({text:'Proyecto Curricular ' + self.coordinador.nombre_proyecto_curricular, style:'bottom_space'});
       return contenido
     }
@@ -364,49 +420,57 @@ angular.module('contractualClienteApp')
       Función que genera el documento de quienes no cumplieron con sus obligaciones
     */
     self.generarPDF = function (){
-      //adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/*/**/*').
-      adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/72/2/2018').
-        then(function(response){
-          self.docentes_incumplidos = response.data;
 
-          //Generación documento
-          var docDefinition = {
-            pageMargins: [30, 140, 40, 40],
-            header: {
-             height: 120,
-             width: 120,
-             image: self.imagen.imagen,
-             margin: [100, 15,5,5],
-             alignment: 'center'
-           },
-           content: self.getContenido(),
-           styles: {
-             top_space: {
-               fontSize: 11,
-               marginTop: 30
-             },
-             bottom_space: {
-               fontSize: 12,
-               bold: true,
-               alignment:'center'
-               //marginBottom: 30
-             },
-             general_font:{
-               fontSize: 11,
-               alignment: 'justify'
-             },
-             lista:{
-               fontSize: 9,
-               alignment:'justify'
-             }
-           }
-          }
-          //Variable para obtener la fecha y hora que se genera el dcoumento
-          var date = new Date();
-          date = moment(date).format('DD_MMM_YYYY_HH_mm_ss');
+      wso2GeneralService.get('/dependenciasProxy/proyecto_curricular_snies', self.coordinador.codigo_snies).
+      then(function(response){
+        self.proyecto_homologado = response.data.homologacion;
+        console.log(self.proyecto_homologado);
 
-          //Sirve para descargar el documento y setearle el nombre
-          pdfMake.createPdf(docDefinition).download('Certificación cumplido coordinación ' + date + '.pdf');
-         });
+            //adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/*/**/*').
+            adminMidRequest.get('/aprobacion_pago/certificacion_visto_bueno/'+ self.proyecto_homologado.id_oikos +'/' + self.mes.Id + '/' + self.anio).
+              then(function(responseMid){
+                self.docentes_incumplidos = responseMid.data;
+
+                //Generación documento
+                var docDefinition = {
+                  pageMargins: [30, 140, 40, 40],
+                  header: {
+                   height: 120,
+                   width: 120,
+                   image: self.imagen.imagen,
+                   margin: [100, 15,5,5],
+                   alignment: 'center'
+                 },
+                 content: self.getContenido(),
+                 styles: {
+                   top_space: {
+                     fontSize: 11,
+                     marginTop: 30
+                   },
+                   bottom_space: {
+                     fontSize: 12,
+                     bold: true,
+                     alignment:'center'
+                     //marginBottom: 30
+                   },
+                   general_font:{
+                     fontSize: 11,
+                     alignment: 'justify'
+                   },
+                   lista:{
+                     fontSize: 9,
+                     alignment:'justify'
+                   }
+                 }
+                }
+                //Variable para obtener la fecha y hora que se genera el dcoumento
+                var date = new Date();
+                console.log(date);
+                date = moment(date).format('DD_MMM_YYYY_HH_mm_ss');
+
+                //Sirve para descargar el documento y setearle el nombre
+                pdfMake.createPdf(docDefinition).download('Certificación cumplido coordinación ' + date + '.pdf');
+               });
+          });
     };
   });
