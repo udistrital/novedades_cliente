@@ -20,6 +20,61 @@ angular.module('contractualClienteApp')
 
       self.contratistas = [];
 
+      self.mes = '';
+
+      self.meses = [{
+          Id: 1,
+          Nombre: $translate.instant('ENERO')
+        },
+        {
+          Id: 2,
+          Nombre: $translate.instant('FEBRERO')
+        },
+        {
+          Id: 3,
+          Nombre: $translate.instant('MARZO')
+        },
+        {
+          Id: 4,
+          Nombre: $translate.instant('ABRIL')
+        },
+        {
+          Id: 5,
+          Nombre: $translate.instant('MAYO')
+        },
+        {
+          Id: 6,
+          Nombre: $translate.instant('JUNIO')
+        },
+        {
+          Id: 7,
+          Nombre: $translate.instant('JULIO')
+        },
+        {
+          Id: 8,
+          Nombre: $translate.instant('AGOSTO')
+        },
+        {
+          Id: 9,
+          Nombre: $translate.instant('SEPT')
+        },
+        {
+          Id: 10,
+          Nombre: $translate.instant('OCTU')
+        },
+        {
+          Id: 11,
+          Nombre: $translate.instant('NOV')
+        },
+        {
+          Id: 12,
+          Nombre: $translate.instant('DIC')
+        }
+      ];
+
+      self.d = new Date();
+      self.anios = [(self.d.getFullYear()), (self.d.getFullYear() + 1)];
+
       /*
         Función para obtener la imagen del escudo de la universidad
       */
@@ -145,7 +200,7 @@ angular.module('contractualClienteApp')
 
         contratoRequest.get('ordenador', self.Documento).then(function (response) {
 
-          self.ordenador = response.data;
+          self.ordenador = response.data.ordenador;
           console.log(self.ordenador);
 
           //Petición para obtener el Id de la relación de acuerdo a los campos
@@ -157,34 +212,6 @@ angular.module('contractualClienteApp')
 
 
         });
-
-        /*          try {
-                  contratoRequest.get('supervisor_contratistas',self.Documento).then(function(response) {
-
-                    self.respuesta_supervisor_contratistas = response.data;
-
-                    console.log(response.status);
-
-
-
-                     self.procesar_contratistas(self.respuesta_supervisor_contratistas.supervisores.supervisor_contratista);
-                     console.log(self.contratistas);
-
-
-                    self.supervisor = self.respuesta_supervisor_contratistas.supervisores.supervisor_contratista[0].supervisor;
-
-                    self.gridOptions1.data = self.contratistas;
-
-
-                  });
-
-                       } catch (error) {
-
-
-                        }
-        */
-
-       // self.gridApi.core.refresh();
       };
 
       self.obtener_informacion_ordenador();
@@ -373,7 +400,7 @@ angular.module('contractualClienteApp')
             date = moment(date).format('DD_MMM_YYYY_HH_mm_ss');
 
             //Sirve para descargar el documento y setearle el nombre
-            pdfMake.createPdf(docDefinition).download('Certificación cumplido coordinación ' + date + '.pdf');
+            pdfMake.createPdf(docDefinition).download('Certificación cumplido para pago ' + date + '.pdf');
            });
       };
 
