@@ -284,12 +284,14 @@ angular.module('contractualClienteApp')
           adminMidRequest.get('aprobacion_pago/informacion_ordenador/'+self.aux_pago_mensual.NumeroContrato+'/'+self.aux_pago_mensual.VigenciaContrato).then(function(response){
            self.ordenador = response.data;
 
-          for (var i = 0; i < soportes.length; i++) {
+  //        for (var i = 0; i < soportes.length; i++) {
 
-            if (!soportes[i].Aprobado) {
-              self.aprobado = false;
-              break;
-            } else {
+  //          if (!soportes[i].Aprobado) {
+  //            self.aprobado = false;
+  //            break;
+
+              //
+      //      } else {
               self.aprobado = true;
 
               administrativaRequest.get('estado_pago_mensual', $.param({
@@ -328,9 +330,10 @@ angular.module('contractualClienteApp')
                 });
 
               });
-
-            }
-          }//
+//
+    //        }
+  //
+  //        }//
           })
         } else {
           swal(
@@ -521,7 +524,7 @@ angular.module('contractualClienteApp')
               'Error',
               'No se ha podido aprobar el documento',
               'error'
-            );  
+            );
           }
        });
 

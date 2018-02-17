@@ -90,31 +90,35 @@
             </div>
 
             <!--Div que se visualiza al seleccionar el check link-->
-            <div ng-if="cargaDocumentosDocente.link">
+            <div class="row">
+              <div ng-if="cargaDocumentosDocente.link">
+                <div class="col-md-1">
+                  <label class="control-label">{{'ENL' | translate}}</label>
+                </div>
+                <div class="col-md-2">
+                  <input type="text" class="form-control" ng-model="cargaDocumentosDocente.enlace" required> </input>
+                </div>
+
+              </div>
+
               <div class="col-md-1">
-                <label class="control-label">{{'ENL' | translate}}</label>
+                <label for="select_item" class="col-form-label">Item</label>
               </div>
-              <div class="col-md-2">
-                <input type="text" class="form-control" ng-model="cargaDocumentosDocente.enlace" required> </input>
+              <div class="col-md-5">
+                <select ng-model="cargaDocumentosDocente.item" class="form-control">
+                  <option ng-repeat="iItem in cargaDocumentosDocente.items" ng-value="iItem">{{iItem.ItemInforme.Nombre}} </option>
+                </select>
               </div>
-
             </div>
-
-            <div class="col-md-1">
-              <label for="select_item" class="col-form-label">Item</label>
+            <br>
+            <div class="row">
+              <div class="col-md-3">
+                <label for="observacion" class="col-form-label">{{'OBSER' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <textarea rows="3" cols="50" ng-model="cargaDocumentosDocente.observaciones"></textarea>
+              </div>
             </div>
-            <div class="col-md-2">
-              <select ng-model="cargaDocumentosDocente.item" class="form-control">
-                <option ng-repeat="iItem in cargaDocumentosDocente.items" ng-value="iItem">{{iItem.ItemInforme.Nombre}} </option>
-              </select>
-            </div>
-            <div class="col-md-1">
-              <label for="observacion" class="col-form-label">{{'OBSER' | translate}}</label>
-            </div>
-            <div class="col-md-4">
-              <textarea rows="3" cols="50" ng-model="cargaDocumentosDocente.observaciones"></textarea>
-            </div>
-
           </div>
 
 
@@ -122,7 +126,7 @@
       </div>
 
 
-      <button ng-if="cargaDocumentosDocente.seleccionado && (cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'CD' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion == 'RD' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'RC' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'RP') " class="btn btn-success" ng-click="cargaDocumentosDocente.subir_documento()">
+      <button ng-if="cargaDocumentosDocente.seleccionado && (cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'CD' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion == 'RD' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'RC' || cargaDocumentosDocente.fila_seleccionada.EstadoPagoMensual.CodigoAbreviacion === 'RP') " ng-show="cargaDocumentosDocente.mostrar_boton" class="btn btn-success" ng-click="cargaDocumentosDocente.subir_documento()">
         {{'CAR_SOP' | translate }}
       </button>
     </div>

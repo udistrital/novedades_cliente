@@ -21,12 +21,9 @@ angular.module('contractualClienteApp')
 
   //Se utiliza la variable self estandarizada
   var self = this;
-
+  self.mostrar_boton= true;
 
   self.Documento = $routeParams.docid;
-
-
-
 
   self.anios = [];
 
@@ -213,7 +210,7 @@ angular.module('contractualClienteApp')
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
         cellTemplate: '<a type="button" title="{{\'VER_SOP\'| translate }}" type="button" class="fa fa-folder-open-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes">' +
-          '</a>&nbsp;' + ' <a ng-if="row.entity.EstadoPagoMensual.CodigoAbreviacion === \'CD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RC\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RD\'" type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision(row.entity)"  >',
+          '</a>&nbsp;' + ' <a ng-if="row.entity.EstadoPagoMensual.CodigoAbreviacion === \'CD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RC\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RP\'" type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision(row.entity)"  >',
         width: "10%"
       }
     ]
@@ -250,47 +247,47 @@ angular.module('contractualClienteApp')
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Enviar'
     }).then(function () {
+
       var nombre_docs = solicitud.VigenciaContrato + solicitud.NumeroContrato + solicitud.Persona + solicitud.Mes + solicitud.Ano;
-      self.validar_docs(nombre_docs, "HORAS LECTIVAS");
-      console.log(self.docs, self.validar_docs);
-     // console.log(solicitud);
-      solicitud.EstadoPagoMensual = {"Id":1};
-      solicitud.Responsable = self.informacion_coordinador.numero_documento_coordinador;
-      solicitud.CargoResponsable = "COORDINADOR " + self.contrato.Dependencia;
-     // console.log(solicitud);
-      administrativaRequest.put('pago_mensual', solicitud.Id, solicitud).
-      then(function(response){
-        swal(
-          'Solicitud enviada',
-          'Su solicitud se encuentra a la espera de revisión',
-          'success'
-        )
-      })
-      self.cargar_soportes(self.contrato);
 
-    });
-    self.gridApi2.core.refresh();
-  };
+    //  administrativaRequest.get('soporte_pago_mensual', $.param({
+    //    query: "PagoMensual:" + solicitud.Id,
+    //    limit: 0
+    //  })).then(function(responseVal){
 
-  /*
-    Validar documento de listas
-  */
-  self.validar_docs = function(nombre, descripcion){
-    coreRequest.get('documento', $.param({
-      query: "Nombre:" + nombre,
-      limit: 0
-    })).then(function(response) {
-      self.docs = response.data;
-      self.validacion_docs = false;
-      if(self.docs !== null){
-        console.log("Puede enviar a revisión");
-        self.validacion_docs = true;
+    self.obtener_doc(solicitud);
+
+
+        if(self.documentos!== null){
+          solicitud.EstadoPagoMensual = {"Id":1};
+          solicitud.Responsable = self.informacion_coordinador.numero_documento_coordinador;
+          solicitud.CargoResponsable = "COORDINADOR " + self.contrato.Dependencia;
+         // console.log(solicitud);
+          administrativaRequest.put('pago_mensual', solicitud.Id, solicitud).
+          then(function(response){
+            swal(
+              'Solicitud enviada',
+              'Su solicitud se encuentra a la espera de revisión',
+              'success'
+            )
+          })
+          self.cargar_soportes(self.contrato);
+
+
+        self.gridApi2.core.refresh();
+
       }else{
-        console.log("No ha adjuntado las listas");
-      }
-      console.log(self.docs);
-      return self.docs, self.validacion_docs
+        swal(
+          'Error',
+          'No puede enviar a revisión sin cargar algún documento',
+          'error'
+        )
+      }//else
+          //    });
     });
+
+
+
   };
 
   /*
@@ -360,7 +357,6 @@ angular.module('contractualClienteApp')
       });
 
       self.gridOptions2.data = response.data;
-      console.log(self.gridOptions2.data);
 
     });
   };
@@ -509,7 +505,7 @@ angular.module('contractualClienteApp')
     if (self.archivo) {
 
       if (self.fileModel!== undefined && self.item!==undefined) {
-
+      self.mostrar_boton= false;
       var descripcion = self.item.ItemInforme.Nombre;
       var aux = self.cargarDocumento(nombre_doc, descripcion, self.fileModel, function(url) {
         //Objeto documento
@@ -551,7 +547,6 @@ angular.module('contractualClienteApp')
               "Aprobado": false
             };
 
-            console.log(self.item.Id);
             //Post a la tabla soporte documento
             administrativaRequest.post('soporte_pago_mensual', self.objeto_soporte)
               .then(function(response) {
@@ -561,6 +556,11 @@ angular.module('contractualClienteApp')
                   'Se ha guardado el documento en el repositorio',
                   'success'
                 );
+                self.item = undefined;
+                //angular.element("input[type='file']").val(null);
+                self.fileModel = undefined;
+                self.mostrar_boton= true;
+
               });
           });
 
@@ -578,6 +578,7 @@ angular.module('contractualClienteApp')
 //
     } else if (self.link) {
       if (self.enlace!== undefined && self.item!==undefined) {
+        self.mostrar_boton= false;
 
         var descripcion = self.item.ItemInforme.Nombre;
       //Objeto documento
@@ -594,9 +595,6 @@ angular.module('contractualClienteApp')
         }),
         "Activo": true
       };
-
-      console.log(self.objeto_documento);
-
       //Post a la tabla documento del core
       coreRequest.post('documento', self.objeto_documento)
         .then(function(response) {
@@ -622,7 +620,12 @@ angular.module('contractualClienteApp')
                 'Enlace guardado',
                 'Se ha guardado el enlace',
                 'success'
-              );            });
+              );
+              self.enlace = undefined;
+              self.item = undefined;
+              self.mostrar_boton= true;
+
+             });
         });
 
       }else{
@@ -638,7 +641,6 @@ angular.module('contractualClienteApp')
     self.objeto_documento={};
 
   };
-
 
   self.cambiarCheckArchivo = function() {
     if (self.archivo) {

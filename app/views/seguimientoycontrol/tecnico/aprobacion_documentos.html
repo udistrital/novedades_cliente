@@ -131,7 +131,6 @@
                 <md-button ng-if="iDoc.Contenido.Tipo === 'Enlace'" ng-click="aprobacionDocumentos.getDocumento(iDoc.Contenido.IdNuxeo); aprobacionDocumentos.visualizar_enlace(iDoc.Contenido.Enlace)"
                   class="btn btn-primary btn-outline">Ver documento</md-button>
                 <md-button class="btn btn-danger btn-outline" ng-click="aprobacionDocumentos.enviar_comentario(iDoc)">Enviar observaciones</md-button>
-                <md-button class="btn btn-success btn-outline" ng-click="aprobacionDocumentos.aprobar_documentos(iDoc.Id)">Aprobar</md-button>
               </md-card-actions>
             </md-card>
           </div>
