@@ -422,7 +422,6 @@ angular.module('contractualClienteApp')
 
     administrativaRequest.post("tr_necesidad_docente", self.tr_necesidad).then(function(response) {
       self.alerta = "";
-      console.log("Aqui esta-> ", response);
       for (var i = 1; i < response.data.length; i++) {
         self.alerta = self.alerta + response.data[i] + "\n";
       }

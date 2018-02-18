@@ -262,7 +262,6 @@ angular.module('contractualClienteApp')
           solicitud.EstadoPagoMensual = {"Id":1};
           solicitud.Responsable = self.informacion_coordinador.numero_documento_coordinador;
           solicitud.CargoResponsable = "COORDINADOR " + self.contrato.Dependencia;
-         // console.log(solicitud);
           administrativaRequest.put('pago_mensual', solicitud.Id, solicitud).
           then(function(response){
             swal(
@@ -312,7 +311,6 @@ angular.module('contractualClienteApp')
         }
 
       });
-    //  console.log("Este es el resultado " + self.respuesta_docente);
    // self.gridApi2.core.refresh();
   };
 
@@ -342,7 +340,6 @@ angular.module('contractualClienteApp')
       contratoRequest.get('contrato_elaborado', self.contrato.NumeroVinculacion + '/' + self.contrato.Vigencia).then(function(response_ce) {
 
         self.tipo_contrato = response_ce.data.contrato.tipo_contrato;
-      console.log(response_ce.data);
 
         administrativaRequest.get("item_informe_tipo_contrato", $.param({
           query: "TipoContrato:" + self.tipo_contrato,
@@ -350,7 +347,6 @@ angular.module('contractualClienteApp')
         })).then(function(response_iitc) {
 
           self.items = response_iitc.data;
-          console.log(self.items);
 
         });
 
@@ -366,7 +362,6 @@ angular.module('contractualClienteApp')
     .then(function(response){
       self.informacion = response.data;
       self.informacion_coordinador = self.informacion.carreraSniesCollection.carreraSnies[0];
-      console.log(self.informacion_coordinador);
     })
   };
 
@@ -406,8 +401,6 @@ angular.module('contractualClienteApp')
         if (response.data == null) {
 
           administrativaRequest.post("pago_mensual", pago_mensual).then(function(response) {
-
-            console.log(response.data);
             swal(
               'Solicitud registrada',
               'Por favor cargue los soportes correspondientes',
@@ -432,9 +425,6 @@ angular.module('contractualClienteApp')
 
       });
 
-
-
-      //  console.log(pago_mensual);
     });
   }else {
       swal(
@@ -499,7 +489,6 @@ angular.module('contractualClienteApp')
   self.subir_documento = function() {
 
     var nombre_doc = self.contrato.Vigencia + self.contrato.NumeroVinculacion + self.Documento + self.fila_seleccionada.Mes + self.fila_seleccionada.Ano;
-    console.log(self.fileModel);
 
 
     if (self.archivo) {
@@ -527,8 +516,6 @@ angular.module('contractualClienteApp')
           }),
           "Activo": true
         };
-
-        console.log(self.objeto_documento);
 
         //Post a la tabla documento del core
         coreRequest.post('documento', self.objeto_documento)
@@ -669,7 +656,6 @@ angular.module('contractualClienteApp')
            self.doc=response;
            var aux=response.get('file:content');
            self.document=response;
-           console.log(self.document);
            defered.resolve(response);
          })
          .catch(function(error){
@@ -697,7 +683,6 @@ angular.module('contractualClienteApp')
         self.obtenerFetch(self.document).then(function(r){
             self.blob=r;
             var fileURL = URL.createObjectURL(self.blob);
-            console.log(fileURL);
             self.content = $sce.trustAsResourceUrl(fileURL);
             $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900');
          });
@@ -715,10 +700,8 @@ angular.module('contractualClienteApp')
       limit:0
     })).then(function(response){
       self.documentos = response.data;
-      console.log(self.documentos);
       angular.forEach(self.documentos, function(value) {
         self.descripcion_doc = value.Descripcion;
-        console.log(self.descripcion_doc);
         value.Contenido = JSON.parse(value.Contenido);
 
         if (value.Contenido.Tipo === "Enlace") {
@@ -755,8 +738,6 @@ angular.module('contractualClienteApp')
        documento.Activo = false;
        coreRequest.put('documento', documento.Id, documento).
        then(function(response){
-            console.log(documento);
-            console.log(response);
             self.obtener_doc(self.fila_sol_pago);
       });
 

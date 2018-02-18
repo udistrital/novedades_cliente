@@ -52,7 +52,6 @@ angular.module('contractualClienteApp')
                                     query: "Id:" + item.Apropiacion,
                                     fields: "Rubro,Valor"
                                 })).then(function(response) {
-                                    //console.log(response);
                                     obj.Apropiacion = response.data[0];
                                 });
 
@@ -64,7 +63,6 @@ angular.module('contractualClienteApp')
                                     financieraRequest.get('fuente_financiamiento', $.param({
                                         query: "Id:" + item.FuenteFinanciamiento
                                     })).then(function(response) {
-                                        //console.log(response);
                                         i_fuente.FuenteFinanciamiento = response.data[0];
                                     });
                                     i_fuente.MontoParcial = item.MontoParcial;

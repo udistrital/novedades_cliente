@@ -118,9 +118,7 @@ angular.module('contractualClienteApp')
         self.gridOptions.onRegisterApi = function(gridApi) {
             self.gridApi = gridApi;
             self.gridApi.selection.on.rowSelectionChanged($scope, function(row) {
-                //console.log(row.entity);
                 self.necesidad = row.entity;
-                //console.log(row);
             });
         };
 

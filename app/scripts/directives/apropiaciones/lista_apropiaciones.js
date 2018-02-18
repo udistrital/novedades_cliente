@@ -112,8 +112,6 @@ angular.module('contractualClienteApp')
       /*  self.cargarSaldos = function() {
           angular.forEach(self.gridOptions.data, function(data) {
             financieraRequest.get('apropiacion/SaldoApropiacion/' + data.Id, '').then(function(response) {
-
-              //console.log(response.data);
               data.Saldo = response.data;
             });
           });
@@ -137,7 +135,6 @@ angular.module('contractualClienteApp')
 
           for (var h = 0; h < self.gridOptions.data.length; h++) {
             level = (self.gridOptions.data[h].Rubro.Codigo.match(/-/g) || []).length;
-            //console.log(level);
             if (level < self.max_level) {
               self.gridOptions.data[h].$$treeLevel = level;
             }
@@ -165,7 +162,6 @@ angular.module('contractualClienteApp')
 
             for (var j = 0; j < self.gridOptions.data.length; j++) {
               level = (self.gridOptions.data[j].Rubro.Codigo.match(/-/g) || []).length;
-              //console.log(level);
               if (level < self.max_level) {
                 self.gridOptions.data[j].$$treeLevel = level;
               }
@@ -187,7 +183,6 @@ angular.module('contractualClienteApp')
           });
           self.gridApi.selection.on.rowSelectionChanged($scope, function(row) {
             $scope.apropiacion = row.entity;
-            //console.log(row);
           });
         };
 

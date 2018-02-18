@@ -142,8 +142,6 @@ angular.module('contractualClienteApp')
 
           self.respuesta_supervisor_contratistas = response.data;
 
-          console.log(response.status);
-
 
 
 
@@ -219,8 +217,6 @@ angular.module('contractualClienteApp')
 
 
           self.respuesta_acta_inicio = response.data;
-
-          console.log(self.respuesta_acta_inicio);
 
           amazonAdministrativaRequest.get('contrato_disponibilidad', $.param({
             query: "NumeroContrato:" + contrato_contratista.NumeroContrato + ",Vigencia:" + contrato_contratista.VigenciaContrato,
@@ -401,10 +397,8 @@ angular.module('contractualClienteApp')
        limit:0
      })).then(function(response){
        self.documentos = response.data;
-       console.log(self.documentos);
        angular.forEach(self.documentos, function(value) {
          self.descripcion_doc = value.Descripcion;
-         console.log(self.descripcion_doc);
          value.Contenido = JSON.parse(value.Contenido);
 
          if (value.Contenido.Tipo === "Enlace") {
@@ -436,7 +430,6 @@ angular.module('contractualClienteApp')
             self.doc=response;
             var aux=response.get('file:content');
             self.document=response;
-            console.log(self.document);
             defered.resolve(response);
           })
           .catch(function(error){
@@ -464,7 +457,6 @@ angular.module('contractualClienteApp')
          self.obtenerFetch(self.document).then(function(r){
              self.blob=r;
              var fileURL = URL.createObjectURL(self.blob);
-             console.log(fileURL);
              self.content = $sce.trustAsResourceUrl(fileURL);
              self.url = fileURL;
 
@@ -489,8 +481,6 @@ angular.module('contractualClienteApp')
          documento.Contenido = JSON.stringify(documento.Contenido);
          coreRequest.put('documento', documento.Id, documento).
          then(function(response){
-              console.log(documento);
-              console.log(response);
               self.obtener_doc(self.fila_sol_pago);
         });
 

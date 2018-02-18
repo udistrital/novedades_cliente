@@ -143,9 +143,6 @@ angular.module('contractualClienteApp')
                 DocentesDesvincular: desvinculacionesData
             };
 
-            console.log("objeto a enviar");
-            console.log(objeto_a_enviar);
-
             adminMidRequest.post("gestion_desvinculaciones/adicionar_horas", objeto_a_enviar).then(function(response) {
 
                 if (response.data === "OK") {

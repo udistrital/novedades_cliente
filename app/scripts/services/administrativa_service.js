@@ -19,10 +19,8 @@ angular.module('administrativaService', [])
         return {
             get: function(tabla, params) {
                 if(angular.isUndefined(params)){
-                    console.log(path + tabla);
                     return $http.get(path + tabla, token_service.setting_bearer.headers);
                 }else{
-                    console.log(path + tabla + "/?" + params);
                     return $http.get(path + tabla + "/?" + params, token_service.setting_bearer.headers);
                 }
             },

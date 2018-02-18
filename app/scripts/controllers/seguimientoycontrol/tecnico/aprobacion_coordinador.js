@@ -173,7 +173,6 @@ angular.module('contractualClienteApp')
         self.documentos = response.data;
         //self.obtener_informacion_docente();
         angular.forEach(self.documentos, function (value) {
-          console.log(value);
           contratoRequest.get('informacion_contrato_elaborado_contratista', value.NumeroContrato + '/' + value.VigenciaContrato).
             then(function (response) {
               value.Nombre = response.data.informacion_contratista.nombre_completo;
@@ -201,7 +200,6 @@ angular.module('contractualClienteApp')
 
 
     self.dar_visto_bueno = function (pago_mensual) {
-      console.log(pago_mensual);
       contratoRequest.get('contrato_elaborado', pago_mensual.NumeroContrato + '/' + pago_mensual.VigenciaContrato).then(function (response) {
         self.aux_pago_mensual = pago_mensual;
         self.contrato = response.data.contrato;
@@ -299,10 +297,8 @@ angular.module('contractualClienteApp')
        limit:0
      })).then(function(response){
        self.documentos = response.data;
-       console.log(self.documentos);
        angular.forEach(self.documentos, function(value) {
          self.descripcion_doc = value.Descripcion;
-         console.log(self.descripcion_doc);
          value.Contenido = JSON.parse(value.Contenido);
 
          if (value.Contenido.Tipo === "Enlace") {
@@ -334,7 +330,6 @@ angular.module('contractualClienteApp')
             self.doc=response;
             var aux=response.get('file:content');
             self.document=response;
-            console.log(self.document);
             defered.resolve(response);
           })
           .catch(function(error){
@@ -362,7 +357,6 @@ angular.module('contractualClienteApp')
          self.obtenerFetch(self.document).then(function(r){
              self.blob=r;
              var fileURL = URL.createObjectURL(self.blob);
-             console.log(fileURL);
              self.content = $sce.trustAsResourceUrl(fileURL);
              $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900', true);
           });
@@ -386,8 +380,6 @@ angular.module('contractualClienteApp')
          documento.Contenido = JSON.stringify(documento.Contenido);
          coreRequest.put('documento', documento.Id, documento).
          then(function(response){
-              console.log(documento);
-              console.log(response);
               self.obtener_doc(self.fila_sol_pago);
         });
 
@@ -424,7 +416,6 @@ angular.module('contractualClienteApp')
       wso2GeneralService.get('/dependenciasProxy/proyecto_curricular_snies', self.coordinador.codigo_snies).
       then(function(response){
         self.proyecto_homologado = response.data.homologacion;
-        console.log(self.proyecto_homologado);
 
             //adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/*/**/*').
             adminMidRequest.get('/aprobacion_pago/certificacion_visto_bueno/'+ self.proyecto_homologado.id_oikos +'/' + self.mes.Id + '/' + self.anio).
@@ -465,7 +456,6 @@ angular.module('contractualClienteApp')
                 }
                 //Variable para obtener la fecha y hora que se genera el dcoumento
                 var date = new Date();
-                console.log(date);
                 date = moment(date).format('DD_MMM_YYYY_HH_mm_ss');
 
                 //Sirve para descargar el documento y setearle el nombre

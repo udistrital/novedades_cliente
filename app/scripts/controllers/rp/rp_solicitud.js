@@ -97,12 +97,10 @@ angular.module('contractualClienteApp')
             gridOptionsService.build(amazonAdministrativaRequest, 'informacion_proveedor', 'limit=-1', self.gridOptions_proveedor).then(function(data) {
                 self.gridOptions = data;
                 self.gridOptions.onRegisterApi = function(gridApi) {
-                    console.log("reg");
                     gridApi.selection.on.rowSelectionChanged($scope, function(row) {
                         self.gridOptions_contratos.data.length = 0;
                         self.gridOptions_contratos.data.push(row.entity);
                         //self.contrato.push(row.entity);
-                        console.log(self.contrato);
                     });
                 };
             });
@@ -130,7 +128,6 @@ angular.module('contractualClienteApp')
                 angular.forEach(response.data, function(data) {
                     financieraMidRequest.get('disponibilidad/ListaDisponibilidades/' + response.data[0].VigenciaCdp, 'limit=1&query=Estado.Nombre__not_in:Agotado,NumeroDisponibilidad:' + data.NumeroCdp + "&UnidadEjecutora=" + 1).then(function(response) {
                         self.gridOptions_cdp.data.push(response.data[0]);
-                        console.log(response.data);
                         if (response.data === null || response.status !== 200) {
                             swal("Alerta", $translate.instant('NO_HAY_DATOS_REDIRIGIR_CDP'), "error").then(function() {
                                 $window.location.href = '#/rp_solicitud_personas';
@@ -397,12 +394,9 @@ angular.module('contractualClienteApp')
 
         $scope.saldosValor = function() {
             $scope.banderaRubro = true;
-            console.log("fn");
             //si es una solicitud por resolucion se hara la comparacion con los valores de los contratos
             if (self.resolucion.length > 0) {
                 angular.forEach(self.contrato, function(v) {
-                    console.log("err");
-                    console.log(self.resolucion);
                     if (v.Valor < v.Valor_contrato || v.Valor_contrato === 0 || isNaN(v.Valor_contrato) || v.Valor_contrato === undefined) {
                         $scope.banderaRubro = false;
                     }
@@ -422,7 +416,6 @@ angular.module('contractualClienteApp')
         self.Registrar = function() {
             $scope.saldosValor();
             var registrosSolicitud = [];
-            console.log(self.NumeroCompromiso);
             self.alerta_registro_rp = ["No se pudo solicitar el rp"];
             if (self.NumeroCompromiso === null || self.NumeroCompromiso === undefined || self.NumeroCompromiso <= 0) {
                 swal("Alertas", "Debe digitar el numero del compromiso.", "error");
@@ -549,12 +542,8 @@ angular.module('contractualClienteApp')
                     //});
 
                 });
-                console.log("_______________");
-                console.log(registrosSolicitud);
                 administrativaRequest.post('solicitud_rp/AddSolicitudRpTr', registrosSolicitud).then(function(response) {
-                    console.log(response.data);
                     self.alerta = response.data;
-                    console.log(self.alerta);
                     var templateAlert = "<table class='table table-bordered'><th>" + $translate.instant('SOLICITUD') + "</th><th>" + $translate.instant('CDP');
                     if (self.solicitudcdp_bool === false) {
                         templateAlert = "<table class='table table-bordered'><th>" + $translate.instant('SOLICITUD') + "</th><th>" + $translate.instant('CDP') + "<th>" + $translate.instant('CONTRATO') + "</th>" + "<th>" + $translate.instant('VIGENCIA_CONTRATO') + "</th>";
@@ -563,7 +552,6 @@ angular.module('contractualClienteApp')
                         if (data.Type === "error") {
                             templateAlert = templateAlert + "<tr class='danger'><td> N/A </td>" + "<td> " + $translate.instant(data.Code) + " </td>";
                         } else if (data.Type === "success") {
-                            console.log(data.Body);
                             if (self.solicitudcdp_bool === false) {
                                 templateAlert = templateAlert + "<tr class='success'><td>" + data.Body.Id + "</td>" + "<td>" + data.Body.Cdp + "</td>" + "<td>" + data.Body.NumeroContrato + "</td>" + "<td>" + data.Body.VigenciaContrato + "</td>";
                             } else {

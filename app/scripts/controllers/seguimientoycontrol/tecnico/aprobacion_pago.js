@@ -201,7 +201,6 @@ angular.module('contractualClienteApp')
         contratoRequest.get('ordenador', self.Documento).then(function (response) {
 
           self.ordenador = response.data.ordenador;
-          console.log(self.ordenador);
 
           //Petición para obtener el Id de la relación de acuerdo a los campos
           adminMidRequest.get('aprobacion_pago/solicitudes_ordenador/'+self.Documento).then(function (response) {
@@ -365,7 +364,6 @@ angular.module('contractualClienteApp')
         adminMidRequest.get('aprobacion_pago/certificacion_documentos_aprobados/14/2/2018').
           then(function(response){
             self.docentes_pago_rechazado = response.data;
-            console.log(self.docentes_pago_rechazado);
 
             //Generación documento
             var docDefinition = {

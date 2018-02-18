@@ -21,7 +21,6 @@ while (!!(m = regex.exec(queryString))) {
 var req = new XMLHttpRequest();
 // consider using POST so query isn't logged
 var query = 'https://' + window.location.host + '?' + queryString;
-//console.log(query);
 req.open('GET', query, true);
 req.onreadystatechange = function(e) {
     if (req.readyState === 4) {
@@ -31,7 +30,6 @@ req.onreadystatechange = function(e) {
             window.alert('There was an error processing the token.');
         } else {
             //alert('something else other than 200 was returned');
-            //console.log(req);
         }
     }
 };

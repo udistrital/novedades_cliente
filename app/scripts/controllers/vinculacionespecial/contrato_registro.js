@@ -21,7 +21,6 @@ angular.module('contractualClienteApp')
 
         administrativaRequest.get('resolucion/' +  self.idResolucion).then(function(response) {
             self.resolucionActual = response.data;
-            console.log(response.data);
             administrativaRequest.get('tipo_resolucion/' +  self.resolucionActual.IdTipoResolucion.Id).then(function(response) {
                 self.resolucionActual.IdTipoResolucion.NombreTipoResolucion = response.data.NombreTipoResolucion;
             });
@@ -45,11 +44,7 @@ angular.module('contractualClienteApp')
               self.contratados=response.data;
               if(self.contratados != null){
                 self.contratados.forEach(function(row){
-                  console.log("row");
-                  console.log(row.Id);
                   adminMidRequest.get("calculo_salario/Contratacion/"+row.Id.toString()).then(function(response){
-                    console.log("SCA VOY");
-                    console.log(response);
                     row.ValorContrato=response.data;
                   });
                 });
