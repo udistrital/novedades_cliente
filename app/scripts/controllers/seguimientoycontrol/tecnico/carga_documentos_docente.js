@@ -8,12 +8,22 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('CargaDocumentosDocenteCtrl', function ($scope, $http, $translate, uiGridConstants, contratoRequest, administrativaRequest, nuxeo, $q, coreRequest, $window,$sce, adminMidRequest) {
+  .controller('CargaDocumentosDocenteCtrl', function ($scope, $http, $translate, uiGridConstants, contratoRequest, administrativaRequest, nuxeo, $q, coreRequest, $window,$sce, adminMidRequest,$routeParams) {
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
   var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
 
+
+  $('body').on('hidden.bs.modal', '.modal', function (e) {
+    if($('.modal').hasClass('in')) {
+    $('body').addClass('modal-open');
+    }
+});
+
   //Se utiliza la variable self estandarizada
   var self = this;
+  self.mostrar_boton= true;
+
+  self.Documento = $routeParams.docid;
 
   self.anios = [];
 
@@ -131,7 +141,7 @@ angular.module('contractualClienteApp')
       {
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
-        cellTemplate: '<a type="button" title="{{\'SOLICITAR_CUM\'| translate }}" type="button" class="fa fa-money fa-lg  faa-shake animated-hover" data-toggle="modal" data-target="#modal_ver_soportes" >' +
+        cellTemplate: '<a type="button" title="{{\'SOLICITAR_CUM\'| translate }}" type="button" class="fa fa-money fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.solicitar_pago(row.entity)"   data-toggle="modal" data-target="#modal_enviar_solicitud" >' +
           '</a>&nbsp;' + ' <a type="button" title="{{\'CARGAR_LISTAS\'| translate }}" type="button" class="fa fa-upload fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.cargar_soportes(row.entity)"  data-toggle="modal" data-target="#modal_carga_listas_docente">',
         width: "10%"
       }
@@ -139,38 +149,10 @@ angular.module('contractualClienteApp')
   };
 
 
-
   self.gridOptions1.onRegisterApi = function(gridApi) {
     self.gridApi = gridApi;
   };
 
-  /*
-    Enviar solicitud de revisión de soportes a Coordinador
-  */
-  self.enviar_revision = function (solicitud) {
-    swal({
-      title: '¿Está seguro(a) de enviar a revisar los soportes por el coordinador?',
-      text: "No podrá revertir la validación",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Enviar'
-    }).then(function () {
-      console.log(solicitud);
-      self.jsonActualizado = solicitud;
-      console.log(self.jsonActualizado);
-      self.jsonActualizado.EstadoPagoMensual = {"Id":1};
-      console.log(self.jsonActualizado);
-      administrativaRequest.put('pago_mensual', solicitud.Id, self.jsonActualizado).
-      then(function(response){
-        console.log("Se realizó cambio de estado en la solicutd");
-      })
-      self.gridApi.core.refresh();
-
-    });
-  };
   /*
     Creación tabla que tendrá las solicitudes de pago de cada contrato
   */
@@ -227,8 +209,8 @@ angular.module('contractualClienteApp')
       {
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
-        cellTemplate: '<a type="button" title="{{\'VER_SOP\'| translate }}" type="button" class="fa fa-folder-open-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.visualizar_docs(row.entity)" data-toggle="modal" data-target="#modal_carga_listas_docente">' +
-          '</a>&nbsp;' + ' <a type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision(row.entity)"  >',
+        cellTemplate: '<a type="button" title="{{\'VER_SOP\'| translate }}" type="button" class="fa fa-folder-open-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes">' +
+          '</a>&nbsp;' + ' <a ng-if="row.entity.EstadoPagoMensual.CodigoAbreviacion === \'CD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RC\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RP\'" type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision(row.entity)"  >',
         width: "10%"
       }
     ]
@@ -248,9 +230,64 @@ angular.module('contractualClienteApp')
       //Condiciuonal para capturar la información de la fila seleccionado
       if (self.seleccionado) {
         self.fila_seleccionada = row.entity;
-        self.obtener_doc();
       }
     });
+  };
+
+  /*
+    Enviar solicitud de revisión de soportes a Coordinador
+  */
+  self.enviar_revision = function (solicitud) {
+    swal({
+      title: '¿Está seguro(a) de enviar a revisar los soportes por el coordinador?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Enviar'
+    }).then(function () {
+
+      var nombre_docs = solicitud.VigenciaContrato + solicitud.NumeroContrato + solicitud.Persona + solicitud.Mes + solicitud.Ano;
+
+    //  administrativaRequest.get('soporte_pago_mensual', $.param({
+    //    query: "PagoMensual:" + solicitud.Id,
+    //    limit: 0
+    //  })).then(function(responseVal){
+
+    self.obtener_doc(solicitud);
+
+
+        if(self.documentos!== null){
+          solicitud.EstadoPagoMensual = {"Id":1};
+          solicitud.Responsable = self.informacion_coordinador.numero_documento_coordinador;
+          solicitud.CargoResponsable = "COORDINADOR " + self.contrato.Dependencia;
+         // console.log(solicitud);
+          administrativaRequest.put('pago_mensual', solicitud.Id, solicitud).
+          then(function(response){
+            swal(
+              'Solicitud enviada',
+              'Su solicitud se encuentra a la espera de revisión',
+              'success'
+            )
+          })
+          self.cargar_soportes(self.contrato);
+
+
+        self.gridApi2.core.refresh();
+
+      }else{
+        swal(
+          'Error',
+          'No puede enviar a revisión sin cargar algún documento',
+          'error'
+        )
+      }//else
+          //    });
+    });
+
+
+
   };
 
   /*
@@ -275,24 +312,28 @@ angular.module('contractualClienteApp')
         }
 
       });
-      console.log("Este es el resultado " + self.respuesta_docente);
-    self.gridApi2.core.refresh();
+    //  console.log("Este es el resultado " + self.respuesta_docente);
+   // self.gridApi2.core.refresh();
   };
+
+  self.obtener_informacion_docente();
+
 
   /*
   Función que permite realizar una solicitud de pago mensual
   */
   self.solicitar_pago = function(contrato) {
     self.contrato = contrato;
-    self.anios = [parseInt(self.contrato.Vigencia) - 1, parseInt(self.contrato.Vigencia), parseInt(self.contrato.Vigencia) + 1];
-    self.obtener_informacion_coordinador(self.contrato.IdDependencia);
+    self.anios = [parseInt(self.contrato.Vigencia), parseInt(self.contrato.Vigencia) + 1];
   };
 
 
   self.cargar_soportes = function(contrato) {
+
     self.seleccionado = false;
     self.gridOptions2.data = [];
     self.contrato = contrato;
+    self.obtener_informacion_coordinador(self.contrato.IdDependencia);
     administrativaRequest.get("pago_mensual", $.param({
       query: "NumeroContrato:" + self.contrato.NumeroVinculacion + ",VigenciaContrato:" + self.contrato.Vigencia,
       limit: 0
@@ -316,7 +357,6 @@ angular.module('contractualClienteApp')
       });
 
       self.gridOptions2.data = response.data;
-      console.log(self.gridOptions2.data);
 
     });
   };
@@ -335,25 +375,25 @@ angular.module('contractualClienteApp')
 
     if (self.mes !== undefined && self.anio !== undefined) {
       //Petición para obtener id de estado pago mensual
-      administrativaCrudService.get("estado_pago_mensual", $.param({
+      administrativaRequest.get("estado_pago_mensual", $.param({
           query: "CodigoAbreviacion:CD",
           limit: 0
         })).then(function (response) {
-
-
+        //Variable que contiene el Id del estado pago mensual
+        var id_estado = response.data[0].Id;
+      //Se arma elemento JSON para la solicitud
       var pago_mensual = {
-        CargoResponsable: "COORDINADOR " + self.contrato.Dependencia,
-        EstadoPagoMensual: {
-          Id: 2
-        },
+        CargoResponsable: "DOCENTE",
+        EstadoPagoMensual: { Id: id_estado},
         FechaModificacion: new Date(),
         Mes: self.mes,
         Ano: self.anio,
         NumeroContrato: self.contrato.NumeroVinculacion,
         Persona: self.Documento,
-        Responsable: self.informacion_coordinador.numero_documento_coordinador,
+        Responsable: self.Documento,
         VigenciaContrato: parseInt(self.contrato.Vigencia)
       };
+
 
       administrativaRequest.get("pago_mensual", $.param({
         query: "NumeroContrato:" + self.contrato.NumeroVinculacion +
@@ -375,6 +415,8 @@ angular.module('contractualClienteApp')
             )
 
             self.contrato = {};
+            self.mes = {};
+            self.anio = {};
 
           });
 
@@ -457,12 +499,19 @@ angular.module('contractualClienteApp')
   self.subir_documento = function() {
 
     var nombre_doc = self.contrato.Vigencia + self.contrato.NumeroVinculacion + self.Documento + self.fila_seleccionada.Mes + self.fila_seleccionada.Ano;
-    var descripcion = self.item.ItemInforme.Nombre;
+    console.log(self.fileModel);
+
 
     if (self.archivo) {
-      var aux = self.cargarDocumento(nombre_doc, descripcion, self.fileModel, function(url) {
 
+      if (self.fileModel!== undefined && self.item!==undefined) {
+      self.mostrar_boton= false;
+      var descripcion = self.item.ItemInforme.Nombre;
+      var aux = self.cargarDocumento(nombre_doc, descripcion, self.fileModel, function(url) {
         //Objeto documento
+        var date = new Date();
+        date = moment(date).format('DD_MMM_YYYY_HH:mm:ss');
+        //var now = date
         self.objeto_documento = {
           "Nombre": nombre_doc,
           "Descripcion": descripcion,
@@ -470,6 +519,8 @@ angular.module('contractualClienteApp')
             "Id": 3
           },
           "Contenido": JSON.stringify({
+            "NombreArchivo": self.fileModel.name,
+            "FechaCreacion": date,
             "Tipo": "Archivo",
             "IdNuxeo": url,
             "Observaciones": self.observaciones
@@ -500,16 +551,36 @@ angular.module('contractualClienteApp')
             administrativaRequest.post('soporte_pago_mensual', self.objeto_soporte)
               .then(function(response) {
                 //Bandera de validacion
-                console.log("Se ha registrado el documento en el soporte mensual");
+                swal(
+                  'Documento guardado',
+                  'Se ha guardado el documento en el repositorio',
+                  'success'
+                );
+                self.item = undefined;
+                //angular.element("input[type='file']").val(null);
+                self.fileModel = undefined;
+                self.mostrar_boton= true;
+
               });
           });
 
 
       });
 
+    }else{
+
+      swal(
+        'Error',
+        'Debe subir un archivo y seleccionar un item',
+        'error'
+      );
+    }
+//
     } else if (self.link) {
+      if (self.enlace!== undefined && self.item!==undefined) {
+        self.mostrar_boton= false;
 
-
+        var descripcion = self.item.ItemInforme.Nombre;
       //Objeto documento
       self.objeto_documento = {
         "Nombre": nombre_doc,
@@ -524,9 +595,6 @@ angular.module('contractualClienteApp')
         }),
         "Activo": true
       };
-
-      console.log(self.objeto_documento);
-
       //Post a la tabla documento del core
       coreRequest.post('documento', self.objeto_documento)
         .then(function(response) {
@@ -548,15 +616,31 @@ angular.module('contractualClienteApp')
           administrativaRequest.post('soporte_pago_mensual', self.objeto_soporte)
             .then(function(response) {
               //Bandera de validacion
-              console.log("Se ha registrado el documento en el soporte mensual");
-            });
+              swal(
+                'Enlace guardado',
+                'Se ha guardado el enlace',
+                'success'
+              );
+              self.enlace = undefined;
+              self.item = undefined;
+              self.mostrar_boton= true;
+
+             });
         });
 
-    }
+      }else{
 
+        swal(
+          'Error',
+          'Debe copiar el enlace y seleccionar un item',
+          'error'
+        );
+
+      }
+    }
+    self.objeto_documento={};
 
   };
-
 
   self.cambiarCheckArchivo = function() {
     if (self.archivo) {
@@ -585,6 +669,7 @@ angular.module('contractualClienteApp')
            self.doc=response;
            var aux=response.get('file:content');
            self.document=response;
+           console.log(self.document);
            defered.resolve(response);
          })
          .catch(function(error){
@@ -614,7 +699,7 @@ angular.module('contractualClienteApp')
             var fileURL = URL.createObjectURL(self.blob);
             console.log(fileURL);
             self.content = $sce.trustAsResourceUrl(fileURL);
-            $window.open(fileURL);
+            $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900');
          });
      });
    };
@@ -622,30 +707,69 @@ angular.module('contractualClienteApp')
    /*
     Función que obtiene los documentos relacionados a las solicitudes
    */
-   self.obtener_doc = function (){
-     console.log(self.fila_seleccionada);
-     var nombre_docs = self.contrato.Vigencia + self.contrato.NumeroVinculacion + self.Documento + self.fila_seleccionada.Mes + self.fila_seleccionada.Ano;
+   self.obtener_doc = function (fila){
+     self.fila_sol_pago = fila;
+     var nombre_docs = self.contrato.Vigencia + self.contrato.NumeroVinculacion + self.Documento + self.fila_sol_pago.Mes + self.fila_sol_pago.Ano;
      coreRequest.get('documento', $.param ({
-      query: "Nombre:" + nombre_docs,
+      query: "Nombre:" + nombre_docs + ",Activo:true",
       limit:0
     })).then(function(response){
       self.documentos = response.data;
+      console.log(self.documentos);
       angular.forEach(self.documentos, function(value) {
         self.descripcion_doc = value.Descripcion;
         console.log(self.descripcion_doc);
-        var json = value.Contenido;
-        var desJson = JSON.parse(json)
+        value.Contenido = JSON.parse(value.Contenido);
 
-        if (desJson.Tipo == "Archivo") {
-          self.getDocumento(desJson.IdNuxeo)
-        }else{
-          console.log("Este es el enlace " + desJson.Enlace);
-        }
+        if (value.Contenido.Tipo === "Enlace") {
+            value.Contenido.NombreArchivo = value.Contenido.Tipo;
+        };
+      });
+    })
+  };
 
+  /*
+    Función para visualizar enlace
+  */
+  self.visualizar_enlace = function (url){
+    $window.open(url);
+  };
+
+  /*
+    Función para "borrar" un documento
+  */
+  self.borrar_doc = function(){
+
+   var documento = self.doc;
+    /*  swal({
+        title: '¿Está seguro(a) de eliminar el soporte?',
+        text: "No podrá revertir esta acción",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Aceptar'
+      }).then(function () {*/
+       documento.Contenido = JSON.stringify(documento.Contenido)
+       documento.Activo = false;
+       coreRequest.put('documento', documento.Id, documento).
+       then(function(response){
+            console.log(documento);
+            console.log(response);
+            self.obtener_doc(self.fila_sol_pago);
       });
 
-    })
+    //  });
 
 
-   }
+  };
+
+  self.set_doc = function (doc){
+
+    self.doc = doc;
+  }
+
+
+
   });

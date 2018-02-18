@@ -128,7 +128,7 @@ angular.module('contractualClienteApp')
             administrativaRequest.get('necesidad', $.param({
                 query: "EstadoNecesidad.Nombre__not_in:Borrador",
                 limit: -1,
-                sortby: "NumeroElaboracion",
+                sortby: "Vigencia,NumeroElaboracion",
                 order: "desc",
             })).then(function(response) {
                 self.gridOptions.data = response.data;

@@ -8,13 +8,78 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionCoordinadorCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, academicaWsoService) {
+  .controller('AprobacionCoordinadorCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, academicaWsoService, coreRequest, $q, $window, $sce, nuxeo, adminMidRequest, $routeParams, wso2GeneralService) {
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
     var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
 
     //Se utiliza la variable self estandarizada
     var self = this;
+    self.Documento = $routeParams.docid;
     self.objeto_docente = [];
+    self.nombres_docentes_incumplidos = '';
+    self.mes = '';
+
+    self.meses = [{
+        Id: 1,
+        Nombre: $translate.instant('ENERO')
+      },
+      {
+        Id: 2,
+        Nombre: $translate.instant('FEBRERO')
+      },
+      {
+        Id: 3,
+        Nombre: $translate.instant('MARZO')
+      },
+      {
+        Id: 4,
+        Nombre: $translate.instant('ABRIL')
+      },
+      {
+        Id: 5,
+        Nombre: $translate.instant('MAYO')
+      },
+      {
+        Id: 6,
+        Nombre: $translate.instant('JUNIO')
+      },
+      {
+        Id: 7,
+        Nombre: $translate.instant('JULIO')
+      },
+      {
+        Id: 8,
+        Nombre: $translate.instant('AGOSTO')
+      },
+      {
+        Id: 9,
+        Nombre: $translate.instant('SEPT')
+      },
+      {
+        Id: 10,
+        Nombre: $translate.instant('OCTU')
+      },
+      {
+        Id: 11,
+        Nombre: $translate.instant('NOV')
+      },
+      {
+        Id: 12,
+        Nombre: $translate.instant('DIC')
+      }
+    ];
+
+    self.d = new Date();
+    self.anios = [(self.d.getFullYear()), (self.d.getFullYear() + 1)];
+
+    /*
+      Función para obtener la imagen del escudo de la universidad
+    */
+    $http.get("scripts/models/imagen_ud.json")
+     .then(function(response) {
+       self.imagen = response.data;
+    });
+
     /*
       Creación tabla que tendrá todos los docentes relacionados al coordinador
     */
@@ -74,9 +139,9 @@ angular.module('contractualClienteApp')
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
         cellTemplate: '<a type="button" title="Ver soportes" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
-          'ng-click="grid.appScope.aprobacionDocumentos.verInformacionContrato(row.entity)" data-toggle="modal" data-target="#modal_visualizar_documentos"></a>' +
+          'ng-click="grid.appScope.aprobacionCoordinador.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes"</a>&nbsp;' +
           '<a type="button" title="Visto bueno" type="button" class="fa fa-check fa-lg  faa-shake animated-hover"' +
-          'ng-click="grid.appScope.aprobacionCoordinador.dar_visto_bueno(row.entity)"></a>'+
+          'ng-click="grid.appScope.aprobacionCoordinador.dar_visto_bueno(row.entity)"></a>&nbsp;'+
           '<a type="button" title="Rechazar" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
           'ng-click="grid.appScope.aprobacionCoordinador.rechazar(row.entity)"></a>',
         width: "10%"
@@ -91,6 +156,8 @@ angular.module('contractualClienteApp')
     self.gridOptions1.onRegisterApi = function (gridApi) {
       self.gridApi = gridApi;
     };
+
+
 
     /*
     Función que al recibir el número de documento del coordinador cargue los correspondientes
@@ -117,6 +184,7 @@ angular.module('contractualClienteApp')
     };
 
 
+
     /*
       Función que obtiene la información correspondiente al coordinador
     */
@@ -125,11 +193,11 @@ angular.module('contractualClienteApp')
       academicaWsoService.get('coordinador_carrera_snies', documento).
         then(function (response) {
           self.informacion_coordinador = response.data;
-          console.log(self.informacion_coordinador);
           self.coordinador = self.informacion_coordinador.coordinadorCollection.coordinador[0];
-         console.log(self.coordinador.nombre_coordinador);
         })
     };
+
+    self.obtener_docentes_coordinador();
 
 
     self.dar_visto_bueno = function (pago_mensual) {
@@ -146,6 +214,7 @@ angular.module('contractualClienteApp')
 
           var sig_estado = responseCod.data;
           self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
+          self.aux_pago_mensual.FechaModificacion = new Date();
 
           administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
 
@@ -189,6 +258,7 @@ angular.module('contractualClienteApp')
 
           var sig_estado = responseCod.data;
           self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
+          self.aux_pago_mensual.FechaModificacion = new Date();
 
           administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
 
@@ -216,5 +286,191 @@ angular.module('contractualClienteApp')
         })
       });
 
+    };
+
+    /*
+      Función para ver documentos de los docentes a cargo
+    */
+    self.obtener_doc = function (fila){
+      self.fila_sol_pago = fila;
+      var nombre_docs = self.fila_sol_pago.VigenciaContrato + self.fila_sol_pago.NumeroContrato + self.fila_sol_pago.Persona + self.fila_sol_pago.Mes + self.fila_sol_pago.Ano;
+      coreRequest.get('documento', $.param ({
+       query: "Nombre:" + nombre_docs + ",Activo:true",
+       limit:0
+     })).then(function(response){
+       self.documentos = response.data;
+       console.log(self.documentos);
+       angular.forEach(self.documentos, function(value) {
+         self.descripcion_doc = value.Descripcion;
+         console.log(self.descripcion_doc);
+         value.Contenido = JSON.parse(value.Contenido);
+
+         if (value.Contenido.Tipo === "Enlace") {
+             value.Contenido.NombreArchivo = value.Contenido.Tipo;
+         };
+       });
+     })
+   };
+
+   /*
+     Función para visualizar enlace
+   */
+   self.visualizar_enlace = function (url){
+     $window.open(url);
+   };
+
+   /*
+     Función que permite obtener un documento de nuxeo por el Id
+   */
+   self.getDocumento = function(docid){
+    nuxeo.header('X-NXDocumentProperties', '*');
+
+    self.obtenerDoc = function () {
+      var defered = $q.defer();
+
+      nuxeo.request('/id/'+docid)
+          .get()
+          .then(function(response) {
+            self.doc=response;
+            var aux=response.get('file:content');
+            self.document=response;
+            console.log(self.document);
+            defered.resolve(response);
+          })
+          .catch(function(error){
+              defered.reject(error)
+          });
+      return defered.promise;
+    };
+
+    self.obtenerFetch = function (doc) {
+      var defered = $q.defer();
+
+      doc.fetchBlob()
+        .then(function(res) {
+          defered.resolve(res.blob());
+
+        })
+        .catch(function(error){
+              defered.reject(error)
+          });
+      return defered.promise;
+    };
+
+      self.obtenerDoc().then(function(){
+
+         self.obtenerFetch(self.document).then(function(r){
+             self.blob=r;
+             var fileURL = URL.createObjectURL(self.blob);
+             console.log(fileURL);
+             self.content = $sce.trustAsResourceUrl(fileURL);
+             $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900', true);
+          });
+      });
+    };
+
+
+    /*
+      Función para "borrar" un documento
+    */
+    self.enviar_comentario = function(documento){
+        swal({
+          title: '¿Está seguro(a) de enviar la observación?',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Aceptar'
+        }).then(function () {
+         documento.Contenido = JSON.stringify(documento.Contenido);
+         coreRequest.put('documento', documento.Id, documento).
+         then(function(response){
+              console.log(documento);
+              console.log(response);
+              self.obtener_doc(self.fila_sol_pago);
+        });
+
+        });
+    };
+
+
+    /*
+      Función que genera el documento de quienes no cumplieron con sus obligaciones
+    */
+    self.getContenido = function(){
+      var contenido = [];
+      contenido.push( {text:'EL SUSCRITO COORDINADOR DEL PROYECTO CURRICULAR DE ' + self.coordinador.nombre_proyecto_curricular + ' DE LA FACULTAD DE INGENIERÍA DE LA UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
+      contenido.push({text:'CERTIFICA QUE: ', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
+      contenido.push({text:'Los Docentes de Vinculación Especial contratados para el periodo Académico 2018-1, del Proyecto Curricular de ' + self.coordinador.nombre_proyecto_curricular + ' cumplieron a cabalidad con las funciones docentes durante el mes de FEBRERO de 2018 (según calendario académico).', style:'general_font'}, '\n\n')
+      if(self.docentes_incumplidos){
+        contenido.push({text:'A excepción de las siguientes novedades: ', style:'general_font'}, '\n')
+        angular.forEach(self.docentes_incumplidos, function(value) {
+         contenido.push({text: self.coordinador.nombre_proyecto_curricular +', ' + value.NumeroContrato + ', ' + value.Nombre + ', ' + value.NumDocumento + ', No se le aprueba cumplido.', style:'lista'});
+       });
+      }
+      contenido.push('\n',{text:'La presente certificación se expide a los nueve días del mes de febrero de 2018.',  style:'general_font'}, '\n\n\n\n\n\n');
+      contenido.push({text:'' + self.coordinador.nombre_coordinador, style:'bottom_space'});
+      contenido.push({text:'Coordinador', style:'bottom_space'});
+      contenido.push({text:'Proyecto Curricular ' + self.coordinador.nombre_proyecto_curricular, style:'bottom_space'});
+      return contenido
+    }
+
+    /*
+      Función que genera el documento de quienes no cumplieron con sus obligaciones
+    */
+    self.generarPDF = function (){
+
+      wso2GeneralService.get('/dependenciasProxy/proyecto_curricular_snies', self.coordinador.codigo_snies).
+      then(function(response){
+        self.proyecto_homologado = response.data.homologacion;
+        console.log(self.proyecto_homologado);
+
+            //adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/*/**/*').
+            adminMidRequest.get('/aprobacion_pago/certificacion_visto_bueno/'+ self.proyecto_homologado.id_oikos +'/' + self.mes.Id + '/' + self.anio).
+              then(function(responseMid){
+                self.docentes_incumplidos = responseMid.data;
+
+                //Generación documento
+                var docDefinition = {
+                  pageMargins: [30, 140, 40, 40],
+                  header: {
+                   height: 120,
+                   width: 120,
+                   image: self.imagen.imagen,
+                   margin: [100, 15,5,5],
+                   alignment: 'center'
+                 },
+                 content: self.getContenido(),
+                 styles: {
+                   top_space: {
+                     fontSize: 11,
+                     marginTop: 30
+                   },
+                   bottom_space: {
+                     fontSize: 12,
+                     bold: true,
+                     alignment:'center'
+                     //marginBottom: 30
+                   },
+                   general_font:{
+                     fontSize: 11,
+                     alignment: 'justify'
+                   },
+                   lista:{
+                     fontSize: 9,
+                     alignment:'justify'
+                   }
+                 }
+                }
+                //Variable para obtener la fecha y hora que se genera el dcoumento
+                var date = new Date();
+                console.log(date);
+                date = moment(date).format('DD_MMM_YYYY_HH_mm_ss');
+
+                //Sirve para descargar el documento y setearle el nombre
+                pdfMake.createPdf(docDefinition).download('Certificación cumplido coordinación ' + date + '.pdf');
+               });
+          });
     };
   });

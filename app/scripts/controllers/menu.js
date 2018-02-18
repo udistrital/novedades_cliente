@@ -243,4 +243,4 @@ angular.module('contractualClienteApp')
                 });
             });
         })(jQuery);
-    });
+});
