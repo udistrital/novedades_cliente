@@ -17,7 +17,7 @@ var conf_cloud = {
     ARKA_SERVICE: "https://tuleap.udistrital.edu.co/go_api/arka_api_crud/v1/",
     CONFIGURACION_SERVICE: "https://tuleap.udistrital.edu.co/go_api/configuracion_api/v1/",
     CORE_SERVICE: "https://tuleap.udistrital.edu.co/go_api/core_api/v1/",
-    CORE_AMAZON_SERVICE: "http://10.20.0.254/core_amazon_crud/v1/",
+    CORE_AMAZON_SERVICE: "https://tuleap.udistrital.edu.co/go_api/core_amazon_crud/v1/",
     FINANCIERA_MID_SERVICE: "https://tuleap.udistrital.edu.co/go_api/financiera_mid_api/v1/",
     FINANCIERA_SERVICE: "https://tuleap.udistrital.edu.co/go_api/financiera_api/v1/",
     MODELS_SERVICE: "scripts/models/",
@@ -28,7 +28,7 @@ var conf_cloud = {
     TITAN_SERVICE: "https://tuleap.udistrital.edu.co/go_api/titan_api_crud/v1/",
     SICAPITAL_SERVICE: "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/",
     CONTRATO_SERVICE: "https://autenticacion.udistrital.edu.co:8244/contratacion_api/v1/",
-    NUXEO_SERVICE:"http://34.238.146.153:8080/nuxeo/",
+    NUXEO_SERVICE:"http://documental.udistrital.edu.co:8080/nuxeo/",
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
