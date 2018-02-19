@@ -203,7 +203,7 @@ angular.module('contractualClienteApp')
       contratoRequest.get('contrato_elaborado', pago_mensual.NumeroContrato + '/' + pago_mensual.VigenciaContrato).then(function (response) {
         self.aux_pago_mensual = pago_mensual;
         self.contrato = response.data.contrato;
-        self.aux_pago_mensual.Responsable = self.contrato.supervisor.documento_identificacion;
+        self.aux_pago_mensual.Responsable = self.contrato.supervisor.documento_identificacion.toString();
 
         administrativaRequest.get('estado_pago_mensual', $.param({
           limit: 0,
