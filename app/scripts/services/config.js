@@ -27,6 +27,7 @@ var conf_cloud = {
     TITAN_SERVICE: "https://tuleap.udistrital.edu.co/go_api/titan_api_crud/v1/",
     SICAPITAL_SERVICE: "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/",
     CONTRATO_SERVICE: "https://autenticacion.udistrital.edu.co:8244/contratacion_api/v1/",
+    NUXEO_SERVICE:"http://34.238.146.153:8080/nuxeo/",
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
