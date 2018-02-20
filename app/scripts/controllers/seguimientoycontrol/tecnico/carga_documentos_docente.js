@@ -262,6 +262,7 @@ angular.module('contractualClienteApp')
           solicitud.EstadoPagoMensual = {"Id":1};
           solicitud.Responsable = self.informacion_coordinador.numero_documento_coordinador;
           solicitud.CargoResponsable = "COORDINADOR " + self.contrato.Dependencia;
+          solicitud.CargoResponsable = solicitud.CargoResponsable.substring(0,69);
           administrativaRequest.put('pago_mensual', solicitud.Id, solicitud).
           then(function(response){
             swal(
