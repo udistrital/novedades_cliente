@@ -88,62 +88,73 @@ angular.module('contractualClienteApp')
       enableFiltering: true,
       resizable: true,
       rowHeight: 40,
-      columnDefs: [{
-        field: 'Persona',
-        cellTemplate: tmpl,
-        displayName: $translate.instant('DOCUMENTO'),
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
+      columnDefs: [
+        {
+          field: 'Dependencia.Nombre',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('PRO_CURR'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+          width: "15%"
         },
-        width: "15%"
-      },
-      {
-        field: 'Nombre',
-        cellTemplate: tmpl,
-        displayName: $translate.instant('NAME_TEACHER'),
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
+        {
+          field: 'PagoMensual.Persona',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('DOCUMENTO'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+          width: "15%"
         },
-      },
+        {
+          field: 'NombrePersona',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('NAME_TEACHER'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+        },
 
-      {
-        field: 'NumeroContrato',
-        cellTemplate: tmpl,
-        displayName: $translate.instant('NUM_VIN'),
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
+        {
+          field: 'PagoMensual.NumeroContrato',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('NUM_VIN'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
         },
-      },
-      {
-        field: 'Mes',
-        cellTemplate: tmpl,
-        displayName: $translate.instant('MES_SOLICITUD'),
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
+        {
+          field: 'PagoMensual.Mes',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('MES_SOLICITUD'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
         },
-      },
-      {
-        field: 'Ano',
-        cellTemplate: tmpl,
-        displayName: $translate.instant('ANO_SOLICITUD'),
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
+        {
+          field: 'PagoMensual.Ano',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('ANO_SOLICITUD'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
         },
-      },
       {
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
         cellTemplate: '<a type="button" title="Ver soportes" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
-          'ng-click="grid.appScope.aprobacionCoordinador.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes"</a>&nbsp;' +
+          'ng-click="grid.appScope.aprobacionCoordinador.obtener_doc(row.entity.PagoMensual)" data-toggle="modal" data-target="#modal_ver_soportes"</a>&nbsp;' +
           '<a type="button" title="Visto bueno" type="button" class="fa fa-check fa-lg  faa-shake animated-hover"' +
-          'ng-click="grid.appScope.aprobacionCoordinador.dar_visto_bueno(row.entity)"></a>&nbsp;'+
+          'ng-click="grid.appScope.aprobacionCoordinador.dar_visto_bueno(row.entity.PagoMensual)"></a>&nbsp;'+
           '<a type="button" title="Rechazar" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
-          'ng-click="grid.appScope.aprobacionCoordinador.rechazar(row.entity)"></a>',
+          'ng-click="grid.appScope.aprobacionCoordinador.rechazar(row.entity.PagoMensual)"></a>',
         width: "10%"
       }
       ]
@@ -166,18 +177,9 @@ angular.module('contractualClienteApp')
 
       self.obtener_informacion_coordinador(self.Documento);
       //Petición para obtener el Id de la relación de acuerdo a los campos
-      administrativaRequest.get('pago_mensual', $.param({
-        limit: 0,
-        query: 'Responsable:' + self.Documento + ',EstadoPagoMensual.CodigoAbreviacion:PRC'
-      })).then(function (response) {
+      adminMidRequest.get('aprobacion_pago/solicitudes_coordinador/'+self.Documento).then(function (response) {
         self.documentos = response.data;
         //self.obtener_informacion_docente();
-        angular.forEach(self.documentos, function (value) {
-          contratoRequest.get('informacion_contrato_elaborado_contratista', value.NumeroContrato + '/' + value.VigenciaContrato).
-            then(function (response) {
-              value.Nombre = response.data.informacion_contratista.nombre_completo;
-            });
-        });
         self.gridOptions1.data = self.documentos;
       });
     };
