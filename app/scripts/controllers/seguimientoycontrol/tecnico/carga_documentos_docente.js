@@ -562,6 +562,9 @@ angular.module('contractualClienteApp')
         'Debe subir un archivo y seleccionar un item',
         'error'
       );
+      
+      self.mostrar_boton= true;
+
     }
 //
     } else if (self.link) {
@@ -623,6 +626,8 @@ angular.module('contractualClienteApp')
           'Debe copiar el enlace y seleccionar un item',
           'error'
         );
+
+        self.mostrar_boton= true;
 
       }
     }
