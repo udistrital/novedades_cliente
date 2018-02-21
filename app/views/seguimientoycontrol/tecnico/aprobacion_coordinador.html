@@ -12,12 +12,20 @@
 
               <div class="form-group col-lg-6">
                 <label>{{'NOM_COOR' | translate}}</label>
-                <input type="text" class="form-control" ng-model="aprobacionCoordinador.coordinador.nombre_coordinador" disabled>
+                <input type="text" class="form-control" ng-model="aprobacionCoordinador.nombre_coordinador" disabled>
               </div>
 
               <div class="form-group col-lg-6">
                 <label>{{'PRO_CURR' | translate}}</label>
-                <span class="form-control" readonly> {{aprobacionCoordinador.coordinador.nombre_proyecto_curricular}}</span>
+                <select class="form-control" required="" ng-model="aprobacionCoordinador.coordinador" class="form-control">
+                  <option value="">---Seleccione el proyecto curricular del cual generará el certificado---</option>
+                  <option ng-repeat="iProyec in aprobacionCoordinador.proyectos_coordinador" ng-value="iProyec">{{iProyec.nombre_proyecto_curricular}}</option>
+                </select>
+
+                <!--<select ng-model="aprobacionCoordinador.coordinador" class="form-control">
+                  <option ng-repeat="iProyec in aprobacionCoordinador.proyectos_coordinador" ng-value="iProyec"> </option>
+                </select>
+                <span class="form-control" readonly> {{aprobacionCoordinador.coordinador.nombre_proyecto_curricular}}</span>-->
               </div>
 
 

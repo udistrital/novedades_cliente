@@ -340,6 +340,10 @@ angular.module('contractualClienteApp')
         Función que genera el documento de quienes no cumplieron con sus obligaciones
       */
       self.getContenido = function(){
+        var date = new Date()
+        var dia = moment(date).format('D');
+        var mes = moment(date).format('M');
+        var anio = moment(date).format('YYYY');
         var contenido = [];
         contenido.push( {text:'EL SUSCRITO DECANO DE LA FACULTAD DE INGENIERÍA DE LA UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
         contenido.push({text:'CERTIFICA QUE: ', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
@@ -350,7 +354,7 @@ angular.module('contractualClienteApp')
            contenido.push({text: value.Nombre + ', ' + value.NumDocumento, style:'general_font'});
          });
         }
-        contenido.push('\n',{text:'La presente certificación se expide con destino a la División de Recursos Humanos a los catorce días del mes de febrero de 2018.',  style:'general_font'}, '\n\n\n\n\n\n');
+        contenido.push('\n',{text:'La presente certificación se expide con destino a la División de Recursos Humanos el día ' + dia + ' del mes de ' + self.meses[mes-1].Nombre + ' de ' + anio +'.',  style:'general_font'}, '\n\n\n\n\n\n');
         contenido.push({text:'' + self.ordenador.nombre, style:'bottom_space'});
         contenido.push({text:'' + self.ordenador.cargo, style:'bottom_space'});
         return contenido
@@ -360,46 +364,52 @@ angular.module('contractualClienteApp')
         Función que genera el documento de quienes no cumplieron con sus obligaciones
       */
       self.generarPDF = function (){
-        //adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/*/**/*').
-        adminMidRequest.get('aprobacion_pago/certificacion_documentos_aprobados/14/2/2018').
-          then(function(response){
-            self.docentes_pago_rechazado = response.data;
 
-            //Generación documento
-            var docDefinition = {
-              pageMargins: [30, 140, 40, 40],
-              header: {
-               height: 120,
-               width: 120,
-               image: self.imagen.imagen,
-               margin: [100, 15,5,5],
-               alignment: 'center'
-             },
-             content: self.getContenido(),
-             styles: {
-               top_space: {
-                 fontSize: 11,
-                 marginTop: 30
-               },
-               bottom_space: {
-                 fontSize: 12,
-                 bold: true,
-                 alignment:'center'
-                 //marginBottom: 30
-               },
-               general_font:{
-                 fontSize: 11,
-                 alignment: 'justify'
-               }
-             }
-            }
-            //Variable para obtener la fecha y hora que se genera el dcoumento
-            var date = new Date();
-            date = moment(date).format('DD_MMM_YYYY_HH_mm_ss');
+        wso2GeneralService.get('/dependenciasProxy/proyecto_curricular_snies', self).
+        then(function(response){
+          self.proyecto_homologado = response.data.homologacion;
+              //adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/*/**/*').
+              adminMidRequest.get('aprobacion_pago/certificacion_documentos_aprobados/14/2/2018').
+                then(function(response){
+                  self.docentes_pago_rechazado = response.data;
 
-            //Sirve para descargar el documento y setearle el nombre
-            pdfMake.createPdf(docDefinition).download('Certificación cumplido para pago ' + date + '.pdf');
-           });
-      };
+                  //Generación documento
+                  var docDefinition = {
+                    pageMargins: [30, 140, 40, 40],
+                    header: {
+                     height: 120,
+                     width: 120,
+                     image: self.imagen.imagen,
+                     margin: [100, 15,5,5],
+                     alignment: 'center'
+                   },
+                   content: self.getContenido(),
+                   styles: {
+                     top_space: {
+                       fontSize: 11,
+                       marginTop: 30
+                     },
+                     bottom_space: {
+                       fontSize: 12,
+                       bold: true,
+                       alignment:'center'
+                       //marginBottom: 30
+                     },
+                     general_font:{
+                       fontSize: 11,
+                       alignment: 'justify'
+                     }
+                   }
+                  }
+                  //Variable para obtener la fecha y hora que se genera el dcoumento
+                  var date = new Date();
+                  date = moment(date).format('DD_MMM_YYYY_HH_mm_ss');
+
+                  //Sirve para descargar el documento y setearle el nombre
+                  pdfMake.createPdf(docDefinition).download('Certificación cumplido para pago ' + date + '.pdf');
+                 });
+            });
+
+          };
 
   });
