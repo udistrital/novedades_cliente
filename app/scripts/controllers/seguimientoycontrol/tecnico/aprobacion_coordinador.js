@@ -304,14 +304,15 @@ angular.module('contractualClienteApp')
        self.documentos = response.data;
        angular.forEach(self.documentos, function(value) {
          self.descripcion_doc = value.Descripcion;
-         value.self.contenido = JSON.parse(value.self.contenido);
+         value.Contenido = JSON.parse(value.Contenido);
 
-         if (value.self.contenido.Tipo === "Enlace") {
-             value.self.contenido.NombreArchivo = value.self.contenido.Tipo;
+         if (value.Contenido.Tipo === "Enlace") {
+             value.Contenido.NombreArchivo = value.Contenido.Tipo;
          };
        });
      })
    };
+
 
    /*
      Función para visualizar enlace
@@ -382,7 +383,7 @@ angular.module('contractualClienteApp')
           cancelButtonText: 'Cancelar',
           confirmButtonText: 'Aceptar'
         }).then(function () {
-         documento.self.contenido = JSON.stringify(documento.self.contenido);
+         documento.contenido = JSON.stringify(documento.contenido);
          coreRequest.put('documento', documento.Id, documento).
          then(function(response){
               self.obtener_doc(self.fila_sol_pago);
