@@ -562,7 +562,7 @@ angular.module('contractualClienteApp')
         'Debe subir un archivo y seleccionar un item',
         'error'
       );
-      
+
       self.mostrar_boton= true;
 
     }
@@ -724,6 +724,7 @@ angular.module('contractualClienteApp')
     $window.open(url);
   };
 
+  
   /*
     Función para "borrar" un documento
   */
