@@ -88,66 +88,77 @@ angular.module('contractualClienteApp')
       enableFiltering: true,
       resizable: true,
       rowHeight: 40,
-      columnDefs: [{
-        field: 'Persona',
-        cellTemplate: tmpl,
-        displayName: $translate.instant('DOCUMENTO'),
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
+      columnDefs: [
+        {
+          field: 'Dependencia.Nombre',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('PRO_CURR'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+          width: "15%"
         },
-        width: "15%"
-      },
-      {
-        field: 'Nombre',
-        cellTemplate: tmpl,
-        displayName: $translate.instant('NAME_TEACHER'),
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
+        {
+          field: 'PagoMensual.Persona',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('DOCUMENTO'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+          width: "15%"
         },
-      },
+        {
+          field: 'NombrePersona',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('NAME_TEACHER'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+        },
 
-      {
-        field: 'NumeroContrato',
-        cellTemplate: tmpl,
-        displayName: $translate.instant('NUM_VIN'),
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
+        {
+          field: 'PagoMensual.NumeroContrato',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('NUM_VIN'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
         },
-      },
-      {
-        field: 'Mes',
-        cellTemplate: tmpl,
-        displayName: $translate.instant('MES_SOLICITUD'),
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
+        {
+          field: 'PagoMensual.Mes',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('MES_SOLICITUD'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
         },
-      },
-      {
-        field: 'Ano',
-        cellTemplate: tmpl,
-        displayName: $translate.instant('ANO_SOLICITUD'),
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
+        {
+          field: 'PagoMensual.Ano',
+          cellTemplate: tmpl,
+          displayName: $translate.instant('ANO_SOLICITUD'),
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
         },
-      },
       {
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
         cellTemplate: '<a type="button" title="Ver soportes" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
-          'ng-click="grid.appScope.aprobacionCoordinador.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes"</a>&nbsp;' +
+          'ng-click="grid.appScope.aprobacionCoordinador.obtener_doc(row.entity.PagoMensual)" data-toggle="modal" data-target="#modal_ver_soportes"</a>&nbsp;' +
           '<a type="button" title="Visto bueno" type="button" class="fa fa-check fa-lg  faa-shake animated-hover"' +
-          'ng-click="grid.appScope.aprobacionCoordinador.dar_visto_bueno(row.entity)"></a>&nbsp;'+
+          'ng-click="grid.appScope.aprobacionCoordinador.dar_visto_bueno(row.entity.PagoMensual)"></a>&nbsp;'+
           '<a type="button" title="Rechazar" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
-          'ng-click="grid.appScope.aprobacionCoordinador.rechazar(row.entity)"></a>',
+          'ng-click="grid.appScope.aprobacionCoordinador.rechazar(row.entity.PagoMensual)"></a>',
         width: "10%"
       }
       ]
-    };
+};
 
 
     /*
@@ -166,22 +177,12 @@ angular.module('contractualClienteApp')
 
       self.obtener_informacion_coordinador(self.Documento);
       //Petición para obtener el Id de la relación de acuerdo a los campos
-      administrativaRequest.get('pago_mensual', $.param({
-        limit: 0,
-        query: 'Responsable:' + self.Documento + ',EstadoPagoMensual.CodigoAbreviacion:PRC'
-      })).then(function (response) {
+      adminMidRequest.get('aprobacion_pago/solicitudes_coordinador/'+self.Documento).then(function (response) {
         self.documentos = response.data;
         //self.obtener_informacion_docente();
-        angular.forEach(self.documentos, function (value) {
-          contratoRequest.get('informacion_contrato_elaborado_contratista', value.NumeroContrato + '/' + value.VigenciaContrato).
-            then(function (response) {
-              value.Nombre = response.data.informacion_contratista.nombre_completo;
-            });
-        });
         self.gridOptions1.data = self.documentos;
       });
-    };
-
+};
 
 
     /*
@@ -395,71 +396,25 @@ angular.module('contractualClienteApp')
     /*
       Función que genera el documento de quienes no cumplieron con sus obligaciones
     */
-    self.getcontenido = function(){
-      /*homologacionDependenciaService.get('proyecto_curricular_snies', self.coordinador.codigo_snies).
-      then(function(response){
-        self.dep = response.data.homologacion;*/
-        oikosRequest.get('dependencia_padre', $.param({
-          query:'Hija:' + self.proyecto_homologado.id_oikos
-        })).then(function(responseHom)
-      {
-        self.facultad = responseHom.data;
-        console.log(self.facultad);
-        var date = new Date()
-        var dia = moment(date).format('D');
-        var mes = moment(date).format('M');
-        var anio = moment(date).format('YYYY');
-        var contenido = [];
-        //console.log(self.contenido);
-        contenido.push( {text:'EL SUSCRITO COORDINADOR DEL PROYECTO CURRICULAR DE ' + self.coordinador.nombre_proyecto_curricular + ' DE LA FACULTAD DE INGENIERÍA DE LA UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
-        //console.log(self.contenido);
-        contenido.push({text:'CERTIFICA QUE: ', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
-        contenido.push({text:'Los Docentes de Vinculación Especial contratados para el periodo Académico 2018-1, del Proyecto Curricular de ' + self.coordinador.nombre_proyecto_curricular + ' cumplieron a cabalidad con las funciones docentes durante el mes de FEBRERO de 2018 (según calendario académico).', style:'general_font'}, '\n\n')
-        if(self.docentes_incumplidos){
-          contenido.push({text:'A excepción de las siguientes novedades: ', style:'general_font'}, '\n')
-          angular.forEach(self.docentes_incumplidos, function(value) {
-           contenido.push({text: value.NumDocumento + ', ' + value.Nombre + ', ' + value.NumeroContrato + ', No se le aprueba cumplido.', style:'lista'});
-         });
-        }
-        contenido.push('\n',{text:'La presente certificación se expide el día ' + dia + ' del mes de ' + self.meses[mes-1].Nombre + ' de ' + anio +'.',  style:'general_font'}, '\n\n\n\n\n\n');
-        contenido.push({text:'' + self.coordinador.nombre_coordinador, style:'bottom_space'});
-        contenido.push({text:'Coordinador', style:'bottom_space'});
-        contenido.push({text:'Proyecto Curricular ' + self.coordinador.nombre_proyecto_curricular, style:'bottom_space'});
-
-        //console.log(self.contenido);
-
-        return contenido;
-
-      })
-
-            //});
-
-        };
-
-
-    /*
-      Función que genera el documento de quienes no cumplieron con sus obligaciones
-    */
     self.generarPDF = function (){
-
+ 
 
       homologacionDependenciaService.get('proyecto_curricular_snies', self.coordinador.codigo_snies).
       then(function(response){
+        console.log(self.coordinador.codigo_snies);
         self.proyecto_homologado = response.data.homologacion;
-
+        
             //adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/*/**/*').
             adminMidRequest.get('/aprobacion_pago/certificacion_visto_bueno/'+ self.proyecto_homologado.id_oikos +'/' + self.mes.Id + '/' + self.anio).
               then(function(responseMid){
-                self.docentes_incumplidos = responseMid.data;
+               self.docentes_incumplidos = responseMid.data;
 
                 oikosRequest.get('dependencia_padre', $.param({
                   query:'Hija:' + self.proyecto_homologado.id_oikos
                 })).then(function(responseHom)
               {
-                self.facultad = responseHom.data;
-                console.log(self.facultad);
-                console.log(self.facultad.Padre);
-                console.log(self.facultad.Padre.Nombre);
+                self.facultad = responseHom.data[0];
+
                 var date = new Date()
                 var dia = moment(date).format('D');
                 var mes = moment(date).format('M');
@@ -514,7 +469,7 @@ angular.module('contractualClienteApp')
                    }
                  }
                 }
-                console.log(docDefinition.content);
+      
                 //Variable para obtener la fecha y hora que se genera el dcoumento
                 var date = new Date();
                 date = moment(date).format('DD_MMM_YYYY_HH_mm_ss');
