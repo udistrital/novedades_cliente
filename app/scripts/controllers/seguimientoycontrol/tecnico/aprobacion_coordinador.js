@@ -398,13 +398,13 @@ angular.module('contractualClienteApp')
       Función que genera el documento de quienes no cumplieron con sus obligaciones
     */
     self.generarPDF = function (){
- 
+
 
       homologacionDependenciaService.get('proyecto_curricular_snies', self.coordinador.codigo_snies).
       then(function(response){
         console.log(self.coordinador.codigo_snies);
         self.proyecto_homologado = response.data.homologacion;
-        
+
             //adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/*/**/*').
             adminMidRequest.get('/aprobacion_pago/certificacion_visto_bueno/'+ self.proyecto_homologado.id_oikos +'/' + self.mes.Id + '/' + self.anio).
               then(function(responseMid){
@@ -470,7 +470,7 @@ angular.module('contractualClienteApp')
                    }
                  }
                 }
-      
+
                 //Variable para obtener la fecha y hora que se genera el dcoumento
                 var date = new Date();
                 date = moment(date).format('DD_MMM_YYYY_HH_mm_ss');
@@ -478,7 +478,7 @@ angular.module('contractualClienteApp')
                 pdfMake.createPdf(docDefinition).download('Certificación cumplido coordinación ' + date + '.pdf');
 
 
-              })
+              });
                 //console.log(self.contenido);
 
 

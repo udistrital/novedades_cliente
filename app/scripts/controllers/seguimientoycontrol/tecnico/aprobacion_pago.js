@@ -345,9 +345,9 @@ angular.module('contractualClienteApp')
         var mes = moment(date).format('M');
         var anio = moment(date).format('YYYY');
         var contenido = [];
-        contenido.push( {text:'EL SUSCRITO DECANO DE LA FACULTAD DE INGENIERÍA DE LA UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
+        contenido.push( {text:'EL SUSCRITO DECANO DE LA '+ self.facultad.Nombre +' DE LA UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
         contenido.push({text:'CERTIFICA QUE: ', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
-        contenido.push({text:'De acuerdo con la información suministrada por los proyectos curriculares de pregrado de la facultad de Ingeniería, los profesores de Vinculación Especial contratados para el período académico 2018-I, cumplieron a cabalidad con las funciones docentes en el mes de febrero del presente año. (De acuerdo a calendario académico).', style:'general_font'}, '\n\n')
+        contenido.push({text:'De acuerdo con la información suministrada por los proyectos curriculares de la '+ self.facultad.Nombre +', los profesores de Vinculación Especial contratados para el período académico 2018-I, cumplieron a cabalidad con las funciones docentes en el mes de '+ self.mes.Nombre +' del presente año. (De acuerdo a calendario académico).', style:'general_font'}, '\n\n')
         if(self.docentes_pago_rechazado){
           contenido.push({text:'A excepción de las siguientes novedades: ', style:'general_font'}, '\n')
           angular.forEach(self.docentes_pago_rechazado, function(value) {
@@ -365,13 +365,19 @@ angular.module('contractualClienteApp')
       */
       self.generarPDF = function (){
 
-        wso2GeneralService.get('/dependenciasProxy/proyecto_curricular_snies', self).
-        then(function(response){
-          self.proyecto_homologado = response.data.homologacion;
-              //adminMidRequest.get('aprobacion_pago/certificacion_visto_bueno/*/**/*').
-              adminMidRequest.get('aprobacion_pago/certificacion_documentos_aprobados/14/2/2018').
+        adminMidRequest.get('aprobacion_pago/dependencia_ordenador/' + self.Documento).
+        then(function(responseHom){
+          self.facultad_homologada = responseHom.data;
+
+              adminMidRequest.get('aprobacion_pago/certificacion_documentos_aprobados/' + self.facultad_homologada + '/' + self.mes.Id + '/' + self.anio).
                 then(function(response){
                   self.docentes_pago_rechazado = response.data;
+
+                  oikosRequest.get('dependencia/'+ self.facultad_homologada)
+                  .then(function(responseFac)
+                {
+                  console.log(responseFac.data);
+                  self.facultad = responseFac.data;
 
                   //Generación documento
                   var docDefinition = {
@@ -401,6 +407,7 @@ angular.module('contractualClienteApp')
                      }
                    }
                   }
+
                   //Variable para obtener la fecha y hora que se genera el dcoumento
                   var date = new Date();
                   date = moment(date).format('DD_MMM_YYYY_HH_mm_ss');
@@ -409,6 +416,7 @@ angular.module('contractualClienteApp')
                   pdfMake.createPdf(docDefinition).download('Certificación cumplido para pago ' + date + '.pdf');
                  });
             });
+        });//Peticion Oikos
 
           };
 

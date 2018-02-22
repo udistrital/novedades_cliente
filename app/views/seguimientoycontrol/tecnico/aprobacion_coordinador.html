@@ -18,14 +18,9 @@
               <div class="form-group col-lg-6">
                 <label>{{'PRO_CURR' | translate}}</label>
                 <select class="form-control" required="" ng-model="aprobacionCoordinador.coordinador" class="form-control">
-                  <option value="">---Seleccione el proyecto curricular del cual generará el certificado---</option>
+                  <option value="">---Seleccione el proyecto curricular del certificado---</option>
                   <option ng-repeat="iProyec in aprobacionCoordinador.proyectos_coordinador" ng-value="iProyec">{{iProyec.nombre_proyecto_curricular}}</option>
                 </select>
-
-                <!--<select ng-model="aprobacionCoordinador.coordinador" class="form-control">
-                  <option ng-repeat="iProyec in aprobacionCoordinador.proyectos_coordinador" ng-value="iProyec"> </option>
-                </select>
-                <span class="form-control" readonly> {{aprobacionCoordinador.coordinador.nombre_proyecto_curricular}}</span>-->
               </div>
 
 
@@ -33,7 +28,7 @@
             <div class="col-md-3">
                 <label>{{'MES' | translate }}</label>
                 <select class="form-control" ng-model="aprobacionCoordinador.mes" ng-options="option.Nombre for option in aprobacionCoordinador.meses">
-                      <option value="">--Elija el mes del certificado--</option>
+                      <option value="">--Seleccione el mes del certificado--</option>
                 </select>
               </div>
 
@@ -41,6 +36,7 @@
               <div class="col-md-3">
                 <label>{{'ANO' | translate }}</label>
                 <select ng-model="aprobacionCoordinador.anio" class="form-control">
+                  <option value="">---Seleccione el año del certificado---</option>
                   <option ng-repeat="iAnio in aprobacionCoordinador.anios" ng-value="iAnio">{{iAnio}} </option>
                 </select>
               </div>
