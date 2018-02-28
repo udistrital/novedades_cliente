@@ -27,7 +27,7 @@ angular.module('contractualClienteApp')
 
   self.anios = [];
 
-  self.meses = [{
+  self.meses_aux = [{
       Id: 1,
       Nombre: $translate.instant('ENERO')
     },
@@ -76,6 +76,19 @@ angular.module('contractualClienteApp')
       Nombre: $translate.instant('DIC')
     }
   ]
+
+
+  self.getMeses = function (anio){
+     var hoy = new Date();
+    if (anio<hoy.getFullYear()){
+      self.meses =self.meses_aux;
+    }else if(anio==hoy.getFullYear()){
+
+      self.meses = self.meses_aux.slice(0, hoy.getMonth()+1);
+
+    }
+
+  };
   /*
     Creación tabla que tendrá todos los contratos relacionados al docente
   */
@@ -323,7 +336,7 @@ angular.module('contractualClienteApp')
   */
   self.solicitar_pago = function(contrato) {
     self.contrato = contrato;
-    self.anios = [parseInt(self.contrato.Vigencia), parseInt(self.contrato.Vigencia) + 1];
+    self.anios = [parseInt(self.contrato.Vigencia), parseInt(self.contrato.Vigencia) -1];
   };
 
 

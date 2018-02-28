@@ -215,39 +215,7 @@ angular.module('contractualClienteApp')
 
       self.obtener_informacion_ordenador();
 
-      self.validarCumplido = function (contratista) {
-        swal({
-          title: '¿Está seguro(a)?',
-          text: "Podrá revertir la validación",
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          cancelButtonText: 'Cancelar',
-          confirmButtonText: 'Validar'
-        }).then(function () {
-          contratista.validacion = true;
-          self.gridApi.core.refresh();
 
-        });
-      };
-
-      self.invalidarCumplido = function (contratista) {
-        swal({
-          title: '¿Está seguro(a) de invalidar el cumplido?',
-          text: "Podrá revertir la invalidación",
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          cancelButtonText: 'Cancelar',
-          confirmButtonText: 'Invalidar'
-        }).then(function () {
-          contratista.validacion = false;
-          self.gridApi.core.refresh();
-
-        });
-      };
 
       self.aprobarPago = function (pago_mensual) {
 
