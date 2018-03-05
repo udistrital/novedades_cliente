@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionDocumentosCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, amazonAdministrativaRequest,nuxeo,coreRequest, $q, $sce, $window, adminMidRequest,$routeParams) {
+  .controller('AprobacionDocumentosCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest, amazonAdministrativaRequest,nuxeo,coreRequest, $q, $sce, $window, adminMidRequest,$routeParams, $scope) {
 
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
     var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
@@ -104,6 +104,17 @@ angular.module('contractualClienteApp')
 
     self.gridOptions1.onRegisterApi = function (gridApi) {
       self.gridApi = gridApi;
+
+      gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+
+
+            self.solicitudes_seleccionadas = gridApi.selection.getSelectedRows();
+            console.log(self.solicitudes_seleccionadas);
+          
+
+    });
+
+
     };
 
 
@@ -522,6 +533,45 @@ angular.module('contractualClienteApp')
       });
 
 
+    }
+
+    self.aprobar_multiples_documentos =function(){
+      
+
+
+        swal({
+          title: '¿Está seguro(a) de aprobar varias solicitudes a la vez?',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Aceptar'
+        }).then(function () {
+          adminMidRequest.post('aprobacion_pago/aprobar_documentos',self.solicitudes_seleccionadas).then(function(response){
+            if (response.data === 'OK'){
+              swal(
+                'Solicitudes Aprobadas',
+                'Se han aprobado las solicitudes seleccionadas',
+                'success'
+              )
+              self.obtener_informacion_supervisor();
+              self.gridApi.core.refresh();
+
+
+            }else{
+
+              swal(
+                'Error',
+                'No se han podido aprobar las solicitudes seleccionadas',
+                'error'
+              );
+
+            }
+          });
+        });
+
+   
     }
 
 

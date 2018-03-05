@@ -17,8 +17,8 @@
               </div>
 
 
-              <div style="height: {{gridHeight}}px;" ui-grid="aprobacionDocumentos.gridOptions1" align='center' ui-grid-auto-resize></div>
-
+              <div style="height: {{gridHeight}}px;" ui-grid="aprobacionDocumentos.gridOptions1" align='center' ui-grid-selection ui-grid-auto-resize></div>
+              <button class="btn btn-warning" ng-click="aprobacionDocumentos.aprobar_multiples_documentos()">Aprobar</button>
             </form>
           </div>
         </div>

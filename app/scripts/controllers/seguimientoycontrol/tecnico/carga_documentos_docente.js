@@ -154,8 +154,8 @@ angular.module('contractualClienteApp')
       {
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
-        cellTemplate: '<a type="button" title="{{\'SOLICITAR_CUM\'| translate }}" type="button" class="fa fa-money fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.solicitar_pago(row.entity)"   data-toggle="modal" data-target="#modal_enviar_solicitud" >' +
-          '</a>&nbsp;' + ' <a type="button" title="{{\'CARGAR_LISTAS\'| translate }}" type="button" class="fa fa-upload fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.cargar_soportes(row.entity)"  data-toggle="modal" data-target="#modal_carga_listas_docente">',
+        cellTemplate: 
+        ' <a type="button" title="{{\'CAR_SOP\'| translate }}" type="button" class="fa fa-upload fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.cargar_soportes(row.entity); grid.appScope.cargaDocumentosDocente.solicitar_pago(row.entity);"  data-toggle="modal" data-target="#modal_carga_listas_docente">',
         width: "10%"
       }
     ]
@@ -381,7 +381,7 @@ angular.module('contractualClienteApp')
 
 
   self.enviar_solicitud = function() {
-
+    self.mostrar_boton= false;
     if (self.mes !== undefined && self.anio !== undefined) {
       //Petición para obtener id de estado pago mensual
       administrativaRequest.get("estado_pago_mensual", $.param({
@@ -421,9 +421,15 @@ angular.module('contractualClienteApp')
               'success'
             )
 
-            self.contrato = {};
+            self.cargar_soportes(self.contrato);
+
+
+            self.gridApi2.core.refresh();
+
+         //   self.contrato = {};
             self.mes = {};
             self.anio = {};
+            self.mostrar_boton= true;
 
           });
 
@@ -435,6 +441,7 @@ angular.module('contractualClienteApp')
             'error'
           );
 
+          self.mostrar_boton= true;
         }
 
       });
@@ -446,6 +453,7 @@ angular.module('contractualClienteApp')
         'Debe seleccionar un mes y un año',
         'error'
       );
+      self.mostrar_boton= true;
     }
 
   };
