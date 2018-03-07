@@ -618,6 +618,24 @@ var text_es = {
   VER_SOP:"VER SOPORTES",
   ENV_REV:"ENVIAR A REVISIÓN COORDINADOR",
   PARRA_VER_SOP:"A continuación se listan los soportes asociados al cumplido",
+  ENV_REV_WARN:"¿Está seguro(a) de enviar a revisar los soportes por el coordinador?",
+  SOLICITUD_ENVIADA:"Solicitud enviada",
+  SOLICITUD_EN_ESPERA:"Su solicitud se encuentra a la espera de revisión",
+  NO_PUEDE_ENV:"No puede enviar a revisión sin cargar algún documento",
+  VERIFICACION_FECHA_WARN:"Seleccionó un mes o año diferente al actual, ¿Está seguro(a) de enviar la solicitud?",
+  SOLICITUD_REGISTRADA:"Solicitud registrada",
+  CARGUE_CORRESPONDIENTE: "Por favor cargue los soportes correspondientes",
+  YA_EXISTE: "Ya existe una solicitud de pago para el año y mes dados",
+  DEBE_SELECCIONAR: "Debe seleccionar un mes y un año",
+  DOCUMENTO_GUARDADO: "Documento guardado",
+  DOCUMENTO_SE_HA_GUARDADO: "Se ha guardado el documento en el repositorio",
+  DEBE_SUBIR_ARCHIVO: "Debe subir un archivo y seleccionar un item",
+  ENLACE_GUARDADO: "Enlace guardado",
+  ENLACE_SE_HA_GUARDADO: "Se ha guardado el enlace",
+  DEBE_PEGAR_ENLACE: "Debe pegar el enlace y seleccionar un item",
+  
+  
+ 
 
 
   //Modal informe de gestión docente
@@ -1004,6 +1022,31 @@ var text_en = {
   VER_SOP:"VIEW SUPPORTS",
   ENV_REV:"SEND TO COORDINATOR REVIEW",
   PARRA_VER_SOP:"Below are the supports associated with the compliment",
+  ENV_REV_WARN:"Are you sure to send the supports to review by the coordinator?",
+  SOLICITUD_ENVIADA:"Request sent",
+  SOLICITUD_EN_ESPERA:"Your request is on wait for review",
+  NO_PUEDE_ENV:"You can't send without upload a document at least",
+  VERIFICACION_FECHA_WARN:"You selected a month or year different from current date. Are you sure to send the request?",
+  SOLICITUD_REGISTRADA:"Registered request",
+  CARGUE_CORRESPONDIENTE: "Please upload the corresponding documents",
+  YA_EXISTE: "There is already a payment request for the given year and month",
+  DEBE_SELECCIONAR: "You must select a month and a year",
+  DOCUMENTO_GUARDADO: "Document saved",
+  DOCUMENTO_SE_HA_GUARDADO: "The document has been saved in the repository",
+  DEBE_SUBIR_ARCHIVO: "You must upload a file and select an item",
+  ENLACE_GUARDADO: "Link saved",
+  ENLACE_SE_HA_GUARDADO: "The link has been saved",
+  DEBE_PEGAR_ENLACE: "You must paste a link and select an item",
+
+
+
+
+
+
+
+
+
+
 
   //Modal informe de gestión docente
   TITULO_MODAL_INFORME_DOC:"TEACHER MANAGEMENT REPORT",

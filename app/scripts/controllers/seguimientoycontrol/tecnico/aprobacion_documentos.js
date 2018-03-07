@@ -17,6 +17,7 @@ angular.module('contractualClienteApp')
     var self = this;
     self.contratistas = [];
     self.Documento = $routeParams.docid;
+    self.solicitudes_seleccionadas=[];
 
     /*
       Creación tabla que tendrá todos los contratistas relacionados al supervisor
@@ -109,7 +110,6 @@ angular.module('contractualClienteApp')
 
 
             self.solicitudes_seleccionadas = gridApi.selection.getSelectedRows();
-            console.log(self.solicitudes_seleccionadas);
           
 
     });

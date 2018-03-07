@@ -174,6 +174,7 @@ angular.module('contractualClienteApp')
     enableFiltering: true,
     resizable: true,
     enableRowSelection: true,
+    rowHeight: 40,
     columnDefs: [{
         field: 'NumeroContrato',
         cellTemplate: tmpl,
@@ -252,13 +253,13 @@ angular.module('contractualClienteApp')
   */
   self.enviar_revision = function (solicitud) {
     swal({
-      title: '¿Está seguro(a) de enviar a revisar los soportes por el coordinador?',
+      title: $translate.instant('ENV_REV_WARN'),
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Enviar'
+      cancelButtonText: $translate.instant('CANCELAR'),
+      confirmButtonText: $translate.instant('ENVIAR')
     }).then(function () {
 
       var nombre_docs = solicitud.VigenciaContrato + solicitud.NumeroContrato + solicitud.Persona + solicitud.Mes + solicitud.Ano;
@@ -279,8 +280,8 @@ angular.module('contractualClienteApp')
           administrativaRequest.put('pago_mensual', solicitud.Id, solicitud).
           then(function(response){
             swal(
-              'Solicitud enviada',
-              'Su solicitud se encuentra a la espera de revisión',
+               $translate.instant('SOLICITUD_ENVIADA'),
+              $translate.instant('SOLICITUD_EN_ESPERA'),
               'success'
             )
           })
@@ -292,7 +293,7 @@ angular.module('contractualClienteApp')
       }else{
         swal(
           'Error',
-          'No puede enviar a revisión sin cargar algún documento',
+          $translate.instant('NO_PUEDE_ENV'),
           'error'
         )
       }//else
@@ -380,9 +381,38 @@ angular.module('contractualClienteApp')
   };
 
 
+  self.verificar_fecha_pago = function(){
+    var hoy = new Date();
+    if(self.mes !== hoy.getMonth()+1 || self.anio !== hoy.getFullYear()){
+      swal({
+        title: $translate.instant('VERIFICACION_FECHA_WARN'),
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: $translate.instant('CANCELAR'),
+        confirmButtonText: $translate.instant('ACEPTAR')
+      }).then(function () {
+
+        self.enviar_solicitud();
+
+      });
+
+
+
+    }else{
+
+      self.enviar_solicitud();
+    }
+  }
+
+
   self.enviar_solicitud = function() {
     self.mostrar_boton= false;
+
     if (self.mes !== undefined && self.anio !== undefined) {
+
+  
       //Petición para obtener id de estado pago mensual
       administrativaRequest.get("estado_pago_mensual", $.param({
           query: "CodigoAbreviacion:CD",
@@ -416,8 +446,8 @@ angular.module('contractualClienteApp')
 
           administrativaRequest.post("pago_mensual", pago_mensual).then(function(response) {
             swal(
-              'Solicitud registrada',
-              'Por favor cargue los soportes correspondientes',
+              $translate.instant('SOLICITUD_REGISTRADA'),
+              $translate.instant('CARGUE_CORRESPONDIENTE'),
               'success'
             )
 
@@ -437,7 +467,7 @@ angular.module('contractualClienteApp')
 
           swal(
             'Error',
-            'Ya existe una solicitud de pago para el año y mes dados',
+            $translate.instant('YA_EXISTE'),
             'error'
           );
 
@@ -450,7 +480,7 @@ angular.module('contractualClienteApp')
   }else {
       swal(
         'Error',
-        'Debe seleccionar un mes y un año',
+        $translate.instant('DEBE_SELECCIONAR'),
         'error'
       );
       self.mostrar_boton= true;
@@ -561,8 +591,8 @@ angular.module('contractualClienteApp')
               .then(function(response) {
                 //Bandera de validacion
                 swal(
-                  'Documento guardado',
-                  'Se ha guardado el documento en el repositorio',
+                  $translate.instant('DOCUMENTO_GUARDADO'),
+                  $translate.instant('DOCUMENTO_SE_HA_GUARDADO'),
                   'success'
                 );
                 self.item = undefined;
@@ -580,7 +610,7 @@ angular.module('contractualClienteApp')
 
       swal(
         'Error',
-        'Debe subir un archivo y seleccionar un item',
+        $translate.instant('DEBE_SUBIR_ARCHIVO'),
         'error'
       );
 
@@ -629,8 +659,8 @@ angular.module('contractualClienteApp')
             .then(function(response) {
               //Bandera de validacion
               swal(
-                'Enlace guardado',
-                'Se ha guardado el enlace',
+                $translate.instant('ENLACE_GUARDADO'),
+                $translate.instant('ENLACE_SE_HA_GUARDADO'),
                 'success'
               );
               self.enlace = undefined;
@@ -644,7 +674,7 @@ angular.module('contractualClienteApp')
 
         swal(
           'Error',
-          'Debe copiar el enlace y seleccionar un item',
+          $translate.instant('DEBE_PEGAR_ENLACE'),
           'error'
         );
 

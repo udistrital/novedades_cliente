@@ -169,32 +169,15 @@ angular.module('contractualClienteApp')
 
 
 
-      /*
-        Función que recibe un objeto que posee un arreglo con información de los contratistas y su supervisor.
-        Eśta función extrae el arreglo y los procesa para adicionar un atributo de validación.
-      */
-
-      self.procesar_contratistas = function (supervisor_contratistas) {
-
-        for (var i = 0; i < supervisor_contratistas.length; i++) {
-          self.contratistas[i] = {
-            num_documento: supervisor_contratistas[i].contratista.documento,
-            nombre: supervisor_contratistas[i].contratista.nombre,
-            dependencia: supervisor_contratistas[i].supervisor.dependencia,
-            cargo_supervision: supervisor_contratistas[i].supervisor.cargo,
-            validacion: false
-          }
-        }
-      }
 
       /*
-        Función para consultar los datos del supervisor del contrato y los contratistas asociados a este
+        Función para consultar los datos del ordenador del contrato y los contratistas asociados a este
       */
 
 
 
       self.obtener_informacion_ordenador = function () {
-        //Petición para obtener la información del supervisor del contrato
+        //Petición para obtener la información del ordenador del contrato
         self.gridOptions1.data = [];
         self.contratistas = [];
 
