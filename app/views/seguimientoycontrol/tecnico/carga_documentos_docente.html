@@ -297,4 +297,76 @@
     </div>
   </div>
 </div>
+
+
+<div id="modal_check_docente" class="modal fade" role="dialog">
+    <div class="modal-content col-md-10 col-md-offset-1" style="margin-top: 5%">
+  
+      <div class="modal-header">
+        <button type="button" class="btn btn-outline btn-danger btn-xs pull-right" data-dismiss="modal">&times</button>
+        <br>
+      </div>
+  
+      <div class="modal-body">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Solicitar cumplido</h3>
+          </div>
+  
+          <div class="row">
+  
+          <div class="col-md-12">
+              <p>{{'PARRAFO_SOLICITAR_PAGO' | translate }}</p>
+            </div>
+  
+            <div class="col-md-1">
+                <label>{{'ANO' | translate }}</label>
+              </div>
+              <div class="col-md-3">
+                <select ng-model="cargaDocumentosDocente.anio"   ng-change="cargaDocumentosDocente.getMeses(cargaDocumentosDocente.anio)" class="form-control">
+                  <option ng-repeat="iAnio in cargaDocumentosDocente.anios" ng-value="iAnio">{{iAnio}} </option>
+                </select>
+              </div>
+    
+            <div class="row">
+            <div class="col-md-1">
+              <label>{{'MES' | translate }}</label>
+            </div>
+            <div class="col-md-3">
+              <select ng-model="cargaDocumentosDocente.mes" class="form-control">
+                <option ng-repeat="iMes in cargaDocumentosDocente.meses" ng-value="iMes.Id">{{iMes.Nombre}} </option>
+              </select>
+            </div>
+          </div>  
+
+          <center>
+            <div class="form-check col-md-12">
+                <label class="form-check-label" for="check_acepto">Acepto que he cumplido con mi propuesta de trabajo como docente de vinculación especial para el mes y año seleccionado</label>
+                <input type="checkbox" class="form-check-input" id="check_acepto" ng-model="cargaDocumentosDocente.acepto">
+
+            </div>
+       
+            <div class="col-md-5">
+              <button class="btn btn-success" ng-click="cargaDocumentosDocente.verificar_fecha_pago_check()" ng-show="cargaDocumentosDocente.mostrar_boton">
+                {{'ENVIAR' | translate }}
+              </button>
+            </div>
+          </center>
+          </div>
+          <br>
+  
+
+  
+          <br>
+  
+  
+          <div class="panel-body">
+  
+            <div style="height: {{gridHeight}}px;width:{{gridWidth}}px" ui-grid="cargaDocumentosDocente.gridOptions2" align='center' ui-grid-selection ui-grid-auto-resize></div>
+  
+            <br>
+            <br>
+          </div>
+  
+  </div>
 </div>

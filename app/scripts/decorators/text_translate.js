@@ -584,7 +584,7 @@ var text_es = {
   NOM_ORDENADOR:"NOMBRE ORDENADOR DEL GASTO",
 
   //Módulo cargar de listas
-  TITULO_CARGA_LISTAS:"CARGA SOPORTES CUMPLIDO DOCENTES",
+  TITULO_CARGA_LISTAS:"SOLICITUD CUMPLIDO DOCENTES",
   NOM_DOCENTE:"NOMBRE DEL DOCENTE",
   PRO_CURR:"PROYECTO CURRICULAR",
   NUM_VINC:"NÚMERO DE VINCULACIÓN",
@@ -626,7 +626,7 @@ var text_es = {
   SOLICITUD_REGISTRADA:"Solicitud registrada",
   CARGUE_CORRESPONDIENTE: "Por favor cargue los soportes correspondientes",
   YA_EXISTE: "Ya existe una solicitud de pago para el año y mes dados",
-  DEBE_SELECCIONAR: "Debe seleccionar un mes y un año",
+  DEBE_SELECCIONAR: "Debe seleccionar un mes y un año, y aceptar que ha cumplido con sus obligaciones",
   DOCUMENTO_GUARDADO: "Documento guardado",
   DOCUMENTO_SE_HA_GUARDADO: "Se ha guardado el documento en el repositorio",
   DEBE_SUBIR_ARCHIVO: "Debe subir un archivo y seleccionar un item",

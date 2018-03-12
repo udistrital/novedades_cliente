@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionPagoCtrl', function (oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest,$routeParams,adminMidRequest) {
+  .controller('AprobacionPagoCtrl', function ($scope, oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest,$routeParams,adminMidRequest) {
 
 
       //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
@@ -165,9 +165,17 @@ angular.module('contractualClienteApp')
 
       self.gridOptions1.onRegisterApi = function (gridApi) {
         self.gridApi = gridApi;
+  
+        gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+  
+  
+              self.solicitudes_seleccionadas = gridApi.selection.getSelectedRows();
+            
+  
+      });
+  
+  
       };
-
-
 
 
       /*
@@ -370,5 +378,50 @@ angular.module('contractualClienteApp')
         });//Peticion Oikos
 
           };
+
+
+
+
+    self.aprobar_multiples_pagos =function(){
+      
+
+
+      swal({
+        title: '¿Está seguro(a) de aprobar varias solicitudes a la vez?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Aceptar'
+      }).then(function () {
+        adminMidRequest.post('aprobacion_pago/aprobar_pagos',self.solicitudes_seleccionadas).then(function(response){
+          if (response.data === 'OK'){
+            swal(
+              'Pagos Aprobados',
+              'Se han aprobado los pagos de las solicitudes seleccionadas',
+              'success'
+            )
+            self.obtener_informacion_ordenador();
+            self.gridApi.core.refresh();
+
+
+          }else{
+
+            swal(
+              'Error',
+              'No se han podido aprobar los pagos de las solicitudes seleccionadas',
+              'error'
+            );
+
+          }
+        });
+      });
+
+ 
+  }
+
+
+
 
   });

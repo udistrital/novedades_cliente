@@ -155,7 +155,8 @@ angular.module('contractualClienteApp')
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
         cellTemplate: 
-        ' <a type="button" title="{{\'CAR_SOP\'| translate }}" type="button" class="fa fa-upload fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.cargar_soportes(row.entity); grid.appScope.cargaDocumentosDocente.solicitar_pago(row.entity);"  data-toggle="modal" data-target="#modal_carga_listas_docente">',
+       // ' <a type="button" title="{{\'CAR_SOP\'| translate }}" type="button" class="fa fa-upload fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.cargar_soportes(row.entity); grid.appScope.cargaDocumentosDocente.solicitar_pago(row.entity);"  data-toggle="modal" data-target="#modal_carga_listas_docente">'
+        ' <a type="button" title="Enviar Solicitud" type="button" class="fa fa-upload fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.cargar_soportes(row.entity); grid.appScope.cargaDocumentosDocente.solicitar_pago(row.entity);"  data-toggle="modal" data-target="#modal_check_docente">',
         width: "10%"
       }
     ]
@@ -807,6 +808,119 @@ angular.module('contractualClienteApp')
   self.set_doc = function (doc){
 
     self.doc = doc;
+  };
+
+//Aqui empiezan las funciones que desactivan la funcionalidad de carga de documentos
+
+
+  self.enviar_solicitud_coordinador = function(){
+
+    self.mostrar_boton= false;
+
+    if (self.mes !== undefined && self.anio !== undefined && self.acepto) {
+
+  
+      //Petición para obtener id de estado pago mensual
+      administrativaRequest.get("estado_pago_mensual", $.param({
+          query: "CodigoAbreviacion:PRC",
+          limit: 0
+        })).then(function (response) {
+        //Variable que contiene el Id del estado pago mensual
+        var id_estado = response.data[0].Id;
+      //Se arma elemento JSON para la solicitud
+      var pago_mensual = {
+        CargoResponsable: "COORDINADOR " + self.contrato.Dependencia,
+        EstadoPagoMensual: { Id: id_estado},
+        FechaModificacion: new Date(),
+        Mes: self.mes,
+        Ano: self.anio,
+        NumeroContrato: self.contrato.NumeroVinculacion,
+        Persona: self.Documento,
+        Responsable: self.informacion_coordinador.numero_documento_coordinador,
+        VigenciaContrato: parseInt(self.contrato.Vigencia)
+      };
+
+
+
+      administrativaRequest.get("pago_mensual", $.param({
+        query: "NumeroContrato:" + self.contrato.NumeroVinculacion +
+          ",VigenciaContrato:" + self.contrato.Vigencia +
+          ",Mes:" + self.mes +
+          ",Ano:" + self.anio,
+        limit: 0
+      })).then(function(response) {
+
+        if (response.data == null) {
+
+          administrativaRequest.post("pago_mensual", pago_mensual).then(function(response) {
+            swal(
+              'Solicitud registrada y enviada',
+              'Se ha enviado la solicitud a la coordinación',
+              'success'
+            )
+
+            self.cargar_soportes(self.contrato);
+
+
+            self.gridApi2.core.refresh();
+
+         //   self.contrato = {};
+            self.mes = {};
+            self.anio = {};
+            self.mostrar_boton= true;
+
+          });
+
+        } else {
+
+          swal(
+            'Error',
+            $translate.instant('YA_EXISTE'),
+            'error'
+          );
+
+          self.mostrar_boton= true;
+        }
+
+      });
+
+    });
+  }else {
+      swal(
+        'Error',
+        $translate.instant('DEBE_SELECCIONAR'),
+        'error'
+      );
+      self.mostrar_boton= true;
+    }
+
+
+  };
+
+
+  self.verificar_fecha_pago_check = function(){
+    var hoy = new Date();
+    if(self.mes !== hoy.getMonth()+1 || self.anio !== hoy.getFullYear()){
+      swal({
+        title: $translate.instant('VERIFICACION_FECHA_WARN'),
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: $translate.instant('CANCELAR'),
+        confirmButtonText: $translate.instant('ACEPTAR')
+      }).then(function () {
+
+        self.enviar_solicitud_coordinador();
+
+      });
+
+
+
+    }else{
+
+      self.enviar_solicitud_coordinador();
+    }
   }
 
 
