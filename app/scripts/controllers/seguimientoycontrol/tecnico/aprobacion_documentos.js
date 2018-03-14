@@ -89,11 +89,12 @@ angular.module('contractualClienteApp')
         {
           field: 'Acciones',
           displayName: $translate.instant('ACC'),
-          cellTemplate: ' <a type="button" title="Aprobar pago" type="button" class="fa fa-check fa-lg  faa-shake animated-hover" ng-if="!row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.verificarDocumentos(row.entity.PagoMensual)">' +
-            '</a>&nbsp;' + '<a type="button" title="Rechazar pago" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
+          cellTemplate: //Borrar comentario cuando se active funcionalidad de soportes' <a type="button" title="Aprobar cumplido" type="button" class="fa fa-check fa-lg  faa-shake animated-hover" ng-if="!row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.verificarDocumentos(row.entity.PagoMensual)">' 
+         ' <a type="button" title="Aprobar cumplido" type="button" class="fa fa-check fa-lg  faa-shake animated-hover" ng-if="!row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.verificarDocumentosCheck(row.entity.PagoMensual)">' 
+          + '</a>&nbsp;' + '<a type="button" title="Rechazar pago" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
             'ng-if="row.entity.validacion" ng-click="grid.appScope.aprobacionDocumentos.invalidarCumplido(row.entity)"></a>' +
-            '<a type="button" title="Ver información" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
-            'ng-click="grid.appScope.aprobacionDocumentos.obtener_doc(row.entity.PagoMensual)" data-toggle="modal" data-target="#modal_ver_soportes"></a>' +
+            //'<a type="button" title="Ver información" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
+            //'ng-click="grid.appScope.aprobacionDocumentos.obtener_doc(row.entity.PagoMensual)" data-toggle="modal" data-target="#modal_ver_soportes"></a>' +
             '<a type="button" title="Rechazar" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
             'ng-click="grid.appScope.aprobacionDocumentos.rechazar(row.entity.PagoMensual)"></a>',
           width: "10%"
@@ -311,7 +312,7 @@ angular.module('contractualClienteApp')
                 self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
                 self.aux_pago_mensual.Responsable = self.ordenador.NumeroDocumento.toString();
                 self.aux_pago_mensual.CargoResponsable = self.ordenador.Cargo;
-                self.aux_pago_mensual.FechaModificacion = new Date();
+              
 
                 administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
 
@@ -572,6 +573,60 @@ angular.module('contractualClienteApp')
         });
 
    
+    }
+
+
+
+    //Código temporal que desactiva la funcionalidad de soportes
+
+
+    self.verificarDocumentosCheck = function (pago_mensual) {
+      self.aprobado = false;
+      self.aux_pago_mensual = pago_mensual;
+  
+          adminMidRequest.get('aprobacion_pago/informacion_ordenador/'+self.aux_pago_mensual.NumeroContrato+'/'+self.aux_pago_mensual.VigenciaContrato).then(function(response){
+           self.ordenador = response.data;
+
+              self.aprobado = true;
+
+              administrativaRequest.get('estado_pago_mensual', $.param({
+                limit: 0,
+                query: 'CodigoAbreviacion:AD'
+              })).then(function (responseCod) {
+
+                var sig_estado = responseCod.data;
+
+                self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
+                self.aux_pago_mensual.Responsable = self.ordenador.NumeroDocumento.toString();
+                self.aux_pago_mensual.CargoResponsable = self.ordenador.Cargo;
+
+                administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
+
+                  if (response.data === "OK") {
+
+                    swal(
+                      'Cumplidos Aprobados',
+                      'Se ha registrado la aprobación de los cumplidos',
+                      'success'
+                    )
+                    self.obtener_informacion_supervisor();
+                    self.gridApi.core.refresh();
+                  } else {
+
+
+                    swal(
+                      'Error',
+                      'No se ha podido registrar la aprobación de los cumplidos',
+                      'error'
+                    );
+                  }
+
+                });
+
+              });
+
+          })
+
     }
 
 

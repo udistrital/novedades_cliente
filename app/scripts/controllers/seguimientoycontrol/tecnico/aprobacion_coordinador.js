@@ -149,8 +149,8 @@ angular.module('contractualClienteApp')
       {
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
-        cellTemplate: '<a type="button" title="Ver soportes" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
-          'ng-click="grid.appScope.aprobacionCoordinador.obtener_doc(row.entity.PagoMensual)" data-toggle="modal" data-target="#modal_ver_soportes"</a>&nbsp;' +
+        cellTemplate: //'<a type="button" title="Ver soportes" type="button" class="fa fa-eye fa-lg  faa-shake animated-hover"' +
+          //'ng-click="grid.appScope.aprobacionCoordinador.obtener_doc(row.entity.PagoMensual)" data-toggle="modal" data-target="#modal_ver_soportes"</a>&nbsp;' +
           '<a type="button" title="Visto bueno" type="button" class="fa fa-check fa-lg  faa-shake animated-hover"' +
           'ng-click="grid.appScope.aprobacionCoordinador.dar_visto_bueno(row.entity.PagoMensual)"></a>&nbsp;'+
           '<a type="button" title="Rechazar" type="button" class="fa fa-close fa-lg  faa-shake animated-hover"' +
@@ -217,7 +217,7 @@ angular.module('contractualClienteApp')
 
           var sig_estado = responseCod.data;
           self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
-          self.aux_pago_mensual.FechaModificacion = new Date();
+
 
           administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
 
@@ -261,7 +261,6 @@ angular.module('contractualClienteApp')
 
           var sig_estado = responseCod.data;
           self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
-          self.aux_pago_mensual.FechaModificacion = new Date();
 
           administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
 

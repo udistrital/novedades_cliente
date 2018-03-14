@@ -225,7 +225,9 @@ angular.module('contractualClienteApp')
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
         cellTemplate: '<a type="button" title="{{\'VER_SOP\'| translate }}" type="button" class="fa fa-folder-open-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes">' +
-          '</a>&nbsp;' + ' <a ng-if="row.entity.EstadoPagoMensual.CodigoAbreviacion === \'CD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RC\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RP\'" type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision(row.entity)"  >',
+          '</a>&nbsp;' 
+          //+ ' <a ng-if="row.entity.EstadoPagoMensual.CodigoAbreviacion === \'CD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RC\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RP\'" type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision(row.entity)"  >'
+          + ' <a ng-if="row.entity.EstadoPagoMensual.CodigoAbreviacion === \'CD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RC\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RP\'" type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosDocente.enviar_revision_check(row.entity)"  >',
         width: "10%"
       }
     ]
@@ -425,7 +427,6 @@ angular.module('contractualClienteApp')
       var pago_mensual = {
         CargoResponsable: "DOCENTE",
         EstadoPagoMensual: { Id: id_estado},
-        FechaModificacion: new Date(),
         Mes: self.mes,
         Ano: self.anio,
         NumeroContrato: self.contrato.NumeroVinculacion,
@@ -831,7 +832,6 @@ angular.module('contractualClienteApp')
       var pago_mensual = {
         CargoResponsable: "COORDINADOR " + self.contrato.Dependencia,
         EstadoPagoMensual: { Id: id_estado},
-        FechaModificacion: new Date(),
         Mes: self.mes,
         Ano: self.anio,
         NumeroContrato: self.contrato.NumeroVinculacion,
@@ -840,7 +840,7 @@ angular.module('contractualClienteApp')
         VigenciaContrato: parseInt(self.contrato.Vigencia)
       };
 
-
+      pago_mensual.CargoResponsable= pago_mensual.CargoResponsable.substring(0,69);
 
       administrativaRequest.get("pago_mensual", $.param({
         query: "NumeroContrato:" + self.contrato.NumeroVinculacion +
@@ -922,6 +922,42 @@ angular.module('contractualClienteApp')
       self.enviar_solicitud_coordinador();
     }
   }
+
+
+  self.enviar_revision_check = function (solicitud) {
+ 
+    swal({
+      title: '¿Está seguro(a) de enviar el cumplido a la coordinación?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: $translate.instant('CANCELAR'),
+      confirmButtonText: $translate.instant('ENVIAR')
+    }).then(function () {
+          solicitud.EstadoPagoMensual = {"Id":1};
+          solicitud.Responsable = self.informacion_coordinador.numero_documento_coordinador;
+          solicitud.CargoResponsable = "COORDINADOR " + self.contrato.Dependencia;
+      
+          solicitud.CargoResponsable = solicitud.CargoResponsable.substring(0,69);
+          administrativaRequest.put('pago_mensual', solicitud.Id, solicitud).
+          then(function(response){
+            swal(
+               $translate.instant('SOLICITUD_ENVIADA'),
+              $translate.instant('SOLICITUD_EN_ESPERA'),
+              'success'
+            )
+          })
+          self.cargar_soportes(self.contrato);
+
+
+        self.gridApi2.core.refresh();
+
+    });
+
+
+
+  };
 
 
 

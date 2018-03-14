@@ -221,7 +221,6 @@ angular.module('contractualClienteApp')
 
             var sig_estado = responseCod.data;
             self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
-            self.aux_pago_mensual.FechaModificacion = new Date();
 
             administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
 
@@ -264,7 +263,7 @@ angular.module('contractualClienteApp')
 
             var sig_estado = responseCod.data;
             self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
-            self.aux_pago_mensual.FechaModificacion = new Date();
+
 
 
             administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual).then(function (response) {
