@@ -818,7 +818,7 @@ angular.module('contractualClienteApp')
 
     self.mostrar_boton= false;
 
-    if (self.mes !== undefined && self.anio !== undefined && self.acepto) {
+    if (self.mes !== undefined && self.anio !== undefined) {
 
   
       //Petición para obtener id de estado pago mensual

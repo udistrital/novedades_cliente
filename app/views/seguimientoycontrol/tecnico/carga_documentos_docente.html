@@ -315,10 +315,8 @@
   
           <div class="row">
               <center>
-          <div class="col-md-12">
-              <p>{{'PARRAFO_SOLICITAR_PAGO' | translate }}</p>
-            </div>
-  
+            <br>
+            <br>
             <div class="col-md-1 col-md-offset-2">
                 <label>{{'ANO' | translate }}</label>
               </div>
@@ -344,8 +342,17 @@
               <div class="panel panel-default col-md-6 col-md-offset-3">
                   <div class="panel-body">
             <div class="form-check ">
-                <label class="form-check-label" for="check_acepto">Acepto que he cumplido con mi propuesta de trabajo como docente de vinculación especial para el mes y año seleccionado</label>
-                <input type="checkbox" class="form-check-input" id="check_acepto" ng-model="cargaDocumentosDocente.acepto">
+                <label class="form-check-label">Estimado(a) Docente:</label>
+                <br>
+                <label class="form-check-label">Seleccione el mes y año de la solicitud de cumplido que va a realizar. 
+                  Tenga en cuenta que al hacer click en el boton de enviar usted manifiesta que ha cumplido con las actividades
+                  como docente de vinculación especial para el mes y año seleccionado. Esta acción genera una solicitud al coordinador
+                  del proyecto curricular para gestionar el visto bueno y el pago correspondiente.
+                </label>
+               <br>
+               <label class="form-check-label">
+                 NOTA: Debe hacer la solicitud por cada proyecto curricular donde desarrolló sus actividades.
+                </label>
 
             </div>
                   </div>
