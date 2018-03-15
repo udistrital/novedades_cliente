@@ -947,11 +947,10 @@ angular.module('contractualClienteApp')
               $translate.instant('SOLICITUD_EN_ESPERA'),
               'success'
             )
+            self.cargar_soportes(self.contrato);
+            self.gridApi2.core.refresh();
           })
-          self.cargar_soportes(self.contrato);
 
-
-        self.gridApi2.core.refresh();
 
     });
 
