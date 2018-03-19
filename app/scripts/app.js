@@ -251,6 +251,11 @@ angular
               controller: 'CargaDocumentosDocenteCtrl',
               controllerAs: 'cargaDocumentosDocente'
             })
+            .when('/seguimientoycontrol/tecnico/carga_documentos_contratista', {
+              templateUrl: 'views/seguimientoycontrol/tecnico/carga_documentos_contratista.html',
+              controller: 'cargaDocumentosContratistaCtrl',
+              controllerAs: 'cargaDocumentosContratista'
+            })
             .otherwise({
                 redirectTo: '/'
             });

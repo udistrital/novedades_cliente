@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('cargaDocumentosContratistaCtrl', function ($scope, $http, $translate, uiGridConstants, contratoRequest, administrativaRequest, nuxeo, $q, coreRequest, $window,$sce, adminMidRequest,$routeParams, wso2GeneralService) {
+  .controller('cargaDocumentosContratistaCtrl', function ($scope, $http, $translate, uiGridConstants, contratoRequest, administrativaRequest, nuxeo, $q, coreRequest, $window,$sce, adminMidRequest,$routeParams, wso2GeneralService, amazonAdministrativaRequest) {
 
     //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
   var tmpl = '<div ng-if="!row.entity.editable">{{COL_FIELD}}</div><div ng-if="row.entity.editable"><input ng-model="MODEL_COL_FIELD"</div>';
@@ -106,7 +106,7 @@ angular.module('contractualClienteApp')
     enableFiltering: true,
     resizable: true,
     columnDefs: [{
-        field: 'NumeroContrato',
+        field: 'NumeroContratoSuscrito',
         cellTemplate: tmpl,
         displayName: $translate.instant('NUMERO_CONTRATO'),
         sort: {
@@ -126,7 +126,7 @@ angular.module('contractualClienteApp')
         width: "10%"
       },
       {
-        field: 'RP',
+        field: 'NumeroRp',
         cellTemplate: tmpl,
         displayName: $translate.instant('RP'),
         sort: {
@@ -136,7 +136,7 @@ angular.module('contractualClienteApp')
         width: "15%"
       },
       {
-        field: 'CDP',
+        field: 'NumeroCdp',
         cellTemplate: tmpl,
         displayName: $translate.instant('CDP'),
         sort: {
@@ -146,7 +146,7 @@ angular.module('contractualClienteApp')
         width: "10%"
       },
       {
-        field: 'Dependencia',
+        field: 'NombreDependencia',
         cellTemplate: tmpl,
         displayName: $translate.instant('DEPENDENCIA'),
         sort: {
@@ -168,35 +168,6 @@ angular.module('contractualClienteApp')
     self.gridApi = gridApi;
   };
 
-  self.datos = [{
-    "NumeroContrato": "14",
-    "Vigencia": "2018",
-    "RP": "3215",
-    "CDP": "154",
-    "Dependencia": "OAS"
-  }];
-
-  self.gridOptions1.data = self.datos;
-
-  /*
-    Función que recibe un objeto que posee un arreglo con información de los contratistas y su supervisor.
-    Eśta función extrae el arreglo y los procesa para adicionar un atributo de validación.
-  */
-
-  self.procesar_contratos = function (contratos_contratista) {
-
-    for (var i = 0; i < contratos_contratista.length; i++) {
-      self.contratistas[i] = {
-        vigencia: contratos_contratista[i].contratista.documento,
-        nombre: contratos_contratista[i].contratista.nombre,
-        contrato: contratos_contratista[i].contrato,
-        dependencia: contratos_contratista[i].supervisor.dependencia,
-        cargo_supervision: contratos_contratista[i].supervisor.cargo,
-        validacion: false
-      }
-    }
-  };
-
   /*
     Función para consultar los contratos asociados al contratista
   */
@@ -205,20 +176,16 @@ angular.module('contractualClienteApp')
   //  self.gridOptions1.data = [];
     self.contratos = [];
       //Petición para obtener las vinculaciones del docente
-      wso2GeneralService.get('/contratoSuscritoProxyService/contratos_persona', self.Documento)
+      adminMidRequest.get('aprobacion_pago/contratos_contratista/' + self.Documento)
       .then(function(response) {
-        if(self.respuesta_contratista !== null || self.respuesta_contratista !== undefined){
+        console.log(response.data);
+        if(response.data !== null || response.data !== undefined){
           //Contiene la respuesta de la petición
-          self.respuesta_contratista = response.data.contratos_personas;
-          //Variable que contiene el nombre del docente
-          self.vigencia_contrato = self.respuesta_contratista.contrato_persona[0].vigencia;
-          //Variable que contiene el número de contrato
-          self.numero_contrato = self.respuesta_contratista.contrato_persona[0].numero_contrato;
-
-          self.obtener_informacion_contratista(self.numero_contrato, self.vigencia_contrato);
-
-          //Carga la información en la tabla
-          //self.gridOptions1.data = self.respuesta_contratista;
+          self.informacion_contratos = response.data;
+          //Se envia la data a la tabla
+          self.gridOptions1.data = self.informacion_contratos;
+          //Contiene el numero de documento del Responsable
+          self.responsable = self.informacion_contratos[0].NumDocumentoSupervisor;
         }else{
           alert("No se encontraron contratos vigentes asociadas a su número de documento");
         }
@@ -227,20 +194,25 @@ angular.module('contractualClienteApp')
     //self.gridApi2.core.refresh();
   };
 
-  self.obtener_informacion_contratos_contratista();
+
 
   /*
-    Función para consultar los contratos asociados al contratista
+    Función para consultar la informacion del contratista
   */
-  self.obtener_informacion_contratista = function(numero_contrato, vigencia){
-    wso2GeneralService.get('/contratoSuscritoProxyService/informacion_contrato_contratista', numero_contrato + '/' + vigencia)
-    .then(function(response){
+  self.obtener_informacion_contratista = function(){
+    amazonAdministrativaRequest.get('informacion_proveedor', $.param({
+      query: "NumDocumento:" + self.Documento,
+      limit: 0
+    })).then(function (response) {
       console.log(response.data);
       //Información contratista
-      self.info_contratista = response.data.informacion_contratista;
-      console.log(self.info_contratista.nombre_completo);
+      self.info_contratista = response.data;
+      self.nombre_contratista = self.info_contratista[0].NomProveedor;
     })
   };
+
+  self.obtener_informacion_contratista();
+  self.obtener_informacion_contratos_contratista();
 
   /*
     Creación tabla que tendrá las solicitudes de pago de cada contrato
@@ -344,7 +316,7 @@ angular.module('contractualClienteApp')
         FechaModificacion: new Date(),
         Mes: self.mes,
         Ano: self.anio,
-        NumeroContrato: self.contrato.NumeroContrato,
+        NumeroContrato: self.contrato.NumeroContratoSuscrito,
         Persona: self.Documento,
         Responsable: self.Documento,
         VigenciaContrato: parseInt(self.contrato.Vigencia)
@@ -352,7 +324,7 @@ angular.module('contractualClienteApp')
 
 
       administrativaRequest.get("pago_mensual", $.param({
-        query: "NumeroContrato:" + self.contrato.NumeroContrato +
+        query: "NumeroContrato:" + self.contrato.NumeroContratoSuscrito +
           ",VigenciaContrato:" + self.contrato.Vigencia +
           ",Mes:" + self.mes +
           ",Ano:" + self.anio,
@@ -407,11 +379,11 @@ angular.module('contractualClienteApp')
       self.contrato = contrato;
       //self.obtener_informacion_coordinador(self.contrato.IdDependencia);
       administrativaRequest.get("pago_mensual", $.param({
-        query: "NumeroContrato:" + self.contrato.NumeroContrato + ",VigenciaContrato:" + self.contrato.Vigencia,
+        query: "NumeroContrato:" + self.contrato.NumeroContratoSuscrito + ",VigenciaContrato:" + self.contrato.Vigencia,
         limit: 0
       })).then(function(response) {
 
-        contratoRequest.get('contrato', self.contrato.NumeroContrato + '/' + self.contrato.Vigencia).then(function(response_ce) {
+        contratoRequest.get('contrato', self.contrato.NumeroContratoSuscrito + '/' + self.contrato.Vigencia).then(function(response_ce) {
 
           self.tipo_contrato = response_ce.data.contrato.tipo_contrato;
 
@@ -429,76 +401,68 @@ angular.module('contractualClienteApp')
         });
 
         self.gridOptions2.data = response.data;
+        console.log(response.data);
 
       });
     };
 
-    // self.obtener_informacion_coordinador = function(IdDependencia){
-    //   adminMidRequest.get('aprobacion_pago/informacion_coordinador/'+ IdDependencia)
-    //   .then(function(response){
-    //     self.informacion = response.data;
-    //     self.informacion_coordinador = self.informacion.carreraSniesCollection.carreraSnies[0];
-    //   })
-    // };
+  /*
+    Enviar solicitud de revisión de soportes a Supervisor
+  */
+  self.enviar_revision = function (solicitud) {
+    swal({
+      title: '¿Está seguro(a) de enviar a revisar los soportes por el supervisor?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Enviar'
+    }).then(function () {
+
+      var nombre_docs = solicitud.VigenciaContrato + solicitud.NumeroContrato + solicitud.Persona + solicitud.Mes + solicitud.Ano;
+      console.log(nombre_docs);
+    //  administrativaRequest.get('soporte_pago_mensual', $.param({
+    //    query: "PagoMensual:" + solicitud.Id,
+    //    limit: 0
+    //  })).then(function(responseVal){
+
+    self.obtener_doc(solicitud);
+
+
+        if(self.documentos!== null){
+          solicitud.EstadoPagoMensual = {"Id":11};
+          solicitud.Responsable = self.responsable;
+          solicitud.CargoResponsable = "SUPERVISOR " + self.contrato.NombreDependencia;
+          console.log(self.contrato.NombreDependencia);
+          solicitud.CargoResponsable = solicitud.CargoResponsable.substring(0,69);
+          administrativaRequest.put('pago_mensual', solicitud.Id, solicitud).
+          then(function(response){
+            swal(
+              'Solicitud enviada',
+              'Su solicitud se encuentra a la espera de revisión',
+              'success'
+            )
+          })
+          self.cargar_soportes(self.contrato);
+
+
+        self.gridApi2.core.refresh();
+
+      }else{
+        swal(
+          'Error',
+          'No puede enviar a revisión sin cargar algún documento',
+          'error'
+        )
+      }//else
+          //    });
+    });
 
 
 
-  // /*
-  //   Enviar solicitud de revisión de soportes a Supervisor
-  // */
-  // self.enviar_revision = function (solicitud) {
-  //   swal({
-  //     title: '¿Está seguro(a) de enviar a revisar los soportes por el coordinador?',
-  //     type: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonColor: '#3085d6',
-  //     cancelButtonColor: '#d33',
-  //     cancelButtonText: 'Cancelar',
-  //     confirmButtonText: 'Enviar'
-  //   }).then(function () {
-  //
-  //     var nombre_docs = solicitud.VigenciaContrato + solicitud.NumeroContrato + solicitud.Persona + solicitud.Mes + solicitud.Ano;
-  //
-  //   //  administrativaRequest.get('soporte_pago_mensual', $.param({
-  //   //    query: "PagoMensual:" + solicitud.Id,
-  //   //    limit: 0
-  //   //  })).then(function(responseVal){
-  //
-  //   self.obtener_doc(solicitud);
-  //
-  //
-  //       if(self.documentos!== null){
-  //         solicitud.EstadoPagoMensual = {"Id":1};
-  //         solicitud.Responsable = self.informacion_coordinador.numero_documento_coordinador;
-  //         solicitud.CargoResponsable = "COORDINADOR " + self.contrato.Dependencia;
-  //         solicitud.CargoResponsable = solicitud.CargoResponsable.substring(0,69);
-  //         administrativaRequest.put('pago_mensual', solicitud.Id, solicitud).
-  //         then(function(response){
-  //           swal(
-  //             'Solicitud enviada',
-  //             'Su solicitud se encuentra a la espera de revisión',
-  //             'success'
-  //           )
-  //         })
-  //         self.cargar_soportes(self.contrato);
-  //
-  //
-  //       self.gridApi2.core.refresh();
-  //
-  //     }else{
-  //       swal(
-  //         'Error',
-  //         'No puede enviar a revisión sin cargar algún documento',
-  //         'error'
-  //       )
-  //     }//else
-  //         //    });
-  //   });
-  //
-  //
-  //
-  // };
-  //
+  };
+
 
 //
   /*
@@ -630,72 +594,8 @@ angular.module('contractualClienteApp')
         self.mostrar_boton= true;
 
       }
-  //    Si selecciona el link
-      } else if (self.link) {
-        if (self.enlace!== undefined && self.item!==undefined) {
-          self.mostrar_boton= false;
-
-          var descripcion = self.item.ItemInforme.Nombre;
-        //Objeto documento
-        self.objeto_documento = {
-          "Nombre": nombre_doc,
-          "Descripcion": descripcion,
-          "TipoDocumento": {
-            "Id": 3
-          },
-          "Contenido": JSON.stringify({
-            "Tipo": "Enlace",
-            "Enlace": self.enlace,
-            "Observaciones": self.observaciones
-          }),
-          "Activo": true
-        };
-        //Post a la tabla documento del core
-        coreRequest.post('documento', self.objeto_documento)
-          .then(function(response) {
-            self.id_documento = response.data.Id;
-
-            //Objeto soporte_pago_mensual
-            self.objeto_soporte = {
-              "PagoMensual": {
-                "Id": self.fila_seleccionada.Id
-              },
-              "Documento": self.id_documento,
-              "ItemInformeTipoContrato": {
-                "Id": self.item.Id
-              },
-              "Aprobado": false
-            };
-
-            //Post a la tabla soporte documento
-            administrativaRequest.post('soporte_pago_mensual', self.objeto_soporte)
-              .then(function(response) {
-                //Bandera de validacion
-                swal(
-                  'Enlace guardado',
-                  'Se ha guardado el enlace',
-                  'success'
-                );
-                self.enlace = undefined;
-                self.item = undefined;
-                self.mostrar_boton= true;
-
-               });
-          });
-
-        }else{
-
-          swal(
-            'Error',
-            'Debe copiar el enlace y seleccionar un item',
-            'error'
-          );
-
-          self.mostrar_boton= true;
-
-        }
-      }
-      self.objeto_documento={};
+}
+  self.objeto_documento={};
 
     };
 
@@ -705,123 +605,106 @@ angular.module('contractualClienteApp')
       }
     };
 
-    self.cambiarCheckLink = function() {
-      if (self.link) {
-        self.archivo = false;
-      }
-    };
 //
-//   /*
-//     Función que permite obtener un documento de nuxeo por el Id
-//   */
-//   self.getDocumento = function(docid){
-//    nuxeo.header('X-NXDocumentProperties', '*');
-//
-//    self.obtenerDoc = function () {
-//      var defered = $q.defer();
-//
-//      nuxeo.request('/id/'+docid)
-//          .get()
-//          .then(function(response) {
-//            self.doc=response;
-//            var aux=response.get('file:content');
-//            self.document=response;
-//            defered.resolve(response);
-//          })
-//          .catch(function(error){
-//              defered.reject(error)
-//          });
-//      return defered.promise;
-//    };
-//
-//    self.obtenerFetch = function (doc) {
-//      var defered = $q.defer();
-//
-//      doc.fetchBlob()
-//        .then(function(res) {
-//          defered.resolve(res.blob());
-//
-//        })
-//        .catch(function(error){
-//              defered.reject(error)
-//          });
-//      return defered.promise;
-//    };
-//
-//      self.obtenerDoc().then(function(){
-//
-//         self.obtenerFetch(self.document).then(function(r){
-//             self.blob=r;
-//             var fileURL = URL.createObjectURL(self.blob);
-//             self.content = $sce.trustAsResourceUrl(fileURL);
-//             $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900');
-//          });
-//      });
-//    };
-//
-//    /*
-//     Función que obtiene los documentos relacionados a las solicitudes
-//    */
-//    self.obtener_doc = function (fila){
-//      self.fila_sol_pago = fila;
-//      var nombre_docs = self.contrato.Vigencia + self.contrato.NumeroVinculacion + self.Documento + self.fila_sol_pago.Mes + self.fila_sol_pago.Ano;
-//      coreRequest.get('documento', $.param ({
-//       query: "Nombre:" + nombre_docs + ",Activo:true",
-//       limit:0
-//     })).then(function(response){
-//       self.documentos = response.data;
-//       angular.forEach(self.documentos, function(value) {
-//         self.descripcion_doc = value.Descripcion;
-//         value.Contenido = JSON.parse(value.Contenido);
-//
-//         if (value.Contenido.Tipo === "Enlace") {
-//             value.Contenido.NombreArchivo = value.Contenido.Tipo;
-//         };
-//       });
-//     })
-//   };
-//
-//   /*
-//     Función para visualizar enlace
-//   */
-//   self.visualizar_enlace = function (url){
-//     $window.open(url);
-//   };
-//
-//
-//   /*
-//     Función para "borrar" un documento
-//   */
-//   self.borrar_doc = function(){
-//
-//    var documento = self.doc;
-//     /*  swal({
-//         title: '¿Está seguro(a) de eliminar el soporte?',
-//         text: "No podrá revertir esta acción",
-//         type: 'warning',
-//         showCancelButton: true,
-//         confirmButtonColor: '#3085d6',
-//         cancelButtonColor: '#d33',
-//         cancelButtonText: 'Cancelar',
-//         confirmButtonText: 'Aceptar'
-//       }).then(function () {*/
-//        documento.Contenido = JSON.stringify(documento.Contenido)
-//        documento.Activo = false;
-//        coreRequest.put('documento', documento.Id, documento).
-//        then(function(response){
-//             self.obtener_doc(self.fila_sol_pago);
-//       });
-//
-//     //  });
-//
-//
-//   };
-//
-//   self.set_doc = function (doc){
-//
-//     self.doc = doc;
-//   }
-//
+  /*
+    Función que permite obtener un documento de nuxeo por el Id
+  */
+  self.getDocumento = function(docid){
+   nuxeo.header('X-NXDocumentProperties', '*');
+
+   self.obtenerDoc = function () {
+     var defered = $q.defer();
+
+     nuxeo.request('/id/'+docid)
+         .get()
+         .then(function(response) {
+           self.doc=response;
+           var aux=response.get('file:content');
+           self.document=response;
+           defered.resolve(response);
+         })
+         .catch(function(error){
+             defered.reject(error)
+         });
+     return defered.promise;
+   };
+
+   self.obtenerFetch = function (doc) {
+     var defered = $q.defer();
+
+     doc.fetchBlob()
+       .then(function(res) {
+         defered.resolve(res.blob());
+
+       })
+       .catch(function(error){
+             defered.reject(error)
+         });
+     return defered.promise;
+   };
+
+     self.obtenerDoc().then(function(){
+
+        self.obtenerFetch(self.document).then(function(r){
+            self.blob=r;
+            var fileURL = URL.createObjectURL(self.blob);
+            self.content = $sce.trustAsResourceUrl(fileURL);
+            $window.open(fileURL, 'Soporte Cumplido', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=700,height=900');
+         });
+     });
+   };
+
+   /*
+    Función que obtiene los documentos relacionados a las solicitudes
+   */
+   self.obtener_doc = function (fila){
+     self.fila_sol_pago = fila;
+     var nombre_docs = self.contrato.Vigencia + self.contrato.NumeroContrato + self.Documento + self.fila_sol_pago.Mes + self.fila_sol_pago.Ano;
+     coreRequest.get('documento', $.param ({
+      query: "Nombre:" + nombre_docs + ",Activo:true",
+      limit:0
+    })).then(function(response){
+      self.documentos = response.data;
+      angular.forEach(self.documentos, function(value) {
+        self.descripcion_doc = value.Descripcion;
+        value.Contenido = JSON.parse(value.Contenido);
+      });
+    })
+  };
+
+  /*
+    Función para "borrar" un documento
+  */
+  self.borrar_doc = function(){
+
+   var documento = self.doc;
+     swal({
+        title: '¿Está seguro(a) de eliminar el soporte?',
+        text: "No podrá revertir esta acción",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Aceptar'
+      }).then(function () {
+       documento.Contenido = JSON.stringify(documento.Contenido)
+       documento.Activo = false;
+       coreRequest.put('documento', documento.Id, documento).
+       then(function(response){
+            self.obtener_doc(self.fila_sol_pago);
+      });
+
+     });
+
+
+  };
+
+  self.set_doc = function (doc){
+
+    self.doc = doc;
+  }
+
 
 
 

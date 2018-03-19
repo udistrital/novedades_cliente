@@ -13,7 +13,7 @@
 
                 <div class="form-group col-lg-6">
                   <label>{{'NOM_CONTRATISTA'| translate}}</label>
-                  <span class="form-control" readonly> {{cargaDocumentosContratista.info_contratista.nombre_completo}}</span>
+                  <span class="form-control" readonly> {{cargaDocumentosContratista.nombre_contratista}}</span>
                 </div>
 
               </div><!--Fin row-->
@@ -106,34 +106,20 @@
             <fieldset class="form-group">
               <label> {{'ARC' | translate}}</label>
               <input type="checkbox" ng-model="cargaDocumentosContratista.archivo" ng-change="cargaDocumentosContratista.cambiarCheckArchivo()">
-              <!--Campo que pinta la opción de enlace-->
-              <label> {{'ENL' | translate}}</label>
-              <input type="checkbox" ng-model="cargaDocumentosContratista.link" ng-change="cargaDocumentosContratista.cambiarCheckLink()">
             </fieldset>
 
             <!--Div que se visualiza al seleccionar el check archivo-->
             <div ng-if="cargaDocumentosContratista.archivo">
-
-              <div class="col-md-1">
-                <label class="control-label">{{'ARC' | translate}}</label>
-              </div>
               <div class="col-md-3">
                 <input type="file" angular-bfi="{'showUpload':false, allowedFileExtensions:['pdf'], language:'es'}" file-model="cargaDocumentosContratista.fileModel" required> </input>
+              </div>
+              <div class="col-md-1">
+                <label class="control-label">{{'ARC' | translate}}</label>
               </div>
             </div>
 
             <!--Div que se visualiza al seleccionar el check link-->
             <div class="row">
-              <div ng-if="cargaDocumentosContratista.link">
-                <div class="col-md-1">
-                  <label class="control-label">{{'ENL' | translate}}</label>
-                </div>
-                <div class="col-md-2">
-                  <input type="text" class="form-control" ng-model="cargaDocumentosContratista.enlace" required> </input>
-                </div>
-
-              </div>
-
               <div class="col-md-1">
                 <label for="select_item" class="col-form-label">Item</label>
               </div>
@@ -144,7 +130,9 @@
                 </select>
               </div>
             </div>
+
             <br>
+
             <div class="row">
               <div class="col-md-3">
                 <label for="observacion" class="col-form-label">{{'OBSER' | translate}}</label>
