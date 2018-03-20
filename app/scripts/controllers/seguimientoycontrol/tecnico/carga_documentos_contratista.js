@@ -271,7 +271,7 @@ angular.module('contractualClienteApp')
         field: 'Acciones',
         displayName: $translate.instant('ACC'),
         cellTemplate: '<a type="button" title="{{\'VER_SOP\'| translate }}" type="button" class="fa fa-folder-open-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosContratista.obtener_doc(row.entity)" data-toggle="modal" data-target="#modal_ver_soportes">' +
-          '</a>&nbsp;' + ' <a ng-if="row.entity.EstadoPagoMensual.CodigoAbreviacion === \'CD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RC\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RP\'" type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosContratista.enviar_revision(row.entity)"  >',
+          '</a>&nbsp;' + ' <a ng-if="row.entity.EstadoPagoMensual.CodigoAbreviacion === \'CD\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RS\' || row.entity.EstadoPagoMensual.CodigoAbreviacion === \'RO\'" type="button" title="{{\'ENV_REV\'| translate }}" type="button" class="fa fa-send-o fa-lg  faa-shake animated-hover" ng-click="grid.appScope.cargaDocumentosContratista.enviar_revision(row.entity)"  >',
         width: "10%"
       }
     ]
@@ -521,7 +521,7 @@ angular.module('contractualClienteApp')
   */
   self.subir_documento = function() {
 
-      var nombre_doc = self.contrato.Vigencia + self.contrato.NumeroContrato + self.Documento + self.fila_seleccionada.Mes + self.fila_seleccionada.Ano;
+      var nombre_doc = self.contrato.Vigencia + self.contrato.NumeroContratoSuscrito + self.Documento + self.fila_seleccionada.Mes + self.fila_seleccionada.Ano;
       //Si seleccionan el check de archivo
       if (self.archivo) {
         //Condicional del item y del file model
@@ -659,7 +659,7 @@ angular.module('contractualClienteApp')
    */
    self.obtener_doc = function (fila){
      self.fila_sol_pago = fila;
-     var nombre_docs = self.contrato.Vigencia + self.contrato.NumeroContrato + self.Documento + self.fila_sol_pago.Mes + self.fila_sol_pago.Ano;
+     var nombre_docs = self.contrato.Vigencia + self.contrato.NumeroContratoSuscrito + self.Documento + self.fila_sol_pago.Mes + self.fila_sol_pago.Ano;
      coreRequest.get('documento', $.param ({
       query: "Nombre:" + nombre_docs + ",Activo:true",
       limit:0

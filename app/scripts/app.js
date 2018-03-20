@@ -256,6 +256,11 @@ angular
               controller: 'cargaDocumentosContratistaCtrl',
               controllerAs: 'cargaDocumentosContratista'
             })
+            .when('/seguimientoycontrol/tecnico/aprobacion_supervisor', {
+              templateUrl: 'views/seguimientoycontrol/tecnico/aprobacion_supervisor.html',
+              controller: 'AprobacionSupervisorCtrl',
+              controllerAs: 'aprobacionSupervisor'
+            })
             .otherwise({
                 redirectTo: '/'
             });
