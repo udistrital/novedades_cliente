@@ -261,6 +261,11 @@ angular
               controller: 'AprobacionSupervisorCtrl',
               controllerAs: 'aprobacionSupervisor'
             })
+            .when('/seguimientoycontrol/tecnico/aprobacion_ordenador', {
+              templateUrl: 'views/seguimientoycontrol/tecnico/aprobacion_ordenador.html',
+              controller: 'AprobacionOrdenadorCtrl',
+              controllerAs: 'aprobacionOrdenador'
+            })
             .otherwise({
                 redirectTo: '/'
             });
