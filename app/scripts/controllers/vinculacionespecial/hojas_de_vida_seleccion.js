@@ -47,7 +47,72 @@ angular.module('contractualClienteApp')
             }
         };
 
+        if(self.resolucion.NivelAcademico_nombre==="PREGRADO"){
           self.datosDocentesCargaLectiva.columnDefs = [{
+                    field: 'docente_apellido',
+                    displayName: $translate.instant('APELLIDO_DOCENTES'),
+                    width: '15%'
+                },
+                {
+                    field: 'docente_nombre',
+                    displayName: $translate.instant('NOMBRES_DOCENTES'),
+                    width: '15%'
+                },
+                {
+                    field: 'docente_documento',
+                    displayName: $translate.instant('DOCUMENTO_DOCENTES'),
+                    width: '10%'
+                },
+                {
+
+                    field: 'horas_lectivas',
+                    displayName: $translate.instant('HORAS_LECTIVAS'),
+                    width: '5%',
+                    cellTemplate: '<center><div ng-if="!row.entity.editrow">{{COL_FIELD}}</div><div ng-if="row.entity.editrow"><input type="text" style="height:30px" ng-model="MODEL_COL_FIELD"</div></center>'},
+                {
+                    field: 'proyecto_nombre',
+                    displayName: $translate.instant('PROYECTO_CURRICULAR'),
+                    width: '33%'
+                },
+                {
+                    field: 'CategoriaNombre',
+                    displayName: $translate.instant('CATEGORIA'),
+                    width: '10%'
+                },
+                {
+                    field: 'tipo_vinculacion_nombre',
+                    displayName: $translate.instant('DEDICACION'),
+                    width: '10%'
+                },
+                {
+                    field: 'id_tipo_vinculacion',
+                    visible: false
+                },
+                {
+                    field: 'id_proyecto',
+                    visible: false
+                },     
+                {
+                    field: 'dependencia_academica',
+                    visible: false
+                },
+
+                  /*{
+                      displayName: $translate.instant('OPCIONES'),
+                      field: 'edit',
+                      enableFiltering: false, enableSorting: false,
+                      cellTemplate: '<center>' +
+                      '<a class="ver"  ng-show="!row.entity.editrow" ng-click="grid.appScope.modificar_horas(row.entity)">' +
+                      '<i title="{{\'MODIFICAR_HORAS_BTN\' | translate }}" class="fa fa-pencil fa-lg  faa-shake animated-hover"></i></a> ' +
+                      '<a class="ver"  ng-show="row.entity.editrow" ng-click="grid.appScope.guardar_horas_modificadas(row.entity)">' +
+                      '<i title="{{\'GUARDAR_HORAS_BTN\' | translate }}" class="fa fa-floppy-o fa-lg  faa-shake animated-hover"></i></a> ' +
+                      '<a class="ver"  ng-show="row.entity.editrow" ng-click="grid.appScope.cancelar_modificacion(row.entity)">' +
+                      '<i title="{{\'CANCELAR_MOD_BTN\' | translate }}" class="fa fa-ban fa-lg  faa-shake animated-hover"></i></a> ' +
+                      '</center>'
+                   }*/
+              ];
+            } else {
+                self.datosDocentesCargaLectiva.columnDefs = [{
                     field: 'docente_apellido',
                     displayName: $translate.instant('APELLIDO_DOCENTES'),
                     width: '15%'
@@ -90,6 +155,10 @@ angular.module('contractualClienteApp')
                 {
                     field: 'id_proyecto',
                     visible: false
+                },     
+                {
+                    field: 'dependencia_academica',
+                    visible: false
                 },
 
                   {
@@ -109,6 +178,7 @@ angular.module('contractualClienteApp')
                       '</center>'
                    }
               ];
+            }
 
 
 
@@ -279,6 +349,7 @@ angular.module('contractualClienteApp')
 
         });
 
+
         administrativaRequest.get("vinculacion_docente/get_total_contratos_x_resolucion/"+self.resolucion.Id, "").then(function(response) {
            self.total_contratos_x_vin = response.data;
         });
@@ -320,6 +391,7 @@ angular.module('contractualClienteApp')
                       Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
                       NivelAcademico: self.resolucion.NivelAcademico_nombre,
                       Disponibilidad: self.apropiacion_elegida[0].Id,
+                      DependenciaAcademica: personaSeleccionada.DependenciaAcademica,
                       Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
                   };
 
@@ -569,4 +641,4 @@ angular.module('contractualClienteApp')
 
         };
 
-    });
+});
