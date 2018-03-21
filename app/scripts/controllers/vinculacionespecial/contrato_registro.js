@@ -204,7 +204,7 @@ angular.module('contractualClienteApp')
                     var actaI = JSON.parse(JSON.stringify(self.acta));
                     contratoGeneral.Contratista = parseInt(contratado.IdPersona);
                     contratoGeneral.DependenciaSolicitante = contratado.IdProyectoCurricular.toString();
-                    contratoGeneral.PlazoEjecucion = parseInt(contratado.NumeroHorasSemanales * 7);
+                    contratoGeneral.PlazoEjecucion = parseInt(((contratado.NumeroHorasSemanales / 4) * 30));
                     contratoGeneral.OrdenadorGasto = self.ordenadorGasto.Id;
                     contratoGeneral.ValorContrato = parseInt(contratado.ValorContrato);
                     var contratoVinculacion = {
