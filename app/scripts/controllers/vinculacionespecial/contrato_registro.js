@@ -93,7 +93,7 @@ angular.module('contractualClienteApp')
             self.contratoGeneralBase.Contrato.FormaPago = { Id: 240 };
             self.contratoGeneralBase.Contrato.DescripcionFormaPago = "Abono a Cuenta Mensual de acuerdo a puntas y hotras laboradas";
             self.contratoGeneralBase.Contrato.Justificacion = "Docente de Vinculacion Especial";
-            self.contratoGeneralBase.Contrato.UnidadEjecucion = { Id: 205 };
+            self.contratoGeneralBase.Contrato.UnidadEjecucion = { Id: 269 };
             self.contratoGeneralBase.Contrato.LugarEjecucion = { Id: 4 };
             self.contratoGeneralBase.Contrato.Observaciones = "Contrato de Docente Vinculación Especial";
             self.contratoGeneralBase.Contrato.TipoControl = 181;
@@ -204,7 +204,7 @@ angular.module('contractualClienteApp')
                     var actaI = JSON.parse(JSON.stringify(self.acta));
                     contratoGeneral.Contratista = parseInt(contratado.IdPersona);
                     contratoGeneral.DependenciaSolicitante = contratado.IdProyectoCurricular.toString();
-                    contratoGeneral.PlazoEjecucion = parseInt(((contratado.NumeroHorasSemanales / 4) * 30));
+                    contratoGeneral.PlazoEjecucion = parseInt(contratado.NumeroHorasSemanales);
                     contratoGeneral.OrdenadorGasto = self.ordenadorGasto.Id;
                     contratoGeneral.ValorContrato = parseInt(contratado.ValorContrato);
                     var contratoVinculacion = {
