@@ -132,6 +132,7 @@ angular.module('contractualClienteApp')
       FechaRegistro: self.fecha,
       ValorContrato        : row.entity.ValorContrato,
       Categoria: row.entity.Categoria,
+      DependenciaAcademica: row.entity.DependenciaAcademica,
       Disponibilidad: row.entity.Disponibilidad
       };
 

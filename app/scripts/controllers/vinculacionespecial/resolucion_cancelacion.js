@@ -124,6 +124,7 @@ angular.module('contractualClienteApp')
                     Categoria: personaSeleccionada.Categoria,
                     Disponibilidad: personaSeleccionada.Disponibilidad,
                     Vigencia: personaSeleccionada.Vigencia,
+                    DependenciaAcademica: personaSeleccionada.DependenciaAcademica,
                     NumeroContrato: personaSeleccionada.NumeroContrato
                 };
 

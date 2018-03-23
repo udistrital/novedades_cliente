@@ -552,6 +552,7 @@ angular.module('contractualClienteApp')
                         Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
                         Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
                         NivelAcademico: self.resolucion.NivelAcademico_nombre,
+                        DependenciaAcademica: personaSeleccionada.DependenciaAcademica,
                         Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
                         Periodo: self.resolucion.Periodo
                     };
@@ -600,6 +601,7 @@ angular.module('contractualClienteApp')
                     Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
                     NivelAcademico: self.resolucion.NivelAcademico_nombre,
                     Disponibilidad: self.apropiacion_elegida[0].Id,
+                    DependenciaAcademica: personaSeleccionada.DependenciaAcademica,
                     Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
                     Periodo: self.resolucion.Periodo
                 };

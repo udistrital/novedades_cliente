@@ -202,6 +202,7 @@ angular.module('contractualClienteApp')
                 Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
                 Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
                 NivelAcademico: self.resolucion.NivelAcademico_nombre,
+                DependenciaAcademica: self.persona_a_modificar.DependenciaAcademica,
                 Disponibilidad: self.apropiacion_elegida[0].Id,
                 NumeroContrato: self.persona_a_modificar.NumeroContrato,
                 Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
@@ -267,6 +268,7 @@ angular.module('contractualClienteApp')
                     IdProyectoCurricular: parseInt(self.persona_a_modificar.IdProyectoCurricular),
                     Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
                     ValorContrato: self.persona_a_modificar.ValorContrato,
+                    DependenciaAcademica: self.persona_a_modificar.DependenciaAcademica,
                     Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
                     NivelAcademico: self.resolucion.NivelAcademico_nombre,
                     Disponibilidad: parseInt(self.disponibilidad_actual_id),
