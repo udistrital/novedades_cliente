@@ -131,7 +131,6 @@ angular.module('contractualClienteApp')
                 NivelAcademico: self.resolucion.NivelAcademico_nombre,
                 Disponibilidad: parseInt(self.disponibilidad_actual_id),
                 NumeroContrato: self.persona_a_modificar.NumeroContrato,
-                DependenciaAcademica: self.persona_a_modificar.DependenciaAcademica,
                 Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
             };
 
