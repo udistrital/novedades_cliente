@@ -140,7 +140,6 @@ var text_es = {
   INSERCION_RP:"Se insertó correctamente la solicitud del registro presupuestal con los siguientes datos",
   VIGENCIA_SOLICITUD:"Vigencia solicitud",
   FECHA_SOLICITUD:"Fecha solicitud",
-  NUMERO_CONTRATO:"Número contrato",
   SELECCIONE_UNA_VIGENCIA:"Seleccione la Vigencia",
   RESPONSABLE_DOCUMENTO:"Responsable documento",
   RESPONSABLE:"Responsable",
@@ -166,7 +165,6 @@ var text_es = {
   VALOR:"Valor",
   COMPROMISO:"Compromiso",
   NUMERO:"Número",
-  VIGENCIA:"Vigencia",
   COMPROMISO_TIPO:"Tipo",
   VALOR_RP:"Valor registro presupuestal",
   SALDO_AP:"Saldo apropiación",
@@ -239,7 +237,6 @@ var text_es = {
   OBJETO_CDP:"Objeto del CDP",
   JUSTIFICACION:"Justificación",
   DESCRIPCION_FORMA_PAGO:"Descripción forma de pago",
-  OBSERVACIONES:"Observaciones",
   //CONTRATO_RESUMEN
   DOCENTES_CONTRATADOS:"Docentes contratados - periodo actual",
   CEDULA:"Cédula",
@@ -247,7 +244,6 @@ var text_es = {
   CATEGORIA:"Categoría",
   DEDICACION:"Dedicación",
   HORAS_SEMANALES:"Horas semanales",
-  PERIODO_VINCULACION:"Periodo vinculación",
   VINCULACION:"Vinculación",
   VALOR_CONTRATO:"Valor del contrato",
   DOCENTES_CONTRATADOS_ACTUAL:"DOCENTES CONTRATADOS - PERIODO ACTUAL",
@@ -525,17 +521,13 @@ var text_es = {
   TITULO_REG_CUMPLIDO: "CUMPLIDO",
   NUM_DOC_IDENTIDAD:"NUMERO DOCUMENTO DE IDENTIDAD",
   NAME_CONTRATISTA:"NOMBRE",
-  TIPO_DOC:"TIPO DOCUMENTO",
   CIUDAD_DOC:"CIUDAD",
-  NUM_CONTRAC:"NÚMERO CONTRATO",
   FECH_SUSC_CONT:"FECHA SUSCRIPCIÓN CONTRATO",
   UNIDAD_EJE:"UNIDAD EJECUTORA",
   VIGENCIA:"VIGENCIA",
   TIPO_CUENTA:"TIPO CUENTA",
   BANCO:"BANCO",
   NUM_CUENTA:"NÚMERO CUENTA",
-  DEPENDENCIA:"DEPENDENCIA",
-  SUPERVISOR:"SUPERVISOR DEL CONTRATO",
   CARGO_SUP:"CARGO SUPERVISOR DEL CONTRATO",
   CUMPLIDO_MES:"CUMPLIDO DEL MES",
   DIAS_LABORADOS:"DÍAS LABORADOS",
@@ -588,7 +580,6 @@ var text_es = {
   NOM_DOCENTE:"NOMBRE DEL DOCENTE",
   PRO_CURR:"PROYECTO CURRICULAR",
   NUM_VINC:"NÚMERO DE VINCULACIÓN",
-  RESOLUCION:"RESOLUCIÓN",
   SOLICITAR_CUM:"SOLICITAR CUMPLIDO",
   CARGAR_LISTAS:"CARGAR LISTAS",
   SELECCIONAR_DOCUMENTO:"Seleccione el documento",
@@ -659,7 +650,6 @@ var text_es = {
   NOM_CONTRATISTA: "NOMBRE CONTRATISTA",
   NUMERO_CONTRATO:"NUMERO CONTRATO",
   RP:"RP",
-  CDP:"CDP",
 };
 
 var text_en = {
@@ -717,7 +707,6 @@ var text_en = {
   INSERCION_RP:"The budget register request was insert correctly with the following data:",
   VIGENCIA_SOLICITUD: "Request validity",
   FECHA_SOLICITUD: "Request date",
-  NUMERO_CONTRATO: "Contract number",
   RUBRO:"Item",
   SOLICITUD: "Request",
   SOLICITUD_NECESIDAD: "Need Request",
@@ -823,7 +812,6 @@ var text_en = {
   VALOR: "Value",
   COMPROMISO: "Agreement",
   NUMERO:"Number",
-  VIGENCIA:"Validity",
   COMPROMISO_TIPO:"Tipe",
   VALOR_RP:"Budget register value",
   SALDO_AP:"Appropiation reminder",
@@ -942,8 +930,6 @@ var text_en = {
   TIPO_CUENTA:"ACCOUNT TYPE",
   BANCO:"BANK",
   NUM_CUENTA:"ACCOUNT NUMBER",
-  DEPENDENCIA:"DEPENDENCE",
-  SUPERVISOR:"CONTRACT SUPERVISOR",
   CARGO_SUP:"CONTRACT SUPERVISORY CHARGE",
   CUMPLIDO_MES:"MONTH COMPLIMENT",
   DIAS_LABORADOS:"WORKING DAYS",
@@ -962,7 +948,6 @@ var text_en = {
 
   //MODULO INFORME DE GESTIÓN
   TITULO_REG_INFORME:"MANAGEMENT REPORT",
-  NUM_CONTRAC:"CONTRACT NUMBER",
   INFORME_MES:"MONTH REPORT",
   FECHA_INI_CONTRACT:"START DATE OF CONTRACT",
   FECHA_FIN_CONTRACT:"END DATE OF CONTRACT",
@@ -1065,8 +1050,7 @@ var text_en = {
   TITULO_CARGA_CONTRATISTA: "CARGA SOPORTES CONTRATISTA",
   NOM_CONTRATISTA: "NOMBRE CONTRATISTA",
   NUMERO_CONTRATO:"CONTRACT NUMBER",
-  RP:"RP",
-  CDP:"CDP"
+  RP:"RP"
 };
 
 angular.module('contractualClienteApp')
