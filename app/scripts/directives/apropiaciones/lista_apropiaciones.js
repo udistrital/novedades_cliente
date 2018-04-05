@@ -144,7 +144,8 @@ angular.module('contractualClienteApp')
 
         //self.gridApi.core.refresh();
         self.actualiza_rubros = function() {
-          financieraRequest.get('apropiacion', 'limit=0&query=Vigencia:' + $scope.vigencia + ",Rubro.Codigo__startswith:" + $scope.tipo + ",Rubro.UnidadEjecutora:" + $scope.unidadejecutora).then(function(response) {
+          financieraRequest.get('apropiacion', 'limit=-1&query=Vigencia:' + $scope.vigencia + ",Rubro.Codigo__startswith:" + $scope.tipo + ",Rubro.UnidadEjecutora:" + $scope.unidadejecutora + ",Estado.Id:" + 2).then(function(response) {
+            console.log("Vigencia: ",$scope.vigencia, " start: ",$scope.tipo, " unidadEjecutora: ",$scope.unidadejecutora)
             if(response.data!==null){
             self.gridOptions.data = response.data.sort(function(a, b) {
               if (a.Rubro.Codigo < b.Rubro.Codigo) {return -1;}

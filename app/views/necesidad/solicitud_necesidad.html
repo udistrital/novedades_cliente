@@ -369,7 +369,7 @@
               <label class=" control-label">{{"SELECCIONAR" | translate}} {{"APROPIACIONES" | translate}}</label>
 
               <div ng-show="solicitudNecesidad.necesidad.TipoFinanciacionNecesidad.Nombre=='Inversión'">
-                <lista-apropiaciones vigencia="2017" tipo="'3-3'" apropiacion="apro" unidadejecutora=solicitudNecesidad.necesidad.UnidadEjecutora tipofinanciacion=solicitudNecesidad.necesidad.TipoFinanciacionNecesidad selhijos="true"></lista-apropiaciones>
+                <lista-apropiaciones vigencia=solicitudNecesidad.vigencia tipo="'3-3'" apropiacion="apro" unidadejecutora=solicitudNecesidad.necesidad.UnidadEjecutora tipofinanciacion=solicitudNecesidad.necesidad.TipoFinanciacionNecesidad selhijos="true"></lista-apropiaciones>
                 <center>
                   <button type="button" class="btn btn-success btn-outline" ng-click="solicitudNecesidad.agregar_ffapropiacion(apro)">
                     {{"AGREGAR" | translate}}
@@ -419,7 +419,7 @@
               <div class="panel panel-body col-md-12" ng-show="solicitudNecesidad.necesidad.TipoFinanciacionNecesidad.Nombre=='Funcionamiento'">
 
                 <div class="form-group">
-                  <lista-apropiaciones vigencia="2017" tipo="'3-1'" apropiacion="apro" unidadejecutora=solicitudNecesidad.necesidad.UnidadEjecutora tipofinanciacion=solicitudNecesidad.necesidad.TipoFinanciacionNecesidad selhijos="true"></lista-apropiaciones>
+                  <lista-apropiaciones vigencia=solicitudNecesidad.vigencia tipo="'3-1'" apropiacion="apro" unidadejecutora=solicitudNecesidad.necesidad.UnidadEjecutora tipofinanciacion=solicitudNecesidad.necesidad.TipoFinanciacionNecesidad selhijos="true"></lista-apropiaciones>
                   <center>
                     <button type="button" class="btn btn-success btn-outline" ng-click="solicitudNecesidad.agregar_ffapropiacion(apro)">
                       {{"AGREGAR" | translate}}
