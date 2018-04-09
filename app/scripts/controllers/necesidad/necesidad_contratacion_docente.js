@@ -18,7 +18,9 @@ angular.module('contractualClienteApp')
     $scope.info_objeto = false;
     $scope.info_legal = false;
     $scope.finan = false;
-  
+    self.fecha_actual = new Date();
+    self.vigencia=self.fecha_actual.getFullYear();
+    
     function validarDatos(datosPorValidar) {
       var faltanCampos = false;
       for (var dato in datosPorValidar) {

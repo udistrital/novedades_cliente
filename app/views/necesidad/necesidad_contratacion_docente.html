@@ -80,7 +80,6 @@
                   <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"ROL" | translate}} {{"ORDENADOR_GASTO" | translate}}</option>
                 </select>
               </div>
-              <pre>{{necesidadContratacionDocente.rol_ordenador_gasto}}</pre>
 
               <div class="col-md-6">
                 <label for="rol_ordenador_gasto" class="control-label">{{"ORDENADOR_GASTO" | translate}}</label>
@@ -406,7 +405,7 @@
               <div class="panel panel-body col-md-12">
 
                 <div class="form-group">
-                  <lista-apropiaciones vigencia="2017" tipo="'3-1'" apropiacion="apro" unidadejecutora=necesidadContratacionDocente.necesidad.UnidadEjecutora tipofinanciacion=necesidadContratacionDocente.necesidad.TipoFinanciacionNecesidad selhijos="true"></lista-apropiaciones>
+                  <lista-apropiaciones vigencia=necesidadContratacionDocente.vigencia tipo="'3-1'" apropiacion="apro" unidadejecutora=necesidadContratacionDocente.necesidad.UnidadEjecutora tipofinanciacion=necesidadContratacionDocente.necesidad.TipoFinanciacionNecesidad selhijos="true"></lista-apropiaciones>
                   <center>
                     <button type="button" class="btn btn-success btn-outline" ng-click="necesidadContratacionDocente.agregar_ffapropiacion(apro)">
                       {{"AGREGAR" | translate}}

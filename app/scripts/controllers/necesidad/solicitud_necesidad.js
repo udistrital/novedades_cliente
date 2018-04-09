@@ -23,6 +23,8 @@ angular.module('contractualClienteApp')
         $scope.info_legal = false;
         $scope.espf = false;
         $scope.finan = false;
+        self.fecha_actual = new Date();
+        self.vigencia=self.fecha_actual.getFullYear();
 
         function validarDatos(datosPorValidar) {
             var faltanCampos = false;
@@ -225,7 +227,7 @@ angular.module('contractualClienteApp')
         });
 
         agoraRequest.get('informacion_persona_natural', $.param({
-            query: 'Id:6774454',
+            query: 'Id:52204982',
             limit: -1
         })).then(function(response) {
             self.persona_solicitante = response.data[0];
