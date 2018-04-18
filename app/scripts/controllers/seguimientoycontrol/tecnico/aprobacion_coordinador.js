@@ -174,13 +174,15 @@ angular.module('contractualClienteApp')
     Función que al recibir el número de documento del coordinador cargue los correspondientes
     */
     self.obtener_docentes_coordinador = function () {
-
+      self.gridOptions1.data=[];
       self.obtener_informacion_coordinador(self.Documento);
       //Petición para obtener el Id de la relación de acuerdo a los campos
       adminMidRequest.get('aprobacion_pago/solicitudes_coordinador/'+self.Documento).then(function (response) {
         self.documentos = response.data;
         //self.obtener_informacion_docente();
         self.gridOptions1.data = self.documentos;
+        self.gridApi.core.refresh();
+
       });
 };
 
