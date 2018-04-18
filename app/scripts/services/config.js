@@ -162,7 +162,7 @@ var conf_local = {
 
 angular.module('contractualClienteApp')
     .constant('CONF', {
-        GENERAL: conf_pruebas
+        GENERAL: conf_cloud
     });
 
 //Probando merge de nuevo rererererererere
