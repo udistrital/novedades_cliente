@@ -60,7 +60,6 @@ angular
         'gridOptionsService',
         'configuracionService',
         'requestService',
-        'colombiaHolidaysService'
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');
