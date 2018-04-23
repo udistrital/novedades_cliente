@@ -114,9 +114,10 @@ angular.module('contractualClienteApp')
 
   self.AnularDesvinculacionDocente = function(row){
 
-
     var docente_a_anular = {
       Id :              row.entity.Id,
+      NumeroContrato: row.entity.NumeroContrato,
+      Vigencia: row.entity.Vigencia,
       IdPersona :           row.entity.IdPersona,
       NumeroHorasSemanales : row.entity.NumeroHorasSemanales,
       NumeroSemanas  :     row.entity.NumeroSemanas,

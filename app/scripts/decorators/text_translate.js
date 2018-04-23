@@ -405,6 +405,12 @@ var text_es = {
       ALERTA_ERROR_RESOLUCION: "Error al insertar resolución",
       ALERTA_SELEC_RESOLUCION:"Seleccione una resolución para cancelar",
       DATOS_RESOLUCION: "Datos de la resolución",
+      CANCELACION: "Cancelación",
+      SEMANAS_REVERSAR: "Número de Semanas a Reversar",
+      ELIJA_SEMANAS_MINIMO: "Elija un número de semanas -> Mínimo: ",
+      ELIJA_SEMANAS_MAXIMO: " Máximo: ",
+      COMPLETE_CAMPOS: "Complete Todos Los Campos",
+      FECHA_FIN_ACTA: "Fecha fin de acuerdo a la reversión: ",
 
   //RESOLUCION_GESTION
       /*---HTML---*/

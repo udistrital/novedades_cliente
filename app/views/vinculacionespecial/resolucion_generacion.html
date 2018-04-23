@@ -8,6 +8,7 @@
     <select ng-model="resolucionGeneracion.tipo_resolucion_elegida">
       <option value="">{{'SELECCIONE' | translate }}</option>
       <option value=1>{{'VINCULACION' | translate }}</option>
+      <option value=2>{{'CANCELACION' | translate }}</option>
       <!--option ng-repeat="tipos in resolucionGeneracion.tipos_resolucion" value="{{tipos.Id}}">{{tipos.NombreTipoResolucion}}</option-->
     </select>
   </div>
@@ -87,7 +88,7 @@
         <input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionGeneracion.resolucion.numero" required>
       </div>
 
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12 col-md-offset-0">
           <br>
           <div class="panel panel-default">
             <div class="panel-heading">

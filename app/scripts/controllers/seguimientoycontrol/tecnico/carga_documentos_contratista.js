@@ -178,7 +178,6 @@ angular.module('contractualClienteApp')
       //Petición para obtener las vinculaciones del docente
       adminMidRequest.get('aprobacion_pago/contratos_contratista/' + self.Documento)
       .then(function(response) {
-        console.log(response.data);
         if(response.data !== null || response.data !== undefined){
           //Contiene la respuesta de la petición
           self.informacion_contratos = response.data;
@@ -204,7 +203,6 @@ angular.module('contractualClienteApp')
       query: "NumDocumento:" + self.Documento,
       limit: 0
     })).then(function (response) {
-      console.log(response.data);
       //Información contratista
       self.info_contratista = response.data;
       self.nombre_contratista = self.info_contratista[0].NomProveedor;
@@ -387,8 +385,6 @@ angular.module('contractualClienteApp')
 
           self.tipo_contrato = response_ce.data.contrato.tipo_contrato;
 
-          console.log(self.tipo_contrato);
-
           administrativaRequest.get("item_informe_tipo_contrato", $.param({
             query: "TipoContrato:" + self.tipo_contrato,
             limit: 0
@@ -401,7 +397,6 @@ angular.module('contractualClienteApp')
         });
 
         self.gridOptions2.data = response.data;
-        console.log(response.data);
 
       });
     };
@@ -421,7 +416,6 @@ angular.module('contractualClienteApp')
     }).then(function () {
 
       var nombre_docs = solicitud.VigenciaContrato + solicitud.NumeroContrato + solicitud.Persona + solicitud.Mes + solicitud.Ano;
-      console.log(nombre_docs);
     //  administrativaRequest.get('soporte_pago_mensual', $.param({
     //    query: "PagoMensual:" + solicitud.Id,
     //    limit: 0
@@ -434,7 +428,6 @@ angular.module('contractualClienteApp')
           solicitud.EstadoPagoMensual = {"Id":11};
           solicitud.Responsable = self.responsable;
           solicitud.CargoResponsable = "SUPERVISOR " + self.contrato.NombreDependencia;
-          console.log(self.contrato.NombreDependencia);
           solicitud.CargoResponsable = solicitud.CargoResponsable.substring(0,69);
           administrativaRequest.put('pago_mensual', solicitud.Id, solicitud).
           then(function(response){

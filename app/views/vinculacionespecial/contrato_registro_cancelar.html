@@ -22,9 +22,20 @@
                     <div class="panel-body" ng-show="info_cancelar">
                         <form role="form">
                             <div class="row">
-                                <div class="form-group col-lg-6">
+                                <!--div class="form-group col-lg-6">
                                     <label>{{ 'FECHA_CANCELACION' | translate }}</label>
                                     <md-datepicker ng-model="contratoRegistroCancelar.contratoCanceladoBase.FechaCancelacion" md-current-view="year" md-placeholder="Elija fecha de cancelación" required></md-datepicker>
+                                </div-->
+                                <div class="form-group col-lg-12">
+                                    <div class="row">
+                                        <div class="col-sm-2"><label>{{ 'SEMANAS_REVERSAR' | translate }}</label></div>
+                                        <div class="col-sm-1"><input type="number" style="width: 4em" ng-model="contratoRegistroCancelar.semanasReversar" min=1 max={{contratoRegistroCancelar.maximoSemanas}} required></div>
+                                        <div class="col-sm-7"><font size="1" color="blue">({{ 'ELIJA_SEMANAS_MINIMO' | translate }} 1 {{ 'ELIJA_SEMANAS_MAXIMO' | translate }} {{contratoRegistroCancelar.maximoSemanas}})</font></div>
+                                    </div>
+                                    <!--div class="form-group col-lg-6">
+                                            <label>{{ 'FECHA_FIN_VINCULACION' | translate }}</label>
+                                            <input type="text" class="form-control" ng-model="contratoRegistroCancelar.fechaCancelacion" disabled>
+                                    </div-->
                                 </div>
                                 <div class="form-group col-lg-12">
                                         <label>{{ 'JUSTIFICACION' | translate }}</label>
