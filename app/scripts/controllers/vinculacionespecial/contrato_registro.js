@@ -38,25 +38,6 @@ angular.module('contractualClienteApp')
                 self.contratoGeneralBase.Contrato.SedeSolicitante = response.data.Id.toString();
                 self.sede_solicitante_defecto = response.data.Nombre;
             });
-            /*
-            amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
-
-              self.contratados=response.data;
-              if(self.contratados != null){
-                self.contratados.forEach(function(row){
-                  adminMidRequest.get("calculo_salario/Contratacion/"+row.Id.toString()).then(function(response){
-                    row.ValorContrato=response.data;
-                  });
-                });
-
-              }
-            });
-
-
-            adminMidRequest.post("calculo_salario/Precontratacion/"+self.idResolucion.toString()+"/"+resolucion.NivelAcademico).then(function(response){
-              self.contratados=response.data;
-              });
-              */
             adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.idResolucion.toString()).then(function (response) {
 
                 self.contratados = response.data;
@@ -131,31 +112,6 @@ angular.module('contractualClienteApp')
             $mdDialog.hide();
         };
 
-        /*self.calcularSalario = function(){
-            adminMidRequest.post("calculo_salario/Precontratacion/"+self.nivelAcademico+"/"+persona.Id+"/"+self.datosValor.NumSemanas+"/"+self.datosValor.NumHorasSemanales+"/asociado/"+self.datosValor.dedicacion).then(function(response){
-              if(typeof(response.data)=="number"){
-                self.valorContrato=response.data;
-                  swal({
-                    title: $translate.instant('VALOR_CONTRATO'),
-                    text: NumeroALetras(response.data),
-                    type: "info",
-                    confirmButtonText: $translate.instant('ACEPTAR'),
-                    closeOnConfirm: false,
-                    showLoaderOnConfirm: true,
-                  });
-                  self.asignarValoresDefecto();
-            }else{
-              swal({
-                    title: "Peligro",
-                    text: $translate.instant('NO_CALCULADO_SALARIO'),
-                    type: "danger",
-                    confirmButtonText: $translate.instant('ACEPTAR'),
-                    closeOnConfirm: false,
-                    showLoaderOnConfirm: true,
-                  });
-            }
-            });
-        }*/
 
         self.realizarContrato = function () {
             if (self.datosFiltro.Dedicacion === "HCH") {
@@ -197,7 +153,6 @@ angular.module('contractualClienteApp')
         self.guardarContratos = function () {
             self.estado = true;
             var conjuntoContratos = [];
-            //var errorInsercion = false;
             if (self.contratados) {
                 self.contratados.forEach(function (contratado) {
                     var contratoGeneral = JSON.parse(JSON.stringify(self.contratoGeneralBase.Contrato));
@@ -229,15 +184,6 @@ angular.module('contractualClienteApp')
 
                         adminMidRequest.post("expedir_resolucion/expedir", expedicionResolucion).then(function (response) {
                             self.estado = false;
-                            //if(typeof(response.data)=="object"){ //xDD
-                            /*
-                                          self.alerta = "";
-                                          for (var i = 1; i < response.data.length; i++) {
-                                            self.alerta = self.alerta + response.data[i] + "\n";
-                                          }*/
-                            //swal("", self.alerta, response.data[0]);
-
-                            //xD
                             if (response.status == 233) {
                                 swal({
                                     text: response.data,
@@ -257,17 +203,6 @@ angular.module('contractualClienteApp')
                                     $window.location.reload();
                                 });
                             }
-
-                            //  $mdDialog.hide()
-                            /*  }else{
-                                swal({
-                                  title: "Alerta",
-                                  text: $translate.instant('PROBLEMA_EXPEDICION'),
-                                  type: "warning",
-                                  confirmButtonText: $translate.instant('ACEPTAR'),
-                                  showLoaderOnConfirm: true,
-                                });
-                              }*/
                         });
                     } else {
 

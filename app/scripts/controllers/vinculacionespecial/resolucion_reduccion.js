@@ -117,8 +117,6 @@ angular.module('contractualClienteApp')
                 Id: self.persona_a_modificar.Id,
                 FechaRegistro: self.persona_a_modificar.FechaRegistro,
                 IdPersona: self.persona_a_modificar.IdPersona,
-                //NumeroContrato: null,
-                //Vigencia:null,
                 NumeroHorasSemanales: parseInt(self.horas_actuales),
                 NumeroHorasNuevas: parseInt(self.horas_totales),
                 NumeroSemanas: parseInt(self.persona_a_modificar.NumeroSemanas),
@@ -155,7 +153,6 @@ angular.module('contractualClienteApp')
                     //LIMPIAR GRID
                     desvinculacionesData = [];
                     $window.location.reload();
-                    //  $('#modal_adicion').modal('hide');
                 } else {
                     swal({
                         title: $translate.instant('ERROR'),
@@ -166,7 +163,6 @@ angular.module('contractualClienteApp')
                     //LIMPIAR GRID
                     desvinculacionesData = [];
                     $window.location.reload();
-                    //  $('#modal_adicion').modal('hide');
                 }
             });
 

@@ -211,7 +211,6 @@ self.resolucionValida = function(){
 
 self.generarResolucion = function(){
   if(self.resolucionValida()){
-    //self.contenidoResolucion;
     var documento=self.getDocumento(self.contenidoResolucion,self.contratados,self.proyectos);
     pdfMake.createPdf(documento).getDataUrl(function(outDoc){
       document.getElementById('vistaPDF').src = outDoc;
