@@ -8,23 +8,12 @@
 						<h4 class="intro-text"> {{ 'DOCENTE_VINCULADOS' | translate }} </h4>
 					</div>
 						<br>
-						<!--div class="col-md-2">
-							<center><label> {{ 'SELECCIONE_PROY' | translate }}</label></center>
-						</div>
-						<div class="col-md-10">
-						<select class="form-control" ng-model="resolucionCancelacion.term" ng-change="resolucionCancelacion.get_docentes_vinculados()">
-							<option ng-selected="{{proyecto.Id == resolucionCancelacion.defaultSelectedPrecont}}" ng-repeat="proyecto in resolucionCancelacion.proyectos" value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
-						</select>
-					 </div-->
 						<br>
 						<div ng-hide="!resolucionCancelacion.sin_docentes_por_cancelar()" class="panel-body">
 							<br>
 							<div ui-grid="resolucionCancelacion.precontratados" ui-grid-selection ui-grid-pagination ui-grid-auto-resize class="grid" ng-hide="resolucionCancelacion.estado"></div>
 							<center><loading load="resolucionCancelacion.estado" tam="5"></loading><center>
 						</div>
-						<!--div ng-hide="resolucionCancelacion.sin_docentes_por_cancelar()" >
-							<center> <img src="images/NoVinculacionesCancelar.png" width="400px" alt=""><center>
-						</div-->
 						<div ng-hide="resolucionCancelacion.sin_docentes_por_cancelar()" >
 							<div class="panel panel-danger">
 								<div class="panel-heading">Error</div>

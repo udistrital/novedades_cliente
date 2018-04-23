@@ -171,6 +171,7 @@ angular.module('contractualClienteApp')
       //Petición para obtener el Id de la relación de acuerdo a los campos
       adminMidRequest.get('aprobacion_pago/solicitudes_supervisor_contratistas/'+self.Documento).then(function (response) {
         self.documentos = response.data;
+        console.log(self.documentos);
         //self.obtener_informacion_docente();
         self.gridOptions1.data = self.documentos;
       });
@@ -186,9 +187,11 @@ angular.module('contractualClienteApp')
         query: "NumDocumento:" + documento,
         limit: 0
       })).then(function (response) {
+        console.log(response.data);
         //Información contratista
         self.info_supervisor = response.data;
         self.nombre_supervisor = self.info_supervisor[0].NomProveedor;
+        console.log(self.nombre_supervisor);
     });
   };
 
@@ -201,6 +204,8 @@ angular.module('contractualClienteApp')
       contratoRequest.get('contrato', pago_mensual.NumeroContrato + '/' + pago_mensual.VigenciaContrato)
       .then(function (response) {
         self.aux_pago_mensual = pago_mensual;
+        //console.log(self.aux_pago_mensual);
+        console.log(response.data);
         self.contrato = response.data.contrato;
 
         //Obtiene la información correspondiente del ordenador
@@ -219,7 +224,10 @@ angular.module('contractualClienteApp')
         })).then(function (responseCod) {
 
           var sig_estado = responseCod.data;
+          console.log(sig_estado);
           self.aux_pago_mensual.EstadoPagoMensual.Id = sig_estado[0].Id;
+
+          console.log(self.aux_pago_mensual);
 
 
           administrativaRequest.put('pago_mensual', self.aux_pago_mensual.Id, self.aux_pago_mensual)
@@ -306,6 +314,7 @@ angular.module('contractualClienteApp')
        query: "Nombre:" + nombre_docs + ",Activo:true",
        limit:0
      })).then(function(response){
+       console.log(self.documentos);
        self.documentos = response.data;
        angular.forEach(self.documentos, function(value) {
          self.descripcion_doc = value.Descripcion;
@@ -383,4 +392,4 @@ angular.module('contractualClienteApp')
 
         });
     };
-  });
+});

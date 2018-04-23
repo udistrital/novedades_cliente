@@ -96,20 +96,6 @@ angular.module('contractualClienteApp')
                     field: 'dependencia_academica',
                     visible: false
                 },
-
-                  /*{
-                      displayName: $translate.instant('OPCIONES'),
-                      field: 'edit',
-                      enableFiltering: false, enableSorting: false,
-                      cellTemplate: '<center>' +
-                      '<a class="ver"  ng-show="!row.entity.editrow" ng-click="grid.appScope.modificar_horas(row.entity)">' +
-                      '<i title="{{\'MODIFICAR_HORAS_BTN\' | translate }}" class="fa fa-pencil fa-lg  faa-shake animated-hover"></i></a> ' +
-                      '<a class="ver"  ng-show="row.entity.editrow" ng-click="grid.appScope.guardar_horas_modificadas(row.entity)">' +
-                      '<i title="{{\'GUARDAR_HORAS_BTN\' | translate }}" class="fa fa-floppy-o fa-lg  faa-shake animated-hover"></i></a> ' +
-                      '<a class="ver"  ng-show="row.entity.editrow" ng-click="grid.appScope.cancelar_modificacion(row.entity)">' +
-                      '<i title="{{\'CANCELAR_MOD_BTN\' | translate }}" class="fa fa-ban fa-lg  faa-shake animated-hover"></i></a> ' +
-                      '</center>'
-                   }*/
               ];
             } else {
                 self.datosDocentesCargaLectiva.columnDefs = [{
@@ -272,17 +258,9 @@ angular.module('contractualClienteApp')
               self.actualizarLista(self.offset, query);
           });
           gridApi.pagination.on.paginationChanged($scope, function(newPage, pageSize) {
-
-              //self.gridOptions.data = {};
-
-              //var inicio = $filter('date')(self.fechaInicio, "yyyy-MM-dd");
-              //var fin = $filter('date')(self.fechaFin, "yyyy-MM-dd");
               var query = '';
-              /*
-              if (inicio !== undefined && fin !== undefined) {
-                  query = '&rangoinicio=' + inicio + "&rangofin=" + fin;
-              }
-              */
+
+
               var grid = this.grid;
               angular.forEach(grid.columns, function(value, key) {
                   if (value.filters[0].term) {
@@ -337,8 +315,6 @@ angular.module('contractualClienteApp')
                 self.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function() {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
-
-                  //  self.verificarDisponibilidad();
                 });
             }
         };
@@ -413,11 +389,6 @@ angular.module('contractualClienteApp')
                             self.personasSeleccionadas1 = [];
                             vinculacionesData = [];
                           });
-
-                        //self.RecargarDatosPersonas();
-                        //self.RecargarDisponibilidades();
-                        //self.RecargarApropiaciones();
-                        //self.get_docentes_vinculados();
 
                     } else {
                         swal({
@@ -537,10 +508,6 @@ angular.module('contractualClienteApp')
                         self.Disponibilidades.totalItems = response.data;
                         self.actualizarLista(self.offset, '');
               });
-              /*financieraRequest.get('disponibilidad', "limit=100&query=Vigencia:" + self.vigencia_data).then(function(response) {
-                    self.Disponibilidades.data = response.data;
-                });
-                */
                 self.personasSeleccionadas1.forEach(function(personaSeleccionada) {
                     var vinculacionDocente = {
                         IdPersona: personaSeleccionada.docente_documento,
@@ -580,8 +547,6 @@ angular.module('contractualClienteApp')
                 self.Apropiaciones.data = response.data;
                 self.ver = true;
                 self.estado_ap = false;
-                //self.Apropiaciones.data = response.data;
-
             });
 
         };

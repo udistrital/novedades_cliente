@@ -40,8 +40,6 @@ angular.module('contractualClienteApp')
             self.datosFiltro = response.data;
 
             oikosRequest.get("dependencia/" + self.datosFiltro.IdFacultad.toString()).then(function(response) {
-
-                //self.contratoGeneralBase.Contrato.SedeSolicitante = response.data.Id.toString();
                 self.sede_solicitante_defecto = response.data.Nombre;
             });
 
@@ -152,8 +150,6 @@ angular.module('contractualClienteApp')
                 });
             }
         };
-
-        //HERE
 
         self.cancelados = {
             paginationPageSizes: [10, 15, 20],
