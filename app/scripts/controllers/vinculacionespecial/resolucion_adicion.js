@@ -296,7 +296,6 @@ angular.module('contractualClienteApp')
                         //LIMPIAR GRID
                         desvinculacionesData = [];
                         $window.location.reload();
-                        //  $('#modal_adicion').modal('hide');
                     } else {
                         swal({
                             title: $translate.instant('ERROR'),
@@ -307,7 +306,6 @@ angular.module('contractualClienteApp')
                         //LIMPIAR GRID
                         desvinculacionesData = [];
                         $window.location.reload();
-                        //  $('#modal_adicion').modal('hide');
                     }
                 });
             } else {

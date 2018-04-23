@@ -13,14 +13,23 @@ angular.module('contractualClienteApp')
 
         var self = this;
         self.contratoCanceladoBase = {};
-        //self.contratoGeneralBase.Contrato = {};
-        //self.info_desvincular = false;
         self.idResolucion = idResolucion;
         self.estado = false;
         self.cantidad = 0;
+        self.maximoSemanas = 0;
+        self.semanasTranscurridas = 0;
+        var dias = 0;
+        var decimal = 0;
+        var semanasDecimal = 0;
+        self.fechaActa;
+        var fechaFinal;
+        var diasTotales = 0;
+        self.fecha_actual = new Date();
+        self.fechaFinal = new Date();
 
         administrativaRequest.get('resolucion/' +  self.idResolucion).then(function(response) {
             self.resolucionActual = response.data;
+            self.maximoSemanas = self.resolucionActual.NumeroSemanas;
             administrativaRequest.get('tipo_resolucion/' +  self.resolucionActual.IdTipoResolucion.Id).then(function(response) {
                 self.resolucionActual.IdTipoResolucion.NombreTipoResolucion = response.data.NombreTipoResolucion;
             });
@@ -31,8 +40,6 @@ angular.module('contractualClienteApp')
             self.datosFiltro = response.data;
 
             oikosRequest.get("dependencia/" + self.datosFiltro.IdFacultad.toString()).then(function(response) {
-
-                //self.contratoGeneralBase.Contrato.SedeSolicitante = response.data.Id.toString();
                 self.sede_solicitante_defecto = response.data.Nombre;
             });
 
@@ -65,6 +72,7 @@ angular.module('contractualClienteApp')
 
         self.cancelarContrato = function() {
             self.asignarValoresDefecto();
+            self.fechaCancelacion = self.fechaActaInicio(self.semanasRev);
             
             swal({
                 title: $translate.instant('EXPEDIR'),
@@ -73,8 +81,9 @@ angular.module('contractualClienteApp')
                     '<p><b>' + $translate.instant('FACULTAD') + ': </b>' + resolucion.Facultad + '</p>' +
                     '<p><b>' + $translate.instant('NIVEL_ACADEMICO') + ': </b>' + resolucion.NivelAcademico + '</p>' +
                     '<p><b>' + $translate.instant('DEDICACION') + ': </b>' + resolucion.Dedicacion + '</p>' +
-                    '<p><b>' + $translate.instant('NUMERO_CANCELACIONES') + ': </b>' + self.cantidad + '</p>',
-                type: 'warning',
+                    '<p><b>' + $translate.instant('NUMERO_CANCELACIONES') + ': </b>' + self.cantidad + '</p>' +
+                    '<p><b>' + $translate.instant('FECHA_FIN_ACTA') + ': </b>' + self.fechaCancelacion + '</p>',
+                type: 'question',
                 showCancelButton: true,
                 confirmButtonText: $translate.instant('ACEPTAR'),
                 cancelButtonText: $translate.instant('CANCELAR'),
@@ -82,7 +91,14 @@ angular.module('contractualClienteApp')
                 cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false
             }).then(function() {
-                self.expedirCancelar();
+                if(self.FechaExpedicion && self.semanasReversar && self.contratoCanceladoBase.MotivoCancelacion){
+                    self.expedirCancelar();
+                } else {
+                    swal({
+                        text: $translate.instant('COMPLETE_CAMPOS'),
+                        type: 'error'
+                    });
+                }                
             }, function(dismiss) {
                 if (dismiss === 'cancel') {
                     swal({
@@ -99,6 +115,7 @@ angular.module('contractualClienteApp')
             if (self.contratados) {
                 self.contratados.forEach(function(contratado) {
                     var contratoCancelado = JSON.parse(JSON.stringify(self.contratoCanceladoBase));
+                    contratoCancelado.FechaCancelacion = self.fechaUtc(self.fechaCancelacion);
                     contratoCancelado.NumeroContrato = contratado.NumeroContrato.String;
                     contratoCancelado.Vigencia = contratado.Vigencia.Int64;
                     var CancelacionContrato = {
@@ -134,8 +151,6 @@ angular.module('contractualClienteApp')
             }
         };
 
-        //HERE
-
         self.cancelados = {
             paginationPageSizes: [10, 15, 20],
             paginationPageSize: 10,
@@ -156,12 +171,51 @@ angular.module('contractualClienteApp')
 
         //Función para visualizar docentes para cancelar su vinculacion resolución
         self.get_docentes_cancelados = function() {
+            self.estado = true;
             self.info_desvincular = !self.info_desvincular;
             adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion=" + self.idResolucion).then(function(response) {
                 self.cancelados.data = response.data;
+                amazonAdministrativaRequest.get("acta_inicio", $.param({
+                    query: 'NumeroContrato:'+self.cancelados.data[0].NumeroContrato.String+',Vigencia:'+self.cancelados.data[0].Vigencia.Int64
+                  })).then(function(response) {
+                    self.acta = response.data[0];
+                    self.fechaIni = new Date(self.acta.FechaInicio);
+                    self.fechaActa = self.fechaUtc(self.fechaIni);
+                    self.calculoSemanas(self.fechaActa);  
+                    self.maximoSemanas = self.maximoSemanas - self.semanasTranscurridas;
+                    self.estado = false;
+                });
             });
         };
 
         self.get_docentes_cancelados();
 
+        //Función para convertir las fechas a UTC declaradas desde el cliente (Las que vengan por gets corregirlas desde los apis)
+        self.fechaUtc = function(fecha){
+            var _fechaConUtc = new Date(fecha.getUTCFullYear(), fecha.getUTCMonth(), fecha.getUTCDate(),  fecha.getUTCHours(), fecha.getUTCMinutes(), fecha.getUTCSeconds());
+            return _fechaConUtc;
+          };
+
+        //Función para hacer el cálculo de semanas para la vinculación docente
+        self.calculoSemanas = function(fecha){
+            dias = (self.fechaUtc(self.fecha_actual)-self.fechaActa)  / 1000 / 60 / 60 / 24 ;
+            semanasDecimal = dias / 7;
+            decimal = semanasDecimal % 1;
+            self.semanasTranscurridas = semanasDecimal - decimal;
+            if(decimal>0){
+                self.semanasTranscurridas = self.semanasTranscurridas + 1;
+            } 
+        };
+
+        //Se calcula la fecha de cancelación (fin) del acta inicio a partir de la fecha inicio de la misma y las semanas insertadas
+        self.fechaActaInicio = function(semanasAReversar){
+            self.semanasRev = self.resolucionActual.NumeroSemanas - self.semanasReversar;
+            diasTotales = self.semanasRev*7 ;
+            self.fechaFinal = new Date(self.acta.FechaInicio);
+            self.fechaFinal = self.fechaUtc(self.fechaFinal);
+            self.fechaFinal.setDate(self.fechaFinal.getDate() + diasTotales);
+            return self.fechaFinal;
+        };
+
     });
+    

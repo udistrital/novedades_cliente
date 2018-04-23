@@ -59,7 +59,7 @@ angular
         'contratoService',
         'gridOptionsService',
         'configuracionService',
-        'requestService'
+        'requestService',
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');

@@ -193,36 +193,10 @@ angular.module('contractualClienteApp')
       fullscreen: true,
       locals: {idResolucion: row.entity.Id, lista: self, resolucion: row.entity}
     });
-    /*
-    swal({
-    title: $translate.instant('CANCELAR_RESOLUCION'),
-    html:
-    '<p><b>Número: </b>'+row.entity.Numero.toString()+'</p>'+
-    '<p><b>Facultad: </b>'+row.entity.Facultad+'</p>'+
-    '<p><b>Nivel académico: </b>'+row.entity.NivelAcademico+'</p>'+
-    '<p><b>Dedicación: </b>'+row.entity.Dedicacion+'</p>',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonText: $translate.instant('ACEPTAR'),
-    cancelButtonText: $translate.instant('CANCELAR'),
-    confirmButtonClass: 'btn btn-success',
-    cancelButtonClass: 'btn btn-danger',
-    buttonsStyling: false
-  }).then(function () {
-  self.cancelarResolucion(row);
-}, function (dismiss) {
-if (dismiss === 'cancel') {
-swal({
-text: $translate.instant('NO_CANCELACION_RESOLUCION'),
-type: 'error'
-})
-}
-})*/
 };
 
 //Función para realizar la cancelación y verificación de la resolución
 self.cancelarResolucion = function(row){
-  //var cancelacionPosible = true;
   //Se verifica que no existan liquidaciones asoociadas a los contratos pertenecientes a la resolucion
   adminMidRequest.post("cancelacion_valida/"+row.entity.Id).then(function(response){
     if(response.data==="OK"){
@@ -292,7 +266,7 @@ $scope.verVisualizarResolucion = function(row){
     NivelAcademico_nombre : row.entity.NivelAcademico,
     IdFacultad : row.entity.Facultad,
     Vigencia : row.entity.Vigencia,
-    Periodo : row.entity.Periodo,                       //--- se deja quemado, debe incluirse ne tabla resolucion
+    Periodo : row.entity.Periodo,                      
     NumeroSemanas : row.entity.NumeroSemanas,
     Dedicacion: row.entity.Dedicacion,
     FacultadNombre: row.entity.FacultadNombre,

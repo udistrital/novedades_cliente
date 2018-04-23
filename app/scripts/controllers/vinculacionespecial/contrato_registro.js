@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('ContratoRegistroCtrl', function(amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreAmazonRequest, financieraRequest,sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate, $window) {
+    .controller('ContratoRegistroCtrl', function (amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreAmazonRequest, financieraRequest, sicapitalRequest, idResolucion, $mdDialog, lista, resolucion, $translate, $window) {
 
         var self = this;
         self.contratoGeneralBase = {};
@@ -19,53 +19,34 @@ angular.module('contractualClienteApp')
 
         self.idResolucion = idResolucion;
 
-        administrativaRequest.get('resolucion/' +  self.idResolucion).then(function(response) {
+        administrativaRequest.get('resolucion/' + self.idResolucion).then(function (response) {
             self.resolucionActual = response.data;
-            administrativaRequest.get('tipo_resolucion/' +  self.resolucionActual.IdTipoResolucion.Id).then(function(response) {
+            administrativaRequest.get('tipo_resolucion/' + self.resolucionActual.IdTipoResolucion.Id).then(function (response) {
                 self.resolucionActual.IdTipoResolucion.NombreTipoResolucion = response.data.NombreTipoResolucion;
             });
         });
 
-        oikosRequest.get('dependencia/' + resolucion.Facultad).then(function(response) {
+        oikosRequest.get('dependencia/' + resolucion.Facultad).then(function (response) {
             resolucion.Facultad = response.data.Nombre;
         });
 
 
-        administrativaRequest.get("resolucion_vinculacion_docente/" + self.idResolucion).then(function(response) {
+        administrativaRequest.get("resolucion_vinculacion_docente/" + self.idResolucion).then(function (response) {
             self.datosFiltro = response.data;
-            oikosRequest.get("dependencia/" + self.datosFiltro.IdFacultad.toString()).then(function(response) {
+            oikosRequest.get("dependencia/" + self.datosFiltro.IdFacultad.toString()).then(function (response) {
 
                 self.contratoGeneralBase.Contrato.SedeSolicitante = response.data.Id.toString();
                 self.sede_solicitante_defecto = response.data.Nombre;
             });
-            /*
-            amazonAdministrativaRequest.get("precontratado/"+self.idResolucion.toString()).then(function(response){
-
-              self.contratados=response.data;
-              if(self.contratados != null){
-                self.contratados.forEach(function(row){
-                  adminMidRequest.get("calculo_salario/Contratacion/"+row.Id.toString()).then(function(response){
-                    row.ValorContrato=response.data;
-                  });
-                });
-
-              }
-            });
-
-
-            adminMidRequest.post("calculo_salario/Precontratacion/"+self.idResolucion.toString()+"/"+resolucion.NivelAcademico).then(function(response){
-              self.contratados=response.data;
-              });
-              */
-            adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.idResolucion.toString()).then(function(response) {
+            adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.idResolucion.toString()).then(function (response) {
 
                 self.contratados = response.data;
 
 
             });
-            coreAmazonRequest.get("ordenador_gasto", "query=DependenciaId%3A" + self.datosFiltro.IdFacultad.toString()).then(function(response) {
+            coreAmazonRequest.get("ordenador_gasto", "query=DependenciaId%3A" + self.datosFiltro.IdFacultad.toString()).then(function (response) {
                 if (response.data === null) {
-                    coreAmazonRequest.get("ordenador_gasto/1").then(function(response) {
+                    coreAmazonRequest.get("ordenador_gasto/1").then(function (response) {
                         self.ordenadorGasto = response.data;
                     });
                 } else {
@@ -74,21 +55,21 @@ angular.module('contractualClienteApp')
             });
         });
 
-        coreAmazonRequest.get("punto_salarial", "sortby=Vigencia&order=desc&limit=1").then(function(response) {
+        coreAmazonRequest.get("punto_salarial", "sortby=Vigencia&order=desc&limit=1").then(function (response) {
             self.punto_salarial = response.data[0];
         });
 
-        coreAmazonRequest.get("salario_minimo", "sortby=Vigencia&order=desc&limit=1").then(function(response) {
+        coreAmazonRequest.get("salario_minimo", "sortby=Vigencia&order=desc&limit=1").then(function (response) {
             self.salario_minimo = response.data[0];
         });
 
         amazonAdministrativaRequest.get('vigencia_contrato', $.param({
             limit: -1
-        })).then(function(response) {
+        })).then(function (response) {
             self.vigencia_data = response.data;
         });
 
-        self.asignarValoresDefecto = function() {
+        self.asignarValoresDefecto = function () {
             self.contratoGeneralBase.Contrato.Vigencia = new Date().getFullYear();
             self.contratoGeneralBase.Contrato.FormaPago = { Id: 240 };
             self.contratoGeneralBase.Contrato.DescripcionFormaPago = "Abono a Cuenta Mensual de acuerdo a puntas y hotras laboradas";
@@ -116,48 +97,23 @@ angular.module('contractualClienteApp')
 
         self.asignarValoresDefecto();
 
-        financieraRequest.get("unidad_ejecutora/1").then(function(response) {
+        financieraRequest.get("unidad_ejecutora/1").then(function (response) {
             self.unidad_ejecutora_defecto = response.data;
         });
-        amazonAdministrativaRequest.get("parametros/240").then(function(response) {
+        amazonAdministrativaRequest.get("parametros/240").then(function (response) {
             self.forma_pago_defecto = response.data;
         });
-        amazonAdministrativaRequest.get("parametros/136").then(function(response) {
+        amazonAdministrativaRequest.get("parametros/136").then(function (response) {
             self.regimen_contratacion_defecto = response.data;
         });
 
 
-        self.cancelar = function() {
+        self.cancelar = function () {
             $mdDialog.hide();
         };
 
-        /*self.calcularSalario = function(){
-            adminMidRequest.post("calculo_salario/Precontratacion/"+self.nivelAcademico+"/"+persona.Id+"/"+self.datosValor.NumSemanas+"/"+self.datosValor.NumHorasSemanales+"/asociado/"+self.datosValor.dedicacion).then(function(response){
-              if(typeof(response.data)=="number"){
-                self.valorContrato=response.data;
-                  swal({
-                    title: $translate.instant('VALOR_CONTRATO'),
-                    text: NumeroALetras(response.data),
-                    type: "info",
-                    confirmButtonText: $translate.instant('ACEPTAR'),
-                    closeOnConfirm: false,
-                    showLoaderOnConfirm: true,
-                  });
-                  self.asignarValoresDefecto();
-            }else{
-              swal({
-                    title: "Peligro",
-                    text: $translate.instant('NO_CALCULADO_SALARIO'),
-                    type: "danger",
-                    confirmButtonText: $translate.instant('ACEPTAR'),
-                    closeOnConfirm: false,
-                    showLoaderOnConfirm: true,
-                  });
-            }
-            });
-        }*/
 
-        self.realizarContrato = function() {
+        self.realizarContrato = function () {
             if (self.datosFiltro.Dedicacion === "HCH") {
                 self.contratoGeneralBase.Contrato.TipoContrato = { Id: 3 };
                 self.contratoGeneralBase.Contrato.ObjetoContrato = "Docente de Vinculación Especial - Honorarios";
@@ -182,9 +138,9 @@ angular.module('contractualClienteApp')
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false
-            }).then(function() {
+            }).then(function () {
                 self.guardarContratos();
-            }, function(dismiss) {
+            }, function (dismiss) {
                 if (dismiss === 'cancel') {
                     swal({
                         text: $translate.instant('EXPEDICION_NO_REALIZADA'),
@@ -194,12 +150,11 @@ angular.module('contractualClienteApp')
             });
         };
 
-        self.guardarContratos = function() {
+        self.guardarContratos = function () {
             self.estado = true;
             var conjuntoContratos = [];
-            //var errorInsercion = false;
             if (self.contratados) {
-                self.contratados.forEach(function(contratado) {
+                self.contratados.forEach(function (contratado) {
                     var contratoGeneral = JSON.parse(JSON.stringify(self.contratoGeneralBase.Contrato));
                     var actaI = JSON.parse(JSON.stringify(self.acta));
                     contratoGeneral.Contratista = parseInt(contratado.IdPersona);
@@ -224,21 +179,33 @@ angular.module('contractualClienteApp')
                     idResolucion: self.idResolucion,
                     FechaExpedicion: self.FechaExpedicion
                 };
-                adminMidRequest.post("expedir_resolucion/validar_datos_expedicion", expedicionResolucion).then(function(response) {
-                    if(response.status==201){
+                adminMidRequest.post("expedir_resolucion/validar_datos_expedicion", expedicionResolucion).then(function (response) {
+                    if (response.status == 201) {
 
-                adminMidRequest.post("expedir_resolucion/expedir", expedicionResolucion).then(function(response) {
-                    self.estado = false;
-                    //if(typeof(response.data)=="object"){ //xDD
-                    /*
-                                  self.alerta = "";
-                                  for (var i = 1; i < response.data.length; i++) {
-                                    self.alerta = self.alerta + response.data[i] + "\n";
-                                  }*/
-                    //swal("", self.alerta, response.data[0]);
+                        adminMidRequest.post("expedir_resolucion/expedir", expedicionResolucion).then(function (response) {
+                            self.estado = false;
+                            if (response.status == 233) {
+                                swal({
+                                    text: response.data,
+                                    title: "Alerta",
+                                    type: "error",
+                                    confirmButtonText: $translate.instant('ACEPTAR'),
+                                    showLoaderOnConfirm: true,
+                                });
+                            } else {
 
-                    //xD
-                    if(response.status==233){
+                                swal({
+                                    title: $translate.instant('EXPEDIDA'),
+                                    text: $translate.instant('DATOS_REGISTRADOS'),
+                                    type: 'success',
+                                    confirmButtonText: $translate.instant('ACEPTAR')
+                                }).then(function () {
+                                    $window.location.reload();
+                                });
+                            }
+                        });
+                    } else {
+
                         swal({
                             text: response.data,
                             title: "Alerta",
@@ -246,40 +213,8 @@ angular.module('contractualClienteApp')
                             confirmButtonText: $translate.instant('ACEPTAR'),
                             showLoaderOnConfirm: true,
                         });
-                    } else {
-
-                    swal({
-                        title: $translate.instant('EXPEDIDA'),
-                        text: $translate.instant('DATOS_REGISTRADOS'),
-                        type: 'success',
-                        confirmButtonText: $translate.instant('ACEPTAR')
-                    }).then(function() {
-                        $window.location.reload();
-                    });
-                }
-
-                    //  $mdDialog.hide()
-                    /*  }else{
-                        swal({
-                          title: "Alerta",
-                          text: $translate.instant('PROBLEMA_EXPEDICION'),
-                          type: "warning",
-                          confirmButtonText: $translate.instant('ACEPTAR'),
-                          showLoaderOnConfirm: true,
-                        });
-                      }*/
+                    }
                 });
-            } else {
-
-                swal({
-                    text: response.data,
-                    title: "Alerta",
-                    type: "error",
-                    confirmButtonText: $translate.instant('ACEPTAR'),
-                    showLoaderOnConfirm: true,
-                });
-                }
-        });
             } else {
                 swal({
                     text: $translate.instant('NO_DOCENTES'),
@@ -290,5 +225,18 @@ angular.module('contractualClienteApp')
                 });
             }
         };
+        self.validarFecha = function (date) {
 
+            if (date.getDay() == 0 || date.getDay() == 6) {
+                return false;
+            }
+            var myHolidays = holidays.getColombiaHolidaysByYear(date.getFullYear());
+            var strDate = date.toJSON().split('T')[0];
+            for (var i = 0; i < myHolidays.length; i++) {
+                if (myHolidays[i].holiday == strDate) {
+                    return false;
+                }
+            }
+            return true;
+        };
     });

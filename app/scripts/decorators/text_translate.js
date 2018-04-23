@@ -186,6 +186,7 @@ var text_es = {
   TIPO_DOCUMENTO:"Tipo documento",
   NUMERO_DOCUMENTO :"No documento",
   FECHA_INICIO:"Fecha inicio",
+  FECHA_INICIO_VALIDA:"Fecha inicio válida",
   FECHA_FIN:"Fecha fin",
   FECHA:"Fecha",
   TIPO:"Tipo",
@@ -404,6 +405,12 @@ var text_es = {
       ALERTA_ERROR_RESOLUCION: "Error al insertar resolución",
       ALERTA_SELEC_RESOLUCION:"Seleccione una resolución para cancelar",
       DATOS_RESOLUCION: "Datos de la resolución",
+      CANCELACION: "Cancelación",
+      SEMANAS_REVERSAR: "Número de Semanas a Reversar",
+      ELIJA_SEMANAS_MINIMO: "Elija un número de semanas -> Mínimo: ",
+      ELIJA_SEMANAS_MAXIMO: " Máximo: ",
+      COMPLETE_CAMPOS: "Complete Todos Los Campos",
+      FECHA_FIN_ACTA: "Fecha fin de acuerdo a la reversión: ",
 
   //RESOLUCION_GESTION
       /*---HTML---*/
@@ -509,7 +516,9 @@ var text_es = {
   NUMERO_CANCELACIONES: "Número de vinculaciones canceladas",
   DATOS_CANCELADOS:"Las vinculaciones asociadas a esta resolución de cancelación han sido removidas",
   DATOS_EXPEDICION: "Datos de Expedición",
+  FECHA_INVALIDA: "Por favor escoja otra fecha. La fecha escojida es un Sábado, Domingo o un día festivo",
   FECHA_EXPEDICION: "Fecha de Expedición",
+  FECHA_EXPEDICION_VALIDA: "Fecha de Expedición válida",
   NUMERO_SEMANAS: "Número de Semanas",
   TITULO_RESOLUCION: "Título de la Resolución",
   INFORMACION_CANCELAR: "Información de la cancelación",
