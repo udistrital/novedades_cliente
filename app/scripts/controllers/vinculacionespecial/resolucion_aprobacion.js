@@ -58,7 +58,7 @@ angular.module('contractualClienteApp')
                             return 'resolucionExpedida';
                         }
                     },
-                    width: '15%',
+                    width: '10%',
                     displayName: $translate.instant('VIGENCIA')
                 },
                 {
@@ -70,8 +70,20 @@ angular.module('contractualClienteApp')
                             return 'resolucionExpedida';
                         }
                     },
-                    width: '20%',
+                    width: '15%',
                     displayName: $translate.instant('FACULTAD')
+                },
+                {
+                    field: 'TipoResolucion',
+                    cellClass: function(grid, row/*, col, rowRenderIndex, colRenderIndex*/) {
+                      if (row.entity.Estado==="Cancelada") {
+                        return 'resolucionCancelada';
+                      }else if(row.entity.Estado==="Expedida"){
+                        return 'resolucionExpedida';
+                      }
+                    },
+                    width: '15%',
+                    displayName: $translate.instant('TIPO_RESOLUCION')
                 },
                 {
                     field: 'NivelAcademico',
@@ -94,7 +106,7 @@ angular.module('contractualClienteApp')
                             return 'resolucionExpedida';
                         }
                     },
-                    width: '15%',
+                    width: '10%',
                     displayName: $translate.instant('DEDICACION')
                 },
                 {
