@@ -394,6 +394,8 @@ angular.module('contractualClienteApp')
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Aceptar'
       }).then(function () {
+        
+         self.solicitudes_seleccionadas = self.gridApi.selection.getSelectedRows();
         adminMidRequest.post('aprobacion_pago/aprobar_pagos',self.solicitudes_seleccionadas).then(function(response){
           if (response.data === 'OK'){
             swal(
