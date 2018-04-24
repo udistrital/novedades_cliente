@@ -131,7 +131,7 @@ var conf_local = {
     ARKA_SERVICE: "http://10.20.0.254/arka_api_crud/v1/",
     CONFIGURACION_SERVICE: "http://10.20.0.254/configuracion_api/v1/",
     CORE_SERVICE: "http://10.20.0.254/core_api/v1/",
-    CORE_AMAZON_SERVICE: "http://10.20.0.254/core_amazon_api/v1/",
+    CORE_AMAZON_SERVICE: "http://10.20.0.254/core_amazon_crud/v1/",
     FINANCIERA_MID_SERVICE: "http://10.20.0.254/financiera_mid_api/v1/",
     FINANCIERA_SERVICE: "http://10.20.0.254/financiera_api/v1/",
     MODELS_SERVICE: "scripts/models/",

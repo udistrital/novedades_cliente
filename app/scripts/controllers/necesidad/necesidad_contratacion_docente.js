@@ -123,7 +123,7 @@ angular.module('contractualClienteApp')
         limit: -1
       })).then(function(response) {
         self.ordenador_gasto = response.data[0];
-        self.dep_ned.OrdenadorGasto=strconv.Atoi(response.data[0].Id);
+        self.dep_ned.OrdenadorGasto=parseInt(response.data[0].Id);
       });
     });
   },true);

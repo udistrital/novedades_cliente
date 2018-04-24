@@ -21,8 +21,7 @@ angular.module('contractualClienteApp')
         var dias = 0;
         var decimal = 0;
         var semanasDecimal = 0;
-        self.fechaActa;
-        var fechaFinal;
+        self.fechaActa = new Date();
         var diasTotales = 0;
         self.fecha_actual = new Date();
         self.fechaFinal = new Date();
@@ -72,7 +71,7 @@ angular.module('contractualClienteApp')
 
         self.cancelarContrato = function() {
             self.asignarValoresDefecto();
-            self.fechaCancelacion = self.fechaActaInicio(self.semanasRev);
+            self.fechaCancelacion = self.fechaActaInicio();
             
             swal({
                 title: $translate.instant('EXPEDIR'),
@@ -129,7 +128,7 @@ angular.module('contractualClienteApp')
                     idResolucion: self.idResolucion,
                     FechaExpedicion: self.FechaExpedicion
                 };
-                adminMidRequest.post("expedir_resolucion/cancelar", expedicionResolucion).then(function(response) {
+                adminMidRequest.post("expedir_resolucion/cancelar", expedicionResolucion).then(function() {
                     self.estado = false;
                     swal({
                         title: $translate.instant('EXPEDIDA'),
@@ -181,7 +180,7 @@ angular.module('contractualClienteApp')
                     self.acta = response.data[0];
                     self.fechaIni = new Date(self.acta.FechaInicio);
                     self.fechaActa = self.fechaUtc(self.fechaIni);
-                    self.calculoSemanas(self.fechaActa);  
+                    self.calculoSemanas();  
                     self.maximoSemanas = self.maximoSemanas - self.semanasTranscurridas;
                     self.estado = false;
                 });
@@ -197,7 +196,7 @@ angular.module('contractualClienteApp')
           };
 
         //Función para hacer el cálculo de semanas para la vinculación docente
-        self.calculoSemanas = function(fecha){
+        self.calculoSemanas = function(){
             dias = (self.fechaUtc(self.fecha_actual)-self.fechaActa)  / 1000 / 60 / 60 / 24 ;
             semanasDecimal = dias / 7;
             decimal = semanasDecimal % 1;
@@ -208,7 +207,7 @@ angular.module('contractualClienteApp')
         };
 
         //Se calcula la fecha de cancelación (fin) del acta inicio a partir de la fecha inicio de la misma y las semanas insertadas
-        self.fechaActaInicio = function(semanasAReversar){
+        self.fechaActaInicio = function(){
             self.semanasRev = self.resolucionActual.NumeroSemanas - self.semanasReversar;
             diasTotales = self.semanasRev*7 ;
             self.fechaFinal = new Date(self.acta.FechaInicio);
