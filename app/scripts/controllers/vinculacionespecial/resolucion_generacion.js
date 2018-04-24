@@ -51,7 +51,7 @@ angular.module('contractualClienteApp')
                     displayName: $translate.instant('PERIODO')
                 },
                 {
-                    field: 'Facultad',
+                    field: 'NombreFacultad',
                     width: '27%',
                     displayName: $translate.instant('FACULTAD')
                 },
@@ -114,7 +114,7 @@ angular.module('contractualClienteApp')
                         }
                     }
                     oikosRequest.get("dependencia/"+resolucion.Facultad).then(function(response){
-                        resolucion.Facultad = response.data.Nombre;
+                        resolucion.NombreFacultad = response.data.Nombre;
                       });
                 });
             }
