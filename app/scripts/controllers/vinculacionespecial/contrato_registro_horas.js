@@ -170,7 +170,7 @@ angular.module('contractualClienteApp')
                     Vinculaciones: conjuntoContratos,
                     idResolucion: self.idResolucion
                 };
-                adminMidRequest.post("expedir_resolucion/expedir", expedicionResolucion).then(function(response) {
+                adminMidRequest.post("expedir_resolucion/expedir", expedicionResolucion).then(function() {
                     amazonAdministrativaRequest.get("resolucion_vinculacion").then(function(response) {
                         lista.resolucionesInscritas.data = response.data;
                         lista.resolucionesInscritas.data.forEach(function(resolucion) {

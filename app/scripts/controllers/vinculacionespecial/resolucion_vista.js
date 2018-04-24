@@ -11,7 +11,6 @@ angular.module('contractualClienteApp')
 .controller('ResolucionVistaCtrl', function (administrativaRequest,oikosRequest,coreRequest,adminMidRequest,$mdDialog,$scope,$http,$translate) {
 
   var self=this;
-  var pdfmake;
 
   self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
   self.proyectos=[];
@@ -56,11 +55,12 @@ angular.module('contractualClienteApp')
   //Función para obtener el contenido de las tablas por proyecto currícular de los docentes asociados a la resolución
   self.getCuerpoTabla=function(idProyecto, datos, columnas) {
     var cuerpo=[];
+    var encabezado=[];
     if(self.resolucion.NivelAcademico_nombre === 'POSGRADO'){
-      var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' },  { text: $translate.instant('TIPO_DOCUMENTO'), style: 'encabezado'},{ text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMESTRALES'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado'}];
+      encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' },  { text: $translate.instant('TIPO_DOCUMENTO'), style: 'encabezado'},{ text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMESTRALES'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado'}];
     }
     if(self.resolucion.NivelAcademico_nombre === 'PREGRADO'){
-      var encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('TIPO_DOCUMENTO'), style: 'encabezado'},  { text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMANALES'), style: 'encabezado'},{ text:  $translate.instant('PERIODO_VINCULACION'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado'}];
+      encabezado=[{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('TIPO_DOCUMENTO'), style: 'encabezado'},  { text: $translate.instant('CEDULA'), style: 'encabezado'},  { text:  $translate.instant('EXPEDICION'), style: 'encabezado'},{ text:  $translate.instant('CATEGORIA'), style: 'encabezado'},{ text:  $translate.instant('DEDICACION'), style: 'encabezado'},{ text:  $translate.instant('HORAS_SEMANALES'), style: 'encabezado'},{ text:  $translate.instant('PERIODO_VINCULACION'), style: 'encabezado'},{ text:  $translate.instant('VALOR_CONTRATO'), style: 'encabezado'},{ text:  $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado'}];
     }
 
 

@@ -36,7 +36,7 @@ angular.module('contractualClienteApp')
                           text: $translate.instant('ALERTA_ERROR_CATEGORIA'),
                           type: 'info',
                           confirmButtonText: $translate.instant('ACEPTAR')
-                        })
+                        });
                         row.isSelected = false;
                       }else{
                         self.personasSeleccionadas1 = gridApi.selection.getSelectedRows();
@@ -529,7 +529,7 @@ angular.module('contractualClienteApp')
                 });
 
                 adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos_seleccionados ", vinculacionesData).then(function(response) {
-                    self.total_contratos_seleccionados = response.data
+                    self.total_contratos_seleccionados = response.data;
 
                 });
 

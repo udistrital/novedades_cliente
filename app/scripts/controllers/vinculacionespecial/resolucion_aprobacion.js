@@ -213,7 +213,7 @@ angular.module('contractualClienteApp')
         //Función para asignar controlador de la vista resolucion_vista.html, donde se pasa por parámetro el id de la resolucion seleccionada con ayuda de $mdDialog
         $scope.verVisualizarResolucion = function(row) {
           if(row.entity.FechaExpedicion === null || row.entity.FechaExpedicion.toString()==="0001-01-01T00:00:00Z"){
-            self.FechaParaPDF = "Fecha de expedición pendiente"
+            self.FechaParaPDF = "Fecha de expedición pendiente";
           }else{
             var string1= row.entity.FechaExpedicion;
             string1 = string1.split('T')[0];

@@ -22,8 +22,8 @@ angular.module('colombiaHolidaysService', [])
      scriptTag.async = true;
      scriptTag.src = 'bower_components/colombia-holidays/js/holidays.js';
      scriptTag.onreadystatechange = function () {
-       if (this.readyState == 'complete') onScriptLoad();
-     }
+       if (this.readyState === 'complete') {onScriptLoad();}
+     };
      scriptTag.onload = onScriptLoad;
 
      var s = $document[0].getElementsByTagName('body')[0];
