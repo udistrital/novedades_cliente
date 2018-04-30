@@ -34,7 +34,7 @@ var text_es = {
   RECHAZAR:"Rechazar",
   SOLICITAR_CDP:"Solicitar CDP",
   GENERAR_RESOLUCION:"Generar Resolución",
-  REALIZAR_EXPEDICION:"Realizar expedición de la resolución con los datos introducidos",
+  REALIZAR_EXPEDICION:"Realizar expedición de la resolución",
   INFORMACION_PERSONA_NATURAL:"Información persona natural",
   FORMACION_ACADEMICA:"Formación académica",
   EXPERIENCIA_LABORAL_DOCENTE:"Experiencia laboral docente",
@@ -275,9 +275,11 @@ var text_es = {
       DOCENTE_VINCULADOS:"Docentes vinculados",
       SELECCIONE_PROY:"Seleccione el proyecto curricular",
       TITULO_DISP: "Disponibilidad",
-      VINCULAR_DOCENTES_SELECCIONADOS: "Vincular docentes seleccionados",
+      VINCULAR_DOCENTES: "Vincular Docentes",
       ELEGIR_DISP: "Elegir disponibilidad",
       LABEL_TOTAL_X_RESOLUCION: "Valor total de contratación:\n(Docentes vinculados) ",
+      VOLVER: "Volver",
+      DOCENTES_SELECCIONADOS_REVERSAR: "Docentes Seleccionados Para Reversar",
       /*---Script---*/
       APELLIDO_DOCENTES:"Apellidos",
       NOMBRES_DOCENTES: "Nombres",
@@ -310,6 +312,7 @@ var text_es = {
       ALERTA_ERROR_CATEGORIA: "Debe seleccionar docentes con categoria asignada",
       LABEL_TOTAL_CONTRATACION: "Valor total de contratos para docentes seleccionados",
       ALERTA_SELEC_DOC: "Seleccione docentes",
+      CAMBIOS_NO_GUARDADOS: "Los Cambios no guardados se perderan",
   //RESOLUCION_ADICION_DETALLE
       /*---HTML---*/
       TITULO_DOC_VIN_RES_AD: "Docentes vinculados a resolución de adicion",
@@ -320,6 +323,7 @@ var text_es = {
       ALERTA_ERROR_ANULACION:"Error en anulación",
       ANULAR_BTN: "Anular",
       ANULADA_BTN: "Anular",
+      CANCELAR_BTN: "Cancelar",
 
   //RESOLUCION_ADICION
       /*---HTML---*/
@@ -397,6 +401,7 @@ var text_es = {
       SELECCIONE:"Seleccione",
       SELECCIONE_TIPO_RES: "Seleccione el tipo de resolución a crear",
       ASOCIAR_RESOLUCION: "Asociar resolución",
+      VIGENCIA:"Vigencia",
       /*---Script---*/
       INFORMACION_CONTENIDO: "Los artículos son creados por defecto y pueden ser editados",
       CONFIRMAR_GUARDAR_RESOLUCION: "Guardar resolución",
@@ -533,7 +538,6 @@ var text_es = {
   CIUDAD_DOC:"CIUDAD",
   FECH_SUSC_CONT:"FECHA SUSCRIPCIÓN CONTRATO",
   UNIDAD_EJE:"UNIDAD EJECUTORA",
-  VIGENCIA:"VIGENCIA",
   TIPO_CUENTA:"TIPO CUENTA",
   BANCO:"BANCO",
   NUM_CUENTA:"NÚMERO CUENTA",
@@ -691,9 +695,9 @@ var text_en = {
   VER_SEGUIMIENTO_FINANCIERO: "See financial monitoring",
   CREAR_RESOLUCION: "Create new special entailment resolution",
   GENERAR_RESOLUCION: "Generate Resolution",
-  REALIZAR_EXPEDICION: "Issue the resolution with the data entered",
+  REALIZAR_EXPEDICION: "Issue the resolution",
   INFORMACION_PERSONA_NATURAL: "Information natural person",
-  VINCULAR_DOCENTES_SELECCIONADOS: "Entailment selected teachers to resolution",
+  VINCULAR_DOCENTES: "Entailment teachers",
   FORMACION_ACADEMICA: "Academic training",
   EXPERIENCIA_LABORAL_DOCENTE: "Teaching work experience",
   TRABAJOS_INVESTIGACION: "Investigation work",
@@ -704,6 +708,7 @@ var text_en = {
   SOLICITUD_NECESIDAD_CONTRATACION_DOCENTES: "Need Request Teacher Recruitment",
   SOLICITUD_NECESIDAD_EXTERNA: "Extern Need Request",
   PRECIO_MAS_IVA: "Value + IVA",
+  CANCELAR_BTN: "Cancel",
   //SOLICITUD RP
   TIPO_PERSONA:"Kind of person",
   TIPO_RESOLUCION:"Kind of resolution",
@@ -883,6 +888,9 @@ var text_en = {
   TOTAL:"Total",
   UNITARIO:"Unit",
   NO_HAY_DATOS_REDIRIGIR:"There are no data to show you will be redirected to the previous menu",
+  CAMBIOS_NO_GUARDADOS: "Unsaved changes wiil be lost",
+  VOLVER: "Back",
+  DOCENTES_SELECCIONADOS_REVERSAR: "Teachers selected to be reversed",
 
 
 

@@ -106,8 +106,13 @@
                                       <input type="submit" class="form-control btn-primary" ng-click="resolucionDetalle.agregarArticulo()" value="Nuevo artículo">
                                   </div>
                               </div>
+                              <div class="panel-body">
+                                    <div class="col-lg-6 col-lg-offset-3">
+                                            <input type="submit" class="form-control btn-success" ng-click="resolucionDetalle.guardarCambios()" value="Guardar cambios realizados en la resolución">
+                                    </div>
+                              </div>
                               <div class="col-lg-6 col-lg-offset-3">
-                                      <input type="submit" class="form-control btn-success" ng-click="resolucionDetalle.guardarCambios()" value="Guardar cambios realizados en la resolución">
+                                    <input type="submit" class="form-control btn-danger" ng-click="resolucionDetalle.volver()" value="{{'VOLVER' | translate }}">
                               </div>
                           </div>
                       </div>
