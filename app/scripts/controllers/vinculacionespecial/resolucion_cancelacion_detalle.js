@@ -97,7 +97,8 @@ angular.module('contractualClienteApp')
       cancelButtonText: $translate.instant('CANCELAR'),
       confirmButtonClass: 'btn btn-success',
       cancelButtonClass: 'btn btn-danger',
-      buttonsStyling: false
+      buttonsStyling: false,
+      allowOutsideClick: false
     }).then(function () {
       self.AnularDesvinculacionDocente(row);
     }, function (dismiss) {
@@ -147,7 +148,8 @@ angular.module('contractualClienteApp')
       swal({
           text:$translate.instant('ALERTA_ANULACION_EXITOSA'),
           type: 'success',
-          confirmButtonText: $translate.instant('ACEPTAR')
+          confirmButtonText: $translate.instant('ACEPTAR'),
+          allowOutsideClick: false
 
         });
          $window.location.reload();
@@ -156,7 +158,8 @@ angular.module('contractualClienteApp')
           title: $translate.instant('ERROR'),
           text: $translate.instant('ALERTA_ERROR_ANULACION'),
           type: 'error',
-          confirmButtonText: $translate.instant('ACEPTAR')
+          confirmButtonText: $translate.instant('ACEPTAR'),
+          allowOutsideClick: false
         });
 
       }
@@ -164,6 +167,10 @@ angular.module('contractualClienteApp')
     });
 
   };
+
+  self.volver = function(){
+    $window.location.href = '#/vinculacionespecial/resolucion_gestion';
+  }
 
 
 

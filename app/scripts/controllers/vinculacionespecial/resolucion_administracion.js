@@ -163,11 +163,12 @@ angular.module('contractualClienteApp')
       controllerAs: 'contratoRegistro',
       templateUrl: 'views/vinculacionespecial/contrato_registro.html',
       parent: angular.element(document.body),
-      clickOutsideToClose:true,
+      clickOutsideToClose:false,
       fullscreen: true,
       locals: {idResolucion: row.entity.Id, lista: self, resolucion: row.entity}
     });
   };
+  
 
     //Función para asignar controlador de la vista contrato_registro_horas.html (expedición de la resolución de modificación de horas), donde se pasa por parámetro el id de la resolucion seleccionada, la lista de resoluciones paraque sea recargada y los datos completos de la resolución con ayuda de $mdDialog
     $scope.verRealizarExpedicionHoras = function(row){
@@ -189,7 +190,7 @@ angular.module('contractualClienteApp')
       controllerAs: 'contratoRegistroCancelar',
       templateUrl: 'views/vinculacionespecial/contrato_registro_cancelar.html',
       parent: angular.element(document.body),
-      clickOutsideToClose:true,
+      clickOutsideToClose:false,
       fullscreen: true,
       locals: {idResolucion: row.entity.Id, lista: self, resolucion: row.entity}
     });
