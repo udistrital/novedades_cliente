@@ -14,6 +14,7 @@ angular.module('contractualClienteApp')
         self.offset = 0;
         self.saldo_disponible = true;
         self.personasSeleccionadas1 = [];
+        self.esconderBoton = false;
 
         self.datosDocentesCargaLectiva = {
             paginationPageSizes: [10, 15, 20],
@@ -352,7 +353,8 @@ angular.module('contractualClienteApp')
 
         //Función para almacenar los datos de las vinculaciones realizadas
         self.agregarPrecontratos = function() {
-
+            
+            self.esconderBoton = true;
             vinculacionesData = [];
             if (self.saldo_disponible && self.apropiacion_elegida) {
                 self.personasSeleccionadas1.forEach(function(personaSeleccionada) {
@@ -382,8 +384,8 @@ angular.module('contractualClienteApp')
                         swal({
                             text: $translate.instant('VINCULACION_EXITOSA'),
                             type: 'success',
-                            confirmButtonText: $translate.instant('ACEPTAR')
-
+                            confirmButtonText: $translate.instant('ACEPTAR'),
+                            allowOutsideClick: false
                           }).then(function() {
                             $window.location.reload();
                             self.personasSeleccionadas1 = [];
@@ -395,7 +397,8 @@ angular.module('contractualClienteApp')
                             title: $translate.instant('ERROR'),
                             text: $translate.instant('ALERTA_PREVIN_ERROR'),
                             type: 'info',
-                            confirmButtonText: $translate.instant('ACEPTAR')
+                            confirmButtonText: $translate.instant('ACEPTAR'),
+                            allowOutsideClick: false
                           }).then(function() {
                             $window.location.reload();
                             self.personasSeleccionadas1 = [];
@@ -449,7 +452,8 @@ angular.module('contractualClienteApp')
                 cancelButtonText: $translate.instant('CANCELAR'),
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false
+                buttonsStyling: false,
+                allowOutsideClick: false
             }).then(function() {
                 self.desvincularDocente(row);
 
@@ -472,7 +476,8 @@ angular.module('contractualClienteApp')
                     swal({
                         text: $translate.instant('DESVINCULACION_EXITOSA'),
                         type: 'success',
-                        confirmButtonText: $translate.instant('ACEPTAR')
+                        confirmButtonText: $translate.instant('ACEPTAR'),
+                        allowOutsideClick: false
 
                     }).then(function() {
                         $window.location.reload();
@@ -494,7 +499,7 @@ angular.module('contractualClienteApp')
 
         //Función que muestra modal que permite elegir Disponibilidades y sus apropiaciones
         self.mostrar_modal_disponibilidad = function() {
-
+            self.esconderBoton = false;
             if (self.personasSeleccionadas1.length === 0) {
                 swal({
                     text: $translate.instant('ALERTA_SELEC_DOC'),

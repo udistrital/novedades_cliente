@@ -140,8 +140,6 @@ angular.module('contractualClienteApp')
                         '<i title="{{\'APROBADA_BTN\' | translate }}" class="fa fa-check fa-lg  faa-shake animated-hover"></i></a> ' +
                         '<a ng-if="row.entity.Estado==\'Aprobada\'" class="ver" ng-click="grid.appScope.verModificarEstado(row,\'DESAPROBADA\',1)">' +
                         '<i title="{{\'DESAPROBADA_BTN\' | translate }}" class="fa fa-ban fa-lg  faa-shake animated-hover"></i></a> ' +
-                        '<a ng-if="row.entity.Estado==\'Aprobada\'" class="ver" ng-click="grid.appScope.verModificarEstado(row,\'ANULADA\',6)">' +
-                        '<i title="{{\'ANULADA_BTN\' | translate }}" class="fa fa-times-circle fa-lg  faa-shake animated-hover"></i></a> ' +
                         '</center>'
                 }
             ]
@@ -175,7 +173,9 @@ angular.module('contractualClienteApp')
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: $translate.instant(nombreEstado+'_BTN')
+                    confirmButtonText: $translate.instant(nombreEstado+'_BTN'),
+                    cancelButtonText: $translate.instant('CANCELAR'),
+                    allowOutsideClick: false
                 }).then(function() {
                     self.cambiarEstado(resolucion_estado,nombreEstado);
                 });
@@ -197,7 +197,8 @@ angular.module('contractualClienteApp')
                 cancelButtonText: $translate.instant('CANCELAR'),
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false
+                buttonsStyling: false,
+                allowOutsideClick: false
             }).then(function() {
                 self.restaurarResolucion(row);
             }, function(dismiss) {
@@ -227,7 +228,7 @@ angular.module('contractualClienteApp')
             NivelAcademico_nombre : row.entity.NivelAcademico,
             IdFacultad : row.entity.Facultad,
             Vigencia : row.entity.Vigencia,
-            Periodo : row.entity.Periodo,                       //--- se deja quemado, debe incluirse ne tabla resolucion
+            Periodo : row.entity.Periodo,                       
             NumeroSemanas : row.entity.NumeroSemanas,
             Dedicacion: row.entity.Dedicacion,
             FacultadNombre: row.entity.FacultadNombre,

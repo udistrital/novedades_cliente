@@ -518,6 +518,20 @@ self.numeroALetras = function(numero) {
   }
 };
 
+self.volver = function() {
+  swal({
+    text: $translate.instant('CAMBIOS_NO_GUARDADOS'),
+    type: 'warning',
+    confirmButtonText: $translate.instant('ACEPTAR'),
+    cancelButtonText: $translate.instant('CANCELAR'),
+    showCancelButton: true,
+    cancelButtonColor: '#d33',
+    allowOutsideClick: false
+  }).then(function() {
+    $window.location.href = '#/vinculacionespecial/resolucion_gestion';
+  });
+};
+
 self.FormatoNumero=function(amount, decimals) {
 
         amount += '';

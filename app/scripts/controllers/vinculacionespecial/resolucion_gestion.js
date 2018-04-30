@@ -276,7 +276,7 @@ angular.module('contractualClienteApp')
       NivelAcademico_nombre : row.entity.NivelAcademico,
       IdFacultad : row.entity.Facultad,
       Vigencia : row.entity.Vigencia,
-      Periodo : row.entity.Periodo,                       //--- se deja quemado, debe incluirse ne tabla resolucion
+      Periodo : row.entity.Periodo,                       
       NumeroSemanas : row.entity.NumeroSemanas,
       Dedicacion : self.Dedicacion
     };
@@ -331,7 +331,7 @@ angular.module('contractualClienteApp')
       NivelAcademico_nombre : row.entity.NivelAcademico,
       IdFacultad : row.entity.Facultad,
       Vigencia : row.entity.Vigencia,
-      Periodo : row.entity.Periodo,                       //--- se deja quemado, debe incluirse ne tabla resolucion
+      Periodo : row.entity.Periodo,                       
       NumeroSemanas : row.entity.NumeroSemanas,
       Dedicacion: row.entity.Dedicacion,
       FacultadNombre: row.entity.FacultadNombre,
@@ -377,7 +377,8 @@ angular.module('contractualClienteApp')
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: $translate.instant('ANULADA_BTN')
+                    confirmButtonText: $translate.instant('ANULADA_BTN'),
+                    allowOutsideClick: false
                 }).then(function() {
                     self.cambiarEstado(resolucion_estado);
                 });
