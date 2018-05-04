@@ -60,6 +60,7 @@ angular
         'gridOptionsService',
         'configuracionService',
         'requestService',
+        'gridApiService'
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');
