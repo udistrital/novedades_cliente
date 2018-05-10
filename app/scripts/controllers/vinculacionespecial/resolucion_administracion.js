@@ -166,7 +166,6 @@ angular.module('contractualClienteApp')
         if (response.data === null) {
           self.resolucionesAprobadas.data = [];
         } else {
-          //console.log(response.data);
           self.resolucionesAprobadas.data = response.data;
           if (response.data.length == self.resolucionesAprobadas.paginationPageSize)
             self.resolucionesAprobadas.totalItems = offset + self.resolucionesAprobadas.paginationPageSize + 5;
