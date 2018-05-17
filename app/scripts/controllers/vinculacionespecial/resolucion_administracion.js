@@ -157,20 +157,13 @@ angular.module('contractualClienteApp')
 
     //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
     self.cargarDatosResolucion = function (offset, query) {
-
-      adminMidRequest.get("gestion_resoluciones/get_resoluciones_aprobadas", $.param({
+      var req = adminMidRequest.get("gestion_resoluciones/get_resoluciones_aprobadas", $.param({
         limit: self.resolucionesAprobadas.paginationPageSize,
         offset: offset,
         query: query
-      })).then(function (response) {
-        if (response.data === null) {
-          self.resolucionesAprobadas.data = [];
-        } else {
-          self.resolucionesAprobadas.data = response.data;
-          if (response.data.length == self.resolucionesAprobadas.paginationPageSize)
-            self.resolucionesAprobadas.totalItems = offset + self.resolucionesAprobadas.paginationPageSize + 5;
-        }
-      });
+      }))
+      req.then(gridApiService.paginationFunc(self.resolucionesAprobadas, offset));
+      return req;
     };
 
     //Función para asignar controlador de la vista contrato_registro.html (expedición de la resolución), donde se pasa por parámetro el id de la resolucion seleccionada, la lista de resoluciones paraque sea recargada y los datos completos de la resolución con ayuda de $mdDialog
