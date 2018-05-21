@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('ResolucionAprobacionCtrl', function (administrativaRequest, adminMidRequest, titan_request, $scope, $window, $mdDialog, $translate,gridApiService) {
+    .controller('ResolucionAprobacionCtrl', function (administrativaRequest, adminMidRequest, titan_request, gridApiService, $scope, $window, $mdDialog, $translate) {
 
         var self = this;
         self.CurrentDate = new Date();
@@ -217,14 +217,6 @@ angular.module('contractualClienteApp')
 
         //Función para asignar controlador de la vista resolucion_vista.html, donde se pasa por parámetro el id de la resolucion seleccionada con ayuda de $mdDialog
         $scope.verVisualizarResolucion = function (row) {
-            if (row.entity.FechaExpedicion === null || row.entity.FechaExpedicion.toString() === "0001-01-01T00:00:00Z") {
-                self.FechaParaPDF = "Fecha de expedición pendiente";
-            } else {
-                var string1 = row.entity.FechaExpedicion;
-                string1 = string1.split('T')[0];
-                self.FechaParaPDF = string1;
-            }
-
 
             var resolucion = {
                 Id: row.entity.Id,
@@ -236,7 +228,7 @@ angular.module('contractualClienteApp')
                 NumeroSemanas: row.entity.NumeroSemanas,
                 Dedicacion: row.entity.Dedicacion,
                 FacultadNombre: row.entity.FacultadNombre,
-                FechaExpedicion: self.FechaParaPDF
+                FechaExpedicion: row.entity.FechaExpedicion
             };
 
             var local = JSON.stringify(resolucion);
