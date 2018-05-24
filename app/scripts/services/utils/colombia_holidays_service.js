@@ -1,3 +1,6 @@
+'use strict';
+
+
 angular.module('colombiaHolidaysService', [])
     .factory('colombiaHolidaysService', function ($http, $q, requestRequest, token_service, CONF) {
         return {

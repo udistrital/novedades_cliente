@@ -47,7 +47,8 @@
 						<br>
 						<div class="panel-body">
 						<br>
-						<div ui-grid="hojasDeVidaSeleccion.precontratados" ui-grid-selection ui-grid-pagination class="grid" ng-hide="hojasDeVidaSeleccion.estado"></div>
+						<div ui-grid="hojasDeVidaSeleccion.precontratados" ui-grid-selection ui-grid-pagination ui-grid-selection ui-grid-pagination class="grid" ng-hide="hojasDeVidaSeleccion.estado"></div>
+						<input type="submit" class="btn btn-danger" ng-disabled="hojasDeVidaSeleccion.personasSeleccionadasBorrar.length == 0" value="{{'DESVINCULAR_DOCENTES' | translate }}" ng-click="verCancelarInscripcionDocentes(hojasDeVidaSeleccion.personasSeleccionadasBorrar)">
 						<center><loading load="hojasDeVidaSeleccion.estado" tam="5"></loading><center>
 						</div>
 
