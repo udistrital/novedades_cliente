@@ -457,7 +457,7 @@ angular.module('contractualClienteApp')
                 buttonsStyling: false,
                 allowOutsideClick: false
             }).then(function () {
-                console.log(rows);
+                //console.log(rows);
                 rows.forEach(function (row) {
                     self.desvincularDocente(row);
                 });

@@ -43,12 +43,14 @@ angular.module('contractualClienteApp')
             var contenido = [];
             var fechaParaPDF = "";
             var fechaExpedicion = resolucion.FechaExpedicion;
-            if(typeof fechaExpedicion === "object"){
+            
+            if (fechaExpedicion != undefined && typeof fechaExpedicion === "object") {
                 fechaExpedicion = fechaExpedicion.toJSON();
             }
             if (fechaExpedicion == undefined || fechaExpedicion === "0001-01-01T00:00:00Z") {
                 fechaParaPDF = "Fecha de expedición pendiente";
-            } else {
+            }
+            else {
                 fechaExpedicion = fechaExpedicion.split('T')[0];
                 fechaParaPDF = fechaExpedicion;
             }
