@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('contractualClienteApp')
     .factory('pdfMakerService', function ($http, $translate) {
         var self = {};

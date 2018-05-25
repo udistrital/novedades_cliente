@@ -1,3 +1,5 @@
+'use strict';
+
 
 angular.module('colombiaHolidaysService', [])
 .factory('colombiaHolidaysService', function () {
