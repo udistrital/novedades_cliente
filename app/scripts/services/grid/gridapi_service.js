@@ -34,7 +34,7 @@ angular.module('gridApiService', [])
                     angular.forEach(grid.columns, function (value, key) {
                         if (value.filters[0].term) {
                             var formtstr = value.colDef.name.replace('[0]', '');
-                            console.log("change ", value.filters[0].term);
+                            //console.log("change ", value.filters[0].term);
                             query = query + '&query=' + formtstr + '__icontains:' + value.filters[0].term;
 
                         }
