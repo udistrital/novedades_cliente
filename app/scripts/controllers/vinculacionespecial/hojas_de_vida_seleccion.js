@@ -47,7 +47,7 @@ angular.module('contractualClienteApp')
 
                 });
                 //soporte a paginacion
-                self.gridApi = gridApiService.pagination(self.gridApi, self.RecargarDatosPersonas, $scope);
+                self.datosDocentesCargaLectiva.gridApi  = gridApiService.pagination(gridApi, self.RecargarDatosPersonas, $scope);
                 //soporte a filtro de precontratados
                 gridApi.grid.registerRowsProcessor(self.filtrarPrecontratados, 200);
 
