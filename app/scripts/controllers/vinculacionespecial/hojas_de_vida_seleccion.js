@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .controller('HojasDeVidaSeleccionCtrl', function (financieraMidRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
+    .controller('HojasDeVidaSeleccionCtrl', function (financieraMidRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, gridApiService, $localStorage, $scope, $mdDialog, $translate, $window) {
 
         var self = this;
 
@@ -29,7 +29,7 @@ angular.module('contractualClienteApp')
             enableSelectAll: false,
 
             onRegisterApi: function (gridApi) {
-                self.gridApi = gridApi;
+                self.datosDocentesCargaLectiva.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function (row) {
 
                     if (row.entity.CategoriaNombre === "") {
@@ -46,112 +46,66 @@ angular.module('contractualClienteApp')
                     }
 
                 });
+                //soporte a paginacion
+                self.gridApi = gridApiService.pagination(self.gridApi, self.RecargarDatosPersonas, $scope);
+                //soporte a filtro de precontratados
+                gridApi.grid.registerRowsProcessor(self.filtrarPrecontratados, 200);
+
             }
         };
 
-        if (self.resolucion.NivelAcademico_nombre === "PREGRADO") {
-            self.datosDocentesCargaLectiva.columnDefs = [{
-                field: 'docente_apellido',
-                displayName: $translate.instant('APELLIDO_DOCENTES'),
-                width: '15%'
-            },
-            {
-                field: 'docente_nombre',
-                displayName: $translate.instant('NOMBRES_DOCENTES'),
-                width: '15%'
-            },
-            {
-                field: 'docente_documento',
-                displayName: $translate.instant('DOCUMENTO_DOCENTES'),
-                width: '10%'
-            },
-            {
-
-                field: 'horas_lectivas',
-                displayName: $translate.instant('HORAS_LECTIVAS'),
-                width: '5%',
-                cellTemplate: '<center><div ng-if="!row.entity.editrow">{{COL_FIELD}}</div><div ng-if="row.entity.editrow"><input type="text" style="height:30px" ng-model="MODEL_COL_FIELD"</div></center>'
-            },
-            {
-                field: 'proyecto_nombre',
-                displayName: $translate.instant('PROYECTO_CURRICULAR'),
-                width: '33%'
-            },
-            {
-                field: 'CategoriaNombre',
-                displayName: $translate.instant('CATEGORIA'),
-                width: '10%'
-            },
-            {
-                field: 'tipo_vinculacion_nombre',
-                displayName: $translate.instant('DEDICACION'),
-                width: '10%'
-            },
-            {
-                field: 'id_tipo_vinculacion',
-                visible: false
-            },
-            {
-                field: 'id_proyecto',
-                visible: false
-            },
-            {
-                field: 'dependencia_academica',
-                visible: false
-            },
-            ];
-        } else {
-            self.datosDocentesCargaLectiva.columnDefs = [{
-                field: 'docente_apellido',
-                displayName: $translate.instant('APELLIDO_DOCENTES'),
-                width: '15%'
-            },
-            {
-                field: 'docente_nombre',
-                displayName: $translate.instant('NOMBRES_DOCENTES'),
-                width: '15%'
-            },
-            {
-                field: 'docente_documento',
-                displayName: $translate.instant('DOCUMENTO_DOCENTES'),
-                width: '10%'
-            },
-            {
-
-                field: 'horas_lectivas',
-                displayName: $translate.instant('HORAS_LECTIVAS'),
-                width: '5%',
-                cellTemplate: '<center><div ng-if="!row.entity.editrow">{{COL_FIELD}}</div><div ng-if="row.entity.editrow"><input type="text" style="height:30px" ng-model="MODEL_COL_FIELD"</div></center>'
-            },
-            {
-                field: 'proyecto_nombre',
-                displayName: $translate.instant('PROYECTO_CURRICULAR'),
-                width: '33%'
-            },
-            {
-                field: 'CategoriaNombre',
-                displayName: $translate.instant('CATEGORIA'),
-                width: '7%'
-            },
-            {
-                field: 'tipo_vinculacion_nombre',
-                displayName: $translate.instant('DEDICACION'),
-                width: '5%'
-            },
-            {
-                field: 'id_tipo_vinculacion',
-                visible: false
-            },
-            {
-                field: 'id_proyecto',
-                visible: false
-            },
-            {
-                field: 'dependencia_academica',
-                visible: false
-            },
-
-            {
+        self.datosDocentesCargaLectiva.columnDefs = [{
+            field: 'docente_apellido',
+            displayName: $translate.instant('APELLIDO_DOCENTES'),
+            width: '15%'
+        },
+        {
+            field: 'docente_nombre',
+            displayName: $translate.instant('NOMBRES_DOCENTES'),
+            width: '15%'
+        },
+        {
+            field: 'docente_documento',
+            displayName: $translate.instant('DOCUMENTO_DOCENTES'),
+            width: '10%',
+            filter: {}
+        },
+        {
+            field: 'horas_lectivas',
+            displayName: $translate.instant('HORAS_LECTIVAS'),
+            width: '5%',
+            cellTemplate: '<center><div ng-if="!row.entity.editrow">{{COL_FIELD}}</div><div ng-if="row.entity.editrow"><input type="text" style="height:30px" ng-model="MODEL_COL_FIELD"</div></center>'
+        },
+        {
+            field: 'proyecto_nombre',
+            displayName: $translate.instant('PROYECTO_CURRICULAR'),
+            width: '33%'
+        },
+        {
+            field: 'CategoriaNombre',
+            displayName: $translate.instant('CATEGORIA'),
+            width: '10%'
+        },
+        {
+            field: 'tipo_vinculacion_nombre',
+            displayName: $translate.instant('DEDICACION'),
+            width: '10%'
+        },
+        {
+            field: 'id_tipo_vinculacion',
+            visible: false
+        },
+        {
+            field: 'id_proyecto',
+            visible: false
+        },
+        {
+            field: 'dependencia_academica',
+            visible: false
+        },
+        ];
+        if (self.resolucion.NivelAcademico_nombre !== "PREGRADO") {
+            self.datosDocentesCargaLectiva.push({
                 displayName: $translate.instant('OPCIONES'),
                 field: 'edit',
                 enableFiltering: false, enableSorting: false,
@@ -166,8 +120,7 @@ angular.module('contractualClienteApp')
                     '<i title="{{\'CANCELAR_MOD_BTN\' | translate }}" class="fa fa-ban fa-lg  faa-shake animated-hover"></i></a> ' +
 
                     '</center>'
-            }
-            ];
+            });
         }
 
 
@@ -181,7 +134,7 @@ angular.module('contractualClienteApp')
             multiSelect: true,
             //enableFullRowSelection: true,
             //modifierKeysToMultiSelect: true,
-            enableSelectionBatchEvent: false ,
+            enableSelectionBatchEvent: false,
             //enableRowHeaderSelection: false,
             columnDefs: [
                 { field: 'Id', visible: false },
@@ -203,7 +156,7 @@ angular.module('contractualClienteApp')
                 }
             ],
             onRegisterApi: function (gridApi) {
-                self.gridApi = gridApi;
+                self.precontratados.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function () {
                     self.personasSeleccionadasBorrar = gridApi.selection.getSelectedRows();
                 });
@@ -315,24 +268,47 @@ angular.module('contractualClienteApp')
             ],
 
             onRegisterApi: function (gridApi) {
-                self.gridApi = gridApi;
+                self.Apropiaciones.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function () {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
                 });
             }
         };
 
+        //*--------------Funciones para recargar grids que han sido seleccionados -------------* //
+        self.RecargarDatosPersonas = function (offset, query) {
+            var p = $.param({
+                vigencia: self.resolucion.Vigencia,
+                periodo: self.resolucion.Periodo,
+                tipo_vinculacion: self.resolucion.Dedicacion,
+                facultad: self.resolucion.IdFacultad,
+                nivel_academico: self.resolucion.NivelAcademico_nombre,
+                limit: self.datosDocentesCargaLectiva.paginationPageSize,
+                offset: offset,
+                query: query
+            });
+            var req = adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria", p);
+            req.then(gridApiService.paginationFunc(self.datosDocentesCargaLectiva, offset));
+            return req;
+        };
 
-        adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria", "vigencia=" + self.resolucion.Vigencia + "&periodo=" + self.resolucion.Periodo + "&tipo_vinculacion=" + self.resolucion.Dedicacion + "&facultad=" + self.resolucion.IdFacultad + "&nivel_academico=" + self.resolucion.NivelAcademico_nombre).then(function (response) {
-            self.datosDocentesCargaLectiva.data = response.data;
+        self.RecargarDisponibilidades = function () {
+            var p = $.param({
+                limit: "",
+                query: "Vigencia:" + self.vigencia_data
+            });
+            financieraRequest.get('disponibilidad', p).then(function (response) {
+                self.Disponibilidades.data = response.data;
+            });
+        };
 
-        });
-
+        self.RecargarApropiaciones = function () {
+            self.Apropiaciones.data = [];
+        };
 
         administrativaRequest.get("vinculacion_docente/get_total_contratos_x_resolucion/" + self.resolucion.Id, "").then(function (response) {
             self.total_contratos_x_vin = response.data;
         });
-
 
         oikosRequest.get("dependencia/proyectosPorFacultad/" + self.resolucion.IdFacultad + "/" + self.resolucion.NivelAcademico_nombre, "").then(function (response) {
             self.proyectos = response.data;
@@ -342,15 +318,12 @@ angular.module('contractualClienteApp')
         //Función para visualizar docentes ya vinculados a resolución
         self.get_docentes_vinculados = function () {
             self.estado = true;
-            adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.resolucion.Id).then(function (response) {
+            var r = adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.resolucion.Id).then(function (response) {
                 self.precontratados.data = response.data;
                 self.estado = false;
-
             });
-
             self.precontratados.columnDefs[10].filter.term = self.term;
-
-
+            return r;
         };
 
         //Función para almacenar los datos de las vinculaciones realizadas
@@ -597,25 +570,25 @@ angular.module('contractualClienteApp')
             vinculacionesData = [];
         };
 
-        //*--------------Funciones para recargar grids que han sido seleccionados -------------* //
-        self.RecargarDatosPersonas = function () {
-            adminMidRequest.get("gestion_previnculacion/Precontratacion/docentes_x_carga_horaria", "vigencia=" + self.resolucion.Vigencia + "&periodo=" + self.resolucion.Periodo + "&tipo_vinculacion=" + self.resolucion.Dedicacion + "&facultad=" + self.resolucion.IdFacultad + "&nivel_academico=" + self.resolucion.NivelAcademico_nombre).then(function (response) {
-                self.datosDocentesCargaLectiva.data = response.data;
 
+        // carga inicial de docentes en la tabla
+        self.RecargarDatosPersonas();
+        self.get_docentes_vinculados().then(function () {
+            //refresca una vez cargados los docentes precontratados
+            self.datosDocentesCargaLectiva.gridApi.core.refresh();
+        });
+
+        // filtro para eliminar del grid datosDocentesCargaLectiva los docentes precontratados
+        self.filtrarPrecontratados = function (rows) {
+            rows.forEach(function (row) {
+                self.precontratados.data.forEach(function (p) {
+                    if (p.IdPersona == row.entity.docente_documento && p.IdProyectoCurricular == row.entity.id_proyecto) {
+                        row.visible = false;
+                        return;
+                    }
+                });
             });
+            return rows;
         };
-
-        self.RecargarDisponibilidades = function () {
-            financieraRequest.get('disponibilidad', "limit=&query=Vigencia:" + self.vigencia_data).then(function (response) {
-                self.Disponibilidades.data = response.data;
-
-            });
-        };
-
-        self.RecargarApropiaciones = function () {
-            self.Apropiaciones.data = [];
-
-        };
-
 
     });
