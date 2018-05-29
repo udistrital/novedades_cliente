@@ -274,6 +274,7 @@ var text_es = {
       HOJAS_VIDA_INSCRITAS:"Docentes inscritos",
       DOCENTE_VINCULADOS:"Docentes vinculados",
       SELECCIONE_PROY:"Seleccione el proyecto curricular",
+      TODOS_PROY: "Todos los proyectos",
       TITULO_DISP: "Disponibilidad",
       VINCULAR_DOCENTES: "Vincular Docentes",
       ELEGIR_DISP: "Elegir disponibilidad",

@@ -40,7 +40,7 @@
   },
   "scripts": {
     "test": "karma start test/karma.conf.js",
-    "install": "npm install; bower install",
+    "install": "bower install -F",
     "serve": "grunt serve",
     "build": "grunt build"
   },
