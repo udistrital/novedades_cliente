@@ -21,6 +21,8 @@ angular.module('contractualClienteApp')
             enableFiltering: true,
             enableRowSelection: false,
             enableRowHeaderSelection: false,
+            useExternalPagination: true,
+            useExternalSorting: true,
             columnDefs: [{
                 field: 'Id',
                 visible: false
@@ -142,7 +144,11 @@ angular.module('contractualClienteApp')
                     '<i title="{{\'DESAPROBADA_BTN\' | translate }}" class="fa fa-ban fa-lg  faa-shake animated-hover"></i></a> ' +
                     '</center>'
             }
-            ]
+            ],
+            onRegisterApi: function (gridApi) {
+                self.gridApi = gridApi;
+                self.gridApi = gridApiService.pagination(self.gridApi, self.cargarDatosResolucion, $scope);
+              }
         };
 
         //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
