@@ -18,7 +18,7 @@ angular
         'ngMessages',
         'ngResource',
         'ngRoute',
-        'ngSanitize',
+        //'ngSanitize',
         'afOAuth2',
         'treeControl',
         'ngMaterial',
