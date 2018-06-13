@@ -405,6 +405,10 @@ var text_es = {
       PROBLEMA_ALMACENAMIENTO:"Ha habido un problema en el almacenamiento de los cambios",
       REVISE_DATOS_RESOLUCION:"Revise los datos de la resolución",
       CREAR_RESOLUCION:"Crear resolución de vinculación especial",
+      CONSULTAR_DOCENTE: "Consultar Docente",
+      CONSULTAR_DOCUMENTO_DOCENTE: "Consultar Documento Docente",
+      NO_DOCENTES: "No hay resultados",
+      CAMPO_DOCENTE_INVALIDO: "Por favor usar una identificación válida",
 
   //RESOLUCION_GENERACION
       /*---HTML---*/

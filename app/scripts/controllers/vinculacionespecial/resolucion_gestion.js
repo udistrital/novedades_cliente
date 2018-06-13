@@ -348,6 +348,17 @@ angular.module('contractualClienteApp')
       $window.location.href = '#/vinculacionespecial/resolucion_generacion';
     };
 
+    self.consultarDocentes = function () {
+      $mdDialog.show({
+        controller: "ResolucionBusquedaDocenteCtrl",
+        controllerAs: 'resolucionBusquedaDocente',
+        templateUrl: 'views/vinculacionespecial/resolucion_busqueda_docente.html',
+        parent: angular.element(document.body),
+        clickOutsideToClose: true,
+        fullscreen: true
+      });
+    };
+
     //Función para realizar la anulación de la resolución
     $scope.verRealizarAnulacion = function (row) {
       administrativaRequest.get("resolucion/" + row.entity.Id).then(function (response) {
@@ -399,6 +410,4 @@ angular.module('contractualClienteApp')
         }
       });
     };
-
-
   });
