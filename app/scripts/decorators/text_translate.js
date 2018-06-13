@@ -538,6 +538,7 @@ var text_es = {
   DATOS_EXPEDICION: "Datos de Expedición",
   FECHA_INVALIDA: "Por favor escoja otra fecha. La fecha escojida es un Sábado, Domingo o un día festivo",
   FECHA_EXPEDICION: "Fecha de Expedición",
+  ELEGIR_FECHA: "Elija fecha",
   FECHA_EXPEDICION_VALIDA: "Fecha de Expedición válida",
   NUMERO_SEMANAS: "Número de Semanas",
   TITULO_RESOLUCION: "Título de la Resolución",
