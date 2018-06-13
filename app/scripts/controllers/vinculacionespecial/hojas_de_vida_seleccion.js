@@ -13,6 +13,7 @@ angular.module('contractualClienteApp')
         var vinculacionesData = [];
         self.offset = 0;
         self.saldo_disponible = true;
+        self.personasVincular = [];
         self.personasSeleccionadasAgregar = [];
         self.personasSeleccionadasBorrar = [];
         self.esconderBoton = false;
@@ -47,10 +48,12 @@ angular.module('contractualClienteApp')
 
                 });
                 //soporte a paginacion
-                self.datosDocentesCargaLectiva.gridApi  = gridApiService.pagination(gridApi, self.RecargarDatosPersonas, $scope);
+                self.datosDocentesCargaLectiva.gridApi = gridApiService.pagination(gridApi, self.RecargarDatosPersonas, $scope);
                 //soporte a filtro de precontratados
                 gridApi.grid.registerRowsProcessor(self.filtrarPrecontratados, 200);
-
+                gridApi.selection.on.rowSelectionChanged($scope, function () {
+                    self.personasVincular = gridApi.selection.getSelectedRows();
+                });
             }
         };
 
@@ -132,24 +135,27 @@ angular.module('contractualClienteApp')
             enableSorting: true,
             enableFiltering: true,
             multiSelect: true,
+            enableGridMenu: true,
+            exporterCsvFilename: 'precontratados.csv',
+            exporterExcelFilename: 'precontratados.xlsx',
+            exporterExcelSheetName: 'Hoja1',
             //enableFullRowSelection: true,
             //modifierKeysToMultiSelect: true,
             enableSelectionBatchEvent: false,
             //enableRowHeaderSelection: false,
             columnDefs: [
-                { field: 'Id', visible: false },
+                { field: 'Id', visible: false, exporterSuppressExport: true, enableHiding: false },
                 { field: 'NombreCompleto', width: '20%', displayName: $translate.instant('NOMBRE') },
                 { field: 'IdPersona', width: '10%', displayName: $translate.instant('DOCUMENTO_DOCENTES') },
                 { field: 'Categoria', width: '10%', displayName: $translate.instant('CATEGORIA') },
                 { field: 'IdDedicacion.NombreDedicacion', width: '10%', displayName: $translate.instant('DEDICACION') },
-                { field: 'IdDedicacion.Id', visible: false },
+                { field: 'IdDedicacion.Id', visible: false, exporterSuppressExport: true, enableHiding: false },
                 { field: 'NumeroHorasSemanales', width: '8%', displayName: $translate.instant('HORAS_SEMANALES') },
                 { field: 'NumeroSemanas', width: '7%', displayName: $translate.instant('SEMANAS') },
                 { field: 'NumeroDisponibilidad', width: '15%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
                 { field: 'ValorContrato', width: '15%', displayName: $translate.instant('VALOR_CONTRATO'), cellClass: "valorEfectivo", cellFilter: "currency" },
                 {
-                    field: 'IdProyectoCurricular',
-                    visible: false,
+                    field: 'IdProyectoCurricular', visible: false, exporterSuppressExport: true, enableHiding: false,
                     filter: {
                         term: self.term
                     }
@@ -591,4 +597,12 @@ angular.module('contractualClienteApp')
             return rows;
         };
 
+        $scope.exportarCSV = function () {
+            var csvExporter = angular.element(document.querySelectorAll(".custom-csv-link-location"));
+            self.precontratados.gridApi.exporter.csvExport('all', 'all', csvExporter);
+        };
+        $scope.exportarPDF = function () {
+            self.precontratados.gridApi.exporter.pdfExport('all','all');
+
+        };
     });
