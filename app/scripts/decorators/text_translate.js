@@ -405,6 +405,10 @@ var text_es = {
       PROBLEMA_ALMACENAMIENTO:"Ha habido un problema en el almacenamiento de los cambios",
       REVISE_DATOS_RESOLUCION:"Revise los datos de la resolución",
       CREAR_RESOLUCION:"Crear resolución de vinculación especial",
+      CONSULTAR_DOCENTE: "Consultar Docente",
+      CONSULTAR_DOCUMENTO_DOCENTE: "Consultar Documento Docente",
+      NO_DOCENTES: "No hay resultados",
+      CAMPO_DOCENTE_INVALIDO: "Por favor usar una identificación válida",
 
   //RESOLUCION_GENERACION
       /*---HTML---*/
@@ -534,6 +538,7 @@ var text_es = {
   DATOS_EXPEDICION: "Datos de Expedición",
   FECHA_INVALIDA: "Por favor escoja otra fecha. La fecha escojida es un Sábado, Domingo o un día festivo",
   FECHA_EXPEDICION: "Fecha de Expedición",
+  ELEGIR_FECHA: "Elija fecha",
   FECHA_EXPEDICION_VALIDA: "Fecha de Expedición válida",
   NUMERO_SEMANAS: "Número de Semanas",
   TITULO_RESOLUCION: "Título de la Resolución",
