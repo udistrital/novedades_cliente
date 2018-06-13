@@ -51,7 +51,7 @@
 										<input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionReduccion.horas_actuales" readonly>
 									</div>
 									<div class="col-md-2">
-										<label>{{ 'LABEL_HORAS_A_ADICIONAR' | translate }}</label>
+										<label>{{ 'LABEL_HORAS_A_REDUCIR' | translate }}</label>
 									</div>
 									<div class="col-md-1">
 										<input type="number" pattern="[0-9]*" class="form-control" ng-model="resolucionReduccion.horas_a_adicionar" ng-change="resolucionReduccion.Calcular_horas_totales()" min=0 max={{resolucionReduccion.horas_actuales-1}} required="">

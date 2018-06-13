@@ -143,6 +143,7 @@ angular.module('contractualClienteApp')
         });
 
         administrativaRequest.get("modificacion_resolucion", "limit=-1&query=ResolucionNueva:" + self.resolucion.Id).then(function(response) {
+            self.resolucionModificacion = self.resolucion.Id;
             self.resolucion.Id = response.data[0].ResolucionAnterior;
             self.resolucion_id_nueva = response.data[0].ResolucionNueva;
             self.id_modificacion_resolucion = response.data[0].Id;
@@ -199,7 +200,7 @@ angular.module('contractualClienteApp')
                 NumeroHSemanas: parseInt(self.semanas_actuales),
                 NumeroSemanasNuevas: parseInt(self.semanas_totales),
                 NumeroSemanas: parseInt(self.persona_a_modificar.NumeroSemanas),
-                IdResolucion: { Id: parseInt(self.resolucion.Id) },
+                IdResolucion: { Id: self.resolucionModificacion },
                 IdDedicacion: { Id: parseInt(self.persona_a_modificar.IdDedicacion.Id) },
                 IdProyectoCurricular: parseInt(self.persona_a_modificar.IdProyectoCurricular),
                 Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
@@ -273,7 +274,7 @@ angular.module('contractualClienteApp')
                             NumeroHorasNuevas: parseInt(self.horas_totales),
                             NumeroSemanas: parseInt(self.semanas_actuales),
                             NumeroSemanasNuevas: parseInt(self.semanas_totales),
-                            IdResolucion: { Id: parseInt(self.resolucion.Id) },
+                            IdResolucion: { Id: self.resolucionModificacion },
                             IdDedicacion: { Id: parseInt(self.persona_a_modificar.IdDedicacion.Id) },
                             IdProyectoCurricular: parseInt(self.persona_a_modificar.IdProyectoCurricular),
                             Categoria: self.persona_a_modificar.Categoria.toUpperCase(),

@@ -82,6 +82,7 @@ angular.module('contractualClienteApp')
         });
 
         administrativaRequest.get("modificacion_resolucion", "limit=-1&query=ResolucionNueva:" + self.resolucion.Id).then(function(response) {
+            self.resolucionModificacion = self.resolucion.Id;
             self.resolucion.Id = response.data[0].ResolucionAnterior;
             self.id_modificacion_resolucion = response.data[0].Id;
 
@@ -138,7 +139,7 @@ angular.module('contractualClienteApp')
                     IdPersona: personaSeleccionada.IdPersona,
                     NumeroHorasSemanales: personaSeleccionada.NumeroHorasSemanales,
                     NumeroSemanas: personaSeleccionada.NumeroSemanas,
-                    IdResolucion: { Id: self.resolucion.Id },
+                    IdResolucion: { Id: self.resolucionModificacion },
                     IdDedicacion: { Id: personaSeleccionada.IdDedicacion.Id },
                     IdProyectoCurricular: personaSeleccionada.IdProyectoCurricular,
                     Estado: Boolean(false),
