@@ -241,9 +241,7 @@ angular.module('contractualClienteApp')
       }
     });
 
-    //Función para redireccionar la página web a la vista de edición del contenido de la resolución, donde se pasa por parámetro el id de la resolucion seleccionada
-    $scope.verEditarResolucion = function (row) {
-
+    self.registrarResolucion = function(row) {
       var resolucion = {
         Id: row.entity.Id,
         Numero: row.entity.Numero,
@@ -257,9 +255,13 @@ angular.module('contractualClienteApp')
         FechaExpedicion: row.entity.FechaExpedicion
       };
 
-
       var local = JSON.stringify(resolucion);
-      localStorage.setItem('resolucion', local);
+      localStorage.setItem('resolucion', local);  
+    };
+
+    //Función para redireccionar la página web a la vista de edición del contenido de la resolución, donde se pasa por parámetro el id de la resolucion seleccionada
+    $scope.verEditarResolucion = function (row) {
+      self.registrarResolucion(row);
       $window.location.href = '#/vinculacionespecial/resolucion_detalle';
 
     };
@@ -272,19 +274,7 @@ angular.module('contractualClienteApp')
         self.Dedicacion = row.entity.Dedicacion;
       }
 
-      var resolucion = {
-        Id: row.entity.Id,
-        Numero: row.entity.Numero,
-        NivelAcademico_nombre: row.entity.NivelAcademico,
-        IdFacultad: row.entity.Facultad,
-        Vigencia: row.entity.Vigencia,
-        Periodo: row.entity.Periodo,
-        NumeroSemanas: row.entity.NumeroSemanas,
-        Dedicacion: self.Dedicacion
-      };
-
-      var local = JSON.stringify(resolucion);
-      localStorage.setItem('resolucion', local);
+      self.registrarResolucion(row);
 
       if (row.entity.TipoResolucion === "Vinculación") {
         $window.location.href = '#/vinculacionespecial/hojas_de_vida_seleccion';
@@ -304,35 +294,25 @@ angular.module('contractualClienteApp')
 
     };
 
-    $scope.verListarDocentesAdicion = function () {
+    $scope.verListarDocentesAdicion = function (row) {
+      self.registrarResolucion(row);
       $window.location.href = '#/vinculacionespecial/resolucion_adicion_detalle';
     };
 
-    $scope.verListarDocentesReduccion = function () {
+    $scope.verListarDocentesReduccion = function (row) {
+      self.registrarResolucion(row);
       $window.location.href = '#/vinculacionespecial/resolucion_reduccion_detalle';
     };
 
-    $scope.verListarDocentesCancelacion = function () {
+    $scope.verListarDocentesCancelacion = function (row) {
+      self.registrarResolucion(row);
       $window.location.href = '#/vinculacionespecial/resolucion_cancelacion_detalle';
     };
     //Función para asignar controlador de la vista resolucion_vista.html, donde se pasa por parámetro el id de la resolucion seleccionada con ayuda de $mdDialog
     $scope.verVisualizarResolucion = function (row) {
 
-      var resolucion = {
-        Id: row.entity.Id,
-        Numero: row.entity.Numero,
-        NivelAcademico_nombre: row.entity.NivelAcademico,
-        IdFacultad: row.entity.Facultad,
-        Vigencia: row.entity.Vigencia,
-        Periodo: row.entity.Periodo,
-        NumeroSemanas: row.entity.NumeroSemanas,
-        Dedicacion: row.entity.Dedicacion,
-        FacultadNombre: row.entity.FacultadNombre,
-        FechaExpedicion: row.entity.FechaExpedicion
-      };
+      self.registrarResolucion(row);
 
-      var local = JSON.stringify(resolucion);
-      localStorage.setItem('resolucion', local);
       $mdDialog.show({
         controller: "ResolucionVistaCtrl",
         controllerAs: 'resolucionVista',
