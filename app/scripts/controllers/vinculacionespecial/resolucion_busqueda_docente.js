@@ -25,7 +25,6 @@ angular.module('contractualClienteApp')
       });
 
       var resultados = administrativaRequest.get("vinculacion_docente/", q).then(function (lista) {
-        var listaResoluciones = [];
         if (lista.data == null || lista.data.length === 0) {
           $scope.listaResoluciones = [];
           return;
@@ -33,11 +32,9 @@ angular.module('contractualClienteApp')
         lista.data.forEach(function (elem) {
           var idResolucion = elem.IdResolucion.Id;
           administrativaRequest.get("resolucion/" + idResolucion).then(function (res) {
-            listaResoluciones.push(res.data.NumeroResolucion);
+            $scope.listaResoluciones.push(res.data.NumeroResolucion);
           });
         });
-
-        $scope.listaResoluciones = listaResoluciones;
       });
     };
 

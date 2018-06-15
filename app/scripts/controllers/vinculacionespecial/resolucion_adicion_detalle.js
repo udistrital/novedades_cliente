@@ -6,6 +6,7 @@ angular.module('contractualClienteApp')
   var self = this;
 
   self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
+  self.resolucion_id_nueva = self.resolucion.Id;
   self.estado = false;
   self.proyectos=[];
   self.vigencia_data = self.resolucion.Vigencia;
@@ -53,7 +54,7 @@ angular.module('contractualClienteApp')
     ],
 
     onRegisterApi : function(gridApi){
-      self.gridApi = gridApi;
+      self.precontratados_adicion.gridApi = gridApi;
       gridApi.selection.on.rowSelectionChanged($scope,function(){
         self.personasSeleccionadas=gridApi.selection.getSelectedRows();
 
@@ -78,14 +79,14 @@ angular.module('contractualClienteApp')
   self.get_docentes_vinculados_adicion=function(){
 
     self.estado = true;
-    adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion="+self.resolucion_id_nueva).then(function(response){
+    var r = adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion="+self.resolucion_id_nueva).then(function(response){
       self.precontratados_adicion.data=response.data;
       self.estado = false;
 
     });
 
     self.precontratados_adicion.columnDefs[12].filter.term = self.term;
-
+    return r;
 
   };
 
@@ -173,5 +174,8 @@ angular.module('contractualClienteApp')
     });
 
   };
-
+  self.get_docentes_vinculados_adicion().then(function () {
+    //   //refresca una vez cargados los docentes precontratados
+    self.precontratados_adicion.gridApi.core.refresh();
+  });
 });

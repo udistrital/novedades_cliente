@@ -5,7 +5,7 @@ angular.module('contractualClienteApp')
         var self = {};
         self.imagen = { imagen: "" };
         //TODO: una imagen en base64 en un archivo JSON? por qué no directo
-        $http.get("scripts/models/imagen_ud.json")
+        $http.get("scripts/models/imagen.json")
             .then(function (response) {
                 self.imagen = response.data;
 
@@ -55,14 +55,6 @@ angular.module('contractualClienteApp')
                 fechaParaPDF = fechaExpedicion;
             }
             contenido.push({
-                text: "UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS",
-                style: 'titulo'
-            });
-            contenido.push({
-                text: resolucion.FacultadNombre,
-                style: 'titulo'
-            });
-            contenido.push({
                 text: $translate.instant('RESOLUCION') + " " + 'No ' + contenidoResolucion.Numero,
                 style: 'titulo'
             });
@@ -76,17 +68,17 @@ angular.module('contractualClienteApp')
             });
             contenido.push({
                 text: contenidoResolucion.Titulo,
-                style: 'titulo_res'
+                style: 'epigrafe'
             });
             contenido.push(self.getPreambuloTexto(contenidoResolucion.Preambulo));
             contenido.push({
                 text: $translate.instant('CONSIDERANDO'),
-                style: 'titulo'
+                style: 'sub_titulo'
             });
             contenido.push(self.getConsideracionTexto(contenidoResolucion.Consideracion));
             contenido.push({
                 text: $translate.instant('RESUELVE'),
-                style: 'titulo'
+                style: 'sub_titulo'
             });
             var numero = 0;
             //Se agregan artículos al documento
@@ -107,7 +99,7 @@ angular.module('contractualClienteApp')
                             if (proyectoVisible) {
                                 contenido.push({
                                     text: proyecto.Nombre,
-                                    style: 'proyecto'
+                                    style: 'texto'
                                 });
                                 //Definicion de los encabezados en base a las claves almacenadas dentro de la estructura de los datos
                                 if (resolucion.NivelAcademico_nombre === 'PREGRADO') {
@@ -126,14 +118,18 @@ angular.module('contractualClienteApp')
             }
             contenido.push({
                 text: $translate.instant('COMUNIQUESE_Y_CUM'),
-                style: 'finalizacion'
+                style: 'sub_titulo'
             });
+            contenido.push({
+                text: $translate.instant('DADO_A_LOS'), 
+                style: 'texto'
+            })
             contenido.push({
                 text: contenidoResolucion.OrdenadorGasto.NombreOrdenador,
                 style: 'nombre_ordenador'
             });
             contenido.push({
-                text: '--' + contenidoResolucion.OrdenadorGasto.Cargo + ' --',
+                text: '-- ' + contenidoResolucion.OrdenadorGasto.Cargo + ' --',
                 style: 'nombre_cargo'
             });
             contenido.push(self.getTablaRevision());
@@ -146,73 +142,98 @@ angular.module('contractualClienteApp')
                 info: {
                     title: $translate.instant('RESOLUCION')
                 },
-                pageMargins: [40, 140, 40, 40],
-                header: {
+                pageMargins: [40, 160, 40, 40],
+                header: [{
+                    alignment: 'center',
+                    height: 'auto',
+                    margin: [0, 15, 0, 0],
+                    table: {
+                        height: 'auto',
+                        widths: ['*'],
+                        body: [
+                            [
+                                {
                     height: 120,
                     width: 120,
                     image: self.imagen.imagen,
-                    margin: [100, 15, 5, 5],
                     alignment: 'center'
+                                }
+                            ],
+                            [{text: resolucion.FacultadNombre, font: 'Calibri', fontSize: 8, bold: true}] 
+                        ]
                 },
+                    layout: 'noBorders'
+                }],
                 content: self.getContenido(contenidoResolucion, resolucion, contratados, proyectos),
                 //Definición de los estilosutilizados dentro del documento
                 styles: {
                     //Encabezados de las tablas
                     encabezado: {
-                        fontSize: 9,
+                        font: 'Calibri',
+                        fontSize: 10,
                         alignment: 'center'
                     },
                     //Contenido de las tablas
                     tabla: {
-                        fontSize: 8,
+                        font: 'Calibri',
+                        fontSize: 9,
                         margin: [-20, 5, -10, 0]
                     },
                     //Texto normal
                     texto: {
-                        fontSize: 10,
+                        font: 'Calibri',
+                        fontSize: 12,
                         margin: [30, 5],
                         alignment: 'justify',
-                    },
-                    //Títulos (Preámbulo, onsideración, ...)
+                    }, 
                     titulo: {
+                        font: 'MinionPro',
                         bold: true,
                         fontSize: 12,
                         alignment: 'center'
                     },
-                    titulo_res: {
+                    epigrafe: {
+                        font: 'MinionPro',
                         bold: true,
-                        fontSize: 9,
+                        italics: true,
+                        fontSize: 12,
                         alignment: 'center'
+                    },
+                    //Considerando, resuelve...
+                    sub_titulo: {
+                        font: 'Calibri',
+                        fontSize: 12,
+                        bold: true,
+                        alignment: 'center'
+                    },
+                    //Artículo, parágrafo...
+                    texto_numeracion: {
+                        font: 'Calibri',
+                        fontSize: 12,
+                        bold: true,
+                        alignment: 'justify'
                     },
                     tabla_revision: {
                         fontSize: 6,
                         alignment: 'center'
-                    },        //Proyectos curriculares
-                    proyecto: {
-                        fontSize: 11,
-                        margin: [30, 5]
                     },
-                    //Nombre del ordenador del gasto
-                    nombre_cargo: {
-                        bold: true,
-                        fontSize: 10,
-                        margin: [30, 0, 30, 0],
-                        alignment: 'center'
-                    },
-                    //Parte final de la resolución y complementos
-                    finalizacion: {
+                    //Nombre del ordenador del gasto y cargo
+                    nombre_ordenador: {
+                        font: 'MinionPro',
                         bold: true,
                         fontSize: 12,
+                        margin: [30, 80, 30, 0],
+                        alignment: 'center'
+                    },
+                    nombre_cargo: {
+                        font: 'MinionPro',
+                        bold: false,
+                        fontSize: 12,
+                        margin: [30, 0, 30, 30],
                         alignment: 'center'
                     },
                     pie_pagina: {
                         fontSize: 8,
-                        alignment: 'center'
-                    },
-                    nombre_ordenador: {
-                        bold: true,
-                        fontSize: 10,
-                        margin: [30, 50, 30, 0],
                         alignment: 'center'
                     }
                 },
@@ -220,17 +241,18 @@ angular.module('contractualClienteApp')
                 footer: function (page, pages) {
                     return {
                         columns: [
-                            $translate.instant('RESOLUCION') + " " + 'No ' + contenidoResolucion.Numero + " " + resolucion.NivelAcademico_nombre + " " + resolucion.Dedicacion + " " + "2018-I" + "\n" + resolucion.FacultadNombre,
+                            '', // $translate.instant('RESOLUCION') + " " + 'No ' + contenidoResolucion.Numero + " " + resolucion.NivelAcademico_nombre + " " + resolucion.Dedicacion + " " + "2018-I" + "\n" + resolucion.FacultadNombre,
                             {
                                 alignment: 'right',
                                 text: [
-                                    { text: page.toString(), italics: true },
+                                    'Página ',
+                                    { text: page.toString(), bold: true },
                                     ' de ',
-                                    { text: pages.toString(), italics: true }
+                                    { text: pages.toString(), bold: true }
                                 ]
                             }
                         ],
-                        margin: [10, 0],
+                        margin: [10, 0, 20],
                         style: "pie_pagina"
                     };
                 },
@@ -258,8 +280,9 @@ angular.module('contractualClienteApp')
                     widths: [80, 150, 150, 80],
                     body: [
                         ['', { text: $translate.instant('NOMBRE_COMPLETO'), style: 'tabla_revision' }, { text: $translate.instant('CARGO_PDF'), style: 'tabla_revision' }, { text: $translate.instant('FIRMA'), style: 'tabla_revision' }],
-                        [{ text: $translate.instant('PROYECTO'), style: 'tabla_revision' }, '', '', ''],
+                        [{ text: $translate.instant('ELABORO'), style: 'tabla_revision' }, '', '', ''],
                         [{ text: $translate.instant('REVISO'), style: 'tabla_revision' }, { text: 'JORGE ADELMO HERNANDEZ PARDO', style: 'tabla_revision' }, { text: $translate.instant('OF_DOCENCIA'), style: 'tabla_revision' }, ''],
+                        [{ text: $translate.instant('APROBO'), style: 'tabla_revision' }, '', '', ''],
                     ]
                 }
             };
@@ -283,15 +306,21 @@ angular.module('contractualClienteApp')
 
         //Funcion para obtener el texto de los artiulos consu paragrafos dentro de una estructura
         self.getArticuloTexto = function (articulo, numero) {
-            var aux = [{ text: $translate.instant('ARTICULO') + " " + self.numeroALetras(numero + 1) + ' - ', bold: true }, articulo.Texto];
+            var aux = [{ text: $translate.instant('ARTICULO') + " " + (numero + 1) + 'º. ', style: 'texto_numeracion' }, articulo.Texto ];
             if (articulo.Paragrafos !== null) {
+                // Solo se enumeran si hay más de uno
+                if (articulo.Paragrafos.length === 1) {
+                    aux.push({ text: " " + $translate.instant('PARAGRAFO') + ". ", style: 'texto_numeracion' });
+                    aux.push(articulo.Paragrafos[0].Texto);
+                } else {
                 var numeroParagrafo = 1;
                 //Cada paragrafo se inserta dentro del texto del articulo
                 articulo.Paragrafos.forEach(function (paragrafo) {
-                    aux.push({ text: " " + $translate.instant('PARAGRAFO') + " " + self.numeroALetras(numeroParagrafo) + ' - ', bold: true });
+                        aux.push({ text: " " + $translate.instant('PARAGRAFO') + " " + numeroParagrafo + 'º. ', style: 'texto_numeracion' });
                     aux.push(paragrafo.Texto);
                     numeroParagrafo++;
                 });
+            }
             }
 
             return {
