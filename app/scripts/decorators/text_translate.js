@@ -408,7 +408,7 @@ var text_es = {
       CREAR_RESOLUCION:"Crear resolución de vinculación especial",
       CONSULTAR_DOCENTE: "Consultar Docente",
       CONSULTAR_DOCUMENTO_DOCENTE: "Consultar Documento Docente",
-      NO_DOCENTES: "No hay resultados",
+      NO_DOCENTES_RESOLUCION: "No hay resultados",
       CAMPO_DOCENTE_INVALIDO: "Por favor usar una identificación válida",
 
   //RESOLUCION_GENERACION
@@ -452,7 +452,7 @@ var text_es = {
       CONFIGURAR_BTN:"Configurar",
       CONFIGURAR_DOC_BTN:"Configurar documento",
       EXPEDIR_BTN:"Expedir",
-      CANCELAR_BTN:"Cancelar resolución",
+      CANCELAR_BTN_RESOLUCION:"Cancelar resolución",
       RESTAURAR_BTN:"Restaurar resolución",
       CONSULTAR_CAN_BTN: "Consultar cancelaciones",
 

@@ -2,7 +2,7 @@
 
 
 angular.module('colombiaHolidaysService', [])
-    .factory('colombiaHolidaysService', function ($http, $q, requestRequest, token_service, CONF) {
+    .factory('colombiaHolidaysService', function (){
         return {
             validarFecha: function (date) {
 
@@ -18,5 +18,5 @@ angular.module('colombiaHolidaysService', [])
                 }
                 return true;
             }
-        }
+        };
     });

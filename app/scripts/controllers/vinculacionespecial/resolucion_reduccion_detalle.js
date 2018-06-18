@@ -81,7 +81,7 @@ angular.module('contractualClienteApp')
     self.get_docentes_vinculados_adicion = function () {
 
       self.estado = true;
-      console.log(self.resolucion_id_nueva)
+      //console.log(self.resolucion_id_nueva);
       var r = adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion=" + self.resolucion_id_nueva).then(function (response) {
         self.precontratados_adicion.data = response.data;
         self.estado = false;
@@ -124,7 +124,7 @@ angular.module('contractualClienteApp')
         self.idVinc = response.data[0].VinculacionDocenteRegistrada.Id;
         self.AnularAdicionDocente(row);
       });
-    }
+    };
 
     self.AnularAdicionDocente = function (row) {
 

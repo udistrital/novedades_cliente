@@ -12,9 +12,7 @@ angular.module('contractualClienteApp')
     $scope.idDocente = "";
 
     $scope.queryDocente = function (query) {
-      console.log(query)
-      //var results = query ? self.states.filter(createFilterFor(query)) : self.states;
-      //https://tuleap.udistrital.edu.co/go_api/administrativa_api/v1/vinculacion_docente/?limit=-1&query=IdPersona:<idpersona>
+      //console.log(query)
 
       // valida la cedula de la persona
       var intId = parseInt(query);
@@ -25,14 +23,17 @@ angular.module('contractualClienteApp')
       });
 
       var resultados = administrativaRequest.get("vinculacion_docente/", q).then(function (lista) {
+        $scope.listaResoluciones = [];
         if (lista.data == null || lista.data.length === 0) {
-          $scope.listaResoluciones = [];
           return;
         }
         lista.data.forEach(function (elem) {
           var idResolucion = elem.IdResolucion.Id;
           administrativaRequest.get("resolucion/" + idResolucion).then(function (res) {
-            $scope.listaResoluciones.push(res.data.NumeroResolucion);
+            var NumeroResolucion = res.data.NumeroResolucion;
+            if (!$scope.listaResoluciones.includes(NumeroResolucion)) {
+              $scope.listaResoluciones.push(NumeroResolucion);
+            }
           });
         });
       });
