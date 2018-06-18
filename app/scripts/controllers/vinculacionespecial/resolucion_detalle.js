@@ -175,7 +175,7 @@ angular.module('contractualClienteApp')
             $window.location.reload();
           });
         }).catch(function (err) {
-          console.log(err);
+          //console.log(err);
           swal({
             title: $translate.instant('ALERTA'),
             text: $translate.instant('PROBLEMA_ALMACENAMIENTO'),
