@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('ResolucionDetalleCtrl', function (administrativaRequest, oikosRequest, coreRequest, adminMidRequest, colombiaHolidaysService, pdfMakerService, $mdDialog, $scope, $translate, $window, $localStorage, $http) {
+  .controller('ResolucionDetalleCtrl', function (administrativaRequest, oikosRequest, coreRequest, adminMidRequest, colombiaHolidaysService, pdfMakerService, $mdDialog, $scope, $translate, $window) {
 
     var self = this;
     self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
@@ -160,7 +160,7 @@ angular.module('contractualClienteApp')
           if (response.data !== "OK") {
             throw response.data;
           }
-          return administrativaRequest.put("contenido_resolucion", self.resolucion.Id, self.contenidoResolucion)
+          return administrativaRequest.put("contenido_resolucion", self.resolucion.Id, self.contenidoResolucion);
         }).then(function (response) {
           if (response.data !== "OK") {
             throw response.data;
@@ -173,7 +173,7 @@ angular.module('contractualClienteApp')
             showLoaderOnConfirm: true
           }).then(function () {
             $window.location.reload();
-          })
+          });
         }).catch(function (err) {
           //console.log(err);
           swal({
@@ -183,7 +183,7 @@ angular.module('contractualClienteApp')
             confirmButtonText: $translate.instant('ACEPTAR'),
             showLoaderOnConfirm: true
           });
-        });;
+        });
       } else {
         swal({
           text: $translate.instant('REVISE_DATOS_RESOLUCION'),
