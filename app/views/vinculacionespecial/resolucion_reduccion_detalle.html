@@ -16,9 +16,9 @@
 				</div>
 				<div class="col-md-10">
 					<select class="form-control" ng-model="resolucionReduccionDetalle.term" ng-change="resolucionReduccionDetalle.get_docentes_vinculados_adicion()">
-						<option value="">{{ 'TODOS_PROY' | translate | lowercase }}</option>
+						<option value="">{{ 'TODOS_PROY' | translate }}</option>
 						<option ng-selected="{{proyecto.Id == resolucionReduccionDetalle.defaultSelectedPrecont}}" ng-repeat="proyecto in resolucionReduccionDetalle.proyectos"
-						 value="{{proyecto.Id}}">{{proyecto.Nombre | lowercase }}</option>
+						 value="{{proyecto.Id}}">{{proyecto.Nombre }}</option>
 					</select>
 				</div>
 				<br>

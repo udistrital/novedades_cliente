@@ -69,7 +69,10 @@ angular.module('contractualClienteApp')
     administrativaRequest.get("modificacion_resolucion", "limit=-1&query=ResolucionNueva:" + self.resolucionNueva.Id).then(function (response) {
       self.resolucionVieja.Id = response.data[0].ResolucionAnterior;
       self.id_modificacion_resolucion = response.data[0].Id;
-
+      self.get_docentes_vinculados().then(function () {
+        //   //refresca una vez cargados los docentes precontratados
+        self.precontratados.gridApi.core.refresh();
+      });
     });
     //Función para visualizar docentes ya vinculados a resolución
     self.get_docentes_vinculados = function () {
@@ -173,9 +176,4 @@ angular.module('contractualClienteApp')
     self.volver = function () {
       $window.location.href = '#/vinculacionespecial/resolucion_gestion';
     }
-
-    self.get_docentes_vinculados().then(function () {
-      //   //refresca una vez cargados los docentes precontratados
-      self.precontratados.gridApi.core.refresh();
-    });
   });
