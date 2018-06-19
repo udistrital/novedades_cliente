@@ -10,7 +10,6 @@ angular.module('contractualClienteApp')
         self.proyectos = [];
         self.fecha = new Date();
         var desvinculacionesData = [];
-        var vacio = true;
 
         self.precontratados = {
             paginationPageSizes: [10, 15, 20],
@@ -22,6 +21,7 @@ angular.module('contractualClienteApp')
             enableVerticalScrollbar: true,
             useExternalPagination: false,
             enableSelectAll: false,
+            data: [],
             columnDefs: [
                 { field: 'Id', visible: false },
                 { field: 'NombreCompleto', width: '20%', displayName: $translate.instant('NOMBRE') },
@@ -60,21 +60,12 @@ angular.module('contractualClienteApp')
             adminMidRequest.get("gestion_previnculacion/docentes_previnculados/?id_resolucion=" + response.data[0].ResolucionAnterior).then(function(response) {
                 self.precontratados.data = response.data;
                 self.estado = false;
-                if(self.precontratados.data!==null){
-                    vacio = true;
-                } else {
-                    vacio = false;
+                if(self.precontratados.data===null) {
+                    self.precontratados.data = [];
                 }
-                self.sin_docentes_por_cancelar();
+                //self.sin_docentes_por_cancelar();
             });
         });
-        
-
-        //Función para visualizar docentes ya vinculados a resolución
-        self.sin_docentes_por_cancelar = function() {
-            return vacio;
-            };
-
 
         oikosRequest.get("dependencia/proyectosPorFacultad/" + self.resolucion.IdFacultad + "/" + self.resolucion.NivelAcademico_nombre, "").then(function(response) {
             self.proyectos = response.data;

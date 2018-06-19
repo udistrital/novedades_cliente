@@ -47,9 +47,9 @@
 				<br>
 				<div class="col-md-10">
 					<select class="form-control" ng-model="hojasDeVidaSeleccion.term" ng-change="hojasDeVidaSeleccion.get_docentes_vinculados()">
-						<option value="">{{ 'TODOS_PROY' | translate | lowercase }}</option>
+						<option value="">{{ 'TODOS_PROY' | translate}}</option>
 						<option ng-selected="{{proyecto.Id == HojasDeVidaSeleccion.defaultSelectedPrecont}}" ng-repeat="proyecto in hojasDeVidaSeleccion.proyectos"
-						 value="{{proyecto.Id}}">{{proyecto.Nombre | lowercase }}</option>
+						 value="{{proyecto.Id}}">{{proyecto.Nombre}}</option>
 					</select>
 				</div>
 				<br>
