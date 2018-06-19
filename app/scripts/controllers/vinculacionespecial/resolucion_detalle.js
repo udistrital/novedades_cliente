@@ -13,7 +13,10 @@ angular.module('contractualClienteApp')
     var self = this;
     self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
     //TODO: ver porque Json.Parse no transforma las fechas :/
-    if (self.resolucion.FechaExpedicion != undefined && self.resolucion.FechaExpedicion !== "0001-01-01T00:00:00Z") {
+    if (self.resolucion.FechaExpedicion === "0001-01-01T00:00:00Z") {
+      self.resolucion.FechaExpedicion = undefined;
+    }
+    if (self.resolucion.FechaExpedicion != undefined) {
       self.resolucion.FechaExpedicion = new Date(self.resolucion.FechaExpedicion);
     }
     self.proyectos = [];
@@ -154,7 +157,11 @@ angular.module('contractualClienteApp')
           localRes.FechaExpedicion = res.FechaExpedicion;
           var local = JSON.stringify(localRes);
           localStorage.setItem('resolucion', local);
-          res.FechaExpedicion = res.FechaExpedicion.toJSON();
+          if (self.resolucion.FechaExpedicion != undefined) {
+            res.FechaExpedicion = res.FechaExpedicion.toJSON();
+          } else {
+            res.FechaExpedicion = new Date('0001-01-01').toJSON();
+          }
           return administrativaRequest.put("resolucion", self.resolucion.Id, res);
         }).then(function (response) {
           if (response.data !== "OK") {
@@ -193,28 +200,23 @@ angular.module('contractualClienteApp')
     };
 
     self.resolucionValida = function (contenidoResolucion) {
+      if (!contenidoResolucion.Numero) return false
+      if (!contenidoResolucion.Titulo) return false;
+      if (!contenidoResolucion.Preambulo) return false;
+      if (!contenidoResolucion.Consideracion) return false;
+
       var resolucionValida = true;
-      if (!contenidoResolucion.Numero) {
-        resolucionValida = false;
-      }
-      if (!contenidoResolucion.Titulo) {
-        resolucionValida = false;
-      }
-      if (!contenidoResolucion.Preambulo) {
-        resolucionValida = false;
-      }
-      if (!contenidoResolucion.Consideracion) {
-        resolucionValida = false;
-      }
       if (contenidoResolucion.Articulos) {
         contenidoResolucion.Articulos.forEach(function (articulo) {
           if (!articulo.Texto) {
             resolucionValida = false;
+            return;
           }
           if (articulo.Paragrafos) {
             articulo.Paragrafos.forEach(function (paragrafo) {
               if (!paragrafo.Texto) {
                 resolucionValida = false;
+                return;
               }
             });
           }

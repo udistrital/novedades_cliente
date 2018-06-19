@@ -146,7 +146,7 @@ angular.module('contractualClienteApp')
             self.resolucion.Id = response.data[0].ResolucionAnterior;
             self.resolucion_id_nueva = response.data[0].ResolucionNueva;
             self.id_modificacion_resolucion = response.data[0].Id;
-
+            self.get_docentes_vinculados();
         });
         //Función para visualizar docentes ya vinculados a resolución
         self.get_docentes_vinculados = function() {
@@ -299,7 +299,7 @@ angular.module('contractualClienteApp')
         
                             if (response.data === "OK") {
                                 swal({
-                                    text: $translate.instant('ALERTA_ADICION_EXITOSA'),
+                                    text: $translate.instant('ALERTA_REDUCCION_EXITOSA'),
                                     type: 'success',
                                     confirmButtonText: $translate.instant('ACEPTAR')
         
@@ -310,7 +310,7 @@ angular.module('contractualClienteApp')
                             } else {
                                 swal({
                                     title: $translate.instant('ERROR'),
-                                    text: $translate.instant('ALERTA_ERROR_ADICION'),
+                                    text: $translate.instant('ALERTA_ERROR_REDUCCION'),
                                     type: 'info',
                                     confirmButtonText: $translate.instant('ACEPTAR')
                                 });
@@ -335,5 +335,4 @@ angular.module('contractualClienteApp')
                 });
             }
         };
-
     });
