@@ -241,7 +241,7 @@ angular.module('contractualClienteApp')
       }
     });
 
-    self.registrarResolucion = function(row) {
+    self.registrarResolucion = function (row) {
       var resolucion = {
         Id: row.entity.Id,
         Numero: row.entity.Numero,
@@ -256,7 +256,7 @@ angular.module('contractualClienteApp')
       };
 
       var local = JSON.stringify(resolucion);
-      localStorage.setItem('resolucion', local);  
+      localStorage.setItem('resolucion', local);
     };
 
     //Función para redireccionar la página web a la vista de edición del contenido de la resolución, donde se pasa por parámetro el id de la resolucion seleccionada
