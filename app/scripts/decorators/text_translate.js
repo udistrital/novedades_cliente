@@ -360,7 +360,6 @@ var text_es = {
     /*---Script---*/
     ALERTA_REDUCCION_EXITOSA: "Reducción realizada exitosamente",
     ALERTA_ERROR_REDUCCION: "Error al realizar reducción",
-    REDUCIR_BTN: "Reducir",
 
     //RESOLUCION_ADMINISTRACION
     NO_RESTAURACION_RESOLUCION: "No se ha realizado la restauración de la resolución",
@@ -456,8 +455,6 @@ var text_es = {
     VER_DOC_BTN: "Ver documento",
     VINCULAR_BTN: "Vincular docentes",
     VER_DOCENTES_VIN_BTN: "Ver docentes vinculados",
-    ADICIONAR_HORAS_BTN: "Adicionar horas",
-    REDUCIR_HORAS_BTN: "Reducir horas",
     CANCELAR_VIN_BTN: "Cancelar vinculación",
     APROBADA_BTN: "Aprobar",
     DESAPROBADA_BTN: "Desaprobar",

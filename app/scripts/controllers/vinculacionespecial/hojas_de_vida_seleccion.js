@@ -602,7 +602,7 @@ angular.module('contractualClienteApp')
             self.precontratados.gridApi.exporter.csvExport('all', 'all', csvExporter);
         };
         $scope.exportarPDF = function () {
-            self.precontratados.gridApi.exporter.pdfExport('all','all');
+            self.precontratados.gridApi.exporter.pdfExport('all', 'all');
 
         };
     });

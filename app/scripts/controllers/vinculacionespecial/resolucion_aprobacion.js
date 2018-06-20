@@ -148,7 +148,7 @@ angular.module('contractualClienteApp')
             onRegisterApi: function (gridApi) {
                 self.gridApi = gridApi;
                 self.gridApi = gridApiService.pagination(self.gridApi, self.cargarDatosResolucion, $scope);
-              }
+            }
         };
 
         //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
@@ -261,7 +261,7 @@ angular.module('contractualClienteApp')
                 //Se actualizan los datos de la resolución
                 administrativaRequest.put("resolucion/RestaurarResolucion", nuevaResolucion.Id, nuevaResolucion).then(function (response) {
                     if (response.data === "OK") {
-                        self.cargarDatosResolucion(self.offset,self.query);
+                        self.cargarDatosResolucion(self.offset, self.query);
                     }
                 });
             });
@@ -269,14 +269,14 @@ angular.module('contractualClienteApp')
 
 
         //Se hace el llamado de la función para cargar datos de resoluciones
-        self.cargarDatosResolucion(self.offset,self.query);
+        self.cargarDatosResolucion(self.offset, self.query);
 
 
         //Función para cambiar el estado de la resolución
         self.cambiarEstado = function (resolucion_estado, estadoNuevo) {
             administrativaRequest.post("resolucion_estado", resolucion_estado).then(function (response) {
                 if (response.statusText === "Created") {
-                    self.cargarDatosResolucion(self.offset,self.query);
+                    self.cargarDatosResolucion(self.offset, self.query);
                     swal(
                         'Felicidades',
                         $translate.instant(estadoNuevo),

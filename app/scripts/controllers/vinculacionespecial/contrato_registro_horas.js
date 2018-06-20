@@ -34,12 +34,12 @@ angular.module('contractualClienteApp')
             resolucion.Facultad = response.data.Nombre;
         });
 
-        administrativaRequest.get("modificacion_resolucion/","query=ResolucionNueva:" + self.idResolucion).then(function (response) {
-                        self.resolucionModificada = response.data[0].ResolucionAnterior;
-                        administrativaRequest.get("resolucion/" + self.resolucionModificada).then(function (response) {
-                        self.numeroResolucionModificada = response.data.NumeroResolucion;
-                    });
-                    });
+        administrativaRequest.get("modificacion_resolucion/", "query=ResolucionNueva:" + self.idResolucion).then(function (response) {
+            self.resolucionModificada = response.data[0].ResolucionAnterior;
+            administrativaRequest.get("resolucion/" + self.resolucionModificada).then(function (response) {
+                self.numeroResolucionModificada = response.data.NumeroResolucion;
+            });
+        });
 
         administrativaRequest.get("resolucion_vinculacion_docente/" + self.idResolucion).then(function (response) {
             self.datosFiltro = response.data;
