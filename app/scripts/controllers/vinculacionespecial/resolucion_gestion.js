@@ -176,12 +176,12 @@ angular.module('contractualClienteApp')
             '<i title="{{\'CONSULTAR_CAN_BTN\' | translate }}" class="fa fa-table fa-lg faa-shake animated-hover"></i></a> ' +
 
             '<a ng-if="row.entity.TipoResolucion==\'Adición\' && row.entity.Estado==\'Solicitada\' "  class="editar" ng-click="grid.appScope.verEditarDocentes(row)">' +
-            '<i title="{{\'ADICIONAR_HORAS_BTN\' | translate }}" class="fa fa-plus-circle fa-lg  faa-shake animated-hover"></i></a> ' +
+            '<i title="{{\'ADICIONAR_BTN\' | translate }}" class="fa fa-plus-circle fa-lg  faa-shake animated-hover"></i></a> ' +
             '<a ng-if="row.entity.TipoResolucion==\'Adición\' && row.entity.Estado==\'Solicitada\' " class="editar" ng-click="grid.appScope.verListarDocentesAdicion(row)">' +
             '<i title="{{\'VER_DOCENTES_VIN_BTN\' | translate }}" class="fa fa-table fa-lg  faa-shake animated-hover"></i></a> ' +
 
             '<a ng-if="row.entity.TipoResolucion==\'Reducción\' && row.entity.Estado==\'Solicitada\' "  class="editar" ng-click="grid.appScope.verEditarDocentes(row)">' +
-            '<i title="{{\'REDUCIR_HORAS_BTN\' | translate }}" class="fa fa-minus-circle fa-lg  faa-shake animated-hover"></i></a> ' +
+            '<i title="{{\'REDUCIR_BTN\' | translate }}" class="fa fa-minus-circle fa-lg  faa-shake animated-hover"></i></a> ' +
             '<a ng-if="row.entity.TipoResolucion==\'Reducción\'&& row.entity.Estado==\'Solicitada\' "  class="editar" ng-click="grid.appScope.verListarDocentesReduccion(row)">' +
             '<i title="{{\'VER_DOCENTES_VIN_BTN\' | translate }}" class="fa fa-table fa-lg  faa-shake animated-hover""></i></a> ' +
 
@@ -241,7 +241,7 @@ angular.module('contractualClienteApp')
       }
     });
 
-    self.registrarResolucion = function(row) {
+    self.registrarResolucion = function (row) {
       var resolucion = {
         Id: row.entity.Id,
         Numero: row.entity.Numero,
@@ -256,7 +256,7 @@ angular.module('contractualClienteApp')
       };
 
       var local = JSON.stringify(resolucion);
-      localStorage.setItem('resolucion', local);  
+      localStorage.setItem('resolucion', local);
     };
 
     //Función para redireccionar la página web a la vista de edición del contenido de la resolución, donde se pasa por parámetro el id de la resolucion seleccionada
