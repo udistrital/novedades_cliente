@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .controller('ResolucionCancelacionCtrl', function(administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
+    .controller('ResolucionCancelacionCtrl', function (administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
 
         var self = this;
 
         self.resolucion = JSON.parse(localStorage.getItem("resolucion"));
         self.estado = false;
+        self.carga = false;
         self.proyectos = [];
         self.fecha = new Date();
         var desvinculacionesData = [];
@@ -39,12 +40,12 @@ angular.module('contractualClienteApp')
                 { field: 'NumeroContrato', visible: false },
             ],
 
-            onRegisterApi: function(gridApi) {
+            onRegisterApi: function (gridApi) {
                 self.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope, function() {
+                gridApi.selection.on.rowSelectionChanged($scope, function () {
                     self.personasSeleccionadas = gridApi.selection.getSelectedRows();
-                    self.personasSeleccionadas.forEach(function(persona){
-                        oikosRequest.get("dependencia/" + persona.IdProyectoCurricular).then(function(response) {
+                    self.personasSeleccionadas.forEach(function (persona) {
+                        oikosRequest.get("dependencia/" + persona.IdProyectoCurricular).then(function (response) {
                             persona.Proyecto = response.data.Nombre;
                         });
                     });
@@ -55,38 +56,42 @@ angular.module('contractualClienteApp')
         self.estado = true;
         administrativaRequest.get('modificacion_resolucion', $.param({
             limit: -1,
-            query: 'ResolucionNueva:'+self.resolucion.Id            
-        })).then(function(response) {
-            adminMidRequest.get("gestion_previnculacion/docentes_previnculados/?id_resolucion=" + response.data[0].ResolucionAnterior).then(function(response) {
+            query: 'ResolucionNueva:' + self.resolucion.Id
+        })).then(function (response) {
+            adminMidRequest.get("gestion_previnculacion/docentes_previnculados/?id_resolucion=" + response.data[0].ResolucionAnterior).then(function (response) {
                 self.precontratados.data = response.data;
                 self.estado = false;
-                if(self.precontratados.data===null) {
+                self.carga = true;
+                if (self.precontratados.data === null) {
                     self.precontratados.data = [];
                 }
                 //self.sin_docentes_por_cancelar();
             });
         });
 
-        oikosRequest.get("dependencia/proyectosPorFacultad/" + self.resolucion.IdFacultad + "/" + self.resolucion.NivelAcademico_nombre, "").then(function(response) {
+        oikosRequest.get("dependencia/proyectosPorFacultad/" + self.resolucion.IdFacultad + "/" + self.resolucion.NivelAcademico_nombre, "").then(function (response) {
             self.proyectos = response.data;
             self.defaultSelectedPrecont = self.proyectos[0].Id;
         });
 
-        administrativaRequest.get("modificacion_resolucion", "limit=-1&query=ResolucionNueva:" + self.resolucion.Id).then(function(response) {
+        administrativaRequest.get("modificacion_resolucion", "limit=-1&query=ResolucionNueva:" + self.resolucion.Id).then(function (response) {
             self.resolucionModificacion = self.resolucion.Id;
             self.resolucion.Id = response.data[0].ResolucionAnterior;
             self.id_modificacion_resolucion = response.data[0].Id;
 
-        }); 
+        });
         //Función para visualizar docentes ya vinculados a resolución
-        self.get_docentes_vinculados = function() {
+        self.get_docentes_vinculados = function () {
 
             self.estado = true;
-            adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.resolucion.Id).then(function(response) {
+            adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.resolucion.Id).then(function (response) {
                 self.precontratados.data = response.data;
                 self.estado = false;
+
+            }).then(function () {
+                self.carga = true;
             });
-            if(self.personasSeleccionadas && self.personasSeleccionadas!==[]){
+            if (self.personasSeleccionadas && self.personasSeleccionadas !== []) {
                 self.personasSeleccionadas.push(self.personasSeleccionadas[0]);
             }
 
@@ -94,7 +99,7 @@ angular.module('contractualClienteApp')
 
 
 
-        self.verCancelarInscripcionDocente = function(row) {
+        self.verCancelarInscripcionDocente = function (row) {
             swal({
                 title: $translate.instant('PREGUNTA_SEGURO'),
                 text: $translate.instant('CONFIRMAR_DESVINCULACION'),
@@ -108,9 +113,9 @@ angular.module('contractualClienteApp')
                 cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false,
                 allowOutsideClick: false
-            }).then(function() {
+            }).then(function () {
                 self.desvincularDocente(row);
-            }, function(dismiss) {
+            }, function (dismiss) {
                 if (dismiss === 'cancel') {
                     swal(
                         $translate.instant('CANCELADO'),
@@ -122,9 +127,9 @@ angular.module('contractualClienteApp')
         };
 
 
-        self.desvincularDocente = function() {
+        self.desvincularDocente = function () {
 
-            self.personasSeleccionadas.forEach(function(personaSeleccionada) {
+            self.personasSeleccionadas.forEach(function (personaSeleccionada) {
                 var docente_a_desvincular = {
                     Id: personaSeleccionada.Id,
                     IdPersona: personaSeleccionada.IdPersona,
@@ -153,7 +158,7 @@ angular.module('contractualClienteApp')
             };
 
 
-            adminMidRequest.post("gestion_desvinculaciones/actualizar_vinculaciones", objeto_a_enviar).then(function(response) {
+            adminMidRequest.post("gestion_desvinculaciones/actualizar_vinculaciones", objeto_a_enviar).then(function (response) {
                 if (response.data === "OK") {
                     self.persona = null;
                     swal({
@@ -179,9 +184,9 @@ angular.module('contractualClienteApp')
 
         };
 
-        self.volver = function(){
+        self.volver = function () {
             $window.location.href = '#/vinculacionespecial/resolucion_gestion';
-          }
+        }
 
 
 
