@@ -38,11 +38,19 @@
 						</li>
 					</ul>
 				</div>
-				<div class="form-group col-lg-6 col-lg-offset-3">
-					<label></label>
-					<input type="submit" class="form-control btn btn-success" value="{{'SELEC_VIN_BTN' | translate }}" ng-click="resolucionCancelacion.verCancelarInscripcionDocente()">
+				<div ng-hide="resolucionCancelacion.precontratados.data.length == 0">
+					<div class="form-group col-lg-12">
+						<div class="row">
+							<div class="col-sm-4"><label>{{ 'SEMANAS_REVERSAR' | translate }}</label></div>
+							<div class="col-sm-1"><input type="number" style="width: 4em" ng-model="resolucionCancelacion.semanasReversar" min=1 max={{resolucionCancelacion.maximoSemanas}} required></div>
+							<div class="col-sm-7"><font size="1" color="blue">({{ 'ELIJA_SEMANAS_MINIMO' | translate }} 1 {{ 'ELIJA_SEMANAS_MAXIMO' | translate }} {{resolucionCancelacion.maximoSemanas}})</font></div>
+						</div>
+					</div>
+					<div class="form-group col-lg-6 col-lg-offset-3">
+							<label></label>
+							<input type="submit" class="form-control btn btn-success" value="{{'SELEC_VIN_BTN' | translate }}" ng-click="resolucionCancelacion.verCancelarInscripcionDocente()">
+					</div>
 				</div>
-
 			</div>
 			<div class="col-lg-6 col-lg-offset-3">
 				<input type="submit" class="form-control btn-danger" ng-click="resolucionCancelacion.volver()" value="{{'VOLVER' | translate }}">
