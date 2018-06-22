@@ -379,6 +379,8 @@ var text_es = {
     //RESOLUCION_CANCELACION_DETALLE
     /*---HTML---*/
     SELEC_VIN_BTN: "Seleccionar vinculaciones a cancelar",
+    SEMANAS_REV: "Semanas a reversar",
+    VALOR_CONTRATO_REV: "Valor a reversar",
     /*---Script---*/
     PREGUNTA_SEGURO_ANULAR_DESV: "¿Está seguro de que desea anular la desvinculación?",
     CONFIRMACION_ANULAR_DESV: "Anular desvinculación",

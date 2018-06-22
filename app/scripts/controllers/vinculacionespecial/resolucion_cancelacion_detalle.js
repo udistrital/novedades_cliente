@@ -31,9 +31,9 @@ angular.module('contractualClienteApp')
         { field: 'IdDedicacion.Id', visible: false },
         { field: 'Disponibilidad', visible: false },
         { field: 'NumeroHorasSemanales', width: '8%', displayName: $translate.instant('HORAS_SEMANALES') },
-        { field: 'NumeroSemanas', width: '7%', displayName: $translate.instant('SEMANAS') },
-        { field: 'NumeroDisponibilidad', width: '15%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
-        { field: 'ValorContrato', width: '15%', displayName: $translate.instant('VALOR_CONTRATO'), cellClass: "valorEfectivo", cellFilter: "currency" },
+        { field: 'NumeroSemanas', width: '10%', displayName: $translate.instant('SEMANAS_REV') },
+        { field: 'NumeroDisponibilidad', width: '12%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
+        { field: 'ValorContrato', width: '15%', displayName: $translate.instant('VALOR_CONTRATO_REV'), cellClass: "valorEfectivo", cellFilter: "currency" },
         {
           field: 'IdProyectoCurricular', visible: false, filter: {
             term: self.term
@@ -145,8 +145,8 @@ angular.module('contractualClienteApp')
         DocentesDesvincular: desvinculacionesData
       };
 
-
-      adminMidRequest.post("gestion_desvinculaciones/anular_desvinculacion", objeto_a_enviar).then(function (response) {
+      //Se cambia la lógica de la anulación para que sea igual a la de adiciones, debido a que se cambió la vinculación de la misma manera
+      adminMidRequest.post("gestion_desvinculaciones/anular_adicion", objeto_a_enviar).then(function (response) {
         if (response.data === "OK") {
 
 

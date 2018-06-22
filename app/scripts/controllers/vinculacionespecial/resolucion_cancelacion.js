@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .controller('ResolucionCancelacionCtrl', function (administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
+    .controller('ResolucionCancelacionCtrl', function(amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
 
         var self = this;
 
@@ -10,6 +10,8 @@ angular.module('contractualClienteApp')
         self.carga = false;
         self.proyectos = [];
         self.fecha = new Date();
+        self.maximoSemanas = 1;
+        self.fechaActual = new Date();
         var desvinculacionesData = [];
 
         self.precontratados = {
@@ -49,6 +51,18 @@ angular.module('contractualClienteApp')
                             persona.Proyecto = response.data.Nombre;
                         });
                     });
+                    if (self.personasSeleccionadas.length > 0) {
+                        amazonAdministrativaRequest.get("acta_inicio", $.param({
+                            query: 'NumeroContrato:' + self.personasSeleccionadas[0].NumeroContrato.String + ',Vigencia:' + self.personasSeleccionadas[0].Vigencia.Int64
+                        })).then(function (response) {
+                            self.acta = response.data[0];
+                            self.fechaIni = new Date(self.acta.FechaInicio);
+                            self.fechaActa = self.fechaUtc(self.fechaIni);
+                            self.calculoSemanas();
+                            self.semanasOriginales = self.personasSeleccionadas[0].NumeroSemanas;
+                            self.maximoSemanas = self.semanasOriginales - self.semanasTranscurridas;
+                        }); 
+                    }
                 });
             }
         };
@@ -128,14 +142,15 @@ angular.module('contractualClienteApp')
 
 
         self.desvincularDocente = function () {
-
+            
             self.personasSeleccionadas.forEach(function (personaSeleccionada) {
                 var docente_a_desvincular = {
                     Id: personaSeleccionada.Id,
                     IdPersona: personaSeleccionada.IdPersona,
                     NumeroHorasSemanales: personaSeleccionada.NumeroHorasSemanales,
                     NumeroSemanas: personaSeleccionada.NumeroSemanas,
-                    IdResolucion: { Id: self.resolucionModificacion },
+                    NumeroSemanasNuevas: self.semanasReversar,
+                    IdResolucion: { Id: personaSeleccionada.IdResolucion.Id },
                     IdDedicacion: { Id: personaSeleccionada.IdDedicacion.Id },
                     IdProyectoCurricular: personaSeleccionada.IdProyectoCurricular,
                     Estado: Boolean(false),
@@ -145,7 +160,9 @@ angular.module('contractualClienteApp')
                     Disponibilidad: personaSeleccionada.Disponibilidad,
                     Vigencia: personaSeleccionada.Vigencia,
                     DependenciaAcademica: personaSeleccionada.DependenciaAcademica,
-                    NumeroContrato: personaSeleccionada.NumeroContrato
+                    NumeroContrato: personaSeleccionada.NumeroContrato,
+                    Dedicacion: personaSeleccionada.IdDedicacion.NombreDedicacion.toUpperCase(),
+                    NivelAcademico:personaSeleccionada.IdResolucion.NivelAcademico,
                 };
 
                 desvinculacionesData.push(docente_a_desvincular);
@@ -154,11 +171,12 @@ angular.module('contractualClienteApp')
 
             var objeto_a_enviar = {
                 IdModificacionResolucion: self.id_modificacion_resolucion,
+                IdNuevaResolucion: self.resolucionModificacion,
                 DocentesDesvincular: desvinculacionesData
             };
 
 
-            adminMidRequest.post("gestion_desvinculaciones/actualizar_vinculaciones", objeto_a_enviar).then(function (response) {
+            adminMidRequest.post("gestion_desvinculaciones/actualizar_vinculaciones_cancelacion", objeto_a_enviar).then(function (response) {
                 if (response.data === "OK") {
                     self.persona = null;
                     swal({
@@ -182,6 +200,23 @@ angular.module('contractualClienteApp')
             });
 
 
+        };
+
+        //Función para hacer el cálculo de semanas transcurridas desde la fecha de inicio hasta la fecha actual
+        self.calculoSemanas = function () {
+            var dias = (self.fechaUtc(self.fechaActual) - self.fechaActa) / 1000 / 60 / 60 / 24;
+            var semanasDecimal = dias / 7;
+            var decimal = semanasDecimal % 1;
+            self.semanasTranscurridas = semanasDecimal - decimal;
+            if (decimal > 0) {
+                self.semanasTranscurridas = self.semanasTranscurridas + 1;
+            }
+        };
+        
+        //Función para convertir las fechas a UTC declaradas desde el cliente (Las que vengan por gets corregirlas desde los apis)
+        self.fechaUtc = function (fecha) {
+            var _fechaConUtc = new Date(fecha.getUTCFullYear(), fecha.getUTCMonth(), fecha.getUTCDate(), fecha.getUTCHours(), fecha.getUTCMinutes(), fecha.getUTCSeconds());
+            return _fechaConUtc;
         };
 
         self.volver = function () {

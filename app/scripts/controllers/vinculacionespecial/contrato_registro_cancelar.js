@@ -52,6 +52,11 @@ angular.module('contractualClienteApp')
                 self.contratados = response.data;
                 var yeison = JSON.parse(JSON.stringify(self.contratados));
                 self.cantidad = Object.keys(yeison).length;
+                amazonAdministrativaRequest.get("acta_inicio", $.param({
+                    query: 'NumeroContrato:' + self.contratados[0].NumeroContrato.String + ',Vigencia:' + self.contratados[0].Vigencia.Int64
+                })).then(function (response) {
+                    self.acta = response.data[0];
+                });
             });
             coreAmazonRequest.get("ordenador_gasto", "query=DependenciaId%3A" + self.datosFiltro.IdFacultad.toString()).then(function (response) {
                 if (response.data === null) {
@@ -81,7 +86,7 @@ angular.module('contractualClienteApp')
         self.cancelarContrato = function () {
             self.asignarValoresDefecto();
             self.fechaCancelacion = self.fechaActaInicio();
-            if (self.FechaExpedicion && self.semanasReversar && self.contratoCanceladoBase.MotivoCancelacion) {
+            if (self.FechaExpedicion && self.contratoCanceladoBase.MotivoCancelacion) {
                 swal({
                     title: $translate.instant('EXPEDIR'),
                     text: $translate.instant('SEGURO_EXPEDIR'),
@@ -100,7 +105,7 @@ angular.module('contractualClienteApp')
                     buttonsStyling: false,
                     allowOutsideClick: false
                 }).then(function () {
-                    if (self.FechaExpedicion && self.semanasReversar && self.contratoCanceladoBase.MotivoCancelacion) {
+                    if (self.FechaExpedicion && self.contratoCanceladoBase.MotivoCancelacion) {
                         self.expedirCancelar();
                     } else {
                         swal({
@@ -181,9 +186,9 @@ angular.module('contractualClienteApp')
                 { field: 'IdPersona', width: '13%', displayName: $translate.instant('DOCUMENTO_DOCENTES') },
                 { field: 'Categoria', width: '10%', displayName: $translate.instant('CATEGORIA') },
                 { field: 'NumeroHorasSemanales', width: '15%', displayName: $translate.instant('HORAS_SEMANALES') },
-                { field: 'NumeroSemanas', width: '10%', displayName: $translate.instant('SEMANAS') },
-                { field: 'NumeroDisponibilidad', width: '15%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
-                { field: 'ValorContrato', width: '15%', displayName: $translate.instant('VALOR_CONTRATO'), cellClass: "valorEfectivo", cellFilter: "currency" }
+                { field: 'NumeroSemanas', width: '15%', displayName: $translate.instant('SEMANAS_REV') },
+                { field: 'NumeroDisponibilidad', width: '10%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
+                { field: 'ValorContrato', width: '15%', displayName: $translate.instant('VALOR_CONTRATO_REV'), cellClass: "valorEfectivo", cellFilter: "currency" }
             ]
         };
 
@@ -191,18 +196,8 @@ angular.module('contractualClienteApp')
         self.get_docentes_cancelados = function () {
             self.estado = true;
             self.info_desvincular = !self.info_desvincular;
-            adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion=" + self.idResolucion).then(function (response) {
+            adminMidRequest.get("gestion_desvinculaciones/docentes_desvinculados", "id_resolucion=" + self.idResolucion).then(function (response) {
                 self.cancelados.data = response.data;
-                amazonAdministrativaRequest.get("acta_inicio", $.param({
-                    query: 'NumeroContrato:' + self.cancelados.data[0].NumeroContrato.String + ',Vigencia:' + self.cancelados.data[0].Vigencia.Int64
-                })).then(function (response) {
-                    self.acta = response.data[0];
-                    self.fechaIni = new Date(self.acta.FechaInicio);
-                    self.fechaActa = self.fechaUtc(self.fechaIni);
-                    self.calculoSemanas();
-                    self.maximoSemanas = self.maximoSemanas - self.semanasTranscurridas;
-                    self.estado = false;
-                });
             });
         };
 
@@ -227,7 +222,7 @@ angular.module('contractualClienteApp')
 
         //Se calcula la fecha de cancelación (fin) del acta inicio a partir de la fecha inicio de la misma y las semanas insertadas
         self.fechaActaInicio = function () {
-            self.semanasRev = self.resolucionActual.NumeroSemanas - self.semanasReversar;
+            self.semanasRev = self.resolucionActual.NumeroSemanas - self.cancelados.data[0].NumeroSemanas;
             diasTotales = self.semanasRev * 7;
             self.fechaFinal = new Date(self.acta.FechaInicio);
             self.fechaFinal = self.fechaUtc(self.fechaFinal);
