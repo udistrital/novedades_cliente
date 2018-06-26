@@ -90,6 +90,7 @@ var text_es = {
     LABEL_SEMANAS_A_ADICIONAR: "Semanas A Adicionar",
     LABEL_SEMANAS_A_REDUCIR: "Semanas A Reducir",
     LABEL_SEMANAS_TOTALES: "Semanas Totales",
+    LABEL_VALOR_ADICIONAR: "Valor a adicionar",
     TIPO_SERVICIO: "Tipo de Servicio",
     PERFIL: "Perfil",
     EL_TIPO_DE: "el Tipo de",
