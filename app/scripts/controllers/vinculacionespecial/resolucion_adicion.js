@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .controller('ResolucionAdicionCtrl', function (administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
+    .controller('ResolucionAdicionCtrl', function (amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
 
         var self = this;
 
@@ -178,10 +178,14 @@ angular.module('contractualClienteApp')
             financieraRequest.get('disponibilidad', "limit=-1&query=Vigencia:" + self.vigencia_data).then(function (response) {
                 self.Disponibilidades.data = response.data;
             });
-
-            $('#modal_adicion').modal('show');
-
-
+            amazonAdministrativaRequest.get("acta_inicio", $.param({
+                query: 'NumeroContrato:' + self.persona_a_modificar.NumeroContrato.String + ',Vigencia:' + self.persona_a_modificar.Vigencia.Int64
+            })).then(function (response) {
+                self.acta = response.data[0];
+                self.fechaIni = new Date(self.acta.FechaInicio);
+                self.fechaActa = self.fechaUtc(self.fechaIni);
+                $('#modal_adicion').modal('show');
+            }); 
         };
 
         self.listar_apropiaciones = function () {
@@ -265,19 +269,22 @@ angular.module('contractualClienteApp')
         };
 
         self.realizar_nueva_vinculacion = function () {
-            if (self.semanas_a_adicionar != 0 || self.horas_a_adicionar != 0) {
-
+            if (((self.semanas_a_adicionar != 0 && self.semanas_a_adicionar != undefined) || (self.horas_a_adicionar != 0 && self.horas_a_adicionar != undefined))
+                    && self.FechaInicio != undefined) {
                 if (self.saldo_disponible) {
+                    self.calculoSemanasTranscurridas();
+                    self.semanasRestantes = self.semanas_actuales - self.semanasTranscurridas;
 
                     var vinculacionDocente = {
                         Id: self.persona_a_modificar.Id,
                         FechaRegistro: self.persona_a_modificar.FechaRegistro,
                         IdPersona: self.persona_a_modificar.IdPersona,
                         NumeroHorasSemanales: parseInt(self.horas_actuales),
-                        NumeroHorasNuevas: parseInt(self.horas_totales),
+                        NumeroHorasNuevas: parseInt(self.horas_a_adicionar),
                         NumeroSemanas: parseInt(self.semanas_actuales),
-                        NumeroSemanasNuevas: parseInt(self.semanas_totales),
-                        IdResolucion: { Id: self.resolucionModificacion },
+                        NumeroSemanasNuevas: parseInt(self.semanas_a_adicionar),
+                        NumeroSemanasRestantes: parseInt(self.semanasRestantes),
+                        IdResolucion: { Id: self.persona_a_modificar.IdResolucion.Id },
                         IdDedicacion: { Id: parseInt(self.persona_a_modificar.IdDedicacion.Id) },
                         IdProyectoCurricular: parseInt(self.persona_a_modificar.IdProyectoCurricular),
                         Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
@@ -332,12 +339,25 @@ angular.module('contractualClienteApp')
                     });
                 }
 
-            } else {
-                swal({
-                    text: $translate.instant('COMPLETE_CAMPOS_DIFERENTE_0'),
-                    type: 'warning'
-                });
             }
+        };
+
+        //Función para hacer el cálculo de semanas entre la fecha de inicio original hasta la fecha de inicio de la adición
+        self.calculoSemanasTranscurridas = function () {
+            var dias = (self.FechaInicio - self.fechaActa) / 1000 / 60 / 60 / 24;
+            console.log(dias, self.FechaInicio, self.fechaActa, self.FechaInicio - self.fechaActa);
+            var semanasDecimal = dias / 7;
+            var decimal = semanasDecimal % 1;
+            self.semanasTranscurridas = semanasDecimal - decimal;
+            if (decimal > 0) {
+                self.semanasTranscurridas = self.semanasTranscurridas + 1;
+            }
+        };
+        
+        //Función para convertir las fechas a UTC declaradas desde el cliente (Las que vengan por gets corregirlas desde los apis)
+        self.fechaUtc = function (fecha) {
+            var _fechaConUtc = new Date(fecha.getUTCFullYear(), fecha.getUTCMonth(), fecha.getUTCDate(), fecha.getUTCHours(), fecha.getUTCMinutes(), fecha.getUTCSeconds());
+            return _fechaConUtc;
         };
 
     });

@@ -27,12 +27,12 @@ angular.module('contractualClienteApp')
                     encabezado.push({ text: $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado' });
                     modificacion = false;
                     break;
-                /* case "Adición":
-                    columnas.push('ValorContratoFormato', 'ValorAdicionar', 'NumeroDisponibilidad');
-                    segundaFila.push('TotalHoras', 'TotalSemanas', 'TotalContrato');
+                case "Adición":
+                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroDisponibilidad');
+                    segundaFila.push('NumeroHorasNuevas', 'NumeroMesesNuevos', 'ValorContratoFormato');
                     encabezado.push({ text: $translate.instant('LABEL_VALOR_ADICIONAR'), style: 'encabezado' }, { text: $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado' });
                     break;
-                case "Reducción":
+                /* case "Reducción":
                     columnas.push('ValorContratoFormato', 'ValorReversar', 'NumeroRP');
                     segundaFila.push('TotalHoras', 'TotalSemanas', 'TotalContrato');
                     encabezado.push({ text: $translate.instant('VALOR_CONTRATO_REV'), style: 'encabezado' }, { text: $translate.instant('NUMERO_REGISTRO_PRESUPUESTAL'), style: 'encabezado' });
@@ -214,13 +214,13 @@ angular.module('contractualClienteApp')
                     //Encabezados de las tablas
                     encabezado: {
                         font: 'Calibri',
-                        fontSize: 10,
+                        fontSize: 9,
                         alignment: 'center'
                     },
                     //Contenido de las tablas
                     tabla: {
                         font: 'Calibri',
-                        fontSize: 9,
+                        fontSize: 8.5,
                         margin: [-20, 5, -10, 0]
                     },
                     //Texto normal

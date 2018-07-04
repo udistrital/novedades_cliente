@@ -48,7 +48,7 @@ angular.module('contractualClienteApp')
                 self.contratoGeneralBase.Contrato.SedeSolicitante = response.data.Id.toString();
                 self.sede_solicitante_defecto = response.data.Nombre;
             });
-            adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.idResolucion.toString()).then(function (response) {
+            adminMidRequest.get("gestion_previnculacion/docentes_previnculados_all", "id_resolucion=" + self.idResolucion.toString()).then(function (response) {
 
                 self.contratados = response.data;
 
@@ -134,7 +134,7 @@ angular.module('contractualClienteApp')
                 self.contratoGeneralBase.Contrato.TipoContrato = { Id: 18 };
                 self.contratoGeneralBase.Contrato.ObjetoContrato = "Docente de Vinculación Especial - Medio Tiempo Ocasional (MTO) - Tiempo Completo Ocasional (TCO)";
             }
-            if (self.FechaExpedicion && self.acta.FechaInicio) {
+            if (self.FechaExpedicion) {
                 swal({
                     title: $translate.instant('EXPEDIR'),
                     text: $translate.instant('SEGURO_EXPEDIR'),
@@ -183,13 +183,14 @@ angular.module('contractualClienteApp')
                     var actaI = JSON.parse(JSON.stringify(self.acta));
                     contratoGeneral.Contratista = parseInt(contratado.IdPersona);
                     contratoGeneral.DependenciaSolicitante = contratado.IdProyectoCurricular.toString();
-                    contratoGeneral.PlazoEjecucion = parseInt(contratado.NumeroHorasSemanales);
+                    contratoGeneral.PlazoEjecucion = parseInt(contratado.NumeroHorasNuevas);
                     contratoGeneral.OrdenadorGasto = self.ordenadorGasto.Id;
                     contratoGeneral.ValorContrato = parseInt(contratado.ValorContrato);
                     var contratoVinculacion = {
                         ContratoGeneral: contratoGeneral,
                         ActaInicio: actaI,
-                        VinculacionDocente: { Id: parseInt(contratado.Id) }
+                        //TODO: Revisar cálculo correcto de la fecha
+                        VinculacionDocente: { Id: parseInt(contratado.Id), NumeroSemanasNuevas: contratado.NumeroSemanasNuevas }
                     };
                     if (self.datosFiltro.NivelAcademico.toLowerCase() === "pregrado") {
                         contratoVinculacion.VinculacionDocente.IdPuntoSalarial = self.punto_salarial.Id;
