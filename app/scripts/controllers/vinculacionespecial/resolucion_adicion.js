@@ -274,7 +274,7 @@ angular.module('contractualClienteApp')
                 if (self.saldo_disponible) {
                     self.calculoSemanasTranscurridas();
                     self.semanasRestantes = self.semanas_actuales - self.semanasTranscurridas;
-
+                    //TODO: guardar fecha de inicio
                     var vinculacionDocente = {
                         Id: self.persona_a_modificar.Id,
                         FechaRegistro: self.persona_a_modificar.FechaRegistro,
@@ -345,7 +345,6 @@ angular.module('contractualClienteApp')
         //Función para hacer el cálculo de semanas entre la fecha de inicio original hasta la fecha de inicio de la adición
         self.calculoSemanasTranscurridas = function () {
             var dias = (self.FechaInicio - self.fechaActa) / 1000 / 60 / 60 / 24;
-            console.log(dias, self.FechaInicio, self.fechaActa, self.FechaInicio - self.fechaActa);
             var semanasDecimal = dias / 7;
             var decimal = semanasDecimal % 1;
             self.semanasTranscurridas = semanasDecimal - decimal;

@@ -94,8 +94,7 @@ angular.module('contractualClienteApp')
                         '<p><b>' + $translate.instant('FACULTAD') + ': </b>' + resolucion.Facultad + '</p>' +
                         '<p><b>' + $translate.instant('NIVEL_ACADEMICO') + ': </b>' + resolucion.NivelAcademico + '</p>' +
                         '<p><b>' + $translate.instant('DEDICACION') + ': </b>' + resolucion.Dedicacion + '</p>' +
-                        '<p><b>' + $translate.instant('NUMERO_CANCELACIONES') + ': </b>' + self.cantidad + '</p>' +
-                        '<p><b>' + $translate.instant('FECHA_FIN_ACTA') + ': </b>' + self.fechaCancelacion + '</p>',
+                        '<p><b>' + $translate.instant('NUMERO_CANCELACIONES') + ': </b>' + self.cantidad + '</p>',
                     type: 'question',
                     showCancelButton: true,
                     confirmButtonText: $translate.instant('ACEPTAR'),

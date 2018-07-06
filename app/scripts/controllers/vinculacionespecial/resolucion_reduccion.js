@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .controller('ResolucionReduccionCtrl', function (administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
+    .controller('ResolucionReduccionCtrl', function (amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
 
         var self = this;
 
@@ -174,9 +174,16 @@ angular.module('contractualClienteApp')
             financieraRequest.get('disponibilidad', "limit=-1&query=Vigencia:" + self.vigencia_data).then(function (response) {
                 self.Disponibilidades.data = response.data;
             });
-
-            $('#modal_adicion').modal('show');
-
+            amazonAdministrativaRequest.get("acta_inicio", $.param({
+                query: 'NumeroContrato:' + self.persona_a_modificar.NumeroContrato.String + ',Vigencia:' + self.persona_a_modificar.Vigencia.Int64
+            })).then(function (response) {
+                self.acta = response.data[0];
+                self.fechaIni = new Date(self.acta.FechaInicio);
+                self.fechaActa = self.fechaUtc(self.fechaIni);
+                self.calculoSemanasTranscurridas(self.fecha);
+                self.maximoSemanasReducir = self.semanas_actuales - self.semanasTranscurridas;
+                $('#modal_adicion').modal('show');
+            }); 
 
         };
 
@@ -261,19 +268,22 @@ angular.module('contractualClienteApp')
         };
 
         self.realizar_nueva_vinculacion = function () {
-            if (self.semanas_a_adicionar != 0 || self.horas_a_adicionar != 0) {
-
+            if (((self.semanas_a_adicionar != 0 && self.semanas_a_adicionar != undefined) || (self.horas_a_adicionar != 0 && self.horas_a_adicionar != undefined))
+                && self.FechaInicio != undefined) {
                 if (self.saldo_disponible) {
-
+                    self.calculoSemanasTranscurridas(self.FechaInicio);
+                    self.semanasRestantes = self.semanas_totales - self.semanasTranscurridas;
+                    //TODO: guardar fecha de inicio
                     var vinculacionDocente = {
                         Id: self.persona_a_modificar.Id,
                         FechaRegistro: self.persona_a_modificar.FechaRegistro,
                         IdPersona: self.persona_a_modificar.IdPersona,
                         NumeroHorasSemanales: parseInt(self.horas_actuales),
-                        NumeroHorasNuevas: parseInt(self.horas_totales),
+                        NumeroHorasNuevas: parseInt(self.horas_a_adicionar),
                         NumeroSemanas: parseInt(self.semanas_actuales),
-                        NumeroSemanasNuevas: parseInt(self.semanas_totales),
-                        IdResolucion: { Id: parseInt(self.resolucion.Id) },
+                        NumeroSemanasNuevas: parseInt(self.semanas_a_adicionar),
+                        NumeroSemanasRestantes: parseInt(self.semanasRestantes),
+                        IdResolucion: { Id: parseInt(self.persona_a_modificar.IdResolucion.Id) },
                         IdDedicacion: { Id: parseInt(self.persona_a_modificar.IdDedicacion.Id) },
                         IdProyectoCurricular: parseInt(self.persona_a_modificar.IdProyectoCurricular),
                         Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
@@ -292,9 +302,10 @@ angular.module('contractualClienteApp')
                         IdModificacionResolucion: self.id_modificacion_resolucion,
                         IdNuevaResolucion: self.resolucion_id_nueva,
                         DisponibilidadNueva: self.disponibilidad_nueva_id,
+                        TipoDesvinculacion: "Reducción",
                         DocentesDesvincular: desvinculacionesData
                     };
-
+                    
                     adminMidRequest.post("gestion_desvinculaciones/adicionar_horas", objeto_a_enviar).then(function (response) {
 
                         if (response.data === "OK") {
@@ -328,11 +339,25 @@ angular.module('contractualClienteApp')
                     });
                 }
 
-            } else {
-                swal({
-                    text: $translate.instant('COMPLETE_CAMPOS_DIFERENTE_0'),
-                    type: 'warning'
-                });
+            } 
+        };
+
+        //Función para hacer el cálculo de semanas en dos casos:
+        //(1) Entre la fecha de inicio original y la fecha actual para determinar el máximo de semanas a reversar
+        //(2) Entre la fecha de inicio original y la fecha de inicio escogida en la reducción para el cálculo de horas a reversar
+        self.calculoSemanasTranscurridas = function (fechaCalculo) {
+            var dias = (fechaCalculo - self.fechaActa) / 1000 / 60 / 60 / 24;
+            var semanasDecimal = dias / 7;
+            var decimal = semanasDecimal % 1;
+            self.semanasTranscurridas = semanasDecimal - decimal;
+            if (decimal > 0) {
+                self.semanasTranscurridas = self.semanasTranscurridas + 1;
             }
+        };
+        
+        //Función para convertir las fechas a UTC declaradas desde el cliente (Las que vengan por gets corregirlas desde los apis)
+        self.fechaUtc = function (fecha) {
+            var _fechaConUtc = new Date(fecha.getUTCFullYear(), fecha.getUTCMonth(), fecha.getUTCDate(), fecha.getUTCHours(), fecha.getUTCMinutes(), fecha.getUTCSeconds());
+            return _fechaConUtc;
         };
     });

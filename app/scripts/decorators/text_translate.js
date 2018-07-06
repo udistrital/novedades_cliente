@@ -472,7 +472,8 @@ var text_es = {
     /*---Script---*/
     PREGUNTA_SEGURO_ANULAR_RED: "¿Está seguro de que desea anular la reducción?",
     CONFIRMAR_ANULAR_REDUCCION: "Anular reducción",
-
+    HORAS_REVERSAR: "Horas a reversar",
+    TITULO_DOC_VIN_RES_RED: "Docentes vinculados a resolución de reducción",
     //RESOLUCION_REDUCCION
     /*---HTML---*/
     TITULO_REDUCCION_HORAS: "Reducción de horas",
