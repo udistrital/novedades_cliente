@@ -36,9 +36,11 @@
 </div>
 
 <div id="modal_adicion" class="modal fade" role="dialog">
-
-
-
+	<style>
+		.md-datepicker-calendar-pane {
+			z-index: 1200;
+		}
+	</style>
 	<div class="modal-content col-md-10 col-md-offset-1" style="margin-top: 5%">
 		<div class="modal-header">
 			<button type="button" class="btn btn-outline btn-danger btn-xs pull-right" data-dismiss="modal">&times</button>
@@ -95,6 +97,12 @@
 								</div>
 							</div>
 							<div class="col-md-12">
+								<div class="form-group col-lg-6">
+									<label>{{ 'FECHA_INICIO_VALIDA' | translate }}</label>
+									<md-datepicker ng-model="resolucionAdicion.FechaInicio" md-current-view="year" md-date-filter="validarFecha" md-placeholder="{{'ELEGIR_FECHA' | translate }}"  required></md-datepicker>
+								</div>
+							</div>
+							<div class="col-md-12">
 								<br>
 								<div class="col-md-2 col-md-offset 3">
 									<label>{{'LABEL_DISP_ACTUAL' | translate}}</label>
@@ -119,9 +127,10 @@
 								</div>
 								<br>
 							</div>
+						</div>
 					</form>
-					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>

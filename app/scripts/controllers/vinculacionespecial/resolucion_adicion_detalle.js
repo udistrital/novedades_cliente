@@ -33,10 +33,10 @@ angular.module('contractualClienteApp')
         { field: 'Dedicacion', width: '15%', displayName: $translate.instant('DEDICACION') },
         { field: 'IdDedicacion.Id', visible: false },
         { field: 'Disponibilidad', visible: false },
-        { field: 'NumeroHorasSemanales', width: '8%', displayName: $translate.instant('HORAS_SEMANALES') },
-        { field: 'NumeroSemanas', width: '7%', displayName: $translate.instant('SEMANAS') },
+        { field: 'NumeroHorasSemanales', width: '10%', displayName: $translate.instant('LABEL_HORAS_A_ADICIONAR') },
+        { field: 'NumeroSemanas', width: '10%', displayName: $translate.instant('LABEL_SEMANAS_A_ADICIONAR') },
         { field: 'NumeroDisponibilidad', width: '10%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
-        { field: 'ValorContrato', width: '15%', displayName: $translate.instant('VALOR_CONTRATO'), cellClass: "valorEfectivo", cellFilter: "currency" },
+        { field: 'ValorContrato', width: '10%', displayName: $translate.instant('LABEL_VALOR_ADICIONAR'), cellClass: "valorEfectivo", cellFilter: "currency" },
         {
           field: 'IdProyectoCurricular', visible: false, filter: {
             term: self.term
@@ -84,7 +84,7 @@ angular.module('contractualClienteApp')
     self.get_docentes_vinculados_adicion = function () {
 
       self.estado = true;
-      var r = adminMidRequest.get("gestion_desvinculaciones/docentes_cancelados", "id_resolucion=" + self.resolucion_id_nueva).then(function (response) {
+      var r = adminMidRequest.get("gestion_desvinculaciones/docentes_desvinculados", "id_resolucion=" + self.resolucion_id_nueva).then(function (response) {
         self.precontratados_adicion.data = response.data;
         self.estado = false;
 
@@ -109,7 +109,7 @@ angular.module('contractualClienteApp')
         cancelButtonClass: 'btn btn-danger',
         buttonsStyling: false
       }).then(function () {
-        self.buscarNuevaVinc(row, row.entity.Id, self.id_modificacion_resolucion);
+        self.AnularAdicionDocente(row);
       }, function (dismiss) {
         if (dismiss === 'cancel') {
           swal(
@@ -121,18 +121,11 @@ angular.module('contractualClienteApp')
       });
     };
 
-    self.buscarNuevaVinc = function (row, id, modRes) {
-      administrativaRequest.get("modificacion_vinculacion/", "query=VinculacionDocenteCancelada.Id:" + id + ",ModificacionResolucion.Id:" + modRes).then(function (response) {
-        self.idVinc = response.data[0].VinculacionDocenteRegistrada.Id;
-        self.AnularAdicionDocente(row);
-      });
-    }
-
     self.AnularAdicionDocente = function (row) {
 
 
       var docente_a_anular = {
-        Id: self.idVinc,
+        Id: row.entity.Id,
         IdPersona: row.entity.IdPersona,
         NumeroHorasSemanales: row.entity.NumeroHorasSemanales,
         NumeroSemanas: row.entity.NumeroSemanas,

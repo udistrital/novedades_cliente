@@ -90,6 +90,7 @@ var text_es = {
     LABEL_SEMANAS_A_ADICIONAR: "Semanas A Adicionar",
     LABEL_SEMANAS_A_REDUCIR: "Semanas A Reducir",
     LABEL_SEMANAS_TOTALES: "Semanas Totales",
+    LABEL_VALOR_ADICIONAR: "Valor a adicionar",
     TIPO_SERVICIO: "Tipo de Servicio",
     PERFIL: "Perfil",
     EL_TIPO_DE: "el Tipo de",
@@ -471,7 +472,8 @@ var text_es = {
     /*---Script---*/
     PREGUNTA_SEGURO_ANULAR_RED: "¿Está seguro de que desea anular la reducción?",
     CONFIRMAR_ANULAR_REDUCCION: "Anular reducción",
-
+    HORAS_REVERSAR: "Horas a reversar",
+    TITULO_DOC_VIN_RES_RED: "Docentes vinculados a resolución de reducción",
     //RESOLUCION_REDUCCION
     /*---HTML---*/
     TITULO_REDUCCION_HORAS: "Reducción de horas",
