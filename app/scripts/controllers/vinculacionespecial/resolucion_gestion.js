@@ -252,7 +252,8 @@ angular.module('contractualClienteApp')
         NumeroSemanas: row.entity.NumeroSemanas,
         Dedicacion: row.entity.Dedicacion,
         FacultadNombre: row.entity.FacultadNombre,
-        FechaExpedicion: row.entity.FechaExpedicion
+        FechaExpedicion: row.entity.FechaExpedicion,
+        TipoResolucion: row.entity.TipoResolucion
       };
 
       var local = JSON.stringify(resolucion);

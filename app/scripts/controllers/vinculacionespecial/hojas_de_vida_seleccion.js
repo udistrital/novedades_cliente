@@ -108,7 +108,7 @@ angular.module('contractualClienteApp')
         },
         ];
         if (self.resolucion.NivelAcademico_nombre !== "PREGRADO") {
-            self.datosDocentesCargaLectiva.push({
+            self.datosDocentesCargaLectiva.columnDefs.push({
                 displayName: $translate.instant('OPCIONES'),
                 field: 'edit',
                 enableFiltering: false, enableSorting: false,

@@ -11,33 +11,83 @@ angular.module('contractualClienteApp')
 
             });
         //Función para obtener el contenido de las tablas por proyecto currícular de los docentes asociados a la resolución
-        self.getCuerpoTabla = function (idProyecto, nivelAcademico, datos, columnas) {
+        self.getCuerpoTabla = function (idProyecto, nivelAcademico, datos, tipoResolucion) {
             var cuerpo = [];
             var encabezado = [];
-            if (nivelAcademico === 'POSGRADO') {
-                encabezado = [{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('TIPO_DOCUMENTO'), style: 'encabezado' }, { text: $translate.instant('CEDULA'), style: 'encabezado' }, { text: $translate.instant('EXPEDICION'), style: 'encabezado' }, { text: $translate.instant('CATEGORIA'), style: 'encabezado' }, { text: $translate.instant('DEDICACION'), style: 'encabezado' }, { text: $translate.instant('HORAS_SEMESTRALES'), style: 'encabezado' }, { text: $translate.instant('VALOR_CONTRATO'), style: 'encabezado' }, { text: $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado' }];
-            }
-            if (nivelAcademico === 'PREGRADO') {
-                encabezado = [{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('TIPO_DOCUMENTO'), style: 'encabezado' }, { text: $translate.instant('CEDULA'), style: 'encabezado' }, { text: $translate.instant('EXPEDICION'), style: 'encabezado' }, { text: $translate.instant('CATEGORIA'), style: 'encabezado' }, { text: $translate.instant('DEDICACION'), style: 'encabezado' }, { text: $translate.instant('HORAS_SEMANALES'), style: 'encabezado' }, { text: $translate.instant('PERIODO_VINCULACION'), style: 'encabezado' }, { text: $translate.instant('VALOR_CONTRATO'), style: 'encabezado' }, { text: $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado' }];
-            }
+            var modificacion = true;
+            var segundaFila = [];
+            var columnas = [];
 
+            columnas = ['NombreCompleto', 'TipoDocumento', 'IdPersona', 'LugarExpedicionCedula', 'Categoria', 'Dedicacion', 'NumeroHorasSemanales', 'NumeroMeses'];
+            encabezado = [{ text: $translate.instant('NOMBRE'), style: 'encabezado' }, { text: $translate.instant('TIPO_DOCUMENTO'), style: 'encabezado' }, { text: $translate.instant('CEDULA'), style: 'encabezado' }, { text: $translate.instant('EXPEDICION'), style: 'encabezado' }, { text: $translate.instant('CATEGORIA'), style: 'encabezado' }, { text: $translate.instant('DEDICACION'), style: 'encabezado' }, { text: $translate.instant('HORAS_SEMANALES'), style: 'encabezado' }, { text: $translate.instant('PERIODO_VINCULACION'), style: 'encabezado' }, { text: $translate.instant('VALOR_CONTRATO'), style: 'encabezado' }];
+
+            switch (tipoResolucion) {
+                case "Vinculación": 
+                    columnas.push('ValorContratoFormato', 'NumeroDisponibilidad');
+                    encabezado.push({ text: $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado' });
+                    modificacion = false;
+                    break;
+                case "Adición":
+                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroDisponibilidad');
+                    segundaFila.push('NumeroHorasNuevas', 'NumeroMesesNuevos', 'ValorContratoFormato');
+                    encabezado.push({ text: $translate.instant('LABEL_VALOR_ADICIONAR'), style: 'encabezado' }, { text: $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado' });
+                    break;
+                case "Reducción":
+                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroDisponibilidad'); //NumeroRP
+                    segundaFila.push('NumeroHorasNuevas', 'NumeroMesesNuevos', 'ValorContratoFormato');
+                    encabezado.push({ text: $translate.instant('VALOR_CONTRATO_REV'), style: 'encabezado' }, { text: $translate.instant('NUMERO_REGISTRO_PRESUPUESTAL'), style: 'encabezado' });
+                    break;
+                case "Cancelación":
+                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroDisponibilidad'); //'NumeroRP'
+                    segundaFila.push('NumeroHorasSemanales', 'NumeroMesesNuevos', 'ValorContratoFormato');
+                    encabezado.push({ text: $translate.instant('VALOR_CONTRATO_REV'), style: 'encabezado' }, { text: $translate.instant('NUMERO_REGISTRO_PRESUPUESTAL'), style: 'encabezado' });
+                    break;
+                default: break;
+            }
+            
             cuerpo.push(encabezado);
             if (datos) {
                 datos.forEach(function (fila) {
                     //Se veriica que el docente este asociado al proyecto curricular actual
                     if (fila.IdProyectoCurricular === idProyecto) {
-                        var datoFila = [];
-                        columnas.forEach(function (columna) {
-                            //Cada dato es almacenado como un String dentro de la matriz de la tabla
-                            datoFila.push(fila[columna].toString());
-                        });
-                        //La fila es agregada a la tablacon los datos correspondientes
-                        cuerpo.push(datoFila);
+                        //Si la resolución es de cancelación, adición o reducción la tabla es diferente
+                        if (modificacion) {
+                            var tablaModificacion = self.tablaModificacion(columnas,fila,segundaFila);
+                            cuerpo.push(tablaModificacion[0]);
+                            cuerpo.push(tablaModificacion[1]);
+                        } else {
+                            var datoFila = [];
+                            columnas.forEach(function (columna) {
+                                //Cada dato es almacenado como un String dentro de la matriz de la tabla
+                                datoFila.push(fila[columna].toString());
+                            });
+                            //La fila es agregada a la tabla con los datos correspondientes
+                            cuerpo.push(datoFila);
+                        }
                     }
                 });
             }
             return cuerpo;
         };
+
+        self.tablaModificacion = function (columnas, fila, segundaFila) {
+            var datoFila = [];
+            var segunda = [];
+            var cantidadColumnas = columnas.length;
+
+            for (var i = 0, j = 0; i < cantidadColumnas; i++){
+                if (i < 6 || i > 8) {
+                    datoFila.push({ text: fila[columnas[i]].toString(), rowSpan:2 });
+                }
+                if (i > 5 && i < 9) {
+                    datoFila.push({ text: fila[columnas[i]].toString() });
+                    segunda[i] = 'Pasa a '+fila[segundaFila[j]].toString();
+                    j++;
+                }
+            }
+            return [datoFila, segunda];
+        }
+
         //Función que devuelve en contenido de la resolución en un arreglo de estructuras
         self.getContenido = function (contenidoResolucion, resolucion, contratados, proyectos) {
             var contenido = [];
@@ -101,13 +151,7 @@ angular.module('contractualClienteApp')
                                     text: proyecto.Nombre,
                                     style: 'texto'
                                 });
-                                //Definicion de los encabezados en base a las claves almacenadas dentro de la estructura de los datos
-                                if (resolucion.NivelAcademico_nombre === 'PREGRADO') {
-                                    contenido.push(self.getTabla(proyecto.Id, resolucion.NivelAcademico_nombre, contratados, ['NombreCompleto', 'TipoDocumento', 'IdPersona', 'LugarExpedicionCedula', 'Categoria', 'Dedicacion', 'NumeroHorasSemanales', 'NumeroMeses', 'ValorContratoFormato', 'NumeroDisponibilidad']));
-                                }
-                                if (resolucion.NivelAcademico_nombre === 'POSGRADO') {
-                                    contenido.push(self.getTabla(proyecto.Id, resolucion.NivelAcademico_nombre, contratados, ['NombreCompleto', 'TipoDocumento', 'IdPersona', 'LugarExpedicionCedula', 'Categoria', 'Dedicacion', 'NumeroHorasSemanales', 'ValorContratoFormato', 'NumeroDisponibilidad']));
-                                }
+                                contenido.push(self.getTabla(proyecto.Id, resolucion.NivelAcademico_nombre, contratados, resolucion.TipoResolucion));
                             }
 
                         });
@@ -170,13 +214,13 @@ angular.module('contractualClienteApp')
                     //Encabezados de las tablas
                     encabezado: {
                         font: 'Calibri',
-                        fontSize: 10,
+                        fontSize: 9,
                         alignment: 'center'
                     },
                     //Contenido de las tablas
                     tabla: {
                         font: 'Calibri',
-                        fontSize: 9,
+                        fontSize: 8.5,
                         margin: [-20, 5, -10, 0]
                     },
                     //Texto normal
@@ -261,12 +305,12 @@ angular.module('contractualClienteApp')
         };
 
         //Función para obtener la estructura de la tabla de contratados
-        self.getTabla = function (idProyecto, nivelAcademico, datos, columnas) {
+        self.getTabla = function (idProyecto, nivelAcademico, datos, tipoResolucion) {
             return {
                 style: 'tabla',
                 table: {
                     headerRows: 1,
-                    body: self.getCuerpoTabla(idProyecto, nivelAcademico, datos, columnas)
+                    body: self.getCuerpoTabla(idProyecto, nivelAcademico, datos, tipoResolucion)
                 }
             };
         };
