@@ -38,7 +38,7 @@ angular.module('contractualClienteApp')
                     encabezado.push({ text: $translate.instant('VALOR_CONTRATO_REV'), style: 'encabezado' }, { text: $translate.instant('NUMERO_REGISTRO_PRESUPUESTAL'), style: 'encabezado' });
                     break;
                 case "Cancelación":
-                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroDisponibilidad'); //'NumeroRP'
+                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroRp'); //'NumeroRP'
                     segundaFila.push('NumeroHorasSemanales', 'NumeroMesesNuevos', 'ValorContratoFormato');
                     encabezado.push({ text: $translate.instant('VALOR_CONTRATO_REV'), style: 'encabezado' }, { text: $translate.instant('NUMERO_REGISTRO_PRESUPUESTAL'), style: 'encabezado' });
                     break;
