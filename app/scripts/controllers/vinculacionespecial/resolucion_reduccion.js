@@ -273,7 +273,6 @@ angular.module('contractualClienteApp')
                 if (self.saldo_disponible) {
                     self.calculoSemanasTranscurridas(self.FechaInicio);
                     self.semanasRestantes = self.semanas_totales - self.semanasTranscurridas;
-                    //TODO: guardar fecha de inicio
                     var vinculacionDocente = {
                         Id: self.persona_a_modificar.Id,
                         FechaRegistro: self.persona_a_modificar.FechaRegistro,
@@ -293,7 +292,7 @@ angular.module('contractualClienteApp')
                         Disponibilidad: parseInt(self.disponibilidad_actual_id),
                         Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
                         NumeroContrato: self.persona_a_modificar.NumeroContrato,
-
+                        FechaInicio: self.FechaInicio,
                     };
 
                     desvinculacionesData.push(vinculacionDocente);
