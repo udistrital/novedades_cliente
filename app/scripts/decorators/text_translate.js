@@ -358,6 +358,7 @@ var text_es = {
     /*---HTML---*/
     TITULO_REDUCCION_HORAS: "Reducción de horas",
     LABEL_HORAS_A_REDUCIR: "Horas a reducir",
+    SELECCIONAR_RP: "Seleccionar registro presupuestal",
     /*---Script---*/
     ALERTA_REDUCCION_EXITOSA: "Reducción realizada exitosamente",
     ALERTA_ERROR_REDUCCION: "Error al realizar reducción",
