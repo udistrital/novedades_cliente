@@ -134,6 +134,8 @@ var text_es = {
     //necesidades
     GESTION_NECESIDADES: "Gestión de Necesidades",
     NUMERO_ELABORACION: "No. de Elaboración",
+    LISTA_NECESIDADES:"Lista de Necesidades",
+
     //visualizar_necesidad
     DE: "de",
     MONTO: "Monto",
