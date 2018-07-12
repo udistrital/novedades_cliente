@@ -181,6 +181,7 @@ angular.module('contractualClienteApp')
                 self.contratados.forEach(function (contratado) {
                     var contratoGeneral = JSON.parse(JSON.stringify(self.contratoGeneralBase.Contrato));
                     var actaI = JSON.parse(JSON.stringify(self.acta));
+                    actaI.FechaInicio = contratado.FechaInicio;
                     contratoGeneral.Contratista = parseInt(contratado.IdPersona);
                     contratoGeneral.DependenciaSolicitante = contratado.IdProyectoCurricular.toString();
                     contratoGeneral.PlazoEjecucion = parseInt(contratado.NumeroHorasNuevas);
@@ -190,7 +191,11 @@ angular.module('contractualClienteApp')
                         ContratoGeneral: contratoGeneral,
                         ActaInicio: actaI,
                         //TODO: Revisar cálculo correcto de la fecha
-                        VinculacionDocente: { Id: parseInt(contratado.Id), NumeroSemanasNuevas: contratado.NumeroSemanasNuevas }
+                        VinculacionDocente: { 
+                            Id: parseInt(contratado.Id),
+                            NumeroSemanasNuevas: contratado.NumeroSemanasNuevas,
+                            NumeroHorasNuevas: contratado.NumeroHorasNuevas
+                        }
                     };
                     if (self.datosFiltro.NivelAcademico.toLowerCase() === "pregrado") {
                         contratoVinculacion.VinculacionDocente.IdPuntoSalarial = self.punto_salarial.Id;
@@ -207,7 +212,7 @@ angular.module('contractualClienteApp')
                 adminMidRequest.post("expedir_resolucion/validar_datos_expedicion", expedicionResolucion).then(function (response) {
                     if (response.status === 201) {
 
-                        adminMidRequest.post("expedir_resolucion/expedir", expedicionResolucion).then(function (response) {
+                        adminMidRequest.post("expedir_resolucion/expedirModificacion", expedicionResolucion).then(function (response) {
                             self.estado = false;
                             if (response.status === 233) {
                                 swal({

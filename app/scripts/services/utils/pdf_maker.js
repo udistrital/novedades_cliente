@@ -33,12 +33,12 @@ angular.module('contractualClienteApp')
                     encabezado.push({ text: $translate.instant('LABEL_VALOR_ADICIONAR'), style: 'encabezado' }, { text: $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado' });
                     break;
                 case "Reducción":
-                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroDisponibilidad'); //NumeroRP
+                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroRp');
                     segundaFila.push('NumeroHorasNuevas', 'NumeroMesesNuevos', 'ValorContratoFormato');
                     encabezado.push({ text: $translate.instant('VALOR_CONTRATO_REV'), style: 'encabezado' }, { text: $translate.instant('NUMERO_REGISTRO_PRESUPUESTAL'), style: 'encabezado' });
                     break;
                 case "Cancelación":
-                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroDisponibilidad'); //'NumeroRP'
+                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroRp');
                     segundaFila.push('NumeroHorasSemanales', 'NumeroMesesNuevos', 'ValorContratoFormato');
                     encabezado.push({ text: $translate.instant('VALOR_CONTRATO_REV'), style: 'encabezado' }, { text: $translate.instant('NUMERO_REGISTRO_PRESUPUESTAL'), style: 'encabezado' });
                     break;

@@ -12,6 +12,7 @@ angular.module('contractualClienteApp')
         self.fecha = new Date();
         self.maximoSemanas = 1;
         self.fechaActual = new Date();
+
         var desvinculacionesData = [];
 
         self.precontratados = {
@@ -46,10 +47,12 @@ angular.module('contractualClienteApp')
                 self.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function () {
                     self.personasSeleccionadas = gridApi.selection.getSelectedRows();
-                    self.personasSeleccionadas.forEach(function (persona) {
+                    self.rps = [];
+                    self.personasSeleccionadas.forEach(function (persona, indice) {
                         oikosRequest.get("dependencia/" + persona.IdProyectoCurricular).then(function (response) {
                             persona.Proyecto = response.data.Nombre;
                         });
+                       self.getRPs(persona.NumeroContrato.String,persona.Vigencia.Int64, persona.IdPersona, indice);
                     });
                     if (self.personasSeleccionadas.length > 0) {
                         amazonAdministrativaRequest.get("acta_inicio", $.param({
@@ -144,6 +147,9 @@ angular.module('contractualClienteApp')
         self.desvincularDocente = function () {
             
             self.personasSeleccionadas.forEach(function (personaSeleccionada) {
+                personaSeleccionada.InformacionRp = JSON.parse( personaSeleccionada.InformacionRp);
+                personaSeleccionada.InformacionRp.rp =parseInt(personaSeleccionada.InformacionRp.rp,10);
+                personaSeleccionada.InformacionRp.vigencia =parseInt(personaSeleccionada.InformacionRp.vigencia,10);
                 var docente_a_desvincular = {
                     Id: personaSeleccionada.Id,
                     IdPersona: personaSeleccionada.IdPersona,
@@ -163,12 +169,13 @@ angular.module('contractualClienteApp')
                     NumeroContrato: personaSeleccionada.NumeroContrato,
                     Dedicacion: personaSeleccionada.IdDedicacion.NombreDedicacion.toUpperCase(),
                     NivelAcademico:personaSeleccionada.IdResolucion.NivelAcademico,
+                    NumeroRp:personaSeleccionada.InformacionRp.rp,
+                    VigenciaRp:personaSeleccionada.InformacionRp.vigencia,
                 };
-
                 desvinculacionesData.push(docente_a_desvincular);
+                
 
             });
-
             var objeto_a_enviar = {
                 IdModificacionResolucion: self.id_modificacion_resolucion,
                 IdNuevaResolucion: self.resolucionModificacion,
@@ -223,6 +230,14 @@ angular.module('contractualClienteApp')
             $window.location.href = '#/vinculacionespecial/resolucion_gestion';
         }
 
+        self.getRPs = function(vinculacion,vigencia,identificacion, indice){
+
+            adminMidRequest.get("gestion_previnculacion/rp_docente/"+vinculacion+"/"+vigencia+"/"+identificacion, "").then(function (response) {
+            self.rps[indice] = response.data.cdp_rp_docente.cdp_rp;
+            
+            });
+
+        }
 
 
     });
