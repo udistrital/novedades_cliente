@@ -165,15 +165,17 @@ angular.module('contractualClienteApp')
 
 
         $scope.mostrar_modal_adicion = function (row) {
+            console.log(row.entity);
             self.horas_actuales = row.entity.NumeroHorasSemanales;
             self.semanas_actuales = row.entity.NumeroSemanas;
             self.disponibilidad_actual = row.entity.NumeroDisponibilidad;
             self.persona_a_modificar = row.entity;
             self.disponibilidad_actual_id = row.entity.Disponibilidad;
             self.disponibilidad_nueva_id = row.entity.Disponibilidad;
-            financieraRequest.get('disponibilidad', "limit=-1&query=Vigencia:" + self.vigencia_data).then(function (response) {
+            /* financieraRequest.get('disponibilidad', "limit=-1&query=Vigencia:" + self.vigencia_data).then(function (response) {
                 self.Disponibilidades.data = response.data;
-            });
+            }); */
+            self.getRPs(self.persona_a_modificar.NumeroContrato.String, self.persona_a_modificar.Vigencia.Int64, self.persona_a_modificar.IdPersona);
             amazonAdministrativaRequest.get("acta_inicio", $.param({
                 query: 'NumeroContrato:' + self.persona_a_modificar.NumeroContrato.String + ',Vigencia:' + self.persona_a_modificar.Vigencia.Int64
             })).then(function (response) {
@@ -269,11 +271,13 @@ angular.module('contractualClienteApp')
 
         self.realizar_nueva_vinculacion = function () {
             if (((self.semanas_a_adicionar != 0 && self.semanas_a_adicionar != undefined) || (self.horas_a_adicionar != 0 && self.horas_a_adicionar != undefined))
-                && self.FechaInicio != undefined) {
+                && self.FechaInicio != undefined && self.persona_a_modificar.InformacionRp != undefined) {
                 if (self.saldo_disponible) {
                     self.calculoSemanasTranscurridas(self.FechaInicio);
                     self.semanasRestantes = self.semanas_totales - self.semanasTranscurridas;
-                    //TODO: guardar fecha de inicio
+                    self.persona_a_modificar.InformacionRp = JSON.parse( self.persona_a_modificar.InformacionRp);
+                    self.persona_a_modificar.InformacionRp.rp = parseInt(self.persona_a_modificar.InformacionRp.rp,10);
+                    self.persona_a_modificar.InformacionRp.vigencia = parseInt(self.persona_a_modificar.InformacionRp.vigencia,10);
                     var vinculacionDocente = {
                         Id: self.persona_a_modificar.Id,
                         FechaRegistro: self.persona_a_modificar.FechaRegistro,
@@ -293,7 +297,9 @@ angular.module('contractualClienteApp')
                         Disponibilidad: parseInt(self.disponibilidad_actual_id),
                         Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
                         NumeroContrato: self.persona_a_modificar.NumeroContrato,
-
+                        FechaInicio: self.FechaInicio,
+                        NumeroRp:self.persona_a_modificar.InformacionRp.rp,
+                        VigenciaRp:self.persona_a_modificar.InformacionRp.vigencia,
                     };
 
                     desvinculacionesData.push(vinculacionDocente);
@@ -360,4 +366,10 @@ angular.module('contractualClienteApp')
             var _fechaConUtc = new Date(fecha.getUTCFullYear(), fecha.getUTCMonth(), fecha.getUTCDate(), fecha.getUTCHours(), fecha.getUTCMinutes(), fecha.getUTCSeconds());
             return _fechaConUtc;
         };
+
+        self.getRPs = function(vinculacion,vigencia,identificacion){
+            adminMidRequest.get("gestion_previnculacion/rp_docente/"+vinculacion+"/"+vigencia+"/"+identificacion, "").then(function (response) {
+            self.rps = response.data.cdp_rp_docente.cdp_rp;
+            });
+        }
     });

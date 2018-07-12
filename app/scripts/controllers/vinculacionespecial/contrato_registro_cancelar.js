@@ -85,7 +85,6 @@ angular.module('contractualClienteApp')
 
         self.cancelarContrato = function () {
             self.asignarValoresDefecto();
-            self.fechaCancelacion = self.fechaActaInicio();
             if (self.FechaExpedicion && self.contratoCanceladoBase.MotivoCancelacion) {
                 swal({
                     title: $translate.instant('EXPEDIR'),
@@ -135,12 +134,13 @@ angular.module('contractualClienteApp')
             if (self.contratados) {
                 self.contratados.forEach(function (contratado) {
                     var contratoCancelado = JSON.parse(JSON.stringify(self.contratoCanceladoBase));
-                    contratoCancelado.FechaCancelacion = self.fechaUtc(self.fechaCancelacion);
                     contratoCancelado.NumeroContrato = contratado.NumeroContrato.String;
                     contratoCancelado.Vigencia = contratado.Vigencia.Int64;
                     var CancelacionContrato = {
                         ContratoCancelado: contratoCancelado,
-                        VinculacionDocente: { Id: parseInt(contratado.Id) }
+                        VinculacionDocente: { 
+                            Id: parseInt(contratado.Id),
+                            NumeroSemanasNuevas: contratado.NumeroSemanasNuevas }
                     };
                     conjuntoContratos.push(CancelacionContrato);
                 });
@@ -202,31 +202,5 @@ angular.module('contractualClienteApp')
 
         self.get_docentes_cancelados();
 
-        //Función para convertir las fechas a UTC declaradas desde el cliente (Las que vengan por gets corregirlas desde los apis)
-        self.fechaUtc = function (fecha) {
-            var _fechaConUtc = new Date(fecha.getUTCFullYear(), fecha.getUTCMonth(), fecha.getUTCDate(), fecha.getUTCHours(), fecha.getUTCMinutes(), fecha.getUTCSeconds());
-            return _fechaConUtc;
-        };
-
-        //Función para hacer el cálculo de semanas para la vinculación docente
-        self.calculoSemanas = function () {
-            dias = (self.fechaUtc(self.fecha_actual) - self.fechaActa) / 1000 / 60 / 60 / 24;
-            semanasDecimal = dias / 7;
-            decimal = semanasDecimal % 1;
-            self.semanasTranscurridas = semanasDecimal - decimal;
-            if (decimal > 0) {
-                self.semanasTranscurridas = self.semanasTranscurridas + 1;
-            }
-        };
-
-        //Se calcula la fecha de cancelación (fin) del acta inicio a partir de la fecha inicio de la misma y las semanas insertadas
-        self.fechaActaInicio = function () {
-            self.semanasRev = self.resolucionActual.NumeroSemanas - self.cancelados.data[0].NumeroSemanas;
-            diasTotales = self.semanasRev * 7;
-            self.fechaFinal = new Date(self.acta.FechaInicio);
-            self.fechaFinal = self.fechaUtc(self.fechaFinal);
-            self.fechaFinal.setDate(self.fechaFinal.getDate() + diasTotales);
-            return self.fechaFinal;
-        };
         $scope.validarFecha = colombiaHolidaysService.validateDate;
     });

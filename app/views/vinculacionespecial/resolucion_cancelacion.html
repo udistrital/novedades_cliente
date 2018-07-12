@@ -34,7 +34,10 @@
 						<li class="list-group-item" ng-repeat="personas in resolucionCancelacion.personasSeleccionadas">
 							<label>
 								<span class="text-info">{{$index+1}}. </span>{{personas.IdPersona}} - {{personas.NombreCompleto}} - {{personas.Proyecto}} - {{personas.NumeroHorasSemanales}}
-								Horas Semanales</label>
+								Horas Semanales - </label>
+							 <select  ng-model="personas.InformacionRp" >
+								<option ng-repeat="rp in resolucionCancelacion.rps[$index]" value="{{rp}}">RP:{{rp.rp}}-Vigencia:{{rp.vigencia}}</option>
+							</select> 
 						</li>
 					</ul>
 				</div>
