@@ -19,6 +19,7 @@ angular.module('contractualClienteApp')
         self.esconderBoton = false;
         self.idResolucion = idResolucion;
         self.FechaExpedicion = null;
+        self.resolucionTest = JSON.parse(localStorage.getItem("resolucion"));
 
         administrativaRequest.get('resolucion/' + self.idResolucion).then(function (response) {
             self.resolucionActual = response.data;
@@ -190,11 +191,12 @@ angular.module('contractualClienteApp')
                     var contratoVinculacion = {
                         ContratoGeneral: contratoGeneral,
                         ActaInicio: actaI,
-                        //TODO: Revisar cálculo correcto de la fecha
                         VinculacionDocente: { 
                             Id: parseInt(contratado.Id),
                             NumeroSemanasNuevas: contratado.NumeroSemanasNuevas,
-                            NumeroHorasNuevas: contratado.NumeroHorasNuevas
+                            NumeroHorasNuevas: contratado.NumeroHorasNuevas,
+                            NivelAcademico: self.resolucionTest.NivelAcademico_nombre,
+                            Dedicacion: self.resolucionTest.Dedicacion
                         }
                     };
                     if (self.datosFiltro.NivelAcademico.toLowerCase() === "pregrado") {

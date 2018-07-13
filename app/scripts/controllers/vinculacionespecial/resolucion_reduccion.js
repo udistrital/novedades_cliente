@@ -155,7 +155,6 @@ angular.module('contractualClienteApp')
             adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.resolucion.Id).then(function (response) {
                 self.precontratados.data = response.data;
                 self.estado = false;
-
             });
 
             self.precontratados.columnDefs[12].filter.term = self.term;
@@ -165,16 +164,12 @@ angular.module('contractualClienteApp')
 
 
         $scope.mostrar_modal_adicion = function (row) {
-            console.log(row.entity);
             self.horas_actuales = row.entity.NumeroHorasSemanales;
             self.semanas_actuales = row.entity.NumeroSemanas;
             self.disponibilidad_actual = row.entity.NumeroDisponibilidad;
             self.persona_a_modificar = row.entity;
             self.disponibilidad_actual_id = row.entity.Disponibilidad;
             self.disponibilidad_nueva_id = row.entity.Disponibilidad;
-            /* financieraRequest.get('disponibilidad', "limit=-1&query=Vigencia:" + self.vigencia_data).then(function (response) {
-                self.Disponibilidades.data = response.data;
-            }); */
             self.getRPs(self.persona_a_modificar.NumeroContrato.String, self.persona_a_modificar.Vigencia.Int64, self.persona_a_modificar.IdPersona);
             amazonAdministrativaRequest.get("acta_inicio", $.param({
                 query: 'NumeroContrato:' + self.persona_a_modificar.NumeroContrato.String + ',Vigencia:' + self.persona_a_modificar.Vigencia.Int64
