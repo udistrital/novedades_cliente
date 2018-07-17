@@ -31,14 +31,15 @@ angular
         'ui.grid.pagination',
         'ui.grid.exporter',
         'ui.grid.autoResize',
+        'ui.grid.exporter',
+        'ui.grid.expandable',
+        'ui.grid.pinning',
         'ngStorage',
         'ngWebSocket',
         'angularMoment',
         'ui.utils.masks',
         'pascalprecht.translate',
         'nvd3',
-        'ui.grid.expandable',
-        'ui.grid.pinning',
         'ui.knob',
         'file-model',
         'angularBootstrapFileinput',
@@ -59,7 +60,9 @@ angular
         'contratoService',
         'gridOptionsService',
         'configuracionService',
-        'requestService'
+        'requestService',
+        'gridApiService',
+        'colombiaHolidaysService'
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');
