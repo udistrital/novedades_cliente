@@ -32,7 +32,7 @@ angular.module('contractualClienteApp')
         });;
 
         oikosRequest.get('dependencia/' + resolucion.Facultad).then(function (response) {
-            resolucion.Facultad = response.data.Nombre;
+            resolucion.FacultadNombre = response.data.Nombre;
         });
 
         administrativaRequest.get("modificacion_resolucion/", "query=ResolucionNueva:" + self.idResolucion).then(function (response) {
@@ -140,7 +140,7 @@ angular.module('contractualClienteApp')
                     title: $translate.instant('EXPEDIR'),
                     text: $translate.instant('SEGURO_EXPEDIR'),
                     html: '<p><b>' + $translate.instant('NUMERO') + ': </b>' + resolucion.Numero.toString() + '</p>' +
-                        '<p><b>' + $translate.instant('FACULTAD') + ': </b>' + resolucion.Facultad + '</p>' +
+                        '<p><b>' + $translate.instant('FACULTAD') + ': </b>' + resolucion.FacultadNombre + '</p>' +
                         '<p><b>' + $translate.instant('NIVEL_ACADEMICO') + ': </b>' + resolucion.NivelAcademico + '</p>' +
                         '<p><b>' + $translate.instant('DEDICACION') + ': </b>' + resolucion.Dedicacion + '</p>',
                     type: 'warning',
