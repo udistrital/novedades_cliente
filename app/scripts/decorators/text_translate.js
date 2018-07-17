@@ -9,7 +9,7 @@
 */
 var text_es = {
     NO_HAY_DATOS_REDIRIGIR_RP: "No hay datos de registro presupuestal para este contratista",
-    NO_HAY_DATOS_REDIRIGIR_ORDEN: "No hay datos de ordenes de pago para este contratista",
+    NO_HAY_DATOS_REDIRIGIR_ORDEN: "No hay datos de órdenes de pago para este contratista",
     SELECCIONAR_FILTRO: "Seleccione el tipo de filtro por el cual quiere generar la solicitud del RP",
     BUSCAR: "Buscar",
     NO_HAY_DATOS_REDIRIGIR_CDP: "No hay datos de CDP para este contrato",
@@ -72,7 +72,7 @@ var text_es = {
     ROL: "Rol",
     ORDENADOR_GASTO: "Ordenador del Gasto",
     GENERAL: "General",
-    PLAN_ANUAL_ADQUISICIONES: "Plan Anual de Adquisiones",
+    PLAN_ANUAL_ADQUISICIONES: "Plan Anual de Adquisiciones",
     ESTUDIO_MERCADO: "Estudio de Mercado",
     ANALISIS_RIESGOS: "Análisis de Riesgos",
     SUPERVISOR: "Supervisor",
@@ -204,7 +204,7 @@ var text_es = {
     ORDEN_PAGO: "Orden pago",
     FECHA_ORDEN: "Fecha orden",
     VALOR_BRUTO: "Valor bruto",
-    LINEA_ORDEN_PAGO: "Linea del tiempo de ordenes de pago",
+    LINEA_ORDEN_PAGO: "Línea del tiempo de órdenes de pago",
     ESTADISTICAS_GENERALES: "Estadísticas generales",
     VALOR_TOTAL_CONTRATO: "Valor total contrato",
     VALOR_MENSUAL: "Valor mensual",
@@ -324,7 +324,7 @@ var text_es = {
     ALERTA_ERROR_CATEGORIA: "Debe seleccionar docentes con categoria asignada",
     LABEL_TOTAL_CONTRATACION: "Valor total de contratos para docentes seleccionados",
     ALERTA_SELEC_DOC: "Seleccione docentes",
-    CAMBIOS_NO_GUARDADOS: "Los Cambios no guardados se perderan",
+    CAMBIOS_NO_GUARDADOS: "Los Cambios no guardados se perderán",
     //RESOLUCION_ADICION_DETALLE
     /*---HTML---*/
     TITULO_DOC_VIN_RES_AD: "Docentes vinculados a resolución de adición",
@@ -415,7 +415,7 @@ var text_es = {
     ESCRIBA_TEXTO: "Escriba el texto del artículo",
     DEBE_INSERTAR: "Debe insertar texto.",
     ALMENOS_UNO: "La resolución debe tener al menos un artículo",
-    ESCRIBA_PARAGRAFO: "Escriba el texto del paragrafo",
+    ESCRIBA_PARAGRAFO: "Escriba el texto del parágrafo",
     GUARDADO: "Guardado",
     GUARDADO_EXITO: "Los cambios se han guardado exitosamente",
     PROBLEMA_ALMACENAMIENTO: "Ha habido un problema en el almacenamiento de los cambios",
@@ -502,8 +502,8 @@ var text_es = {
     // Minutas Plantillas
     BTN_MINUTAS: {
         GENERAR_MINUTA: "Generar Plantilla",
-        AGREGAR_CLAUSULA: "Agregar Clausula",
-        ELIMINAR_CLAUSULA: "Eliminar Clausula",
+        AGREGAR_CLAUSULA: "Agregar Cláusula",
+        ELIMINAR_CLAUSULA: "Eliminar Cláusula",
         ACEPTAR: "Aceptar",
         AGREGAR_PARAGRAFO: "Agregar Parágrafo",
         ELIMINAR_PARAGRAFO: "Eliminar Parágrafo",
@@ -530,7 +530,7 @@ var text_es = {
     GESTION_PLANTILLA: "Gestión",
     FILTRAR_POR: "Filtrar Por",
     ENCABEZADO_MINUTA: "Encabezado",
-    PIE_MINURA: "Píe de página",
+    PIE_MINURA: "Pie de página",
     PARAMETROS_PDF: "Parámetros del Pdf",
     MARGENES: "Márgenes",
     SUPERIOR: "Superior",
@@ -547,13 +547,13 @@ var text_es = {
     PROYECTO_INVESTIGACION: "Proyecto de Investigación",
     DOCENTES_DESVINCULAR: "Docentes a desvincular",
     CONVENIO: "Convenio",
-    FECHA_CANCELACION: "Fecha de Cancelacion",
+    FECHA_CANCELACION: "Fecha de Cancelación",
     INFORMACION_VINCULACION: "Información de la Vinculación",
     CANCELACION_VINCULACION: "Datos de la cancelación de la(s) vinculacion(es)",
     NUMERO_CANCELACIONES: "Número de vinculaciones canceladas",
     DATOS_CANCELADOS: "Las vinculaciones asociadas a esta resolución de cancelación han sido removidas",
     DATOS_EXPEDICION: "Datos de Expedición",
-    FECHA_INVALIDA: "Por favor escoja otra fecha. La fecha escojida es un Sábado, Domingo o un día festivo",
+    FECHA_INVALIDA: "Por favor escoja otra fecha. La fecha escogida es un Sábado, Domingo o un día festivo",
     FECHA_EXPEDICION: "Fecha de Expedición",
     ELEGIR_FECHA: "Elija fecha",
     FECHA_EXPEDICION_VALIDA: "Fecha de Expedición válida",
@@ -566,7 +566,7 @@ var text_es = {
 
     //MODULO CUMPLIDO
     TITULO_REG_CUMPLIDO: "CUMPLIDO",
-    NUM_DOC_IDENTIDAD: "NUMERO DOCUMENTO DE IDENTIDAD",
+    NUM_DOC_IDENTIDAD: "NÚMERO DOCUMENTO DE IDENTIDAD",
     NAME_CONTRATISTA: "NOMBRE",
     CIUDAD_DOC: "CIUDAD",
     FECH_SUSC_CONT: "FECHA SUSCRIPCIÓN CONTRATO",
@@ -581,14 +581,14 @@ var text_es = {
     ACCION_CONSULTAR_NUM_DOC: "CONSULTAR INFORMACIÓN",
     GEN_CUMPLIDO: "GENERAR CUMPLIDO",
     PLACE_NUM_DOC: "Ingrese su número de documento de identidad",
-    PLACE_MES: "-- Elija el mes al cúal corresponde el cumplido --",
-    PLACE_DIAS_LAB: "POR FAVOR INGRESE EL RANGO DE DIAS LABORADOS",
+    PLACE_MES: "-- Elija el mes al cual corresponde el cumplido --",
+    PLACE_DIAS_LAB: "POR FAVOR INGRESE EL RANGO DE DÍAS LABORADOS",
     DIA_INI: "DÍA INICIO",
     DIA_FIN: "DÍA FIN",
     VISTA_CUMPLIDO: "VISUALIZACIÓN CUMPLIDO",
     VISTA_CUMPLIDO_ACTUALIZADO: "ACTUALIZAR VISUALIZACIÓN",
-    MEN_PARRA_EX: "Sí desea incluir un parrafo extra para agregar la fuente de financiamiento, de click en la siguiente casilla",
-    PARRAFO_EXTRA: "Parrafo extra",
+    MEN_PARRA_EX: "Si desea incluir un párrafo extra para agregar la fuente de financiamiento, dé click en la siguiente casilla",
+    PARRAFO_EXTRA: "Párrafo extra",
 
     //MODULO INFORME DE GESTIÓN
     TITULO_REG_INFORME: "INFORME DE GESTIÓN",
@@ -632,7 +632,7 @@ var text_es = {
     PARRAFO_SOLICITAR_PAGO: "Seleccione el mes y el año de la solicitud de cumplido a realizar",
     PARRAFO_CARGAR_LISTAS: "Seleccione la solicitud de cumplido a la que le va a cargar los soportes.",
     CAR_SOP: "CARGAR SOPORTES",
-    DED: "DEDICACION",
+    DED: "DEDICACIÓN",
     MES: "MES",
     ANO: "AÑO",
     DESC_ADJ: "Por favor seleccione la opción correspondiente al tipo de adjunto que va a realizar",
@@ -666,10 +666,10 @@ var text_es = {
     DEBE_SELECCIONAR: "Debe seleccionar un mes y un año",
     DOCUMENTO_GUARDADO: "Documento guardado",
     DOCUMENTO_SE_HA_GUARDADO: "Se ha guardado el documento en el repositorio",
-    DEBE_SUBIR_ARCHIVO: "Debe subir un archivo y seleccionar un item",
+    DEBE_SUBIR_ARCHIVO: "Debe subir un archivo y seleccionar un ítem",
     ENLACE_GUARDADO: "Enlace guardado",
     ENLACE_SE_HA_GUARDADO: "Se ha guardado el enlace",
-    DEBE_PEGAR_ENLACE: "Debe pegar el enlace y seleccionar un item",
+    DEBE_PEGAR_ENLACE: "Debe pegar el enlace y seleccionar un ítem",
 
 
     //Modal informe de gestión docente
@@ -694,7 +694,7 @@ var text_es = {
     //Carga documentos contratista
     TITULO_CARGA_CONTRATISTA: "CARGA SOPORTES CONTRATISTA",
     NOM_CONTRATISTA: "NOMBRE CONTRATISTA",
-    NUMERO_CONTRATO: "NUMERO CONTRATO",
+    NUMERO_CONTRATO: "NÚMERO CONTRATO",
     RP: "RP",
 };
 

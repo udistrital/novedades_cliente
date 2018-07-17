@@ -184,9 +184,10 @@ angular.module('contractualClienteApp')
                 { field: 'NombreCompleto', width: '22%', displayName: $translate.instant('NOMBRE') },
                 { field: 'IdPersona', width: '13%', displayName: $translate.instant('DOCUMENTO_DOCENTES') },
                 { field: 'Categoria', width: '10%', displayName: $translate.instant('CATEGORIA') },
-                { field: 'NumeroHorasSemanales', width: '15%', displayName: $translate.instant('HORAS_SEMANALES') },
-                { field: 'NumeroSemanas', width: '15%', displayName: $translate.instant('SEMANAS_REV') },
-                { field: 'NumeroDisponibilidad', width: '10%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
+                { field: 'NumeroHorasSemanales', width: '12%', displayName: $translate.instant('HORAS_SEMANALES') },
+                { field: 'NumeroSemanas', width: '12%', displayName: $translate.instant('SEMANAS_REV') },
+                { field: 'NumeroDisponibilidad', width: '9%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
+                { field: 'NumeroRp', width: '7%', displayName: $translate.instant('NUMERO_REGISTRO_PRESUPUESTAL') },
                 { field: 'ValorContrato', width: '15%', displayName: $translate.instant('VALOR_CONTRATO_REV'), cellClass: "valorEfectivo", cellFilter: "currency" }
             ]
         };

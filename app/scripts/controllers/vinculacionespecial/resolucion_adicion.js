@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .controller('ResolucionAdicionCtrl', function (amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
+    .controller('ResolucionAdicionCtrl', function (amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, colombiaHolidaysService, $localStorage, $scope, $mdDialog, $translate, $window) {
 
         var self = this;
 
@@ -358,5 +358,5 @@ angular.module('contractualClienteApp')
             var _fechaConUtc = new Date(fecha.getUTCFullYear(), fecha.getUTCMonth(), fecha.getUTCDate(), fecha.getUTCHours(), fecha.getUTCMinutes(), fecha.getUTCSeconds());
             return _fechaConUtc;
         };
-
+        $scope.validarFecha = colombiaHolidaysService.validateDate;
     });
