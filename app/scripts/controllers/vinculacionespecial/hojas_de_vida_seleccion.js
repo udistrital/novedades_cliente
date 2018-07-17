@@ -70,7 +70,6 @@ angular.module('contractualClienteApp')
         {
             field: 'docente_documento',
             displayName: $translate.instant('DOCUMENTO_DOCENTES'),
-            width: '10%',
             filter: {}
         },
         {
@@ -82,17 +81,15 @@ angular.module('contractualClienteApp')
         {
             field: 'proyecto_nombre',
             displayName: $translate.instant('PROYECTO_CURRICULAR'),
-            width: '33%'
+            width: '30%'
         },
         {
             field: 'CategoriaNombre',
             displayName: $translate.instant('CATEGORIA'),
-            width: '10%'
         },
         {
             field: 'tipo_vinculacion_nombre',
             displayName: $translate.instant('DEDICACION'),
-            width: '10%'
         },
         {
             field: 'id_tipo_vinculacion',

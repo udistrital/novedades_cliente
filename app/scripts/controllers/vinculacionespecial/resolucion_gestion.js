@@ -270,9 +270,7 @@ angular.module('contractualClienteApp')
     //Función para redireccionar la página web a la vista de adición y eliminación de docentes en la resolucion, donde se pasa por parámetro el id de la resolucion seleccionada
     $scope.verEditarDocentes = function (row) {
       if (row.entity.Dedicacion === "TCO-MTO") {
-        self.Dedicacion = "TCO|MTO";
-      } else {
-        self.Dedicacion = row.entity.Dedicacion;
+        row.entity.Dedicacion = "TCO|MTO";
       }
 
       self.registrarResolucion(row);
