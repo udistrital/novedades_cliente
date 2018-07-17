@@ -262,8 +262,6 @@ angular.module('contractualClienteApp')
     //Función para asignar controlador de la vista resolucion_vista.html, donde se pasa por parámetro el id de la resolucion seleccionada con ayuda de $mdDialog
     $scope.verVisualizarResolucion = function (row) {
 
-
-
       var resolucion = {
         Id: row.entity.Id,
         Numero: row.entity.Numero,

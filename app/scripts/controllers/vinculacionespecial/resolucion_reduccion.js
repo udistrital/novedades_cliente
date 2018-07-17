@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .controller('ResolucionReduccionCtrl', function (amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, $localStorage, $scope, $mdDialog, $translate, $window) {
+    .controller('ResolucionReduccionCtrl', function (amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, colombiaHolidaysService, $localStorage, $scope, $mdDialog, $translate, $window) {
 
         var self = this;
 
@@ -367,4 +367,5 @@ angular.module('contractualClienteApp')
             self.rps = response.data.cdp_rp_docente.cdp_rp;
             });
         }
+        $scope.validarFecha = colombiaHolidaysService.validateDate;
     });
