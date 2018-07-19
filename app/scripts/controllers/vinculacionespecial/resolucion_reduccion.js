@@ -265,8 +265,7 @@ angular.module('contractualClienteApp')
         };
 
         self.realizar_nueva_vinculacion = function () {
-            if (((self.semanas_a_adicionar != 0 && self.semanas_a_adicionar != undefined) || (self.horas_a_adicionar != 0 && self.horas_a_adicionar != undefined))
-                && self.FechaInicio != undefined && self.persona_a_modificar.InformacionRp != undefined) {
+            if (self.semanas_a_adicionar != undefined && self.horas_a_adicionar != undefined && self.FechaInicio != undefined && self.persona_a_modificar.InformacionRp != undefined) {
                 if (self.saldo_disponible) {
                     self.calculoSemanasTranscurridas(self.FechaInicio);
                     self.semanasRestantes = self.semanas_totales - self.semanasTranscurridas;
@@ -355,6 +354,12 @@ angular.module('contractualClienteApp')
                 self.semanasTranscurridas = self.semanasTranscurridas + 1;
             }
         };
+
+        self.CalculoSemanasRestantes = function () {
+            self.calculoSemanasTranscurridas(self.FechaInicio);
+            self.semanasRestantes = self.semanas_actuales - self.semanasTranscurridas;
+            self.maximoSemanasReducir = self.semanasRestantes;
+        }
         
         //Función para convertir las fechas a UTC declaradas desde el cliente (Las que vengan por gets corregirlas desde los apis)
         self.fechaUtc = function (fecha) {
