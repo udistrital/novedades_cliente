@@ -184,6 +184,8 @@ angular.module('contractualClienteApp')
                 self.acta = response.data[0];
                 self.fechaIni = new Date(self.acta.FechaInicio);
                 self.fechaActa = self.fechaUtc(self.fechaIni);
+                self.calculoSemanasTranscurridas(self.fecha);
+                self.maximoSemanasAdicionar = self.semanas_actuales - self.semanasTranscurridas;
                 $('#modal_adicion').modal('show');
             }); 
         };
@@ -269,67 +271,66 @@ angular.module('contractualClienteApp')
         };
 
         self.realizar_nueva_vinculacion = function () {
-            if (((self.semanas_a_adicionar != 0 && self.semanas_a_adicionar != undefined) || (self.horas_a_adicionar != 0 && self.horas_a_adicionar != undefined))
-                    && self.FechaInicio != undefined) {
+            if (self.semanas_a_adicionar != undefined && self.horas_a_adicionar != undefined && self.FechaInicio != undefined) {
                 if (self.saldo_disponible) {
-                    self.calculoSemanasTranscurridas();
-                    self.semanasRestantes = self.semanas_actuales - self.semanasTranscurridas;
-                    var vinculacionDocente = {
-                        Id: self.persona_a_modificar.Id,
-                        FechaRegistro: self.persona_a_modificar.FechaRegistro,
-                        IdPersona: self.persona_a_modificar.IdPersona,
-                        NumeroHorasSemanales: parseInt(self.horas_actuales),
-                        NumeroHorasNuevas: parseInt(self.horas_a_adicionar),
-                        NumeroSemanas: parseInt(self.semanas_actuales),
-                        NumeroSemanasNuevas: parseInt(self.semanas_a_adicionar),
-                        NumeroSemanasRestantes: parseInt(self.semanasRestantes),
-                        IdResolucion: { Id: self.persona_a_modificar.IdResolucion.Id },
-                        IdDedicacion: { Id: parseInt(self.persona_a_modificar.IdDedicacion.Id) },
-                        IdProyectoCurricular: parseInt(self.persona_a_modificar.IdProyectoCurricular),
-                        Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
-                        ValorContrato: self.persona_a_modificar.ValorContrato,
-                        Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
-                        NivelAcademico: self.resolucion.NivelAcademico_nombre,
-                        Disponibilidad: parseInt(self.disponibilidad_actual_id),
-                        Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
-                        NumeroContrato: self.persona_a_modificar.NumeroContrato,
-                        FechaInicio: self.FechaInicio,
-                    };
+                    if (self.semanas_a_adicionar <= self.semanasRestantes) {
+                        var vinculacionDocente = {
+                            Id: self.persona_a_modificar.Id,
+                            FechaRegistro: self.persona_a_modificar.FechaRegistro,
+                            IdPersona: self.persona_a_modificar.IdPersona,
+                            NumeroHorasSemanales: parseInt(self.horas_actuales),
+                            NumeroHorasNuevas: parseInt(self.horas_a_adicionar),
+                            NumeroSemanas: parseInt(self.semanas_actuales),
+                            NumeroSemanasNuevas: parseInt(self.semanas_a_adicionar),
+                            NumeroSemanasRestantes: parseInt(self.semanasRestantes),
+                            IdResolucion: { Id: self.persona_a_modificar.IdResolucion.Id },
+                            IdDedicacion: { Id: parseInt(self.persona_a_modificar.IdDedicacion.Id) },
+                            IdProyectoCurricular: parseInt(self.persona_a_modificar.IdProyectoCurricular),
+                            Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
+                            ValorContrato: self.persona_a_modificar.ValorContrato,
+                            Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
+                            NivelAcademico: self.resolucion.NivelAcademico_nombre,
+                            Disponibilidad: parseInt(self.disponibilidad_actual_id),
+                            Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
+                            NumeroContrato: self.persona_a_modificar.NumeroContrato,
+                            FechaInicio: self.FechaInicio,
+                        };
 
-                    desvinculacionesData.push(vinculacionDocente);
+                        desvinculacionesData.push(vinculacionDocente);
 
-                    var objeto_a_enviar = {
-                        IdModificacionResolucion: self.id_modificacion_resolucion,
-                        IdNuevaResolucion: self.resolucion_id_nueva,
-                        DisponibilidadNueva: self.disponibilidad_nueva_id,
-                        TipoDesvinculacion: "Adición",
-                        DocentesDesvincular: desvinculacionesData
-                    };
+                        var objeto_a_enviar = {
+                            IdModificacionResolucion: self.id_modificacion_resolucion,
+                            IdNuevaResolucion: self.resolucion_id_nueva,
+                            DisponibilidadNueva: self.disponibilidad_nueva_id,
+                            TipoDesvinculacion: "Adición",
+                            DocentesDesvincular: desvinculacionesData
+                        };
 
-                    adminMidRequest.post("gestion_desvinculaciones/adicionar_horas", objeto_a_enviar).then(function (response) {
+                        adminMidRequest.post("gestion_desvinculaciones/adicionar_horas", objeto_a_enviar).then(function (response) {
 
-                        if (response.data === "OK") {
-                            swal({
-                                text: $translate.instant('ALERTA_ADICION_EXITOSA'),
-                                type: 'success',
-                                confirmButtonText: $translate.instant('ACEPTAR')
+                            if (response.data === "OK") {
+                                swal({
+                                    text: $translate.instant('ALERTA_ADICION_EXITOSA'),
+                                    type: 'success',
+                                    confirmButtonText: $translate.instant('ACEPTAR')
 
-                            });
-                            //LIMPIAR GRID
-                            desvinculacionesData = [];
-                            $window.location.reload();
-                        } else {
-                            swal({
-                                title: $translate.instant('ERROR'),
-                                text: $translate.instant('ALERTA_ERROR_ADICION'),
-                                type: 'info',
-                                confirmButtonText: $translate.instant('ACEPTAR')
-                            });
-                            //LIMPIAR GRID
-                            desvinculacionesData = [];
-                            $window.location.reload();
-                        }
-                    });
+                                });
+                                //LIMPIAR GRID
+                                desvinculacionesData = [];
+                                $window.location.reload();
+                            } else {
+                                swal({
+                                    title: $translate.instant('ERROR'),
+                                    text: $translate.instant('ALERTA_ERROR_ADICION'),
+                                    type: 'info',
+                                    confirmButtonText: $translate.instant('ACEPTAR')
+                                });
+                                //LIMPIAR GRID
+                                desvinculacionesData = [];
+                                $window.location.reload();
+                            }
+                        });
+                    } 
                 } else {
                     swal({
                         title: $translate.instant('ERROR'),
@@ -343,8 +344,11 @@ angular.module('contractualClienteApp')
         };
 
         //Función para hacer el cálculo de semanas entre la fecha de inicio original hasta la fecha de inicio de la adición
-        self.calculoSemanasTranscurridas = function () {
-            var dias = (self.FechaInicio - self.fechaActa) / 1000 / 60 / 60 / 24;
+        //Función para hacer el cálculo de semanas en dos casos:
+        //(1) Entre la fecha de inicio original y la fecha actual para determinar el máximo de semanas a adicionar
+        //(2) Entre la fecha de inicio original y la fecha de inicio escogida en la adición para determinar las semanas restantes
+        self.calculoSemanasTranscurridas = function (fechaCalculo) {
+            var dias = (fechaCalculo - self.fechaActa) / 1000 / 60 / 60 / 24;
             var semanasDecimal = dias / 7;
             var decimal = semanasDecimal % 1;
             self.semanasTranscurridas = semanasDecimal - decimal;
@@ -352,6 +356,12 @@ angular.module('contractualClienteApp')
                 self.semanasTranscurridas = self.semanasTranscurridas + 1;
             }
         };
+
+        self.CalculoSemanasRestantes = function () {
+            self.calculoSemanasTranscurridas(self.FechaInicio);
+            self.semanasRestantes = self.semanas_actuales - self.semanasTranscurridas;
+            self.maximoSemanasAdicionar = self.semanasRestantes;
+        }
         
         //Función para convertir las fechas a UTC declaradas desde el cliente (Las que vengan por gets corregirlas desde los apis)
         self.fechaUtc = function (fecha) {
