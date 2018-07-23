@@ -11,6 +11,7 @@ angular.module('contractualClienteApp')
         self.vigencia_data = self.resolucion.Vigencia;
         self.fecha = new Date();
         self.saldo_disponible = true;
+        self.semanasTranscurridas = 0;
         var desvinculacionesData = [];
 
         self.precontratados = {
@@ -177,8 +178,10 @@ angular.module('contractualClienteApp')
                 self.acta = response.data[0];
                 self.fechaIni = new Date(self.acta.FechaInicio);
                 self.fechaActa = self.fechaUtc(self.fechaIni);
-                self.calculoSemanasTranscurridas(self.fecha);
-                self.maximoSemanasReducir = self.semanas_actuales - self.semanasTranscurridas;
+                if (self.FechaInicio == undefined) {
+                    self.calculoSemanasTranscurridas(self.fecha);
+                    self.maximoSemanasReducir = self.semanas_actuales - self.semanasTranscurridas;
+                }
                 $('#modal_adicion').modal('show');
             }); 
 
@@ -347,11 +350,13 @@ angular.module('contractualClienteApp')
         //(2) Entre la fecha de inicio original y la fecha de inicio escogida en la reducción para el cálculo de horas a reversar
         self.calculoSemanasTranscurridas = function (fechaCalculo) {
             var dias = (fechaCalculo - self.fechaActa) / 1000 / 60 / 60 / 24;
-            var semanasDecimal = dias / 7;
-            var decimal = semanasDecimal % 1;
-            self.semanasTranscurridas = semanasDecimal - decimal;
-            if (decimal > 0) {
-                self.semanasTranscurridas = self.semanasTranscurridas + 1;
+            if (dias > 0) {
+                var semanasDecimal = dias / 30 * 4; // cálculo con base en mes de 30 días y 4 semanas
+                var decimal = semanasDecimal % 1;
+                self.semanasTranscurridas = semanasDecimal - decimal;
+                if (decimal > 0) {
+                    self.semanasTranscurridas = self.semanasTranscurridas + 1;
+                }
             }
         };
 
