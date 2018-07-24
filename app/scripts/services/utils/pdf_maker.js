@@ -16,6 +16,7 @@ angular.module('contractualClienteApp')
             var encabezado = [];
             var modificacion = true;
             var segundaFila = [];
+            var terceraFila = [];
             var columnas = [];
 
             columnas = ['NombreCompleto', 'TipoDocumento', 'IdPersona', 'LugarExpedicionCedula', 'Categoria', 'Dedicacion', 'NumeroHorasSemanales', 'NumeroMeses'];
@@ -32,13 +33,15 @@ angular.module('contractualClienteApp')
                     modificacion = false;
                     break;
                 case "Adición":
-                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroDisponibilidad');
-                    segundaFila.push('NumeroHorasNuevas', 'NumeroMesesNuevos', 'ValorContratoFormato');
+                    columnas.push('ValorContratoInicialFormato', '', 'NumeroDisponibilidad');
+                    segundaFila.push('NumeroHorasModificacion', 'NumeroMesesNuevos', '', 'ValorModificacionFormato');
+                    terceraFila.push('NumeroHorasNuevas', '', 'ValorContratoFormato', '');                    
                     encabezado.push({ text: $translate.instant('LABEL_VALOR_ADICIONAR'), style: 'encabezado' }, { text: $translate.instant('DISPONIBILIDAD_PDF'), style: 'encabezado' });
                     break;
                 case "Reducción":
-                    columnas.push('ValorContratoInicialFormato', 'ValorModificacionFormato', 'NumeroRp');
-                    segundaFila.push('NumeroHorasNuevas', 'NumeroMesesNuevos', 'ValorContratoFormato');
+                    columnas.push('ValorContratoInicialFormato', '', 'NumeroRp');
+                    segundaFila.push('NumeroHorasModificacion', 'NumeroMesesNuevos', '', 'ValorModificacionFormato');
+                    terceraFila.push('NumeroHorasNuevas', '', 'ValorContratoFormato', '');
                     encabezado.push({ text: $translate.instant('VALOR_CONTRATO_REV'), style: 'encabezado' }, { text: $translate.instant('NUMERO_REGISTRO_PRESUPUESTAL'), style: 'encabezado' });
                     break;
                 case "Cancelación":
@@ -56,14 +59,22 @@ angular.module('contractualClienteApp')
                     if (fila.IdProyectoCurricular === idProyecto) {
                         //Si la resolución es de cancelación, adición o reducción la tabla es diferente
                         if (modificacion) {
-                            var tablaModificacion = self.tablaModificacion(columnas,fila,segundaFila);
+                            var tablaModificacion = [];
+                            if (tipoResolucion == 'Cancelación'){
+                                tablaModificacion = self.tablaCancelacion(columnas, fila, segundaFila);                            
+                            } else {
+                                tablaModificacion = self.tablaModificacionHoras(columnas, fila, segundaFila, terceraFila);
+                            }
                             cuerpo.push(tablaModificacion[0]);
                             cuerpo.push(tablaModificacion[1]);
+                            if (tablaModificacion[2] != undefined) {
+                                cuerpo.push(tablaModificacion[2]); 
+                            }
                         } else {
                             var datoFila = [];
                             columnas.forEach(function (columna) {
                                 //Cada dato es almacenado como un String dentro de la matriz de la tabla
-                                datoFila.push(fila[columna].toString());
+                                datoFila.push(fila[columna] != undefined ? fila[columna].toString() : '');
                             });
                             //La fila es agregada a la tabla con los datos correspondientes
                             cuerpo.push(datoFila);
@@ -74,7 +85,29 @@ angular.module('contractualClienteApp')
             return cuerpo;
         };
 
-        self.tablaModificacion = function (columnas, fila, segundaFila) {
+        self.tablaModificacionHoras = function (columnas, fila, segundaFila, terceraFila) {
+            var datoFila = [];
+            var segunda = [];
+            var tercera = [];
+            var cantidadColumnas = columnas.length;
+
+            for (var i = 0, j = 0; i < cantidadColumnas; i++){
+                if (i < 6 || i > 9) {
+                    datoFila.push({ text: fila[columnas[i]] != undefined ? fila[columnas[i]].toString() : '', rowSpan: 3 });
+                }
+                if (i > 5 && i < 10) {
+                    console.log('segunda', fila[segundaFila[j]], 'tercera', fila[terceraFila[j]], 'i', i, 'j', j);
+                    datoFila.push({ text: fila[columnas[i]] != undefined ? fila[columnas[i]].toString() : '' });
+                    segunda[i] = fila[segundaFila[j]] != undefined ? fila[segundaFila[j]].toString() : '';
+                    tercera[i] = fila[terceraFila[j]] != undefined ? fila[terceraFila[j]].toString() : '';
+                    tercera[i] = i == 6 ? 'Total ' + tercera[i] : tercera[i] ;
+                    j++;
+                }
+            }
+            return [datoFila, segunda, tercera];
+        }
+
+        self.tablaCancelacion = function (columnas, fila, segundaFila, terceraFila) {
             var datoFila = [];
             var segunda = [];
             var cantidadColumnas = columnas.length;
