@@ -12,6 +12,7 @@ angular.module('contractualClienteApp')
         self.fecha = new Date();
         self.maximoSemanas = 1;
         self.fechaActual = new Date();
+        self.semanasTranscurridas = 0;
 
         var desvinculacionesData = [];
 
@@ -212,11 +213,13 @@ angular.module('contractualClienteApp')
         //Función para hacer el cálculo de semanas transcurridas desde la fecha de inicio hasta la fecha actual
         self.calculoSemanas = function () {
             var dias = (self.fechaUtc(self.fechaActual) - self.fechaActa) / 1000 / 60 / 60 / 24;
-            var semanasDecimal = dias / 7;
-            var decimal = semanasDecimal % 1;
-            self.semanasTranscurridas = semanasDecimal - decimal;
-            if (decimal > 0) {
-                self.semanasTranscurridas = self.semanasTranscurridas + 1;
+            if (dias > 0) {
+                var semanasDecimal = dias / 30 * 4; // cálculo con base en mes de 30 días y 4 semanas
+                var decimal = semanasDecimal % 1;
+                self.semanasTranscurridas = semanasDecimal - decimal;
+                if (decimal > 0) {
+                    self.semanasTranscurridas = self.semanasTranscurridas + 1;
+                }
             }
         };
         
