@@ -66,7 +66,7 @@
 								</div>
 								<div class="col-md-1">
 									<input type="number" pattern="[0-9]*" class="form-control" ng-model="resolucionAdicion.horas_a_adicionar" ng-change="resolucionAdicion.Calcular_horas_totales()"
-									 min=0 required="">
+									 min=1 required="">
 								</div>
 								<div class="col-md-2">
 									<label>{{ 'LABEL_HORAS_TOTALES' | translate }}</label>
@@ -87,19 +87,13 @@
 								</div>
 								<div class="col-md-1">
 									<input type="number" pattern="[0-9]*" class="form-control" ng-model="resolucionAdicion.semanas_a_adicionar" ng-change="resolucionAdicion.Calcular_semanas_totales()"
-									 min=0 required="">
-								</div>
-								<div class="col-md-2">
-									<label>{{ 'LABEL_SEMANAS_TOTALES' | translate }}</label>
-								</div>
-								<div class="col-md-1">
-									<input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionAdicion.semanas_totales" readonly>
+									 min=1 max={{resolucionAdicion.maximoSemanasAdicionar}} required="">
 								</div>
 							</div>
 							<div class="col-md-12">
 								<div class="form-group col-lg-6">
 									<label>{{ 'FECHA_INICIO_VALIDA' | translate }}</label>
-									<md-datepicker ng-model="resolucionAdicion.FechaInicio" md-current-view="year" md-date-filter="validarFecha" md-placeholder="{{'ELEGIR_FECHA' | translate }}"  required></md-datepicker>
+									<md-datepicker ng-model="resolucionAdicion.FechaInicio" ng-change="resolucionAdicion.CalculoSemanasRestantes()" md-current-view="year" md-date-filter="validarFecha" md-placeholder="{{'ELEGIR_FECHA' | translate }}"  required></md-datepicker>
 								</div>
 							</div>
 							<div class="col-md-12">
