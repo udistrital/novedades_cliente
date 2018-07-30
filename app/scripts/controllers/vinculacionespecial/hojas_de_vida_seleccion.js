@@ -596,10 +596,10 @@ angular.module('contractualClienteApp')
 
         $scope.exportarCSV = function () {
             var csvExporter = angular.element(document.querySelectorAll(".custom-csv-link-location"));
-            self.precontratados.gridApi.exporter.csvExport('all', 'all', csvExporter);
+            self.precontratados.gridApi.exporter.csvExport('visible', 'all', csvExporter);
         };
         $scope.exportarPDF = function () {
-            self.precontratados.gridApi.exporter.pdfExport('all', 'all');
+            self.precontratados.gridApi.exporter.pdfExport('visible', 'all');
 
         };
     });
