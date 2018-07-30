@@ -309,7 +309,7 @@ angular.module('contractualClienteApp')
             self.Apropiaciones.data = [];
         };
 
-        administrativaRequest.get("vinculacion_docente/get_total_contratos_x_resolucion/" + self.resolucion.Id, "").then(function (response) {
+        administrativaRequest.get("vinculacion_docente/get_total_contratos_x_resolucion/" + self.resolucion.Id + "/" + self.resolucion.Dedicacion, "").then(function (response) {
             self.total_contratos_x_vin = response.data;
         });
 
