@@ -96,7 +96,6 @@ angular.module('contractualClienteApp')
                     datoFila.push({ text: fila[columnas[i]] != undefined ? fila[columnas[i]].toString() : '', rowSpan: 3 });
                 }
                 if (i > 5 && i < 10) {
-                    console.log('segunda', fila[segundaFila[j]], 'tercera', fila[terceraFila[j]], 'i', i, 'j', j);
                     datoFila.push({ text: fila[columnas[i]] != undefined ? fila[columnas[i]].toString() : '' });
                     segunda[i] = fila[segundaFila[j]] != undefined ? fila[segundaFila[j]].toString() : '';
                     tercera[i] = fila[terceraFila[j]] != undefined ? fila[terceraFila[j]].toString() : '';
