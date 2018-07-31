@@ -120,6 +120,7 @@ var text_es = {
     NOMBRE_DOCUMENTO: "Nombre del Documento",
     //lista_actividades_economicas
     ACTIVIDADES_ECONOMICAS: "Actividades Económicas",
+    ACTIVIDAD_ECONOMICA: "Actividad Económica",
     //lista_subgrupos_catalogos
     CATALOGO: "Catálogo",
     PRODCUTOS: "Productos",
