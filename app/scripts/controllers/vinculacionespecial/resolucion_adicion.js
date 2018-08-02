@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .controller('ResolucionAdicionCtrl', function (amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, colombiaHolidaysService, $localStorage, $scope, $mdDialog, $translate, $window) {
+    .controller('ResolucionAdicionCtrl', function (financieraMidRequest,amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, colombiaHolidaysService, $localStorage, $scope, $mdDialog, $translate, $window) {
 
         var self = this;
 
@@ -13,6 +13,7 @@ angular.module('contractualClienteApp')
         self.saldo_disponible = true;
         self.semanasTranscurridas = 0;
         var desvinculacionesData = [];
+        self.offset = 0;
 
         self.precontratados = {
             paginationPageSizes: [10, 15, 20],
@@ -77,7 +78,7 @@ angular.module('contractualClienteApp')
             multiSelect: false,
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: true,
-            useExternalPagination: false,
+            useExternalPagination: true,
             enableSelectAll: false,
             columnDefs: [{
                 field: 'NumeroDisponibilidad',
@@ -103,6 +104,32 @@ angular.module('contractualClienteApp')
 
 
                 });
+
+                gridApi.core.on.filterChanged($scope, function () {
+                    var grid = this.grid;
+                    var query = '';
+                    angular.forEach(grid.columns, function (value, key) {
+                        if (value.filters[0].term) {
+                            var formtstr = value.colDef.name.replace('[0]', '');
+                            query = query + '&query=' + formtstr + '__icontains:' + value.filters[0].term;
+    
+                        }
+                    });
+                    self.actualizarLista(self.offset, query);
+                });
+
+                gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
+                    var query = '';
+                    var grid = this.grid;
+                    angular.forEach(grid.columns, function (value, key) {
+                        if (value.filters[0].term) {
+                            var formtstr = value.colDef.name.replace('[0]', '');
+                            query = query + '&query=' + formtstr + '__icontains:' + value.filters[0].term;
+                        }
+                    });
+                    self.offset = (newPage - 1) * pageSize;
+                    self.actualizarLista(self.offset, query);
+                });
             }
         };
 
@@ -121,10 +148,12 @@ angular.module('contractualClienteApp')
 
                 {
                     field: 'Apropiacion.Valor',
+                    cellFilter: "currency",
                     displayName: $translate.instant('VALOR_APROPIACION')
                 },
                 {
                     field: 'Apropiacion.Saldo',
+                    cellFilter: "currency",
                     displayName: $translate.instant('SALDO_APROPIACION')
                 }
             ],
@@ -176,8 +205,10 @@ angular.module('contractualClienteApp')
             self.persona_a_modificar = row.entity;
             self.disponibilidad_actual_id = row.entity.Disponibilidad;
             self.disponibilidad_nueva_id = row.entity.Disponibilidad;
-            financieraRequest.get('disponibilidad', "limit=-1&query=Vigencia:" + self.vigencia_data).then(function (response) {
-                self.Disponibilidades.data = response.data;
+            financieraRequest.get("disponibilidad/TotalDisponibilidades/" + self.vigencia_data, 'UnidadEjecutora=1')
+            .then(function (response) { 
+                self.Disponibilidades.totalItems = response.data;
+                self.actualizarLista(self.offset, '');
             });
             amazonAdministrativaRequest.get("acta_inicio", $.param({
                 query: 'NumeroContrato:' + self.persona_a_modificar.NumeroContrato.String + ',Vigencia:' + self.persona_a_modificar.Vigencia.Int64
@@ -191,6 +222,16 @@ angular.module('contractualClienteApp')
                 }
                 $('#modal_adicion').modal('show');
             }); 
+        };
+
+        self.actualizarLista = function (offset, query) {
+            financieraMidRequest.get('disponibilidad/ListaDisponibilidades/' + self.vigencia_data, 'limit=' + self.Disponibilidades.paginationPageSize + '&offset=' + offset + query + "&UnidadEjecutora=1").then(function (response) {
+                if (response.data.Type !== undefined) {
+                    self.Disponibilidades.data = [];
+                } else {
+                    self.Disponibilidades.data = response.data;
+                }
+            });
         };
 
         self.listar_apropiaciones = function () {
@@ -293,7 +334,7 @@ angular.module('contractualClienteApp')
                             ValorContrato: self.persona_a_modificar.ValorContrato,
                             Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
                             NivelAcademico: self.resolucion.NivelAcademico_nombre,
-                            Disponibilidad: parseInt(self.disponibilidad_actual_id),
+                            Disponibilidad: parseInt(self.apropiacion_elegida[0].Id),
                             Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
                             NumeroContrato: self.persona_a_modificar.NumeroContrato,
                             FechaInicio: self.FechaInicio,
