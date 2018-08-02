@@ -7,7 +7,7 @@
  * # listaActividadesEconomicas
  */
 angular.module('contractualClienteApp')
-  .directive('listaActividadesEconomicas', function (coreRequest, $translate) {
+  .directive('listaActividadesEconomicas', function (coreAmazonRequest, $translate) {
     return {
       restrict: 'E',
       scope:{
@@ -37,7 +37,7 @@ angular.module('contractualClienteApp')
             },
             {
                 field: 'Nombre',
-                displayName: $translate.instant('ACTIVIDADES_ECONOMICAS'),
+                displayName: $translate.instant('ACTIVIDAD_ECONOMICA'),
                 headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
                 cellTooltip: function(row) {
                   return row.entity.Nombre;
@@ -53,9 +53,9 @@ angular.module('contractualClienteApp')
           });
         };
 
-        coreRequest.get('actividad_economica',$.param({
+        coreAmazonRequest.get('ciiu_subclase',$.param({
           limit:-1,
-          query:"ClasificacionCiiu.Nombre:Subclase,Activo:true",
+          //query:"ClasificacionCiiu.Nombre:Subclase,Activo:true",
           sortby:"Id",
           order:"asc",
         })).then(function(response) {

@@ -309,7 +309,7 @@ angular.module('contractualClienteApp')
             self.Apropiaciones.data = [];
         };
 
-        administrativaRequest.get("vinculacion_docente/get_total_contratos_x_resolucion/" + self.resolucion.Id, "").then(function (response) {
+        administrativaRequest.get("vinculacion_docente/get_total_contratos_x_resolucion/" + self.resolucion.Id + "/" + self.resolucion.Dedicacion, "").then(function (response) {
             self.total_contratos_x_vin = response.data;
         });
 
@@ -596,10 +596,10 @@ angular.module('contractualClienteApp')
 
         $scope.exportarCSV = function () {
             var csvExporter = angular.element(document.querySelectorAll(".custom-csv-link-location"));
-            self.precontratados.gridApi.exporter.csvExport('all', 'all', csvExporter);
+            self.precontratados.gridApi.exporter.csvExport('visible', 'all', csvExporter);
         };
         $scope.exportarPDF = function () {
-            self.precontratados.gridApi.exporter.pdfExport('all', 'all');
+            self.precontratados.gridApi.exporter.pdfExport('visible', 'all');
 
         };
     });
