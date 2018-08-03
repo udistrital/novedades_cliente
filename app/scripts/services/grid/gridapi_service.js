@@ -28,41 +28,29 @@ angular.module('gridApiService', [])
              * @description Metodo gridApi del servicio
              */
             pagination: function (gridApi, consulFunc, $scope) {
-                gridApi.core.on.filterChanged($scope, function () {
-                    var grid = this.grid;
-                    var query = '';
+                var self = this;
+                var filter = function (grid) {
+                    var query = [];
                     angular.forEach(grid.columns, function (value, key) {
                         if (value.filters[0].term) {
                             var formtstr = value.colDef.name.replace('[0]', '');
                             //console.log("change ", value.filters[0].term);
-                            query = query + '&query=' + formtstr + '__icontains:' + value.filters[0].term;
+                            query.push(formtstr + '__icontains:' + value.filters[0].term);
 
-                        }
+                        };
                     });
-                    consulFunc(self.offset, query);
+                    return query;
+                };
+                gridApi.core.on.filterChanged($scope, function () {
+                    consulFunc($scope.offset, filter(this.grid));
                 });
                 gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
-
-                    //self.gridOptions.data = {};
-
-
-                    var query = '';
-
-                    var grid = this.grid;
-
-                    angular.forEach(grid.columns, function (value, key) {
-                        if (value.filters[0].term) {
-                            var formtstr = value.colDef.name.replace('[0]', '');
-                            query = query + '&query=' + formtstr + '__icontains:' + value.filters[0].term;
-
-                        }
-                    });
-                    var offset = (newPage - 1) * pageSize;
-                    consulFunc(offset, query);
+                    $scope.offset = (newPage - 1) * pageSize;
+                    consulFunc($scope.offset, filter(this.grid));
                 });
                 return gridApi;
             },
-            paginationFunc: function (table,offset) {
+            paginationFunc: function (table, offset) {
                 return function (response) {
                     if (response.data === null) {
                         table.data = [];
