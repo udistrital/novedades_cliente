@@ -584,7 +584,7 @@ angular.module('contractualClienteApp')
         // filtro para eliminar del grid datosDocentesCargaLectiva los docentes precontratados
         self.filtrarPrecontratados = function (rows) {
             rows.forEach(function (row) {
-                if (self.precontratados.data.length == 0) {
+                if (self.precontratados.data.length == 0 && self.estado) {
                     row.visible = false;
                 }
                 self.precontratados.data.forEach(function (p) {
