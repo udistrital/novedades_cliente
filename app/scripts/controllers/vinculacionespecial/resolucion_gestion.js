@@ -14,6 +14,8 @@ angular.module('contractualClienteApp')
   .controller('ResolucionGestionCtrl', function (adminMidRequest, resolucion, administrativaRequest, $scope, $window, $mdDialog, $translate, gridApiService) {
 
     var self = this;
+    $scope.offset = 0;
+    $scope.query = "";
     self.CurrentDate = new Date();
 
     //Tabla para mostrar los datos básicos de las resoluciones almacenadas dentro del sistema
@@ -202,17 +204,19 @@ angular.module('contractualClienteApp')
 
     //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
     self.cargarDatosResolucion = function (offset, query) {
+      console.log(offset)
+      console.log(query)
       var req = adminMidRequest.get("gestion_resoluciones/get_resoluciones_inscritas", $.param({
         limit: self.resolucionesInscritas.paginationPageSize,
         offset: offset,
         query: query
-      }))
+      }, true)) //Usar true para que $.param use query=...&query=.... etc
       req.then(gridApiService.paginationFunc(self.resolucionesInscritas, offset));
       return req;
     };
 
     //Se cargan los datos de las resoluciones de vinculación especial almacenadas
-    self.cargarDatosResolucion(self.offset, self.query).then(function (response) {
+    self.cargarDatosResolucion($scope.offset, $scope.query).then(function (response) {
 
       self.resolucionesInscritas.data = response.data;
 
@@ -372,7 +376,7 @@ angular.module('contractualClienteApp')
     self.cambiarEstado = function (resolucion_estado) {
       administrativaRequest.post("resolucion_estado", resolucion_estado).then(function (response) {
         if (response.statusText === "Created") {
-          self.cargarDatosResolucion(self.offset, self.query);
+          self.cargarDatosResolucion($scope.offset, $scope.query);
           swal(
             'Felicidades',
             $translate.instant('ANULADA'),
