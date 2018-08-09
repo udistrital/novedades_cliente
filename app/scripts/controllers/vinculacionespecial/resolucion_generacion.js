@@ -143,7 +143,12 @@ angular.module('contractualClienteApp')
 
         self.crearResolucion = function () {
             self.objeto_facultad = JSON.parse(self.resolucion.facultad);
-            if (self.resolucion.numero && self.resolucion.facultad && self.resolucion.nivelAcademico && self.resolucion.dedicacion && self.resolucion.numeroSemanas) {
+            if (self.resolucion.numero &&
+                self.resolucion.facultad &&
+                self.resolucion.nivelAcademico &&
+                self.resolucion.dedicacion &&
+                self.resolucion.numeroSemanas &&
+                self.resolucion.Periodo) {
                 swal({
                     title: $translate.instant('DATOS_RESOLUCION'),
                     html: '<p><b>' + $translate.instant('NUMERO') + ': </b>' + self.resolucion.numero.toString() + '</p>' +

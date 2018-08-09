@@ -14,6 +14,7 @@ angular.module('contractualClienteApp')
         self.semanasTranscurridas = 0;
         var desvinculacionesData = [];
         self.offset = 0;
+        self.cambio_disp = false;
 
         self.precontratados = {
             paginationPageSizes: [10, 15, 20],
@@ -162,7 +163,8 @@ angular.module('contractualClienteApp')
                 self.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function () {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
-                    self.verificarDisponibilidad();
+                    self.disponibilidad_nueva_id = self.apropiacion_elegida[0].Id;
+                   // self.verificarDisponibilidad();
                 });
             }
         };
@@ -244,7 +246,7 @@ angular.module('contractualClienteApp')
         };
 
         self.verificarDisponibilidad = function () {
-
+            
             var vinculacionDocente = {
 
                 IdPersona: self.persona_a_modificar.IdPersona,
@@ -270,11 +272,9 @@ angular.module('contractualClienteApp')
 
                 if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
                     self.saldo_disponible = false;
-
                 } else {
                     self.saldo_disponible = true;
                     self.disponibilidad_nueva_id = self.apropiacion_elegida[0].Id;
-
                 }
             });
 
@@ -311,7 +311,7 @@ angular.module('contractualClienteApp')
         };
 
         self.cambiar_disponibilidad = function () {
-            self.cambio_disp = true;
+            self.cambio_disp = !self.cambio_disp;
         };
 
         self.realizar_nueva_vinculacion = function () {
@@ -334,7 +334,7 @@ angular.module('contractualClienteApp')
                             ValorContrato: self.persona_a_modificar.ValorContrato,
                             Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
                             NivelAcademico: self.resolucion.NivelAcademico_nombre,
-                            Disponibilidad: parseInt(self.apropiacion_elegida[0].Id),
+                            Disponibilidad: parseInt(self.disponibilidad_actual_id),
                             Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
                             NumeroContrato: self.persona_a_modificar.NumeroContrato,
                             FechaInicio: self.FechaInicio,

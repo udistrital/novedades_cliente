@@ -48,7 +48,7 @@ angular.module('contractualClienteApp')
 
                 });
                 //soporte a paginacion
-                self.datosDocentesCargaLectiva.gridApi = gridApiService.pagination(gridApi, self.RecargarDatosPersonas, $scope);
+                //self.datosDocentesCargaLectiva.gridApi = gridApiService.pagination(gridApi, self.RecargarDatosPersonas, $scope);
                 //soporte a filtro de precontratados
                 gridApi.grid.registerRowsProcessor(self.filtrarPrecontratados, 200);
                 gridApi.selection.on.rowSelectionChanged($scope, function () {
@@ -584,6 +584,9 @@ angular.module('contractualClienteApp')
         // filtro para eliminar del grid datosDocentesCargaLectiva los docentes precontratados
         self.filtrarPrecontratados = function (rows) {
             rows.forEach(function (row) {
+                if (self.precontratados.data.length == 0 && self.estado) {
+                    row.visible = false;
+                }
                 self.precontratados.data.forEach(function (p) {
                     if (p.IdPersona == row.entity.docente_documento && p.IdProyectoCurricular == row.entity.id_proyecto) {
                         row.visible = false;
