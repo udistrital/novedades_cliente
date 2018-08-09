@@ -35,6 +35,7 @@ angular.module('contractualClienteApp')
                 { field: 'IdDedicacion.NombreDedicacion', width: '10%', displayName: $translate.instant('DEDICACION') },
                 { field: 'IdDedicacion.Id', visible: false },
                 { field: 'Disponibilidad', visible: false },
+                { field: 'DependenciaAcademica', visible: false },
                 { field: 'NumeroHorasSemanales', width: '10%', displayName: $translate.instant('HORAS_SEMANALES') },
                 { field: 'NumeroSemanas', width: '10%', displayName: $translate.instant('SEMANAS') },
                 { field: 'NumeroDisponibilidad', width: '13%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
