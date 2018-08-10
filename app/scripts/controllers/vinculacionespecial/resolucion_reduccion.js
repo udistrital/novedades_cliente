@@ -33,6 +33,7 @@ angular.module('contractualClienteApp')
                 { field: 'IdDedicacion.NombreDedicacion', width: '10%', displayName: $translate.instant('DEDICACION') },
                 { field: 'IdDedicacion.Id', visible: false },
                 { field: 'Disponibilidad', visible: false },
+                { field: 'DependenciaAcademica', visible: false },
                 { field: 'NumeroHorasSemanales', width: '8%', displayName: $translate.instant('HORAS_SEMANALES') },
                 { field: 'NumeroSemanas', width: '7%', displayName: $translate.instant('SEMANAS') },
                 { field: 'NumeroDisponibilidad', width: '15%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
@@ -297,6 +298,7 @@ angular.module('contractualClienteApp')
                         FechaInicio: self.FechaInicio,
                         NumeroRp:self.persona_a_modificar.InformacionRp.rp,
                         VigenciaRp:self.persona_a_modificar.InformacionRp.vigencia,
+                        DependenciaAcademica: self.persona_a_modificar.DependenciaAcademica,
                     };
 
                     desvinculacionesData.push(vinculacionDocente);

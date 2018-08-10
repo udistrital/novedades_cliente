@@ -35,6 +35,7 @@ angular.module('contractualClienteApp')
                 { field: 'IdDedicacion.NombreDedicacion', width: '10%', displayName: $translate.instant('DEDICACION') },
                 { field: 'IdDedicacion.Id', visible: false },
                 { field: 'Disponibilidad', visible: false },
+                { field: 'DependenciaAcademica', visible: false },
                 { field: 'NumeroHorasSemanales', width: '8%', displayName: $translate.instant('HORAS_SEMANALES') },
                 { field: 'NumeroSemanas', width: '7%', displayName: $translate.instant('SEMANAS') },
                 { field: 'NumeroDisponibilidad', width: '15%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
@@ -338,6 +339,7 @@ angular.module('contractualClienteApp')
                             Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
                             NumeroContrato: self.persona_a_modificar.NumeroContrato,
                             FechaInicio: self.FechaInicio,
+                            DependenciaAcademica: self.persona_a_modificar.DependenciaAcademica,
                         };
 
                         desvinculacionesData.push(vinculacionDocente);
@@ -349,7 +351,7 @@ angular.module('contractualClienteApp')
                             TipoDesvinculacion: "Adición",
                             DocentesDesvincular: desvinculacionesData
                         };
-
+                        
                         adminMidRequest.post("gestion_desvinculaciones/adicionar_horas", objeto_a_enviar).then(function (response) {
 
                             if (response.data === "OK") {
