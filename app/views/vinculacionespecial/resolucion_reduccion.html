@@ -90,6 +90,10 @@
 									<input type="number" pattern="[0-9]*" class="form-control" ng-model="resolucionReduccion.semanas_a_adicionar" ng-change="resolucionReduccion.Calcular_semanas_totales()"
 									 min=1 max={{resolucionReduccion.maximoSemanasReducir}} required="">
 								</div>
+								<div class="col-md-4">
+									<br>
+									<font size="3" color="red">{{ 'MAXIMO_SUGERIDO' | translate }} {{resolucionReduccion.maximoSemanasSugeridas}}</font>
+								</div>
 							</div>
 							<div class="col-md-12">
 								<br>
@@ -110,8 +114,10 @@
 							</div>
 							<div class="col-lg-12">
 								<br>
-								<div class="col-lg-4 col-lg-offset-4">
-									<input type="submit" class="form-control btn btn-success" value="{{'BTN_MODIFICAR_HORAS' | translate }}" ng-click="resolucionReduccion.realizar_nueva_vinculacion()">
+								<div ng-show="resolucionReduccion.mostrar_modificar">
+									<div class="col-lg-4 col-lg-offset-4">
+										<input type="submit" class="form-control btn btn-success" value="{{'BTN_MODIFICAR_HORAS' | translate }}" ng-click="resolucionReduccion.realizar_nueva_vinculacion()">
+									</div>
 								</div>
 							</div>
 						</div>

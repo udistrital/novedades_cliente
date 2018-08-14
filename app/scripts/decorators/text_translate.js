@@ -447,6 +447,7 @@ var text_es = {
     SEMANAS_REVERSAR: "Número de Semanas a Reversar",
     ELIJA_SEMANAS_MINIMO: "Elija un número de semanas -> Mínimo: ",
     ELIJA_SEMANAS_MAXIMO: " Máximo: ",
+    MAXIMO_SUGERIDO: "Máximo de semanas sugeridas:",
     COMPLETE_CAMPOS: "Complete Todos Los Campos",
     FECHA_FIN_ACTA: "Fecha fin de acuerdo a la reversión: ",
 
