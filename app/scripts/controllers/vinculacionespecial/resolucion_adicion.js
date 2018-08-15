@@ -15,6 +15,7 @@ angular.module('contractualClienteApp')
         var desvinculacionesData = [];
         self.offset = 0;
         self.cambio_disp = false;
+        self.mostrar_modificar = true;
 
         self.precontratados = {
             paginationPageSizes: [10, 15, 20],
@@ -221,7 +222,9 @@ angular.module('contractualClienteApp')
                 self.fechaActa = self.fechaUtc(self.fechaIni);
                 if (self.FechaInicio == undefined) {
                     self.calculoSemanasTranscurridas(self.fecha);
-                    self.maximoSemanasAdicionar = self.semanas_actuales - self.semanasTranscurridas;
+                    self.maximoSemanasSugeridas = self.semanas_actuales - self.semanasTranscurridas;
+                    self.maximoSugeridasInicial = self.maximoSemanasSugeridas;
+                    self.maximoSemanasAdicionar = self.semanas_actuales;
                 }
                 $('#modal_adicion').modal('show');
             }); 
@@ -319,6 +322,7 @@ angular.module('contractualClienteApp')
             if (self.semanas_a_adicionar != undefined && self.horas_a_adicionar != undefined && self.FechaInicio != undefined) {
                 if (self.saldo_disponible) {
                     if (self.semanas_a_adicionar <= self.semanasRestantes) {
+                        self.mostrar_modificar = false;
                         var vinculacionDocente = {
                             Id: self.persona_a_modificar.Id,
                             FechaRegistro: self.persona_a_modificar.FechaRegistro,
@@ -402,6 +406,8 @@ angular.module('contractualClienteApp')
                 if (decimal > 0) {
                     self.semanasTranscurridas = self.semanasTranscurridas + 1;
                 }
+            } else {
+                self.semanasTranscurridas = 0;
             }
         };
 
@@ -409,6 +415,10 @@ angular.module('contractualClienteApp')
             self.calculoSemanasTranscurridas(self.FechaInicio);
             self.semanasRestantes = self.semanas_actuales - self.semanasTranscurridas;
             self.maximoSemanasAdicionar = self.semanasRestantes;
+            self.maximoSemanasSugeridas = self.maximoSugeridasInicial;
+            if (self.FechaInicio > self.fecha) {
+                self.maximoSemanasSugeridas = self.semanasRestantes;
+            }
         }
         
         //Función para convertir las fechas a UTC declaradas desde el cliente (Las que vengan por gets corregirlas desde los apis)

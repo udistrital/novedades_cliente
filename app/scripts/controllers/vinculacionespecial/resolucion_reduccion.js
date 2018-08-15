@@ -13,6 +13,7 @@ angular.module('contractualClienteApp')
         self.saldo_disponible = true;
         self.semanasTranscurridas = 0;
         var desvinculacionesData = [];
+        self.mostrar_modificar = true;
 
         self.precontratados = {
             paginationPageSizes: [10, 15, 20],
@@ -181,7 +182,9 @@ angular.module('contractualClienteApp')
                 self.fechaActa = self.fechaUtc(self.fechaIni);
                 if (self.FechaInicio == undefined) {
                     self.calculoSemanasTranscurridas(self.fecha);
-                    self.maximoSemanasReducir = self.semanas_actuales - self.semanasTranscurridas;
+                    self.maximoSemanasSugeridas = self.semanas_actuales - self.semanasTranscurridas;
+                    self.maximoSugeridasInicial = self.maximoSemanasSugeridas;
+                    self.maximoSemanasReducir = self.semanas_actuales;
                 }
                 $('#modal_adicion').modal('show');
             }); 
@@ -271,6 +274,7 @@ angular.module('contractualClienteApp')
         self.realizar_nueva_vinculacion = function () {
             if (self.semanas_a_adicionar != undefined && self.horas_a_adicionar != undefined && self.FechaInicio != undefined && self.persona_a_modificar.InformacionRp != undefined) {
                 if (self.saldo_disponible) {
+                    self.mostrar_modificar = false;
                     self.calculoSemanasTranscurridas(self.FechaInicio);
                     self.semanasRestantes = self.semanas_totales - self.semanasTranscurridas;
                     self.persona_a_modificar.InformacionRp = JSON.parse( self.persona_a_modificar.InformacionRp);
@@ -359,6 +363,8 @@ angular.module('contractualClienteApp')
                 if (decimal > 0) {
                     self.semanasTranscurridas = self.semanasTranscurridas + 1;
                 }
+            } else {
+                self.semanasTranscurridas = 0;
             }
         };
 
@@ -366,6 +372,10 @@ angular.module('contractualClienteApp')
             self.calculoSemanasTranscurridas(self.FechaInicio);
             self.semanasRestantes = self.semanas_actuales - self.semanasTranscurridas;
             self.maximoSemanasReducir = self.semanasRestantes;
+            self.maximoSemanasSugeridas = self.maximoSugeridasInicial;
+            if (self.FechaInicio > self.fecha) {
+                self.maximoSemanasSugeridas = self.semanasRestantes;
+            }
         }
         
         //Función para convertir las fechas a UTC declaradas desde el cliente (Las que vengan por gets corregirlas desde los apis)

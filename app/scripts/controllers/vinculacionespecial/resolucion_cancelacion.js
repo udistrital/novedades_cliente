@@ -13,6 +13,7 @@ angular.module('contractualClienteApp')
         self.maximoSemanas = 1;
         self.fechaActual = new Date();
         self.semanasTranscurridas = 0;
+        self.mostrar_cancelar = true;
 
         var desvinculacionesData = [];
 
@@ -147,7 +148,7 @@ angular.module('contractualClienteApp')
 
 
         self.desvincularDocente = function () {
-            
+            self.mostrar_cancelar = false;
             self.personasSeleccionadas.forEach(function (personaSeleccionada) {
                 personaSeleccionada.InformacionRp = JSON.parse( personaSeleccionada.InformacionRp);
                 personaSeleccionada.InformacionRp.rp =parseInt(personaSeleccionada.InformacionRp.rp,10);
