@@ -15,7 +15,7 @@ angular.module('gridApiService', [])
          * # gridApiService
          * Fabrica sobre la cual se consumen los servicios para paginado externo en uigrid
          */
-    .factory('gridApiService', function () {
+    .factory('gridApiService', function ($timeout) {
         //var path = CONF.GENERAL.ACADEMICA_SERVICE;
         // Public API here
         return {
@@ -42,23 +42,29 @@ angular.module('gridApiService', [])
                     return query;
                 };
                 gridApi.core.on.filterChanged($scope, function () {
-                    consulFunc($scope.offset, filter(this.grid));
+                    var self = this;
+                    $scope.offset = 0;
+                    //self.grid.paginationCurrentPage = 1;
+                    if(angular.isDefined($scope.filterTimeout)) {
+                        $timeout.cancel($scope.filterTimeout);
+                    }
+                    $scope.filterTimeout = $timeout(function() {consulFunc($scope.offset, filter(self.grid))}, 500);
                 });
                 gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
+                    var self = this;
                     $scope.offset = (newPage - 1) * pageSize;
-                    consulFunc($scope.offset, filter(this.grid));
+                    consulFunc($scope.offset, filter(self.grid));
+ 
                 });
                 return gridApi;
-            },
+            },  
             paginationFunc: function (table, offset) {
                 return function (response) {
                     if (response.data === null) {
                         table.data = [];
                     } else {
                         table.data = response.data;
-                        if (response.data.length === table.paginationPageSize) {
-                            table.totalItems = offset + table.paginationPageSize + 5;
-                        }
+                        table.totalItems = offset + table.data.length + 1;
                     }
                 };
             }
