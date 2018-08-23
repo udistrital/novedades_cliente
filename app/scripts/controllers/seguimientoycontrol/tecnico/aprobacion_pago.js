@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('AprobacionPagoCtrl', function ($scope, oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest,$routeParams,adminMidRequest) {
+  .controller('AprobacionPagoCtrl', function ($scope, oikosRequest, $http, uiGridConstants, contratoRequest, $translate, administrativaRequest,$routeParams,adminMidRequest, gridApiService) {
 
 
       //Variable de template que permite la edición de las filas de acuerdo a la condición ng-if
@@ -19,6 +19,7 @@ angular.module('contractualClienteApp')
       self.Documento = $routeParams.docid;
 
       self.contratistas = [];
+      self.offset = 0;
 
       self.mes = '';
 
@@ -87,10 +88,14 @@ angular.module('contractualClienteApp')
         Creación tabla que tendrá todos los contratistas relacionados al supervisor
       */
       self.gridOptions1 = {
+        paginationPageSizes: [10, 15, 20],
+        paginationPageSize: 10,
         enableSorting: true,
         enableFiltering: true,
         resizable: true,
         rowHeight: 40,
+        useExternalPagination: true,
+
         columnDefs: [
           {
             field: 'Dependencia.Nombre',
@@ -173,8 +178,12 @@ angular.module('contractualClienteApp')
             
   
       });
+
+
   
-  
+    self.gridApi = gridApiService.pagination(self.gridApi, self.obtener_informacion_ordenador, $scope);
+
+    
       };
 
 
@@ -184,7 +193,7 @@ angular.module('contractualClienteApp')
 
 
 
-      self.obtener_informacion_ordenador = function () {
+      self.obtener_informacion_ordenador = function (offset,query) {
         //Petición para obtener la información del ordenador del contrato
         self.gridOptions1.data = [];
         self.contratistas = [];
@@ -194,17 +203,18 @@ angular.module('contractualClienteApp')
           self.ordenador = response.data.ordenador;
 
           //Petición para obtener el Id de la relación de acuerdo a los campos
-          adminMidRequest.get('aprobacion_pago/solicitudes_ordenador/'+self.Documento).then(function (response) {
-            self.documentos = response.data;
-            //self.obtener_informacion_docente();
-            self.gridOptions1.data = self.documentos;
-          });
+          adminMidRequest.get('aprobacion_pago/solicitudes_ordenador/'+self.Documento, 
+          $.param({
+            limit: self.gridOptions1.paginationPageSize,
+            offset: offset,
+           // query: typeof(query) === "string" ? query : query.join(",")
+          }, true)).then(gridApiService.paginationFunc(self.gridOptions1, offset));
 
 
         });
       };
 
-      self.obtener_informacion_ordenador();
+      self.obtener_informacion_ordenador(self.offset);
 
 
 
@@ -231,7 +241,7 @@ angular.module('contractualClienteApp')
                   'Se ha registrado la aprobación del pago',
                   'success'
                 )
-                self.obtener_informacion_ordenador();
+                self.obtener_informacion_ordenador(self.offset);
                 self.gridApi.core.refresh();
                }else{
 
@@ -275,7 +285,7 @@ angular.module('contractualClienteApp')
                   'Se ha registrado el rechazo del pago',
                   'success'
                 )
-                self.obtener_informacion_ordenador();
+                self.obtener_informacion_ordenador(self.offset);
                 self.gridApi.core.refresh();
                }else{
 
@@ -403,7 +413,7 @@ angular.module('contractualClienteApp')
               'Se han aprobado los pagos de las solicitudes seleccionadas',
               'success'
             )
-            self.obtener_informacion_ordenador();
+            self.obtener_informacion_ordenador(self.offset);
             self.gridApi.core.refresh();
 
 
