@@ -50,6 +50,7 @@ angular.module('gridApiService', [])
                     }
                     $scope.filterTimeout = $timeout(function () { consulFunc($scope.offset, filter(self.grid)) }, 500);
                 });
+                return gridApi;
             },
             /**
              * @ngdoc function
@@ -61,7 +62,6 @@ angular.module('gridApiService', [])
              */
             pagination: function (gridApi, consulFunc, $scope) {
                 var self = this;
-
 
                 gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
                     var self = this;
