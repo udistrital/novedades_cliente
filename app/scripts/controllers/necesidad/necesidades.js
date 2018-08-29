@@ -107,8 +107,8 @@ angular.module('contractualClienteApp')
                 query: "EstadoNecesidad.Nombre__not_in:Borrador",
                 limit: self.gridOptions.paginationPageSize,
                 offset: offset,
-                //sortby: "Vigencia,NumeroElaboracion",
-                //order: "desc",
+                sortby: "Vigencia,NumeroElaboracion",
+                order: "desc",
             }))
             req.then(gridApiService.paginationFunc(self.gridOptions, offset));
             return req;
