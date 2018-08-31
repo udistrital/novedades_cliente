@@ -107,8 +107,8 @@ angular.module('contractualClienteApp')
                 query: "EstadoNecesidad.Nombre__not_in:Borrador",
                 limit: self.gridOptions.paginationPageSize,
                 offset: offset,
-                //sortby: "Vigencia,NumeroElaboracion",
-                //order: "desc",
+                sortby: "Vigencia,NumeroElaboracion",
+                order: "desc",
             }))
             req.then(gridApiService.paginationFunc(self.gridOptions, offset));
             return req;
@@ -135,11 +135,16 @@ angular.module('contractualClienteApp')
         };
 
         self.aprobar_necesidad = function () {
-            administrativaRequest.get('estado_necesidad', $.param({
-                query: "Nombre:Aprobada"
-            })).then(function (response) {
-                self.g_necesidad.EstadoNecesidad = response.data[0];
-                administrativaRequest.put('necesidad', self.g_necesidad.Id, self.g_necesidad).then(function (response) {
+            var n = {};
+            administrativaRequest.get('necesidad/' + self.g_necesidad.Id
+            ).then(function (response) {
+                n = response.data == undefined ? {} : response.data;
+                return administrativaRequest.get('estado_necesidad', $.param({
+                    query: "Nombre:Aprobada"
+                }));
+            }).then(function (response) {
+                n.EstadoNecesidad = response.data[0];
+                administrativaRequest.put('necesidad', n.Id, n).then(function (response) {
                     self.alerta = "";
                     for (var i = 1; i < response.data.length; i++) {
                         self.alerta = self.alerta + response.data[i] + "\n";
@@ -154,7 +159,7 @@ angular.module('contractualClienteApp')
         };
 
         self.rechazar_necesidad = function () {
-
+            var nec_rech = {};
             swal({
                 title: 'Indica una justificación por el rechazo',
                 input: 'textarea',
@@ -169,29 +174,38 @@ angular.module('contractualClienteApp')
                     });
                 }
             }).then(function (text) {
-                var nec_rech = {
+                nec_rech = {
                     Justificacion: text,
-                    Necesidad: self.g_necesidad
+                    Necesidad: {}
                 };
-                administrativaRequest.post('necesidad_rechazada', nec_rech).then(function (response) {
-                    if (response.data !== undefined) {
-                        swal(
-                            'Ok!',
-                            'La necesidad ha sido Rechazada!',
-                            'success'
-                        );
-                    } else {
-                        swal(
-                            'error!',
-                            'La necesidad no pudo ser rechazada!',
-                            'error'
-                        );
-                    }
-                    self.cargarDatosNecesidades(self.offset, self.query);
-                    self.self.g_necesidad = undefined;
-                    $("#myModal").modal("hide");
-                });
-
+                return administrativaRequest.get('necesidad/' + self.g_necesidad.Id);
+            }).then(function (response) {
+                nec_rech.Necesidad = response.data;
+                return administrativaRequest.get('estado_necesidad', $.param({
+                    query: "Nombre:Rechazada"
+                }));
+            }).then(function (response) {
+                nec_rech.Necesidad.EstadoNecesidad = response.data[0];
+                return administrativaRequest.put('necesidad', nec_rech.Necesidad.Id, nec_rech.Necesidad);
+            }).then(function (response) {
+                return administrativaRequest.post('necesidad_rechazada', nec_rech);
+            }).then(function (response) {
+                if (response.data !== undefined) {
+                    swal(
+                        $translate.instant("OK"),
+                        $translate.instant("NECESIDAD_RECHAZADA"),
+                        'success'
+                    );
+                } else {
+                    swal(
+                        $translate.instant("ERROR"),
+                        $translate.instant("NECESIDAD_NO_RECHAZADA"),
+                        'error'
+                    );
+                }
+                self.cargarDatosNecesidades(self.offset, self.query);
+                self.g_necesidad = undefined;
+                $("#myModal").modal("hide");
             });
         };
 

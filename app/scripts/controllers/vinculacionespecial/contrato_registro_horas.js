@@ -49,7 +49,7 @@ angular.module('contractualClienteApp')
                 self.contratoGeneralBase.Contrato.SedeSolicitante = response.data.Id.toString();
                 self.sede_solicitante_defecto = response.data.Nombre;
             });
-            adminMidRequest.get("gestion_previnculacion/docentes_previnculados_all", "id_resolucion=" + self.idResolucion.toString()).then(function (response) {
+            adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.idResolucion.toString()).then(function (response) {
 
                 self.contratados = response.data;
 
@@ -185,7 +185,7 @@ angular.module('contractualClienteApp')
                     actaI.FechaInicio = contratado.FechaInicio;
                     contratoGeneral.Contratista = parseInt(contratado.IdPersona);
                     contratoGeneral.DependenciaSolicitante = contratado.IdProyectoCurricular.toString();
-                    contratoGeneral.PlazoEjecucion = parseInt(contratado.NumeroHorasNuevas);
+                    contratoGeneral.PlazoEjecucion = parseInt(contratado.NumeroHorasSemanales);
                     contratoGeneral.OrdenadorGasto = self.ordenadorGasto.Id;
                     contratoGeneral.ValorContrato = parseInt(contratado.ValorContrato);
                     var contratoVinculacion = {
