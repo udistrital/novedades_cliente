@@ -33,14 +33,14 @@ angular.module('contractualClienteApp')
                 { field: 'NombreCompleto', width: '15%', displayName: $translate.instant('NOMBRE') },
                 { field: 'IdPersona', width: '10%', displayName: $translate.instant('DOCUMENTO_DOCENTES') },
                 { field: 'Categoria', width: '10%', displayName: $translate.instant('CATEGORIA') },
-                { field: 'IdDedicacion.NombreDedicacion', width: '10%', displayName: $translate.instant('DEDICACION') },
+                { field: 'ProyectoNombre', width: '23%', displayName: $translate.instant('PROYECTO_CURRICULAR') },
                 { field: 'IdDedicacion.Id', visible: false },
                 { field: 'Disponibilidad', visible: false },
                 { field: 'DependenciaAcademica', visible: false },
                 { field: 'NumeroHorasSemanales', width: '8%', displayName: $translate.instant('HORAS_SEMANALES') },
                 { field: 'NumeroSemanas', width: '7%', displayName: $translate.instant('SEMANAS') },
-                { field: 'NumeroDisponibilidad', width: '15%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
-                { field: 'ValorContrato', width: '15%', displayName: $translate.instant('VALOR_CONTRATO'), cellClass: "valorEfectivo", cellFilter: "currency" },
+                { field: 'NumeroDisponibilidad', width: '9%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
+                { field: 'ValorContrato', width: '11%', displayName: $translate.instant('VALOR_CONTRATO'), cellClass: "valorEfectivo", cellFilter: "currency" },
                 {
                     field: 'IdProyectoCurricular',
                     visible: false,
@@ -54,7 +54,7 @@ angular.module('contractualClienteApp')
                     field: 'cancelar',
                     enableSorting: false,
                     enableFiltering: false,
-                    width: '15%',
+                    width: '8%',
                     displayName: $translate.instant('OPCIONES'),
                     cellTemplate: '<center>' +
                         '<a class="borrar" ng-click="grid.appScope.mostrar_modal_adicion(row)">' +
