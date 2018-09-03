@@ -589,20 +589,50 @@ angular.module('contractualClienteApp')
 
 
             administrativaRequest.post("tr_necesidad", self.tr_necesidad).then(function (response) {
-                self.alerta = "";
-                for (var i = 1; i < response.data.length; i++) {
-                    self.alerta = self.alerta + response.data[i] + "\n";
+                self.alerta_necesidad = response.data;
+                if (typeof(self.alerta_necesidad) === "string") {
+                    swal({
+                        title: '',
+                        type: 'error',
+                        text: self.alerta_necesidad,
+                        showCloseButton: true,
+                        confirmButtonText:  $translate.instant("CERRAR")
+                    });
+                    console.log(self.alerta_necesidad);
+                    return;
                 }
+                var templateAlert = "<table class='table table-bordered'><th>" +
+                    $translate.instant('NO_NECESIDAD') + "</th><th>" +
+                    $translate.instant('UNIDAD_EJECUTORA') + "</th><th>" +
+                    $translate.instant('DEPENDENCIA_DESTINO') + "</th><th>" +
+                    $translate.instant('TIPO_CONTRATO') + "</th><th>" +
+                    $translate.instant('VALOR') + "</th>";
+                angular.forEach(self.alerta_necesidad, function (data) {
+                    if (data.Type === "error")
+                        templateAlert += "<tr class='danger'>";
+                    else
+                        templateAlert += "<tr class='" + data.Type + "'>";
+
+                    var n = typeof (data.Body) === "object" ? data.Body.Necesidad : self.necesidad;
+                    console.log(self.unidad_ejecutora_data);
+                    console.log(n);
+                    templateAlert +=
+                        "<td>" + n.Id + "</td>" +
+                        "<td>" + self.unidad_ejecutora_data.filter(function (u) { return u.Id === n.UnidadEjecutora })[0].Nombre + "</td>" +
+                        "<td>" + self.dependencia_data.filter(function (dd) { return dd.Id === self.dependencia_destino })[0].Nombre + "</td>" +
+                        "<td>" + n.TipoContratoNecesidad.Nombre + "</td>" +
+                        "<td>" + n.Valor + "</td>";
+
+                    templateAlert += "</tr>";
+                });
+                templateAlert = templateAlert + "</table>";
                 swal({
-                    text: self.alerta,
-                    type: response.data[0],
-                    confirmButtonColor: "#449D44",
-                    confirmButtonText: $translate.instant('CONFIRMAR')
-                }).then(function () {
-                    //si da click en ir a contratistas
-                    if (response.data[0] === "success") {
-                        location.href = '#/necesidades';
-                    }
+                    title: '',
+                    type: self.alerta_necesidad[0].Type,
+                    width: 800,
+                    html: templateAlert,
+                    showCloseButton: true,
+                    confirmButtonText:  $translate.instant("CERRAR")
                 });
             });
         };

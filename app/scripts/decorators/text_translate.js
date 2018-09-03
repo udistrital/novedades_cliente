@@ -10,6 +10,7 @@
 var text_es = {
     OK: "Ok",
     ERROR: "Error",
+    CERRAR: "Cerrar",
     NO_HAY_DATOS_REDIRIGIR_RP: "No hay datos de registro presupuestal para este contratista",
     NO_HAY_DATOS_REDIRIGIR_ORDEN: "No hay datos de órdenes de pago para este contratista",
     SELECCIONAR_FILTRO: "Seleccione el tipo de filtro por el cual quiere generar la solicitud del RP",
@@ -138,7 +139,8 @@ var text_es = {
     GESTION_NECESIDADES: "Gestión de Necesidades",
     NUMERO_ELABORACION: "No. de Elaboración",
     LISTA_NECESIDADES:"Lista de Necesidades",
-
+    NECESIDAD_RECHAZADA: "La necesidad ha sido Rechazada!",
+    NECESIDAD_NO_RECHAZADA: "La necesidad no pudo ser rechazada!",
     //visualizar_necesidad
     DE: "de",
     MONTO: "Monto",
@@ -840,8 +842,8 @@ var text_en = {
     //necesidades
     GESTION_NECESIDADES: "Managment Needs",
     NUMERO_ELABORACION: "No. of Elaboration",
-    NECESIDAD_RECHAZADA: "La necesidad ha sido Rechazada!",
-    NECESIDAD_NO_RECHAZADA: "La necesidad no pudo ser rechazada!",
+    NECESIDAD_RECHAZADA: "The Need has been rejected!",
+    NECESIDAD_NO_RECHAZADA: "The Need had not been rejected!",
     OBLIGATORIO: "Required",
     //visualizar_necesidad
     DE: "of",
