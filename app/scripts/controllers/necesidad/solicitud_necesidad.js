@@ -17,11 +17,12 @@ angular.module('contractualClienteApp')
             JefeDependenciaSolicitante: 6
         };
 
-        $scope.info_general = false;
-        $scope.info_responsables = false;
-        $scope.info_objeto = false;
-        $scope.info_legal = false;
+        $scope.info_general = true;
+        $scope.info_responsables = true;
+        $scope.info_objeto = true;
+        $scope.info_legal = true;
         $scope.espf = false;
+        $scope.info_espf = true;
         $scope.finan = false;
         self.fecha_actual = new Date();
         self.vigencia = self.fecha_actual.getFullYear();
@@ -39,18 +40,18 @@ angular.module('contractualClienteApp')
         }
 
         self.validar_formu = function (arrVariables, parteValidar) {
+            var alertInfo = {
+                type: 'error',
+                title: 'Complete todos los campos obligatorios en el formulario',
+                showConfirmButton: false,
+                timer: 2000,
+            };
             switch (parteValidar) {
                 case 0: // responsables
                     if ($scope.info_responsables) {
                         if (validarDatos(arrVariables)) {
                             $scope.info_responsables = true; // Si faltan datos mantiene abierta info_responsables
-                            swal({
-                                position: 'top-right',
-                                type: 'error',
-                                title: 'Complete todos los campos obligatorios en el formulario',
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
+                            swal(alertInfo);
                         } else {
                             $scope.info_responsables = false;
                             self.formuIncompleto = false;
@@ -64,13 +65,7 @@ angular.module('contractualClienteApp')
                     if ($scope.info_general) {
                         if (validarDatos(arrVariables)) {
                             $scope.info_general = true; // Si faltan datos mantiene abierta info_responsables
-                            swal({
-                                position: 'top-right',
-                                type: 'error',
-                                title: 'Complete todos los campos obligatorios en el formulario',
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
+                            swal(alertInfo);
                         } else {
                             $scope.info_general = false;
                             self.formuIncompleto = false;
@@ -84,13 +79,7 @@ angular.module('contractualClienteApp')
                     if ($scope.info_objeto) {
                         if (validarDatos(arrVariables)) {
                             $scope.info_objeto = true; // Si faltan datos mantiene abierta info_responsables
-                            swal({
-                                position: 'top-right',
-                                type: 'error',
-                                title: 'Complete todos los campos obligatorios en el formulario',
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
+                            swal(alertInfo);
                         } else {
                             $scope.info_objeto = false;
                             self.formuIncompleto = false;
@@ -110,13 +99,7 @@ angular.module('contractualClienteApp')
                     if ($scope.info_espf) {
                         if (validarDatos(arrVariables)) {
                             $scope.info_espf = true; // Si faltan datos mantiene abierta info_responsables
-                            swal({
-                                position: 'top-right',
-                                type: 'error',
-                                title: 'Complete todos los campos obligatorios en el formulario',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
+                            swal(alertInfo);
                         } else {
                             $scope.info_espf = false;
                             self.formuIncompleto = false;
@@ -234,7 +217,6 @@ angular.module('contractualClienteApp')
         });
 
         self.necesidad = {};
-        self.necesidad.TipoContratoNecesidad = {};
         self.necesidad.TipoNecesidad = {
             Id: 1
         };
@@ -515,30 +497,18 @@ angular.module('contractualClienteApp')
                     'Faltan datos en el formulario',
                     'Completa todos los datos obligatorios del formulario',
                     'warning'
-                );
+                ).then(function (event) {
+                    var e = angular.element('.ng-invalid-required')[1];
+                    e.focus();
+                })
             }
         };
 
         self.crear_solicitud = function () {
-            self.marcos_legales = [];
             self.f_apropiaciones = [];
 
-
-            if (self.actividades_economicas.length > 0) {
-                for (var i = 0; i < self.actividades_economicas.length; i++) {
-                    var Act_Economica = {};
-                    Act_Economica.ActividadEconomica = self.actividades_economicas[i].Id;
-                    self.actividades_economicas_id.push(Act_Economica);
-                }
-            }
-
-            if (self.documentos.length > 0) {
-                for (var j = 0; j < self.documentos.length; j++) {
-                    var marco = {};
-                    marco.MarcoLegal = self.documentos[j];
-                    self.marcos_legales.push(marco);
-                }
-            }
+            self.actividades_economicas_id = self.actividades_economicas.map(function (a) { return { ActividadEconomica: a.Id } });
+            self.marcos_legales = self.documentos.map(function (d) { return { MarcoLegal: d } });
 
             if (self.necesidad.TipoFinanciacionNecesidad.Nombre === 'Inversión') {
                 if (self.valor_inv !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Nombre === 'Compras') {
@@ -590,15 +560,24 @@ angular.module('contractualClienteApp')
 
             administrativaRequest.post("tr_necesidad", self.tr_necesidad).then(function (response) {
                 self.alerta_necesidad = response.data;
-                if (typeof(self.alerta_necesidad) === "string") {
+                if (typeof (self.alerta_necesidad) === "string") {
                     swal({
                         title: '',
                         type: 'error',
                         text: self.alerta_necesidad,
                         showCloseButton: true,
-                        confirmButtonText:  $translate.instant("CERRAR")
+                        confirmButtonText: $translate.instant("CERRAR")
                     });
-                    console.log(self.alerta_necesidad);
+                    return;
+                }
+                if (self.alerta_necesidad[0].Type === "error") {
+                    swal({
+                        title: '',
+                        type: 'error',
+                        text: self.alerta_necesidad[0].Body,
+                        showCloseButton: true,
+                        confirmButtonText: $translate.instant("CERRAR")
+                    });
                     return;
                 }
                 var templateAlert = "<table class='table table-bordered'><th>" +
@@ -614,8 +593,7 @@ angular.module('contractualClienteApp')
                         templateAlert += "<tr class='" + data.Type + "'>";
 
                     var n = typeof (data.Body) === "object" ? data.Body.Necesidad : self.necesidad;
-                    console.log(self.unidad_ejecutora_data);
-                    console.log(n);
+
                     templateAlert +=
                         "<td>" + n.Id + "</td>" +
                         "<td>" + self.unidad_ejecutora_data.filter(function (u) { return u.Id === n.UnidadEjecutora })[0].Nombre + "</td>" +
@@ -632,7 +610,7 @@ angular.module('contractualClienteApp')
                     width: 800,
                     html: templateAlert,
                     showCloseButton: true,
-                    confirmButtonText:  $translate.instant("CERRAR")
+                    confirmButtonText: $translate.instant("CERRAR")
                 });
             });
         };
