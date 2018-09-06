@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate) {
+    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate) {
         var self = this;
         self.documentos = [];
         self.formuIncompleto = true;
@@ -21,9 +21,8 @@ angular.module('contractualClienteApp')
         $scope.info_responsables = true;
         $scope.info_objeto = true;
         $scope.info_legal = true;
-        $scope.espf = false;
         $scope.info_espf = true;
-        $scope.finan = false;
+        $scope.info_finan = true;
         self.fecha_actual = new Date();
         self.vigencia = self.fecha_actual.getFullYear();
 
@@ -499,7 +498,8 @@ angular.module('contractualClienteApp')
                     'warning'
                 ).then(function (event) {
                     var e = angular.element('.ng-invalid-required')[1];
-                    e.focus();
+                    e.focus(); // para que enfoque el elemento
+                    e.classList.add("ng-dirty") //para que se vea rojo
                 })
             }
         };
@@ -570,7 +570,7 @@ angular.module('contractualClienteApp')
                     });
                     return;
                 }
-                if (self.alerta_necesidad[0].Type === "error") {
+                if (self.alerta_necesidad[0].Type === "error" && typeof (self.alerta_necesidad[0].Body) === "string") {
                     swal({
                         title: '',
                         type: 'error',
@@ -595,11 +595,11 @@ angular.module('contractualClienteApp')
                     var n = typeof (data.Body) === "object" ? data.Body.Necesidad : self.necesidad;
 
                     templateAlert +=
-                        "<td>" + n.Id + "</td>" +
+                        "<td>" + n.NumeroElaboracion + "</td>" +
                         "<td>" + self.unidad_ejecutora_data.filter(function (u) { return u.Id === n.UnidadEjecutora })[0].Nombre + "</td>" +
                         "<td>" + self.dependencia_data.filter(function (dd) { return dd.Id === self.dependencia_destino })[0].Nombre + "</td>" +
                         "<td>" + n.TipoContratoNecesidad.Nombre + "</td>" +
-                        "<td>" + n.Valor + "</td>";
+                        "<td>" + $filter('currency')(n.Valor) + "</td>";
 
                     templateAlert += "</tr>";
                 });
@@ -612,6 +612,9 @@ angular.module('contractualClienteApp')
                     showCloseButton: true,
                     confirmButtonText: $translate.instant("CERRAR")
                 });
+                if (self.alerta_necesidad[0].Type === "success") {
+                    $window.location.href = '#/necesidades';
+                }
             });
         };
 
