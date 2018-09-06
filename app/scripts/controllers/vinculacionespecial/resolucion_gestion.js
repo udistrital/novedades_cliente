@@ -371,22 +371,56 @@ angular.module('contractualClienteApp')
 
     //Función para cambiar el estado de la resolución
     self.cambiarEstado = function (resolucion_estado) {
-      administrativaRequest.post("resolucion_estado", resolucion_estado).then(function (response) {
-        if (response.statusText === "Created") {
-          self.cargarDatosResolucion($scope.offset, $scope.query);
-          swal(
-            'Felicidades',
-            $translate.instant('ANULADA'),
-            'success'
-          ).then(function () {
-            $window.location.reload();
+      adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + resolucion_estado.Resolucion.Id.toString()).then(function (response) {
+        if (response.data.length === 0 || resolucion_estado.Resolucion.IdTipoResolucion.Id) {
+          administrativaRequest.post("resolucion_estado", resolucion_estado).then(function (response) {
+            if (response.statusText === "Created") {
+              self.cargarDatosResolucion($scope.offset, $scope.query);
+              swal(
+                'Felicidades',
+                $translate.instant('ANULADA'),
+                'success'
+              ).then(function () {
+                $window.location.reload();
+              });
+            } else {
+              swal(
+                'Error',
+                'Ocurrió un error',
+                'error'
+              );
+            }
           });
         } else {
-          swal(
-            'Error',
-            'Ocurrió un error',
-            'error'
-          );
+          adminMidRequest.post("gestion_desvinculaciones/anular_modificaciones", response.data).then(function (response) {
+            if (response.data === "OK") {
+              
+              administrativaRequest.post("resolucion_estado", resolucion_estado).then(function (response) {
+                if (response.statusText === "Created") {
+                  self.cargarDatosResolucion($scope.offset, $scope.query);
+                  swal(
+                    'Felicidades',
+                    $translate.instant('ANULADA'),
+                    'success'
+                  ).then(function () {
+                    $window.location.reload();
+                  });
+                } else {
+                  swal(
+                    'Error',
+                    'Ocurrió un error',
+                    'error'
+                  );
+                }
+              });
+            } else {
+              swal(
+                'Error',
+                'Ocurrió un error',
+                'error'
+              );
+            }
+          });
         }
       });
     };
