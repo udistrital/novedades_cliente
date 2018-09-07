@@ -372,7 +372,7 @@ angular.module('contractualClienteApp')
     //Función para cambiar el estado de la resolución
     self.cambiarEstado = function (resolucion_estado) {
       adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + resolucion_estado.Resolucion.Id.toString()).then(function (response) {
-        if (response.data.length === 0 || resolucion_estado.Resolucion.IdTipoResolucion.Id) {
+        if (response.data.length === 0 || resolucion_estado.Resolucion.IdTipoResolucion.Id == 1) {
           administrativaRequest.post("resolucion_estado", resolucion_estado).then(function (response) {
             if (response.statusText === "Created") {
               self.cargarDatosResolucion($scope.offset, $scope.query);
