@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .controller('ResolucionAdicionCtrl', function (financieraMidRequest,amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, colombiaHolidaysService, $localStorage, $scope, $mdDialog, $translate, $window) {
+    .controller('ResolucionAdicionCtrl', function (financieraMidRequest, amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, colombiaHolidaysService, $localStorage, $scope, $mdDialog, $translate, $window, gridApiService) {
 
         var self = this;
 
@@ -108,31 +108,8 @@ angular.module('contractualClienteApp')
 
                 });
 
-                gridApi.core.on.filterChanged($scope, function () {
-                    var grid = this.grid;
-                    var query = '';
-                    angular.forEach(grid.columns, function (value, key) {
-                        if (value.filters[0].term) {
-                            var formtstr = value.colDef.name.replace('[0]', '');
-                            query = query + '&query=' + formtstr + '__icontains:' + value.filters[0].term;
-    
-                        }
-                    });
-                    self.actualizarLista(self.offset, query);
-                });
-
-                gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
-                    var query = '';
-                    var grid = this.grid;
-                    angular.forEach(grid.columns, function (value, key) {
-                        if (value.filters[0].term) {
-                            var formtstr = value.colDef.name.replace('[0]', '');
-                            query = query + '&query=' + formtstr + '__icontains:' + value.filters[0].term;
-                        }
-                    });
-                    self.offset = (newPage - 1) * pageSize;
-                    self.actualizarLista(self.offset, query);
-                });
+                self.gridApi = gridApiService.pagination(self.gridApi, self.actualizarLista, $scope);
+                self.gridApi = gridApiService.filter(self.gridApi, self.actualizarLista, $scope);
             }
         };
 
@@ -166,7 +143,7 @@ angular.module('contractualClienteApp')
                 gridApi.selection.on.rowSelectionChanged($scope, function () {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
                     self.disponibilidad_nueva_id = self.apropiacion_elegida[0].Id;
-                   // self.verificarDisponibilidad();
+                    // self.verificarDisponibilidad();
                 });
             }
         };
@@ -210,10 +187,10 @@ angular.module('contractualClienteApp')
             self.disponibilidad_actual_id = row.entity.Disponibilidad;
             self.disponibilidad_nueva_id = row.entity.Disponibilidad;
             financieraRequest.get("disponibilidad/TotalDisponibilidades/" + self.vigencia_data, 'UnidadEjecutora=1')
-            .then(function (response) { 
-                self.Disponibilidades.totalItems = response.data;
-                self.actualizarLista(self.offset, '');
-            });
+                .then(function (response) {
+                    self.Disponibilidades.totalItems = response.data;
+                    self.actualizarLista(self.offset, '');
+                });
             amazonAdministrativaRequest.get("acta_inicio", $.param({
                 query: 'NumeroContrato:' + self.persona_a_modificar.NumeroContrato.String + ',Vigencia:' + self.persona_a_modificar.Vigencia.Int64
             })).then(function (response) {
@@ -227,17 +204,19 @@ angular.module('contractualClienteApp')
                     self.maximoSemanasAdicionar = self.semanas_actuales;
                 }
                 $('#modal_adicion').modal('show');
-            }); 
+            });
         };
 
         self.actualizarLista = function (offset, query) {
-            financieraMidRequest.get('disponibilidad/ListaDisponibilidades/' + self.vigencia_data, 'limit=' + self.Disponibilidades.paginationPageSize + '&offset=' + offset + query + "&UnidadEjecutora=1").then(function (response) {
-                if (response.data.Type !== undefined) {
-                    self.Disponibilidades.data = [];
-                } else {
-                    self.Disponibilidades.data = response.data;
-                }
-            });
+            var req = financieraMidRequest.get('disponibilidad/ListaDisponibilidades/' + self.vigencia_data,
+                $.param({
+                    limit: self.Disponibilidades.paginationPageSize,
+                    offset: offset,
+                    query: typeof (query) === "string" ? query : query.join(","),
+                    UnidadEjecutora: 1
+                }));
+            req.then(gridApiService.paginationFunc(self.Disponibilidades, offset));
+            return req;
         };
 
         self.listar_apropiaciones = function () {
@@ -250,7 +229,7 @@ angular.module('contractualClienteApp')
         };
 
         self.verificarDisponibilidad = function () {
-            
+
             var vinculacionDocente = {
 
                 IdPersona: self.persona_a_modificar.IdPersona,
@@ -355,7 +334,7 @@ angular.module('contractualClienteApp')
                             TipoDesvinculacion: "Adición",
                             DocentesDesvincular: desvinculacionesData
                         };
-                        
+
                         adminMidRequest.post("gestion_desvinculaciones/adicionar_horas", objeto_a_enviar).then(function (response) {
 
                             if (response.data === "OK") {
@@ -380,7 +359,7 @@ angular.module('contractualClienteApp')
                                 $window.location.reload();
                             }
                         });
-                    } 
+                    }
                 } else {
                     swal({
                         title: $translate.instant('ERROR'),
@@ -420,7 +399,7 @@ angular.module('contractualClienteApp')
                 self.maximoSemanasSugeridas = self.semanasRestantes;
             }
         }
-        
+
         //Función para convertir las fechas a UTC declaradas desde el cliente (Las que vengan por gets corregirlas desde los apis)
         self.fechaUtc = function (fecha) {
             var _fechaConUtc = new Date(fecha.getUTCFullYear(), fecha.getUTCMonth(), fecha.getUTCDate(), fecha.getUTCHours(), fecha.getUTCMinutes(), fecha.getUTCSeconds());
