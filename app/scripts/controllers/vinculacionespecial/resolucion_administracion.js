@@ -21,7 +21,7 @@ angular.module('contractualClienteApp')
       enableRowSelection: false,
       enableRowHeaderSelection: false,
       useExternalPagination: true,
-      useExternalSorting: true,
+      useExternalFiltering: true,
       columnDefs: [
         {
           field: 'Id',
@@ -152,16 +152,18 @@ angular.module('contractualClienteApp')
       onRegisterApi: function (gridApi) {
         self.gridApi = gridApi;
         self.gridApi = gridApiService.pagination(self.gridApi, self.cargarDatosResolucion, $scope);
+        self.gridApi = gridApiService.filter(self.gridApi, self.cargarDatosResolucion, $scope);
       }
     };
 
     //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
     self.cargarDatosResolucion = function (offset, query) {
+      if (query == undefined) query = "";
       var req = adminMidRequest.get("gestion_resoluciones/get_resoluciones_aprobadas", $.param({
         limit: self.resolucionesAprobadas.paginationPageSize,
         offset: offset,
-        query: query
-      }))
+        query: typeof (query) === "string" ? query : query.join(",")
+      }), true)
       req.then(gridApiService.paginationFunc(self.resolucionesAprobadas, offset));
       return req;
     };
