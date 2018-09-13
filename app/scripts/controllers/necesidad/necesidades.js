@@ -21,6 +21,7 @@ angular.module('contractualClienteApp')
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: 0,
             useExternalPagination: true,
+            useExternalFiltering: true,
             enableSelectAll: false,
             multiSelect: false,
             columnDefs: [{
@@ -81,6 +82,8 @@ angular.module('contractualClienteApp')
             },
             {
                 field: 'ver',
+                enableFiltering: false, 
+                enableSorting: false,
                 displayName: $translate.instant('VER'),
                 cellTemplate: function () {
                     return '<center><a href="" style="border:0" type="button" ng-click="grid.appScope.direccionar(row.entity)"><span class="fa fa-eye"></span></a></center>';
@@ -94,7 +97,10 @@ angular.module('contractualClienteApp')
             ],
             onRegisterApi: function (gridApi) {
                 self.gridApi = gridApi;
+
                 self.gridApi = gridApiService.pagination(self.gridApi, self.cargarDatosNecesidades, $scope);
+                self.gridApi = gridApiService.filter(self.gridApi, self.cargarDatosNecesidades, $scope);
+
                 self.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                     self.necesidad = row.entity;
                 });
@@ -103,13 +109,17 @@ angular.module('contractualClienteApp')
 
         //Funcion para cargar los datos de las necesidades creadas y almacenadas dentro del sistema
         self.cargarDatosNecesidades = function (offset, query) {
+            if (query == undefined) query = [];
+            query = typeof(query) === "string" ? [query] : query;
+            query.push("EstadoNecesidad.Nombre__not_in:Borrador");
+            
             var req = administrativaRequest.get('necesidad', $.param({
-                query: "EstadoNecesidad.Nombre__not_in:Borrador",
                 limit: self.gridOptions.paginationPageSize,
                 offset: offset,
                 sortby: "Vigencia,NumeroElaboracion",
                 order: "desc",
-            }))
+                query: query.join(",")
+            }, true))
             req.then(gridApiService.paginationFunc(self.gridOptions, offset));
             return req;
         };
