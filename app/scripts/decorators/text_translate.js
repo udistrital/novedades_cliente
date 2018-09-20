@@ -197,6 +197,7 @@ var text_es = {
     FECHA_INICIO_VALIDA: "Fecha inicio válida",
     FECHA_FIN: "Fecha fin",
     FECHA: "Fecha",
+    LABEL_FECHA_INVALIDA: "Fecha inválida",
     TIPO: "Tipo",
     DATOS_REGISTRO_PRESUPUESTAL: "Datos del registro presupuestal",
     NUMERO_REGISTRO_PRESUPUESTAL: "No RP",
