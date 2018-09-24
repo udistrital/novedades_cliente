@@ -90,6 +90,14 @@ angular.module('contractualClienteApp')
 
         };
 
+        oikosRequest.get('dependencia_tipo_dependencia', $.param({
+            query: "TipoDependenciaId.Id:2",
+            fields: "DependenciaId",
+            limit: -1
+        })).then(function (response) {
+            self.facultades = response.data;
+        });
+
         administrativaRequest.get("resolucion_vinculacion/expedidas_vigencia_periodo_vinculacion", "vigencia=" + self.anioPeriodo).then(function (response) {
             self.resolucionesExpedidasPeriodo.data = response.data;
             if (self.resolucionesExpedidasPeriodo.data !== null) {
@@ -113,20 +121,15 @@ angular.module('contractualClienteApp')
                             resolucion.EstadoTexto = "Cancelada";
                         }
                     }
-                    oikosRequest.get("dependencia/" + resolucion.Facultad).then(function (response) {
-                        resolucion.NombreFacultad = response.data.Nombre;
+                    self.facultades.forEach(function (dependencia) {
+                        if (dependencia.DependenciaId.Id == resolucion.Facultad){
+                            resolucion.NombreFacultad = dependencia.DependenciaId.Nombre;
+                        }
                     });
                 });
             }
         });
 
-        oikosRequest.get('dependencia_tipo_dependencia', $.param({
-            query: "TipoDependenciaId.Id:2",
-            fields: "DependenciaId",
-            limit: -1
-        })).then(function (response) {
-            self.facultades = response.data;
-        });
 
         self.resolucion = {};
 
