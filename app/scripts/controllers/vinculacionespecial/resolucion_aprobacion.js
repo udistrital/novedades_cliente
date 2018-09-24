@@ -32,10 +32,6 @@ angular.module('contractualClienteApp')
                 visible: false
             },
             {
-                field: 'Estado',
-                visible: false
-            },
-            {
                 field: 'Facultad',
                 visible: false
             },
@@ -65,6 +61,7 @@ angular.module('contractualClienteApp')
             },
             {
                 field: 'FacultadNombre',
+                enableFiltering: false,
                 cellClass: function (grid, row /*, col, rowRenderIndex, colRenderIndex*/) {
                     if (row.entity.Estado === "Cancelada") {
                         return 'resolucionCancelada';

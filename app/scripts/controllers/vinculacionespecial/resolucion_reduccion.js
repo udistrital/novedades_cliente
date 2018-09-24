@@ -14,6 +14,7 @@ angular.module('contractualClienteApp')
         self.semanasTranscurridas = 0;
         var desvinculacionesData = [];
         self.mostrar_modificar = true;
+        self.mostrarFechaInvalida = false;
 
         self.precontratados = {
             paginationPageSizes: [10, 15, 20],
@@ -174,6 +175,8 @@ angular.module('contractualClienteApp')
             self.disponibilidad_actual_id = row.entity.Disponibilidad;
             self.disponibilidad_nueva_id = row.entity.Disponibilidad;
             self.getRPs(self.persona_a_modificar.NumeroContrato.String, self.persona_a_modificar.Vigencia.Int64, self.persona_a_modificar.IdPersona);
+            self.mostrarSemanas = row.entity.IdResolucion.NivelAcademico == "PREGRADO" ? true : false;
+            self.maximoHorasReducir = row.entity.IdResolucion.NivelAcademico == "PREGRADO" ? self.horas_actuales - 1 : self.horas_actuales;
             amazonAdministrativaRequest.get("acta_inicio", $.param({
                 query: 'NumeroContrato:' + self.persona_a_modificar.NumeroContrato.String + ',Vigencia:' + self.persona_a_modificar.Vigencia.Int64
             })).then(function (response) {
@@ -272,7 +275,7 @@ angular.module('contractualClienteApp')
         };
 
         self.realizar_nueva_vinculacion = function () {
-            if (self.semanas_a_adicionar != undefined && self.horas_a_adicionar != undefined && self.FechaInicio != undefined && self.persona_a_modificar.InformacionRp != undefined) {
+            if ((self.semanas_a_adicionar != undefined || !self.mostrarSemanas) && !self.mostrarFechaInvalida && self.horas_a_adicionar != undefined && self.FechaInicio != undefined && self.persona_a_modificar.InformacionRp != undefined) { 
                 if (self.saldo_disponible) {
                     self.mostrar_modificar = false;
                     self.calculoSemanasTranscurridas(self.FechaInicio);
@@ -287,7 +290,7 @@ angular.module('contractualClienteApp')
                         NumeroHorasSemanales: parseInt(self.horas_actuales),
                         NumeroHorasNuevas: parseInt(self.horas_a_adicionar),
                         NumeroSemanas: parseInt(self.semanas_actuales),
-                        NumeroSemanasNuevas: parseInt(self.semanas_a_adicionar),
+                        NumeroSemanasNuevas: self.mostrarSemanas ? parseInt(self.semanas_a_adicionar) : parseInt(self.semanas_actuales),
                         NumeroSemanasRestantes: parseInt(self.semanasRestantes),
                         IdResolucion: { Id: parseInt(self.persona_a_modificar.IdResolucion.Id) },
                         IdDedicacion: { Id: parseInt(self.persona_a_modificar.IdDedicacion.Id) },
@@ -369,12 +372,18 @@ angular.module('contractualClienteApp')
         };
 
         self.CalculoSemanasRestantes = function () {
-            self.calculoSemanasTranscurridas(self.FechaInicio);
-            self.semanasRestantes = self.semanas_actuales - self.semanasTranscurridas;
-            self.maximoSemanasReducir = self.semanasRestantes;
-            self.maximoSemanasSugeridas = self.maximoSugeridasInicial;
-            if (self.FechaInicio > self.fecha) {
-                self.maximoSemanasSugeridas = self.semanasRestantes;
+            if (self.mostrarSemanas) {
+                self.calculoSemanasTranscurridas(self.FechaInicio);
+                self.semanasRestantes = self.semanas_actuales - self.semanasTranscurridas;
+                self.maximoSemanasReducir = self.semanasRestantes;
+                self.maximoSemanasSugeridas = self.maximoSugeridasInicial;
+                if (self.FechaInicio > self.fecha) {
+                    self.maximoSemanasSugeridas = self.semanasRestantes;
+                }
+            }
+            if (!self.mostrarSemanas){
+                var hoy = new Date (self.fecha.getFullYear(),self.fecha.getMonth(),self.fecha.getDate(),0,0,0);
+                self.mostrarFechaInvalida = self.FechaInicio < hoy ? true : false;
             }
         }
         
