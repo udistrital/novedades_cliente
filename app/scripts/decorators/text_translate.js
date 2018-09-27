@@ -146,7 +146,6 @@ var text_es = {
     MONTO: "Monto",
 
     //SOLICITUD RP
-    ERROR: "Error",
     SALIR: "Salir",
     VOLVER_CONTRATOS: "Volver a contratos",
     NUMERO_SOLICITUD: "Número solicitud",
@@ -484,12 +483,6 @@ var text_es = {
     CONFIRMAR_ANULAR_REDUCCION: "Anular reducción",
     HORAS_REVERSAR: "Horas a reversar",
     TITULO_DOC_VIN_RES_RED: "Docentes vinculados a resolución de reducción",
-    //RESOLUCION_REDUCCION
-    /*---HTML---*/
-    TITULO_REDUCCION_HORAS: "Reducción de horas",
-    LABEL_HORAS_A_REDUCIR: "Horas a reducir",
-    ALERTA_REDUCCION_EXITOSA: "Reducción realizada exitosamente",
-    ALERTA_ERROR_REDUCCION: "Error al realizar reducción",
 
     //RESOLUCION_VISTA
     /*---Script---*/
