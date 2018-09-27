@@ -29,7 +29,7 @@ angular.module('contractualClienteApp')
             return administrativaRequest.get('tipo_resolucion/' + self.resolucionActual.IdTipoResolucion.Id);
         }).then(function (response) {
             self.resolucionActual.IdTipoResolucion.NombreTipoResolucion = response.data.NombreTipoResolucion;
-        });;
+        });
 
         oikosRequest.get('dependencia/' + resolucion.Facultad).then(function (response) {
             resolucion.FacultadNombre = response.data.Nombre;
@@ -191,7 +191,7 @@ angular.module('contractualClienteApp')
                     var contratoVinculacion = {
                         ContratoGeneral: contratoGeneral,
                         ActaInicio: actaI,
-                        VinculacionDocente: { 
+                        VinculacionDocente: {
                             Id: parseInt(contratado.Id),
                             NumeroSemanasNuevas: contratado.NumeroSemanasNuevas,
                             NumeroHorasNuevas: contratado.NumeroHorasNuevas,
