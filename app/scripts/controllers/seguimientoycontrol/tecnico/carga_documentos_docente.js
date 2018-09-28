@@ -325,7 +325,11 @@ angular.module('contractualClienteApp')
           //Carga la información en la tabla
           self.gridOptions1.data = self.respuesta_docente;
         }else{
-          alert("No se encontraron vinculaciones vigentes asociadas a su número de documento");
+          swal(
+            'Error',
+            'No se encontraron vinculaciones vigentes asociadas a su número de documento',
+            'error'
+        )
         }
 
       });
