@@ -141,6 +141,9 @@ var text_es = {
     LISTA_NECESIDADES:"Lista de Necesidades",
     NECESIDAD_RECHAZADA: "La necesidad ha sido Rechazada!",
     NECESIDAD_NO_RECHAZADA: "La necesidad no pudo ser rechazada!",
+    NECESIDAD_JUSTIFICACION_RECHAZO: "Justificación de rechazo",
+    NECESIDAD_FECHA_RECHAZO: "Fecha de rechazo",
+    NECESIDAD_JUSTIFICACION_DESCRIPCION_RECHAZO: "Justificación",
     //visualizar_necesidad
     DE: "de",
     MONTO: "Monto",
