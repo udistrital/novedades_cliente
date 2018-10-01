@@ -27,14 +27,18 @@ angular.module('contractualClienteApp')
         if (lista.data == null || lista.data.length === 0) {
           return;
         }
+        var idResolucionesConsultadas = [];
         lista.data.forEach(function (elem) {
           var idResolucion = elem.IdResolucion.Id;
-          administrativaRequest.get("resolucion/" + idResolucion).then(function (res) {
-            var NumeroResolucion = res.data.NumeroResolucion;
-            if (!$scope.listaResoluciones.includes(NumeroResolucion)) {
-              $scope.listaResoluciones.push(NumeroResolucion);
-            }
-          });
+          if (!idResolucionesConsultadas.includes(idResolucion)) {
+            administrativaRequest.get("resolucion/" + idResolucion).then(function (res) {
+              var NumeroResolucion = res.data.NumeroResolucion;
+              if (!$scope.listaResoluciones.includes(NumeroResolucion)) {
+                $scope.listaResoluciones.push(NumeroResolucion);
+              }
+            });
+          }
+          idResolucionesConsultadas.push(idResolucion);
         });
       });
     };
