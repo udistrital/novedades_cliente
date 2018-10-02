@@ -2,9 +2,9 @@
 <html>
 <div class="panel panel-primary panel-body" style="padding:30px;">
 
-  <center>
+  <div style="text-align: center">
     <h3 class="page-header">{{"SOLICITUD_NECESIDAD_CONTRATO" | translate}}</h3>
-  </center>
+  </div>
 
   <div>
     <div class="panel-body">
@@ -13,7 +13,7 @@
         novalidate>
 
 
-        <div align="center">
+        <div style="text-align: center">
           <div class="form-group">
             <label class="radio-inline">
               <input type="radio" ng-model="value" value="duracion" ng-change="solicitudNecesidad.duracionEspecial(value)">{{"DURACION"
@@ -288,10 +288,10 @@
               </div>
 
               <div class="form-group">
-                <center>
+                <div style="text-align: center">
                   <button type="button" class="btn btn-primary btn-outline" ng-click="solicitudNecesidad.actividad_esp!=undefined && solicitudNecesidad.agregarActEsp(solicitudNecesidad.actividad_esp);solicitudNecesidad.actividad_esp=undefined">{{"AGREGAR"
                     | translate}}</button>
-                </center>
+                </div>
               </div>
               <div class="form-group">
                 <div class="col-md-6">
@@ -373,10 +373,10 @@
 
 
                     <div class="form-group">
-                      <center>
+                      <div style="text-align: center">
                         <button type="button" class="btn btn-primary btn-outline" ng-click="solicitudNecesidad.requisitos_minimos.push({id: $index + 1 , requisito: pro.requisitomin , reqi: pro.i});pro.requisitomin=''">{{"AGREGAR"
                           | translate}}</button>
-                      </center>
+                      </div>
                     </div>
                   </div>
 
@@ -408,9 +408,9 @@
 
               <div>
                 <div class="form-group" ng-if="solicitudNecesidad.necesidad.TipoFinanciacionNecesidad.Nombre">
-                  <lista-apropiaciones vigencia=solicitudNecesidad.vigencia tipo="Nombre=='Inversion'?'3-3':'3-1'" apropiacion="solicitudNecesidad.apro"
-                    unidadejecutora=solicitudNecesidad.necesidad.UnidadEjecutora tipofinanciacion=solicitudNecesidad.necesidad.TipoFinanciacionNecesidad
-                    selhijos="true"></lista-apropiaciones>
+                  <lista-apropiaciones vigencia=solicitudNecesidad.vigencia tipo="Nombre=='Inversion'?'3-3':'3-1'"
+                    apropiacion="solicitudNecesidad.apro" unidadejecutora=solicitudNecesidad.necesidad.UnidadEjecutora
+                    tipofinanciacion=solicitudNecesidad.necesidad.TipoFinanciacionNecesidad selhijos="true"></lista-apropiaciones>
                   <div style="text-align:center;">
                     <button type="button" class="btn btn-success btn-outline" ng-click="solicitudNecesidad.agregar_ffapropiacion(solicitudNecesidad.apro)">
                       {{"AGREGAR" | translate}}
@@ -460,9 +460,9 @@
           </div>
         </fieldset>
         <fieldset>
-          <center>
+          <div style="text-align: center">
             <input type="submit" class="btn btn-success btn-outline " name="button" value="{{'REGISTRAR' | translate }}" />
-          </center>
+          </div>
         </fieldset>
       </form>
     </div>
