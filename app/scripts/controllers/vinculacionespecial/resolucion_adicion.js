@@ -30,6 +30,7 @@ angular.module('contractualClienteApp')
             columnDefs: [
                 { field: 'Id', visible: false },
                 { field: 'FechaRegistro', visible: false },
+                { field: 'FechaInicio', visible: false },
                 { field: 'NombreCompleto', width: '15%', displayName: $translate.instant('NOMBRE') },
                 { field: 'IdPersona', width: '10%', displayName: $translate.instant('DOCUMENTO_DOCENTES') },
                 { field: 'Categoria', width: '10%', displayName: $translate.instant('CATEGORIA') },
@@ -321,7 +322,8 @@ angular.module('contractualClienteApp')
                             Disponibilidad: parseInt(self.disponibilidad_actual_id),
                             Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
                             NumeroContrato: self.persona_a_modificar.NumeroContrato,
-                            FechaInicio: self.FechaInicio,
+                            FechaInicio: self.persona_a_modificar.FechaInicio,
+                            FechaInicioNueva: self.FechaInicio,
                             DependenciaAcademica: self.persona_a_modificar.DependenciaAcademica,
                         };
 

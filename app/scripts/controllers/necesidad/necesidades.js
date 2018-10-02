@@ -11,7 +11,8 @@ angular.module('contractualClienteApp')
     .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, gridApiService) {
         var self = this;
         self.offset = 0;
-
+        self.rechazada = false;
+        
         self.gridOptions = {
             paginationPageSizes: [10, 15, 20],
             paginationPageSize: 10,
@@ -82,7 +83,7 @@ angular.module('contractualClienteApp')
             },
             {
                 field: 'ver',
-                enableFiltering: false, 
+                enableFiltering: false,
                 enableSorting: false,
                 displayName: $translate.instant('VER'),
                 cellTemplate: function () {
@@ -110,9 +111,9 @@ angular.module('contractualClienteApp')
         //Funcion para cargar los datos de las necesidades creadas y almacenadas dentro del sistema
         self.cargarDatosNecesidades = function (offset, query) {
             if (query == undefined) query = [];
-            query = typeof(query) === "string" ? [query] : query;
+            query = typeof (query) === "string" ? [query] : query;
             query.push("EstadoNecesidad.Nombre__not_in:Borrador");
-            
+
             var req = administrativaRequest.get('necesidad', $.param({
                 limit: self.gridOptions.paginationPageSize,
                 offset: offset,
@@ -140,6 +141,10 @@ angular.module('contractualClienteApp')
                 self.mod_cdp = false;
                 self.mod_aprobar = false;
             }
+
+            //para mostrar informacion de rechazo
+            self.rechazada = necesidad.EstadoNecesidad.Nombre === 'Rechazada';
+
             $("#myModal").modal();
 
         };
