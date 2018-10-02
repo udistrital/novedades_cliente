@@ -13,6 +13,8 @@ angular.module('contractualClienteApp')
         self.documentos = [];
         self.formuIncompleto = true;
 
+        self.apro = undefined;
+
         self.dep_ned = {
             JefeDependenciaSolicitante: 6
         };
@@ -135,6 +137,7 @@ angular.module('contractualClienteApp')
 
         $scope.$watchGroup(['solicitudNecesidad.necesidad.UnidadEjecutora', 'solicitudNecesidad.necesidad.TipoFinanciacionNecesidad'], function () {
             self.f_apropiacion = [];
+            self.apro = undefined;
         }, true);
 
         $scope.$watch('solicitudNecesidad.rol_ordenador_gasto', function () {
@@ -357,6 +360,9 @@ angular.module('contractualClienteApp')
 
 
         self.agregar_ffapropiacion = function (apropiacion) {
+            if (apropiacion == undefined) {
+                return
+            }
             var Fap = {
                 aprop: apropiacion,
                 Apropiacion: apropiacion.Id,
