@@ -33,7 +33,7 @@ angular.module('contractualClienteApp')
                                 query: "Necesidad:" + response.data[0].Id,
                                 fields: "Justificacion,Fecha"
                             })).then(function (response) {
-                                self.justificacion_rechazo = response.data ? response.data[0] : { Justificacion: "", Fecha: new Date() };
+                                self.justificacion_rechazo = response.data ? response.data[0] : { Justificacion: "", Fecha: "" };
                             });
                         }
                         administrativaRequest.get('marco_legal_necesidad', $.param({
