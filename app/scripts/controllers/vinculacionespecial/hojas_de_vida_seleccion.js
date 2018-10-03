@@ -197,6 +197,7 @@ angular.module('contractualClienteApp')
 
         self.Disponibilidades.onRegisterApi = function (gridApi) {
             gridApi.selection.on.rowSelectionChanged($scope, function () {
+                self.apropiacion_elegida = [];
                 self.disponibilidad_elegida = gridApi.selection.getSelectedRows();
                 self.DisponibilidadApropiacion = self.disponibilidad_elegida[0].DisponibilidadApropiacion;
                 self.listar_apropiaciones();
@@ -257,7 +258,7 @@ angular.module('contractualClienteApp')
             columnDefs: [
 
                 {
-                    field: 'Apropiacion.Valor',
+                    field: 'Valor',
                     displayName: $translate.instant('VALOR_APROPIACION'),
                     cellFilter: "currency",
                     cellClass: "valorEfectivo"
@@ -331,60 +332,31 @@ angular.module('contractualClienteApp')
 
         //Función para almacenar los datos de las vinculaciones realizadas
         self.agregarPrecontratos = function () {
-
-            self.esconderBoton = true;
-            vinculacionesData = [];
-            if (self.saldo_disponible && self.apropiacion_elegida) {
-                self.personasSeleccionadasAgregar.forEach(function (personaSeleccionada) {
-                    var vinculacionDocente = {
-                        IdPersona: personaSeleccionada.docente_documento,
-                        NumeroHorasSemanales: parseInt(personaSeleccionada.horas_lectivas),
-                        NumeroSemanas: parseInt(self.resolucion.NumeroSemanas),
-                        IdResolucion: { Id: parseInt(self.resolucion.Id) },
-                        IdDedicacion: { Id: parseInt(personaSeleccionada.id_tipo_vinculacion) },
-                        IdProyectoCurricular: parseInt(personaSeleccionada.id_proyecto),
-                        Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
-                        Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
-                        NivelAcademico: self.resolucion.NivelAcademico_nombre,
-                        Disponibilidad: self.apropiacion_elegida[0].Id,
-                        DependenciaAcademica: personaSeleccionada.DependenciaAcademica,
-                        Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
-                    };
-
-                    vinculacionesData.push(vinculacionDocente);
-
-                });
-
-                adminMidRequest.post("gestion_previnculacion/Precontratacion/insertar_previnculaciones", vinculacionesData).then(function (response) {
-                    if (typeof response.data === "number") {
-
-                        self.datosDocentesCargaLectiva.data = [];
-                        swal({
-                            text: $translate.instant('VINCULACION_EXITOSA'),
-                            type: 'success',
-                            confirmButtonText: $translate.instant('ACEPTAR'),
-                            allowOutsideClick: false
-                        }).then(function () {
-                            $window.location.reload();
-                            self.personasSeleccionadasAgregar = [];
-                            vinculacionesData = [];
-                        });
-
-                    } else {
-                        swal({
-                            title: $translate.instant('ERROR'),
-                            text: $translate.instant('ALERTA_PREVIN_ERROR'),
-                            type: 'info',
-                            confirmButtonText: $translate.instant('ACEPTAR'),
-                            allowOutsideClick: false
-                        }).then(function () {
-                            $window.location.reload();
-                            self.personasSeleccionadasAgregar = [];
-                            vinculacionesData = [];
-                        });
-                    }
-                });
-
+            if (self.saldo_disponible && self.apropiacion_elegida.length > 0) {
+                if (self.apropiacion_elegida[0].Apropiacion.Saldo < 0){
+                    swal({
+                        title: $translate.instant('PREGUNTA_SEGURO'),
+                        text: $translate.instant('CDP_SIN_SALDO'),
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: $translate.instant('VINCULAR_DOCENTES'),
+                        cancelButtonText: $translate.instant('CANCELAR'),
+                        confirmButtonClass: 'btn btn-success',
+                        cancelButtonClass: 'btn btn-danger',
+                        buttonsStyling: false,
+                        allowOutsideClick: false
+                    }).then(function () {
+                        self.esconderBoton = true;
+                        self.insertarVinculaciones();
+                    }, function (dismiss) {
+                        self.esconderBoton = false;
+                    });
+                } else {
+                    self.esconderBoton = true;
+                    self.insertarVinculaciones();
+                }
             } else {
                 swal({
                     title: $translate.instant('ERROR'),
@@ -393,9 +365,61 @@ angular.module('contractualClienteApp')
                     confirmButtonText: $translate.instant('ACEPTAR')
                 });
             }
-
-
         };
+
+        self.insertarVinculaciones = function () {
+            vinculacionesData = [];            
+            self.personasSeleccionadasAgregar.forEach(function (personaSeleccionada) {
+                var vinculacionDocente = {
+                    IdPersona: personaSeleccionada.docente_documento,
+                    NumeroHorasSemanales: parseInt(personaSeleccionada.horas_lectivas),
+                    NumeroSemanas: parseInt(self.resolucion.NumeroSemanas),
+                    IdResolucion: { Id: parseInt(self.resolucion.Id) },
+                    IdDedicacion: { Id: parseInt(personaSeleccionada.id_tipo_vinculacion) },
+                    IdProyectoCurricular: parseInt(personaSeleccionada.id_proyecto),
+                    Categoria: personaSeleccionada.CategoriaNombre.toUpperCase(),
+                    Dedicacion: personaSeleccionada.tipo_vinculacion_nombre.toUpperCase(),
+                    NivelAcademico: self.resolucion.NivelAcademico_nombre,
+                    Disponibilidad: self.apropiacion_elegida[0].Id,
+                    DependenciaAcademica: personaSeleccionada.DependenciaAcademica,
+                    Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
+                };
+
+                vinculacionesData.push(vinculacionDocente);
+
+            });
+
+            adminMidRequest.post("gestion_previnculacion/Precontratacion/insertar_previnculaciones", vinculacionesData).then(function (response) {
+                if (typeof response.data === "number") {
+
+                    self.datosDocentesCargaLectiva.data = [];
+                    swal({
+                        text: $translate.instant('VINCULACION_EXITOSA'),
+                        type: 'success',
+                        confirmButtonText: $translate.instant('ACEPTAR'),
+                        allowOutsideClick: false
+                    }).then(function () {
+                        $window.location.reload();
+                        self.personasSeleccionadasAgregar = [];
+                        vinculacionesData = [];
+                    });
+
+                } else {
+                    swal({
+                        title: $translate.instant('ERROR'),
+                        text: $translate.instant('ALERTA_PREVIN_ERROR'),
+                        type: 'info',
+                        confirmButtonText: $translate.instant('ACEPTAR'),
+                        allowOutsideClick: false
+                    }).then(function () {
+                        $window.location.reload();
+                        self.personasSeleccionadasAgregar = [];
+                        vinculacionesData = [];
+                    });
+                }
+            });
+        }
+
         //* ----------------------------- *//
 
         $scope.modificar_horas = function (row) {
@@ -479,7 +503,6 @@ angular.module('contractualClienteApp')
 
         //Función que muestra modal que permite elegir Disponibilidades y sus apropiaciones
         self.mostrar_modal_disponibilidad = function () {
-            self.esconderBoton = false;
             if (self.personasSeleccionadasAgregar.length === 0) {
                 swal({
                     text: $translate.instant('ALERTA_SELEC_DOC'),
@@ -529,6 +552,9 @@ angular.module('contractualClienteApp')
             self.ver = false;
             var disponibilidadAp = self.DisponibilidadApropiacion;
             adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones", disponibilidadAp).then(function (response) {
+                response.data.forEach(function(aprop){
+                    aprop.Apropiacion.Saldo = aprop.Apropiacion.Saldo - self.total_contratos_seleccionados;
+                });
                 self.Apropiaciones.data = response.data;
                 self.ver = true;
                 self.estado_ap = false;
