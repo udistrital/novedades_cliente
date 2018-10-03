@@ -332,6 +332,7 @@ var text_es = {
     LABEL_TOTAL_CONTRATACION: "Valor total de contratos para docentes seleccionados",
     ALERTA_SELEC_DOC: "Seleccione docentes",
     CAMBIOS_NO_GUARDADOS: "Los Cambios no guardados se perderán",
+    CDP_SIN_SALDO: "El CDP que eligió no tiene saldo suficiente para los docentes seleccionados, ¿desea continuar?",
     //RESOLUCION_ADICION_DETALLE
     /*---HTML---*/
     TITULO_DOC_VIN_RES_AD: "Docentes vinculados a resolución de adición",
@@ -931,6 +932,7 @@ var text_en = {
     UNITARIO: "Unit",
     NO_HAY_DATOS_REDIRIGIR: "There are no data to show you will be redirected to the previous menu",
     CAMBIOS_NO_GUARDADOS: "Unsaved changes wiil be lost",
+    CDP_SIN_SALDO: "Not enough balance, do you want to continue?",
     VOLVER: "Back",
     DOCENTES_SELECCIONADOS_REVERSAR: "Teachers selected to be reversed",
 
