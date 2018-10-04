@@ -19,100 +19,51 @@ angular.module('contractualClienteApp')
             JefeDependenciaSolicitante: 6
         };
 
-        $scope.info_general = true;
-        $scope.info_responsables = true;
-        $scope.info_objeto = true;
-        $scope.info_legal = true;
-        $scope.info_espf = true;
-        $scope.info_finan = true;
         self.fecha_actual = new Date();
         self.vigencia = self.fecha_actual.getFullYear();
 
-        function validarDatos(datosPorValidar) {
-            var faltanCampos = false;
-            for (var dato in datosPorValidar) {
-                if (datosPorValidar[dato] === undefined) {
-                    faltanCampos = true;
-                } else if (datosPorValidar[dato].length === 0) {
-                    faltanCampos = true;
-                }
-            }
-            return faltanCampos;
-        }
+        self.necesidad = {};
+        self.necesidad.TipoNecesidad = {
+            Id: 1
+        };
+        self.variable = {};
+        self.necesidad.UnicoPago = true;
+        self.necesidad.AgotarPresupuesto = false;
+        self.necesidad.Valor = 0;
+        self.fecha = new Date();
+        self.necesidad.DiasDuracion = 0;
+        self.f_apropiacion = [];
+        self.ActividadEspecifica = [];
+        self.especificaciones = [];
+        self.requisitos_minimos = [];
+        self.actividades_economicas = [];
+        self.actividades_economicas_id = [];
+        self.productos = [];
+        self.valor_inv = 0;
+        self.valor_fun = 0;
+        self.asd = [];
+        self.valorTotalEspecificaciones = 0;
+        self.planes_anuales = [{
+            Id: 1,
+            Nombre: "Necesidad1 -2017"
+        }];
 
-        self.validar_formu = function (arrVariables, parteValidar) {
-            var alertInfo = {
-                type: 'error',
-                title: 'Complete todos los campos obligatorios en el formulario',
-                showConfirmButton: false,
-                timer: 2000,
-            };
-            switch (parteValidar) {
-                case 0: // responsables
-                    if ($scope.info_responsables) {
-                        if (validarDatos(arrVariables)) {
-                            $scope.info_responsables = true; // Si faltan datos mantiene abierta info_responsables
-                            swal(alertInfo);
-                        } else {
-                            $scope.info_responsables = false;
-                            self.formuIncompleto = false;
-                        }
-                    } else {
-                        $scope.info_responsables = true;
-                    }
-                    break;
-
-                case 1: // General
-                    if ($scope.info_general) {
-                        if (validarDatos(arrVariables)) {
-                            $scope.info_general = true; // Si faltan datos mantiene abierta info_responsables
-                            swal(alertInfo);
-                        } else {
-                            $scope.info_general = false;
-                            self.formuIncompleto = false;
-                        }
-                    } else {
-                        $scope.info_general = true;
-                    }
-                    break;
-
-                case 2: // Objeto contractual
-                    if ($scope.info_objeto) {
-                        if (validarDatos(arrVariables)) {
-                            $scope.info_objeto = true; // Si faltan datos mantiene abierta info_responsables
-                            swal(alertInfo);
-                        } else {
-                            $scope.info_objeto = false;
-                            self.formuIncompleto = false;
-                        }
-                    } else {
-                        $scope.info_objeto = true;
-                    }
-                    break;
-                case 3: // Marco legal
-                    if ($scope.info_legal) {
-                        $scope.info_legal = false;
-                    } else {
-                        $scope.info_legal = true;
-                    }
-                    break;
-                case 4: // Especificaciones
-                    if ($scope.info_espf) {
-                        if (validarDatos(arrVariables)) {
-                            $scope.info_espf = true; // Si faltan datos mantiene abierta info_responsables
-                            swal(alertInfo);
-                        } else {
-                            $scope.info_espf = false;
-                            self.formuIncompleto = false;
-                        }
-                    } else {
-                        $scope.info_espf = true;
-                    }
-                    break;
-                default:
-                    self.formuIncompleto = true;
-                    break;
-            }
+        var alertInfo = {
+            type: 'error',
+            title: 'Complete todos los campos obligatorios en el formulario',
+            showConfirmButton: false,
+            timer: 2000,
+        };
+        
+        self.validar_formu = function (form) {
+           if(form.$invalid) {
+               swal(alertInfo);
+               form.open = false;
+               return false;
+           } else {
+               form.open = !form.open;
+               return true;
+           }
         };
 
         $scope.$watch('solicitudNecesidad.dependencia_destino', function () {
@@ -216,35 +167,6 @@ angular.module('contractualClienteApp')
         })).then(function (response) {
             self.persona_solicitante = response.data[0];
         });
-
-        self.necesidad = {};
-        self.necesidad.TipoNecesidad = {
-            Id: 1
-        };
-        self.variable = {};
-        self.necesidad.UnicoPago = true;
-        self.necesidad.AgotarPresupuesto = false;
-        self.necesidad.Valor = 0;
-        self.fecha = new Date();
-        self.necesidad.DiasDuracion = 0;
-        self.f_apropiacion = [];
-        self.ActividadEspecifica = [];
-        self.especificaciones = [];
-        self.requisitos_minimos = [];
-        self.actividades_economicas = [];
-        self.actividades_economicas_id = [];
-        self.productos = [];
-        self.valor_inv = 0;
-        self.valor_fun = 0;
-        self.asd = [];
-        self.valorTotalEspecificaciones = 0;
-
-
-
-        self.planes_anuales = [{
-            Id: 1,
-            Nombre: "Necesidad1 -2017"
-        }];
 
         financieraRequest.get('unidad_ejecutora', $.param({
             limit: -1,
