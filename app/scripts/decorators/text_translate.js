@@ -364,6 +364,8 @@ var text_es = {
     ALERTA_ADICION_EXITOSA: "Adición realizada exitosamente",
     ALERTA_ERROR_ADICION: "Error al realizar adición",
     ADICIONAR_BTN: "Adicionar",
+    NO_PUEDE_ADICIONAR: "No se puede adicionar",
+    DEBE_APROBAR_CARGA: "Se debe verificar el estado del semáforo para este docente",
 
     //RESOLUCION_REDUCCION
     /*---HTML---*/
@@ -373,6 +375,7 @@ var text_es = {
     /*---Script---*/
     ALERTA_REDUCCION_EXITOSA: "Reducción realizada exitosamente",
     ALERTA_ERROR_REDUCCION: "Error al realizar reducción",
+    NO_PUEDE_REDUCIR: "No se puede reducir",
 
     //RESOLUCION_ADMINISTRACION
     NO_RESTAURACION_RESOLUCION: "No se ha realizado la restauración de la resolución",
@@ -1114,7 +1117,11 @@ var text_en = {
     TITULO_CARGA_CONTRATISTA: "CARGA SOPORTES CONTRATISTA",
     NOM_CONTRATISTA: "NOMBRE CONTRATISTA",
     NUMERO_CONTRATO: "CONTRACT NUMBER",
-    RP: "RP"
+    RP: "RP",
+
+    NO_PUEDE_ADICIONAR: "Can't add hours",
+    NO_PUEDE_REDUCIR: "Can't reduce hours",
+    DEBE_APROBAR_CARGA: "New hours must be approved"
 };
 
 angular.module('contractualClienteApp')

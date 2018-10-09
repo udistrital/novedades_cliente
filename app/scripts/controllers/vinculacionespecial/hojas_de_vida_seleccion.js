@@ -333,7 +333,7 @@ angular.module('contractualClienteApp')
         //Función para almacenar los datos de las vinculaciones realizadas
         self.agregarPrecontratos = function () {
             if (self.saldo_disponible && self.apropiacion_elegida.length > 0) {
-                if (self.apropiacion_elegida[0].Apropiacion.Saldo < 0){
+                if (self.apropiacion_elegida[0].Apropiacion.SaldoContratos < 0){
                     swal({
                         title: $translate.instant('PREGUNTA_SEGURO'),
                         text: $translate.instant('CDP_SIN_SALDO'),
@@ -510,7 +510,9 @@ angular.module('contractualClienteApp')
                     confirmButtonText: $translate.instant('ACEPTAR')
                 });
             } else {
-
+                self.total_contratos_seleccionados = 0;
+                self.apropiacion_elegida = [];
+                self.Apropiaciones.data = [];
                 financieraRequest.get("disponibilidad/TotalDisponibilidades/" + self.resolucion.Vigencia, 'UnidadEjecutora=1') //formato de entrada  https://golang.org/src/time/format.go
                     .then(function (response) { //error con el success
                         self.Disponibilidades.totalItems = response.data;
@@ -553,7 +555,7 @@ angular.module('contractualClienteApp')
             var disponibilidadAp = self.DisponibilidadApropiacion;
             adminMidRequest.post("consultar_disponibilidades/listar_apropiaciones", disponibilidadAp).then(function (response) {
                 response.data.forEach(function(aprop){
-                    aprop.Apropiacion.Saldo = aprop.Apropiacion.Saldo - self.total_contratos_seleccionados;
+                    aprop.Apropiacion.SaldoContratos = aprop.Apropiacion.Saldo - self.total_contratos_seleccionados;
                 });
                 self.Apropiaciones.data = response.data;
                 self.ver = true;
