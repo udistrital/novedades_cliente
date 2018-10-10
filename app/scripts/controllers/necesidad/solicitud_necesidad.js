@@ -22,16 +22,10 @@ angular.module('contractualClienteApp')
         self.fecha_actual = new Date();
         self.vigencia = self.fecha_actual.getFullYear();
 
-        self.necesidad = {};
-        self.necesidad.TipoNecesidad = {
-            Id: 1
-        };
+
         self.variable = {};
-        self.necesidad.UnicoPago = true;
-        self.necesidad.AgotarPresupuesto = false;
-        self.necesidad.Valor = 0;
+
         self.fecha = new Date();
-        self.necesidad.DiasDuracion = 0;
         self.f_apropiacion = [];
         self.ActividadEspecifica = [];
         self.especificaciones = [];
@@ -46,6 +40,59 @@ angular.module('contractualClienteApp')
             Id: 1,
             Nombre: "Necesidad1 -2017"
         }];
+
+        self.initNecesidad = function () {
+            self.necesidad = {};
+            self.necesidad.TipoNecesidad = { Id: 1 };
+            self.necesidad.DiasDuracion = 0;
+            self.necesidad.UnicoPago = true;
+            self.necesidad.AgotarPresupuesto = false;
+            self.necesidad.Valor = 0;
+            administrativaRequest.get('estado_necesidad', $.param({
+                query: "Nombre:Solicitada"
+            })).then(function (response) {
+                self.necesidad.EstadoNecesidad = response.data[0];
+            });
+        };
+
+        self.initNecesidad();
+
+        self.formsInit = {
+            Responsables: true,
+            General: true,
+            ObjetoContractual: true,
+            MarcoLegal: true,
+            Especificaciones: true,
+            Financiamiento: true,
+        };
+
+        self.fieldInit = {
+            Responsables: {
+                DependenciaSolicitante: true,
+                JefeDependenciaSolicitante: true,
+                DependenciaDestino: true,
+                JefeDependenciaDestino: true,
+                OrdenadorGasto: true,
+                RolOrdenadorGasto: true,
+            },
+            General: {
+                PlanAnualAdquisiciones: true,
+                UnidadEjecutora: true,
+                EstudioMercado: true,
+                ModalidadSeleccion: true,
+                Supervisor: true
+            },
+            ObjetoContractual: {
+                ObjetoContrato: true,
+                JustificacionContrato: true,
+            }
+        };
+
+        self.deepCopy = function (obj) {
+            return JSON.parse(JSON.stringify(obj));
+        };
+        self.forms = self.deepCopy(self.formsInit);
+        self.field = self.deepCopy(self.fieldInit);
 
         var alertInfo = {
             type: 'error',
@@ -181,6 +228,10 @@ angular.module('contractualClienteApp')
             order: "asc",
         })).then(function (response) {
             self.tipo_necesidad_data = response.data;
+            //ocultar terporalmente funcionalidad no implementada
+            //TODO: implementar la demas funcionalidad
+            var tmpSet = [2, 4, 5] // Ocultando: Nomina, Seguridad Social, Contratacion docente
+            self.tipo_necesidad_data = self.tipo_necesidad_data.filter(function (tn) { return !tmpSet.includes(tn.Id) })
         });
 
         agoraRequest.get('unidad', $.param({
@@ -250,14 +301,6 @@ angular.module('contractualClienteApp')
             self.parametro_estandar_data = response.data;
         });
         //-----
-
-
-        administrativaRequest.get('estado_necesidad', $.param({
-            query: "Nombre:Solicitada"
-        })).then(function (response) {
-            self.necesidad.EstadoNecesidad = response.data[0];
-        });
-
 
         administrativaRequest.get('modalidad_seleccion', $.param({
             limit: -1,
@@ -495,5 +538,26 @@ angular.module('contractualClienteApp')
             });
         };
 
+        // Control de visualizacion de los campos individuales
+        self.CambiarTipoNecesidad = function (IdNecesidad) {
+            self.initNecesidad();
+            self.necesidad.TipoNecesidad = { Id: IdNecesidad };
+            
+            self.forms = self.deepCopy(self.formsInit);
+            self.field = self.deepCopy(self.fieldInit);
+
+            switch (IdNecesidad) {
+                case '1': // Contratacion
+                    break;
+                case '3': // Avances    
+                    self.forms.Especificaciones = false;
+                    for (var key in self.field.General) { self.field.General[key] = false; }
+                    self.field.General.PlanAnualAdquisiciones = true;
+                    self.field.General.UnidadEjecutora = true;
+                    break;
+                default:
+                    break;
+            }
+        };
 
     });
