@@ -19,99 +19,96 @@ angular.module('contractualClienteApp')
             JefeDependenciaSolicitante: 6
         };
 
-        $scope.info_general = true;
-        $scope.info_responsables = true;
-        $scope.info_objeto = true;
-        $scope.info_legal = true;
-        $scope.info_espf = true;
-        $scope.info_finan = true;
         self.fecha_actual = new Date();
         self.vigencia = self.fecha_actual.getFullYear();
 
-        function validarDatos(datosPorValidar) {
-            var faltanCampos = false;
-            for (var dato in datosPorValidar) {
-                if (datosPorValidar[dato] === undefined) {
-                    faltanCampos = true;
-                } else if (datosPorValidar[dato].length === 0) {
-                    faltanCampos = true;
-                }
+
+        self.variable = {};
+
+        self.fecha = new Date();
+        self.f_apropiacion = [];
+        self.ActividadEspecifica = [];
+        self.especificaciones = [];
+        self.requisitos_minimos = [];
+        self.actividades_economicas = [];
+        self.actividades_economicas_id = [];
+        self.productos = [];
+        self.f_valor = 0;
+        self.asd = [];
+        self.valorTotalEspecificaciones = 0;
+        self.planes_anuales = [{
+            Id: 1,
+            Nombre: "Necesidad1 -2017"
+        }];
+
+        self.initNecesidad = function () {
+            self.necesidad = {};
+            self.necesidad.TipoNecesidad = { Id: 1 };
+            self.necesidad.DiasDuracion = 0;
+            self.necesidad.UnicoPago = true;
+            self.necesidad.AgotarPresupuesto = false;
+            self.necesidad.Valor = 0;
+            administrativaRequest.get('estado_necesidad', $.param({
+                query: "Nombre:Solicitada"
+            })).then(function (response) {
+                self.necesidad.EstadoNecesidad = response.data[0];
+            });
+        };
+
+        self.initNecesidad();
+
+        self.formsInit = {
+            Responsables: true,
+            General: true,
+            ObjetoContractual: true,
+            MarcoLegal: true,
+            Especificaciones: true,
+            Financiamiento: true,
+        };
+
+        self.fieldInit = {
+            Responsables: {
+                DependenciaSolicitante: true,
+                JefeDependenciaSolicitante: true,
+                DependenciaDestino: true,
+                JefeDependenciaDestino: true,
+                OrdenadorGasto: true,
+                RolOrdenadorGasto: true,
+            },
+            General: {
+                PlanAnualAdquisiciones: true,
+                UnidadEjecutora: true,
+                EstudioMercado: true,
+                ModalidadSeleccion: true,
+                Supervisor: true
+            },
+            ObjetoContractual: {
+                ObjetoContrato: true,
+                JustificacionContrato: true,
             }
-            return faltanCampos;
-        }
+        };
 
-        self.validar_formu = function (arrVariables, parteValidar) {
-            var alertInfo = {
-                type: 'error',
-                title: 'Complete todos los campos obligatorios en el formulario',
-                showConfirmButton: false,
-                timer: 2000,
-            };
-            switch (parteValidar) {
-                case 0: // responsables
-                    if ($scope.info_responsables) {
-                        if (validarDatos(arrVariables)) {
-                            $scope.info_responsables = true; // Si faltan datos mantiene abierta info_responsables
-                            swal(alertInfo);
-                        } else {
-                            $scope.info_responsables = false;
-                            self.formuIncompleto = false;
-                        }
-                    } else {
-                        $scope.info_responsables = true;
-                    }
-                    break;
+        self.deepCopy = function (obj) {
+            return JSON.parse(JSON.stringify(obj));
+        };
+        self.forms = self.deepCopy(self.formsInit);
+        self.field = self.deepCopy(self.fieldInit);
 
-                case 1: // General
-                    if ($scope.info_general) {
-                        if (validarDatos(arrVariables)) {
-                            $scope.info_general = true; // Si faltan datos mantiene abierta info_responsables
-                            swal(alertInfo);
-                        } else {
-                            $scope.info_general = false;
-                            self.formuIncompleto = false;
-                        }
-                    } else {
-                        $scope.info_general = true;
-                    }
-                    break;
+        var alertInfo = {
+            type: 'error',
+            title: 'Complete todos los campos obligatorios en el formulario',
+            showConfirmButton: false,
+            timer: 2000,
+        };
 
-                case 2: // Objeto contractual
-                    if ($scope.info_objeto) {
-                        if (validarDatos(arrVariables)) {
-                            $scope.info_objeto = true; // Si faltan datos mantiene abierta info_responsables
-                            swal(alertInfo);
-                        } else {
-                            $scope.info_objeto = false;
-                            self.formuIncompleto = false;
-                        }
-                    } else {
-                        $scope.info_objeto = true;
-                    }
-                    break;
-                case 3: // Marco legal
-                    if ($scope.info_legal) {
-                        $scope.info_legal = false;
-                    } else {
-                        $scope.info_legal = true;
-                    }
-                    break;
-                case 4: // Especificaciones
-                    if ($scope.info_espf) {
-                        if (validarDatos(arrVariables)) {
-                            $scope.info_espf = true; // Si faltan datos mantiene abierta info_responsables
-                            swal(alertInfo);
-                        } else {
-                            $scope.info_espf = false;
-                            self.formuIncompleto = false;
-                        }
-                    } else {
-                        $scope.info_espf = true;
-                    }
-                    break;
-                default:
-                    self.formuIncompleto = true;
-                    break;
+        self.validar_formu = function (form) {
+            if (form.$invalid) {
+                swal(alertInfo);
+                form.open = false;
+                return false;
+            } else {
+                form.open = !form.open;
+                return true;
             }
         };
 
@@ -217,35 +214,6 @@ angular.module('contractualClienteApp')
             self.persona_solicitante = response.data[0];
         });
 
-        self.necesidad = {};
-        self.necesidad.TipoNecesidad = {
-            Id: 1
-        };
-        self.variable = {};
-        self.necesidad.UnicoPago = true;
-        self.necesidad.AgotarPresupuesto = false;
-        self.necesidad.Valor = 0;
-        self.fecha = new Date();
-        self.necesidad.DiasDuracion = 0;
-        self.f_apropiacion = [];
-        self.ActividadEspecifica = [];
-        self.especificaciones = [];
-        self.requisitos_minimos = [];
-        self.actividades_economicas = [];
-        self.actividades_economicas_id = [];
-        self.productos = [];
-        self.valor_inv = 0;
-        self.valor_fun = 0;
-        self.asd = [];
-        self.valorTotalEspecificaciones = 0;
-
-
-
-        self.planes_anuales = [{
-            Id: 1,
-            Nombre: "Necesidad1 -2017"
-        }];
-
         financieraRequest.get('unidad_ejecutora', $.param({
             limit: -1,
             sortby: "Nombre",
@@ -260,6 +228,10 @@ angular.module('contractualClienteApp')
             order: "asc",
         })).then(function (response) {
             self.tipo_necesidad_data = response.data;
+            //ocultar terporalmente funcionalidad no implementada
+            //TODO: implementar la demas funcionalidad
+            var tmpSet = [2, 4, 5] // Ocultando: Nomina, Seguridad Social, Contratacion docente
+            self.tipo_necesidad_data = self.tipo_necesidad_data.filter(function (tn) { return !tmpSet.includes(tn.Id) })
         });
 
         agoraRequest.get('unidad', $.param({
@@ -279,33 +251,35 @@ angular.module('contractualClienteApp')
         // function
         self.duracionEspecial = function (especial) {
             self.ver_duracion_fecha = false;
-            if (especial === 'duracion') {
-                self.ver_duracion_fecha = true;
-                self.necesidad.UnicoPago = false;
-                self.necesidad.AgotarPresupuesto = false;
-            } else if (especial === "unico_pago") {
-                self.necesidad.DiasDuracion = 0;
-                self.necesidad.UnicoPago = true;
-                self.necesidad.AgotarPresupuesto = false;
-                self.ver_duracion_fecha = false;
-            } else if (especial === "agotar_presupuesto") {
-                self.necesidad.UnicoPago = false;
-                self.necesidad.AgotarPresupuesto = true;
-                self.ver_duracion_fecha = true;
+            switch (especial) {
+                case 'duracion':
+                    self.ver_duracion_fecha = true;
+                    self.necesidad.UnicoPago = false;
+                    self.necesidad.AgotarPresupuesto = false;
+                    break;
+                case 'unico_pago':
+                    self.necesidad.DiasDuracion = 0;
+                    self.necesidad.UnicoPago = true;
+                    self.necesidad.AgotarPresupuesto = false;
+                    self.ver_duracion_fecha = false;
+                    break;
+                case 'agotar_presupuesto':
+                    self.necesidad.UnicoPago = false;
+                    self.necesidad.AgotarPresupuesto = true;
+                    self.ver_duracion_fecha = true;
+                    break;
+                default:
+                    break;
             }
+
         };
         //
 
         self.calculo_total_dias = function () {
-            if (self.anos === undefined) {
-                self.anos = 0;
-            }
-            if (self.meses === undefined) {
-                self.meses = 0;
-            }
-            if (self.dias === undefined) {
-                self.dias = 0;
-            }
+            self.anos = self.anos == undefined ? 0 : self.anos;
+            self.meses = self.meses == undefined ? 0 : self.meses;
+            self.dias = self.dias == undefined ? 0 : self.dias;
+
             self.necesidad.DiasDuracion = ((parseInt(self.anos) * 360) + (parseInt(self.meses) * 30) + parseInt(self.dias));
         };
         //
@@ -327,14 +301,6 @@ angular.module('contractualClienteApp')
             self.parametro_estandar_data = response.data;
         });
         //-----
-
-
-        administrativaRequest.get('estado_necesidad', $.param({
-            query: "Nombre:Solicitada"
-        })).then(function (response) {
-            self.necesidad.EstadoNecesidad = response.data[0];
-        });
-
 
         administrativaRequest.get('modalidad_seleccion', $.param({
             limit: -1,
@@ -414,7 +380,8 @@ angular.module('contractualClienteApp')
         };
 
         $scope.$watch('solicitudNecesidad.f_apropiacion', function () {
-            self.valor_inv = 0;
+            self.f_valor = 0;
+
             for (var i = 0; i < self.f_apropiacion.length; i++) {
                 self.f_apropiacion[i].MontoParcial = 0;
                 if (self.f_apropiacion[i].fuentes !== undefined) {
@@ -422,7 +389,7 @@ angular.module('contractualClienteApp')
                         self.f_apropiacion[i].MontoParcial += self.f_apropiacion[i].fuentes[k].Monto;
                     }
                 }
-                self.valor_inv += self.f_apropiacion[i].MontoParcial;
+                self.f_valor += self.f_apropiacion[i].MontoParcial;
             }
         }, true);
 
@@ -450,15 +417,6 @@ angular.module('contractualClienteApp')
             self.ActividadEspecifica.push(a);
         };
 
-        self.agregarReq = function () {
-            for (var j = 0; j < self.requisitos_minimos.length; j++) {
-                for (var h = 0; h < self.productos.length; h++) {
-                    if (self.requisitos_minimos[j].reqi === self.productos[h].i) {
-                    }
-                }
-            }
-        };
-
         self.quitar_act_esp = function (i) {
             self.ActividadEspecifica.splice(i, 1);
         };
@@ -472,7 +430,7 @@ angular.module('contractualClienteApp')
                     'Completa todos los datos obligatorios del formulario',
                     'warning'
                 ).then(function (event) {
-                    var e = angular.element('.ng-invalid-required')[1];
+                    var e = angular.element('.ng-invalid-required')[2];
                     e.focus(); // para que enfoque el elemento
                     e.classList.add("ng-dirty") //para que se vea rojo
                 })
@@ -480,35 +438,34 @@ angular.module('contractualClienteApp')
         };
 
         self.crear_solicitud = function () {
-            self.f_apropiaciones = [];
-
             self.actividades_economicas_id = self.actividades_economicas.map(function (a) { return { ActividadEconomica: a.Id } });
             self.marcos_legales = self.documentos.map(function (d) { return { MarcoLegal: d } });
 
-            if (self.valor_inv !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Nombre === 'Compras') {
+            if (self.f_valor !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Nombre === 'Compras') {
                 swal(
                     'Error',
-                    'El valor del contrato (' + self.valorTotalEspecificaciones + ') debe ser igual que el de la financiación(' + self.valor_inv + ')',
+                    'El valor del contrato (' + self.valorTotalEspecificaciones + ') debe ser igual que el de la financiación(' + self.f_valor + ')',
                     'warning'
                 );
                 return;
             }
-            for (var h = 0; h < self.f_apropiacion.length; h++) {
-                if (self.f_apropiacion[h].fuentes !== undefined) {
-                    for (var k = 0; k < self.f_apropiacion[h].fuentes.length; k++) {
-                        var f_ap = {};
-                        f_ap.Apropiacion = self.f_apropiacion[h].Apropiacion;
-                        f_ap.MontoParcial = self.f_apropiacion[h].fuentes[k].Monto;
-                        f_ap.FuenteFinanciamiento = self.f_apropiacion[h].fuentes[k].FuenteFinanciamiento.Id;
+
+            self.f_apropiaciones = [];
+            self.f_apropiacion
+                .filter(function (fap) { return fap.fuentes !== undefined })
+                .forEach(function (fap) {
+                    fap.fuentes.forEach(function (fuente) {
+                        var f = {
+                            Apropiacion: fap.Apropiacion,
+                            MontoParcial: fuente.Monto,
+                            FuenteFinanciamiento: fuente.FuenteFinanciamiento.Id,
+                        };
                         self.f_apropiaciones.push(f_ap);
-                    }
-                }
-            }
-            self.necesidad.Valor = self.valor_inv;
+                    });
+                });
 
 
-            self.agregarReq();
-
+            self.necesidad.Valor = self.f_valor;
 
             self.tr_necesidad = {
                 Necesidad: self.necesidad,
@@ -581,5 +538,26 @@ angular.module('contractualClienteApp')
             });
         };
 
+        // Control de visualizacion de los campos individuales
+        self.CambiarTipoNecesidad = function (IdNecesidad) {
+            self.initNecesidad();
+            self.necesidad.TipoNecesidad = { Id: IdNecesidad };
+            
+            self.forms = self.deepCopy(self.formsInit);
+            self.field = self.deepCopy(self.fieldInit);
+
+            switch (IdNecesidad) {
+                case '1': // Contratacion
+                    break;
+                case '3': // Avances    
+                    self.forms.Especificaciones = false;
+                    for (var key in self.field.General) { self.field.General[key] = false; }
+                    self.field.General.PlanAnualAdquisiciones = true;
+                    self.field.General.UnidadEjecutora = true;
+                    break;
+                default:
+                    break;
+            }
+        };
 
     });
