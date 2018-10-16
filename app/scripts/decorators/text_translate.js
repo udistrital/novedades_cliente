@@ -49,6 +49,10 @@ var text_es = {
     TITULO: "GENERATOR-OAS",
     MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
     //solicitud_necesidad
+    ID_AVANCE: "ID Avance",
+    LISTA_AVANCES: "Lista de Avances",
+    PROCESO_EXTERNO: "Proceso Externo",
+    CONSECUTIVO_PROCESO_EXTERNO: "Consecutivo",
     NECESIDADES: "Necesidades",
     NECESIDAD: "Necesidad",
     RECTOR: "Rector",
@@ -138,7 +142,7 @@ var text_es = {
     //necesidades
     GESTION_NECESIDADES: "Gestión de Necesidades",
     NUMERO_ELABORACION: "No. de Elaboración",
-    LISTA_NECESIDADES:"Lista de Necesidades",
+    LISTA_NECESIDADES: "Lista de Necesidades",
     NECESIDAD_RECHAZADA: "La necesidad ha sido Rechazada!",
     NECESIDAD_NO_RECHAZADA: "La necesidad no pudo ser rechazada!",
     NECESIDAD_JUSTIFICACION_RECHAZO: "Justificación de rechazo",
