@@ -11,6 +11,7 @@ angular.module('contractualClienteApp')
     .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate) {
         var self = this;
         self.documentos = [];
+        self.avance = undefined;
         self.formuIncompleto = true;
 
         self.apro = undefined;
@@ -44,6 +45,7 @@ angular.module('contractualClienteApp')
         self.initNecesidad = function () {
             self.necesidad = {};
             self.necesidad.TipoNecesidad = { Id: 1 };
+            //self.necesidad.TipoContratoNecesidad = {};
             self.necesidad.DiasDuracion = 0;
             self.necesidad.UnicoPago = true;
             self.necesidad.AgotarPresupuesto = false;
@@ -58,6 +60,7 @@ angular.module('contractualClienteApp')
         self.initNecesidad();
 
         self.formsInit = {
+            Avances: false,
             Responsables: true,
             General: true,
             ObjetoContractual: true,
@@ -441,13 +444,15 @@ angular.module('contractualClienteApp')
             self.actividades_economicas_id = self.actividades_economicas.map(function (a) { return { ActividadEconomica: a.Id } });
             self.marcos_legales = self.documentos.map(function (d) { return { MarcoLegal: d } });
 
-            if (self.f_valor !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Nombre === 'Compras') {
-                swal(
-                    'Error',
-                    'El valor del contrato (' + self.valorTotalEspecificaciones + ') debe ser igual que el de la financiación(' + self.f_valor + ')',
-                    'warning'
-                );
-                return;
+            if (self.necesidad.TipoContratoNecesidad) {
+                if (self.f_valor !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Nombre === 'Compras') {
+                    swal(
+                        'Error',
+                        'El valor del contrato (' + self.valorTotalEspecificaciones + ') debe ser igual que el de la financiación(' + self.f_valor + ')',
+                        'warning'
+                    );
+                    return;
+                }
             }
 
             self.f_apropiaciones = [];
@@ -460,7 +465,7 @@ angular.module('contractualClienteApp')
                             MontoParcial: fuente.Monto,
                             FuenteFinanciamiento: fuente.FuenteFinanciamiento.Id,
                         };
-                        self.f_apropiaciones.push(f_ap);
+                        self.f_apropiaciones.push(fap);
                     });
                 });
 
@@ -522,6 +527,11 @@ angular.module('contractualClienteApp')
                         "<td>" + $filter('currency')(n.Valor) + "</td>";
 
                     templateAlert += "</tr>";
+
+                    if (self.avance) {
+                        self.avance.Necesidad = { Id: n.Id }
+                        administrativaRequest.put('necesidad_proceso_externo/', self.avance.Id, self.avance);
+                    }
                 });
                 templateAlert = templateAlert + "</table>";
                 swal({
@@ -541,16 +551,17 @@ angular.module('contractualClienteApp')
         // Control de visualizacion de los campos individuales
         self.CambiarTipoNecesidad = function (IdNecesidad) {
             self.initNecesidad();
-            self.necesidad.TipoNecesidad = { Id: IdNecesidad };
-            
+            self.necesidad.TipoNecesidad = { Id: parseInt(IdNecesidad) };
+
             self.forms = self.deepCopy(self.formsInit);
             self.field = self.deepCopy(self.fieldInit);
 
             switch (IdNecesidad) {
-                case '1': // Contratacion
+                case 1: // Contratacion
                     break;
-                case '3': // Avances    
+                case 3: // Avances    
                     self.forms.Especificaciones = false;
+                    self.forms.Avances = true;
                     for (var key in self.field.General) { self.field.General[key] = false; }
                     self.field.General.PlanAnualAdquisiciones = true;
                     self.field.General.UnidadEjecutora = true;
