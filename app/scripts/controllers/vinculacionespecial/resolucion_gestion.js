@@ -254,7 +254,9 @@ angular.module('contractualClienteApp')
         Dedicacion: row.entity.Dedicacion,
         FacultadNombre: row.entity.FacultadNombre,
         FechaExpedicion: row.entity.FechaExpedicion,
-        TipoResolucion: row.entity.TipoResolucion
+        TipoResolucion: row.entity.TipoResolucion,
+        IdDependenciaFirma: row.entity.IdDependenciaFirma,
+        FacultadFirmaNombre: row.entity.FacultadFirmaNombre
       };
 
       var local = JSON.stringify(resolucion);
