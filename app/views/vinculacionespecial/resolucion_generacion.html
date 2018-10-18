@@ -23,11 +23,17 @@
                 <input type="tel" pattern="[0-9]*" class="form-control" ng-model="resolucionGeneracion.resolucion.numero" required>
               </div>
               <div class="form-group col-lg-6">
-                <label>{{ 'FACULTAD' | translate }}</label>
-                <select class="form-control" ng-model="resolucionGeneracion.resolucion.facultad" required>
-                  <option value="">{{'SELECCIONE' | translate }}</option>
-                  <option ng-repeat="facultad in resolucionGeneracion.facultades" value={{facultad.DependenciaId}}> {{facultad.DependenciaId.Nombre}}</option>
-                </select>
+                <div class="form-group col-lg-9">
+                  <label>{{ 'FACULTAD' | translate }}</label>
+                  <select class="form-control" ng-model="resolucionGeneracion.resolucion.facultad" required>
+                    <option value="">{{'SELECCIONE' | translate }}</option>
+                    <option ng-repeat="facultad in resolucionGeneracion.facultades" value={{facultad.DependenciaId}}> {{facultad.DependenciaId.Nombre}}</option>
+                  </select>
+                </div>
+                <div class="form-group col-lg-3">
+                  <label>{{ 'FIRMA_RECTOR' | translate }}</label><br>
+                  <input type="checkbox" ng-model="resolucionGeneracion.firmaRector">
+                </div>
               </div>
               <div class="form-group col-lg-6">
                 <label>{{ 'NIVEL_ACADEMICO' | translate }}</label>
