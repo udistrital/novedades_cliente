@@ -42,22 +42,72 @@ angular.module('contractualClienteApp')
             Nombre: "Necesidad1 -2017"
         }];
 
-        self.initNecesidad = function () {
-            self.necesidad = {};
-            self.necesidad.TipoNecesidad = { Id: 1 };
-            //self.necesidad.TipoContratoNecesidad = {};
-            self.necesidad.DiasDuracion = 0;
-            self.necesidad.UnicoPago = true;
-            self.necesidad.AgotarPresupuesto = false;
-            self.necesidad.Valor = 0;
-            administrativaRequest.get('estado_necesidad', $.param({
-                query: "Nombre:Solicitada"
-            })).then(function (response) {
-                self.necesidad.EstadoNecesidad = response.data[0];
-            });
+        self.initNecesidad = function (IdNecesidad) {
+
+            if (IdNecesidad) {
+                administrativaRequest.get('necesidad/' + IdNecesidad)
+                    .then(function (response) {
+                        self.necesidad = response.data;
+                    });
+
+                administrativaRequest.get('fuente_financiacion_rubro_necesidad', $.param({
+                    query: 'Necesidad:' + IdNecesidad
+                })).then(function (response) {
+                    self.f_apropiaciones = response.data;
+                });
+
+                administrativaRequest.get('marco_legal_necesidad', $.param({
+                    query: 'Necesidad:' + IdNecesidad
+                })).then(function (response) {
+                    self.documentos = response.data.map(function (d) { return d.MarcoLegal; });
+                });
+
+                administrativaRequest.get('actividad_economica_necesidad', $.param({
+                    query: 'Necesidad:' + IdNecesidad
+                })).then(function (response) {
+                    self.actividades_economicas = response.data.map(function (d) { return parseInt(d.ActividadEconomica); });
+                });
+
+                administrativaRequest.get('dependencia_necesidad', $.param({
+                    query: 'Necesidad:' + IdNecesidad
+                })).then(function (response) {
+                    self.dep_ned = response.data[0];
+
+                    return coreAmazonRequest.get('jefe_dependencia', $.param({
+                        query: "Id:" + self.dep_ned.JefeDependenciaDestino,
+                        limit: -1
+                    }))
+                }).then(function (response) {
+                    self.dependencia_destino = response.data[0].DependenciaId;
+
+                    return coreAmazonRequest.get('jefe_dependencia', $.param({
+                        query: "TerceroId:" + self.dep_ned.OrdenadorGasto,
+                        limit: -1
+                    }))
+                }).then(function (response) {
+                    self.rol_ordenador_gasto = response.data[0].DependenciaId;
+                    console.log(self.rol_ordenador_gasto)
+                });
+
+
+            } else {
+                self.necesidad = {};
+                self.necesidad.TipoNecesidad = { Id: 1 };
+                //self.necesidad.TipoContratoNecesidad = {};
+                self.necesidad.DiasDuracion = 0;
+                self.necesidad.UnicoPago = true;
+                self.necesidad.AgotarPresupuesto = false;
+                self.necesidad.Valor = 0;
+                administrativaRequest.get('estado_necesidad', $.param({
+                    query: "Nombre:Solicitada"
+                })).then(function (response) {
+                    self.necesidad.EstadoNecesidad = response.data[0];
+                });
+            }
         };
 
-        self.initNecesidad();
+        self.IdNecesidad2 = 102633  ;
+        self.initNecesidad(self.IdNecesidad2);
 
         self.formsInit = {
             Avances: false,
@@ -550,7 +600,7 @@ angular.module('contractualClienteApp')
 
         // Control de visualizacion de los campos individuales
         self.CambiarTipoNecesidad = function (IdNecesidad) {
-            self.initNecesidad();
+            self.initNecesidad(self.IdNecesidad2);
             self.necesidad.TipoNecesidad = { Id: parseInt(IdNecesidad) };
 
             self.forms = self.deepCopy(self.formsInit);
