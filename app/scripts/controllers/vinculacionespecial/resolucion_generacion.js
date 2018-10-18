@@ -191,6 +191,7 @@ angular.module('contractualClienteApp')
                 NumeroSemanas: parseInt(self.resolucion.numeroSemanas),
                 Periodo: parseInt(self.resolucion.Periodo),
                 IdTipoResolucion: tipoResolucion,
+                IdDependenciaFirma: self.firmaRector ? 7 : self.objeto_facultad.Id
             };
 
             var resolucionVinculacionDocenteData = {
@@ -205,7 +206,7 @@ angular.module('contractualClienteApp')
                 ResolucionVieja: self.resolucion_a_cancelar_seleccionada.Id,
                 NomDependencia: self.objeto_facultad.Nombre,
             };
-
+            
 
             adminMidRequest.post("gestion_resoluciones/insertar_resolucion_completa", objeto_resolucion).then(function (response) {
                 if (response.data) {

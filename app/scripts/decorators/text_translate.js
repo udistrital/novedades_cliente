@@ -451,6 +451,7 @@ var text_es = {
     SELECCIONE_TIPO_RES: "Seleccione el tipo de resolución a crear",
     ASOCIAR_RESOLUCION: "Asociar resolución",
     VIGENCIA: "Vigencia",
+    FIRMA_RECTOR: "Firma rector",
     /*---Script---*/
     INFORMACION_CONTENIDO: "Los artículos son creados por defecto y pueden ser editados",
     CONFIRMAR_GUARDAR_RESOLUCION: "Guardar resolución",
@@ -1125,7 +1126,8 @@ var text_en = {
 
     NO_PUEDE_ADICIONAR: "Can't add hours",
     NO_PUEDE_REDUCIR: "Can't reduce hours",
-    DEBE_APROBAR_CARGA: "New hours must be approved"
+    DEBE_APROBAR_CARGA: "New hours must be approved",
+    FIRMA_RECTOR: "Rector signature"
 };
 
 angular.module('contractualClienteApp')
