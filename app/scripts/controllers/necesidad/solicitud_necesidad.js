@@ -45,10 +45,11 @@ angular.module('contractualClienteApp')
         self.initNecesidad = function (IdNecesidad) {
 
             if (IdNecesidad) {
-                administrativaRequest.get('necesidad/' + IdNecesidad)
-                    .then(function (response) {
-                        self.necesidad = response.data;
-                    });
+                administrativaRequest.get('necesidad', $.param({
+                    query: 'Id:' + IdNecesidad
+                })).then(function (response) {
+                    self.necesidad = response.data[0];
+                });
 
                 administrativaRequest.get('fuente_financiacion_rubro_necesidad', $.param({
                     query: 'Necesidad:' + IdNecesidad
@@ -61,6 +62,7 @@ angular.module('contractualClienteApp')
                 })).then(function (response) {
                     self.documentos = response.data.map(function (d) { return d.MarcoLegal; });
                 });
+
 
                 administrativaRequest.get('actividad_economica_necesidad', $.param({
                     query: 'Necesidad:' + IdNecesidad
@@ -89,6 +91,12 @@ angular.module('contractualClienteApp')
                     console.log(self.rol_ordenador_gasto)
                 });
 
+                administrativaRequest.get('detalle_servicio_necesidad', $.param({
+                    query: 'Necesidad:' + IdNecesidad
+                })).then(function (response) {
+                    self.detalle_servicio_necesidad = response.data[0];
+                });
+
 
             } else {
                 self.necesidad = {};
@@ -106,7 +114,7 @@ angular.module('contractualClienteApp')
             }
         };
 
-        self.IdNecesidad2 = 102633  ;
+        self.IdNecesidad2 = 102634;
         self.initNecesidad(self.IdNecesidad2);
 
         self.formsInit = {
@@ -166,14 +174,18 @@ angular.module('contractualClienteApp')
         };
 
         $scope.$watch('solicitudNecesidad.dependencia_destino', function () {
+            if (!self.dependencia_destino) return;
             coreAmazonRequest.get('jefe_dependencia', $.param({
                 query: "DependenciaId:" + self.dependencia_destino,
                 limit: -1
             })).then(function (response2) {
+                console.log(response2.data)
+
                 agoraRequest.get('informacion_persona_natural', $.param({
                     query: 'Id:' + response2.data[0].TerceroId,
                     limit: -1
                 })).then(function (response) {
+                    console.log(response)
                     self.jefe_destino = response.data[0];
                     self.dep_ned.JefeDependenciaDestino = response2.data[0].Id;
                 });
@@ -191,6 +203,7 @@ angular.module('contractualClienteApp')
         }, true);
 
         $scope.$watch('solicitudNecesidad.rol_ordenador_gasto', function () {
+            if (!self.rol_ordenador_gasto) return;
             coreAmazonRequest.get('jefe_dependencia', $.param({
                 query: "DependenciaId:" + self.rol_ordenador_gasto,
                 limit: -1
