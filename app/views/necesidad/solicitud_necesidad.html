@@ -3,7 +3,7 @@
 <div class="panel panel-primary panel-body" style="padding:30px;">
 
   <div style="text-align: center">
-    <h3 class="page-header text-center">{{"SOLICITUD_NECESIDAD" | translate}}</h3>
+    <h3 class="page-header text-center">{{"SOLICITUD_NECESIDAD" | translate}} <span ng-if="solicitudNecesidad.necesidad.NumeroElaboracion">#{{solicitudNecesidad.necesidad.NumeroElaboracion}}</span></h3>
   </div>
 
   <div>
@@ -18,7 +18,7 @@
           </legend>
           <label class="radio-inline" ng-repeat="tipo in solicitudNecesidad.tipo_necesidad_data">
             <input type="radio" ng-value="{{tipo.Id}}" ng-model="solicitudNecesidad.necesidad.TipoNecesidad.Id"
-              ng-change="solicitudNecesidad.CambiarTipoNecesidad(solicitudNecesidad.necesidad.TipoNecesidad.Id)"
+              ng-change="solicitudNecesidad.ResetNecesidad(solicitudNecesidad.necesidad.TipoNecesidad.Id)"
               required>
             {{tipo.Nombre}}
           </label>
@@ -262,7 +262,7 @@
               </select>
             </div>
 
-            <div ng-show="solicitudNecesidad.necesidad.TipoContratoNecesidad.Nombre=='Servicio'">
+            <div ng-if="solicitudNecesidad.necesidad.TipoContratoNecesidad.Nombre=='Servicio'">
 
               <div class="col-md-6">
                 <label for="perfil" class="control-label">{{"PERFIL" | translate}}</label>
@@ -279,7 +279,7 @@
                 </select>
               </div>
 
-              <div class="col-md-6" > 
+              <div class="col-md-6">
                 <!-- ng-show="solicitudNecesidad.nucleoarea!=undefined" -->
                 <label class="control-label">{{"NUCLEO_CONOCIMIENTO" | translate}}</label>
                 <select class="form-control" ng-model="solicitudNecesidad.detalle_servicio_necesidad.NucleoConocimiento"
@@ -299,12 +299,14 @@
                 <label for="objeto" class="control-label">{{"ACTIVIDADES_ESPECIFICAS" | translate}}</label>
                 <div>
                   <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="actesp in solicitudNecesidad.ActividadEspecifica">
-                      <label><span class="text-info">{{$index+1}}. </span>{{actesp.Descripcion}}</label>
-                      <button type="button" class="btn btn-danger btn-sm col-md-offset-11" ng-click="solicitudNecesidad.eliminarActividad(actesp)"
-                        aria-label="Left Align">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                      </button>
+                    <li class="list-group-item row" ng-repeat="actesp in solicitudNecesidad.ActividadEspecifica">
+                      <label class="col-md-11"><span class="text-info">{{$index+1}}. </span>{{actesp.Descripcion}}</label>
+                      <div class="col-md-1 text-right">
+                        <button type="button" class="btn btn-danger" ng-click="solicitudNecesidad.eliminarActividad(actesp)"
+                          aria-label="Left Align">
+                          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                      </div>
                     </li>
                   </ul>
                 </div>
@@ -312,12 +314,12 @@
                   placeholder="Descripcion actividad"></textarea>
               </div>
               <div class="col-md-12">
-                  <div style="text-align: center">
-                    <button type="button" class="btn btn-primary btn-outline" ng-click="solicitudNecesidad.actividad_esp!=undefined && solicitudNecesidad.agregarActEsp(solicitudNecesidad.actividad_esp);solicitudNecesidad.actividad_esp=undefined">{{"AGREGAR"
-                      | translate}}</button>
-                  </div>
-                  <br>
+                <div style="text-align: center">
+                  <button type="button" class="btn btn-primary btn-outline" ng-click="solicitudNecesidad.actividad_esp!=undefined && solicitudNecesidad.agregarActEsp(solicitudNecesidad.actividad_esp);solicitudNecesidad.actividad_esp=undefined">{{"AGREGAR"
+                    | translate}}</button>
                 </div>
+                <br>
+              </div>
 
               <!-- Actividades economicas -->
               <div class="col-md-12">
@@ -455,8 +457,8 @@
                   <br>
 
                   <div class="col-md-6">
-                    <fuentes-apropiacion apropiacion="ap.Apropiacion" fuenteapropiacion="ap.fuentes" init-fuenteapropiacion="ap.initFuentes"
-                      dependenciasolicitante="solicitudNecesidad.dependencia_solicitante_data.DependenciaId"></fuentes-apropiacion>
+                    <fuentes-apropiacion apropiacion="ap.Apropiacion" fuenteapropiacion="ap.fuentes"
+                      init-fuenteapropiacion="ap.initFuentes" dependenciasolicitante="solicitudNecesidad.dependencia_solicitante_data.DependenciaId"></fuentes-apropiacion>
                   </div>
 
                   <ul class="list-group col-md-6">

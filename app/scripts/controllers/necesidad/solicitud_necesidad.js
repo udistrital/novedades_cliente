@@ -8,8 +8,11 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate) {
+    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate, $routeParams) {
         var self = this;
+
+        self.IdNecesidad = $routeParams.NecesidadId;
+
         self.documentos = [];
         self.avance = undefined;
         self.formuIncompleto = true;
@@ -83,11 +86,27 @@ angular.module('contractualClienteApp')
             Object.keys(self.duracionEspecialMap).forEach(function (k) {
                 var v = self.duracionEspecialMap[k].slice(1, 3);
                 if (_.isEqual(test, v)) {
-                    console.log(k)
                     self.DuracionEspecial = k;
                     self.ver_duracion_fecha = self.duracionEspecialMap[k][0];
                 }
             });
+        };
+
+        self.calculo_total_dias = function () {
+            self.anos = self.anos == undefined ? 0 : self.anos;
+            self.meses = self.meses == undefined ? 0 : self.meses;
+            self.dias = self.dias == undefined ? 0 : self.dias;
+
+            self.necesidad.DiasDuracion = ((parseInt(self.anos) * 360) + (parseInt(self.meses) * 30) + parseInt(self.dias));
+        };
+
+        self.calculo_total_dias_rev = function () {
+            var c = self.necesidad.DiasDuracion;
+            self.anos = Math.floor(c / 360);
+            c %= 360;
+            self.meses = Math.floor(c / 30);
+            c %= 30;
+            self.dias = c;
         };
 
         self.initNecesidad = function (IdNecesidad) {
@@ -99,6 +118,26 @@ angular.module('contractualClienteApp')
                     self.necesidad = response.data[0];
                     self.duracionEspecialReverse();
                     self.calculo_total_dias_rev();
+
+                    if (self.necesidad.TipoContratoNecesidad.Id === 2) { // Tipo Servicio
+                        administrativaRequest.get('detalle_servicio_necesidad', $.param({
+                            query: 'Necesidad:' + IdNecesidad
+                        })).then(function (response) {
+                            self.detalle_servicio_necesidad = response.data[0];
+                        });
+                        administrativaRequest.get('actividad_especifica', $.param({
+                            query: 'Necesidad:' + IdNecesidad
+                        })).then(function (response) {
+                            self.ActividadEspecifica = response.data;
+                        });
+
+                        administrativaRequest.get('actividad_economica_necesidad', $.param({
+                            query: 'Necesidad:' + IdNecesidad
+                        })).then(function (response) {
+                            self.actividades_economicas_id = response.data.map(function (d) { return parseInt(d.ActividadEconomica); });
+                        });
+                    }
+                    self.CambiarTipoNecesidad(self.necesidad.TipoContratoNecesidad.Id);
                 });
 
                 administrativaRequest.get('fuente_financiacion_rubro_necesidad', $.param({
@@ -129,13 +168,6 @@ angular.module('contractualClienteApp')
                     self.documentos = response.data.map(function (d) { return d.MarcoLegal; });
                 });
 
-
-                administrativaRequest.get('actividad_economica_necesidad', $.param({
-                    query: 'Necesidad:' + IdNecesidad
-                })).then(function (response) {
-                    self.actividades_economicas_id = response.data.map(function (d) { return parseInt(d.ActividadEconomica); });
-                });
-
                 administrativaRequest.get('dependencia_necesidad', $.param({
                     query: 'Necesidad:' + IdNecesidad
                 })).then(function (response) {
@@ -156,15 +188,10 @@ angular.module('contractualClienteApp')
                     self.rol_ordenador_gasto = response.data[0].DependenciaId;
                 });
 
-                administrativaRequest.get('detalle_servicio_necesidad', $.param({
-                    query: 'Necesidad:' + IdNecesidad
-                })).then(function (response) {
-                    self.detalle_servicio_necesidad = response.data[0];
-                });
-
             } else {
                 self.necesidad = {};
                 self.necesidad.TipoNecesidad = { Id: 1 };
+                self.necesidad.TipoContratoNecesidad = { Id: 0 };
                 //self.necesidad.TipoContratoNecesidad = {};
                 self.necesidad.DiasDuracion = 0;
                 self.necesidad.UnicoPago = true;
@@ -178,8 +205,7 @@ angular.module('contractualClienteApp')
             }
         };
 
-        self.IdNecesidad2 = 102634;
-        self.initNecesidad(self.IdNecesidad2);
+        self.initNecesidad(self.IdNecesidad);
 
         self.formsInit = {
             Avances: false,
@@ -371,23 +397,6 @@ angular.module('contractualClienteApp')
             self.iva_data = response.data;
         });
 
-        self.calculo_total_dias = function () {
-            self.anos = self.anos == undefined ? 0 : self.anos;
-            self.meses = self.meses == undefined ? 0 : self.meses;
-            self.dias = self.dias == undefined ? 0 : self.dias;
-
-            self.necesidad.DiasDuracion = ((parseInt(self.anos) * 360) + (parseInt(self.meses) * 30) + parseInt(self.dias));
-        };
-
-        self.calculo_total_dias_rev = function () {
-            var c = self.necesidad.DiasDuracion;
-            self.anos = Math.floor(c / 360);
-            c %= 360;
-            self.meses = Math.floor(c / 30);
-            c %= 30;
-            self.dias = c;
-        };
-
         //Temporal viene dado por un servicio de javier
         agoraRequest.get('informacion_persona_natural', $.param({
             limit: -1,
@@ -502,8 +511,8 @@ angular.module('contractualClienteApp')
             }
         }, true);
 
-        $scope.$watch('solicitudNecesidad.necesidad.TipoContratoNecesidad.Nombre', function () {
-            if (self.necesidad.TipoContratoNecesidad.Nombre === 'Compra') {
+        $scope.$watch('solicitudNecesidad.necesidad.TipoContratoNecesidad.Id', function () {
+            if (self.necesidad && self.necesidad.TipoContratoNecesidad.Id === 1) { //tipo compra
                 self.MostrarTotalEspc = true;
             } else {
                 self.MostrarTotalEspc = false;
@@ -581,10 +590,9 @@ angular.module('contractualClienteApp')
                 DetalleServicioNecesidad: self.detalle_servicio_necesidad
             };
 
-
-            administrativaRequest.post("tr_necesidad", self.tr_necesidad).then(function (response) {
+            var NecesidadHandle = function (response) {
                 self.alerta_necesidad = response.data;
-                if (typeof (self.alerta_necesidad) === "string") {
+                if (response.status !== 200 && typeof (self.alerta_necesidad) === "string") {
                     swal({
                         title: '',
                         type: 'error',
@@ -604,13 +612,17 @@ angular.module('contractualClienteApp')
                     });
                     return;
                 }
+                if (typeof (self.alerta_necesidad) === "string")
+                    self.alerta_necesidad = [{ Type: "success" }]
+
                 var templateAlert = "<table class='table table-bordered'><th>" +
                     $translate.instant('NO_NECESIDAD') + "</th><th>" +
                     $translate.instant('UNIDAD_EJECUTORA') + "</th><th>" +
                     $translate.instant('DEPENDENCIA_DESTINO') + "</th><th>" +
                     $translate.instant('TIPO_CONTRATO') + "</th><th>" +
                     $translate.instant('VALOR') + "</th>";
-                angular.forEach(self.alerta_necesidad, function (data) {
+
+                var forEachResponse = function (data) {
                     if (data.Type === "error")
                         templateAlert += "<tr class='danger'>";
                     else
@@ -631,7 +643,10 @@ angular.module('contractualClienteApp')
                         self.avance.Necesidad = { Id: n.Id }
                         administrativaRequest.put('necesidad_proceso_externo/', self.avance.Id, self.avance);
                     }
-                });
+                }
+
+                angular.forEach(self.alerta_necesidad, forEachResponse);
+
                 templateAlert = templateAlert + "</table>";
                 swal({
                     title: '',
@@ -644,18 +659,29 @@ angular.module('contractualClienteApp')
                 if (self.alerta_necesidad[0].Type === "success") {
                     $window.location.href = '#/necesidades';
                 }
-            });
+            };
+
+            if (self.IdNecesidad) {
+                administrativaRequest.put("tr_necesidad", self.IdNecesidad, self.tr_necesidad).then(NecesidadHandle)
+            } else {
+                administrativaRequest.post("tr_necesidad", self.tr_necesidad).then(NecesidadHandle)
+            }
+        };
+
+
+        self.ResetNecesidad = function(TipoNecesidad) {
+            self.initNecesidad();
+            self.CambiarTipoNecesidad(TipoNecesidad);
         };
 
         // Control de visualizacion de los campos individuales
-        self.CambiarTipoNecesidad = function (IdNecesidad) {
-            self.initNecesidad(self.IdNecesidad2);
-            self.necesidad.TipoNecesidad = { Id: parseInt(IdNecesidad) };
+        self.CambiarTipoNecesidad = function (TipoNecesidad) {
+            self.necesidad.TipoNecesidad = { Id: parseInt(TipoNecesidad) };
 
             self.forms = self.deepCopy(self.formsInit);
             self.field = self.deepCopy(self.fieldInit);
 
-            switch (IdNecesidad) {
+            switch (TipoNecesidad) {
                 case 1: // Contratacion
                     break;
                 case 3: // Avances    

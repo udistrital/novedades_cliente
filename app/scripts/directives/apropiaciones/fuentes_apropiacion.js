@@ -60,7 +60,6 @@ angular.module('contractualClienteApp')
 
           // se observa cambios en idActividades para completar $scope.actividades y seleccionar las respectivas filas en la tabla
           $scope.$watch('initFuenteApropiacion', function () {
-            console.log($scope.initFuenteapropiacion);
             self.fuenteapropiacion = [];
             $scope.initFuenteapropiacion.forEach(function (fuente) {
               var tmp = self.gridOptions.data.filter(function (e) { return e.FuenteFinanciamiento.Id == fuente.FuenteFinanciamiento.Id })

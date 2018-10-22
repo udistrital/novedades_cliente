@@ -8,11 +8,12 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, gridApiService) {
+    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, $window, gridApiService) {
         var self = this;
         self.offset = 0;
         self.rechazada = false;
-        
+        self.editarNecesidad = true; 
+
         self.gridOptions = {
             paginationPageSizes: [10, 15, 20],
             paginationPageSize: 10,
@@ -238,5 +239,12 @@ angular.module('contractualClienteApp')
                 $("#myModal").modal("hide");
             });
         };
-
+        
+        self.editar_necesidad = function () {
+            var idNecesidad = self.g_necesidad.Id;
+            $("#myModal").modal("hide");
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $window.location.href = '#/necesidad/solicitud_necesidad/' + idNecesidad;
+            })
+        }
     });
