@@ -16,36 +16,47 @@ angular.module('contractualClienteApp')
                         widths: ['10%', '*', '40%'],
                         body: [
                             [
-                                'Image Ud',
-                                { text: 'Solicitud Necesidad'.toUpperCase(), margin: [0, 33, 0, 0], style: "headerTitle" },
+                                { text: 'Image Ud', rowSpan: 4 },
+                                { text: 'Solicitud Necesidad'.toUpperCase(), rowSpan: 4, margin: [0, 33, 0, 0], style: "headerTitle" },
+                                { text: "Dependencia Solicitante", style: "title1", border: [true, true, true, false] }
+                            ],
+                            [
+                                "",
+                                "",
+                                { text: "Sección de Almacén General e Inventarios".toUpperCase(), border: [true, false, true, true] }
+                            ],
+                            [
+                                "",
+                                "",
                                 {
-                                    margin: 0,
-                                    table: {
-                                        headerRows: 1,
-                                        widths: ['*'],
-                                        body: [
-                                            [[{ text: "Dependencia Solicitante", style: "title1" }, "Sección de Almacén General e Inventarios".toUpperCase()]],
-                                            [{
-                                                alignment: 'center',
-                                                columns: [
-                                                    [{ text: "Vigencia", style: "title1" }, 2017],
-                                                    [{ text: "No. Solicitud", style: "title1" }, 349]
-                                                ],
-                                                columnGap: 10
-                                            }],
-                                            ["Página 1 de 1"]
-                                        ]
-                                    }
+                                    alignment: 'center',
+                                    columns: [
+                                        [{ text: "Vigencia", style: "title1" }, 2017],
+                                        [{ text: "No. Solicitud", style: "title1" }, 349]
+                                    ],
+                                    columnGap: 10
                                 }
                             ],
+                            [
+                                "",
+                                "",
+                                "Página 1 de 1",
+
+                            ]
                         ]
                     }
                 },
                 {
                     style: "p",
+                    layout: {
+                        fillColor: function (i, node) {
+                            return (i % 2 === 1) ? '#CCCCCC' : null;
+                        }
+                    },
                     table: {
-                        headerRows: 1,
+                        headerRows: 0,
                         widths: ["100%"],
+
                         body: [
                             [{ alignment: "center", text: [{ bold: true, text: "Fecha de Solicitud: " }, "17 de Enero de 2017"] }],
                             [{ style: "title1", text: "JUSTIFICACIÓN (Identifique de forma clara y conta la necesidad de la contratación)" }],
@@ -167,6 +178,7 @@ angular.module('contractualClienteApp')
                                     }
                                 }
                             ]],
+                            [""],
                             [{
                                 alignment: "center",
                                 margin: [10, 30, 10, 20],
