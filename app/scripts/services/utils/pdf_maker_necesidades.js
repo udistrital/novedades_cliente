@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .factory('pdfMakerService', function ($http, $translate) {
+    .factory('pdfMakerNecesidadesService', function ($http, $translate) {
         var self = {};
 
         var docDefinition = {
@@ -223,5 +223,6 @@ angular.module('contractualClienteApp')
             pageOrientation: 'portrait',
 
         }
+        self.docDefinition = docDefinition;
         return self;
     });
