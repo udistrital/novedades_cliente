@@ -95,7 +95,7 @@ angular
                 controller: 'AboutCtrl',
                 controllerAs: 'about'
             })
-            .when('/necesidad/solicitud_necesidad', {
+            .when('/necesidad/solicitud_necesidad/:NecesidadId?', {
                 templateUrl: 'views/necesidad/solicitud_necesidad.html',
                 controller: 'SolicitudNecesidadCtrl',
                 controllerAs: 'solicitudNecesidad'
