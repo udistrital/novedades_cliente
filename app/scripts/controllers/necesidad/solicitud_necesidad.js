@@ -148,7 +148,7 @@ angular.module('contractualClienteApp')
                     // agrupar por ID apropiacion
                     var tmp = self.groupBy(self.f_apropiaciones, function (apro) { return apro.Apropiacion });
                     self.f_apropiacion = [];
-
+                    
                     //crear cada una de las apropiaciones con sus respectivo array de fuentes
                     tmp.forEach(function (v, k) {
                         var ap = v.map(function (a) {
@@ -573,7 +573,7 @@ angular.module('contractualClienteApp')
                             MontoParcial: fuente.Monto,
                             FuenteFinanciamiento: fuente.FuenteFinanciamiento.Id,
                         };
-                        self.f_apropiaciones.push(fap);
+                        self.f_apropiaciones.push(f);
                     });
                 });
 
@@ -592,7 +592,7 @@ angular.module('contractualClienteApp')
 
             var NecesidadHandle = function (response) {
                 self.alerta_necesidad = response.data;
-                if (response.status !== 200 && typeof (self.alerta_necesidad) === "string") {
+                if ((response.status !== 200 || self.alerta_necesidad !== "Ok") && typeof (self.alerta_necesidad) === "string") {
                     swal({
                         title: '',
                         type: 'error',
