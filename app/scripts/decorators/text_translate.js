@@ -54,6 +54,7 @@ var text_es = {
     PROCESO_EXTERNO: "Proceso Externo",
     CONSECUTIVO_PROCESO_EXTERNO: "Consecutivo",
     NECESIDADES: "Necesidades",
+    EDITAR_NECESIDAD: "Editar",
     NECESIDAD: "Necesidad",
     RECTOR: "Rector",
     SOLICITUD_NECESIDAD_CONTRATO: "Solicitud de Necesidad de Contrato",
