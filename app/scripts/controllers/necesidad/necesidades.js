@@ -88,16 +88,7 @@ angular.module('contractualClienteApp')
                 enableSorting: false,
                 displayName: $translate.instant('VER'),
                 cellTemplate: function () {
-                    return `
-                    <div style="text-align: center; display: inline-block">
-                        <a href="" style="border:0" type="button" ng-click="grid.appScope.direccionar(row.entity)"><span class="fa fa-eye"></span>
-                        </a>
-                    </div>
-                    <div style="text-align: center; display: inline-block">
-                        <a href="" style="border:0" type="button" ng-click="grid.appScope.crearPDF(row.entity)"><span class="fa fa-file-pdf-o"></span>
-                        </a>
-                    </div>
-                    `;
+                    return '<div style="text-align: center; display: inline-block"><a href="" style="border:0" type="button" ng-click="grid.appScope.direccionar(row.entity)"><span class="fa fa-eye"></span></a></div><div style="text-align: center; display: inline-block"><a href="" style="border:0" type="button" ng-click="grid.appScope.crearPDF(row.entity)"><span class="fa fa-file-pdf-o"></span></a></div>';
                 },
                 headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
                 cellTooltip: function (row) {
