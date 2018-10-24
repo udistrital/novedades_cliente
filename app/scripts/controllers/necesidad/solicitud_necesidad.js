@@ -602,11 +602,11 @@ angular.module('contractualClienteApp')
                     });
                     return;
                 }
-                if (self.alerta_necesidad[0].Type === "error" && typeof (self.alerta_necesidad[0].Body) === "string") {
+                if (self.alerta_necesidad.Type === "error" && typeof (self.alerta_necesidad.Body) === "string") {
                     swal({
                         title: '',
                         type: 'error',
-                        text: self.alerta_necesidad[0].Body,
+                        text: self.alerta_necesidad.Body,
                         showCloseButton: true,
                         confirmButtonText: $translate.instant("CERRAR")
                     });
@@ -645,18 +645,18 @@ angular.module('contractualClienteApp')
                     }
                 }
 
-                angular.forEach(self.alerta_necesidad, forEachResponse);
+                forEachResponse(self.alerta_necesidad);
 
                 templateAlert = templateAlert + "</table>";
                 swal({
                     title: '',
-                    type: self.alerta_necesidad[0].Type,
+                    type: self.alerta_necesidad.Type,
                     width: 800,
                     html: templateAlert,
                     showCloseButton: true,
                     confirmButtonText: $translate.instant("CERRAR")
                 });
-                if (self.alerta_necesidad[0].Type === "success") {
+                if (self.alerta_necesidad.Type === "success") {
                     $window.location.href = '#/necesidades';
                 }
             };
@@ -690,6 +690,7 @@ angular.module('contractualClienteApp')
                     for (var key in self.field.General) { self.field.General[key] = false; }
                     self.field.General.PlanAnualAdquisiciones = true;
                     self.field.General.UnidadEjecutora = true;
+                    self.necesidad.TipoContratoNecesidad = {Id: 3}; //No aplica
                     break;
                 default:
                     break;
