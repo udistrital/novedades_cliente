@@ -8,7 +8,7 @@
 
   <div>
     <div class="panel-body">
-
+      
       <form name="solicitudform" class="form-horizontal" ng-submit="solicitudNecesidad.submitForm(solicitudform)"
         novalidate>
         <!-- Tipo Necesidad -->
@@ -193,7 +193,7 @@
 
             <div class="col-md-6" ng-if="solicitudNecesidad.field.General.Supervisor">
               <label for="supervisor" class="control-label">{{"SUPERVISOR" | translate}}</label>
-              <select class="form-control" ng-model="solicitudNecesidad.necesidad.Supervisor" ng-options="sup.Id.toString() as sup.PrimerNombre+' '+sup.SegundoNombre+' '+sup.PrimerApellido+' '+sup.SegundoApellido for sup in solicitudNecesidad.persona_data track by String(sup)">
+              <select class="form-control" ng-model="solicitudNecesidad.necesidad.Supervisor" ng-options="sup.Id*1 as sup.PrimerNombre+' '+sup.SegundoNombre+' '+sup.PrimerApellido+' '+sup.SegundoApellido for sup in solicitudNecesidad.persona_data track by sup.Id">
                 <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"SUPERVISOR" | translate}}</option>
               </select>
             </div>
@@ -283,7 +283,7 @@
                 <!-- ng-show="solicitudNecesidad.nucleoarea!=undefined" -->
                 <label class="control-label">{{"NUCLEO_CONOCIMIENTO" | translate}}</label>
                 <select class="form-control" ng-model="solicitudNecesidad.detalle_servicio_necesidad.NucleoConocimiento"
-                  ng-options="nucleoc.Id.toString() as nucleoc.Nombre for nucleoc in solicitudNecesidad.nucleo_conocimiento_data">
+                  ng-options="nucleoc.Id*1 as nucleoc.Nombre for nucleoc in solicitudNecesidad.nucleo_conocimiento_data">
                   <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"EL_TIPO_DE" | translate}}
                     {{"NUCLEO_CONOCIMIENTO" | translate}}</option>
                 </select>
