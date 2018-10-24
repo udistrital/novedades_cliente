@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, $window, gridApiService) {
+    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, $window, gridApiService, pdfMakerNecesidadesService) {
         var self = this;
         self.offset = 0;
         self.rechazada = false;
@@ -88,7 +88,16 @@ angular.module('contractualClienteApp')
                 enableSorting: false,
                 displayName: $translate.instant('VER'),
                 cellTemplate: function () {
-                    return '<center><a href="" style="border:0" type="button" ng-click="grid.appScope.direccionar(row.entity)"><span class="fa fa-eye"></span></a></center>';
+                    return `
+                    <div style="text-align: center; display: inline-block">
+                        <a href="" style="border:0" type="button" ng-click="grid.appScope.direccionar(row.entity)"><span class="fa fa-eye"></span>
+                        </a>
+                    </div>
+                    <div style="text-align: center; display: inline-block">
+                        <a href="" style="border:0" type="button" ng-click="grid.appScope.crearPDF(row.entity)"><span class="fa fa-file-pdf-o"></span>
+                        </a>
+                    </div>
+                    `;
                 },
                 headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
                 cellTooltip: function (row) {
@@ -246,5 +255,9 @@ angular.module('contractualClienteApp')
             $('#myModal').on('hidden.bs.modal', function (e) {
                 $window.location.href = '#/necesidad/solicitud_necesidad/' + idNecesidad;
             })
-        }
+        };
+        $scope.crearPDF = function(row) {
+            pdfMake.createPdf(pdfMakerNecesidadesService.docDefinition()).open();
+        };
+
     });

@@ -105,6 +105,11 @@ angular
                 controller: 'NecesidadesCtrl',
                 controllerAs: 'necesidades'
             })
+            .when('/necesidad-pdf', {
+                templateUrl: 'views/pdfnecesidad.html',
+                controller: 'PdfnecesidadCtrl',
+                controllerAs: 'necesidadPdf'
+            })
             .when('/rp_solicitud_personas', {
                 templateUrl: 'views/rp/rp_solicitud_personas.html',
                 controller: 'RpSolicitudPersonasCtrl',
