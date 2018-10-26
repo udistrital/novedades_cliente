@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate, $routeParams) {
+    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate, $routeParams, necesidadService) {
         var self = this;
 
         self.IdNecesidad = $routeParams.NecesidadId;
@@ -109,103 +109,38 @@ angular.module('contractualClienteApp')
             self.dias = c;
         };
 
-        self.initNecesidad = function (IdNecesidad) {
 
-            if (IdNecesidad) {
-                administrativaRequest.get('necesidad', $.param({
-                    query: 'Id:' + IdNecesidad
-                })).then(function (response) {
-                    self.necesidad = response.data[0];
-                    self.duracionEspecialReverse();
-                    self.calculo_total_dias_rev();
+        necesidadService.initNecesidad(self.IdNecesidad).then(function (trNecesidad) {
+            self.necesidad = trNecesidad.Necesidad;
+            self.detalle_servicio_necesidad = trNecesidad.DetalleServicioNecesidad;
+            self.ActividadEspecifica = trNecesidad.ActividadEspecifica;
+            self.actividades_economicas_id = trNecesidad.ActividadEconomicaNecesidad.map(function (d) { return parseInt(d.ActividadEconomica); });
+            self.f_apropiaciones = trNecesidad.Ffapropiacion;
+            self.documentos = trNecesidad.MarcoLegalNecesidad.map(function (d) { return d.MarcoLegal; });
+            self.dep_ned = trNecesidad.DependenciaNecesidad;
+            self.dependencia_destino = trNecesidad.DependenciaNecesidadDestino;
+            self.rol_ordenador_gasto = trNecesidad.RolOrdenadorGasto;
 
-                    if (self.necesidad.TipoContratoNecesidad.Id === 2) { // Tipo Servicio
-                        administrativaRequest.get('detalle_servicio_necesidad', $.param({
-                            query: 'Necesidad:' + IdNecesidad
-                        })).then(function (response) {
-                            self.detalle_servicio_necesidad = response.data[0];
-                        });
-                        administrativaRequest.get('actividad_especifica', $.param({
-                            query: 'Necesidad:' + IdNecesidad
-                        })).then(function (response) {
-                            self.ActividadEspecifica = response.data;
-                        });
+            self.duracionEspecialReverse();
+            self.calculo_total_dias_rev();
+            self.CambiarTipoNecesidad(self.necesidad.TipoContratoNecesidad.Id);
 
-                        administrativaRequest.get('actividad_economica_necesidad', $.param({
-                            query: 'Necesidad:' + IdNecesidad
-                        })).then(function (response) {
-                            self.actividades_economicas_id = response.data.map(function (d) { return parseInt(d.ActividadEconomica); });
-                        });
-                    }
-                    self.CambiarTipoNecesidad(self.necesidad.TipoContratoNecesidad.Id);
+            // agrupar por ID apropiacion
+            var tmp = self.groupBy(self.f_apropiaciones, function (apro) { return apro.Apropiacion });
+            self.f_apropiacion = [];
+
+            //crear cada una de las apropiaciones con sus respectivo array de fuentes
+            tmp.forEach(function (v, k) {
+                var ap = v.map(function (a) {
+                    return { Monto: a.MontoParcial, FuenteFinanciamiento: { Id: a.FuenteFinanciamiento } }
+                })
+                self.f_apropiacion.push({
+                    Apropiacion: k,
+                    fuentes: ap,
+                    initFuentes: ap
                 });
-
-                administrativaRequest.get('fuente_financiacion_rubro_necesidad', $.param({
-                    query: 'Necesidad:' + IdNecesidad
-                })).then(function (response) {
-                    self.f_apropiaciones = response.data;
-
-                    // agrupar por ID apropiacion
-                    var tmp = self.groupBy(self.f_apropiaciones, function (apro) { return apro.Apropiacion });
-                    self.f_apropiacion = [];
-                    
-                    //crear cada una de las apropiaciones con sus respectivo array de fuentes
-                    tmp.forEach(function (v, k) {
-                        var ap = v.map(function (a) {
-                            return { Monto: a.MontoParcial, FuenteFinanciamiento: { Id: a.FuenteFinanciamiento } }
-                        })
-                        self.f_apropiacion.push({
-                            Apropiacion: k,
-                            fuentes: ap,
-                            initFuentes: ap
-                        });
-                    });
-                });
-
-                administrativaRequest.get('marco_legal_necesidad', $.param({
-                    query: 'Necesidad:' + IdNecesidad
-                })).then(function (response) {
-                    self.documentos = response.data.map(function (d) { return d.MarcoLegal; });
-                });
-
-                administrativaRequest.get('dependencia_necesidad', $.param({
-                    query: 'Necesidad:' + IdNecesidad
-                })).then(function (response) {
-                    self.dep_ned = response.data[0];
-
-                    return coreAmazonRequest.get('jefe_dependencia', $.param({
-                        query: "Id:" + self.dep_ned.JefeDependenciaDestino,
-                        limit: -1
-                    }))
-                }).then(function (response) {
-                    self.dependencia_destino = response.data[0].DependenciaId;
-
-                    return coreAmazonRequest.get('jefe_dependencia', $.param({
-                        query: "TerceroId:" + self.dep_ned.OrdenadorGasto,
-                        limit: -1
-                    }))
-                }).then(function (response) {
-                    self.rol_ordenador_gasto = response.data[0].DependenciaId;
-                });
-
-            } else {
-                self.necesidad = {};
-                self.necesidad.TipoNecesidad = { Id: 1 };
-                self.necesidad.TipoContratoNecesidad = { Id: 0 };
-                //self.necesidad.TipoContratoNecesidad = {};
-                self.necesidad.DiasDuracion = 0;
-                self.necesidad.UnicoPago = true;
-                self.necesidad.AgotarPresupuesto = false;
-                self.necesidad.Valor = 0;
-                administrativaRequest.get('estado_necesidad', $.param({
-                    query: "Nombre:Solicitada"
-                })).then(function (response) {
-                    self.necesidad.EstadoNecesidad = response.data[0];
-                });
-            }
-        };
-
-        self.initNecesidad(self.IdNecesidad);
+            });
+        });
 
         self.formsInit = {
             Avances: false,
@@ -669,7 +604,7 @@ angular.module('contractualClienteApp')
         };
 
 
-        self.ResetNecesidad = function(TipoNecesidad) {
+        self.ResetNecesidad = function (TipoNecesidad) {
             self.initNecesidad();
             self.CambiarTipoNecesidad(TipoNecesidad);
         };
@@ -690,7 +625,7 @@ angular.module('contractualClienteApp')
                     for (var key in self.field.General) { self.field.General[key] = false; }
                     self.field.General.PlanAnualAdquisiciones = true;
                     self.field.General.UnidadEjecutora = true;
-                    self.necesidad.TipoContratoNecesidad = {Id: 3}; //No aplica
+                    self.necesidad.TipoContratoNecesidad = { Id: 3 }; //No aplica
                     break;
                 default:
                     break;

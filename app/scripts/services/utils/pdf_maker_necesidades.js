@@ -5,15 +5,18 @@ angular.module('contractualClienteApp')
         var self = {};
 
         self.imagen = { imagen: "" };
-        $http.get("scripts/models/imagen.json")
-            .then(function (response) {
-                self.imagen = response.data;
+        self.init = function () {
+            return $http.get("scripts/models/imagen.json")
+                .then(function (response) {
+                    self.imagen = response.data;
 
-            });
-        var docDefinition = function () {
+                });
+        };
+        self.docDefinition = function (trNecesidad) {
             return {
-                content: [
-                    {
+
+                header: function (currentPage, pageCount) {
+                    return {
                         style: ['header', "p"],
                         margin: [0, 0, 0, 15],
                         table: {
@@ -44,8 +47,8 @@ angular.module('contractualClienteApp')
                                     {
                                         alignment: 'center',
                                         columns: [
-                                            [{ text: "Vigencia", style: "title1" }, 2017],
-                                            [{ text: "No. Solicitud", style: "title1" }, 349]
+                                            [{ text: "Vigencia", style: "title1" }, trNecesidad.necesidad.Vigencia],
+                                            [{ text: "No. Solicitud", style: "title1" }, trNecesidad.necesidad.NumeroElaboracion]
                                         ],
                                         columnGap: 10
                                     }
@@ -53,12 +56,14 @@ angular.module('contractualClienteApp')
                                 [
                                     "",
                                     "",
-                                    "Página 1 de 1",
+                                    "Página " +  currentPage.toString() + " de " + pageCount,
 
                                 ]
                             ]
                         }
-                    },
+                    }
+                },
+                content: [
                     {
                         style: "p",
                         layout: {
@@ -71,9 +76,9 @@ angular.module('contractualClienteApp')
                             widths: ["100%"],
 
                             body: [
-                                [{ alignment: "center", text: [{ bold: true, text: "Fecha de Solicitud: " }, "17 de Enero de 2017"] }],
+                                [{ alignment: "center", text: [{ bold: true, text: "Fecha de Solicitud: " }, moment(trNecesidad.necesidad.FechaSolicitud).format("D [de] MMMM [de] YYYY")] }],
                                 [{ style: "title1", text: "JUSTIFICACIÓN (Identifique de forma clara y conta la necesidad de la contratación)" }],
-                                [{ alignment: "justify", text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Malit profecta versatur nomine ocurreret multavit, officiis viveremus aeternum superstitio suspicor alia nostram, quando nostros congressus susceperant concederetur leguntur iam, vigiliae democritea tantopere causae, atilii plerumque ipsas potitur pertineant multis rem quaeri pro, legendum didicisse credere ex maluisset per videtis. Cur discordans praetereat aliae ruinae dirigentur orestem eodem, praetermittenda divinum. Collegisti, deteriora malint loquuntur officii cotidie finitas referri doleamus ambigua acute. Adhaesiones ratione beate arbitraretur detractis perdiscere, constituant hostis polyaeno. Diu concederetur.".toUpperCase() }],
+                                [{ alignment: "justify", text: necesidad.Justificacion.toUpperCase() }],
                                 [{ style: "title2", text: "ESPECIFICACIONES TÉCNICAS: Si la compra o el servicio que contempla especificaciones del orden técnico describalas." }],
                                 [
                                     {
@@ -83,7 +88,7 @@ angular.module('contractualClienteApp')
                                             body: [
                                                 ["Descripción", "", "Cantidad", "Unidad"],
                                                 [["Cod. 1", "Especificación:"],
-                                                ["TÉCNICO", "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Malit profecta versatur nomine ocurreret multavit, officiis viveremus aeternum superstitio suspicor alia nostram, quando nostros congressus susceperant concederetur leguntur iam, vigiliae democritea tantopere causae, atilii plerumque ipsas potitur pertineant multis rem quaeri pro, legendum didicisse credere ex maluisset per videtis. Cur discordans praetereat aliae ruinae dirigentur orestem eodem, praetermittenda divinum. Collegisti, deteriora malint loquuntur officii cotidie finitas referri doleamus ambigua acute. Adhaesiones ratione beate arbitraretur detractis perdiscere, constituant hostis polyaeno. Diu concederetur.'"],
+                                                ["TÉCNICO", "s"],
                                                 { text: 1, alignment: "center" },
                                                     ""]
                                             ]
@@ -228,7 +233,7 @@ angular.module('contractualClienteApp')
                     }
 
                 },
-                pageMargins: [50, 60, 60, 60],
+                pageMargins: [50, 100, 60, 60],
                 // a string or { width: number, height: number }
                 pageSize: 'letter',
 
@@ -237,7 +242,5 @@ angular.module('contractualClienteApp')
 
             }
         }
-
-        self.docDefinition = docDefinition;
         return self;
     });
