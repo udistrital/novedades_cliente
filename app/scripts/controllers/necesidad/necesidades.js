@@ -8,11 +8,11 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, $window, gridApiService, pdfMakerNecesidadesService) {
+    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, $window, gridApiService, pdfMakerNecesidadesService, necesidadService) {
         var self = this;
         self.offset = 0;
         self.rechazada = false;
-        self.editarNecesidad = true; 
+        self.editarNecesidad = true;
 
         self.gridOptions = {
             paginationPageSizes: [10, 15, 20],
@@ -239,7 +239,7 @@ angular.module('contractualClienteApp')
                 $("#myModal").modal("hide");
             });
         };
-        
+
         self.editar_necesidad = function () {
             var idNecesidad = self.g_necesidad.Id;
             $("#myModal").modal("hide");
@@ -247,8 +247,17 @@ angular.module('contractualClienteApp')
                 $window.location.href = '#/necesidad/solicitud_necesidad/' + idNecesidad;
             })
         };
-        $scope.crearPDF = function(row) {
-            pdfMake.createPdf(pdfMakerNecesidadesService.docDefinition()).open();
+        $scope.crearPDF = function (row) {
+            console.log(row);
+            var IdNecesidad = row.Id;
+            
+            necesidadService.initNecesidad(IdNecesidad).then(function (trNecesidad) {
+                console.log(trNecesidad)
+
+                return pdfMakerNecesidadesService.docDefinition(trNecesidad);
+            }).then(function (docDefinition) {
+                pdfMake.createPdf(docDefinition).open();
+            })
         };
 
     });

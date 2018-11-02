@@ -104,7 +104,7 @@ angular
                 controller: 'NecesidadesCtrl',
                 controllerAs: 'necesidades'
             })
-            .when('/necesidad-pdf', {
+            .when('/necesidad-pdf/:NecesidadId', {
                 templateUrl: 'views/pdfnecesidad.html',
                 controller: 'PdfnecesidadCtrl',
                 controllerAs: 'necesidadPdf'

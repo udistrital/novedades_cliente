@@ -8,22 +8,21 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('PdfnecesidadCtrl', function (pdfMakerNecesidadesService, administrativaRequest, $scope, necesidadService) {
+  .controller('PdfnecesidadCtrl', function (pdfMakerNecesidadesService, $scope, $routeParams, necesidadService) {
 
+    var IdNecesidad = $routeParams.NecesidadId;
 
-    pdfMakerNecesidadesService.init().then(function () {
-      var IdNecesidad = 102659;
-      var IdNecesidad = 102634;
-      return necesidadService.initNecesidad(IdNecesidad)
-
-    }).then(function (response) {
-      $scope.trNecesidad = response;
+    necesidadService.initNecesidad(IdNecesidad).then(function (trNecesidad) {
+      $scope.trNecesidad = trNecesidad;
       console.log($scope.trNecesidad)
-      var a = pdfMake.createPdf(pdfMakerNecesidadesService.docDefinition($scope.trNecesidad))
+      pdfMakerNecesidadesService.docDefinition($scope.trNecesidad).then(function (docDefinition) {
+        var a = pdfMake.createPdf(docDefinition)
+        a.getDataUrl(function (outDoc) {
+          document.querySelector('#vistaPDF').src = outDoc;
+        });
+      })
 
-      a.getDataUrl(function (outDoc) {
-        document.querySelector('#vistaPDF').src = outDoc;
-      });
+
     })
 
   });

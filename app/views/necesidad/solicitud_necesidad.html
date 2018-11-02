@@ -18,7 +18,6 @@
           </legend>
           <label class="radio-inline" ng-repeat="tipo in solicitudNecesidad.tipo_necesidad_data">
             <input type="radio" ng-value="{{tipo.Id}}" ng-model="solicitudNecesidad.necesidad.TipoNecesidad.Id"
-              ng-change="solicitudNecesidad.ResetNecesidad(solicitudNecesidad.necesidad.TipoNecesidad.Id)"
               required>
             {{tipo.Nombre}}
           </label>
