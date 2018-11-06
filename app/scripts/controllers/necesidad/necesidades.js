@@ -88,13 +88,13 @@ angular.module('contractualClienteApp')
                 enableSorting: false,
                 displayName: $translate.instant('VER'),
                 cellTemplate: function () {
-                    return '<div style="text-align: center; display: inline-block"><a href="" style="border:0" type="button" ng-click="grid.appScope.direccionar(row.entity)"><span class="fa fa-eye"></span></a></div><div style="text-align: center; display: inline-block"><a href="" style="border:0" type="button" ng-click="grid.appScope.crearPDF(row.entity)"><span class="fa fa-file-pdf-o"></span></a></div>';
+                    return '<div class="btn-small"><a href="" style="border:0" type="button" ng-click="grid.appScope.direccionar(row.entity)"><span class="fa fa-eye"></span></a></div><div class="btn-small" style="text-align: center; display: inline-block"><a href="" style="border:0" type="button" ng-click="grid.appScope.crearPDF(row.entity)"><span class="fa fa-file-pdf-o"></span></a></div>';
                 },
                 headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
                 cellTooltip: function (row) {
                     return row.entity.EstadoNecesidad.Nombre + ".\n" + row.entity.EstadoNecesidad.Descripcion;
                 },
-                width: '6%'
+                width: '10%'
             }
             ],
             onRegisterApi: function (gridApi) {
@@ -144,7 +144,7 @@ angular.module('contractualClienteApp')
             }
 
             //para mostrar informacion de rechazo
-            self.rechazada = necesidad.EstadoNecesidad.Nombre === 'Rechazada';
+            self.necesidad_estado = necesidad.EstadoNecesidad.Nombre;
 
             $("#myModal").modal();
 

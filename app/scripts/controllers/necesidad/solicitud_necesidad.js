@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate, $routeParams, necesidadService) {
+    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $sce, $http, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate, $routeParams, necesidadService) {
         var self = this;
 
         self.IdNecesidad = $routeParams.IdNecesidad;
@@ -321,7 +321,12 @@ angular.module('contractualClienteApp')
             self.tipo_contrato_data = response.data;
         });
 
+        $http.get("scripts/models/marco_legal.json")
+        .then(function (response) {
+            
+            self.MarcoLegalNecesidadText = $sce.trustAsHtml(response.data.common_text);
 
+        });
 
         self.agregar_ffapropiacion = function (apropiacion) {
             if (apropiacion == undefined) {
