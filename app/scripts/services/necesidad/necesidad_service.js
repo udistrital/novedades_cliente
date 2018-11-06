@@ -42,7 +42,7 @@ angular.module('contractualClienteApp')
           query: idOrDep ? "Id:" + idDependencia : "DependenciaId:" + idDependencia,
           limit: -1
         })).then(function (response) {
-          out.JefeDependencia = response.data[0]; //TODO: cambiar el critero para tomar en cuenta el periodo de validez del jefe
+          out.JefeDependencia = response.data[0]; //TODO: cambiar el criterio para tomar en cuenta el periodo de validez del jefe
 
           return agoraRequest.get('informacion_persona_natural', $.param({
             query: 'Id:' + response.data[0].TerceroId,
@@ -50,7 +50,10 @@ angular.module('contractualClienteApp')
           }))
         }).then(function (response) {
           out.Persona = response.data[0];
-          resolve(out)
+          resolve(out);
+        }).catch(function (error) {
+          console.log(error);
+          reject(error);
         });
       });
     };
@@ -142,14 +145,12 @@ angular.module('contractualClienteApp')
               }
             });
           }).then(function (fuentes) {
-            console.log(fuentes)
             f_apropiacion.push({
               Apropiacion: idApropiacion,
               fuentes: fuentes,
               initFuentes: fuentes,
               Monto: monto
             });
-            console.log(counter, tmp.size)
             if (counter === tmp.size - 1) resolve(f_apropiacion);
             counter++;
           })
@@ -186,7 +187,7 @@ angular.module('contractualClienteApp')
               });
             } else resolve("Ok");
           }).then(function (response) {
-            console.log(response)
+
             return administrativaRequest.get('fuente_financiacion_rubro_necesidad', $.param({
               query: 'Necesidad:' + IdNecesidad
             })).then(function (response) {

@@ -11,7 +11,7 @@ angular.module('contractualClienteApp')
     .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate, $routeParams, necesidadService) {
         var self = this;
 
-        self.IdNecesidad = $routeParams.NecesidadId;
+        self.IdNecesidad = $routeParams.IdNecesidad;
 
         self.documentos = [];
         self.avance = undefined;
@@ -85,9 +85,12 @@ angular.module('contractualClienteApp')
             self.detalle_servicio_necesidad = trNecesidad.DetalleServicioNecesidad;
             self.ActividadEspecifica = trNecesidad.ActividadEspecifica;
             if (self.necesidad.TipoContratoNecesidad.Id == 2) self.actividades_economicas_id = trNecesidad.ActividadEconomicaNecesidad.map(function (d) { return parseInt(d.ActividadEconomica); });
-            self.f_apropiaciones = trNecesidad.Ffapropiacion;
 
-            self.documentos = trNecesidad.MarcoLegalNecesidad.map(function (d) { return d.MarcoLegal; });
+            if (trNecesidad.Ffapropiacion) {
+                self.f_apropiaciones = trNecesidad.Ffapropiacion;
+                necesidadService.groupByApropiacion(self.f_apropiaciones, false).then(function (fap) { self.f_apropiacion = fap });
+            }
+            self.documentos = trNecesidad.MarcoLegalNecesidad ? trNecesidad.MarcoLegalNecesidad.map(function (d) { return d.MarcoLegal; }) : [];
             self.dep_ned = trNecesidad.DependenciaNecesidad;
             self.dependencia_destino = trNecesidad.DependenciaNecesidadDestino;
             self.rol_ordenador_gasto = trNecesidad.RolOrdenadorGasto;
@@ -95,10 +98,9 @@ angular.module('contractualClienteApp')
             self.duracionEspecialReverse();
             var data = necesidadService.calculo_total_dias_rev(self.necesidad.DiasDuracion);
             self.anos = data.anos;
-            self.meses = self.meses;
-            self.dias = self.dias;
+            self.meses = data.meses;
+            self.dias = data.dias;
 
-            necesidadService.groupByApropiacion(self.f_apropiaciones, false).then(function (fap) { self.f_apropiacion = fap });
         });
 
         self.formsInit = {
@@ -208,6 +210,17 @@ angular.module('contractualClienteApp')
                 self.nucleo_conocimiento_data = response.data;
             });
         }, true);
+
+        $scope.$watch('solicitudNecesidad.detalle_servicio_necesidad.NucleoConocimiento', function () {
+            coreAmazonRequest.get('snies_nucleo_basico', $.param({
+                query: 'Id:' + self.detalle_servicio_necesidad.NucleoConocimiento,
+                limit: -1
+            })).then(function (response) {
+                console.log(response.data);
+                self.nucleoarea = response.data[0].IdArea.Id;
+            });
+        }, true);
+
 
         necesidadService.getAllDependencias().then(function (Dependencias) {
             self.dependencia_data = Dependencias;
@@ -541,15 +554,19 @@ angular.module('contractualClienteApp')
         };
 
 
-        self.ResetNecesidad = function (TipoNecesidad) {
-            necesidadService.initNecesidad();
-            self.necesidad.TipoNecesidad = { Id: parseInt(TipoNecesidad) };
-            self.CambiarTipoNecesidad(TipoNecesidad);
+        self.ResetNecesidad = function () {
+            var TipoNecesidad = self.necesidad.TipoNecesidad.Id;
+            necesidadService.initNecesidad().then(function (trNecesidad) {
+                self.necesidad = trNecesidad.Necesidad;
+                self.necesidad.TipoNecesidad = { Id: parseInt(TipoNecesidad) };
+                self.CambiarTipoNecesidad(TipoNecesidad);
+            });
+
         };
 
         // Control de visualizacion de los campos individuales
         self.CambiarTipoNecesidad = function (TipoNecesidad) {
-
+            console.log(TipoNecesidad)
             self.forms = self.deepCopy(self.formsInit);
             self.field = self.deepCopy(self.fieldInit);
 

@@ -94,7 +94,7 @@ angular
                 controller: 'AboutCtrl',
                 controllerAs: 'about'
             })
-            .when('/necesidad/solicitud_necesidad/:NecesidadId?', {
+            .when('/necesidad/solicitud_necesidad/:IdNecesidad?', {
                 templateUrl: 'views/necesidad/solicitud_necesidad.html',
                 controller: 'SolicitudNecesidadCtrl',
                 controllerAs: 'solicitudNecesidad'
@@ -104,8 +104,8 @@ angular
                 controller: 'NecesidadesCtrl',
                 controllerAs: 'necesidades'
             })
-            .when('/necesidad-pdf/:NecesidadId', {
-                templateUrl: 'views/pdfnecesidad.html',
+            .when('/necesidad/necesidad-pdf/:IdNecesidad?', {
+                templateUrl: 'views/necesidad/pdfnecesidad.html',
                 controller: 'PdfnecesidadCtrl',
                 controllerAs: 'necesidadPdf'
             })

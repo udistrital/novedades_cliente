@@ -35,12 +35,10 @@ angular.module('contractualClienteApp')
                     return necesidadService.groupByApropiacion(trNecesidad.Ffapropiacion, true);
                 }).then(function (data) {
                     apropiacionesGrouped = data;
-                    console.log(apropiacionesGrouped)
 
                     return necesidadService.getApropiacionesData(apropiacionesGrouped);
                 }).then(function (data) {
                     apropiacionesData = data;
-                    console.log(apropiacionesData)
 
                     var dependenciaDestino = dependenciaData.filter(function (d) { return d.Id === trNecesidad.DependenciaNecesidadDestino })[0]
 

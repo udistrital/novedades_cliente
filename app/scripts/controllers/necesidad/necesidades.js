@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, $window, gridApiService, pdfMakerNecesidadesService, necesidadService) {
+    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, $window,  $mdDialog, gridApiService, pdfMakerNecesidadesService, necesidadService) {
         var self = this;
         self.offset = 0;
         self.rechazada = false;
@@ -250,14 +250,16 @@ angular.module('contractualClienteApp')
         $scope.crearPDF = function (row) {
             console.log(row);
             var IdNecesidad = row.Id;
-            
-            necesidadService.initNecesidad(IdNecesidad).then(function (trNecesidad) {
-                console.log(trNecesidad)
 
-                return pdfMakerNecesidadesService.docDefinition(trNecesidad);
-            }).then(function (docDefinition) {
-                pdfMake.createPdf(docDefinition).open();
-            })
+            $mdDialog.show({
+                templateUrl: 'views/necesidad/pdfnecesidad.html',
+                controller: 'PdfnecesidadCtrl',
+                controllerAs: 'necesidadPdf',
+                parent: angular.element(document.body),
+                clickOutsideToClose: true,
+                fullscreen: true,
+                scope: { IdNecesidad: IdNecesidad }
+            });
         };
 
     });
