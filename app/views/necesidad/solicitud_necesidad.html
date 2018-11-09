@@ -255,7 +255,7 @@
             <div class="col-md-12">
               <label class=" control-label">{{"TIPO_CONTRATO_NECESIDAD" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
-              <select class="form-control" ng-model="solicitudNecesidad.necesidad.TipoContratoNecesidad" ng-options="tipoc.Nombre for tipoc in solicitudNecesidad.tipo_contrato_data track by tipoc.Id"
+              <select class="form-control" ng-model="solicitudNecesidad.necesidad.TipoContratoNecesidad" ng-options="tipoc as tipoc.Nombre for tipoc in solicitudNecesidad.tipo_contrato_data track by tipoc.Id | filter : {Id: '3'}"
                 required>
                 <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"TIPO_CONTRATO_NECESIDAD" |
                   translate}}</option>
