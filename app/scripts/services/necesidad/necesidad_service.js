@@ -52,7 +52,6 @@ angular.module('contractualClienteApp')
           out.Persona = response.data[0];
           resolve(out);
         }).catch(function (error) {
-          console.log(error);
           reject(error);
         });
       });
@@ -229,9 +228,12 @@ angular.module('contractualClienteApp')
       } else {
         trNecesidad.Necesidad = {};
         trNecesidad.Necesidad.TipoNecesidad = { Id: 1 };
-        trNecesidad.Necesidad.TipoContratoNecesidad = { Id: 0 };
+        trNecesidad.Necesidad.TipoContratoNecesidad = { Id: "" };
         trNecesidad.Necesidad.DiasDuracion = 0;
         trNecesidad.Necesidad.UnicoPago = true;
+        trNecesidad.ActividadEspecifica = [];
+        trNecesidad.DetalleServicioNecesidad = { NucleoConocimiento: "  " }
+        trNecesidad.DependenciaNecesidad = { JefeDependenciaSolicitante: 6 };
         trNecesidad.Necesidad.AgotarPresupuesto = false;
         trNecesidad.Necesidad.Valor = 0;
         administrativaRequest.get('estado_necesidad', $.param({
