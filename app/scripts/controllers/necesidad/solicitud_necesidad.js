@@ -101,6 +101,36 @@ angular.module('contractualClienteApp')
             self.meses = data.meses;
             self.dias = data.dias;
 
+
+            $scope.$watch('solicitudNecesidad.detalle_servicio_necesidad.NucleoConocimiento', function () {
+                coreAmazonRequest.get('snies_nucleo_basico', $.param({
+                    query: 'Id:' + self.detalle_servicio_necesidad.NucleoConocimiento,
+                    limit: -1
+                })).then(function (response) {
+                    console.log(response.data);
+                    self.nucleoarea = response.data[0].IdArea.Id;
+                });
+            }, true);
+
+            $scope.$watch('solicitudNecesidad.dependencia_destino', function () {
+                necesidadService.getJefeDependencia(self.dependencia_destino).then(function (JD) {
+                    self.jefe_destino = JD.Persona;
+                    self.dep_ned.JefeDependenciaDestino = JD.JefeDependencia.Id;
+                }).catch(function (err) {
+                    console.log(err)
+                });
+            }, true);
+
+
+            $scope.$watch('solicitudNecesidad.rol_ordenador_gasto', function () {
+                necesidadService.getJefeDependencia(self.rol_ordenador_gasto).then(function (JD) {
+                    self.ordenador_gasto = JD.Persona;
+                    self.dep_ned.OrdenadorGasto = parseInt(JD.Persona.Id);
+                }).catch(function (err) {
+                    console.log(err)
+                });
+            }, true);
+
         });
 
         self.formsInit = {
@@ -156,13 +186,6 @@ angular.module('contractualClienteApp')
             }
         };
 
-        $scope.$watch('solicitudNecesidad.dependencia_destino', function () {
-            necesidadService.getJefeDependencia(self.dependencia_destino).then(function (JD) {
-                self.jefe_destino = JD.Persona;
-                self.dep_ned.JefeDependenciaDestino = JD.JefeDependencia.Id;
-            });
-        }, true);
-
         coreAmazonRequest.get('jefe_dependencia/' + self.dep_ned.JefeDependenciaSolicitante, '').then(function (response) {
             self.dependencia_solicitante_data = response.data;
         });
@@ -171,13 +194,6 @@ angular.module('contractualClienteApp')
         //     self.f_apropiacion = [];
         //     self.apro = undefined;
         // }, true);
-
-        $scope.$watch('solicitudNecesidad.rol_ordenador_gasto', function () {
-            necesidadService.getJefeDependencia(self.rol_ordenador_gasto).then(function (JD) {
-                self.ordenador_gasto = JD.Persona;
-                self.dep_ned.OrdenadorGasto = parseInt(JD.Persona.Id);
-            });
-        }, true);
 
         $scope.$watch('solicitudNecesidad.especificaciones.Valor', function () {
             self.valor_iva = (self.especificaciones.Iva / 100) * self.especificaciones.Valor * self.especificaciones.Cantidad;
@@ -208,16 +224,6 @@ angular.module('contractualClienteApp')
                 limit: -1
             })).then(function (response) {
                 self.nucleo_conocimiento_data = response.data;
-            });
-        }, true);
-
-        $scope.$watch('solicitudNecesidad.detalle_servicio_necesidad.NucleoConocimiento', function () {
-            coreAmazonRequest.get('snies_nucleo_basico', $.param({
-                query: 'Id:' + self.detalle_servicio_necesidad.NucleoConocimiento,
-                limit: -1
-            })).then(function (response) {
-                console.log(response.data);
-                self.nucleoarea = response.data[0].IdArea.Id;
             });
         }, true);
 
@@ -276,12 +282,6 @@ angular.module('contractualClienteApp')
             self.unidad_data = response.data;
         });
 
-        financieraRequest.get('iva', $.param({
-            limit: -1
-        })).then(function (response) {
-            self.iva_data = response.data;
-        });
-
         //Temporal viene dado por un servicio de javier
         agoraRequest.get('informacion_persona_natural', $.param({
             limit: -1,
@@ -290,7 +290,6 @@ angular.module('contractualClienteApp')
         })).then(function (response) {
             self.persona_data = response.data;
         });
-
 
         agoraRequest.get('parametro_estandar', $.param({
             query: "ClaseParametro:" + 'Tipo Perfil',
@@ -322,11 +321,11 @@ angular.module('contractualClienteApp')
         });
 
         $http.get("scripts/models/marco_legal.json")
-        .then(function (response) {
-            
-            self.MarcoLegalNecesidadText = $sce.trustAsHtml(response.data.common_text);
+            .then(function (response) {
 
-        });
+                self.MarcoLegalNecesidadText = $sce.trustAsHtml(response.data.common_text);
+
+            });
 
         self.agregar_ffapropiacion = function (apropiacion) {
             if (apropiacion == undefined) {
