@@ -248,7 +248,6 @@ angular.module('contractualClienteApp')
             })
         };
         $scope.crearPDF = function (row) {
-            console.log(row);
             var IdNecesidad = row.Id;
 
             $mdDialog.show({

@@ -80,7 +80,6 @@ angular.module('contractualClienteApp')
         };
 
         necesidadService.initNecesidad(self.IdNecesidad).then(function (trNecesidad) {
-            console.log(trNecesidad)
             self.necesidad = trNecesidad.Necesidad;
             self.detalle_servicio_necesidad = trNecesidad.DetalleServicioNecesidad;
             self.ActividadEspecifica = trNecesidad.ActividadEspecifica;
@@ -107,7 +106,6 @@ angular.module('contractualClienteApp')
                     query: 'Id:' + self.detalle_servicio_necesidad.NucleoConocimiento,
                     limit: -1
                 })).then(function (response) {
-                    console.log(response.data);
                     self.nucleoarea = response.data[0].IdArea.Id;
                 });
             }, true);
@@ -117,7 +115,7 @@ angular.module('contractualClienteApp')
                     self.jefe_destino = JD.Persona;
                     self.dep_ned.JefeDependenciaDestino = JD.JefeDependencia.Id;
                 }).catch(function (err) {
-                    console.log(err)
+                    //console.log(err)
                 });
             }, true);
 
@@ -127,7 +125,7 @@ angular.module('contractualClienteApp')
                     self.ordenador_gasto = JD.Persona;
                     self.dep_ned.OrdenadorGasto = parseInt(JD.Persona.Id);
                 }).catch(function (err) {
-                    console.log(err)
+                    //console.log(err)
                 });
             }, true);
 
@@ -570,7 +568,6 @@ angular.module('contractualClienteApp')
 
         // Control de visualizacion de los campos individuales
         self.CambiarTipoNecesidad = function (TipoNecesidad) {
-            console.log(TipoNecesidad)
             self.forms = self.deepCopy(self.formsInit);
             self.field = self.deepCopy(self.fieldInit);
 
