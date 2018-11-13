@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $sce, $http, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate, $routeParams, necesidadService) {
+    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $sce, $http, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, $translate, $routeParams, necesidadService) {
         var self = this;
 
         self.IdNecesidad = $routeParams.IdNecesidad;
@@ -252,12 +252,12 @@ angular.module('contractualClienteApp')
             self.persona_solicitante = response.data[0];
         });
 
-        financieraRequest.get('unidad_ejecutora', $.param({
+        oikosRequest.get('dependencia', $.param({
             limit: -1,
             sortby: "Nombre",
             order: "asc",
         })).then(function (response) {
-            self.unidad_ejecutora_data = response.data;
+            self.unidad_ejecutora_data = response.data.filter(function(d) {return (d.Id === 7 || d.Id === 12)}); //TODO: usar query:Id__in:(7,12) con la sistaxis correcta si beego tiene soporte
         });
 
         administrativaRequest.get('tipo_necesidad', $.param({
