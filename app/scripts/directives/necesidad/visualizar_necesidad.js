@@ -16,7 +16,7 @@ angular.module('contractualClienteApp')
                 estado: '=',
             },
             templateUrl: 'views/directives/necesidad/visualizar_necesidad.html',
-            controller: function (financieraRequest, administrativaRequest, agoraRequest, oikosRequest, coreAmazonRequest, $scope) {
+            controller: function (financieraRequest, administrativaRequest, agoraRequest, oikosRequest, coreRequest, $scope) {
                 var self = this;
                 self.estados = {
                     rechazada: 'Rechazada',
@@ -92,7 +92,7 @@ angular.module('contractualClienteApp')
                         })).then(function (response) {
                             self.dependencias = response.data[0];
 
-                            coreAmazonRequest.get('jefe_dependencia', $.param({
+                            coreRequest.get('jefe_dependencia', $.param({
                                 query: 'Id:' + response.data[0].JefeDependenciaSolicitante
                             })).then(function (response) {
                                 agoraRequest.get('informacion_persona_natural', $.param({
@@ -107,7 +107,7 @@ angular.module('contractualClienteApp')
                                 });
                             });
 
-                            coreAmazonRequest.get('jefe_dependencia', $.param({
+                            coreRequest.get('jefe_dependencia', $.param({
                                 query: 'Id:' + response.data[0].JefeDependenciaDestino
                             })).then(function (response) {
                                 agoraRequest.get('informacion_persona_natural', $.param({

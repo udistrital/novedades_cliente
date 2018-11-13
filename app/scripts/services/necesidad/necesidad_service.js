@@ -8,7 +8,7 @@
  * Service in the contractualClienteApp.
  */
 angular.module('contractualClienteApp')
-  .service('necesidadService', function (administrativaRequest, coreAmazonRequest, agoraRequest, oikosRequest, financieraRequest) {
+  .service('necesidadService', function (administrativaRequest, coreRequest, agoraRequest, oikosRequest, financieraRequest) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var self = this;
 
@@ -38,7 +38,7 @@ angular.module('contractualClienteApp')
       return new Promise(function (resolve, reject) {
         if (!idDependencia) reject(out);
 
-        coreAmazonRequest.get('jefe_dependencia', $.param({
+        coreRequest.get('jefe_dependencia', $.param({
           query: idOrDep ? "Id:" + idDependencia : "DependenciaId:" + idDependencia,
           limit: -1
         })).then(function (response) {
@@ -204,14 +204,14 @@ angular.module('contractualClienteApp')
             }).then(function (response) {
               trNecesidad.DependenciaNecesidad = response.data[0];
 
-              return coreAmazonRequest.get('jefe_dependencia', $.param({
+              return coreRequest.get('jefe_dependencia', $.param({
                 query: "Id:" + trNecesidad.DependenciaNecesidad.JefeDependenciaDestino,
                 limit: -1
               }))
             }).then(function (response) {
               trNecesidad.DependenciaNecesidadDestino = response.data[0].DependenciaId;
 
-              return coreAmazonRequest.get('jefe_dependencia', $.param({
+              return coreRequest.get('jefe_dependencia', $.param({
                 query: "TerceroId:" + trNecesidad.DependenciaNecesidad.OrdenadorGasto,
                 limit: -1
               }))
