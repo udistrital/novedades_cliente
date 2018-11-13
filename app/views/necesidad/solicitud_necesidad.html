@@ -3,12 +3,12 @@
 <div class="panel panel-primary panel-body" style="padding:30px;">
 
   <div style="text-align: center">
-    <h3 class="page-header text-center">{{"SOLICITUD_NECESIDAD" | translate}} <span ng-if="solicitudNecesidad.necesidad.NumeroElaboracion">#{{solicitudNecesidad.necesidad.NumeroElaboracion}}</span></h3>
+    <h1 class="page-header text-center">{{"SOLICITUD_NECESIDAD" | translate}} <span ng-if="solicitudNecesidad.necesidad.NumeroElaboracion">#{{solicitudNecesidad.necesidad.NumeroElaboracion}}</span></h1>
   </div>
 
   <div>
     <div class="panel-body">
-      
+
       <form name="solicitudform" class="form-horizontal" ng-submit="solicitudNecesidad.submitForm(solicitudform)"
         novalidate>
         <!-- Tipo Necesidad -->
@@ -18,15 +18,14 @@
           </legend>
           <label class="radio-inline" ng-repeat="tipo in solicitudNecesidad.tipo_necesidad_data">
             <input type="radio" ng-value="{{tipo.Id}}" ng-model="solicitudNecesidad.necesidad.TipoNecesidad.Id"
-              ng-change="solicitudNecesidad.ResetNecesidad(solicitudNecesidad.necesidad.TipoNecesidad.Id)"
-              required>
+              ng-change="solicitudNecesidad.ResetNecesidad()" required>
             {{tipo.Nombre}}
           </label>
         </ng-form>
         <!-- Duración -->
         <ng-form class="form-group" style="text-align: center; display: block;">
           <legend class="text-primary">
-            {{"SOLICITUD_NECESIDAD_CONTRATO" | translate}}
+            {{"DURACION_NECESIDAD_CONTRATO" | translate}}
           </legend>
           <label class="radio-inline">
             <input name="Duracion" type="radio" ng-model="solicitudNecesidad.DuracionEspecial" value="duracion"
@@ -73,7 +72,7 @@
             | translate}} <span class="fa fa-plus pull-right" ng-show="responsables.open"></span> <span class="fa fa-minus pull-right"
               ng-show="!avances.open"></span></legend>
           <div class="panel-body">
-            <lista-avances class="col-md-6" data="solicitudNecesidad.avance"></lista-avances>
+            <lista-avances class="col-md-12" data="solicitudNecesidad.avance"></lista-avances>
           </div>
         </ng-form>
 
@@ -193,7 +192,7 @@
 
             <div class="col-md-6" ng-if="solicitudNecesidad.field.General.Supervisor">
               <label for="supervisor" class="control-label">{{"SUPERVISOR" | translate}}</label>
-              <select class="form-control" ng-model="solicitudNecesidad.necesidad.Supervisor" ng-options="sup.Id*1 as sup.PrimerNombre+' '+sup.SegundoNombre+' '+sup.PrimerApellido+' '+sup.SegundoApellido for sup in solicitudNecesidad.persona_data track by sup.Id">
+              <select class="form-control" ng-model="solicitudNecesidad.necesidad.Supervisor" ng-options="sup.Id*1 as sup.PrimerNombre+' '+sup.SegundoNombre+' '+sup.PrimerApellido+' '+sup.SegundoApellido for sup in solicitudNecesidad.persona_data">
                 <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"SUPERVISOR" | translate}}</option>
               </select>
             </div>
@@ -230,10 +229,11 @@
           <legend class="text-primary" ng-click="solicitudNecesidad.validar_formu(marcoLegal)">
             {{"MARCO_LEGAL" | translate}}<span class="fa fa-plus pull-right" ng-show="marcoLegal.open"></span> <span
               class="fa fa-minus pull-right" ng-show="!marcoLegal.open"></span></legend>
-
+          <div ng-bind-html="solicitudNecesidad.MarcoLegalNecesidadText" style="text-align: justify">
+          </div>
           <div class="panel-body" ng-hide="marcoLegal.open">
-            <lista-documentos-legales class="col-md-6" documentos="solicitudNecesidad.documentos"></lista-documentos-legales>
-            <div class="col-md-6 form-group">
+            <lista-documentos-legales class="col-md-12" documentos="solicitudNecesidad.documentos"></lista-documentos-legales>
+            <!-- <div class="col-md-6 form-group">
               <h4>{{"DOCUMENTOS" | translate}}</h4>
               <ul class="list-group">
                 <li class="list-group-item" ng-repeat="doc in solicitudNecesidad.documentos track by $index">
@@ -241,7 +241,7 @@
                   <a href="{{doc.Enlace}}" class="pull-right">{{"ENLACE" | translate}}</a>
                 </li>
               </ul>
-            </div>
+            </div> -->
           </div>
         </ng-form>
 
@@ -255,7 +255,7 @@
             <div class="col-md-12">
               <label class=" control-label">{{"TIPO_CONTRATO_NECESIDAD" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
-              <select class="form-control" ng-model="solicitudNecesidad.necesidad.TipoContratoNecesidad" ng-options="tipoc.Nombre for tipoc in solicitudNecesidad.tipo_contrato_data track by tipoc.Id"
+              <select class="form-control" ng-model="solicitudNecesidad.necesidad.TipoContratoNecesidad" ng-options="tipoc as tipoc.Nombre for tipoc in solicitudNecesidad.tipo_contrato_data track by tipoc.Id | filter : {Id: '3'}"
                 required>
                 <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"TIPO_CONTRATO_NECESIDAD" |
                   translate}}</option>

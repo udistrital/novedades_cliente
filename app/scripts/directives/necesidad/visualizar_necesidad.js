@@ -13,12 +13,19 @@ angular.module('contractualClienteApp')
             scope: {
                 vigencia: '=',
                 numero: '=',
-                rechazada: '=',
+                estado: '=',
             },
             templateUrl: 'views/directives/necesidad/visualizar_necesidad.html',
             controller: function (financieraRequest, administrativaRequest, agoraRequest, oikosRequest, coreAmazonRequest, $scope) {
                 var self = this;
+                self.estados = {
+                    rechazada: 'Rechazada',
+                    solicitada: 'Solicitada',
+                    aprobada: 'Aprobada',
+                    cdpSolicitado: 'Cdp Solicitado'
 
+                };
+                
                 $scope.$watch('[vigencia,numero]', function () {
                     self.cargar_necesidad();
                 });
@@ -28,7 +35,7 @@ angular.module('contractualClienteApp')
                         query: "NumeroElaboracion:" + $scope.numero + ",Vigencia:" + $scope.vigencia
                     })).then(function (response) {
                         self.v_necesidad = response.data[0];
-                        if ($scope.rechazada) {
+                        if ($scope.estado === self.estados.rechazada) {
                             administrativaRequest.get('necesidad_rechazada', $.param({
                                 query: "Necesidad:" + response.data[0].Id,
                                 fields: "Justificacion,Fecha"

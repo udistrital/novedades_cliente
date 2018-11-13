@@ -7,7 +7,7 @@
  * # listaAvances
  */
 angular.module('contractualClienteApp')
-    .directive('listaAvances', function (administrativaRequest, gridApiService, $translate) {
+    .directive('listaAvances', function (administrativaRequest, gridApiService, $translate, financieraRequest) {
         return {
             restrict: 'E',
             scope: {
@@ -36,10 +36,17 @@ angular.module('contractualClienteApp')
                         field: 'ProcesoExterno',
                         displayName: $translate.instant('PROCESO_EXTERNO'),
                         headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
+                        width: '20%'
                     },
                     {
                         field: 'Consecutivo',
                         displayName: $translate.instant('CONSECUTIVO_PROCESO_EXTERNO'),
+                        headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
+                        width: '20%'
+                    },
+                    {
+                        field: 'Nombre',
+                        displayName: $translate.instant('NOMBRE_PROCESO_EXTERNO'),
                         headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
                     }
                     ],
@@ -54,6 +61,13 @@ angular.module('contractualClienteApp')
                     }
                 };
 
+                self.actualizarNombre = function (data) {
+                    data.forEach(function (d,i) {
+                        financieraRequest.get('solicitud_avance/' + d.ProcesoExterno,"").then(function(response) {
+                            data[i].Nombre = response.data.Objetivo;
+                        });
+                    });
+                };
 
                 self.actualizarAvances = function (offset, query) {
                     var initQuery = "Necesidad__isnull:true";
@@ -64,11 +78,15 @@ angular.module('contractualClienteApp')
                         offset: offset,
                         query: query
                     }))
-                    req.then(gridApiService.paginationFunc(self.gridOptions, offset));
+                    req.then(function (response) {
+                        gridApiService.paginationFunc(self.gridOptions, offset)(response);
+                        self.actualizarNombre(self.gridOptions.data);
+                    });
                     return req;
                 };
 
                 self.actualizarAvances(0, "");
+
             }
         };
     });
