@@ -399,7 +399,7 @@ angular.module('contractualClienteApp')
         }, true);
 
         $scope.$watch('solicitudNecesidad.necesidad.TipoContratoNecesidad.Id', function () {
-            if (self.necesidad && self.necesidad.TipoContratoNecesidad.Id === 1) { //tipo compra
+            if (self.necesidad && self.necesidad.TipoContratoNecesidad.Id === 1 /* tipo compra */) { 
                 self.MostrarTotalEspc = true;
             } else {
                 self.MostrarTotalEspc = false;
@@ -440,7 +440,7 @@ angular.module('contractualClienteApp')
             self.marcos_legales = self.documentos.map(function (d) { return { MarcoLegal: d } });
 
             if (self.necesidad.TipoContratoNecesidad) {
-                if (self.f_valor !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Nombre === 'Compras') {
+                if (self.f_valor !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Id === 1 /*tipo compra*/) { 
                     swal(
                         'Error',
                         'El valor del contrato (' + self.valorTotalEspecificaciones + ') debe ser igual que el de la financiación(' + self.f_valor + ')',

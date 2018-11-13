@@ -255,14 +255,16 @@
             <div class="col-md-12">
               <label class=" control-label">{{"TIPO_CONTRATO_NECESIDAD" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
-              <select class="form-control" ng-model="solicitudNecesidad.necesidad.TipoContratoNecesidad" ng-options="tipoc as tipoc.Nombre for tipoc in solicitudNecesidad.tipo_contrato_data track by tipoc.Id | filter : {Id: '3'}"
+              <!-- Filtra tipo necesidad no aplica Tipo necesidad == 3 -->
+              <select class="form-control" ng-model="solicitudNecesidad.necesidad.TipoContratoNecesidad" ng-options="tipoc as tipoc.Nombre for tipoc in solicitudNecesidad.tipo_contrato_data | filter:{Id :'!3'} track by tipoc.Id " 
                 required>
-                <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"TIPO_CONTRATO_NECESIDAD" |
+                <option value="TODO" disabled selected>{{"SELECCIONAR" | translate}} {{"TIPO_CONTRATO_NECESIDAD" |
                   translate}}</option>
               </select>
             </div>
 
-            <div ng-if="solicitudNecesidad.necesidad.TipoContratoNecesidad.Nombre=='Servicio'">
+            <!-- Tipo contrato necesidad === (servicio || Compra y Servicio)-->
+            <div ng-if="solicitudNecesidad.necesidad.TipoContratoNecesidad.Id===2 || solicitudNecesidad.necesidad.TipoContratoNecesidad.Id===4">
 
               <div class="col-md-6">
                 <label for="perfil" class="control-label">{{"PERFIL" | translate}}</label>
@@ -338,7 +340,8 @@
             </div>
 
             <!--Revisar con nueva estructura Arka -->
-            <div class="form-group" ng-if="solicitudNecesidad.necesidad.TipoContratoNecesidad.Nombre=='Compra'">
+            <!-- Tipo contrato necesidad === (compra || Compra y Servicio)-->
+            <div class="form-group" ng-if="solicitudNecesidad.necesidad.TipoContratoNecesidad.Id===1 || solicitudNecesidad.necesidad.TipoContratoNecesidad.Id===4">
               <div class="col-md-12">
                 <lista-subgrupos-catalogos productos="solicitudNecesidad.productos"></lista-subgrupos-catalogos>
               </div>
