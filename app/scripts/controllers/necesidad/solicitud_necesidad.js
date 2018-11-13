@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $sce, $http, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate, $routeParams, necesidadService) {
+    .controller('SolicitudNecesidadCtrl', function (administrativaRequest, $scope, $sce, $http, $filter, $window, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, coreRequest, $translate, $routeParams, necesidadService) {
         var self = this;
 
         self.IdNecesidad = $routeParams.IdNecesidad;
@@ -184,7 +184,7 @@ angular.module('contractualClienteApp')
             }
         };
 
-        coreAmazonRequest.get('jefe_dependencia/' + self.dep_ned.JefeDependenciaSolicitante, '').then(function (response) {
+        coreRequest.get('jefe_dependencia/' + self.dep_ned.JefeDependenciaSolicitante, '').then(function (response) {
             self.dependencia_solicitante_data = response.data;
         });
 
@@ -252,11 +252,15 @@ angular.module('contractualClienteApp')
             self.persona_solicitante = response.data[0];
         });
 
+
+        //TODO: cambio de identificacion en financiera a oikos (7,12, etc)
+        //oikosRequest.get('dependencia', $.param({
         financieraRequest.get('unidad_ejecutora', $.param({
             limit: -1,
             sortby: "Nombre",
             order: "asc",
         })).then(function (response) {
+            //self.unidad_ejecutora_data = response.data.filter(function(d) {return (d.Id === 7 || d.Id === 12)}); //TODO: usar query:Id__in:(7,12) con la sistaxis correcta si beego tiene soporte
             self.unidad_ejecutora_data = response.data;
         });
 
@@ -399,7 +403,7 @@ angular.module('contractualClienteApp')
         }, true);
 
         $scope.$watch('solicitudNecesidad.necesidad.TipoContratoNecesidad.Id', function () {
-            if (self.necesidad && self.necesidad.TipoContratoNecesidad.Id === 1) { //tipo compra
+            if (self.necesidad && self.necesidad.TipoContratoNecesidad.Id === 1 /* tipo compra */) {
                 self.MostrarTotalEspc = true;
             } else {
                 self.MostrarTotalEspc = false;
@@ -440,7 +444,7 @@ angular.module('contractualClienteApp')
             self.marcos_legales = self.documentos.map(function (d) { return { MarcoLegal: d } });
 
             if (self.necesidad.TipoContratoNecesidad) {
-                if (self.f_valor !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Nombre === 'Compras') {
+                if (self.f_valor !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Id === 1 /*tipo compra*/) {
                     swal(
                         'Error',
                         'El valor del contrato (' + self.valorTotalEspecificaciones + ') debe ser igual que el de la financiación(' + self.f_valor + ')',
