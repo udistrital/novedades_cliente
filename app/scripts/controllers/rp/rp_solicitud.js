@@ -198,10 +198,10 @@ angular.module('contractualClienteApp')
 
                 columnDefs: [
                     { field: 'Id', visible: false },
-                    { field: 'Numero_suscrito', width: '15%', displayName: $translate.instant('VINCULACION') },
+                    { field: 'Numero_contrato', width: '15%', displayName: $translate.instant('VINCULACION') },
                     { field: 'Vigencia_contrato', width: '15%', displayName: $translate.instant('VIGENCIA') },
                     { field: 'Nombre_completo', width: '40%', displayName: $translate.instant('NOMBRE') },
-                    { field: 'Documento', width: '15%', displayName: $translate.instant('DOCUMENTO') },
+                    { field: 'Id', width: '15%', displayName: $translate.instant('DOCUMENTO') },
                     { field: 'Valor_contrato', width: '15%', cellTemplate: '<div align="right">{{row.entity.Valor_contrato | currency:undefined:0 }}</div>', displayName: $translate.instant('VALOR') }
                 ]
             };
@@ -319,11 +319,18 @@ angular.module('contractualClienteApp')
                 height: (self.gridOptions_rubros.data.length * rowHeight + headerHeight) + "px"
             };
         };
+        var fecha = new Date();
+        var ano = fecha.getFullYear();
+        var fecha2 = new Date();
+        fecha2.setMonth(fecha2.getMonth() - 12);
+        var ano_anterior = fecha2.getFullYear();
 
-        financieraRequest.get('compromiso', 'limit=0').then(function(response) {
+        
+
+        financieraRequest.get('compromiso', 'limit=-1&query=Vigencia__in:' + ano + '|' + ano_anterior).then(function(response) {
             self.gridOptions_compromiso.data = response.data;
         });
-
+      
         self.proveedor = {
 
         };
