@@ -13,7 +13,7 @@ angular.module('contractualClienteApp')
             scope: {
                 apropiacion: '=',
                 vigencia: "=",
-                tipo: "@",
+                tipo: "<",
                 unidadejecutora: "=",
                 tipofinanciacion: "=",
                 selhijos: "=?"
