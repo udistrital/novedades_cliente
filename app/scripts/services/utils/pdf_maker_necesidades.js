@@ -15,7 +15,7 @@ angular.module('contractualClienteApp')
                 var dependenciaData = [];
                 var apropiacionesData = [];
                 var apropiacionesGrouped = [];
-
+                var perfil_data = [];
 
                 $http.get("scripts/models/imagen.json").then(function (response) {
                     imagen = response.data;
@@ -40,7 +40,15 @@ angular.module('contractualClienteApp')
                 }).then(function (data) {
                     apropiacionesData = data;
 
+                    return necesidadService.getParametroEstandar();
+                }).then(function (response) {
+                    perfil_data = response.data;
+
                     var dependenciaDestino = dependenciaData.filter(function (d) { return d.Id === trNecesidad.DependenciaNecesidadDestino })[0]
+                    var dependenciaSolicitante = dependenciaData.filter(function (d) { return d.Id === trNecesidad.DependenciaNecesidadSolicitante })[0]
+                    var perfil = trNecesidad.DetalleServicioNecesidad ?
+                        perfil_data.filter(function (d) { return d.Id === trNecesidad.DetalleServicioNecesidad.Perfil })[0] :
+                        { ValorParametro: "" };
 
                     resolve({
                         header: function (currentPage, pageCount) {
@@ -67,7 +75,7 @@ angular.module('contractualClienteApp')
                                         [
                                             "",
                                             "",
-                                            { text: "Sección de Almacén General e Inventarios".toUpperCase(), border: [true, false, true, true] }
+                                            { text: dependenciaSolicitante.Nombre.toUpperCase(), border: [true, false, true, true] }
                                         ],
                                         [
                                             "",
@@ -115,10 +123,12 @@ angular.module('contractualClienteApp')
                                                     widths: ["auto", "*", "auto", "auto"],
                                                     body: [
                                                         ["Descripción", "", "Cantidad", "Unidad"],
-                                                        [["Cod. 1", "Especificación:"],
-                                                        ["TÉCNICO", { text: trNecesidad.ActividadEspecifica? trNecesidad.ActividadEspecifica.map(function (ae, i) { return (i + 1).toString() + '. ' + ae.Descripcion }).join('. '): "Ninguna", alignment: "justify" }],
-                                                        { text: 1, alignment: 'center' },
-                                                            ""]
+                                                        [
+                                                            ["Cod. 1", "Especificación:"],
+                                                            [perfil.ValorParametro, "Actividad", { text: trNecesidad.ActividadEspecifica ? trNecesidad.ActividadEspecifica.map(function (ae, i) { return (i + 1).toString() + '. ' + ae.Descripcion }).join('. ') : "Ninguna", alignment: "justify" }],
+                                                            { text: 1, alignment: 'center' },
+                                                            ""
+                                                        ]
                                                     ]
                                                 }
                                             }

@@ -157,6 +157,13 @@ angular.module('contractualClienteApp')
       })
     };
 
+    self.getParametroEstandar = function () {
+      return agoraRequest.get('parametro_estandar', $.param({
+        query: "ClaseParametro:" + 'Tipo Perfil',
+        limit: -1
+      }));
+    }
+
     self.initNecesidad = function (IdNecesidad) {
       var trNecesidad = {};
       if (IdNecesidad) {
@@ -212,6 +219,13 @@ angular.module('contractualClienteApp')
               trNecesidad.DependenciaNecesidadDestino = response.data[0].DependenciaId;
 
               return coreRequest.get('jefe_dependencia', $.param({
+                query: "Id:" + trNecesidad.DependenciaNecesidad.JefeDependenciaSolicitante + ',FechaInicio__lte:' + moment().format('YYYY-MM-DD') + ',FechaFin__gte:' + moment().format('YYYY-MM-DD'),
+                limit: -1,
+              }))
+            }).then(function (response) {
+              trNecesidad.DependenciaNecesidadSolicitante = response.data[0].DependenciaId;
+
+              return coreRequest.get('jefe_dependencia', $.param({
                 query: "TerceroId:" + trNecesidad.DependenciaNecesidad.OrdenadorGasto + ',FechaInicio__lte:' + moment().format('YYYY-MM-DD') + ',FechaFin__gte:' + moment().format('YYYY-MM-DD'),
                 limit: -1
               }))
@@ -232,7 +246,7 @@ angular.module('contractualClienteApp')
         trNecesidad.Necesidad.DiasDuracion = 0;
         trNecesidad.Necesidad.UnicoPago = true;
         trNecesidad.ActividadEspecifica = [];
-        trNecesidad.DetalleServicioNecesidad = { NucleoConocimiento: "  " }
+        trNecesidad.DetalleServicioNecesidad = { NucleoConocimiento: 0 }
         trNecesidad.DependenciaNecesidad = { JefeDependenciaSolicitante: 6 };
         trNecesidad.Necesidad.AgotarPresupuesto = false;
         trNecesidad.Necesidad.Valor = 0;
