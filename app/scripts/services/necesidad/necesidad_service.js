@@ -32,15 +32,15 @@ angular.module('contractualClienteApp')
       return data;
     };
 
-    //Obtiene todo el hjefe de dependencia demendiendo del id del jefe o la dependencia, si idOrDep es true, se utilizará el id del jefe
+    //Obtiene todo el jefe de dependencia demendiendo del id del jefe o la dependencia, si idOrDep es true, se utilizará el id del jefe
     self.getJefeDependencia = function (idDependencia, idOrDep) {
       var out = { JefeDependencia: {}, Persona: {} }
       return new Promise(function (resolve, reject) {
         if (!idDependencia) reject(out);
 
         coreRequest.get('jefe_dependencia', $.param({
-          query: idOrDep ? "Id:" + idDependencia : "DependenciaId:" + idDependencia,
-          limit: -1
+          query: (idOrDep ? "Id:" + idDependencia : "DependenciaId:" + idDependencia) + ',FechaInicio__lte:' + moment().format('YYYY-MM-DD') + ',FechaFin__gte:' + moment().format('YYYY-MM-DD'),
+          limit: -1,
         })).then(function (response) {
           out.JefeDependencia = response.data[0]; //TODO: cambiar el criterio para tomar en cuenta el periodo de validez del jefe
 
@@ -205,14 +205,14 @@ angular.module('contractualClienteApp')
               trNecesidad.DependenciaNecesidad = response.data[0];
 
               return coreRequest.get('jefe_dependencia', $.param({
-                query: "Id:" + trNecesidad.DependenciaNecesidad.JefeDependenciaDestino,
-                limit: -1
+                query: "Id:" + trNecesidad.DependenciaNecesidad.JefeDependenciaDestino + ',FechaInicio__lte:' + moment().format('YYYY-MM-DD') + ',FechaFin__gte:' + moment().format('YYYY-MM-DD'),
+                limit: -1,
               }))
             }).then(function (response) {
               trNecesidad.DependenciaNecesidadDestino = response.data[0].DependenciaId;
 
               return coreRequest.get('jefe_dependencia', $.param({
-                query: "TerceroId:" + trNecesidad.DependenciaNecesidad.OrdenadorGasto,
+                query: "TerceroId:" + trNecesidad.DependenciaNecesidad.OrdenadorGasto + ',FechaInicio__lte:' + moment().format('YYYY-MM-DD') + ',FechaFin__gte:' + moment().format('YYYY-MM-DD'),
                 limit: -1
               }))
             }).then(function (response) {

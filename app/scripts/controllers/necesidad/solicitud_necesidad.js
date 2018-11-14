@@ -185,7 +185,7 @@ angular.module('contractualClienteApp')
         };
 
         coreRequest.get('jefe_dependencia/' + self.dep_ned.JefeDependenciaSolicitante, '').then(function (response) {
-            self.dependencia_solicitante_data = response.data;
+            self.dependencia_solicitante_data = response.data  + ',FechaInicio__lte:' + moment().format('YYYY-MM-DD') + ',FechaFin__gte:' + moment().format('YYYY-MM-DD');
         });
 
         // $scope.$watchGroup(['solicitudNecesidad.necesidad.UnidadEjecutora', 'solicitudNecesidad.necesidad.TipoFinanciacionNecesidad'], function () {
