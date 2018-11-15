@@ -102,6 +102,7 @@ angular.module('contractualClienteApp')
 
 
             $scope.$watch('solicitudNecesidad.detalle_servicio_necesidad.NucleoConocimiento', function () {
+                if(!self.detalle_servicio_necesidad) return
                 coreAmazonRequest.get('snies_nucleo_basico', $.param({
                     query: 'Id:' + self.detalle_servicio_necesidad.NucleoConocimiento,
                     limit: -1
@@ -184,7 +185,7 @@ angular.module('contractualClienteApp')
             }
         };
 
-        coreRequest.get('jefe_dependencia/' + self.dep_ned.JefeDependenciaSolicitante, '').then(function (response) {
+        coreRequest.get('jefe_dependencia/' + self.dep_ned.JefeDependenciaSolicitante, $.param({ query: 'FechaInicio__lte:' + moment().format('YYYY-MM-DD') + ',FechaFin__gte:' + moment().format('YYYY-MM-DD') })).then(function (response) {
             self.dependencia_solicitante_data = response.data;
         });
 
@@ -225,6 +226,11 @@ angular.module('contractualClienteApp')
             });
         }, true);
 
+        $scope.$watch('solicitudNecesidad.necesidad.TipoNecesidad.Id', function () {
+            if (!self.necesidad) return
+            var TipoNecesidad = self.necesidad.TipoNecesidad.Id;
+            self.CambiarTipoNecesidad(TipoNecesidad);
+        })
 
         necesidadService.getAllDependencias().then(function (Dependencias) {
             self.dependencia_data = Dependencias;
@@ -293,10 +299,7 @@ angular.module('contractualClienteApp')
             self.persona_data = response.data;
         });
 
-        agoraRequest.get('parametro_estandar', $.param({
-            query: "ClaseParametro:" + 'Tipo Perfil',
-            limit: -1
-        })).then(function (response) {
+        necesidadService.getParametroEstandar().then(function (response) {
             self.parametro_estandar_data = response.data;
         });
         //-----
@@ -504,7 +507,7 @@ angular.module('contractualClienteApp')
                     return;
                 }
                 if (typeof (self.alerta_necesidad) === "string")
-                    self.alerta_necesidad = [{ Type: "success" }]
+                    self.alerta_necesidad = { Type: "success" }
 
                 var templateAlert = "<table class='table table-bordered'><th>" +
                     $translate.instant('NO_NECESIDAD') + "</th><th>" +
@@ -525,7 +528,7 @@ angular.module('contractualClienteApp')
                         "<td>" + n.NumeroElaboracion + "</td>" +
                         "<td>" + self.unidad_ejecutora_data.filter(function (u) { return u.Id === n.UnidadEjecutora })[0].Nombre + "</td>" +
                         "<td>" + self.dependencia_data.filter(function (dd) { return dd.Id === self.dependencia_destino })[0].Nombre + "</td>" +
-                        "<td>" + n.TipoContratoNecesidad.Nombre + "</td>" +
+                        "<td>" + (n.TipoContratoNecesidad.Nombre ? n.TipoContratoNecesidad.Nombre: '') + "</td>" +
                         "<td>" + $filter('currency')(n.Valor) + "</td>";
 
                     templateAlert += "</tr>";
