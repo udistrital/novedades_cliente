@@ -18,11 +18,7 @@ angular.module('contractualClienteApp')
         self.cantidad = 0;
         self.maximoSemanas = 0;
         self.semanasTranscurridas = 0;
-        var dias = 0;
-        var decimal = 0;
-        var semanasDecimal = 0;
         self.fechaActa = new Date();
-        var diasTotales = 0;
         self.fecha_actual = new Date();
         self.fechaFinal = new Date();
         self.esconderBoton = false;
@@ -138,7 +134,7 @@ angular.module('contractualClienteApp')
                     contratoCancelado.Vigencia = contratado.Vigencia.Int64;
                     var CancelacionContrato = {
                         ContratoCancelado: contratoCancelado,
-                        VinculacionDocente: { 
+                        VinculacionDocente: {
                             Id: parseInt(contratado.Id),
                             NumeroSemanasNuevas: contratado.NumeroSemanasNuevas }
                     };

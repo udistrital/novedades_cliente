@@ -174,6 +174,7 @@ angular.module('contractualClienteApp')
                     NivelAcademico:personaSeleccionada.IdResolucion.NivelAcademico,
                     NumeroRp:personaSeleccionada.InformacionRp.rp,
                     VigenciaRp:personaSeleccionada.InformacionRp.vigencia,
+                    FechaInicio:personaSeleccionada.FechaInicio
                 };
                 desvinculacionesData.push(docente_a_desvincular);
                 

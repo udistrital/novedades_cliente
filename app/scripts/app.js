@@ -69,6 +69,7 @@ angular
     })
     .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
         cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+        cfpLoadingBarProvider.spinnerTemplate = '<div class="loading-div"><div><span class="fa loading-spinner"></div><div class="fa sub-loading-div">Por favor espere, cargando...</div></div>';
     }])
     .config(function($mdDateLocaleProvider) {
         $mdDateLocaleProvider.formatDate = function(date) {
@@ -94,7 +95,7 @@ angular
                 controller: 'AboutCtrl',
                 controllerAs: 'about'
             })
-            .when('/necesidad/solicitud_necesidad', {
+            .when('/necesidad/solicitud_necesidad/:IdNecesidad?', {
                 templateUrl: 'views/necesidad/solicitud_necesidad.html',
                 controller: 'SolicitudNecesidadCtrl',
                 controllerAs: 'solicitudNecesidad'
@@ -103,6 +104,11 @@ angular
                 templateUrl: 'views/necesidad/necesidades.html',
                 controller: 'NecesidadesCtrl',
                 controllerAs: 'necesidades'
+            })
+            .when('/necesidad/necesidad-pdf/:IdNecesidad?', {
+                templateUrl: 'views/necesidad/pdfnecesidad.html',
+                controller: 'PdfnecesidadCtrl',
+                controllerAs: 'necesidadPdf'
             })
             .when('/rp_solicitud_personas', {
                 templateUrl: 'views/rp/rp_solicitud_personas.html',

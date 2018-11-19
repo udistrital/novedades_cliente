@@ -8,9 +8,11 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, gridApiService) {
+    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, $window,  $mdDialog, gridApiService, pdfMakerNecesidadesService, necesidadService) {
         var self = this;
         self.offset = 0;
+        self.rechazada = false;
+        self.editarNecesidad = true;
 
         self.gridOptions = {
             paginationPageSizes: [10, 15, 20],
@@ -82,17 +84,17 @@ angular.module('contractualClienteApp')
             },
             {
                 field: 'ver',
-                enableFiltering: false, 
+                enableFiltering: false,
                 enableSorting: false,
                 displayName: $translate.instant('VER'),
                 cellTemplate: function () {
-                    return '<center><a href="" style="border:0" type="button" ng-click="grid.appScope.direccionar(row.entity)"><span class="fa fa-eye"></span></a></center>';
+                    return '<div class="btn-small"><a href="" style="border:0" type="button" ng-click="grid.appScope.direccionar(row.entity)"><span class="fa fa-eye"></span></a></div><div class="btn-small" style="text-align: center; display: inline-block"><a href="" style="border:0" type="button" ng-click="grid.appScope.crearPDF(row.entity)"><span class="fa fa-file-pdf-o"></span></a></div>';
                 },
                 headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
                 cellTooltip: function (row) {
                     return row.entity.EstadoNecesidad.Nombre + ".\n" + row.entity.EstadoNecesidad.Descripcion;
                 },
-                width: '6%'
+                width: '10%'
             }
             ],
             onRegisterApi: function (gridApi) {
@@ -110,9 +112,9 @@ angular.module('contractualClienteApp')
         //Funcion para cargar los datos de las necesidades creadas y almacenadas dentro del sistema
         self.cargarDatosNecesidades = function (offset, query) {
             if (query == undefined) query = [];
-            query = typeof(query) === "string" ? [query] : query;
+            query = typeof (query) === "string" ? [query] : query;
             query.push("EstadoNecesidad.Nombre__not_in:Borrador");
-            
+
             var req = administrativaRequest.get('necesidad', $.param({
                 limit: self.gridOptions.paginationPageSize,
                 offset: offset,
@@ -140,6 +142,10 @@ angular.module('contractualClienteApp')
                 self.mod_cdp = false;
                 self.mod_aprobar = false;
             }
+
+            //para mostrar informacion de rechazo
+            self.necesidad_estado = necesidad.EstadoNecesidad.Nombre;
+
             $("#myModal").modal();
 
         };
@@ -231,6 +237,27 @@ angular.module('contractualClienteApp')
                 self.cargarDatosNecesidades(self.offset, self.query);
                 self.necesidad = undefined;
                 $("#myModal").modal("hide");
+            });
+        };
+
+        self.editar_necesidad = function () {
+            var idNecesidad = self.g_necesidad.Id;
+            $("#myModal").modal("hide");
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $window.location.href = '#/necesidad/solicitud_necesidad/' + idNecesidad;
+            })
+        };
+        $scope.crearPDF = function (row) {
+            var IdNecesidad = row.Id;
+
+            $mdDialog.show({
+                templateUrl: 'views/necesidad/pdfnecesidad.html',
+                controller: 'PdfnecesidadCtrl',
+                controllerAs: 'necesidadPdf',
+                parent: angular.element(document.body),
+                clickOutsideToClose: true,
+                fullscreen: true,
+                scope: { IdNecesidad: IdNecesidad }
             });
         };
 

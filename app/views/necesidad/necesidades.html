@@ -21,24 +21,26 @@
   <div class="modal-content col-md-10 col-md-offset-1" style="margin-top: 5%">
 
     <div class="modal-body" ng-if="necesidades.g_necesidad!=undefined">
-      <visualizar-necesidad vigencia="necesidades.vigencia" numero="necesidades.numero_el" />
+      <visualizar-necesidad vigencia="necesidades.vigencia" numero="necesidades.numero_el" estado="necesidades.necesidad_estado" />
     </div>
 
 
-    <div class="modal-footer" ng-show="necesidades.mod_aprobar">
-      <center>
-        <button class="btn btn-success" type="button" name="button" ng-click="necesidades.aprobar_necesidad()">{{"APROBAR" | translate}}</button>
-        <button class="btn btn-warning" type="button" name="button" ng-click="necesidades.rechazar_necesidad()">{{"RECHAZAR" | translate}}</button>
-      </center>
+    <div class="modal-footer text-center">
+      <span ng-show="necesidades.mod_aprobar">
+        <button class="btn btn-success" type="button" name="button" ng-click="necesidades.aprobar_necesidad()">{{"APROBAR"
+          | translate}}</button>
+        <button class="btn btn-warning" type="button" name="button" ng-click="necesidades.rechazar_necesidad()">{{"RECHAZAR"
+          | translate}}</button>
+        <button class="btn btn-success btn-outline" type="button" name="button" ng-show="necesidades.editarNecesidad"
+          ng-click="necesidades.editar_necesidad()">{{"EDITAR_NECESIDAD" | translate}}</button>
+
+      </span>
+      <button class="btn btn-success btn-outline" type="button" name="button" ng-show="necesidades.mod_cdp" ng-click="necesidades.solicitar_cdp()">{{"SOLICITAR_CDP"
+        | translate}}</button>
+
     </div>
-    <div class="modal-footer" ng-show="necesidades.mod_cdp">
-      <center>
-        <button class="btn btn-success btn-outline" type="button" name="button" ng-click="necesidades.solicitar_cdp()">{{"SOLICITAR_CDP" | translate}}</button>
-      </center>
-    </div>
+
   </div>
-
-</div>
 
 </div>
 </div>

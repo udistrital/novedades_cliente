@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('NecesidadContratacionDocenteCtrl', function (administrativaRequest, $scope, agoraRequest, oikosRequest, coreAmazonRequest, financieraRequest, $translate) {
+  .controller('NecesidadContratacionDocenteCtrl', function (administrativaRequest, $scope, agoraRequest, oikosRequest, coreAmazonRequest, coreRequest, $translate) {
     var self = this;
     self.documentos = [];
     self.formuIncompleto = true;
@@ -114,7 +114,7 @@ angular.module('contractualClienteApp')
     }, true);
 
     $scope.$watch('necesidadContratacionDocente.rol_ordenador_gasto', function () {
-      coreAmazonRequest.get('jefe_dependencia', $.param({
+      coreRequest.get('jefe_dependencia', $.param({
         query: "DependenciaId:" + self.rol_ordenador_gasto,
         limit: -1
       })).then(function (response) {
@@ -148,7 +148,7 @@ angular.module('contractualClienteApp')
       JefeDependenciaSolicitante: 29
     };
 
-    coreAmazonRequest.get('jefe_dependencia/' + self.dep_ned.JefeDependenciaSolicitante, ''
+    coreRequest.get('jefe_dependencia/' + self.dep_ned.JefeDependenciaSolicitante, ''
     ).then(function (response) {
       self.dependencia_solicitante_data = response.data;
       oikosRequest.get('dependencia/' + self.dependencia_solicitante_data.DependenciaId, ''

@@ -49,10 +49,17 @@ var text_es = {
     TITULO: "GENERATOR-OAS",
     MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
     //solicitud_necesidad
+    ID_AVANCE: "ID Avance",
+    LISTA_AVANCES: "Lista de Avances",
+    PROCESO_EXTERNO: "Proceso Externo",
+    CONSECUTIVO_PROCESO_EXTERNO: "Consecutivo",
+    NOMBRE_PROCESO_EXTERNO: "Nombre",
     NECESIDADES: "Necesidades",
+    EDITAR_NECESIDAD: "Editar",
     NECESIDAD: "Necesidad",
     RECTOR: "Rector",
-    SOLICITUD_NECESIDAD_CONTRATO: "Solicitud de Necesidad de Contrato",
+    SOLICITUD_NECESIDAD_CONTRATO: "Tipo Necesidad",
+    DURACION_NECESIDAD_CONTRATO: "Tiempo Necesidad",
     SOLICITUD_NECESIDAD_CONTRATACION_DOCENTES: "Solicitud de Necesidad de Contratación Docentes",
     SOLICITUD: "Solicitud",
     SOLICITUD_NECESIDAD: "Solicitud de Necesidad",
@@ -138,15 +145,17 @@ var text_es = {
     //necesidades
     GESTION_NECESIDADES: "Gestión de Necesidades",
     NUMERO_ELABORACION: "No. de Elaboración",
-    LISTA_NECESIDADES:"Lista de Necesidades",
+    LISTA_NECESIDADES: "Lista de Necesidades",
     NECESIDAD_RECHAZADA: "La necesidad ha sido Rechazada!",
     NECESIDAD_NO_RECHAZADA: "La necesidad no pudo ser rechazada!",
+    NECESIDAD_JUSTIFICACION_RECHAZO: "Justificación de rechazo",
+    NECESIDAD_FECHA_RECHAZO: "Fecha de rechazo",
+    NECESIDAD_JUSTIFICACION_DESCRIPCION_RECHAZO: "Justificación",
     //visualizar_necesidad
     DE: "de",
     MONTO: "Monto",
 
     //SOLICITUD RP
-    ERROR: "Error",
     SALIR: "Salir",
     VOLVER_CONTRATOS: "Volver a contratos",
     NUMERO_SOLICITUD: "Número solicitud",
@@ -333,6 +342,7 @@ var text_es = {
     LABEL_TOTAL_CONTRATACION: "Valor total de contratos para docentes seleccionados",
     ALERTA_SELEC_DOC: "Seleccione docentes",
     CAMBIOS_NO_GUARDADOS: "Los Cambios no guardados se perderán",
+    CDP_SIN_SALDO: "El CDP que eligió no tiene saldo suficiente para los docentes seleccionados, ¿desea continuar?",
     //RESOLUCION_ADICION_DETALLE
     /*---HTML---*/
     TITULO_DOC_VIN_RES_AD: "Docentes vinculados a resolución de adición",
@@ -361,6 +371,8 @@ var text_es = {
     ALERTA_ADICION_EXITOSA: "Adición realizada exitosamente",
     ALERTA_ERROR_ADICION: "Error al realizar adición",
     ADICIONAR_BTN: "Adicionar",
+    NO_PUEDE_ADICIONAR: "No se puede adicionar",
+    DEBE_APROBAR_CARGA: "Se debe verificar el estado del semáforo para este docente",
 
     //RESOLUCION_REDUCCION
     /*---HTML---*/
@@ -370,6 +382,7 @@ var text_es = {
     /*---Script---*/
     ALERTA_REDUCCION_EXITOSA: "Reducción realizada exitosamente",
     ALERTA_ERROR_REDUCCION: "Error al realizar reducción",
+    NO_PUEDE_REDUCIR: "No se puede reducir",
 
     //RESOLUCION_ADMINISTRACION
     NO_RESTAURACION_RESOLUCION: "No se ha realizado la restauración de la resolución",
@@ -441,6 +454,7 @@ var text_es = {
     SELECCIONE_TIPO_RES: "Seleccione el tipo de resolución a crear",
     ASOCIAR_RESOLUCION: "Asociar resolución",
     VIGENCIA: "Vigencia",
+    FIRMA_RECTOR: "Firma rector",
     /*---Script---*/
     INFORMACION_CONTENIDO: "Los artículos son creados por defecto y pueden ser editados",
     CONFIRMAR_GUARDAR_RESOLUCION: "Guardar resolución",
@@ -484,12 +498,6 @@ var text_es = {
     CONFIRMAR_ANULAR_REDUCCION: "Anular reducción",
     HORAS_REVERSAR: "Horas a reversar",
     TITULO_DOC_VIN_RES_RED: "Docentes vinculados a resolución de reducción",
-    //RESOLUCION_REDUCCION
-    /*---HTML---*/
-    TITULO_REDUCCION_HORAS: "Reducción de horas",
-    LABEL_HORAS_A_REDUCIR: "Horas a reducir",
-    ALERTA_REDUCCION_EXITOSA: "Reducción realizada exitosamente",
-    ALERTA_ERROR_REDUCCION: "Error al realizar reducción",
 
     //RESOLUCION_VISTA
     /*---Script---*/
@@ -938,6 +946,7 @@ var text_en = {
     UNITARIO: "Unit",
     NO_HAY_DATOS_REDIRIGIR: "There are no data to show you will be redirected to the previous menu",
     CAMBIOS_NO_GUARDADOS: "Unsaved changes wiil be lost",
+    CDP_SIN_SALDO: "Not enough balance, do you want to continue?",
     VOLVER: "Back",
     DOCENTES_SELECCIONADOS_REVERSAR: "Teachers selected to be reversed",
 
@@ -1116,7 +1125,12 @@ var text_en = {
     TITULO_CARGA_CONTRATISTA: "CARGA SOPORTES CONTRATISTA",
     NOM_CONTRATISTA: "NOMBRE CONTRATISTA",
     NUMERO_CONTRATO: "CONTRACT NUMBER",
-    RP: "RP"
+    RP: "RP",
+
+    NO_PUEDE_ADICIONAR: "Can't add hours",
+    NO_PUEDE_REDUCIR: "Can't reduce hours",
+    DEBE_APROBAR_CARGA: "New hours must be approved",
+    FIRMA_RECTOR: "Rector signature"
 };
 
 angular.module('contractualClienteApp')
