@@ -107,6 +107,7 @@ angular.module('contractualClienteApp')
 
         self.asignarValoresDefecto();
 
+        //TODO: cambiar a la informacion en Oikos: oikosRequest.get('dependencia' ... teniendo en cuenta produccion
         financieraRequest.get("unidad_ejecutora/1").then(function (response) {
             self.unidad_ejecutora_defecto = response.data;
         });
