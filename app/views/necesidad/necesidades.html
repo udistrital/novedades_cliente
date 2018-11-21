@@ -27,11 +27,11 @@
 
     <div class="modal-footer text-center">
       <span ng-show="necesidades.mod_aprobar">
-        <button class="btn btn-success" type="button" name="button" ng-click="necesidades.aprobar_necesidad()">{{"APROBAR"
+        <button class="btn btn-success" type="button" name="button" ng-click="necesidades.aprobar_necesidad()" ng-show="necesidades.aprobarNecesidadButton">{{"APROBAR"
           | translate}}</button>
-        <button class="btn btn-warning" type="button" name="button" ng-click="necesidades.rechazar_necesidad()">{{"RECHAZAR"
+        <button class="btn btn-warning" type="button" name="button" ng-click="necesidades.rechazar_necesidad()" ng-show="necesidades.rechazarNecesidadButton">{{"RECHAZAR"
           | translate}}</button>
-        <button class="btn btn-success btn-outline" type="button" name="button" ng-show="necesidades.editarNecesidad"
+        <button class="btn btn-success btn-outline" type="button" name="button" ng-show="necesidades.editarNecesidadButton"
           ng-click="necesidades.editar_necesidad()">{{"EDITAR_NECESIDAD" | translate}}</button>
 
       </span>

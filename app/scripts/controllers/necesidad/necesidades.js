@@ -12,8 +12,10 @@ angular.module('contractualClienteApp')
         var self = this;
         self.offset = 0;
         self.rechazada = false;
-        self.editarNecesidad = true;
-
+        self.editarNecesidadButton = true;
+        self.aprobarNecesidadButton = true;
+        self.rechazarNecesidadButton = true;
+        
         self.gridOptions = {
             paginationPageSizes: [10, 15, 20],
             paginationPageSize: 10,
