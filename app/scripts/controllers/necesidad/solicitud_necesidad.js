@@ -32,7 +32,7 @@ angular.module('contractualClienteApp')
 
         self.variable = {};
 
-        //self.DuracionEspecial = 'unico_pago';
+        self.DuracionEspecial = 'unico_pago';
         self.fecha = new Date();
         self.f_apropiacion = [];
         self.ActividadEspecifica = [];

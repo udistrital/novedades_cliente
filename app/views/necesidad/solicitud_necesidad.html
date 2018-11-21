@@ -49,18 +49,18 @@
             <label class="col-sm-1 control-label">{{"AÑOS" | translate}}</label>
             <div class="col-sm-3">
               <input type="text" class="form-control" placeholder="Años" maxlength="4" ng-model="solicitudNecesidad.anos"
-                ng-change="solicitudNecesidad.calculo_total_dias()" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57" />
+                ng-change="solicitudNecesidad.duracionEspecialFunc(solicitudNecesidad.DuracionEspecial)" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57" />
 
             </div>
             <label class="col-sm-1 control-label">{{"MESES" | translate}}</label>
             <div class="col-sm-3">
-              <input type="text" class="form-control" placeholder="Meses" ng-model="solicitudNecesidad.meses" ng-change="solicitudNecesidad.calculo_total_dias()"
+              <input type="text" class="form-control" placeholder="Meses" ng-model="solicitudNecesidad.meses" ng-change="solicitudNecesidad.duracionEspecialFunc(solicitudNecesidad.DuracionEspecial)"
                 onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57" />
             </div>
 
             <label class="col-sm-1 control-label">{{"DIAS" | translate}}</label>
             <div class="col-sm-3">
-              <input type="text" class="form-control" placeholder="Dias" ng-model="solicitudNecesidad.dias" ng-change="solicitudNecesidad.calculo_total_dias()"
+              <input type="text" class="form-control" placeholder="Dias" ng-model="solicitudNecesidad.dias" ng-change="solicitudNecesidad.duracionEspecialFunc(solicitudNecesidad.DuracionEspecial)"
                 onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57" />
             </div>
           </div>
@@ -256,7 +256,7 @@
               <label class=" control-label">{{"TIPO_CONTRATO_NECESIDAD" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
               <!-- Filtra tipo necesidad no aplica Tipo necesidad == 3 -->
-              <select class="form-control" ng-model="solicitudNecesidad.necesidad.TipoContratoNecesidad" ng-options="tipoc as tipoc.Nombre for tipoc in solicitudNecesidad.tipo_contrato_data | filter:{Id :'!3'} track by tipoc.Id " 
+              <select class="form-control" ng-model="solicitudNecesidad.necesidad.TipoContratoNecesidad" ng-options="tipoc as tipoc.Nombre for tipoc in solicitudNecesidad.tipo_contrato_data | filter:{Id :'!3'} track by tipoc.Id "
                 required>
                 <option value="TODO" disabled selected>{{"SELECCIONAR" | translate}} {{"TIPO_CONTRATO_NECESIDAD" |
                   translate}}</option>
