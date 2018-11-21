@@ -8,7 +8,7 @@
  * Controller of the clienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('ContratoRegistroHorasCtrl', function (amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreAmazonRequest, financieraRequest, sicapitalRequest, idResolucion, colombiaHolidaysService, $mdDialog, lista, resolucion, $translate, $window, $scope) {
+    .controller('ContratoRegistroHorasCtrl', function (amazonAdministrativaRequest, administrativaRequest, adminMidRequest, oikosRequest, coreAmazonRequest, financieraRequest, sicapitalRequest, idResolucion, colombiaHolidaysService, pdfMakerService, nuxeoClient, coreRequest, $mdDialog, lista, resolucion, $translate, $window, $scope) {
 
         var self = this;
         self.contratoGeneralBase = {};
@@ -29,6 +29,12 @@ angular.module('contractualClienteApp')
             return administrativaRequest.get('tipo_resolucion/' + self.resolucionActual.IdTipoResolucion.Id);
         }).then(function (response) {
             self.resolucionActual.IdTipoResolucion.NombreTipoResolucion = response.data.NombreTipoResolucion;
+            adminMidRequest.get("gestion_documento_resolucion/get_contenido_resolucion", "id_resolucion=" + self.resolucionActual.Id + "&id_facultad=" + self.resolucionActual.IdDependenciaFirma).then(function (response) {
+                self.contenidoResolucion = response.data;
+                adminMidRequest.get("gestion_previnculacion/docentes_previnculados_all", "id_resolucion=" + self.resolucionActual.Id).then(function (response) {
+                    self.contratadosPdf = response.data;
+                });
+            });
         });
 
         oikosRequest.get('dependencia/' + resolucion.Facultad).then(function (response) {
@@ -45,15 +51,14 @@ angular.module('contractualClienteApp')
         administrativaRequest.get("resolucion_vinculacion_docente/" + self.idResolucion).then(function (response) {
             self.datosFiltro = response.data;
             oikosRequest.get("dependencia/" + self.datosFiltro.IdFacultad.toString()).then(function (response) {
-
                 self.contratoGeneralBase.Contrato.SedeSolicitante = response.data.Id.toString();
                 self.sede_solicitante_defecto = response.data.Nombre;
             });
             adminMidRequest.get("gestion_previnculacion/docentes_previnculados", "id_resolucion=" + self.idResolucion.toString()).then(function (response) {
-
                 self.contratados = response.data;
-
-
+            });
+            oikosRequest.get("dependencia/proyectosPorFacultad/" + resolucion.Facultad + "/" + self.datosFiltro.NivelAcademico, "").then(function (response) {
+                self.proyectos = response.data;
             });
             coreAmazonRequest.get("ordenador_gasto", "query=DependenciaId%3A" + self.datosFiltro.IdFacultad.toString()).then(function (response) {
                 if (response.data === null) {
@@ -211,6 +216,7 @@ angular.module('contractualClienteApp')
                     idResolucion: self.idResolucion,
                     FechaExpedicion: self.FechaExpedicion
                 };
+                resolucion.FechaExpedicion = self.FechaExpedicion;
                 adminMidRequest.post("expedir_resolucion/validar_datos_expedicion", expedicionResolucion).then(function (response) {
                     if (response.status === 201) {
 
@@ -226,16 +232,7 @@ angular.module('contractualClienteApp')
                                     allowOutsideClick: false
                                 });
                             } else {
-
-                                swal({
-                                    title: $translate.instant('EXPEDIDA'),
-                                    text: $translate.instant('DATOS_REGISTRADOS'),
-                                    type: 'success',
-                                    allowOutsideClick: false,
-                                    confirmButtonText: $translate.instant('ACEPTAR')
-                                }).then(function () {
-                                    $window.location.reload();
-                                });
+                                self.guardarResolucionNuxeo();
                             }
                         });
                     } else {
@@ -260,6 +257,54 @@ angular.module('contractualClienteApp')
                     allowOutsideClick: false
                 });
             }
+        };
+
+        /**
+         * @name guardarResolucionNuxeo
+         * @description 
+         * Genera el documento de la resolución en formato blob y lo carga en nuexeo, posteriormente lo guarda en la tabla documento del core
+         */
+        self.guardarResolucionNuxeo = function () {
+            var documento = pdfMakerService.getDocumento(self.contenidoResolucion, resolucion, self.contratadosPdf, self.proyectos);
+            pdfMake.createPdf(documento).getBlob(function (blobDoc) {
+                var aux = nuxeoClient.createDocument("ResolucionDVE" + self.idResolucion, "Resolución DVE expedida", blobDoc, function(url) {
+                    var date = new Date();
+                    date = moment(date).format('DD_MMM_YYYY_HH:mm:ss');
+                    self.objeto_documento = {
+                      "Nombre": "ResolucionDVE" + self.idResolucion,
+                      "Descripcion": "Resolución de vinculación especial",
+                      "TipoDocumento": {
+                        "Id": 6
+                      },
+                      "Contenido": JSON.stringify({
+                        "NombreArchivo": "Resolucion_" + self.resolucionActual.NumeroResolucion + ".pdf",
+                        "FechaCreacion": date,
+                        "Tipo": "Archivo",
+                        "IdNuxeo": url,
+                        "Observaciones": "Ninguna"
+                      }),
+                      "CodigoAbreviacion": "RES-DVE",
+                      "Activo": true
+                    };
+            
+                    //Post a la tabla documento del core
+                    coreRequest.post('documento', self.objeto_documento).then(function(response) {
+                        self.id_documento = response.data.Id;
+                        console.log(self.id_documento);
+                        if (self.id_documento != null && self.id_documento != undefined) {
+                            swal({
+                                title: $translate.instant('EXPEDIDA'),
+                                text: $translate.instant('DATOS_REGISTRADOS'),
+                                type: 'success',
+                                allowOutsideClick: false,
+                                confirmButtonText: $translate.instant('ACEPTAR')
+                            }).then(function () {
+                                $window.location.reload();
+                            });
+                        }
+                    });
+                });
+            });
         };
         $scope.validarFecha = colombiaHolidaysService.validateDate;
     });

@@ -29,7 +29,7 @@ var conf_cloud = {
     TITAN_SERVICE: "https://tuleap.udistrital.edu.co/go_api/titan_api_crud/v1/",
     SICAPITAL_SERVICE: "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/",
     CONTRATO_SERVICE: "https://autenticacion.udistrital.edu.co:8244/administrativa_jbpm/v1/",
-    NUXEO_SERVICE:"https://documental.udistrital.edu.co/nuxeo/",
+    NUXEO_SERVICE:"https://documental.portaoas.udistrital.edu.co/nuxeo/",
     HOMOLOGACION_SERVICE:"https://autenticacion.udistrital.edu.co:8244/dependencias_api/v1/",
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
@@ -106,7 +106,7 @@ var conf_pruebas = {
     TITAN_SERVICE: "http://10.20.0.254/titan_api_crud/v1/",
     SICAPITAL_SERVICE: "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/",
     CONTRATO_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services/contratoSuscritoProxyService/",
-    NUXEO_SERVICE: "https://athento.udistritaloas.edu.co/nuxeo/",
+    NUXEO_SERVICE: "https://documental.udistrital.edu.co/nuxeo/",
     HOMOLOGACION_SERVICE:"https://autenticacion.udistrital.edu.co:8244/dependencias_api/v1/",
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
@@ -146,7 +146,7 @@ var conf_local = {
     TITAN_SERVICE: "http://10.20.0.254/titan_api_crud/v1/",
     SICAPITAL_SERVICE: "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/",
     CONTRATO_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services/contratoSuscritoProxyService/",
-    NUXEO_SERVICE: "https://athento.udistritaloas.edu.co/nuxeo/",
+    NUXEO_SERVICE: "https://documental.udistrital.edu.co/nuxeo/",
     HOMOLOGACION_SERVICE:"https://autenticacion.udistrital.edu.co:8244/dependencias_api/v1/",
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
