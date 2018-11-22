@@ -7,7 +7,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('menuCtrl', function ($location, $http, rolesService, $window, $scope, $rootScope, token_service, configuracionRequest, notificacion, $translate, $route, $mdSidenav) {
+    .controller('menuCtrl', function ($location, $http, rolesService, $window, $scope, $rootScope, configuracionRequest, notificacion, $translate, $route, $mdSidenav) {
         var paths = [];
         $scope.language = {
             es: "btn btn-primary btn-circle btn-outline active",
@@ -16,7 +16,6 @@ angular.module('contractualClienteApp')
 
         $scope.notificacion = notificacion;
         $scope.actual = "";
-        $scope.token_service = token_service;
         $scope.breadcrumb = [];
 
         var recorrerArbol = function (item, padre) {
@@ -35,31 +34,15 @@ angular.module('contractualClienteApp')
             return padres;
         };
         $scope.perfil = "ADMINISTRADOR ARGO";
-        // rolesService.getMenus().then(function () {
-            
-        // });
 
-        if (token_service.live_token()) {
-            var roles = "";
-            if (typeof token_service.token.role === "object") {
-                var rl = [];
-                for (var index = 0; index < token_service.token.role.length; index++) {
-                    if (token_service.token.role[index].indexOf("/") < 0) {
-                        rl.push(token_service.token.role[index]);
-                    }
-                }
-                roles = rl.toString();
-            } else {
-                roles = token_service.token.role;
-            }
+        // optiene los menus segun el rol
+        var roles = rolesService.roles().toString().replace(/,/g, '%2C');
+        configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + roles + '/Argo', '').then(function (response) {
 
-            roles = roles.replace(/,/g, '%2C');
-            configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + roles + '/Argo', '').then(function (response) {
+            $rootScope.my_menu = response.data;
 
-                $rootScope.my_menu = response.data;
+        });
 
-            });
-        }
         /*
         configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + "ADMINISTRADOR_ARGO" + '/Argo', '').then(function(response) {
             $rootScope.my_menu = response.data;
@@ -100,10 +83,10 @@ angular.module('contractualClienteApp')
             $scope.menu_app = response.data;
 
             recorrerArbol($scope.menu_service, "");
-            paths.push({ padre: ["", "Notificaciones", "Ver Notificaciones"], path: "notificaciones" });    
+            paths.push({ padre: ["", "Notificaciones", "Ver Notificaciones"], path: "notificaciones" });
         });
 
-       
+
         $scope.$on('$routeChangeStart', function ( /*next, current*/) {
             $scope.actual = $location.path();
             update_url();

@@ -8,14 +8,14 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, $window,  $mdDialog, gridApiService, pdfMakerNecesidadesService, necesidadService) {
+    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, rolesService, $translate, $window, $mdDialog, gridApiService) {
         var self = this;
         self.offset = 0;
         self.rechazada = false;
-        self.editarNecesidadButton = true;
-        self.aprobarNecesidadButton = true;
-        self.rechazarNecesidadButton = true;
-        
+
+        //permisos de los buttons segun el rol
+        self.buttons = rolesService.buttons('NecesidadesCtrl', rolesService.roles());
+
         self.gridOptions = {
             paginationPageSizes: [10, 15, 20],
             paginationPageSize: 10,
