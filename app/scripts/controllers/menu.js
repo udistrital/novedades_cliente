@@ -7,7 +7,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('menuCtrl', function ($location, $http, rolesService, $window, $scope, $rootScope, configuracionRequest, notificacion, $translate, $route, $mdSidenav) {
+    .controller('menuCtrl', function ($location, $http, rolesService, $window, $scope, $rootScope, token_service, configuracionRequest, notificacion, $translate, $route, $mdSidenav) {
         var paths = [];
         $scope.language = {
             es: "btn btn-primary btn-circle btn-outline active",
@@ -16,6 +16,7 @@ angular.module('contractualClienteApp')
 
         $scope.notificacion = notificacion;
         $scope.actual = "";
+        $scope.token_service = token_service;
         $scope.breadcrumb = [];
 
         var recorrerArbol = function (item, padre) {
