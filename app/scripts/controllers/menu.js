@@ -18,22 +18,6 @@ angular.module('contractualClienteApp')
         $scope.actual = "";
         $scope.token_service = token_service;
         $scope.breadcrumb = [];
-
-        var recorrerArbol = function (item, padre) {
-            var padres = "";
-            for (var i = 0; i < item.length; i++) {
-                if (item[i].Opciones === null) {
-                    padres = padre + " , " + item[i].Nombre;
-                    paths.push({
-                        'path': item[i].Url,
-                        'padre': padres.split(",")
-                    });
-                } else {
-                    recorrerArbol(item[i].Opciones, padre + "," + item[i].Nombre);
-                }
-            }
-            return padres;
-        };
         $scope.perfil = "ADMINISTRADOR ARGO";
 
         // optiene los menus segun el rol
@@ -76,17 +60,10 @@ angular.module('contractualClienteApp')
         };
 
 
-        $http.get("scripts/models/menu_service.json").then(function (response) {
-            $scope.menu_service = response.data;
-        }).then(function () {
-            return $http.get("scripts/models/app_menus.json")
-        }).then(function (response) {
-            $scope.menu_app = response.data;
-
-            recorrerArbol($scope.menu_service, "");
-            paths.push({ padre: ["", "Notificaciones", "Ver Notificaciones"], path: "notificaciones" });
-        });
-
+        $http.get("scripts/models/app_menus.json")
+            .then(function (response) {
+                $scope.menu_app = response.data;
+            });
 
         $scope.$on('$routeChangeStart', function ( /*next, current*/) {
             $scope.actual = $location.path();
