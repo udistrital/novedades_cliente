@@ -236,7 +236,8 @@ angular.module('contractualClienteApp')
                 FechaExpedicion: row.entity.FechaExpedicion,
                 TipoResolucion: row.entity.TipoResolucion,
                 IdDependenciaFirma: row.entity.IdDependenciaFirma,
-                FacultadFirmaNombre: row.entity.FacultadFirmaNombre
+                FacultadFirmaNombre: row.entity.FacultadFirmaNombre,
+                Estado: row.entity.Estado
             };
 
             var local = JSON.stringify(resolucion);

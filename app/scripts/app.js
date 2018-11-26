@@ -62,7 +62,8 @@ angular
         'configuracionService',
         'requestService',
         'gridApiService',
-        'colombiaHolidaysService'
+        'colombiaHolidaysService',
+        'nuxeoClient'
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');
