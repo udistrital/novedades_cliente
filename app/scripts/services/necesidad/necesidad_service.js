@@ -8,7 +8,7 @@
  * Service in the contractualClienteApp.
  */
 angular.module('contractualClienteApp')
-  .service('necesidadService', function (administrativaRequest, coreRequest, agoraRequest, oikosRequest, financieraRequest) {
+  .service('necesidadService', function (administrativaRequest, coreRequest, agoraRequest, oikosRequest, financieraRequest, adminMidRequest) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var self = this;
 
@@ -193,10 +193,8 @@ angular.module('contractualClienteApp')
               });
             } else resolve("Ok");
           }).then(function (response) {
-
-            return administrativaRequest.get('fuente_financiacion_rubro_necesidad', $.param({
-              query: 'Necesidad:' + IdNecesidad
-            })).then(function (response) {
+              
+            return adminMidRequest.get('solicitud_necesidad/fuente_apropiacion_necesidad/' + IdNecesidad).then(function (response) {
               trNecesidad.Ffapropiacion = response.data;
 
               return administrativaRequest.get('marco_legal_necesidad', $.param({

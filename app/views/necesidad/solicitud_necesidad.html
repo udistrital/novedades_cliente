@@ -458,7 +458,7 @@
 
                   <label><span class="text-success">{{$index+1}}.</span> {{ap.aprop.Rubro.Nombre}}</label>
                   <br>
-
+                  <div class="row">
                   <div class="col-md-6">
                     <fuentes-apropiacion apropiacion="ap.Apropiacion" fuenteapropiacion="ap.fuentes"
                       init-fuenteapropiacion="ap.initFuentes" dependenciasolicitante="solicitudNecesidad.dependencia_solicitante_data.DependenciaId"></fuentes-apropiacion>
@@ -467,18 +467,32 @@
                   <ul class="list-group col-md-6">
                     <li class="list-group-item">
 
-                      <label class="text-info">{{"VALOR_SOLICITADO" | translate}}</label>{{ap.MontoParcial | currency}}
+                      <label class="text-info">{{"VALOR_SOLICITADO" | translate}}</label>{{ap.MontoPorApropiacion | currency}}
 
                     <li class="list-group-item" ng-repeat="fu in ap.fuentes">
                       <label class="text-warning">{{"FUENTE" | translate}}</label>
                       {{fu.FuenteFinanciamiento.Descripcion}}
                       <br>
                       <label class="text-warning">{{"VALOR_SOLICITADO" | translate}}</label>
-                      <input type="text" ng-init="fu.Monto = fu.Monto ? fu.Monto : 0" ng-model="fu.Monto" ui-money-mask="0">
+                      <input type="text" ng-init="fu.MontoParcial = fu.MontoParcial ? fu.MontoParcial : 0" ng-model="fu.MontoParcial" ui-money-mask="0">
                       <br>
                     </li>
                     </li>
                   </ul>
+                </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <productos-apropiacion rubro="ap.aprop.Rubro.Id" productoapropiacion="ap.productos"
+                        init-productoapropiacion="ap.initProductos"></productos-apropiacion>
+                    </div>
+                    <ul class="list-group col-md-6">
+                      <li class="list-group-item" ng-repeat="prod in ap.productos">
+                        <label class="text-warning">{{prod.Producto.Nombre}}</label>
+                        {{prod.Producto.Descripcion}}
+                      </li>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
 
                 <div class="form-group">
