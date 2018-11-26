@@ -453,7 +453,7 @@ angular.module('contractualClienteApp')
         };
 
         self.crear_solicitud = function () {
-            self.actividades_economicas_id = self.actividades_economicas.map(function (a) { return { ActividadEconomica: a.Id } });
+            self.actividades_economicas_id = self.actividades_economicas.map(function (ae) { return { ActividadEconomica: ae.Codigo } });
             self.marcos_legales = self.documentos.map(function (d) { return { MarcoLegal: d } });
 
             if (self.necesidad.TipoContratoNecesidad) {
