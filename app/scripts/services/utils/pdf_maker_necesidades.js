@@ -223,7 +223,7 @@ angular.module('contractualClienteApp')
                                                         ]
                                                     }
                                                 ]).concat(
-                                                    apg.Productos.map(function (p) {
+                                                    apg.Productos != null ? apg.Productos.map(function (p) {
                                                         return {
                                                             columnGap: 10,
                                                             columns: [
@@ -234,7 +234,7 @@ angular.module('contractualClienteApp')
                                                                 { text: "" },
                                                             ]
                                                         }
-                                                    })
+                                                    }) : ""
                                                 );
                                             }))
                                         ],
