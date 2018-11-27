@@ -196,6 +196,11 @@ angular
                 controller: 'ContratoRegistroCancelarCtrl',
                 controllerAs: 'contratoRegistroCancelar'
             })
+            .when('/vinculacionespecial/resolucion_reportes', {
+                templateUrl: 'views/vinculacionespecial/resolucion_reportes.html',
+                controller: 'ResolucionReportesCtrl',
+                controllerAs: 'resolucionReportes'
+            })
             .when('/vinculacionespecial/resolucion_gestion', {
                 templateUrl: 'views/vinculacionespecial/resolucion_gestion.html',
                 controller: 'ResolucionGestionCtrl',

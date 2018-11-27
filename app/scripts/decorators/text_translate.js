@@ -468,7 +468,7 @@ var text_es = {
     ELIJA_SEMANAS_MINIMO: "Elija un número de semanas -> Mínimo: ",
     ELIJA_SEMANAS_MAXIMO: " Máximo: ",
     MAXIMO_SUGERIDO: "Máximo de semanas sugeridas:",
-    COMPLETE_CAMPOS: "Complete Todos Los Campos",
+    COMPLETE_CAMPOS: "Complete todos Los Campos",
     FECHA_FIN_ACTA: "Fecha fin de acuerdo a la reversión: ",
 
     //RESOLUCION_GESTION
@@ -515,6 +515,16 @@ var text_es = {
     TIPO_DOC: "Tipo de documento",
     PERIODO_VINCULACION: "Periodo de vinculación",
     DISPONIBILIDAD_PDF: "Dispo-\nnibilidad",
+
+    //RESOLUCION_REPORTES
+    REPORTE: "Reporte",
+    REPORTES: "Reportes resoluciones",
+    REPORTE_UNO: "Reporte docentes por resolución",
+    SELECCIONE_REPORTE: "Seleccione el reporte que desea ver",
+    GENERAR_REPORTE: "Generar reporte",
+    NO_EXISTE_RESOLUCION: "No se ha encontrado una resolución con los datos ingresados",
+    RESOLUCION_NO_VINCULACION: "La resolución a consultar debe ser de vinculación",
+    RESOLUCION_NO_EXPEDIDA: "La resolución a consultar no se encuentra expedida",
 
     // Minutas Plantillas
     BTN_MINUTAS: {
@@ -1130,7 +1140,17 @@ var text_en = {
     NO_PUEDE_ADICIONAR: "Can't add hours",
     NO_PUEDE_REDUCIR: "Can't reduce hours",
     DEBE_APROBAR_CARGA: "New hours must be approved",
-    FIRMA_RECTOR: "Rector signature"
+    FIRMA_RECTOR: "Rector signature",
+
+    //RESOLUCION_REPORTES
+    REPORTE: "Report",
+    REPORTES: "Reports",
+    REPORTE_UNO: "Teachers by document report",
+    SELECCIONE_REPORTE: "Select one report",
+    GENERAR_REPORTE: "Generate report",
+    NO_EXISTE_RESOLUCION: "A document with that information doesn't exist",
+    RESOLUCION_NO_VINCULACION: "A document with that information doesn't exist",
+    RESOLUCION_NO_EXPEDIDA: "The document must be issued",
 };
 
 angular.module('contractualClienteApp')
