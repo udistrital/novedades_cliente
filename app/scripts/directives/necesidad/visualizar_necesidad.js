@@ -16,31 +16,28 @@ angular.module('contractualClienteApp')
                 estado: '=',
             },
             templateUrl: 'views/directives/necesidad/visualizar_necesidad.html',
-            controller: function (financieraRequest, administrativaRequest, agoraRequest, oikosRequest, coreRequest, $scope) {
+            controller: function (financieraRequest, administrativaRequest, agoraRequest, oikosRequest, necesidadService, coreRequest, $scope) {
                 var self = this;
-                self.estados = {
-                    rechazada: 'Rechazada',
-                    solicitada: 'Solicitada',
-                    aprobada: 'Aprobada',
-                    cdpSolicitado: 'Cdp Solicitado'
-
-                };
+                self.RechazaOrAnulada = false;
                 
                 $scope.$watch('[vigencia,numero]', function () {
                     self.cargar_necesidad();
                 });
 
                 self.cargar_necesidad = function () {
+                    self.RechazaOrAnulada = [necesidadService.EstadoNecesidadType.Anulada.Id, necesidadService.EstadoNecesidadType.Rechazada.Id]
+                    .includes($scope.estado.Id);
+
                     administrativaRequest.get('necesidad', $.param({
                         query: "NumeroElaboracion:" + $scope.numero + ",Vigencia:" + $scope.vigencia
                     })).then(function (response) {
                         self.v_necesidad = response.data[0];
-                        if ($scope.estado === self.estados.rechazada) {
+                        if (self.RechazaOrAnulada) {
                             administrativaRequest.get('necesidad_rechazada', $.param({
                                 query: "Necesidad:" + response.data[0].Id,
                                 fields: "Justificacion,Fecha"
                             })).then(function (response) {
-                                self.justificacion_rechazo = response.data ? response.data[0] : { Justificacion: "", Fecha: "" };
+                                self.justificaciones_rechazo = response.data ? response.data : [{ Justificacion: "", Fecha: "" }];
                             });
                         }
                         administrativaRequest.get('marco_legal_necesidad', $.param({

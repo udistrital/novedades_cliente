@@ -49,6 +49,7 @@ var text_es = {
     TITULO: "GENERATOR-OAS",
     MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
     //solicitud_necesidad
+    CODIGO: "Código",
     ID_AVANCE: "ID Avance",
     LISTA_AVANCES: "Lista de Avances",
     PROCESO_EXTERNO: "Proceso Externo",
