@@ -21,22 +21,19 @@
   <div class="modal-content col-md-10 col-md-offset-1" style="margin-top: 5%">
 
     <div class="modal-body" ng-if="necesidades.g_necesidad!=undefined">
-      <visualizar-necesidad vigencia="necesidades.vigencia" numero="necesidades.numero_el" estado="necesidades.necesidad_estado" />
+      <visualizar-necesidad vigencia="necesidades.vigencia" numero="necesidades.numero_el" estado="necesidades.g_necesidad.EstadoNecesidad" />
     </div>
 
 
     <div class="modal-footer text-center">
-      <span ng-show="necesidades.mod_aprobar">
-        <button class="btn btn-success" type="button" name="button" ng-click="necesidades.aprobar_necesidad()" ng-show="necesidades.buttons.AprobarNecesidad">{{"APROBAR"
-          | translate}}</button>
-        <button class="btn btn-warning" type="button" name="button" ng-click="necesidades.rechazar_necesidad()" ng-show="necesidades.buttons.RechazarNecesidad">{{"RECHAZAR"
-          | translate}}</button>
-        <button class="btn btn-success btn-outline" type="button" name="button" ng-show="necesidades.buttons.EditarNecesidad"
-          ng-click="necesidades.editar_necesidad()">{{"EDITAR_NECESIDAD" | translate}}</button>
-
-      </span>
-      <button class="btn btn-success btn-outline" type="button" name="button" ng-show="necesidades.mod_cdp && necesidades.buttons.SolicitarCDP" ng-click="necesidades.solicitar_cdp()">{{"SOLICITAR_CDP"
+      <button class="btn btn-success" type="button" name="button" ng-click="necesidades.aprobar_necesidad()" ng-show="necesidades.verBotonAprobarNecesidad">{{"APROBAR"
         | translate}}</button>
+      <button class="btn btn-warning" type="button" name="button" ng-click="necesidades.rechazar_necesidad()" ng-show="necesidades.verBotonRechazarNecesidad">{{"RECHAZAR"
+        | translate}}</button>
+      <button class="btn btn-success btn-outline" type="button" name="button" ng-show="necesidades.verBotonEditarNecesidad"
+        ng-click="necesidades.editar_necesidad()">{{"EDITAR_NECESIDAD" | translate}}</button>
+      <button class="btn btn-success btn-outline" type="button" name="button" ng-click="necesidades.solicitar_cdp()"
+        ng-show="necesidades.verBotonSolicidadCDPNecesidad">{{"SOLICITAR_CDP" | translate}}</button>
 
     </div>
 
