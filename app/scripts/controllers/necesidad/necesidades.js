@@ -12,9 +12,12 @@ angular.module('contractualClienteApp')
         var self = this;
         self.offset = 0;
         self.rechazada = false;
+        self.buttons = {};
 
         //permisos de los buttons segun el rol
-        self.buttons = rolesService.buttons('NecesidadesCtrl', rolesService.roles());
+        rolesService.buttons('NecesidadesCtrl', rolesService.roles()).then(function (data) {
+            self.buttons = data;
+        });
 
         self.gridOptions = {
             paginationPageSizes: [10, 15, 20],

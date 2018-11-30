@@ -12,10 +12,6 @@ angular.module('contractualClienteApp')
         // AngularJS will instantiate a singleton by calling "new" on this function
         self = this;
 
-        $http.get("/scripts/models/buttons.json").then(function (response) {
-            self.buttonsData = response.data;
-        });
-
         /**
         * @ngdoc method
         * @name contractualClienteApp.rolesService#roles //.# 
@@ -46,24 +42,29 @@ angular.module('contractualClienteApp')
         *                   si se especifica roles, debuelve un objeto con los botones habilitados para esos roles y controlador
         */
         self.buttons = function (controller, roles) {
-            var buttonsWithRoles = self.buttonsData.Controllers[controller].Buttons;
-            if (Array.isArray(roles)) {
-                var buttons = {};
-                for (var button in buttonsWithRoles) {
-                    if (!buttonsWithRoles.hasOwnProperty(button)) {
-                        continue;
-                    }
-                    var b1 = buttonsWithRoles[button];
-                    roles.forEach(function (rol) {
-                        if (b1.hasOwnProperty(rol) && b1[rol]) {
-                            buttons[button] = true;
-                        }
-                    });
+            return new Promise(function (resolve, reject) {
+                $http.get("/scripts/models/buttons.json").then(function (response) {
+                    self.buttonsData = response.data;
+                    var buttonsWithRoles = self.buttonsData.Controllers[controller].Buttons;
+                    if (Array.isArray(roles)) {
+                        var buttons = {};
+                        for (var button in buttonsWithRoles) {
+                            if (!buttonsWithRoles.hasOwnProperty(button)) {
+                                continue;
+                            }
+                            var b1 = buttonsWithRoles[button];
+                            roles.forEach(function (rol) {
+                                if (b1.hasOwnProperty(rol) && b1[rol]) {
+                                    buttons[button] = true;
+                                }
+                            });
 
-                }
-                return buttons;
-            } else {
-                return buttonsWithRoles;
-            }
+                        }
+                        resolve(buttons);
+                    } else {
+                        resolve(buttonsWithRoles);
+                    }
+                });
+            });
         }
     });
