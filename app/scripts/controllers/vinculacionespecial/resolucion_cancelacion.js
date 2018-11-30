@@ -30,17 +30,17 @@ angular.module('contractualClienteApp')
             data: [],
             columnDefs: [
                 { field: 'Id', visible: false },
-                { field: 'NombreCompleto', width: '20%', displayName: $translate.instant('NOMBRE') },
+                { field: 'NombreCompleto', width: '17%', displayName: $translate.instant('NOMBRE') },
                 { field: 'IdPersona', width: '10%', displayName: $translate.instant('DOCUMENTO_DOCENTES') },
                 { field: 'Categoria', width: '10%', displayName: $translate.instant('CATEGORIA') },
-                { field: 'IdDedicacion.NombreDedicacion', width: '10%', displayName: $translate.instant('DEDICACION') },
+                { field: 'ProyectoNombre', width: '22%', displayName: $translate.instant('PROYECTO_CURRICULAR') },
                 { field: 'IdDedicacion.Id', visible: false },
                 { field: 'Disponibilidad', visible: false },
                 { field: 'DependenciaAcademica', visible: false },
                 { field: 'NumeroHorasSemanales', width: '10%', displayName: $translate.instant('HORAS_SEMANALES') },
-                { field: 'NumeroSemanas', width: '10%', displayName: $translate.instant('SEMANAS') },
-                { field: 'NumeroDisponibilidad', width: '13%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
-                { field: 'ValorContrato', width: '15%', displayName: $translate.instant('VALOR_CONTRATO'), cellClass: "valorEfectivo", cellFilter: "currency" },
+                { field: 'NumeroSemanas', width: '7%', displayName: $translate.instant('SEMANAS') },
+                { field: 'NumeroDisponibilidad', width: '9%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
+                { field: 'ValorContrato', width: '13%', displayName: $translate.instant('VALOR_CONTRATO'), cellClass: "valorEfectivo", cellFilter: "currency" },
                 { field: 'IdProyectoCurricular', visible: false },
                 { field: 'Vigencia', visible: false },
                 { field: 'NumeroContrato', visible: false },
@@ -174,6 +174,7 @@ angular.module('contractualClienteApp')
                     NivelAcademico:personaSeleccionada.IdResolucion.NivelAcademico,
                     NumeroRp:personaSeleccionada.InformacionRp.rp,
                     VigenciaRp:personaSeleccionada.InformacionRp.vigencia,
+                    FechaInicio:personaSeleccionada.FechaInicio
                 };
                 desvinculacionesData.push(docente_a_desvincular);
                 
