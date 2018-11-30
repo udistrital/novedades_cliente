@@ -22,17 +22,13 @@ angular.module('contractualClienteApp')
             enableRowSelection: false,
             enableRowHeaderSelection: false,
             useExternalPagination: true,
-            useExternalSorting: true,
+            useExternalFiltering: true,
             columnDefs: [{
                 field: 'Id',
                 visible: false
             },
             {
                 field: 'FechaExpedicion',
-                visible: false
-            },
-            {
-                field: 'Estado',
                 visible: false
             },
             {
@@ -65,6 +61,7 @@ angular.module('contractualClienteApp')
             },
             {
                 field: 'FacultadNombre',
+                enableFiltering: false,
                 cellClass: function (grid, row /*, col, rowRenderIndex, colRenderIndex*/) {
                     if (row.entity.Estado === "Cancelada") {
                         return 'resolucionCancelada';
@@ -148,16 +145,18 @@ angular.module('contractualClienteApp')
             onRegisterApi: function (gridApi) {
                 self.gridApi = gridApi;
                 self.gridApi = gridApiService.pagination(self.gridApi, self.cargarDatosResolucion, $scope);
+                self.gridApi = gridApiService.filter(self.gridApi, self.cargarDatosResolucion, $scope);
             }
         };
 
         //Funcion para cargar los datos de las resoluciones creadas y almacenadas dentro del sistema
         self.cargarDatosResolucion = function (offset, query) {
+            if(query == undefined) query = "";
             var req = adminMidRequest.get("gestion_resoluciones/get_resoluciones_inscritas", $.param({
                 limit: self.resolucionesInscritas.paginationPageSize,
                 offset: offset,
-                query: query
-            }))
+                query: typeof (query) === "string" ? query : query.join(",")
+            }), true)
             req.then(gridApiService.paginationFunc(self.resolucionesInscritas, offset));
             return req;
         };
@@ -235,7 +234,10 @@ angular.module('contractualClienteApp')
                 Dedicacion: row.entity.Dedicacion,
                 FacultadNombre: row.entity.FacultadNombre,
                 FechaExpedicion: row.entity.FechaExpedicion,
-                TipoResolucion: row.entity.TipoResolucion
+                TipoResolucion: row.entity.TipoResolucion,
+                IdDependenciaFirma: row.entity.IdDependenciaFirma,
+                FacultadFirmaNombre: row.entity.FacultadFirmaNombre,
+                Estado: row.entity.Estado
             };
 
             var local = JSON.stringify(resolucion);

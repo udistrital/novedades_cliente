@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contractualClienteApp')
-    .controller('ResolucionAdicionCtrl', function (financieraMidRequest,amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, colombiaHolidaysService, $localStorage, $scope, $mdDialog, $translate, $window) {
+    .controller('ResolucionAdicionCtrl', function (financieraMidRequest, amazonAdministrativaRequest, administrativaRequest, financieraRequest, resolucion, adminMidRequest, oikosRequest, colombiaHolidaysService, $localStorage, $scope, $mdDialog, $translate, $window, gridApiService) {
 
         var self = this;
 
@@ -30,17 +30,18 @@ angular.module('contractualClienteApp')
             columnDefs: [
                 { field: 'Id', visible: false },
                 { field: 'FechaRegistro', visible: false },
+                { field: 'FechaInicio', visible: false },
                 { field: 'NombreCompleto', width: '15%', displayName: $translate.instant('NOMBRE') },
                 { field: 'IdPersona', width: '10%', displayName: $translate.instant('DOCUMENTO_DOCENTES') },
                 { field: 'Categoria', width: '10%', displayName: $translate.instant('CATEGORIA') },
-                { field: 'IdDedicacion.NombreDedicacion', width: '10%', displayName: $translate.instant('DEDICACION') },
+                { field: 'ProyectoNombre', width: '23%', displayName: $translate.instant('PROYECTO_CURRICULAR') },
                 { field: 'IdDedicacion.Id', visible: false },
                 { field: 'Disponibilidad', visible: false },
                 { field: 'DependenciaAcademica', visible: false },
                 { field: 'NumeroHorasSemanales', width: '8%', displayName: $translate.instant('HORAS_SEMANALES') },
                 { field: 'NumeroSemanas', width: '7%', displayName: $translate.instant('SEMANAS') },
-                { field: 'NumeroDisponibilidad', width: '15%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
-                { field: 'ValorContrato', width: '15%', displayName: $translate.instant('VALOR_CONTRATO'), cellClass: "valorEfectivo", cellFilter: "currency" },
+                { field: 'NumeroDisponibilidad', width: '9%', displayName: $translate.instant('NUM_DISPO_DOCENTE') },
+                { field: 'ValorContrato', width: '11%', displayName: $translate.instant('VALOR_CONTRATO'), cellClass: "valorEfectivo", cellFilter: "currency" },
                 {
                     field: 'IdProyectoCurricular',
                     visible: false,
@@ -54,7 +55,7 @@ angular.module('contractualClienteApp')
                     field: 'cancelar',
                     enableSorting: false,
                     enableFiltering: false,
-                    width: '15%',
+                    width: '8%',
                     displayName: $translate.instant('OPCIONES'),
                     cellTemplate: '<center>' +
                         '<a class="borrar" ng-click="grid.appScope.mostrar_modal_adicion(row)">' +
@@ -102,37 +103,17 @@ angular.module('contractualClienteApp')
                 self.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function () {
                     self.disponibilidad_elegida = gridApi.selection.getSelectedRows();
-                    self.DisponibilidadApropiacion = self.disponibilidad_elegida[0].DisponibilidadApropiacion;
-                    self.listar_apropiaciones();
-
-
+                    if (self.disponibilidad_elegida.length == 0) {
+                        self.disponibilidad_nueva = self.disponibilidad_anterior;
+                    } else {
+                        self.disponibilidad_nueva = [];
+                        self.DisponibilidadApropiacion = self.disponibilidad_elegida[0].DisponibilidadApropiacion;
+                        self.listar_apropiaciones();
+                    }
                 });
 
-                gridApi.core.on.filterChanged($scope, function () {
-                    var grid = this.grid;
-                    var query = '';
-                    angular.forEach(grid.columns, function (value, key) {
-                        if (value.filters[0].term) {
-                            var formtstr = value.colDef.name.replace('[0]', '');
-                            query = query + '&query=' + formtstr + '__icontains:' + value.filters[0].term;
-    
-                        }
-                    });
-                    self.actualizarLista(self.offset, query);
-                });
-
-                gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
-                    var query = '';
-                    var grid = this.grid;
-                    angular.forEach(grid.columns, function (value, key) {
-                        if (value.filters[0].term) {
-                            var formtstr = value.colDef.name.replace('[0]', '');
-                            query = query + '&query=' + formtstr + '__icontains:' + value.filters[0].term;
-                        }
-                    });
-                    self.offset = (newPage - 1) * pageSize;
-                    self.actualizarLista(self.offset, query);
-                });
+                self.gridApi = gridApiService.pagination(self.gridApi, self.actualizarLista, $scope);
+                self.gridApi = gridApiService.filter(self.gridApi, self.actualizarLista, $scope);
             }
         };
 
@@ -150,7 +131,7 @@ angular.module('contractualClienteApp')
             columnDefs: [
 
                 {
-                    field: 'Apropiacion.Valor',
+                    field: 'Valor',
                     cellFilter: "currency",
                     displayName: $translate.instant('VALOR_APROPIACION')
                 },
@@ -165,8 +146,11 @@ angular.module('contractualClienteApp')
                 self.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function () {
                     self.apropiacion_elegida = gridApi.selection.getSelectedRows();
-                    self.disponibilidad_nueva_id = self.apropiacion_elegida[0].Id;
-                   // self.verificarDisponibilidad();
+                    if (self.apropiacion_elegida.length != 0) {
+                        self.disponibilidad_nueva = self.apropiacion_elegida[0];
+                    } else {
+                        self.disponibilidad_nueva = [];
+                    }
                 });
             }
         };
@@ -203,41 +187,61 @@ angular.module('contractualClienteApp')
 
 
         $scope.mostrar_modal_adicion = function (row) {
-            self.horas_actuales = row.entity.NumeroHorasSemanales;
-            self.semanas_actuales = row.entity.NumeroSemanas;
-            self.disponibilidad_actual = row.entity.NumeroDisponibilidad;
             self.persona_a_modificar = row.entity;
-            self.disponibilidad_actual_id = row.entity.Disponibilidad;
-            self.disponibilidad_nueva_id = row.entity.Disponibilidad;
-            financieraRequest.get("disponibilidad/TotalDisponibilidades/" + self.vigencia_data, 'UnidadEjecutora=1')
-            .then(function (response) { 
-                self.Disponibilidades.totalItems = response.data;
-                self.actualizarLista(self.offset, '');
-            });
-            amazonAdministrativaRequest.get("acta_inicio", $.param({
-                query: 'NumeroContrato:' + self.persona_a_modificar.NumeroContrato.String + ',Vigencia:' + self.persona_a_modificar.Vigencia.Int64
-            })).then(function (response) {
-                self.acta = response.data[0];
-                self.fechaIni = new Date(self.acta.FechaInicio);
-                self.fechaActa = self.fechaUtc(self.fechaIni);
-                if (self.FechaInicio == undefined) {
-                    self.calculoSemanasTranscurridas(self.fecha);
-                    self.maximoSemanasSugeridas = self.semanas_actuales - self.semanasTranscurridas;
-                    self.maximoSugeridasInicial = self.maximoSemanasSugeridas;
-                    self.maximoSemanasAdicionar = self.semanas_actuales;
+            //Consulta si el semáforo está completo (nueva carga académica aprobada)
+            adminMidRequest.post("gestion_desvinculaciones/consultar_categoria", self.persona_a_modificar).then(function (response) {
+                if (response.data === "OK") {
+                    self.cambio_disp = false;
+                    self.Apropiaciones.data = [];
+                    self.horas_actuales = row.entity.NumeroHorasSemanales;
+                    self.semanas_actuales = row.entity.NumeroSemanas;
+                    self.disponibilidad_actual = row.entity.NumeroDisponibilidad;
+                    self.disponibilidad_actual_id = row.entity.Disponibilidad;
+                    
+                    financieraRequest.get("disponibilidad/TotalDisponibilidades/" + self.vigencia_data, 'UnidadEjecutora=1')
+                        .then(function (response) {
+                            self.Disponibilidades.totalItems = response.data;
+                            self.actualizarLista(self.offset, '');
+                        });
+                    amazonAdministrativaRequest.get("acta_inicio", $.param({
+                        query: 'NumeroContrato:' + self.persona_a_modificar.NumeroContrato.String + ',Vigencia:' + self.persona_a_modificar.Vigencia.Int64
+                    })).then(function (response) {
+                        self.acta = response.data[0];
+                        self.fechaIni = new Date(self.acta.FechaInicio);
+                        self.fechaActa = self.fechaUtc(self.fechaIni);
+                        if (self.FechaInicio == undefined) {
+                            self.calculoSemanasTranscurridas(self.fecha);
+                            self.maximoSemanasSugeridas = self.semanas_actuales - self.semanasTranscurridas;
+                            self.maximoSugeridasInicial = self.maximoSemanasSugeridas;
+                            self.maximoSemanasAdicionar = self.semanas_actuales;
+                        }
+                        financieraRequest.get("disponibilidad/", $.param({query: "DisponibilidadApropiacion.Id:" + self.disponibilidad_actual_id})).then(function (response) {
+                            self.disponibilidad_anterior = response.data[0].DisponibilidadApropiacion[0];
+                            self.disponibilidad_nueva = self.disponibilidad_anterior;
+                            $('#modal_adicion').modal('show');
+                        });
+                    });
+                } else {
+                    swal({
+                        title: $translate.instant('NO_PUEDE_ADICIONAR'),
+                        text: $translate.instant('DEBE_APROBAR_CARGA'),
+                        type: 'warning',
+                        confirmButtonText: $translate.instant('ACEPTAR')
+                    });
                 }
-                $('#modal_adicion').modal('show');
-            }); 
+            });
         };
 
         self.actualizarLista = function (offset, query) {
-            financieraMidRequest.get('disponibilidad/ListaDisponibilidades/' + self.vigencia_data, 'limit=' + self.Disponibilidades.paginationPageSize + '&offset=' + offset + query + "&UnidadEjecutora=1").then(function (response) {
-                if (response.data.Type !== undefined) {
-                    self.Disponibilidades.data = [];
-                } else {
-                    self.Disponibilidades.data = response.data;
-                }
-            });
+            var req = financieraMidRequest.get('disponibilidad/ListaDisponibilidades/' + self.vigencia_data,
+                $.param({
+                    limit: self.Disponibilidades.paginationPageSize,
+                    offset: offset,
+                    query: typeof (query) === "string" ? query : query.join(","),
+                    UnidadEjecutora: 1
+                }));
+            req.then(gridApiService.paginationFunc(self.Disponibilidades, offset));
+            return req;
         };
 
         self.listar_apropiaciones = function () {
@@ -247,42 +251,6 @@ angular.module('contractualClienteApp')
                 self.Apropiaciones.data = response.data;
             });
 
-        };
-
-        self.verificarDisponibilidad = function () {
-            
-            var vinculacionDocente = {
-
-                IdPersona: self.persona_a_modificar.IdPersona,
-                NumeroHorasSemanales: parseInt(self.horas_actuales),
-                NumeroHorasNuevas: parseInt(self.horas_totales),
-                NumeroHSemanas: parseInt(self.semanas_actuales),
-                NumeroSemanasNuevas: parseInt(self.semanas_totales),
-                NumeroSemanas: parseInt(self.persona_a_modificar.NumeroSemanas),
-                IdResolucion: { Id: self.resolucionModificacion },
-                IdDedicacion: { Id: parseInt(self.persona_a_modificar.IdDedicacion.Id) },
-                IdProyectoCurricular: parseInt(self.persona_a_modificar.IdProyectoCurricular),
-                Categoria: self.persona_a_modificar.Categoria.toUpperCase(),
-                Dedicacion: self.persona_a_modificar.IdDedicacion.NombreDedicacion.toUpperCase(),
-                NivelAcademico: self.resolucion.NivelAcademico_nombre,
-                Disponibilidad: self.apropiacion_elegida[0].Id,
-                NumeroContrato: self.persona_a_modificar.NumeroContrato,
-                Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true }
-            };
-
-            desvinculacionesData.push(vinculacionDocente);
-
-            adminMidRequest.post("gestion_previnculacion/Precontratacion/calcular_valor_contratos", desvinculacionesData).then(function (response) {
-
-                if (response.data > parseInt(self.apropiacion_elegida[0].Apropiacion.Saldo)) {
-                    self.saldo_disponible = false;
-                } else {
-                    self.saldo_disponible = true;
-                    self.disponibilidad_nueva_id = self.apropiacion_elegida[0].Id;
-                }
-            });
-
-            desvinculacionesData = [];
         };
 
         self.RecargarDatosPersonas = function () {
@@ -319,8 +287,8 @@ angular.module('contractualClienteApp')
         };
 
         self.realizar_nueva_vinculacion = function () {
-            if (self.semanas_a_adicionar != undefined && self.horas_a_adicionar != undefined && self.FechaInicio != undefined) {
-                if (self.saldo_disponible) {
+            if (self.disponibilidad_nueva != undefined && self.disponibilidad_nueva.length != 0){
+                if (self.semanas_a_adicionar != undefined && self.horas_a_adicionar != undefined && self.FechaInicio != undefined) {
                     if (self.semanas_a_adicionar <= self.semanasRestantes) {
                         self.mostrar_modificar = false;
                         var vinculacionDocente = {
@@ -342,56 +310,83 @@ angular.module('contractualClienteApp')
                             Disponibilidad: parseInt(self.disponibilidad_actual_id),
                             Vigencia: { Int64: parseInt(self.resolucion.Vigencia), valid: true },
                             NumeroContrato: self.persona_a_modificar.NumeroContrato,
-                            FechaInicio: self.FechaInicio,
+                            FechaInicio: self.persona_a_modificar.FechaInicio,
+                            FechaInicioNueva: self.FechaInicio,
                             DependenciaAcademica: self.persona_a_modificar.DependenciaAcademica,
                         };
 
-                        desvinculacionesData.push(vinculacionDocente);
+                        desvinculacionesData[0] = vinculacionDocente;
 
                         var objeto_a_enviar = {
                             IdModificacionResolucion: self.id_modificacion_resolucion,
                             IdNuevaResolucion: self.resolucion_id_nueva,
-                            DisponibilidadNueva: self.disponibilidad_nueva_id,
+                            DisponibilidadNueva: self.disponibilidad_nueva,
                             TipoDesvinculacion: "Adición",
                             DocentesDesvincular: desvinculacionesData
                         };
-                        
-                        adminMidRequest.post("gestion_desvinculaciones/adicionar_horas", objeto_a_enviar).then(function (response) {
-
-                            if (response.data === "OK") {
-                                swal({
-                                    text: $translate.instant('ALERTA_ADICION_EXITOSA'),
-                                    type: 'success',
-                                    confirmButtonText: $translate.instant('ACEPTAR')
-
-                                });
-                                //LIMPIAR GRID
-                                desvinculacionesData = [];
-                                $window.location.reload();
+                        adminMidRequest.post("gestion_desvinculaciones/validar_saldo_cdp", objeto_a_enviar).then(function (response) {
+                            self.mostrar_modificar = true;
+                            if (response.data == "OK") {
+                                self.realizarAdicion(objeto_a_enviar);
                             } else {
                                 swal({
-                                    title: $translate.instant('ERROR'),
-                                    text: $translate.instant('ALERTA_ERROR_ADICION'),
-                                    type: 'info',
-                                    confirmButtonText: $translate.instant('ACEPTAR')
+                                    title: $translate.instant('PREGUNTA_SEGURO'),
+                                    text: $translate.instant('CDP_SIN_SALDO'),
+                                    type: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: $translate.instant('VINCULAR_DOCENTES'),
+                                    cancelButtonText: $translate.instant('CANCELAR'),
+                                    confirmButtonClass: 'btn btn-success',
+                                    cancelButtonClass: 'btn btn-danger',
+                                    buttonsStyling: false,
+                                    allowOutsideClick: false
+                                }).then(function () {
+                                    self.mostrar_modificar = false;
+                                    self.realizarAdicion(objeto_a_enviar);
+                                }, function (dismiss) {
+                                    self.mostrar_modificar = true;
                                 });
-                                //LIMPIAR GRID
-                                desvinculacionesData = [];
-                                $window.location.reload();
                             }
                         });
-                    } 
+                    }
+                }
+            } else {
+                swal({
+                    title: $translate.instant('ERROR'),
+                    text: $translate.instant('ERROR_ELEG_DISP'),
+                    type: 'info',
+                    confirmButtonText: $translate.instant('ACEPTAR')
+                });
+            }
+        };
+
+        self.realizarAdicion = function (objetoAdicion) {
+            adminMidRequest.post("gestion_desvinculaciones/adicionar_horas", objetoAdicion).then(function (response) {
+                if (response.data == "OK") {
+                    swal({
+                        text: $translate.instant('ALERTA_ADICION_EXITOSA'),
+                        type: 'success',
+                        confirmButtonText: $translate.instant('ACEPTAR')
+
+                    });
+                    //LIMPIAR GRID
+                    desvinculacionesData = [];
+                    $window.location.reload();
                 } else {
                     swal({
                         title: $translate.instant('ERROR'),
-                        text: $translate.instant('ERROR_DISP'),
+                        text: $translate.instant('ALERTA_ERROR_ADICION'),
                         type: 'info',
                         confirmButtonText: $translate.instant('ACEPTAR')
                     });
+                    //LIMPIAR GRID
+                    desvinculacionesData = [];
+                    $window.location.reload();
                 }
-
-            }
-        };
+            });
+        }
 
         //Función para hacer el cálculo de semanas entre la fecha de inicio original hasta la fecha de inicio de la adición
         //Función para hacer el cálculo de semanas en dos casos:
@@ -420,7 +415,7 @@ angular.module('contractualClienteApp')
                 self.maximoSemanasSugeridas = self.semanasRestantes;
             }
         }
-        
+
         //Función para convertir las fechas a UTC declaradas desde el cliente (Las que vengan por gets corregirlas desde los apis)
         self.fechaUtc = function (fecha) {
             var _fechaConUtc = new Date(fecha.getUTCFullYear(), fecha.getUTCMonth(), fecha.getUTCDate(), fecha.getUTCHours(), fecha.getUTCMinutes(), fecha.getUTCSeconds());
