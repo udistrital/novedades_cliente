@@ -102,7 +102,7 @@ angular.module('contractualClienteApp')
 
 
             $scope.$watch('solicitudNecesidad.detalle_servicio_necesidad.NucleoConocimiento', function () {
-                if(!self.detalle_servicio_necesidad) return
+                if (!self.detalle_servicio_necesidad) return
                 coreAmazonRequest.get('snies_nucleo_basico', $.param({
                     query: 'Id:' + self.detalle_servicio_necesidad.NucleoConocimiento,
                     limit: -1
@@ -446,16 +446,16 @@ angular.module('contractualClienteApp')
             self.actividades_economicas_id = self.actividades_economicas.map(function (ae) { return { ActividadEconomica: ae.Codigo } });
             self.marcos_legales = self.documentos.map(function (d) { return { MarcoLegal: d } });
 
-            if (self.necesidad.TipoContratoNecesidad) {
-                if (self.f_valor !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Id === 1 /*tipo compra*/) {
-                    swal(
-                        'Error',
-                        'El valor del contrato (' + self.valorTotalEspecificaciones + ') debe ser igual que el de la financiación(' + self.f_valor + ')',
-                        'warning'
-                    );
-                    return;
-                }
-            }
+            // if (self.necesidad.TipoContratoNecesidad) {
+            //     if (self.f_valor !== self.valorTotalEspecificaciones && self.necesidad.TipoContratoNecesidad.Id === 1 /*tipo compra*/) {
+            //         swal(
+            //             'Error',
+            //             'El valor del contrato (' + self.valorTotalEspecificaciones + ') debe ser igual que el de la financiación(' + self.f_valor + ')',
+            //             'warning'
+            //         );
+            //         return;
+            //     }
+            // }
 
             self.f_apropiaciones = [];
             self.f_apropiacion
@@ -528,7 +528,7 @@ angular.module('contractualClienteApp')
                         "<td>" + n.NumeroElaboracion + "</td>" +
                         "<td>" + self.unidad_ejecutora_data.filter(function (u) { return u.Id === n.UnidadEjecutora })[0].Nombre + "</td>" +
                         "<td>" + self.dependencia_data.filter(function (dd) { return dd.Id === self.dependencia_destino })[0].Nombre + "</td>" +
-                        "<td>" + (n.TipoContratoNecesidad.Nombre ? n.TipoContratoNecesidad.Nombre: '') + "</td>" +
+                        "<td>" + (n.TipoContratoNecesidad.Nombre ? n.TipoContratoNecesidad.Nombre : '') + "</td>" +
                         "<td>" + $filter('currency')(n.Valor) + "</td>";
 
                     templateAlert += "</tr>";
@@ -556,8 +556,18 @@ angular.module('contractualClienteApp')
             };
 
             if (self.IdNecesidad) {
+                if (self.tr_necesidad.Necesidad.EstadoNecesidad.Id != necesidadService.EstadoNecesidadType.Rechazada.Id) {
+                    swal(
+                        'Error',
+                        'La necesidad no se puede editar, estado de la necesidad: (' + self.tr_necesidad.Necesidad.EstadoNecesidad.Nombre + ')',
+                        'warning'
+                    );
+                    return;
+                }
+                self.tr_necesidad.Necesidad.EstadoNecesidad = necesidadService.EstadoNecesidadType.Modificada;
                 administrativaRequest.put("tr_necesidad", self.IdNecesidad, self.tr_necesidad).then(NecesidadHandle)
             } else {
+                self.tr_necesidad.Necesidad.EstadoNecesidad = necesidadService.EstadoNecesidadType.Solicidada;
                 administrativaRequest.post("tr_necesidad", self.tr_necesidad).then(NecesidadHandle)
             }
         };
