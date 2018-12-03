@@ -588,7 +588,7 @@ angular.module('contractualClienteApp')
                 self.tr_necesidad.Necesidad.EstadoNecesidad = necesidadService.EstadoNecesidadType.Modificada;
                 administrativaRequest.put("tr_necesidad", self.IdNecesidad, self.tr_necesidad).then(NecesidadHandle)
             } else {
-                self.tr_necesidad.Necesidad.EstadoNecesidad = necesidadService.EstadoNecesidadType.Solicidada;
+                self.tr_necesidad.Necesidad.EstadoNecesidad = necesidadService.EstadoNecesidadType.Solicitada;
                 administrativaRequest.post("tr_necesidad", self.tr_necesidad).then(NecesidadHandle)
             }
         };
