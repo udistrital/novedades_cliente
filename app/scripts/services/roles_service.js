@@ -43,7 +43,7 @@ angular.module('contractualClienteApp')
         */
         self.buttons = function (controller, roles) {
             return new Promise(function (resolve, reject) {
-                $http.get("/scripts/models/buttons.json").then(function (response) {
+                $http.get("scripts/models/buttons.json").then(function (response) {
                     self.buttonsData = response.data;
                     var buttonsWithRoles = self.buttonsData.Controllers[controller].Buttons;
                     if (Array.isArray(roles)) {
