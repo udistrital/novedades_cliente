@@ -62,7 +62,8 @@ angular
         'configuracionService',
         'requestService',
         'gridApiService',
-        'colombiaHolidaysService'
+        'colombiaHolidaysService',
+        'nuxeoClient'
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');
@@ -194,6 +195,11 @@ angular
                 templateUrl: 'views/vinculacionespecial/contrato_registro_cancelar.html',
                 controller: 'ContratoRegistroCancelarCtrl',
                 controllerAs: 'contratoRegistroCancelar'
+            })
+            .when('/vinculacionespecial/resolucion_reportes', {
+                templateUrl: 'views/vinculacionespecial/resolucion_reportes.html',
+                controller: 'ResolucionReportesCtrl',
+                controllerAs: 'resolucionReportes'
             })
             .when('/vinculacionespecial/resolucion_gestion', {
                 templateUrl: 'views/vinculacionespecial/resolucion_gestion.html',

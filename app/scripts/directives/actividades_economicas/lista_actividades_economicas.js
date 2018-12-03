@@ -7,7 +7,7 @@
  * # listaActividadesEconomicas
  */
 angular.module('contractualClienteApp')
-  .directive('listaActividadesEconomicas', function (coreAmazonRequest, $translate) {
+  .directive('listaActividadesEconomicas', function (coreRequest, $translate) {
     return {
       restrict: 'E',
       scope: {
@@ -30,8 +30,13 @@ angular.module('contractualClienteApp')
           enableSelectAll: false,
           columnDefs: [{
             field: 'Id',
-            displayName: $translate.instant('ID'),
+            visible: false
+          },
+          {
+            field: 'Codigo',
+            displayName: $translate.instant('CODIGO'),
             headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
+            width: '20%',
             cellTooltip: function (row) {
               return row.entity.Id;
             }
@@ -54,9 +59,9 @@ angular.module('contractualClienteApp')
           });
         };
 
-        coreAmazonRequest.get('ciiu_subclase', $.param({
+        coreRequest.get('actividad_economica', $.param({
           limit: -1,
-          //query:"ClasificacionCiiu.Nombre:Subclase,Activo:true",
+          query: "ClasificacionCiiu.Nombre:Subclase,Activo:true",
           sortby: "Id",
           order: "asc",
         })).then(function (response) {
@@ -69,7 +74,7 @@ angular.module('contractualClienteApp')
           $scope.$watch('idActividades', function () {
             self.actividades = [];
             $scope.idActividades.forEach(function (id) {
-              var tmp = self.gridOptions.data.filter(function (e) { return e.Id == id })
+              var tmp = self.gridOptions.data.filter(function (e) { return e.Codigo == id })
               if (tmp.length > 0) {
                 $scope.actividades.push(tmp[0]); //enriquecer actividades
                 self.gridApi.selection.selectRow(tmp[0]); //seleccionar las filas

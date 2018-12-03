@@ -28,6 +28,7 @@ angular.module('contractualClienteApp')
           enableVerticalScrollbar: 0,
           minRowsToShow: 8,
           useExternalPagination: false,
+          multiSelect: true,
           columnDefs: [{
             field: 'NombreDocumento',
             displayName: $translate.instant('NOMBRE_DOCUMENTO'),
@@ -85,9 +86,6 @@ angular.module('contractualClienteApp')
             self.gridOptions.enablePaginationControls = true;
           }
         }, true);
-
-
-        self.gridOptions.multiSelect = true;
 
       },
       controllerAs: 'd_listaDocumentosLegales'
