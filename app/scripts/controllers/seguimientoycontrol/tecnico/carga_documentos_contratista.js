@@ -503,13 +503,13 @@ angular.module('contractualClienteApp')
             defered.resolve(url);
           })
           .catch(function(error) {
+            defered.reject(error);
             throw error;
-            defered.reject(error)
           });
       })
       .catch(function(error) {
+        defered.reject(error);
         throw error;
-        defered.reject(error)
       });
 
     return promise;

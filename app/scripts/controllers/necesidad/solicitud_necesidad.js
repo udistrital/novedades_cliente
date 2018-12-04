@@ -87,13 +87,28 @@ angular.module('contractualClienteApp')
 
             if (trNecesidad.Ffapropiacion) {
                 self.f_apropiaciones = trNecesidad.Ffapropiacion;
-                necesidadService.groupByApropiacion(self.f_apropiaciones, false).then(function (fap) { self.f_apropiacion = fap });
+                //necesidadService.groupByApropiacion(self.f_apropiaciones, false).then(function (fap) { self.f_apropiacion = fap });
+                self.f_apropiaciones.forEach(function (apropiacion) {
+                    var cantidadFuentes = apropiacion.Fuentes.length;
+                    for (var i = 0; i < cantidadFuentes; i++) {
+                        apropiacion.Fuentes[i].FuenteFinanciamiento = apropiacion.Fuentes[i].InfoFuente;
+                    }
+                    self.f_apropiacion.push({
+                        Apropiacion: apropiacion.Apropiacion.Id,
+                        aprop: apropiacion.Apropiacion,
+                        fuentes: apropiacion.Fuentes,
+                        initFuentes: apropiacion.Fuentes,
+                        Monto: apropiacion.Monto,
+                        productos: apropiacion.Productos,
+                        initProductos: apropiacion.Productos
+                    });
+                })
             }
+
             self.documentos = trNecesidad.MarcoLegalNecesidad ? trNecesidad.MarcoLegalNecesidad.map(function (d) { return d.MarcoLegal; }) : [];
             self.dep_ned = trNecesidad.DependenciaNecesidad;
             self.dependencia_destino = trNecesidad.DependenciaNecesidadDestino;
             self.rol_ordenador_gasto = trNecesidad.RolOrdenadorGasto;
-
             self.duracionEspecialReverse();
             var data = necesidadService.calculo_total_dias_rev(self.necesidad.DiasDuracion);
             self.anos = data.anos;
@@ -188,11 +203,6 @@ angular.module('contractualClienteApp')
         coreRequest.get('jefe_dependencia/' + self.dep_ned.JefeDependenciaSolicitante, $.param({ query: 'FechaInicio__lte:' + moment().format('YYYY-MM-DD') + ',FechaFin__gte:' + moment().format('YYYY-MM-DD') })).then(function (response) {
             self.dependencia_solicitante_data = response.data;
         });
-
-        // $scope.$watchGroup(['solicitudNecesidad.necesidad.UnidadEjecutora', 'solicitudNecesidad.necesidad.TipoFinanciacionNecesidad'], function () {
-        //     self.f_apropiacion = [];
-        //     self.apro = undefined;
-        // }, true);
 
         $scope.$watch('solicitudNecesidad.especificaciones.Valor', function () {
             self.valor_iva = (self.especificaciones.Iva / 100) * self.especificaciones.Valor * self.especificaciones.Cantidad;
@@ -339,9 +349,9 @@ angular.module('contractualClienteApp')
             var Fap = {
                 aprop: apropiacion,
                 Apropiacion: apropiacion.Id,
-                MontoParcial: 0,
+                MontoPorApropiacion: 0,
             };
-
+            
             // Busca si en f_apropiacion ya existe el elemento que intenta agregarse, comparandolo con su id
             // si lo que devuelve filter es un arreglo mayor que 0, significa que el elemento a agregar ya existe
             // por lo tanto devuelve un mensaje de alerta
@@ -388,13 +398,13 @@ angular.module('contractualClienteApp')
             self.f_valor = 0;
 
             for (var i = 0; i < self.f_apropiacion.length; i++) {
-                self.f_apropiacion[i].MontoParcial = 0;
+                self.f_apropiacion[i].MontoPorApropiacion = 0;
                 if (self.f_apropiacion[i].fuentes !== undefined) {
                     for (var k = 0; k < self.f_apropiacion[i].fuentes.length; k++) {
-                        self.f_apropiacion[i].MontoParcial += self.f_apropiacion[i].fuentes[k].Monto;
+                        self.f_apropiacion[i].MontoPorApropiacion += self.f_apropiacion[i].fuentes[k].MontoParcial;
                     }
                 }
-                self.f_valor += self.f_apropiacion[i].MontoParcial;
+                self.f_valor += self.f_apropiacion[i].MontoPorApropiacion;
             }
         }, true);
 
@@ -458,19 +468,29 @@ angular.module('contractualClienteApp')
             // }
 
             self.f_apropiaciones = [];
+            self.productos_apropiaciones = [];
             self.f_apropiacion
                 .filter(function (fap) { return fap.fuentes !== undefined })
                 .forEach(function (fap) {
                     fap.fuentes.forEach(function (fuente) {
                         var f = {
                             Apropiacion: fap.Apropiacion,
-                            MontoParcial: fuente.Monto,
+                            MontoParcial: fuente.MontoParcial,
                             FuenteFinanciamiento: fuente.FuenteFinanciamiento.Id,
                         };
                         self.f_apropiaciones.push(f);
                     });
+                    //Construye objeto relación producto-rubro para persistir
+                    if (fap.productos && fap.productos.length > 0) {
+                        fap.productos.forEach(function (producto) {
+                            var prod = {
+                                ProductoRubro: producto.Id,
+                                Apropiacion: fap.Apropiacion
+                            };
+                            self.productos_apropiaciones.push(prod);
+                        })
+                    }
                 });
-
 
             self.necesidad.Valor = self.f_valor;
 
@@ -481,7 +501,8 @@ angular.module('contractualClienteApp')
                 MarcoLegalNecesidad: self.marcos_legales,
                 Ffapropiacion: self.f_apropiaciones,
                 DependenciaNecesidad: self.dep_ned,
-                DetalleServicioNecesidad: self.detalle_servicio_necesidad
+                DetalleServicioNecesidad: self.detalle_servicio_necesidad,
+                ProductosNecesidad: self.productos_apropiaciones
             };
 
             var NecesidadHandle = function (response) {
@@ -567,7 +588,7 @@ angular.module('contractualClienteApp')
                 self.tr_necesidad.Necesidad.EstadoNecesidad = necesidadService.EstadoNecesidadType.Modificada;
                 administrativaRequest.put("tr_necesidad", self.IdNecesidad, self.tr_necesidad).then(NecesidadHandle)
             } else {
-                self.tr_necesidad.Necesidad.EstadoNecesidad = necesidadService.EstadoNecesidadType.Solicidada;
+                self.tr_necesidad.Necesidad.EstadoNecesidad = necesidadService.EstadoNecesidadType.Solicitada;
                 administrativaRequest.post("tr_necesidad", self.tr_necesidad).then(NecesidadHandle)
             }
         };
@@ -603,5 +624,5 @@ angular.module('contractualClienteApp')
                     break;
             }
         };
-
+        
     });

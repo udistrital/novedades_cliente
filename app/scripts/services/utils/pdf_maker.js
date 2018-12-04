@@ -237,13 +237,13 @@ angular.module('contractualClienteApp')
                         body: [
                             [
                                 {
-                    height: 120,
-                    width: 120,
-                    image: self.imagen.imagen,
-                    alignment: 'center'
+                                    height: 120,
+                                    width: 120,
+                                    image: self.imagen.imagen,
+                                    alignment: 'center'
                                 }
                             ],
-                            [{text: resolucion.FacultadNombre, font: 'Calibri', fontSize: 8, bold: true}] 
+                            [{text: resolucion.FacultadFirmaNombre, font: 'Calibri', fontSize: 8, bold: true}] 
                         ]
                 },
                     layout: 'noBorders'
@@ -325,7 +325,7 @@ angular.module('contractualClienteApp')
                 footer: function (page, pages) {
                     return {
                         columns: [
-                            '', // $translate.instant('RESOLUCION') + " " + 'No ' + contenidoResolucion.Numero + " " + resolucion.NivelAcademico_nombre + " " + resolucion.Dedicacion + " " + "2018-I" + "\n" + resolucion.FacultadNombre,
+                            '',
                             {
                                 alignment: 'right',
                                 text: [

@@ -126,6 +126,7 @@ var text_es = {
     TOTAL_FINANCIACION: "Total Financiación",
     OBLIGATORIO: "Campo requerido",
     PRECIO_MAS_IVA: "Valor + IVA",
+    NO_NECESIDAD: "No. elaboración necesidad",
     //lista_documentos_legales
     MARCO_LEGAL: "Marco Legal",
     NOMBRE_DOCUMENTO: "Nombre del Documento",
@@ -134,7 +135,7 @@ var text_es = {
     ACTIVIDAD_ECONOMICA: "Actividad Económica",
     //lista_subgrupos_catalogos
     CATALOGO: "Catálogo",
-    PRODCUTOS: "Productos",
+    PRODUCTOS: "Productos",
     //lista_apropiaciones
     APROPIACIONES: "Apropiaciones",
     APROPIACIONES_VIGENCIA: "Apropiaciones de la Vigencia",
@@ -157,7 +158,6 @@ var text_es = {
     MONTO: "Monto",
 
     //SOLICITUD RP
-    ERROR: "Error",
     SALIR: "Salir",
     VOLVER_CONTRATOS: "Volver a contratos",
     NUMERO_SOLICITUD: "Número solicitud",
@@ -213,6 +213,7 @@ var text_es = {
     FECHA_INICIO_VALIDA: "Fecha inicio válida",
     FECHA_FIN: "Fecha fin",
     FECHA: "Fecha",
+    LABEL_FECHA_INVALIDA: "Fecha inválida",
     TIPO: "Tipo",
     DATOS_REGISTRO_PRESUPUESTAL: "Datos del registro presupuestal",
     NUMERO_REGISTRO_PRESUPUESTAL: "No RP",
@@ -343,6 +344,7 @@ var text_es = {
     LABEL_TOTAL_CONTRATACION: "Valor total de contratos para docentes seleccionados",
     ALERTA_SELEC_DOC: "Seleccione docentes",
     CAMBIOS_NO_GUARDADOS: "Los Cambios no guardados se perderán",
+    CDP_SIN_SALDO: "El CDP que eligió no tiene saldo suficiente para los docentes seleccionados, ¿desea continuar?",
     //RESOLUCION_ADICION_DETALLE
     /*---HTML---*/
     TITULO_DOC_VIN_RES_AD: "Docentes vinculados a resolución de adición",
@@ -371,6 +373,8 @@ var text_es = {
     ALERTA_ADICION_EXITOSA: "Adición realizada exitosamente",
     ALERTA_ERROR_ADICION: "Error al realizar adición",
     ADICIONAR_BTN: "Adicionar",
+    NO_PUEDE_ADICIONAR: "No se puede adicionar",
+    DEBE_APROBAR_CARGA: "Se debe verificar el estado del semáforo para este docente",
 
     //RESOLUCION_REDUCCION
     /*---HTML---*/
@@ -380,6 +384,7 @@ var text_es = {
     /*---Script---*/
     ALERTA_REDUCCION_EXITOSA: "Reducción realizada exitosamente",
     ALERTA_ERROR_REDUCCION: "Error al realizar reducción",
+    NO_PUEDE_REDUCIR: "No se puede reducir",
 
     //RESOLUCION_ADMINISTRACION
     NO_RESTAURACION_RESOLUCION: "No se ha realizado la restauración de la resolución",
@@ -451,6 +456,7 @@ var text_es = {
     SELECCIONE_TIPO_RES: "Seleccione el tipo de resolución a crear",
     ASOCIAR_RESOLUCION: "Asociar resolución",
     VIGENCIA: "Vigencia",
+    FIRMA_RECTOR: "Firma rector",
     /*---Script---*/
     INFORMACION_CONTENIDO: "Los artículos son creados por defecto y pueden ser editados",
     CONFIRMAR_GUARDAR_RESOLUCION: "Guardar resolución",
@@ -464,7 +470,7 @@ var text_es = {
     ELIJA_SEMANAS_MINIMO: "Elija un número de semanas -> Mínimo: ",
     ELIJA_SEMANAS_MAXIMO: " Máximo: ",
     MAXIMO_SUGERIDO: "Máximo de semanas sugeridas:",
-    COMPLETE_CAMPOS: "Complete Todos Los Campos",
+    COMPLETE_CAMPOS: "Complete todos Los Campos",
     FECHA_FIN_ACTA: "Fecha fin de acuerdo a la reversión: ",
 
     //RESOLUCION_GESTION
@@ -494,12 +500,6 @@ var text_es = {
     CONFIRMAR_ANULAR_REDUCCION: "Anular reducción",
     HORAS_REVERSAR: "Horas a reversar",
     TITULO_DOC_VIN_RES_RED: "Docentes vinculados a resolución de reducción",
-    //RESOLUCION_REDUCCION
-    /*---HTML---*/
-    TITULO_REDUCCION_HORAS: "Reducción de horas",
-    LABEL_HORAS_A_REDUCIR: "Horas a reducir",
-    ALERTA_REDUCCION_EXITOSA: "Reducción realizada exitosamente",
-    ALERTA_ERROR_REDUCCION: "Error al realizar reducción",
 
     //RESOLUCION_VISTA
     /*---Script---*/
@@ -517,6 +517,16 @@ var text_es = {
     TIPO_DOC: "Tipo de documento",
     PERIODO_VINCULACION: "Periodo de vinculación",
     DISPONIBILIDAD_PDF: "Dispo-\nnibilidad",
+
+    //RESOLUCION_REPORTES
+    REPORTE: "Reporte",
+    REPORTES: "Reportes resoluciones",
+    REPORTE_UNO: "Reporte docentes por resolución",
+    SELECCIONE_REPORTE: "Seleccione el reporte que desea ver",
+    GENERAR_REPORTE: "Generar reporte",
+    NO_EXISTE_RESOLUCION: "No se ha encontrado una resolución con los datos ingresados",
+    RESOLUCION_NO_VINCULACION: "La resolución a consultar debe ser de vinculación",
+    RESOLUCION_NO_EXPEDIDA: "La resolución a consultar no se encuentra expedida",
 
     // Minutas Plantillas
     BTN_MINUTAS: {
@@ -760,6 +770,7 @@ var text_en = {
     SOLICITUD_NECESIDAD_CONTRATACION_DOCENTES: "Need Request Teacher Recruitment",
     SOLICITUD_NECESIDAD_EXTERNA: "Extern Need Request",
     PRECIO_MAS_IVA: "Value + IVA",
+    NO_NECESIDAD: "Need request number",
     CANCELAR_BTN: "Cancel",
     //SOLICITUD RP
     TIPO_PERSONA: "Kind of person",
@@ -841,7 +852,7 @@ var text_en = {
     ACTIVIDADES_ECONOMICAS: "Economic Activities",
     //lista_subgrupos_catalogos
     CATALOGO: "Catalogue",
-    PRODCUTOS: "Products",
+    PRODUCTOS: "Products",
     //lista_apropiaciones
     APROPIACIONES: "Appropiations",
     APROPIACIONES_VIGENCIA: "Validity Appropiations of",
@@ -948,6 +959,7 @@ var text_en = {
     UNITARIO: "Unit",
     NO_HAY_DATOS_REDIRIGIR: "There are no data to show you will be redirected to the previous menu",
     CAMBIOS_NO_GUARDADOS: "Unsaved changes wiil be lost",
+    CDP_SIN_SALDO: "Not enough balance, do you want to continue?",
     VOLVER: "Back",
     DOCENTES_SELECCIONADOS_REVERSAR: "Teachers selected to be reversed",
 
@@ -1126,7 +1138,22 @@ var text_en = {
     TITULO_CARGA_CONTRATISTA: "CARGA SOPORTES CONTRATISTA",
     NOM_CONTRATISTA: "NOMBRE CONTRATISTA",
     NUMERO_CONTRATO: "CONTRACT NUMBER",
-    RP: "RP"
+    RP: "RP",
+
+    NO_PUEDE_ADICIONAR: "Can't add hours",
+    NO_PUEDE_REDUCIR: "Can't reduce hours",
+    DEBE_APROBAR_CARGA: "New hours must be approved",
+    FIRMA_RECTOR: "Rector signature",
+
+    //RESOLUCION_REPORTES
+    REPORTE: "Report",
+    REPORTES: "Reports",
+    REPORTE_UNO: "Teachers by document report",
+    SELECCIONE_REPORTE: "Select one report",
+    GENERAR_REPORTE: "Generate report",
+    NO_EXISTE_RESOLUCION: "A document with that information doesn't exist",
+    RESOLUCION_NO_VINCULACION: "A document with that information doesn't exist",
+    RESOLUCION_NO_EXPEDIDA: "The document must be issued",
 };
 
 angular.module('contractualClienteApp')
