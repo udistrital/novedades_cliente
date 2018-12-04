@@ -71,7 +71,11 @@
           <ul ng-repeat="inv in d_visualizarNecesidad.ff_necesidad track by $index">
             <strong>{{inv.Apropiacion.Rubro.Codigo}}</strong> {{inv.Apropiacion.Rubro.Nombre}}
             <li ng-repeat='f in inv.Fuentes'>
-              {{f.FuenteFinanciamiento.Nombre}} <strong>{{"Monto" | translate}}:</strong> {{f.MontoParcial | currency}}
+              {{f.InfoFuente[0].Nombre}} <strong>{{"Monto" | translate}}:</strong> {{f.MontoParcial | currency}}
+            </li>
+            <br><strong ng-if="inv.Productos.length">{{"PRODUCTOS" | translate}}</strong>
+            <li ng-repeat='p in inv.Productos'>
+              <strong>{{p.ProductoRubroInfo[0].Producto.Nombre}}:</strong> {{p.ProductoRubroInfo[0].Producto.Descripcion}}
             </li>
           </ul>
         </p>
@@ -94,7 +98,7 @@
           <li ng-repeat="doc in d_visualizarNecesidad.marco_legal track by $index">{{doc.MarcoLegal.NombreDocumento}}</li>
         </p>
       </div>
-      <div class="col-sm-6" ng-show="d_visualizarNecesidad.RechazaOrAnulada">
+      <div class="col-sm-6" ng-show="d_visualizarNecesidad.verJustificacion">
         <h3 class="text-info">{{"NECESIDAD_JUSTIFICACION_RECHAZO" | translate}}</h3>
 
         <p class="text-justify" ng-repeat="justificacion_rechazo in d_visualizarNecesidad.justificaciones_rechazo">

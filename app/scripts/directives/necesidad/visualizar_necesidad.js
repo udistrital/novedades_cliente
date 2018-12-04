@@ -16,17 +16,20 @@ angular.module('contractualClienteApp')
                 estado: '=',
             },
             templateUrl: 'views/directives/necesidad/visualizar_necesidad.html',
-            controller: function (financieraRequest, administrativaRequest, agoraRequest, oikosRequest, necesidadService, coreRequest, $scope) {
+            controller: function (financieraRequest, administrativaRequest, agoraRequest, oikosRequest, necesidadService, coreRequest, adminMidRequest, $scope) {
                 var self = this;
-                self.RechazaOrAnulada = false;
-                
+                self.verJustificacion = false;
+
                 $scope.$watch('[vigencia,numero]', function () {
                     self.cargar_necesidad();
                 });
 
                 self.cargar_necesidad = function () {
-                    self.RechazaOrAnulada = [necesidadService.EstadoNecesidadType.Anulada.Id, necesidadService.EstadoNecesidadType.Rechazada.Id]
-                    .includes($scope.estado.Id);
+                    self.verJustificacion = [
+                        necesidadService.EstadoNecesidadType.Anulada.Id,
+                        necesidadService.EstadoNecesidadType.Rechazada.Id,
+                        necesidadService.EstadoNecesidadType.Modificada.Id,
+                    ].includes($scope.estado.Id);
 
                     administrativaRequest.get('necesidad', $.param({
                         query: "NumeroElaboracion:" + $scope.numero + ",Vigencia:" + $scope.vigencia
@@ -46,41 +49,8 @@ angular.module('contractualClienteApp')
                         })).then(function (response) {
                             self.marco_legal = response.data;
                         });
-                        administrativaRequest.get('fuente_financiacion_rubro_necesidad', $.param({
-                            query: "Necesidad:" + response.data[0].Id,
-                            fields: "FuenteFinanciamiento,Apropiacion,MontoParcial"
-                        })).then(function (response) {
-                            var dateArrKeyHolder = [];
-                            var dateArr = [];
-                            angular.forEach(response.data, function (item) {
-                                dateArrKeyHolder[item.Apropiacion] = dateArrKeyHolder[item.Apropiacion] || {};
-                                var obj = dateArrKeyHolder[item.Apropiacion];
-                                if (Object.keys(obj).length === 0) {
-                                    dateArr.push(obj);
-                                }
-
-                                financieraRequest.get('apropiacion', $.param({
-                                    query: "Id:" + item.Apropiacion,
-                                    fields: "Rubro,Valor"
-                                })).then(function (response) {
-                                    obj.Apropiacion = response.data[0];
-                                });
-
-                                obj.Fuentes = obj.Fuentes || [];
-
-                                var i_fuente = {};
-                                if (self.v_necesidad.TipoFinanciacionNecesidad.Id === 1) {
-                                    financieraRequest.get('fuente_financiamiento', $.param({
-                                        query: "Id:" + item.FuenteFinanciamiento
-                                    })).then(function (response) {
-                                        i_fuente.FuenteFinanciamiento = response.data[0];
-                                    });
-                                    i_fuente.MontoParcial = item.MontoParcial;
-                                    obj.Fuentes.push(i_fuente);
-                                }
-                            });
-                            self.ff_necesidad = dateArr;
-
+                        adminMidRequest.get('solicitud_necesidad/fuente_apropiacion_necesidad/' + self.v_necesidad.Id).then(function (response) {
+                            self.ff_necesidad = response.data;
                         });
 
                         administrativaRequest.get('dependencia_necesidad', $.param({
