@@ -18,15 +18,18 @@ angular.module('contractualClienteApp')
             templateUrl: 'views/directives/necesidad/visualizar_necesidad.html',
             controller: function (financieraRequest, administrativaRequest, agoraRequest, oikosRequest, necesidadService, coreRequest, $scope) {
                 var self = this;
-                self.RechazaOrAnulada = false;
-                
+                self.verJustificacion = false;
+
                 $scope.$watch('[vigencia,numero]', function () {
                     self.cargar_necesidad();
                 });
 
                 self.cargar_necesidad = function () {
-                    self.RechazaOrAnulada = [necesidadService.EstadoNecesidadType.Anulada.Id, necesidadService.EstadoNecesidadType.Rechazada.Id]
-                    .includes($scope.estado.Id);
+                    self.verJustificacion = [
+                        necesidadService.EstadoNecesidadType.Anulada.Id,
+                        necesidadService.EstadoNecesidadType.Rechazada.Id,
+                        necesidadService.EstadoNecesidadType.Modificada.Id,
+                    ].includes($scope.estado.Id);
 
                     administrativaRequest.get('necesidad', $.param({
                         query: "NumeroElaboracion:" + $scope.numero + ",Vigencia:" + $scope.vigencia

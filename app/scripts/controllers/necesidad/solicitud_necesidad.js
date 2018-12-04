@@ -171,7 +171,8 @@ angular.module('contractualClienteApp')
                 UnidadEjecutora: true,
                 EstudioMercado: true,
                 ModalidadSeleccion: true,
-                Supervisor: true
+                Supervisor: true,
+                AnalisisRiesgo: true,
             },
             ObjetoContractual: {
                 ObjetoContrato: true,
@@ -351,7 +352,7 @@ angular.module('contractualClienteApp')
                 Apropiacion: apropiacion.Id,
                 MontoPorApropiacion: 0,
             };
-            
+
             // Busca si en f_apropiacion ya existe el elemento que intenta agregarse, comparandolo con su id
             // si lo que devuelve filter es un arreglo mayor que 0, significa que el elemento a agregar ya existe
             // por lo tanto devuelve un mensaje de alerta
@@ -604,7 +605,7 @@ angular.module('contractualClienteApp')
 
         };
 
-        // Control de visualizacion de los campos individuales
+        // Control de visualizacion de los campos individuales en el formulario
         self.CambiarTipoNecesidad = function (TipoNecesidad) {
             self.forms = self.deepCopy(self.formsInit);
             self.field = self.deepCopy(self.fieldInit);
@@ -612,11 +613,13 @@ angular.module('contractualClienteApp')
             switch (TipoNecesidad) {
                 case 1: // Contratacion
                     break;
+                case 6: // Servicios publicos
                 case 3: // Avances    
                     self.forms.Especificaciones = false;
                     self.forms.Avances = true;
                     for (var key in self.field.General) { self.field.General[key] = false; }
                     self.field.General.PlanAnualAdquisiciones = true;
+                    self.field.General.AnalisisRiesgo = true;
                     self.field.General.UnidadEjecutora = true;
                     self.necesidad.TipoContratoNecesidad = { Id: 3 }; //No aplica
                     break;
@@ -624,5 +627,5 @@ angular.module('contractualClienteApp')
                     break;
             }
         };
-        
+
     });

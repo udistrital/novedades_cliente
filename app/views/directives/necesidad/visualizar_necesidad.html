@@ -94,7 +94,7 @@
           <li ng-repeat="doc in d_visualizarNecesidad.marco_legal track by $index">{{doc.MarcoLegal.NombreDocumento}}</li>
         </p>
       </div>
-      <div class="col-sm-6" ng-show="d_visualizarNecesidad.RechazaOrAnulada">
+      <div class="col-sm-6" ng-show="d_visualizarNecesidad.verJustificacion">
         <h3 class="text-info">{{"NECESIDAD_JUSTIFICACION_RECHAZO" | translate}}</h3>
 
         <p class="text-justify" ng-repeat="justificacion_rechazo in d_visualizarNecesidad.justificaciones_rechazo">
