@@ -116,7 +116,11 @@ angular.module('contractualClienteApp')
                                                         ["Descripción", "", "Cantidad", "Unidad"],
                                                         [
                                                             ["Cod. 1", "Especificación:"],
-                                                            [perfil.ValorParametro, "Actividad", { text: trNecesidad.ActividadEspecifica ? trNecesidad.ActividadEspecifica.map(function (ae, i) { return (i + 1).toString() + '. ' + ae.Descripcion }).join('. ') : "Ninguna", alignment: "justify" }],
+                                                            [perfil.ValorParametro, "Actividad",
+                                                            {
+                                                                text: trNecesidad.ActividadEspecifica ?
+                                                                    trNecesidad.ActividadEspecifica.map(function (ae, i) { return (i + 1).toString() + '. ' + ae.Descripcion }).join('. ') : "Ninguna", alignment: "justify"
+                                                            }],
                                                             { text: 1, alignment: 'center' },
                                                             ""
                                                         ]
@@ -239,7 +243,10 @@ angular.module('contractualClienteApp')
                                             }))
                                         ],
                                         [{ style: "title1", text: "Marco Legal".toUpperCase() }],
-                                        [{ text: "Ningunas" }],
+                                        [{
+                                            text: (trNecesidad.MarcoLegalNecesidad && trNecesidad.MarcoLegalNecesidad.length > 0) ?
+                                                trNecesidad.MarcoLegalNecesidad.map(function (ml, i) { return (i + 1).toString() + ". " + ml.MarcoLegal.NombreDocumento }).join("\n") : "Ninguno"
+                                        }],
                                         //TODO: agregar los requisitos minimos a la lógica de negocios
                                         // [{ style: "title1", text: "Requisitos Mínimos".toUpperCase() }],
                                         // [[
