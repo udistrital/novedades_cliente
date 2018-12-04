@@ -126,6 +126,7 @@ var text_es = {
     TOTAL_FINANCIACION: "Total Financiación",
     OBLIGATORIO: "Campo requerido",
     PRECIO_MAS_IVA: "Valor + IVA",
+    NO_NECESIDAD: "No. elaboración necesidad",
     //lista_documentos_legales
     MARCO_LEGAL: "Marco Legal",
     NOMBRE_DOCUMENTO: "Nombre del Documento",
@@ -134,7 +135,7 @@ var text_es = {
     ACTIVIDAD_ECONOMICA: "Actividad Económica",
     //lista_subgrupos_catalogos
     CATALOGO: "Catálogo",
-    PRODCUTOS: "Productos",
+    PRODUCTOS: "Productos",
     //lista_apropiaciones
     APROPIACIONES: "Apropiaciones",
     APROPIACIONES_VIGENCIA: "Apropiaciones de la Vigencia",
@@ -769,6 +770,7 @@ var text_en = {
     SOLICITUD_NECESIDAD_CONTRATACION_DOCENTES: "Need Request Teacher Recruitment",
     SOLICITUD_NECESIDAD_EXTERNA: "Extern Need Request",
     PRECIO_MAS_IVA: "Value + IVA",
+    NO_NECESIDAD: "Need request number",
     CANCELAR_BTN: "Cancel",
     //SOLICITUD RP
     TIPO_PERSONA: "Kind of person",
@@ -850,7 +852,7 @@ var text_en = {
     ACTIVIDADES_ECONOMICAS: "Economic Activities",
     //lista_subgrupos_catalogos
     CATALOGO: "Catalogue",
-    PRODCUTOS: "Products",
+    PRODUCTOS: "Products",
     //lista_apropiaciones
     APROPIACIONES: "Appropiations",
     APROPIACIONES_VIGENCIA: "Validity Appropiations of",
