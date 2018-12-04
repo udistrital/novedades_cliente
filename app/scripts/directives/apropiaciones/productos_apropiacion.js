@@ -2,24 +2,22 @@
 
 /**
  * @ngdoc directive
- * @name contractualClienteApp.directive:apropiaciones/fuentesApropiacion
+ * @name contractualClienteApp.directive:apropiaciones/productosApropiacion
  * @description
- * # apropiaciones/fuentesApropiacion
+ * # apropiaciones/productosApropiacion
  */
 angular.module('contractualClienteApp')
-  .directive('fuentesApropiacion', function (financieraRequest) {
+  .directive('productosApropiacion', function (financieraRequest) {
     return {
       restrict: 'E',
       scope: {
-        apropiacion: '=',
-        fuenteapropiacion: '=',
-        initFuenteapropiacion: '=?',
-        dependenciasolicitante: '='
+        rubro: '=',
+        productoapropiacion: '=',
+        initProductoapropiacion: '=?',
       },
-      templateUrl: 'views/directives/apropiaciones/fuentes_apropiacion.html',
+      templateUrl: 'views/directives/apropiaciones/productos_apropiacion.html',
       controller: function ($scope, $translate) {
         var self = this;
-        $scope.fuente = $translate.instant('FUENTE');
 
         self.gridOptions = {
           paginationPageSizes: [5, 10, 15],
@@ -32,47 +30,44 @@ angular.module('contractualClienteApp')
           enableVerticalScrollbar: 0,
           enableSelectAll: true,
           columnDefs: [{
-            field: 'FuenteFinanciamiento.Nombre',
-            displayName: $translate.instant('FUENTE'),
+            field: 'Producto.Nombre',
+            displayName: $translate.instant('PRODUCTOS'),
             headerCellClass: $scope.highlightFilteredHeader + 'text-center text-info',
             cellTooltip: function (row) {
-              return row.entity.FuenteFinanciamiento.Nombre;
+              return row.entity.Producto.Nombre;
             }
           }
           ]
         };
 
-
         self.gridOptions.onRegisterApi = function (gridApi) {
           self.gridApi = gridApi;
           gridApi.selection.on.rowSelectionChanged($scope, function () {
-            $scope.fuenteapropiacion = self.gridApi.selection.getSelectedRows();
+            $scope.productoapropiacion = self.gridApi.selection.getSelectedRows();
           });
         };
 
-        financieraRequest.get('fuente_financiamiento_apropiacion', $.param({
-          query: "Apropiacion:" + $scope.apropiacion + ",Dependencia:" + $scope.dependenciasolicitante
+        financieraRequest.get('producto_rubro', $.param({
+          query: "Rubro.Id:" + $scope.rubro + ",Activo:true"
         })).then(function (response) {
           self.gridOptions.data = response.data;
         }).then(function (t) {
-          // Se inicializa el grid api para seleccionar
+          //Se inicializa el grid api para seleccionar
           self.gridApi.grid.modifyRows(self.gridOptions.data);
 
-          // se observa cambios en idActividades para completar $scope.actividades y seleccionar las respectivas filas en la tabla
-          $scope.$watch('initFuenteApropiacion', function () {
-            self.fuenteapropiacion = [];
-            $scope.initFuenteapropiacion.forEach(function (fuente) {
-              var tmp = self.gridOptions.data.filter(function (e) { return e.FuenteFinanciamiento.Id == fuente.FuenteFinanciamiento[0].Id })
+          $scope.$watch('initProductoApropiacion', function () {
+            self.productoapropiacion = [];
+            $scope.initProductoapropiacion.forEach(function (producto) {
+              var tmp = self.gridOptions.data.filter(function (e) { return e.Producto.Id == producto.ProductoRubroInfo[0].Producto.Id })
               if (tmp.length > 0) {
-                tmp[0].MontoParcial = fuente.MontoParcial;
-                $scope.fuenteapropiacion.push(tmp[0]); //enriquecer actividades
+                $scope.productoapropiacion.push(tmp[0]); //enriquecer productos
                 self.gridApi.selection.selectRow(tmp[0]); //seleccionar las filas
               }
             });
           });
         });
 
-        $scope.$watch('[d_fuentesApropiacion.gridOptions.paginationPageSize, d_fuentesApropiacion.gridOptions.data]', function () {
+        $scope.$watch('[d_productosApropiacion.gridOptions.paginationPageSize, d_productosApropiacion.gridOptions.data]', function () {
           if ((self.gridOptions.data.length <= self.gridOptions.paginationPageSize || self.gridOptions.paginationPageSize === null) && self.gridOptions.data.length > 0) {
             $scope.gridHeight = self.gridOptions.rowHeight * 2 + (self.gridOptions.data.length * self.gridOptions.rowHeight);
             if (self.gridOptions.data.length <= 5) {
@@ -83,9 +78,7 @@ angular.module('contractualClienteApp')
             self.gridOptions.enablePaginationControls = true;
           }
         }, true);
-
-
       },
-      controllerAs: 'd_fuentesApropiacion'
+      controllerAs: 'd_productosApropiacion'
     };
   });
