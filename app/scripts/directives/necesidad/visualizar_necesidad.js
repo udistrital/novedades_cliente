@@ -19,6 +19,7 @@ angular.module('contractualClienteApp')
             controller: function (financieraRequest, administrativaRequest, agoraRequest, oikosRequest, necesidadService, coreRequest, $scope) {
                 var self = this;
                 self.verJustificacion = false;
+                self.justificaciones_rechazo = [];
 
                 $scope.$watch('[vigencia,numero]', function () {
                     self.cargar_necesidad();
@@ -35,7 +36,7 @@ angular.module('contractualClienteApp')
                         query: "NumeroElaboracion:" + $scope.numero + ",Vigencia:" + $scope.vigencia
                     })).then(function (response) {
                         self.v_necesidad = response.data[0];
-                        if (self.RechazaOrAnulada) {
+                        if (self.verJustificacion) {
                             administrativaRequest.get('necesidad_rechazada', $.param({
                                 query: "Necesidad:" + response.data[0].Id,
                                 fields: "Justificacion,Fecha"
