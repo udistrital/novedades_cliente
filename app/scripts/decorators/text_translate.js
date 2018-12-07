@@ -357,6 +357,35 @@ var text_es = {
     PESO: "PESO",
     CON: "CON ",
     CERO: "CERO ",
+    //ACTA DE CESION
+    ACTA_CESION: "ACTA DE CESIÓN",
+    INFORMACION:"INFORMACIÓN",
+    NO_REGISTRA:"No Registra",
+    CONTRATANTE:"Contratante",
+    CONTRATISTA:"Contratista",
+    ORDENADOR_DE_GASTO:"Ordenador de gasto",
+    CEDULA_CESIONARIO:"Cédula cesionario",
+    PERSONA_NATURAL: "Natural",
+    NUMERO_OFICIO:"Número oficio",
+    NUMERO_OFICIO_ESTADO_CUENTAS:"Número oficio estado de cuentas",
+    FECHA_OFICIO:"Fecha oficio",
+    FECHA_CESION:"Fecha cesión",
+    OTRAS_OBSERVACIONES:"Otras observaciones",
+    INFORMACION_CESIONARIO:"INFORMACIÓN CESIONARIO",
+    SELECCIONAR_CESIONARIO:"Seleccionar cesionario",
+    ACTA_REINICIO:"ACTA DE REINICIO",
+    FECHA_SUSPENSION:"Fecha suspension",
+    FECHA_REINICIO:"Fecha reinicio",
+    PERIODO_SUSPENSION:"Periodo suspension (Días)",
+    ACTA_SUSPENSION:"ACTA DE SUSPENSIÓN",
+    MOTIVO_SUSPENSION:"Motivo de suspensión",
+    CAMPO_REQUERIDO:"Este campo es obligatorio",
+    //ALERTAS
+    TITULO_ERROR:"Errores en el formulario",
+    TITULO_BUEN_TRABAJO:"¡Buen trabajo!",
+    DESCRIPCION_INICIO:"Se registro exitosamente la novedad de 'Acta de inicio'<br>al contrato # ",
+    DESCRIPCION_INICIO_1:"El estado del presente contrato se actualizo a 'Ejecución'.",
+    DESCRIPCION_ERROR_LEGAL:"Contrato no encontrado",
     //CONTRATO_DETALLE
     INFORMACION_CONTRATO: "Información Vinculación",
     FORMA_PAGO: "Forma de pago",
@@ -817,7 +846,10 @@ var text_es = {
     TITULO_CARGA_CONTRATISTA: "CARGA SOPORTES CONTRATISTA",
     NOM_CONTRATISTA: "NOMBRE CONTRATISTA",
     NUMERO_CONTRATO: "NÚMERO CONTRATO",
+    CONTRATO_CANCELADO: "Contrato cancelado",
+    CONTRATO_FINALIZADO: "Contrato finalizado",
     RP: "RP",
+    ANIO:" vigencia "
 };
 
 var text_en = {

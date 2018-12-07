@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolLegalActaSuspensionCtrl', function ($location, $log, $scope, $routeParams, $translate, administrativaAmazonRequest, argoNosqlRequest, coreAmazonRequest, agoraRequest, adminMidRequest, administrativaWsoRequest) {
+  .controller('SeguimientoycontrolLegalActaSuspensionCtrl', function ($location, $log, $scope, $routeParams, $translate, amazonAdministrativaRequest, argoNosqlRequest, coreAmazonRequest, agoraRequest, adminMidRequest, contratoRequest) {
 
     var self = this;
     self.f_registro = new Date();
@@ -25,13 +25,13 @@ angular.module('contractualClienteApp')
 
     self.estados= [];
 
-    administrativaAmazonRequest.get('estado_contrato', $.param({
+    amazonAdministrativaRequest.get('estado_contrato', $.param({
       query: "NombreEstado:" + "Suspendido"
     })).then(function(ec_response){
       self.estados[1] = ec_response.data[0];
     });
 
-    administrativaWsoRequest.get('contrato', '/'+self.contrato_id+'/'+self.contrato_vigencia).then(function(wso_response){
+    contratoRequest.get('contrato', self.contrato_id+'/'+self.contrato_vigencia).then(function(wso_response){
       self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
       self.contrato_obj.valor = wso_response.data.contrato.valor_contrato;
       self.contrato_obj.objeto = wso_response.data.contrato.objeto_contrato;
@@ -43,7 +43,7 @@ angular.module('contractualClienteApp')
       self.contrato_obj.supervisor_documento = wso_response.data.contrato.supervisor.documento_identificacion;
       self.contrato_obj.contratista = wso_response.data.contrato.contratista;
 
-      administrativaAmazonRequest.get('tipo_contrato', $.param({
+      amazonAdministrativaRequest.get('tipo_contrato', $.param({
         query: "Id:" + wso_response.data.contrato.tipo_contrato
       })).then(function(tc_response){
         self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
@@ -72,19 +72,19 @@ angular.module('contractualClienteApp')
                 self.contrato_obj.cesion = 0;
               }
           }
-          administrativaAmazonRequest.get('informacion_proveedor', $.param({
+          amazonAdministrativaRequest.get('informacion_proveedor', $.param({
               query: "Id:" + self.contrato_obj.contratista
           })).then(function(ip_response) {
             self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
             self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
 
-            administrativaAmazonRequest.get('informacion_persona_natural', $.param({
+            amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
                 query: "Id:" + ip_response.data[0].NumDocumento
             })).then(function(ipn_response){
                 coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(c_response){
                     self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
 
-                    administrativaAmazonRequest.get('informacion_persona_natural', $.param({
+                    amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
                         query: "Id:" + self.contrato_obj.supervisor_documento              
                     })).then(function(ispn_response){
                         coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(sc_response){
@@ -156,7 +156,7 @@ angular.module('contractualClienteApp')
         //Se guarda en la posicion [0] del arreglo estados el estado actual
         //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a suspension - devuelve si es true o false
         //si es true guardamos la novedad - y enviamos el cambio de estado del contrato
-        administrativaWsoRequest.get('contrato_estado', '/'+self.contrato_id+'/'+self.contrato_vigencia).then(function (response) {
+        contratoRequest.get('contrato_estado', self.contrato_id+'/'+self.contrato_vigencia).then(function (response) {
           if(response.data.contratoEstado.estado.nombreEstado == "En ejecucion"){
             var estado_temp_from = {
               "NombreEstado": "ejecucion"
@@ -178,7 +178,8 @@ angular.module('contractualClienteApp')
                     }
                   };
 
-                  administrativaWsoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
+                  contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
+                    console.log(response);
                     if (response.status == 200 || response.statusText == "OK") {
                       swal(
                         $translate.instant('TITULO_BUEN_TRABAJO'),
