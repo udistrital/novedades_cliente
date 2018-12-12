@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl', function ($location, $log, $scope, $routeParams, $translate, administrativaAmazonRequest, argoNosqlRequest, coreAmazonRequest, agoraRequest, adminMidRequest, administrativaWsoRequest) {
+  .controller('SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl', function ($location, $log, $scope, $routeParams, $translate, amazonAdministrativaRequest, argoNosqlRequest, coreAmazonRequest, agoraRequest, adminMidRequest, contratoRequest) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -27,13 +27,13 @@ angular.module('contractualClienteApp')
     self.fecha_solicitud = new Date();
     self.fecha_terminacion_anticipada = new Date();
     self.estados= [];
-    administrativaAmazonRequest.get('estado_contrato', $.param({
+    amazonAdministrativaRequest.get('estado_contrato', $.param({
       query: "NombreEstado:" + "Suspendido"
     })).then(function(ec_response){
       self.estados[1] = ec_response.data[0];
     });
 
-    administrativaWsoRequest.get('contrato', '/'+self.contrato_id+'/'+self.contrato_vigencia).then(function(wso_response){
+    contratoRequest.get('contrato', self.contrato_id+'/'+self.contrato_vigencia).then(function(wso_response){
       self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
       self.contrato_obj.valor = wso_response.data.contrato.valor_contrato;
       self.contrato_obj.objeto = wso_response.data.contrato.objeto_contrato;
@@ -43,7 +43,7 @@ angular.module('contractualClienteApp')
       self.contrato_obj.vigencia = wso_response.data.contrato.vigencia;
       self.contrato_obj.supervisor = wso_response.data.contrato.supervisor.nombre;
       self.contrato_obj.supervisor_documento = wso_response.data.contrato.supervisor.documento_identificacion;
-      administrativaAmazonRequest.get('tipo_contrato', $.param({
+      amazonAdministrativaRequest.get('tipo_contrato', $.param({
         query: "Id:" + wso_response.data.contrato.tipo_contrato
       })).then(function(tc_response){
         self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
@@ -66,17 +66,17 @@ angular.module('contractualClienteApp')
                 self.contrato_obj.contratista = last_cesion.cesionario;
               }
           }
-          administrativaAmazonRequest.get('informacion_proveedor', $.param({
+          amazonAdministrativaRequest.get('informacion_proveedor', $.param({
               query: "Id:" + self.contrato_obj.contratista
           })).then(function(ip_response) {
               self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
               self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
-          administrativaAmazonRequest.get('informacion_persona_natural', $.param({
+          amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
             query: "Id:" + ip_response.data[0].NumDocumento
           })).then(function(ipn_response){
             coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(c_response){
               self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
-              administrativaAmazonRequest.get('informacion_persona_natural', $.param({
+              amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
                 query: "Id:" + self.contrato_obj.supervisor_documento              
               })).then(function(ispn_response){
                 coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(sc_response){
