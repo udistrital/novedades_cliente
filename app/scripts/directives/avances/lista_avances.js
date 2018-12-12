@@ -36,7 +36,8 @@ angular.module('contractualClienteApp')
                         field: 'ProcesoExterno',
                         displayName: $translate.instant('PROCESO_EXTERNO'),
                         headerCellClass: $scope.highlightFilteredHeader + 'text-center ',
-                        width: '20%'
+                        width: '20%',
+                        visible: false,
                     },
                     {
                         field: 'Consecutivo',
