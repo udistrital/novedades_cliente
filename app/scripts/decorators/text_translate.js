@@ -48,8 +48,9 @@ var text_es = {
     TIPO_RESOLUCION: "Tipo resolución",
     TITULO: "GENERATOR-OAS",
     MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
-    //solicitud_necesidad
     CODIGO: "Código",
+
+    //solicitud_necesidad
     ID_AVANCE: "ID Avance",
     LISTA_AVANCES: "Lista de Avances",
     PROCESO_EXTERNO: "Proceso Externo",
@@ -193,7 +194,6 @@ var text_es = {
     VALOR_RP: "Valor registro presupuestal",
     SALDO_AP: "Saldo apropiación",
     CDP: "CDP",
-    CODIGO: "Código",
     CONSECUTIVO: "Consecutivo",
     OBJETIVO: "Objetivo",
     OBJETO: "Objeto",
