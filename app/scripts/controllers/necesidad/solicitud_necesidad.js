@@ -147,41 +147,61 @@ angular.module('contractualClienteApp')
 
         });
 
-        self.formsInit = {
-            Avances: false,
-            Responsables: true,
-            General: true,
-            ObjetoContractual: true,
-            MarcoLegal: true,
-            Especificaciones: true,
-            Financiamiento: true,
-        };
-
-        self.fieldInit = {
-            Responsables: {
-                DependenciaSolicitante: true,
-                JefeDependenciaSolicitante: true,
-                DependenciaDestino: true,
-                JefeDependenciaDestino: true,
-                OrdenadorGasto: true,
-                RolOrdenadorGasto: true,
+        self.estructura = {
+            init: {
+                forms: {
+                    Avances: false,
+                    Responsables: true,
+                    General: true,
+                    ObjetoContractual: true,
+                    MarcoLegal: true,
+                    Especificaciones: true,
+                    Financiamiento: true,
+                },
+                Responsables: {
+                    DependenciaSolicitante: true,
+                    JefeDependenciaSolicitante: true,
+                    DependenciaDestino: true,
+                    JefeDependenciaDestino: true,
+                    OrdenadorGasto: true,
+                    RolOrdenadorGasto: true,
+                },
+                General: {
+                    PlanAnualAdquisiciones: true,
+                    UnidadEjecutora: true,
+                    EstudioMercado: true,
+                    ModalidadSeleccion: true,
+                    Supervisor: true,
+                    AnalisisRiesgo: true,
+                },
+                ObjetoContractual: {
+                    ObjetoContrato: true,
+                    JustificacionContrato: true,
+                }
             },
-            General: {
-                PlanAnualAdquisiciones: true,
-                UnidadEjecutora: true,
-                EstudioMercado: true,
-                ModalidadSeleccion: true,
-                Supervisor: true,
-                AnalisisRiesgo: true,
+            Contratacion: {
+                forms: {
+                },
             },
-            ObjetoContractual: {
-                ObjetoContrato: true,
-                JustificacionContrato: true,
+            Avances: {
+                forms: {
+                    Avances: true,
+                    Especificaciones: false,
+                },
+                General: {
+                    EstudioMercado: false,
+                    ModalidadSeleccion: false,
+                    Supervisor: false,
+                },
+            },
+            ServiciosPublicos: {
+                forms: {
+                },
             }
         };
 
-        self.forms = self.deepCopy(self.formsInit);
-        self.field = self.deepCopy(self.fieldInit);
+        self.forms = _.extend({}, self.estructura.init.forms);
+        self.fields = _.extend({}, self.estructura.init);
 
         var alertInfo = {
             type: 'error',
@@ -607,25 +627,15 @@ angular.module('contractualClienteApp')
 
         // Control de visualizacion de los campos individuales en el formulario
         self.CambiarTipoNecesidad = function (TipoNecesidad) {
-            self.forms = self.deepCopy(self.formsInit);
-            self.field = self.deepCopy(self.fieldInit);
+            self.forms = _.merge({}, self.estructura.init.forms);
+            self.fields = _.merge({}, self.estructura.init);
 
-            switch (TipoNecesidad) {
-                case 1: // Contratacion
-                    break;
-                case 6: // Servicios publicos
-                case 3: // Avances    
-                    self.forms.Especificaciones = false;
-                    self.forms.Avances = true;
-                    for (var key in self.field.General) { self.field.General[key] = false; }
-                    self.field.General.PlanAnualAdquisiciones = true;
-                    self.field.General.AnalisisRiesgo = true;
-                    self.field.General.UnidadEjecutora = true;
-                    self.necesidad.TipoContratoNecesidad = { Id: 3 }; //No aplica
-                    break;
-                default:
-                    break;
-            }
+            self.TipoNecesidadType = ["", "Contratacion", "", "Avances", "", "", "ServiciosPublicos"];
+
+            _.merge(self.forms, self.estructura[self.TipoNecesidadType[TipoNecesidad]].forms);
+            _.merge(self.fields, self.estructura[self.TipoNecesidadType[TipoNecesidad]])
+            self.necesidad.TipoContratoNecesidad = { Id: TipoNecesidad }; //No aplica
+
         };
 
     });
