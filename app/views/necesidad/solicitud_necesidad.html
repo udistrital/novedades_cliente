@@ -71,8 +71,10 @@
           <legend class="text-primary" ng-click="solicitudNecesidad.validar_formu(avances)">{{"AVANCES"
             | translate}} <span class="fa fa-plus pull-right" ng-show="responsables.open"></span> <span class="fa fa-minus pull-right"
               ng-show="!avances.open"></span></legend>
-          <div class="panel-body">
-            <lista-avances class="col-md-12" data="solicitudNecesidad.avance"></lista-avances>
+          <div class="panel-body row">
+            <div class="col-md-3"></div>
+            <lista-avances class="col-md-6" data="solicitudNecesidad.avance"></lista-avances>
+            <div class="col-md-3"></div>
           </div>
         </ng-form>
 
@@ -84,12 +86,12 @@
 
           <div class="panel-body" ng-hide="responsables.open">
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.Responsables.DependenciaSolicitante">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.Responsables.DependenciaSolicitante">
               <label class="control-label">{{'DEPENDENCIA_SOLICITANTE' | translate}}</label>
               <span class="form-control">{{solicitudNecesidad.dependencia_solicitante.Nombre}}</span>
             </div>
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.Responsables.JefeDependenciaSolicitante">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.Responsables.JefeDependenciaSolicitante">
               <label for="jefe_solicitante" class="control-label">{{"JEFE_DEPENDENCIA_SOLICITANTE" | translate}}</label>
               <span class="form-control">{{solicitudNecesidad.persona_solicitante.PrimerNombre}}
                 {{solicitudNecesidad.persona_solicitante.SegundoNombre}}
@@ -97,7 +99,7 @@
                 {{solicitudNecesidad.persona_solicitante.SegundoApellido}}</span>
             </div>
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.Responsables.DependenciaDestino">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.Responsables.DependenciaDestino">
               <label for="dep_destino" class="control-label">{{"DEPENDENCIA_DESTINO" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
               <select class="form-control" ng-model="solicitudNecesidad.dependencia_destino" ng-options="depd.Id as depd.Nombre for depd in solicitudNecesidad.dependencia_data"
@@ -106,14 +108,14 @@
               </select>
             </div>
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.Responsables.JefeDependenciaDestino">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.Responsables.JefeDependenciaDestino">
               <label for="jefe_solicitante" class="control-label">{{"JEFE_DEPENDENCIA_DESTINO" | translate}}</label>
               <span class="form-control">{{solicitudNecesidad.jefe_destino.PrimerNombre}}
                 {{solicitudNecesidad.jefe_destino.SegundoNombre}} {{solicitudNecesidad.jefe_destino.PrimerApellido}}
                 {{solicitudNecesidad.jefe_destino.SegundoApellido}}</span>
             </div>
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.Responsables.RolOrdenadorGasto">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.Responsables.RolOrdenadorGasto">
               <label for="ordenador_gasto" class="control-label">{{"ROL" | translate}} {{"ORDENADOR_GASTO" |
                 translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
@@ -124,7 +126,7 @@
               </select>
             </div>
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.Responsables.OrdenadorGasto">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.Responsables.OrdenadorGasto">
               <label for="rol_ordenador_gasto" class="control-label">{{"ORDENADOR_GASTO" | translate}}</label>
               <span class="form-control">{{solicitudNecesidad.ordenador_gasto.PrimerNombre}}
                 {{solicitudNecesidad.ordenador_gasto.SegundoNombre}}
@@ -144,7 +146,7 @@
 
           <div class="panel-body" ng-hide="general.open">
 
-            <div class="col-md-6" ng-show="solicitudNecesidad.field.General.PlanAnualAdquisiciones">
+            <div class="col-md-6" ng-show="solicitudNecesidad.fields.General.PlanAnualAdquisiciones">
               <label class="control-label">{{"PLAN_ANUAL_ADQUISICIONES" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
               <select class="form-control" ng-model="solicitudNecesidad.necesidad.PlanAnualAdquisiciones" ng-options="pa.Id as pa.Nombre for pa  in solicitudNecesidad.planes_anuales"
@@ -154,7 +156,7 @@
               </select>
             </div>
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.General.UnidadEjecutora">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.General.UnidadEjecutora">
               <label class="control-label">{{"UNIDAD_EJECUTORA" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
               <select class="form-control" ng-model="solicitudNecesidad.necesidad.UnidadEjecutora" ng-options="ue.Id as ue.Nombre for ue in solicitudNecesidad.unidad_ejecutora_data"
@@ -163,7 +165,7 @@
               </select>
             </div>
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.General.EstudioMercado" ng-class="{ 'has-error' : solicitudform.estudio_mercados.$invalid && !solicitudform.estudio_mercados.$pristine }">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.General.EstudioMercado" ng-class="{ 'has-error' : solicitudform.estudio_mercados.$invalid && !solicitudform.estudio_mercados.$pristine }">
               <label for="estudio_mercados" class="control-label">{{"ESTUDIO_MERCADO" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
               <textarea name="estudio_mercados" type="text" class="form-control" maxlength="600" ng-model="solicitudNecesidad.necesidad.EstudioMercado"
@@ -174,14 +176,14 @@
               <strong>Error!</strong> Campo requerido
             </div>
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.General.AnalisisRiesgo">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.General.AnalisisRiesgo">
               <label for="analisis_riesgos" class="control-label">{{"ANALISIS_RIESGOS" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
               <textarea type="text" class="form-control" maxlength="600" ng-model="solicitudNecesidad.necesidad.AnalisisRiesgo"
                 placeholder="Análisis de riesgos" rows="6" required></textarea>
             </div>
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.General.ModalidadSeleccion">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.General.ModalidadSeleccion">
               <label for="modalidad_seleccion" class=" control-label">{{"MODALIDAD_SELECCION" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
               <select class="form-control" ng-model="solicitudNecesidad.necesidad.ModalidadSeleccion" ng-options="mod as mod.Id+'-'+mod.Nombre for mod in solicitudNecesidad.modalidad_data track by mod.Id"
@@ -190,7 +192,7 @@
               </select>
             </div>
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.General.Supervisor">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.General.Supervisor">
               <label for="supervisor" class="control-label">{{"SUPERVISOR" | translate}}</label>
               <select class="form-control" ng-model="solicitudNecesidad.necesidad.Supervisor" ng-options="sup.Id*1 as sup.PrimerNombre+' '+sup.SegundoNombre+' '+sup.PrimerApellido+' '+sup.SegundoApellido for sup in solicitudNecesidad.persona_data">
                 <option value="" disabled selected>{{"SELECCIONAR" | translate}} {{"SUPERVISOR" | translate}}</option>
@@ -207,14 +209,14 @@
 
           <div class="panel-body" ng-hide="objetoContractual.open">
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.ObjetoContractual.ObjetoContrato">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.ObjetoContractual.ObjetoContrato">
               <label for="objeto" class="control-label">{{"OBJETO_CONTRATO" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
               <textarea type="text" class="form-control" rows="6" maxlength="800" ng-model="solicitudNecesidad.necesidad.Objeto"
                 placeholder="Objeto de Contrato" required></textarea>
             </div>
 
-            <div class="col-md-6" ng-if="solicitudNecesidad.field.ObjetoContractual.JustificacionContrato">
+            <div class="col-md-6" ng-if="solicitudNecesidad.fields.ObjetoContractual.JustificacionContrato">
               <label for="justificacion" class="control-label">{{"JUSTIFICACION_CONTRATO" | translate}}</label>
               <small>*{{"OBLIGATORIO" | translate}}</small>
               <textarea type="text" class="form-control" rows="6" maxlength="600" ng-model="solicitudNecesidad.necesidad.Justificacion"
