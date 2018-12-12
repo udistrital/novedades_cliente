@@ -518,10 +518,11 @@ var text_es = {
     PERIODO_VINCULACION: "Periodo de vinculación",
     DISPONIBILIDAD_PDF: "Dispo-\nnibilidad",
 
-    //RESOLUCION_REPORTES
+    //RESOLUCION_REPORTES - NECESIDAD_REPORTES
     REPORTE: "Reporte",
-    REPORTES: "Reportes resoluciones",
+    REPORTES: "Reportes ",
     REPORTE_UNO: "Reporte docentes por resolución",
+    REPORTE_NECESIDADES: "Necesidades por dependencia",
     SELECCIONE_REPORTE: "Seleccione el reporte que desea ver",
     GENERAR_REPORTE: "Generar reporte",
     NO_EXISTE_RESOLUCION: "No se ha encontrado una resolución con los datos ingresados",
@@ -1149,6 +1150,7 @@ var text_en = {
     REPORTE: "Report",
     REPORTES: "Reports",
     REPORTE_UNO: "Teachers by document report",
+    REPORTE_NECESIDADES: "Needs by agency",
     SELECCIONE_REPORTE: "Select one report",
     GENERAR_REPORTE: "Generate report",
     NO_EXISTE_RESOLUCION: "A document with that information doesn't exist",
