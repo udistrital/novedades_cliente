@@ -84,21 +84,56 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                     self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
 
-                    amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
+
+                    if(ip_response.data[0].Tipopersona=='NATURAL'){
+                        amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
                         query: "Id:" + ip_response.data[0].NumDocumento
-                    })).then(function(ipn_response){
-                        self.contrato_obj.contratista_ciudad_documento = ipn_response.data[0].IdCiudadExpedicionDocumento;
-                        argoNosqlRequest.get('novedad', self.contrato_id + '/' + self.contrato_obj.vigencia).then(function(response){
-                                for(var i = 0 ; i < response.data.length ; i++){
-                                    if(response.data[i].tiponovedad == "59d7965e867ee188e42d8c72"){
-                                        self.suspension_id_nov = response.data[i]._id;
-                                        self.f_suspension = new Date(response.data[i].fechasuspension);
-                                        self.f_reinicio = new Date(response.data[i].fechareinicio);
-                                        self.motivo_suspension = response.data[i].motivo;
-                                    }
-                                }
+                        })).then(function(ipn_response){
+                            coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(c_response){
+                                self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
+                                argoNosqlRequest.get('novedad', self.contrato_id + '/' + self.contrato_obj.vigencia).then(function(response){
+                                        for(var i = 0 ; i < response.data.length ; i++){
+                                            if(response.data[i].tiponovedad == "59d7965e867ee188e42d8c72"){
+                                                self.suspension_id_nov = response.data[i]._id;
+                                                self.f_suspension = new Date(response.data[i].fechasuspension);
+                                                self.f_reinicio = new Date(response.data[i].fechareinicio);
+                                                self.motivo_suspension = response.data[i].motivo;
+                                            }
+                                        } 
+                                });
+                           });  
                         });
-                    });
+                    }
+                    else{
+                        amazonAdministrativaRequest.get('informacion_persona_juridica', $.param({
+                        query: "Id:" + ip_response.data[0].NumDocumento
+                        })).then(function(ipn_response){
+
+                            amazonAdministrativaRequest.get('informacion_proveedor','query=num_documento:' + ip_response.data[0].NumDocumento).then(function(ip_response){
+                                        coreAmazonRequest.get('ciudad','query=Id:' + ip_response.data[0].IdCiudadContacto).then(function(c_response){
+                                            self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
+                                            argoNosqlRequest.get('novedad', self.contrato_id + '/' + self.contrato_obj.vigencia).then(function(response){
+                                                for(var i = 0 ; i < response.data.length ; i++){
+                                                    if(response.data[i].tiponovedad == "59d7965e867ee188e42d8c72"){
+                                                        self.suspension_id_nov = response.data[i]._id;
+                                                        self.f_suspension = new Date(response.data[i].fechasuspension);
+                                                        self.f_reinicio = new Date(response.data[i].fechareinicio);
+                                                        self.motivo_suspension = response.data[i].motivo;
+                                                    }
+                                                }
+                                            });
+
+                                            
+                                        
+                                      });      
+                        });
+                     });
+                    }
+                    
+
+
+
+                    
                 });
             });
         });
