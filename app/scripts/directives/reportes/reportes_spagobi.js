@@ -12,7 +12,11 @@ angular.module('contractualClienteApp')
       restrict: "E",
       scope:{ 
           reporte: "@",
-          resolucion: "@"
+          resolucion: "@",
+          dependencia: "=",
+          vigencia: "=",
+          necesidad: "=",
+          boton: "="
       },
       template: '<div id="frame" ></div>',
       controller:function($scope){
@@ -26,13 +30,20 @@ angular.module('contractualClienteApp')
           controllerPath: 'servlet/AdapterHTTP'
         });
 
-        $scope.$watch('resolucion', function() {
-          if ($scope.reporte && $scope.reporte.length !== 0 && $scope.resolucion) {
+        $scope.$watch('resolucion || boton', function() {
+          if ($scope.reporte && $scope.reporte.length !== 0) {
+            var parametros = '';
+            if ($scope.resolucion) {
+              parametros = 'id_resolucion=' + $scope.resolucion;
+            } else if ($scope.dependencia && $scope.vigencia) {
+              parametros = 'id_dependencia=' + $scope.dependencia + '&vigencia=' + $scope.vigencia + '&numero_elaboracion=' + $scope.necesidad;
+            }
+            
             function execTest() {
               var url = sbi.api.getDocumentHtml({
                 documentLabel: $scope.reporte, 
                 executionRole: '/spagobi/user/admin', 
-                parameters: {'PARAMETERS': 'id_resolucion=' + $scope.resolucion}, 
+                parameters: {'PARAMETERS':parametros}, 
                 displayToolbar: true, 
                 displaySliders: true, 
                 iframe: {

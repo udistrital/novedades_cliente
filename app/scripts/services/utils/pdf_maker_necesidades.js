@@ -106,7 +106,7 @@ angular.module('contractualClienteApp')
                                         [{ alignment: "center", text: [{ bold: true, text: "Fecha de Solicitud: " }, moment(trNecesidad.Necesidad.FechaSolicitud).format("D [de] MMMM [de] YYYY")] }],
                                         [{ style: "title1", text: "JUSTIFICACIÓN (Identifique de forma clara y conta la necesidad de la contratación)" }],
                                         [{ alignment: "justify", text: trNecesidad.Necesidad.Justificacion.toUpperCase() }],
-                                        [{ style: "title2", text: "ESPECIFICACIONES TÉCNICAS: Si la compra o el servicio que contempla especificaciones del orden técnico describalas." }],
+                                        [{ style: "title2", text: "ESPECIFICACIONES TÉCNICAS: Si la compra o el servicio contempla especificaciones del orden técnico descríbalas." }],
                                         [
                                             {
                                                 table: {
