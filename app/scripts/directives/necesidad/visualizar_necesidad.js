@@ -20,6 +20,8 @@ angular.module('contractualClienteApp')
                 var self = this;
                 self.verJustificacion = false;
                 self.justificaciones_rechazo = [];
+                self.v_necesidad = null;
+                self.solicitud_disponibilidad = null;
 
                 $scope.$watch('[vigencia,numero]', function () {
                     self.cargar_necesidad();
@@ -52,6 +54,14 @@ angular.module('contractualClienteApp')
                         });
                         adminMidRequest.get('solicitud_necesidad/fuente_apropiacion_necesidad/' + self.v_necesidad.Id).then(function (response) {
                             self.ff_necesidad = response.data;
+                        });
+
+                        administrativaRequest.get('solicitud_disponibilidad', $.param({
+                            query: "Necesidad:" + response.data[0].Id,
+                        })).then(function (response) {
+                            self.solicitud_disponibilidad =  
+                            (response.data != null && response.data.length > 0) ?
+                                response.data[0]: {Numero: ''};
                         });
 
                         administrativaRequest.get('dependencia_necesidad', $.param({
@@ -96,8 +106,6 @@ angular.module('contractualClienteApp')
                             })).then(function (response) {
                                 self.ordenador_gasto = response.data[0];
                             });
-
-
                         });
                     });
                 };
