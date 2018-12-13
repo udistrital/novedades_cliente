@@ -147,7 +147,9 @@ var text_es = {
     FUENTES_FINANCIAMIENTO_APROPIACION: "Fuentes de Financiamiento de la Apropiación",
     //necesidades
     GESTION_NECESIDADES: "Gestión de Necesidades",
-    NUMERO_ELABORACION: "No. de Elaboración",
+    NUMERO_NECESIDAD_COMPACTO: "No. de Necesidad",
+    NUMERO_SOLICITUD_NECESIDAD: "No. de Solicitud",
+    NUMERO_ELABORACION_NECESIDAD: "No. de Elaboración",
     LISTA_NECESIDADES: "Lista de Necesidades",
     NECESIDAD_RECHAZADA: "La necesidad ha sido Rechazada!",
     NECESIDAD_NO_RECHAZADA: "La necesidad no pudo ser rechazada!",
@@ -864,7 +866,9 @@ var text_en = {
     FUENTES_FINANCIAMIENTO_APROPIACION: "Appropiations Funding Source",
     //necesidades
     GESTION_NECESIDADES: "Managment Needs",
-    NUMERO_ELABORACION: "No. of Elaboration",
+    NUMERO_NECESIDAD_COMPACTO: "No. of Need",
+    NUMERO_SOLICITUD_NECESIDAD: "No. of Request",
+    NUMERO_ELABORACION_NECESIDAD: "No. of Elaboration",
     NECESIDAD_RECHAZADA: "The Need has been rejected!",
     NECESIDAD_NO_RECHAZADA: "The Need had not been rejected!",
     OBLIGATORIO: "Required",
