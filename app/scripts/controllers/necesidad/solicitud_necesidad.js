@@ -122,7 +122,8 @@ angular.module('contractualClienteApp')
                     query: 'Id:' + self.detalle_servicio_necesidad.NucleoConocimiento,
                     limit: -1
                 })).then(function (response) {
-                    self.nucleoarea = response.data[0].IdArea.Id;
+                    if (response.data != null && response.data.lenght > 0)
+                        self.nucleoarea = response.data[0].IdArea.Id;
                 });
             }, true);
 
@@ -634,8 +635,7 @@ angular.module('contractualClienteApp')
 
             _.merge(self.forms, self.estructura[self.TipoNecesidadType[TipoNecesidad]].forms);
             _.merge(self.fields, self.estructura[self.TipoNecesidadType[TipoNecesidad]])
-            self.necesidad.TipoContratoNecesidad = { Id: TipoNecesidad }; //No aplica
-
+            self.necesidad.TipoContratoNecesidad = { Id: 3 }; //Tipo Contrato Necesidad: No Aplica
         };
 
     });
