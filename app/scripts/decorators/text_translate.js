@@ -147,7 +147,9 @@ var text_es = {
     FUENTES_FINANCIAMIENTO_APROPIACION: "Fuentes de Financiamiento de la Apropiación",
     //necesidades
     GESTION_NECESIDADES: "Gestión de Necesidades",
-    NUMERO_ELABORACION: "No. de Elaboración",
+    NUMERO_NECESIDAD_COMPACTO: "No. de Necesidad",
+    NUMERO_SOLICITUD_NECESIDAD: "No. de Solicitud",
+    NUMERO_ELABORACION_NECESIDAD: "No. de Elaboración",
     LISTA_NECESIDADES: "Lista de Necesidades",
     NECESIDAD_RECHAZADA: "La necesidad ha sido Rechazada!",
     NECESIDAD_NO_RECHAZADA: "La necesidad no pudo ser rechazada!",
@@ -518,10 +520,11 @@ var text_es = {
     PERIODO_VINCULACION: "Periodo de vinculación",
     DISPONIBILIDAD_PDF: "Dispo-\nnibilidad",
 
-    //RESOLUCION_REPORTES
+    //RESOLUCION_REPORTES - NECESIDAD_REPORTES
     REPORTE: "Reporte",
-    REPORTES: "Reportes resoluciones",
+    REPORTES: "Reportes ",
     REPORTE_UNO: "Reporte docentes por resolución",
+    REPORTE_NECESIDADES: "Necesidades por dependencia",
     SELECCIONE_REPORTE: "Seleccione el reporte que desea ver",
     GENERAR_REPORTE: "Generar reporte",
     NO_EXISTE_RESOLUCION: "No se ha encontrado una resolución con los datos ingresados",
@@ -863,7 +866,9 @@ var text_en = {
     FUENTES_FINANCIAMIENTO_APROPIACION: "Appropiations Funding Source",
     //necesidades
     GESTION_NECESIDADES: "Managment Needs",
-    NUMERO_ELABORACION: "No. of Elaboration",
+    NUMERO_NECESIDAD_COMPACTO: "No. of Need",
+    NUMERO_SOLICITUD_NECESIDAD: "No. of Request",
+    NUMERO_ELABORACION_NECESIDAD: "No. of Elaboration",
     NECESIDAD_RECHAZADA: "The Need has been rejected!",
     NECESIDAD_NO_RECHAZADA: "The Need had not been rejected!",
     OBLIGATORIO: "Required",
@@ -1149,6 +1154,7 @@ var text_en = {
     REPORTE: "Report",
     REPORTES: "Reports",
     REPORTE_UNO: "Teachers by document report",
+    REPORTE_NECESIDADES: "Needs by agency",
     SELECCIONE_REPORTE: "Select one report",
     GENERAR_REPORTE: "Generate report",
     NO_EXISTE_RESOLUCION: "A document with that information doesn't exist",

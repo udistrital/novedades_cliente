@@ -197,6 +197,13 @@ angular.module('contractualClienteApp')
             },
             ServiciosPublicos: {
                 forms: {
+                    //Avances: false,
+                    Especificaciones: false,
+                },
+                General: {
+                    EstudioMercado: false,
+                    ModalidadSeleccion: false,
+                    Supervisor: false,
                 },
             }
         };

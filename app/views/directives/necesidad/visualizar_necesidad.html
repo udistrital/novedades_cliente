@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-12">
         <h3 class="page-header">{{ 'NECESIDAD' | translate }} <span ng-show="estado === d_visualizarNecesidad.estados.aprobada">{{d_visualizarNecesidad.v_necesidad.Numero}}
-          {{"DE" | translate}} {{d_visualizarNecesidad.v_necesidad.Vigencia}}</span>
+            {{"DE" | translate}} {{d_visualizarNecesidad.v_necesidad.Vigencia}}</span>
           <span class="pull-right text-info">{{d_visualizarNecesidad.v_necesidad.EstadoNecesidad.Nombre}}</span></h3>
       </div>
 
@@ -17,9 +17,16 @@
 
   </div>
   <div class="panel-body">
-
-    <cite class="text-info pull-right">{{"NUMERO_ELABORACION" | translate}}:
-      {{d_visualizarNecesidad.v_necesidad.NumeroElaboracion}}</cite>
+    <div class="text-info pull-right text-right">
+      <cite class=""> {{d_visualizarNecesidad.v_necesidad.NumeroElaboracion || '-'}}</cite><br>
+      <cite class=""> {{d_visualizarNecesidad.v_necesidad.Numero || '-'}}</cite><br>
+      <cite class=""> {{d_visualizarNecesidad.solicitud_disponibilidad.Numero || '-'}}</cite>
+    </div>
+    <div class="text-info pull-right">
+      <cite class="">{{"NUMERO_ELABORACION_NECESIDAD" | translate}}: </cite><br>
+      <cite class="">{{"NUMERO_NECESIDAD_COMPACTO" | translate}}: </cite><br>
+      <cite class="">{{"NUMERO_SOLICITUD_NECESIDAD" | translate}}: </cite>
+    </div>
 
 
     <h3 class="text-info">{{"RESPONSABLES" | translate}}</h3>
@@ -75,7 +82,8 @@
             </li>
             <br><strong ng-if="inv.Productos.length">{{"PRODUCTOS" | translate}}</strong>
             <li ng-repeat='p in inv.Productos'>
-              <strong>{{p.ProductoRubroInfo[0].Producto.Nombre}}:</strong> {{p.ProductoRubroInfo[0].Producto.Descripcion}}
+              <strong>{{p.ProductoRubroInfo[0].Producto.Nombre}}:</strong>
+              {{p.ProductoRubroInfo[0].Producto.Descripcion}}
             </li>
           </ul>
         </p>
