@@ -147,9 +147,9 @@ var text_es = {
     FUENTES_FINANCIAMIENTO_APROPIACION: "Fuentes de Financiamiento de la Apropiación",
     //necesidades
     GESTION_NECESIDADES: "Gestión de Necesidades",
-    NUMERO_NECESIDAD_COMPACTO: "No. de Necesidad",
-    NUMERO_SOLICITUD_NECESIDAD: "No. de Solicitud",
     NUMERO_ELABORACION_NECESIDAD: "No. de Elaboración",
+    NUMERO_NECESIDAD_COMPACTO: "No. de Necesidad",
+    NUMERO_SOLICITUD_NECESIDAD: "No. de Solicitud CDP",
     LISTA_NECESIDADES: "Lista de Necesidades",
     NECESIDAD_RECHAZADA: "La necesidad ha sido Rechazada!",
     NECESIDAD_NO_RECHAZADA: "La necesidad no pudo ser rechazada!",
