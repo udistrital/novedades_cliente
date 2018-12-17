@@ -64,6 +64,13 @@ angular.module('contractualClienteApp')
                             'info'
                         );
                     }
+                    if (self.estado_contrato_obj.estado == 8) {
+                        swal(
+                            $translate.instant('CONTRATO_FINALIZADO'),
+                            '',
+                            'info'
+                        );
+                    }
                     amazonAdministrativaRequest.get('tipo_contrato', $.param({
                         query: "Id:" + wso_response.data.contrato.tipo_contrato
                     })).then(function(tc_response){
