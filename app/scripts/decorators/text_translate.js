@@ -430,9 +430,20 @@ var text_es = {
     DOCENTES_CONTRATADOS_ACTUAL: "DOCENTES CONTRATADOS - PERIODO ACTUAL",
     BTN: {
         VER: "Ver",
-        SOLICITAR: "Solicitar"
+        BUSCAR: "Buscar",
+        SOLICITAR: "Solicitar",
+        SELECCIONAR: "Seleccionar",
+        CANCELAR: "Cancelar",
+        CONFIRMAR: "Confirmar",
+        AGREGAR: "Agregar",
+        REGISTRAR: "Registrar",
+        SOLICITAR_RP:"Solicitar RP",
+        QUITAR_RUBRO: "Quitar",
+        VER_SEGUIMIENTO_FINANCIERO:"Ver seguimiento financiero"
     },
 
+
+   
     //CONTRATO_REGISTRO
     DATOS_BASICOS: "Información básica",
     DISPONIBILIDAD: "Disponibilidad",
