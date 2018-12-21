@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolLegalActaInicioCtrl', function ($log, $scope, $location, $routeParams, administrativaRequest, $translate, argoNosqlRequest, contratoRequest, agoraRequest, amazonAdministrativaRequest, adminMidRequest)  {
+.controller('SeguimientoycontrolLegalActaInicioCtrl', function ($log, $scope, $location, $routeParams, administrativaRequest, $translate, argoNosqlRequest, contratoRequest, coreAmazonRequest, agoraRequest, amazonAdministrativaRequest, adminMidRequest)  {
     this.awesomeThings = [
         'HTML5 Boilerplate',
         'AngularJS',
@@ -43,9 +43,13 @@ angular.module('contractualClienteApp')
         self.contrato_obj.plazo = wso_response.data.contrato.plazo_ejecucion;
         self.contrato_obj.supervisor = wso_response.data.contrato.supervisor.nombre;
         self.contrato_obj.supervisor_cedula = wso_response.data.contrato.supervisor.documento_identificacion;
+        self.contrato_obj.supervisor_cargo = wso_response.data.contrato.supervisor.cargo;
         self.contrato_obj.VigenciaContrato = wso_response.data.contrato.vigencia;
         self.contrato_obj.FechaRegistro = wso_response.data.contrato.FechaRegistro;
         self.contrato_obj.contratista = String(wso_response.data.contrato.contratista);
+        self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
+        self.contrato_obj.UnidadEjecucion = String(wso_response.data.contrato.unidad_ejecucion);
+
         self.contrato_obj.cesion = 0; //Variable para cotrolar si el contrato tiene cesion
         self.estados= [];
         // Obtiene el estado al cual se quiere pasar el contrato
@@ -82,6 +86,24 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.contratista_documento = $translate.instant('NO_REGISTRA_ACTA_INICIO');
                     self.contrato_obj.contratista_nombre = $translate.instant('NO_REGISTRA_ACTA_INICIO');
                 }
+                amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
+                query: "Id:" + ip_response.data[0].NumDocumento
+                })).then(function(ipn_response){
+                    coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(c_response){  
+                         self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
+                         self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;   
+                    });           
+
+
+                });
+                amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
+                query: "Id:" + self.contrato_obj.supervisor_cedula
+                })).then(function(ipns_response){
+                    coreAmazonRequest.get('ciudad','query=Id:' + ipns_response.data[0].IdCiudadExpedicionDocumento).then(function(cs_response){  
+                         self.contrato_obj.supervisor_ciudad_documento = cs_response.data[0].Nombre;
+                         self.contrato_obj.supervisor_tipo_documento = ipns_response.data[0].TipoDocumento.ValorParametro;   
+                    });           
+                });
             }); 
         });
         //Obtencion tipo de contrato
@@ -314,6 +336,7 @@ angular.module('contractualClienteApp')
      * @param {date} param
      */
     self.format_date = function(param){
+       
         var date = new Date(param);
         var dd = date.getDate();
         var mm = date.getMonth()+1;
@@ -324,8 +347,19 @@ angular.module('contractualClienteApp')
         if(mm<10){
             mm='0'+mm;
         }
-        var today = dd+'/'+mm+'/'+yyyy;
+        var today = 'Día: ' + dd + '  Mes: ' + mm + '  Año: '+yyyy;
         return today;
+    };
+
+    self.format_date_letter = function(param){
+        var cadena=param.split("-"); 
+        var dd = cadena[2];
+        var mm = cadena[1] - 1;
+        var yyyy = cadena[0];
+        var fecha = new Date(yyyy,mm,dd);
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        
+       return fecha.toLocaleDateString("es-ES", options);
     };
 
     /**
@@ -382,8 +416,13 @@ angular.module('contractualClienteApp')
                     widths:[180, 320],
                     body:[
                         [
-                        {text: ' CONTRATO No: ', bold: true, style: 'topHeader'},
-                        {text:  self.contrato_id + ' - ' + self.contrato_vigencia,  style: 'topHeader'}
+                        {text: 'CONTRATO No: ', bold: true, style: 'topHeader'},
+                        { text:[
+                            {text:  self.contrato_id, bold: true, style: 'topHeader'},
+                            {text: ' suscrito el ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion),  style: 'topHeader'}
+                            ]
+                        }
+                        
                         ],
                         [ 
                         {text: 'TIPO DE CONTRATO:',  bold: true,  style: 'topHeader'},               
@@ -395,15 +434,15 @@ angular.module('contractualClienteApp')
                         ],
                         [ 
                         {text: 'VALOR:',  bold: true,  style: 'topHeader'},               
-                        {text:  '$' + numberFormat(self.contrato_obj.valor),  style: 'topHeader'}                                     
+                        {text:  NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + ")",  style: 'topHeader'}                                     
                         ],
                         [ 
                         {text: 'CONTRATISTA:',  bold: true,  style: 'topHeader'},               
-                        {text: self.contrato_obj.contratista_nombre,  style: 'topHeader'}                                     
+                        {text: self.contrato_obj.contratista_nombre + ", mayor de edad, identificado(a) con " + self.contrato_obj.contratista_tipo_documento +  " No. " +  self.contrato_obj.contratista_documento + " Expedida en " + self.contrato_obj.contratista_ciudad_documento,  style: 'topHeader'}                                     
                         ],
                         [ 
                         {text: 'PLAZO:',  bold: true,  style: 'topHeader'},               
-                        {text: self.contrato_obj.plazo,  style: 'topHeader'}                                     
+                        {text: tiempoEjecucion(self.contrato_obj.plazo, self.contrato_obj.UnidadEjecucion),  style: 'topHeader'}                                     
                         ],
                         [ 
                         {text: 'FECHA DE INICIO:',  bold: true,  style: 'topHeader'},               
@@ -415,11 +454,19 @@ angular.module('contractualClienteApp')
                         ],
                         [ 
                         {text: 'SUPERVISOR UNIVERSIDAD DISTRITAL FRANCISCO JOSE DE CALDAS:',  bold: true,  style: 'topHeader'},               
-                        {text: self.contrato_obj.supervisor,  style: 'topHeader'}                                     
+                        {text: self.contrato_obj.supervisor_cargo,  style: 'topHeader'}                                     
                         ],
                         [ 
                         {text: 'No. POLIZA:',  bold: true,  style: 'topHeader'},               
                         {text:  self.poliza_obj.numero_poliza,  style: 'topHeader'}                                     
+                        ],
+                        [ 
+                        {text: 'FECHA DE EXPEDICIÓN DE PÓLIZA:',  bold: true,  style: 'topHeader'},               
+                        {text:  self.format_date_letter(self.poliza_obj.fecha_aprobacion),  style: 'topHeader'}                                     
+                        ],
+                        [ 
+                        {text: 'FECHA DE APROBACIÓN DE PÓLIZA:',  bold: true,  style: 'topHeader'},               
+                        {text:  self.format_date_letter(self.poliza_obj.fecha_aprobacion),  style: 'topHeader'}                                     
                         ],
 
                     ]
@@ -428,7 +475,19 @@ angular.module('contractualClienteApp')
             },
             {
                 text:[
-                '\n\n\n',{text: 'Para constancia de lo anterior, se firma la presente Acta bajo la responsabilidad expresa de los que intervienen en ella:',  style: 'topHeader'},'\n\n\n\n'
+                '\n\n',{text: 'En Bogotá D.C. a los ' + Fecha_Actual('d','si') + ' (' + Fecha_Actual('d','no') +  ') días del mes de ' + Fecha_Actual('m','si') + ' del año ' + Fecha_Actual('a') +', se reunieron: ' +
+                                 self.contrato_obj.contratista_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ' expedida en ' +  self.contrato_obj.contratista_ciudad_documento + 
+                                 ' quien ejerce como Contratista, y ' + self.contrato_obj.supervisor + ', mayor de edad, identificado(a) con ' +  self.contrato_obj.supervisor_tipo_documento +' No. ' + self.contrato_obj.supervisor_cedula + ' expedida en ' + self.contrato_obj.supervisor_ciudad_documento +', en calidad de Supervisor del Contrato por parte de la Universidad Distrital ' +
+                                 ' Franciso José de Caldas con el objeto de dejar constancia del inicio real y efectivo del Contrato anteriormente citado, previo cumplimiento de los requisitos de legalización del Contrato. En consecuencia, se procede a la iniciación del Contrato a partir del día ' + 
+                                 Fecha_Actual('d','si') + ' (' + Fecha_Actual('d','no') +  ') del mes de ' + Fecha_Actual('m','si') + ' del año ' + Fecha_Actual('a') + '. El supervisor puso en conocimiento del Contratista lo siguiente: 1. Que para la firma de la presente Acta de Iniciación, el ' +
+                                 'contratista ha presentado y reposa en la respectiva Carpeta, toda la documentación exigida por la Universidad para estos casos. 2. Que para el desarrollo del contrato es indispensable mantener la Propuesta de Servicios elaborada y cualquier modificación debe ' +
+                                 'convenirse entre las partes. 3. Que en todo momento debe acatarse las instrucciones o exigencias que presente la Supervisión en lo referente a los Procesos y Procedimientos de la Dependencia.  ',  style: 'topHeader'},'\n\n'
+                ], 
+
+            },
+            {
+                text:[
+                  {text: 'Para constancia de lo anterior, se firma la presente Acta bajo la responsabilidad expresa de los que intervienen en ella:',  style: 'topHeader'},'\n\n\n'
                 ], 
 
             },
@@ -483,11 +542,11 @@ angular.module('contractualClienteApp')
                 topHeader:{   
                     margin: [0, 0, 0, 0],
                     alignment: 'justify',
-                    fontSize: 11 
+                    fontSize: 9 
                 },
                 table:{   
                     margin: [0, 0, 0, 0],
-                    border : "0"
+                    border : "0",
                 }        
             },     
             images: {       
@@ -534,6 +593,355 @@ angular.module('contractualClienteApp')
             return resultado;
         }
     }
+
+    function Fecha_Actual (factor, letra){
+        var f = new Date();
+        if(factor=='d'){
+            if(letra=='si'){
+                return Fecha_Dias(f.getDate());
+            }
+            else{
+                 return f.getDate();    
+            }           
+        }
+        if(factor=='m'){
+            if(letra=='si'){
+                return Fecha_Mes(f.getMonth() +1);
+            }
+            else{
+                return (f.getMonth() +1);
+            }            
+        }
+        if(factor=='a'){
+            return f.getFullYear();
+        }
+        else{
+            return (f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear());
+        }
+    }
+
+    function Fecha_Dias(x) {
+        var t = '';
+        switch (x) {
+            case 1: 
+                t = "Un";
+                break;
+            case 2 :
+                t = "Dos";
+                break;
+            case 3 :
+                t = "Tres";
+                break;
+            case 4 :
+                t = "Cuatro";
+                break;
+            case 5 :
+                t = "Cinco";
+                break;
+            case 6 :
+                t = "Seis";
+                break;
+            case 7 :
+                t = "Siete";
+                break;
+            case 8 :
+                t = "Ocho";
+                break;
+            case 9 :
+                t = "Nueve";
+                break;
+            case 10 :
+                t = "Diez";
+                break;
+            case 11 :
+                t = "Once";
+                break;
+            case 12 :
+                t = "Doce";
+                break;
+            case 13 :
+                t = "Trece";
+                break;
+            case 14 :
+                t = "Catorce";
+                break;
+            case 15 :
+                t = "Quince";
+                break;
+            case 16 :
+                t = "Dieciséis";
+                break;
+            case 17 :
+                t = "Diecisiete";
+                break;
+            case 18 :
+                t = "Dieciocho";
+                break;
+            case 19 :
+                t = "Diecinueve";
+                break;
+            case 20 :
+                t = "Veinte";
+                break;
+            case 21 :
+                t = "Veintiun";
+                break;
+            case 22 :
+                t = "Veintidos";
+                break;
+            case 23 :
+                t = "Veintitres";
+                break;
+            case 24 :
+                t = "Veinticuatro";
+                break;
+            case 25 :
+                t = "Veinticinco";
+                break;
+            case 26 :
+                t = "Veintiseis";
+                break;
+            case 27 :
+                t = "Veintisiete";
+                break;
+            case 28 :
+                t = "Veintiocho";
+                break;
+            case 29 :
+                t = "Veintinueve";
+                break;
+            case 30 :
+                t = "Treinta";
+                break;
+            case 31 :
+                t = "Treinta y un";
+                break;
+        }
+
+
+        return t;
+    }
+
+    function Fecha_Mes(x) {
+        switch (x) {
+            case 1 :
+                return "Enero";
+            case 2 :
+                t = "Febrero";
+                break;
+            case 3 :
+                t = "Marzo";
+                break;
+            case 4 :
+                t = "Abril";
+                break;
+            case 5 :
+                t = "Mayo";
+                break;
+            case 6 :
+                t = "Junio";
+                break;
+            case 7 :
+                t = "Julio";
+                break;
+            case 8 :
+                t = "Agosto";
+                break;
+            case 9 :
+                t = "Septiembre";
+                break;
+            case 10 :
+                t = "Octubre";
+                break;
+            case 11 :
+                t = "Noviembre";
+                break;
+            case 12 :
+                t = "Diciembre";
+                break;
+        }
+        return t;
+    }
+
+    function tiempoEjecucion (tiempo , unidad){
+        if (unidad == '205') {
+            var meses = tiempo / 30;
+            if (meses > 1) {
+                meses = floor(meses);
+                var parcial = meses * 30;
+                var dias = tiempo - parcial;
+                var plazo = meses + " mes(es) y " + dias + " dia(s) ";
+            } else {
+                var plazo = tiempo + " dia(s) ";
+            }
+        } else if (unidad == '206') {
+            var plazo = tiempo + " Mes(es) ";
+        } else {
+            var meses = tiempo * 12;
+            var plazo = meses + " mes(es) ";
+        }
+        return plazo;
+    }
+
+
+    function Unidades(num){
+
+        switch(num)
+        {
+            case 1: return "Un";
+            case 2: return "Dos";
+            case 3: return "Tres";
+            case 4: return "Cuatro";
+            case 5: return "Cinco";
+            case 6: return "Seis";
+            case 7: return "Siete";
+            case 8: return "Ocho";
+            case 9: return "Nueve";
+        }
+
+        return "";
+    }//Unidades()
+
+    function Decenas(num){
+
+        var decena = Math.floor(num/10);
+        var unidad = num - (decena * 10);
+
+            switch(decena)
+            {
+                case 1:
+                    switch(unidad)
+                    {
+                        case 0: return "Diez";
+                        case 1: return "Once";
+                        case 2: return "Doce";
+                        case 3: return "Trece";
+                        case 4: return "Catorce";
+                        case 5: return "Quince";
+                        default: return "Dieci" + Unidades(unidad);
+                    }
+                case 2:
+                    switch(unidad)
+                    {
+                        case 0: return "Veinte";
+                        default: return "Veinti" + Unidades(unidad);
+                    }
+                case 3: return DecenasY("Treinta", unidad);
+                case 4: return DecenasY("Cuarenta", unidad);
+                case 5: return DecenasY("Cincuenta", unidad);
+                case 6: return DecenasY("Sesenta", unidad);
+                case 7: return DecenasY("Setenta", unidad);
+                case 8: return DecenasY("Ochenta", unidad);
+                case 9: return DecenasY("Noventa", unidad);
+                case 0: return Unidades(unidad);
+            }
+    }//Decenas()
+
+    function DecenasY(strSin, numUnidades) {
+        if (numUnidades > 0)
+        return strSin + " Y " + Unidades(numUnidades)
+
+        return strSin;
+    }//DecenasY()
+
+    function Centenas(num) {
+        var centenas = Math.floor(num / 100);
+        var decenas = num - (centenas * 100);
+
+        switch(centenas)
+            {
+                case 1:
+                    if (decenas > 0)
+                        return "Ciento " + Decenas(decenas);
+                    return "Cien";
+                case 2: return "Doscientos " + Decenas(decenas);
+                case 3: return "Trescientos " + Decenas(decenas);
+                case 4: return "Cuatroscientos " + Decenas(decenas);
+                case 5: return "Quinientos " + Decenas(decenas);
+                case 6: return "Seiscientos" + Decenas(decenas);
+                case 7: return "Setecientos " + Decenas(decenas);
+                case 8: return "Ochocientos " + Decenas(decenas);
+                case 9: return "Novecientos " + Decenas(decenas);
+            }
+
+        return Decenas(decenas);
+    }//Centenas()
+
+    function Seccion(num, divisor, strSingular, strPlural) {
+        var cientos = Math.floor(num / divisor)
+        var resto = num - (cientos * divisor)
+        var letras = "";
+        if (cientos > 0)
+            if (cientos > 1)
+                letras = Centenas(cientos) + " " + strPlural;
+            else
+                letras = strSingular;
+        if (resto > 0)
+            letras += "";
+        return letras;
+    }//Seccion()
+
+    function Miles(num) {
+        var divisor = 1000;
+        var cientos = Math.floor(num / divisor)
+        var resto = num - (cientos * divisor)
+
+        var strMiles = Seccion(num, divisor, "Un Mil", "Mil");
+        var strCentenas = Centenas(resto);
+
+        if(strMiles == "")
+           return strCentenas;
+
+        return strMiles + " " + strCentenas;
+    }//Miles()
+
+    function Millones(num) {
+        var divisor = 1000000;
+        var cientos = Math.floor(num / divisor)
+        var resto = num - (cientos * divisor)
+
+        var strMillones = Seccion(num, divisor, "Un Millón ", "Millones ");
+        var strMiles = Miles(resto);
+
+        if(strMillones == "")
+            return strMiles;
+
+        return strMillones + " " + strMiles;
+    }//Millones()
+
+    function NumeroALetras(num) {
+        var data = {
+                numero: num,
+                enteros: Math.floor(num),
+                centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
+                letrasCentavos: "",
+                letrasMonedaPlural: 'Pesos',//“PESOS”, 'Dólares', 'Bolívares', 'etcs'
+                letrasMonedaSingular: 'Peso', //“PESO”, 'Dólar', 'Bolivar', 'etc'
+
+                letrasMonedaCentavoPlural: "Centavos",
+                letrasMonedaCentavoSingular: "Centavo"
+        };
+
+        if (data.centavos > 0) {
+                data.letrasCentavos = "Con " + (function (){
+                    if (data.centavos == 1)
+                        return Millones(data.centavos) + " " + data.letrasMonedaCentavoSingular;
+                    else
+                        return Millones(data.centavos) + " " + data.letrasMonedaCentavoPlural;
+                    })();
+        };
+
+        if(data.enteros == 0)
+                return "Cero " + data.letrasMonedaPlural + " " + data.letrasCentavos;
+            if (data.enteros == 1)
+                return Millones(data.enteros) + " " + data.letrasMonedaSingular + " " + data.letrasCentavos;
+            else
+                return Millones(data.enteros) + " " + data.letrasMonedaPlural + " " + data.letrasCentavos;
+    }//NumeroALetras()
+
+
+
+
 }).config(function($mdDateLocaleProvider) {
     $mdDateLocaleProvider.formatDate = function(date) {
         return date ? moment(date).format('DD/MM/YYYY') : '';
