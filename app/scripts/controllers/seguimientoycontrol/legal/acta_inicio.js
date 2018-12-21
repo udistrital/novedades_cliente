@@ -96,15 +96,20 @@ angular.module('contractualClienteApp')
 
 
                 });
-                amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
+               
+            });
+
+            //Obtencion de datos del Supervisor
+            amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
                 query: "Id:" + self.contrato_obj.supervisor_cedula
                 })).then(function(ipns_response){
                     coreAmazonRequest.get('ciudad','query=Id:' + ipns_response.data[0].IdCiudadExpedicionDocumento).then(function(cs_response){  
                          self.contrato_obj.supervisor_ciudad_documento = cs_response.data[0].Nombre;
-                         self.contrato_obj.supervisor_tipo_documento = ipns_response.data[0].TipoDocumento.ValorParametro;   
+                         self.contrato_obj.supervisor_tipo_documento = ipns_response.data[0].TipoDocumento.ValorParametro;
+                         self.contrato_obj.supervisor_nombre_completo = ipns_response.data[0].PrimerNombre + " " + ipns_response.data[0].SegundoNombre + " " + ipns_response.data[0].PrimerApellido + " " +  ipns_response.data[0].SegundoApellido;
+
                     });           
-                });
-            }); 
+             }); 
         });
         //Obtencion tipo de contrato
         amazonAdministrativaRequest.get('tipo_contrato', $.param({
@@ -119,9 +124,12 @@ angular.module('contractualClienteApp')
         if (cantidad_elementos > 0) {
             self.poliza_obj.numero_poliza = wso_response.data.poliza_contrato.numero_poliza;
             self.poliza_obj.fecha_aprobacion = wso_response.data.poliza_contrato.fecha_aprobacion;
+            self.poliza_obj.fecha_expedicion = wso_response.data.poliza_contrato.fecha_expedicion;
+
         }else{
             self.poliza_obj.numero_poliza = $translate.instant('NO_REGISTRA_ACTA_INICIO');
-            self.poliza_obj.fecha_aprobacion = $translate.instant('NO_REGISTRA_ACTA_INICIO');
+            self.poliza_obj.fecha_aprobacion = $translate.instant('NO_REGISTRA_FECHA_APROBACION');
+            self.poliza_obj.fecha_expedicion = $translate.instant('NO_REGISTRA_FECHA_EXPEDICION');
         }
     });
 
@@ -462,7 +470,7 @@ angular.module('contractualClienteApp')
                         ],
                         [ 
                         {text: 'FECHA DE EXPEDICIÓN DE PÓLIZA:',  bold: true,  style: 'topHeader'},               
-                        {text:  self.format_date_letter(self.poliza_obj.fecha_aprobacion),  style: 'topHeader'}                                     
+                        {text:  self.format_date_letter(self.poliza_obj.fecha_expedicion),  style: 'topHeader'}                                     
                         ],
                         [ 
                         {text: 'FECHA DE APROBACIÓN DE PÓLIZA:',  bold: true,  style: 'topHeader'},               
@@ -477,7 +485,7 @@ angular.module('contractualClienteApp')
                 text:[
                 '\n\n',{text: 'En Bogotá D.C. a los ' + Fecha_Actual('d','si') + ' (' + Fecha_Actual('d','no') +  ') días del mes de ' + Fecha_Actual('m','si') + ' del año ' + Fecha_Actual('a') +', se reunieron: ' +
                                  self.contrato_obj.contratista_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ' expedida en ' +  self.contrato_obj.contratista_ciudad_documento + 
-                                 ' quien ejerce como Contratista, y ' + self.contrato_obj.supervisor + ', mayor de edad, identificado(a) con ' +  self.contrato_obj.supervisor_tipo_documento +' No. ' + self.contrato_obj.supervisor_cedula + ' expedida en ' + self.contrato_obj.supervisor_ciudad_documento +', en calidad de Supervisor del Contrato por parte de la Universidad Distrital ' +
+                                 ' quien ejerce como Contratista, y ' + self.contrato_obj.supervisor_nombre_completo + ', mayor de edad, identificado(a) con ' +  self.contrato_obj.supervisor_tipo_documento +' No. ' + self.contrato_obj.supervisor_cedula + ' expedida en ' + self.contrato_obj.supervisor_ciudad_documento +', en calidad de Supervisor del Contrato por parte de la Universidad Distrital ' +
                                  ' Franciso José de Caldas con el objeto de dejar constancia del inicio real y efectivo del Contrato anteriormente citado, previo cumplimiento de los requisitos de legalización del Contrato. En consecuencia, se procede a la iniciación del Contrato a partir del día ' + 
                                  Fecha_Actual('d','si') + ' (' + Fecha_Actual('d','no') +  ') del mes de ' + Fecha_Actual('m','si') + ' del año ' + Fecha_Actual('a') + '. El supervisor puso en conocimiento del Contratista lo siguiente: 1. Que para la firma de la presente Acta de Iniciación, el ' +
                                  'contratista ha presentado y reposa en la respectiva Carpeta, toda la documentación exigida por la Universidad para estos casos. 2. Que para el desarrollo del contrato es indispensable mantener la Propuesta de Servicios elaborada y cualquier modificación debe ' +
@@ -507,7 +515,7 @@ angular.module('contractualClienteApp')
                         {text: 'Firma', bold: false, style: 'topHeader'}
                         ],
                         [
-                        {text: self.contrato_obj.supervisor, bold: false, style: 'topHeader'},
+                        {text: self.contrato_obj.supervisor_nombre_completo, bold: false, style: 'topHeader'},
                         {text: self.contrato_obj.contratista_nombre, bold: false, style: 'topHeader'}
                         ],
                         [
