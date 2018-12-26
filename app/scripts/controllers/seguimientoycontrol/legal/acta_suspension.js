@@ -9,6 +9,11 @@
  */
 angular.module('contractualClienteApp')
   .controller('SeguimientoycontrolLegalActaSuspensionCtrl', function ($location, $log, $scope, $routeParams, $translate, amazonAdministrativaRequest, argoNosqlRequest, coreAmazonRequest, agoraRequest, adminMidRequest, contratoRequest) {
+    this.awesomeThings = [
+        'HTML5 Boilerplate',
+        'AngularJS',
+        'Karma'
+    ];
 
     var self = this;
     self.f_registro = new Date();
@@ -36,12 +41,14 @@ angular.module('contractualClienteApp')
       self.contrato_obj.valor = wso_response.data.contrato.valor_contrato;
       self.contrato_obj.objeto = wso_response.data.contrato.objeto_contrato;
       self.contrato_obj.fecha_registro = wso_response.data.contrato.fecha_registro;
+      self.contrato_obj.ordenador_gasto_id = wso_response.data.contrato.ordenador_gasto.id;
       self.contrato_obj.ordenador_gasto_nombre = wso_response.data.contrato.ordenador_gasto.nombre_ordenador;
       self.contrato_obj.ordenador_gasto_rol = wso_response.data.contrato.ordenador_gasto.rol_ordenador;
       self.contrato_obj.vigencia = wso_response.data.contrato.vigencia;
       self.contrato_obj.supervisor = wso_response.data.contrato.supervisor.nombre;
       self.contrato_obj.supervisor_documento = wso_response.data.contrato.supervisor.documento_identificacion;
       self.contrato_obj.contratista = wso_response.data.contrato.contratista;
+      self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
 
       amazonAdministrativaRequest.get('tipo_contrato', $.param({
         query: "Id:" + wso_response.data.contrato.tipo_contrato
@@ -78,21 +85,56 @@ angular.module('contractualClienteApp')
             self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
             self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
 
+
+            //Obtencion de datos del contratista
             amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
                 query: "Id:" + ip_response.data[0].NumDocumento
             })).then(function(ipn_response){
                 coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(c_response){
                     self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
+                    self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;                               
+
 
                     amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
                         query: "Id:" + self.contrato_obj.supervisor_documento              
                     })).then(function(ispn_response){
                         coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(sc_response){
                             self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
+                            self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro; 
+                            self.contrato_obj.supervisor_nombre_completo = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " +  ispn_response.data[0].SegundoApellido;
                         });
                     });
                 });
             });
+              
+            //Obtención de datos del ordenador del gasto
+            amazonAdministrativaRequest.get('ordenadores', $.param({
+                query: "IdOrdenador:" + self.contrato_obj.ordenador_gasto_id , sortby: "FechaFin" , order: "desc", limit: '1'
+            })).then(function(og_response){
+                    self.contrato_obj.ordenador_gasto_documento=og_response.data[0].Documento;
+
+            });
+
+             //Obtención de datos del ordenador del gasto
+            amazonAdministrativaRequest.get('supervisor_contrato', $.param({
+                query: "CargoId.Id:78" , sortby: "FechaFin" , order: "desc", limit: '1'
+            })).then(function(jj_response){
+                    self.contrato_obj.jefe_juridica_documento=jj_response.data[0].Documento;
+                     amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
+                        query: "Id:" + self.contrato_obj.jefe_juridica_documento              
+                    })).then(function(ijpn_response){
+                        coreAmazonRequest.get('ciudad','query=Id:' + ijpn_response.data[0].IdCiudadExpedicionDocumento).then(function(scj_response){
+                            self.contrato_obj.jefe_juridica_ciudad_documento = scj_response.data[0].Nombre;
+                            self.contrato_obj.jefe_juridica_tipo_documento = ijpn_response.data[0].TipoDocumento.ValorParametro; 
+                            self.contrato_obj.jefe_juridica_nombre_completo = ijpn_response.data[0].PrimerNombre + " " + ijpn_response.data[0].SegundoNombre + " " + ijpn_response.data[0].PrimerApellido + " " +  ijpn_response.data[0].SegundoApellido;
+                        });
+                    });
+
+            });
+
+        //   supervisor_contrato/?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1
+
+
           });
         });
       });
@@ -179,14 +221,17 @@ angular.module('contractualClienteApp')
                   };
 
                   contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
-                    console.log(response);
-                    if (response.status == 200 || response.statusText == "OK") {
+                   
+                   if (response.status == 200 || response.statusText == "OK") {
                       swal(
                         $translate.instant('TITULO_BUEN_TRABAJO'),
                         $translate.instant('DESCRIPCION_SUSPENSION') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
                         'success'
                       );
+
+
                       self.formato_generacion_pdf();
+                    
                     }
                   });
                 }
@@ -222,9 +267,168 @@ angular.module('contractualClienteApp')
       if(mm<10){
         mm='0'+mm;
       }
-      var today = dd+'/'+mm+'/'+yyyy;
+      var today = 'Día: ' + dd + '  Mes: ' + mm + '  Año: '+ yyyy ;
       return today;
     };
+
+
+
+   
+
+    function Unidades(num){
+
+        switch(num)
+        {
+            case 1: return "Un";
+            case 2: return "Dos";
+            case 3: return "Tres";
+            case 4: return "Cuatro";
+            case 5: return "Cinco";
+            case 6: return "Seis";
+            case 7: return "Siete";
+            case 8: return "Ocho";
+            case 9: return "Nueve";
+        }
+
+        return "";
+    }//Unidades()
+
+    function Decenas(num){
+
+        var decena = Math.floor(num/10);
+        var unidad = num - (decena * 10);
+
+            switch(decena)
+            {
+                case 1:
+                    switch(unidad)
+                    {
+                        case 0: return "Diez";
+                        case 1: return "Once";
+                        case 2: return "Doce";
+                        case 3: return "Trece";
+                        case 4: return "Catorce";
+                        case 5: return "Quince";
+                        default: return "Dieci" + Unidades(unidad);
+                    }
+                case 2:
+                    switch(unidad)
+                    {
+                        case 0: return "Veinte";
+                        default: return "Veinti" + Unidades(unidad);
+                    }
+                case 3: return DecenasY("Treinta", unidad);
+                case 4: return DecenasY("Cuarenta", unidad);
+                case 5: return DecenasY("Cincuenta", unidad);
+                case 6: return DecenasY("Sesenta", unidad);
+                case 7: return DecenasY("Setenta", unidad);
+                case 8: return DecenasY("Ochenta", unidad);
+                case 9: return DecenasY("Noventa", unidad);
+                case 0: return Unidades(unidad);
+            }
+    }//Decenas()
+
+    function DecenasY(strSin, numUnidades) {
+        if (numUnidades > 0)
+        return strSin + " Y " + Unidades(numUnidades)
+
+        return strSin;
+    }//DecenasY()
+
+    function Centenas(num) {
+        var centenas = Math.floor(num / 100);
+        var decenas = num - (centenas * 100);
+
+        switch(centenas)
+            {
+                case 1:
+                    if (decenas > 0)
+                        return "Ciento " + Decenas(decenas);
+                    return "Cien";
+                case 2: return "Doscientos " + Decenas(decenas);
+                case 3: return "Trescientos " + Decenas(decenas);
+                case 4: return "Cuatroscientos " + Decenas(decenas);
+                case 5: return "Quinientos " + Decenas(decenas);
+                case 6: return "Seiscientos" + Decenas(decenas);
+                case 7: return "Setecientos " + Decenas(decenas);
+                case 8: return "Ochocientos " + Decenas(decenas);
+                case 9: return "Novecientos " + Decenas(decenas);
+            }
+
+        return Decenas(decenas);
+    }//Centenas()
+
+    function Seccion(num, divisor, strSingular, strPlural) {
+        var cientos = Math.floor(num / divisor)
+        var resto = num - (cientos * divisor)
+        var letras = "";
+        if (cientos > 0)
+            if (cientos > 1)
+                letras = Centenas(cientos) + " " + strPlural;
+            else
+                letras = strSingular;
+        if (resto > 0)
+            letras += "";
+        return letras;
+    }//Seccion()
+
+    function Miles(num) {
+        var divisor = 1000;
+        var cientos = Math.floor(num / divisor)
+        var resto = num - (cientos * divisor)
+
+        var strMiles = Seccion(num, divisor, "Un Mil", "Mil");
+        var strCentenas = Centenas(resto);
+
+        if(strMiles == "")
+           return strCentenas;
+
+        return strMiles + " " + strCentenas;
+    }//Miles()
+
+    function Millones(num) {
+        var divisor = 1000000;
+        var cientos = Math.floor(num / divisor)
+        var resto = num - (cientos * divisor)
+
+        var strMillones = Seccion(num, divisor, "Un Millón ", "Millones ");
+        var strMiles = Miles(resto);
+
+        if(strMillones == "")
+            return strMiles;
+
+        return strMillones + " " + strMiles;
+    }//Millones()
+
+    function NumeroALetras(num) {
+        var data = {
+                numero: num,
+                enteros: Math.floor(num),
+                centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
+                letrasCentavos: "",
+                letrasMonedaPlural: 'Pesos',//“PESOS”, 'Dólares', 'Bolívares', 'etcs'
+                letrasMonedaSingular: 'Peso', //“PESO”, 'Dólar', 'Bolivar', 'etc'
+
+                letrasMonedaCentavoPlural: "Centavos",
+                letrasMonedaCentavoSingular: "Centavo"
+        };
+
+        if (data.centavos > 0) {
+                data.letrasCentavos = "Con " + (function (){
+                    if (data.centavos == 1)
+                        return Millones(data.centavos) + " " + data.letrasMonedaCentavoSingular;
+                    else
+                        return Millones(data.centavos) + " " + data.letrasMonedaCentavoPlural;
+                    })();
+        };
+
+        if(data.enteros == 0)
+                return "Cero " + data.letrasMonedaPlural + " " + data.letrasCentavos;
+            if (data.enteros == 1)
+                return Millones(data.enteros) + " " + data.letrasMonedaSingular + " " + data.letrasCentavos;
+            else
+                return Millones(data.enteros) + " " + data.letrasMonedaPlural + " " + data.letrasCentavos;
+    }//NumeroALetras()
 
     /**
      * @ngdoc method
@@ -240,6 +444,68 @@ angular.module('contractualClienteApp')
         $location.path('/seguimientoycontrol/legal');
       });
     }
+
+
+    /**
+     * @ngdoc method
+     * @name numberFormat
+     * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaInicioCtrl
+     * @description
+     * funcion que formatea los valores de la fecha
+     */
+    function numberFormat(numero){
+        // Variable que contendra el resultado final
+        var resultado = "";
+        var nuevoNumero = 0;
+        // Si el numero empieza por el valor "-" (numero negativo)
+        if(numero[0]=="-")
+        {
+            // Cogemos el numero eliminando las posibles comas que tenga, y sin el signo negativo
+            nuevoNumero=numero.replace(/\,/g,'').substring(1);
+        }else{
+            // Cogemos el numero eliminando las posibles comas que tenga
+            nuevoNumero=numero.replace(/\,/g,'');
+        }
+        // Si tiene decimales, se los quitamos al numero
+        if(numero.indexOf(".")>=0)
+            nuevoNumero=nuevoNumero.substring(0,nuevoNumero.indexOf("."));
+        // Ponemos un punto cada 3 caracteres
+        for (var j= 0, i = nuevoNumero.length - 1; i >= 0; i--, j++)
+            resultado = nuevoNumero.charAt(i) + ((j > 0) && (j % 3 == 0)? ",": "") + resultado;
+        // Si tiene decimales, se lo añadimos al numero una vez forateado con los separadores de miles
+        if(numero.indexOf(".")>=0)
+            resultado+=numero.substring(numero.indexOf("."));
+        if(numero[0]=="-")
+        {
+            // Devolvemos el valor añadiendo al inicio el signo negativo
+            return "-"+resultado;
+        }else{
+            return resultado;
+        }
+    }
+
+    self.format_date_letter = function(param){
+       console.log(param);
+        var cadena=param.toString().split("-"); 
+        var dd = cadena[2];
+        var mm = cadena[1] - 1;
+        var yyyy = cadena[0];
+        var fecha = new Date(yyyy,mm,dd);
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        
+       return fecha.toLocaleDateString("es-ES", options);
+    };
+
+
+    self.format_date_letter_mongo = function(param){
+      var date = new Date(param);
+      var dd = date.getDate();
+      var mm = date.getMonth()+1;
+      var yyyy = date.getFullYear();
+      var fecha = new Date(yyyy,mm,dd);
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      return fecha.toLocaleDateString("es-ES", options);  
+    };
 
     /**
      * @ngdoc method
@@ -269,7 +535,7 @@ angular.module('contractualClienteApp')
                 ],
                 [ ' ',
                   {text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 12, margin: [0, 3]},
-                  {text: 'Fecha de Aprobación: 20/03/14', fontSize: 9},
+                  {text: 'Fecha de Aprobación: 12/10/2017', fontSize: 9},
                   ' '
                 ],
               ]
@@ -282,7 +548,15 @@ angular.module('contractualClienteApp')
                     body:[
                         [
                         {text: 'Contrato:', bold: true, style: 'topHeader'},
-                        {text:  self.contrato_obj.tipo_contrato + ' No. ' +  self.contrato_id  + ' de ' + self.contrato_vigencia,  style: 'topHeader'}
+                        {text:  self.contrato_obj.tipo_contrato,  style: 'topHeader'}
+                        ],
+                        [
+                        {text: 'Ńo. Contrato:', bold: true, style: 'topHeader'},
+                         { text:[
+                            {text:  self.contrato_id, bold: true, style: 'topHeader'},
+                            {text: ' suscrito el ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion),  style: 'topHeader'}
+                            ]
+                         }
                         ],
                         [ 
                         {text: 'Contratante:',  bold: true,  style: 'topHeader'},               
@@ -290,7 +564,7 @@ angular.module('contractualClienteApp')
                         ],
                         [ 
                         {text: 'Contratista:',  bold: true,  style: 'topHeader'},               
-                        {text:  self.contrato_obj.contratista_nombre,  style: 'topHeader'}                                     
+                        {text: self.contrato_obj.contratista_nombre + ", mayor de edad, identificado(a) con " + self.contrato_obj.contratista_tipo_documento +  " No. " +  self.contrato_obj.contratista_documento + " Expedida en " + self.contrato_obj.contratista_ciudad_documento,  style: 'topHeader'}                                     
                         ],
                         [ 
                         {text: 'Objeto:',  bold: true,  style: 'topHeader'},               
@@ -298,7 +572,7 @@ angular.module('contractualClienteApp')
                         ],
                         [ 
                         {text: 'Valor:',  bold: true,  style: 'topHeader'},               
-                        {text: '$'+parseInt(self.contrato_obj.valor).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'),  style: 'topHeader'}                                     
+                        {text: NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + ")",  style: 'topHeader'}                                     
                         ],
                         [ 
                         {text: 'Fecha de inicio:',  bold: true,  style: 'topHeader'},               
@@ -322,17 +596,17 @@ angular.module('contractualClienteApp')
             text:[
               '\n\n',
 
-              'Entre los subscritos a saber, '+ self.contrato_obj.supervisor +' identificado con cédula de ciudadanía No. '+ self.contrato_obj.supervisor_documento +' de '+ self.contrato_obj.supervisor_ciudad_documento +
-              ' y ' + self.contrato_obj.contratista_nombre + ' identificado con cédula de ciudadanía No. ' + self.contrato_obj.contratista_documento + ' de ' + self.contrato_obj.contratista_ciudad_documento +
+              'Entre los subscritos a saber, '+ self.contrato_obj.supervisor_nombre_completo +' identificado con ' + self.contrato_obj.supervisor_tipo_documento + ' No. '+ self.contrato_obj.supervisor_documento +' de '+ self.contrato_obj.supervisor_ciudad_documento +
+              ' y ' + self.contrato_obj.contratista_nombre + ' identificado con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ' de ' + self.contrato_obj.contratista_ciudad_documento +
               ' en su calidad de contratista, hemos determinado SUSPENDER el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id +' de '+ self.contrato_vigencia +
-              ' durante el periodo comprendido entre el día ' + self.format_date(self.f_inicio) + ' y el dia ' + self.format_date(self.f_reinicio) + '.\n\n',
+              ' durante el periodo comprendido entre el día ' + self.format_date_letter_mongo(self.f_inicio) + ' y el dia ' + self.format_date_letter_mongo(self.f_reinicio) + '.\n\n',
 
               {text:'MOTIVO DE LA SUSPENSIÓN', bold:true}, '\n\n',
               self.suspension_nov.motivo, '\n\n',
 
               'Por los motivos antes expuestos las partes acuerdan: ', '\n\n',
               'Suspender el Contrato ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de '+ self.contrato_vigencia +
-              ', durante el periodo comprendido entre ' + self.format_date(self.suspension_nov.fechasuspension) + ' y ' + self.format_date(self.suspension_nov.fechareinicio) + '\n\n',
+              ', durante el periodo comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechareinicio) + '.\n\n',
             ]
           },
           {
@@ -365,32 +639,44 @@ angular.module('contractualClienteApp')
           {
             style:['general_font'],
             text:[
-              'La presente suspensión rige una vez perfeccionado por los intervinientes, para constancia, firman las partes en la fecha ___________________' + '\n\n\n'
+              'La presente suspensión rige una vez perfeccionado por los intervinientes, para constancia, firman las partes en la fecha ___________________ .' + '\n\n\n'
             ]
           },
           {
-            style:['general_font'],
-            text:[
-              '\n\n_____________________________________ \n',
-              'Ordenador de Gasto \n\n\n'
-            ]
+            style:['table'],  
+            table:{
+              widths:[100, '*', 100],
+              body:[
+                [
+                  '',
+                  {text: '\n\n_____________________________________ \n ' + self.contrato_obj.ordenador_gasto_nombre + ' \n CC: ' + self.contrato_obj.ordenador_gasto_documento + '\n Ordenador del Gasto ', style: 'topHeader', alignment: 'center'},
+                  '',
+                ],
+                [
+                  '',
+                  {text: '\n\n_____________________________________ \n  ' + self.contrato_obj.supervisor_nombre_completo + ' \n CC: '+ self.contrato_obj.supervisor_documento +'\n Supervisor ' , style: 'topHeader',  alignment: 'center'},
+                  '',
+                ],
+                [
+                  '',
+                  {text: '\n\n_____________________________________ \n  ' + self.contrato_obj.contratista_nombre + '\n CC: '+ self.contrato_obj.contratista_documento +'\n Contratista ' , style: 'topHeader', alignment: 'center'},
+                  '',
+                ],
+                [
+                  '',
+                  {text: '\n\n Elaboro: __________________________  \n\n\n', style: 'topHeader', alignment: 'center'},
+                  '',
+                ],
+                [
+                  '',
+                  {text: '\n\n Revisó: __________________________ \n    ' + self.contrato_obj.jefe_juridica_nombre_completo + '\n CC: ' +  self.contrato_obj.jefe_juridica_documento + '\nJefe Oficina Asesora Jurídica ', style: 'topHeader',  alignment: 'center'},
+                  '',
+                ],
+              ]
+            },
+             layout: 'noBorders', 
+           
           },
-          {
-            style:['general_font'],
-            text:[
-              '\n\n_____________________________________ \n',
-                'Nombre: ' + self.contrato_obj.supervisor + '\n',
-                'CC: '+ self.contrato_obj.supervisor_documento +'\n' ,'Supervisor \n\n\n'
-            ]
-          },
-          {
-            style:['general_font'],
-            text:[
-              '\n\n_____________________________________ \n',
-                'Nombre: ' + self.contrato_obj.contratista_nombre + '\n',
-                'CC: '+ self.contrato_obj.contratista_documento +'\n' ,'Contratista \n\n\n'
-            ]
-          }
         ],
         styles: {
           top_space: {

@@ -345,7 +345,7 @@ angular.module('contractualClienteApp')
      */
     self.format_date = function(param){
        
-        var date = new Date(param);
+        var date = new Date(param);;
         var dd = date.getDate();
         var mm = date.getMonth()+1;
         var yyyy = date.getFullYear();
@@ -355,7 +355,7 @@ angular.module('contractualClienteApp')
         if(mm<10){
             mm='0'+mm;
         }
-        var today = 'Día: ' + dd + '  Mes: ' + mm + '  Año: '+yyyy;
+        var today = 'Día: ' + dd + '  Mes: ' + mm + '  Año: '+ yyyy;
         return today;
     };
 
