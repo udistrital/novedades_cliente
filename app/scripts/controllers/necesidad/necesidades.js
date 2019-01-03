@@ -8,12 +8,17 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, $translate, $window,  $mdDialog, gridApiService, pdfMakerNecesidadesService, necesidadService) {
+    .controller('NecesidadesCtrl', function ($scope, administrativaRequest, rolesService, necesidadService, $translate, $window, $mdDialog, gridApiService) {
         var self = this;
         self.offset = 0;
         self.rechazada = false;
-        self.editarNecesidad = true;
-
+        self.buttons = {};
+        
+        //permisos de los buttons segun el rol
+        rolesService.buttons('NecesidadesCtrl', rolesService.roles()).then(function (data) {
+            self.buttons = data;
+        });
+        
         self.gridOptions = {
             paginationPageSizes: [10, 15, 20],
             paginationPageSize: 10,
@@ -132,35 +137,31 @@ angular.module('contractualClienteApp')
             self.g_necesidad = necesidad;
             self.numero_el = necesidad.NumeroElaboracion;
             self.vigencia = necesidad.Vigencia;
-            if (necesidad.EstadoNecesidad.Nombre === 'Solicitada') {
-                self.mod_aprobar = true;
-                self.mod_cdp = false;
-            } else if (necesidad.EstadoNecesidad.Nombre === 'Aprobada') {
-                self.mod_aprobar = false;
-                self.mod_cdp = true;
-            } else {
-                self.mod_cdp = false;
-                self.mod_aprobar = false;
-            }
 
             //para mostrar informacion de rechazo
-            self.necesidad_estado = necesidad.EstadoNecesidad.Nombre;
+
+
+            // validaciones para los botones: (estado) && (permisos rol)
+            var aproOrRech = [necesidadService.EstadoNecesidadType.Solicitada.Id, necesidadService.EstadoNecesidadType.Modificada.Id]
+                .includes(necesidad.EstadoNecesidad.Id);
+
+            self.verBotonAprobarNecesidad = aproOrRech  && self.buttons.AprobarNecesidad;
+            self.verBotonRechazarNecesidad = aproOrRech  && self.buttons.RechazarNecesidad;
+            self.verBotonEditarNecesidad = necesidadService.EstadoNecesidadType.Rechazada.Id === necesidad.EstadoNecesidad.Id && self.buttons.EditarNecesidad;
+            self.verBotonSolicidadCDPNecesidad = necesidadService.EstadoNecesidadType.Aprobada.Id === necesidad.EstadoNecesidad.Id && self.buttons.SolicitarCDP;
 
             $("#myModal").modal();
 
         };
 
         self.aprobar_necesidad = function () {
-            var n = {};
+            var nec_apro = {};
             administrativaRequest.get('necesidad/' + self.g_necesidad.Id
             ).then(function (response) {
-                n = response.data == undefined ? {} : response.data;
-                return administrativaRequest.get('estado_necesidad', $.param({
-                    query: "Nombre:Aprobada"
-                }));
-            }).then(function (response) {
-                n.EstadoNecesidad = response.data[0];
-                administrativaRequest.put('necesidad', n.Id, n).then(function (response) {
+                nec_apro = response.data == undefined ? {} : response.data;
+                nec_apro.EstadoNecesidad = necesidadService.EstadoNecesidadType.Aprobada;
+
+                administrativaRequest.put('necesidad', nec_apro.Id, nec_apro).then(function (response) {
                     self.alerta = "";
                     for (var i = 1; i < response.data.length; i++) {
                         self.alerta = self.alerta + response.data[i] + "\n";
@@ -197,11 +198,13 @@ angular.module('contractualClienteApp')
                 return administrativaRequest.get('necesidad/' + self.g_necesidad.Id);
             }).then(function (response) {
                 nec_rech.Necesidad = response.data;
-                return administrativaRequest.get('estado_necesidad', $.param({
-                    query: "Nombre:Rechazada"
-                }));
-            }).then(function (response) {
-                nec_rech.Necesidad.EstadoNecesidad = response.data[0];
+
+                if (nec_rech.Necesidad.EstadoNecesidad.Id === necesidadService.EstadoNecesidadType.Solicitada.Id) {
+                    nec_rech.Necesidad.EstadoNecesidad = necesidadService.EstadoNecesidadType.Rechazada;
+                } else if (nec_rech.Necesidad.EstadoNecesidad.Id === necesidadService.EstadoNecesidadType.Modificada.Id) {
+                    nec_rech.Necesidad.EstadoNecesidad = necesidadService.EstadoNecesidadType.Anulada;
+                }
+
                 return administrativaRequest.put('necesidad', nec_rech.Necesidad.Id, nec_rech.Necesidad);
             }).then(function (response) {
                 return administrativaRequest.post('necesidad_rechazada', nec_rech);
@@ -225,6 +228,14 @@ angular.module('contractualClienteApp')
             });
         };
 
+        self.editar_necesidad = function () {
+            var idNecesidad = self.g_necesidad.Id;
+            $("#myModal").modal("hide");
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $window.location.href = '#/necesidad/solicitud_necesidad/' + idNecesidad;
+            })
+        };
+
         self.solicitar_cdp = function () {
             self.sol_cdp = {};
             self.sol_cdp.Necesidad = self.g_necesidad;
@@ -240,13 +251,6 @@ angular.module('contractualClienteApp')
             });
         };
 
-        self.editar_necesidad = function () {
-            var idNecesidad = self.g_necesidad.Id;
-            $("#myModal").modal("hide");
-            $('#myModal').on('hidden.bs.modal', function (e) {
-                $window.location.href = '#/necesidad/solicitud_necesidad/' + idNecesidad;
-            })
-        };
         $scope.crearPDF = function (row) {
             var IdNecesidad = row.Id;
 

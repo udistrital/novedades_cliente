@@ -114,6 +114,11 @@ angular
                 controller: 'PdfnecesidadCtrl',
                 controllerAs: 'necesidadPdf'
             })
+            .when('/necesidad/necesidad_reportes', {
+                templateUrl: 'views/necesidad/necesidad_reportes.html',
+                controller: 'NecesidadReportesCtrl',
+                controllerAs: 'necesidadReportes'
+            })
             .when('/rp_solicitud_personas', {
                 templateUrl: 'views/rp/rp_solicitud_personas.html',
                 controller: 'RpSolicitudPersonasCtrl',
@@ -198,6 +203,11 @@ angular
                 templateUrl: 'views/vinculacionespecial/contrato_registro_cancelar.html',
                 controller: 'ContratoRegistroCancelarCtrl',
                 controllerAs: 'contratoRegistroCancelar'
+            })
+            .when('/vinculacionespecial/resolucion_reportes', {
+                templateUrl: 'views/vinculacionespecial/resolucion_reportes.html',
+                controller: 'ResolucionReportesCtrl',
+                controllerAs: 'resolucionReportes'
             })
             .when('/vinculacionespecial/resolucion_gestion', {
                 templateUrl: 'views/vinculacionespecial/resolucion_gestion.html',

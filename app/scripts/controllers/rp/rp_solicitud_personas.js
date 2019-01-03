@@ -26,6 +26,8 @@ angular.module('contractualClienteApp')
         self.disponibilidad = disponibilidad;
         $scope.vigenciaModel = null;
         $scope.vigencias = null;
+        var fecha_actual = new Date();
+        $scope.vigencia_actual  = fecha_actual.getFullYear();
         $scope.vigencias_resoluciones = null;
         $scope.contrato_int = $translate.instant('CONTRATO');
         $scope.vigencia_contrato = $translate.instant('VIGENCIA_CONTRATO');

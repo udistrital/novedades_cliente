@@ -15,7 +15,7 @@ var text_es = {
     NO_HAY_DATOS_REDIRIGIR_ORDEN: "No hay datos de órdenes de pago para este contratista",
     SELECCIONAR_FILTRO: "Seleccione el tipo de filtro por el cual quiere generar la solicitud del RP",
     BUSCAR: "Buscar",
-    NO_HAY_DATOS_REDIRIGIR_CDP: "No hay datos de CDP para este contrato",
+    NO_HAY_DATOS_REDIRIGIR_CDP: "El ó Los CDPś Asociados al presente Contrato se encuentran Agotados, por favor verifique la información respectiva en el sistema ARGO.",
     RESOLUCION_SIN_VINCULACIONES: "Esta resolución no tiene vinculaciones para mostrar",
     INGRESE_IDENTIFICACION_PROVEEDOR: "Ingrese identificación del proveedor",
     DATOS_PROVEEDOR: "Datos proveedor",
@@ -48,7 +48,10 @@ var text_es = {
     TIPO_RESOLUCION: "Tipo resolución",
     TITULO: "GENERATOR-OAS",
     MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
+
     UNIVERSIDAD_NOMBRE:"Universidad Distrital Francisco José de Caldas",
+
+    CODIGO: "Código",
     //solicitud_necesidad
     ID_AVANCE: "ID Avance",
     LISTA_AVANCES: "Lista de Avances",
@@ -126,6 +129,7 @@ var text_es = {
     TOTAL_FINANCIACION: "Total Financiación",
     OBLIGATORIO: "Campo requerido",
     PRECIO_MAS_IVA: "Valor + IVA",
+    NO_NECESIDAD: "No. elaboración necesidad",
     //lista_documentos_legales
     MARCO_LEGAL: "Marco Legal",
     NOMBRE_DOCUMENTO: "Nombre del Documento",
@@ -134,7 +138,7 @@ var text_es = {
     ACTIVIDAD_ECONOMICA: "Actividad Económica",
     //lista_subgrupos_catalogos
     CATALOGO: "Catálogo",
-    PRODCUTOS: "Productos",
+    PRODUCTOS: "Productos",
     //lista_apropiaciones
     APROPIACIONES: "Apropiaciones",
     APROPIACIONES_VIGENCIA: "Apropiaciones de la Vigencia",
@@ -145,7 +149,9 @@ var text_es = {
     FUENTES_FINANCIAMIENTO_APROPIACION: "Fuentes de Financiamiento de la Apropiación",
     //necesidades
     GESTION_NECESIDADES: "Gestión de Necesidades",
-    NUMERO_ELABORACION: "No. de Elaboración",
+    NUMERO_ELABORACION_NECESIDAD: "No. de Elaboración",
+    NUMERO_NECESIDAD_COMPACTO: "No. de Necesidad",
+    NUMERO_SOLICITUD_NECESIDAD: "No. de Solicitud CDP",
     LISTA_NECESIDADES: "Lista de Necesidades",
     NECESIDAD_RECHAZADA: "La necesidad ha sido Rechazada!",
     NECESIDAD_NO_RECHAZADA: "La necesidad no pudo ser rechazada!",
@@ -192,7 +198,6 @@ var text_es = {
     VALOR_RP: "Valor registro presupuestal",
     SALDO_AP: "Saldo apropiación",
     CDP: "CDP",
-    CODIGO: "Código",
     CONSECUTIVO: "Consecutivo",
     OBJETIVO: "Objetivo",
     OBJETO: "Objeto",
@@ -636,7 +641,7 @@ var text_es = {
     ELIJA_SEMANAS_MINIMO: "Elija un número de semanas -> Mínimo: ",
     ELIJA_SEMANAS_MAXIMO: " Máximo: ",
     MAXIMO_SUGERIDO: "Máximo de semanas sugeridas:",
-    COMPLETE_CAMPOS: "Complete Todos Los Campos",
+    COMPLETE_CAMPOS: "Complete todos Los Campos",
     FECHA_FIN_ACTA: "Fecha fin de acuerdo a la reversión: ",
 
     //RESOLUCION_GESTION
@@ -683,6 +688,17 @@ var text_es = {
     TIPO_DOC: "Tipo de documento",
     PERIODO_VINCULACION: "Periodo de vinculación",
     DISPONIBILIDAD_PDF: "Dispo-\nnibilidad",
+
+    //RESOLUCION_REPORTES - NECESIDAD_REPORTES
+    REPORTE: "Reporte",
+    REPORTES: "Reportes ",
+    REPORTE_UNO: "Reporte docentes por resolución",
+    REPORTE_NECESIDADES: "Necesidades por dependencia",
+    SELECCIONE_REPORTE: "Seleccione el reporte que desea ver",
+    GENERAR_REPORTE: "Generar reporte",
+    NO_EXISTE_RESOLUCION: "No se ha encontrado una resolución con los datos ingresados",
+    RESOLUCION_NO_VINCULACION: "La resolución a consultar debe ser de vinculación",
+    RESOLUCION_NO_EXPEDIDA: "La resolución a consultar no se encuentra expedida",
 
     // Minutas Plantillas
     BTN_MINUTAS: {
@@ -890,7 +906,7 @@ var text_en = {
     SELECCIONAR_FILTRO: " Select the filter which is going to generate the RP request",
     BUSCAR: "Search",
     INGRESE_IDENTIFICACION_PROVEEDOR: "Enter provider id",
-    NO_HAY_DATOS_REDIRIGIR_CDP: "There is not availability data for this contract",
+    NO_HAY_DATOS_REDIRIGIR_CDP: "The CDPs associated with this Contract are Exhausted, please check the respective information in the ARGO system.",
     RESOLUCION_SIN_VINCULACIONES: "This resolution does not have links to show",
     DATOS_PROVEEDOR: "Provider data",
     IDENTIFICACION: "Id",
@@ -929,6 +945,7 @@ var text_en = {
     SOLICITUD_NECESIDAD_CONTRATACION_DOCENTES: "Need Request Teacher Recruitment",
     SOLICITUD_NECESIDAD_EXTERNA: "Extern Need Request",
     PRECIO_MAS_IVA: "Value + IVA",
+    NO_NECESIDAD: "Need request number",
     CANCELAR_BTN: "Cancel",
     //SOLICITUD RP
     TIPO_PERSONA: "Kind of person",
@@ -1011,7 +1028,7 @@ var text_en = {
     ACTIVIDADES_ECONOMICAS: "Economic Activities",
     //lista_subgrupos_catalogos
     CATALOGO: "Catalogue",
-    PRODCUTOS: "Products",
+    PRODUCTOS: "Products",
     //lista_apropiaciones
     APROPIACIONES: "Appropiations",
     APROPIACIONES_VIGENCIA: "Validity Appropiations of",
@@ -1022,7 +1039,9 @@ var text_en = {
     FUENTES_FINANCIAMIENTO_APROPIACION: "Appropiations Funding Source",
     //necesidades
     GESTION_NECESIDADES: "Managment Needs",
-    NUMERO_ELABORACION: "No. of Elaboration",
+    NUMERO_NECESIDAD_COMPACTO: "No. of Need",
+    NUMERO_SOLICITUD_NECESIDAD: "No. of Request",
+    NUMERO_ELABORACION_NECESIDAD: "No. of Elaboration",
     NECESIDAD_RECHAZADA: "The Need has been rejected!",
     NECESIDAD_NO_RECHAZADA: "The Need had not been rejected!",
     OBLIGATORIO: "Required",
@@ -1318,7 +1337,18 @@ var text_en = {
     NO_PUEDE_ADICIONAR: "Can't add hours",
     NO_PUEDE_REDUCIR: "Can't reduce hours",
     DEBE_APROBAR_CARGA: "New hours must be approved",
-    FIRMA_RECTOR: "Rector signature"
+    FIRMA_RECTOR: "Rector signature",
+
+    //RESOLUCION_REPORTES
+    REPORTE: "Report",
+    REPORTES: "Reports",
+    REPORTE_UNO: "Teachers by document report",
+    REPORTE_NECESIDADES: "Needs by agency",
+    SELECCIONE_REPORTE: "Select one report",
+    GENERAR_REPORTE: "Generate report",
+    NO_EXISTE_RESOLUCION: "A document with that information doesn't exist",
+    RESOLUCION_NO_VINCULACION: "A document with that information doesn't exist",
+    RESOLUCION_NO_EXPEDIDA: "The document must be issued",
 };
 
 angular.module('contractualClienteApp')
