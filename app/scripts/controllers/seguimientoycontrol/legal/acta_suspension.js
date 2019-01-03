@@ -115,7 +115,7 @@ angular.module('contractualClienteApp')
 
             });
 
-             //Obtención de datos del ordenador del gasto
+             //Obtención de datos del jefe de juridica
             amazonAdministrativaRequest.get('supervisor_contrato', $.param({
                 query: "CargoId.Id:78" , sortby: "FechaFin" , order: "desc", limit: '1'
             })).then(function(jj_response){
@@ -483,9 +483,15 @@ angular.module('contractualClienteApp')
             return resultado;
         }
     }
-
+    /**
+     * @ngdoc method
+     * @name format_date_letter
+     * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaInicioCtrl
+     * @description
+     * funcion para el formateo de objetos tipo fecha a formato a letra  nombre dia, año mes y dia 
+     * @param {date} param
+     */
     self.format_date_letter = function(param){
-       console.log(param);
         var cadena=param.toString().split("-"); 
         var dd = cadena[2];
         var mm = cadena[1] - 1;
@@ -496,6 +502,14 @@ angular.module('contractualClienteApp')
        return fecha.toLocaleDateString("es-ES", options);
     };
 
+    /**
+     * @ngdoc method
+     * @name format_date
+     * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
+     * @description
+     * funcion para el formateo de objetos tipo fecha mongo a formato a letra  nombre dia, año mes y dia 
+     * @param {date} param
+     */
 
     self.format_date_letter_mongo = function(param){
       var date = new Date(param);
@@ -529,8 +543,8 @@ angular.module('contractualClienteApp')
                   {image: 'logo_sigud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10}
                 ],
                 [ ' ',
-                  {text: 'Macroproceso: Gestión administrativa y contratación', alignment: 'center', fontSize: 12},
-                  {text: 'Versión: 01', fontSize: 9, margin: [0, 6]},
+                  {text: 'Macroproceso: Gestión de Recursos', alignment: 'center', fontSize: 12},
+                  {text: 'Versión: 02', fontSize: 9, margin: [0, 6]},
                   ' '
                 ],
                 [ ' ',
@@ -596,7 +610,7 @@ angular.module('contractualClienteApp')
             text:[
               '\n\n',
 
-              'Entre los subscritos a saber, '+ self.contrato_obj.supervisor_nombre_completo +' identificado con ' + self.contrato_obj.supervisor_tipo_documento + ' No. '+ self.contrato_obj.supervisor_documento +' de '+ self.contrato_obj.supervisor_ciudad_documento +
+              'Entre los subscritos a saber, '+ self.contrato_obj.supervisor_nombre_completo +' identificado con ' + self.contrato_obj.supervisor_tipo_documento + ' No. '+ self.contrato_obj.supervisor_documento +' de '+ self.contrato_obj.supervisor_ciudad_documento + 
               ' y ' + self.contrato_obj.contratista_nombre + ' identificado con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ' de ' + self.contrato_obj.contratista_ciudad_documento +
               ' en su calidad de contratista, hemos determinado SUSPENDER el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id +' de '+ self.contrato_vigencia +
               ' durante el periodo comprendido entre el día ' + self.format_date_letter_mongo(self.f_inicio) + ' y el dia ' + self.format_date_letter_mongo(self.f_reinicio) + '.\n\n',
@@ -692,13 +706,13 @@ angular.module('contractualClienteApp')
             alignment: 'justify'
           },
           topHeader:{   
-                    margin: [0, 0, 0, 0],
-                    alignment: 'justify',
-                    fontSize: 11 
+            margin: [0, 0, 0, 0],
+            alignment: 'justify',
+            fontSize: 11 
           },
           table:{   
-                    margin: [0, 0, 0, 0],
-                    border : "0"
+            margin: [0, 0, 0, 0],
+            border : "0"
           }   
         },
         images: {
