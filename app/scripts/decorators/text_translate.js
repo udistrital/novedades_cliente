@@ -455,6 +455,10 @@ var text_es = {
     ASOCIAR_RESOLUCION: "Asociar resolución",
     VIGENCIA: "Vigencia",
     FIRMA_RECTOR: "Firma rector",
+    CARGA_DIFERENTE_VIGENCIA: "Carga académica de un periodo anterior",
+    VIGENCIA_CARGA: "Vigencia de la carga académica",
+    PERIODO_CARGA: "Periodo de la carga académica",
+    PERIODO_RESOLUCION: "Periodo de la resolución",
     /*---Script---*/
     INFORMACION_CONTENIDO: "Los artículos son creados por defecto y pueden ser editados",
     CONFIRMAR_GUARDAR_RESOLUCION: "Guardar resolución",
@@ -1141,6 +1145,10 @@ var text_en = {
     NO_PUEDE_REDUCIR: "Can't reduce hours",
     DEBE_APROBAR_CARGA: "New hours must be approved",
     FIRMA_RECTOR: "Rector signature",
+    CARGA_DIFERENTE_VIGENCIA: "Select previous period",
+    VIGENCIA_CARGA: "Academic charge validity",
+    PERIODO_CARGA: "Academic charge period",
+    PERIODO_RESOLUCION: "Document period",
 
     //RESOLUCION_REPORTES
     REPORTE: "Report",

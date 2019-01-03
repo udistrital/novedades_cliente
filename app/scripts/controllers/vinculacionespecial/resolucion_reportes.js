@@ -12,6 +12,12 @@ angular.module('contractualClienteApp')
     var self = this;
     self.nombreReporte = "";
     self.resolucionId = 0;
+    self.vigencias = [];
+    
+    var anio = new Date().getFullYear();
+    for (var v = 2018; v <= anio; v++){
+      self.vigencias.push(v);
+    }
 
     oikosRequest.get('dependencia_tipo_dependencia', $.param({
       query: "TipoDependenciaId.Id:2",
@@ -19,9 +25,7 @@ angular.module('contractualClienteApp')
       limit: -1
     })).then(function (response) {
         self.facultades = response.data;
-    });
-    //TODO: Generar años a partir de 2018 hasta la fecha actual
-    self.vigencias = [2018];
+    });    
 
     self.consultarReporte = function() {
       if (self.facultad && self.numeroResolucion && self.vigencia) {
