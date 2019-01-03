@@ -132,8 +132,6 @@ angular.module('contractualClienteApp')
 
             });
 
-        //   supervisor_contrato/?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1
-
 
           });
         });
@@ -565,7 +563,7 @@ angular.module('contractualClienteApp')
                         {text:  self.contrato_obj.tipo_contrato,  style: 'topHeader'}
                         ],
                         [
-                        {text: 'Ńo. Contrato:', bold: true, style: 'topHeader'},
+                        {text: 'No. Contrato:', bold: true, style: 'topHeader'},
                          { text:[
                             {text:  self.contrato_id, bold: true, style: 'topHeader'},
                             {text: ' suscrito el ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion),  style: 'topHeader'}

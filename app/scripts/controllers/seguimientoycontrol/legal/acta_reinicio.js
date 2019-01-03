@@ -487,10 +487,7 @@ angular.module('contractualClienteApp')
             self.contrato_estado.Estado = self.estado_ejecucion;
             self.contrato_estado.Usuario = "up";
 
-
-             self.formato_generacion_pdf();
-
-           /* contratoRequest.get('contrato_estado', self.contrato_id+'/'+self.contrato_vigencia).then(function(ce_response){
+            contratoRequest.get('contrato_estado', self.contrato_id+'/'+self.contrato_vigencia).then(function(ce_response){
                 if(ce_response.data.contratoEstado.estado.nombreEstado == "Suspendido"){
                     var estado_temp_from = {
                         "NombreEstado": "suspendido"
@@ -528,7 +525,7 @@ angular.module('contractualClienteApp')
                         }
                     });
 
-            });*/
+            });
         }else{
             swal(
                     $translate.instant('TITULO_ERROR'),
