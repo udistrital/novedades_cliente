@@ -197,6 +197,14 @@ var text_es = {
     OBJETIVO: "Objetivo",
     OBJETO: "Objeto",
     ORDENADOR: "Ordenador",
+    VALOR_DESEMBOLSADO: "Valor desembolsado",
+    VALOR_DESEMBOLSADO: "Valor desembolsado",
+    COMPROMISO: "Compromiso",
+    NUMERO:"Número",
+    VIGENCIA:"Vigencia",
+    COMPROMISO_TIPO:"Tipo",
+    SALDO_A_FAVOR_CONTRATISTA:"Saldo a favor del contratista",
+    SALDO_A_FAVOR_UNIVERSIDAD:"Saldo a favor de la Universidad",
     //SEGUMIENTO FINANCIERO
     SEGUIMIENTO_FINANCIERO: "Seguimiento financiero del contrato",
     DATOS_CONTRATO: "Datos contrato",
@@ -357,6 +365,50 @@ var text_es = {
     PESO: "PESO",
     CON: "CON ",
     CERO: "CERO ",
+    //ACTA DE CESION
+    ACTA_CESION: "ACTA DE CESIÓN",
+    INFORMACION:"INFORMACIÓN",
+    NO_REGISTRA:"No Registra",
+    CONTRATANTE:"Contratante",
+    CONTRATISTA:"Contratista",
+    ORDENADOR_DE_GASTO:"Ordenador de gasto",
+    CEDULA_CESIONARIO:"Cédula cesionario",
+    PERSONA_NATURAL: "Natural",
+    NUMERO_OFICIO:"Número oficio",
+    NUMERO_OFICIO_ESTADO_CUENTAS:"Número oficio estado de cuentas",
+    FECHA_OFICIO:"Fecha oficio",
+    FECHA_CESION:"Fecha cesión",
+    OTRAS_OBSERVACIONES:"Otras observaciones",
+    INFORMACION_CESIONARIO:"INFORMACIÓN CESIONARIO",
+    SELECCIONAR_CESIONARIO:"Seleccionar cesionario",
+    ACTA_REINICIO:"ACTA DE REINICIO",
+    FECHA_SUSPENSION:"Fecha suspension",
+    FECHA_REINICIO:"Fecha reinicio",
+    PERIODO_SUSPENSION:"Periodo suspension (Días)",
+    ACTA_SUSPENSION:"ACTA DE SUSPENSIÓN",
+    MOTIVO_SUSPENSION:"Motivo de suspensión",
+    CAMPO_REQUERIDO:"Este campo es obligatorio",
+    //ALERTAS
+    TITULO_ERROR:"Errores en el formulario",
+    TITULO_BUEN_TRABAJO:"¡Buen trabajo!",
+    TITULO_ADVERTENCIA:"Advertencia",
+    DESCRIPCION_ADVERTENCIA: "Primero debe seleccionar un tipo de novedad!",
+    DESCRIPCION_ADVERTENCIA_ADICION: "El valor de la adición no puede ser superior al 50% del valor del contrato.",
+    DESCRIPCION_ADVERTENCIA_PRORROGA: "El valor de la prórroga no puede ser superior al 50% del tiempo de ejecución del contrato.",
+    DESCRIPCION_ERROR:"Llenar los campos obligatorios en el formulario",
+    DESCRIPCION_INICIO:"Se registro exitosamente la novedad de 'Acta de inicio'<br>al contrato # ",
+    DESCRIPCION_INICIO_1:"El estado del presente contrato se actualizo a 'Ejecución'.",
+    DESCRIPCION_ERROR_LEGAL:"Contrato no encontrado",
+    DESCRIPCION_INICIO:"Se registro exitosamente la novedad de 'Acta de inicio'<br>al contrato # ",
+    DESCRIPCION_ADICION:"Se registro exitosamente la novedad de 'Adición'<br>al contrato # ",
+    DESCRIPCION_PRORROGA:"Se registro exitosamente la novedad de 'Prorroga'<br>al contrato # ",
+    DESCRIPCION_ADICION_PRORROGA:"Se registro exitosamente la novedad de 'Adición y Prorroga'<br>al contrato # ",
+    DESCRIPCION_INICIO_1:"El estado del presente contrato se actualizo a 'Ejecución'.",
+    DESCRIPCION_INICIO_ERROR_FECHA:"La fecha fin debe ser mayor a la fecha inicio!",
+    DESCRIPCION_CESION:"Se registro exitosamente la novedad de cesión al contrato # ",
+    DESCRIPCION_SUSPENSION:"Se registro exitosamente la novedad de suspensión al contrato # ",
+    DESCRIPCION_REINICIO:"Se registro exitosamente la novedad de reinicio al contrato # ",
+    DESCRIPCION_ACTA_CESION:"Acta de inicio para cesionario del contrato",
     //CONTRATO_DETALLE
     INFORMACION_CONTRATO: "Información Vinculación",
     FORMA_PAGO: "Forma de pago",
@@ -378,9 +430,20 @@ var text_es = {
     DOCENTES_CONTRATADOS_ACTUAL: "DOCENTES CONTRATADOS - PERIODO ACTUAL",
     BTN: {
         VER: "Ver",
-        SOLICITAR: "Solicitar"
+        BUSCAR: "Buscar",
+        SOLICITAR: "Solicitar",
+        SELECCIONAR: "Seleccionar",
+        CANCELAR: "Cancelar",
+        CONFIRMAR: "Confirmar",
+        AGREGAR: "Agregar",
+        REGISTRAR: "Registrar",
+        SOLICITAR_RP:"Solicitar RP",
+        QUITAR_RUBRO: "Quitar",
+        VER_SEGUIMIENTO_FINANCIERO:"Ver seguimiento financiero"
     },
 
+
+   
     //CONTRATO_REGISTRO
     DATOS_BASICOS: "Información básica",
     DISPONIBILIDAD: "Disponibilidad",
@@ -817,7 +880,10 @@ var text_es = {
     TITULO_CARGA_CONTRATISTA: "CARGA SOPORTES CONTRATISTA",
     NOM_CONTRATISTA: "NOMBRE CONTRATISTA",
     NUMERO_CONTRATO: "NÚMERO CONTRATO",
+    CONTRATO_CANCELADO: "Contrato cancelado",
+    CONTRATO_FINALIZADO: "Contrato finalizado",
     RP: "RP",
+    ANIO:" vigencia "
 };
 
 var text_en = {
@@ -937,6 +1003,7 @@ var text_en = {
     NOMBRE_RUBRO: "Name of Line Item",
     VALOR_SOLICITADO: "Requested Value",
     TOTAL_FINANCIACION: "Total Financing",
+
     //lista_documentos_legales
     MARCO_LEGAL: "Legal Framework",
     NOMBRE_DOCUMENTO: "Document Name",

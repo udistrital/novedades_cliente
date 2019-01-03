@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolLegalActaCesionCtrl', function ($translate, $location, $log, $scope, $routeParams, coreAmazonRequest, administrativaRequest, administrativaAmazonRequest, administrativaWsoRequest, agoraRequest, argoNosqlRequest) {
+.controller('SeguimientoycontrolLegalActaCesionCtrl', function ($translate, $location, $log, $scope, $routeParams, coreAmazonRequest, administrativaRequest, amazonAdministrativaRequest, contratoRequest, agoraRequest, argoNosqlRequest) {
 
     var self = this;
 
@@ -26,12 +26,12 @@ angular.module('contractualClienteApp')
 
     /**
      * @ngdoc method
-     * @name administrativaWsoRequest
+     * @name contratoRequest
      * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
      * @description
      * Funcion para la carga de toda la informacion de un contrato especifico
      */
-    administrativaWsoRequest.get('contrato', '/'+self.contrato_id+'/'+self.contrato_vigencia).then(function(wso_response){
+    contratoRequest.get('contrato', self.contrato_id+'/'+self.contrato_vigencia).then(function(wso_response){
         self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
         self.contrato_obj.valor = wso_response.data.contrato.valor_contrato;
         self.contrato_obj.objeto = wso_response.data.contrato.objeto_contrato;
@@ -44,11 +44,11 @@ angular.module('contractualClienteApp')
         self.contrato_obj.supervisor_cedula = wso_response.data.contrato.supervisor.documento_identificacion;
         self.contrato_obj.contratista = wso_response.data.contrato.contratista;
 
-        administrativaAmazonRequest.get('ordenadores', $.param({
+        amazonAdministrativaRequest.get('ordenadores', $.param({
             query:"IdOrdenador:" + wso_response.data.contrato.ordenador_gasto.id
         })).then(function(ord_response){
             self.contrato_obj.ordenador_resolucion = ord_response.data[0].InfoResolucion;
-            administrativaAmazonRequest.get('tipo_contrato', $.param({
+            amazonAdministrativaRequest.get('tipo_contrato', $.param({
                 query:"Id:"+wso_response.data.contrato.tipo_contrato
             })).then(function(tc_response){
                 self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
@@ -75,13 +75,14 @@ angular.module('contractualClienteApp')
                             self.contrato_obj.contratista = last_cesion.cesionario;
                         }
                     }
-                    administrativaAmazonRequest.get('informacion_proveedor', $.param({
+                    amazonAdministrativaRequest.get('informacion_proveedor', $.param({
                         query: "Id:" + self.contrato_obj.contratista
                     })).then(function(ip_response) {
-                        administrativaAmazonRequest.get('informacion_persona_natural', $.param({
-                            query:"Id:"+self.contrato_obj.supervisor_cedula
+                        amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
+                             query:"Id:"+ self.contrato_obj.supervisor_cedula
                         })).then(function(ipn_response) {
                             self.contrato_obj.supervisor_persona_natural = ipn_response.data;
+                            console.log(self.contrato_obj.supervisor_persona_natural);                            
                             coreAmazonRequest.get('ciudad','query=Id:' + self.contrato_obj.supervisor_persona_natural[0].IdCiudadExpedicionDocumento).then(function(c_response){
                                 self.contrato_obj.supervisor_ciudad_cedula = c_response.data[0].Nombre;
                                 self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
@@ -94,7 +95,7 @@ angular.module('contractualClienteApp')
         });
     });
 
-    administrativaAmazonRequest.get('informacion_persona_natural', $.param({
+    amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
         fields: "Id,PrimerNombre,SegundoNombre,PrimerApellido,SegundoApellido,FechaExpedicionDocumento,TipoDocumento,IdCiudadExpedicionDocumento",
         limit: 0
     })).then(function(response) {
@@ -154,10 +155,10 @@ angular.module('contractualClienteApp')
      */
     self.generarActa = function(){
         if($scope.formCesion.$valid){
-            administrativaAmazonRequest.get('informacion_proveedor', $.param({
+            amazonAdministrativaRequest.get('informacion_proveedor', $.param({
                 query: "NumDocumento:" + self.cesionario_obj.identificacion
             })).then(function(response_ces){
-                administrativaAmazonRequest.get('informacion_proveedor', $.param({
+                amazonAdministrativaRequest.get('informacion_proveedor', $.param({
                     query: "NumDocumento:" + self.contrato_obj.contratista_documento
                 })).then(function(response_ced){
                     self.cesion_nov = {};
