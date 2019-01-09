@@ -473,7 +473,7 @@ angular.module('contractualClienteApp')
                 style:['general_font'],
                 text:[
                 {text:'Otras consideraciones: ', bold:true}, '\n\n' + self.cesion_nov.observacion + '\n\n' +
-                'La presente acta se perfecciona e inicia su ejecución con la firma de las partes y la aceptación del cesionario a partir de: ____________________ .' + '\n\n\n'
+                'La presente acta se perfecciona e inicia su ejecución con la firma de las partes y la aceptación del cesionario a partir de: ____________________' + '\n\n\n'
                 ]
             },
             {
