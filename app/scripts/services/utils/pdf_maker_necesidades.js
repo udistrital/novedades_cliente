@@ -14,7 +14,6 @@ angular.module('contractualClienteApp')
                 var jefeDependenciaSolicitante = {};
                 var dependenciaData = [];
                 var apropiacionesData = [];
-                var apropiacionesGrouped = [];
                 var perfil_data = [];
 
                 $http.get("scripts/models/imagen.json").then(function (response) {
@@ -31,15 +30,7 @@ angular.module('contractualClienteApp')
                     return necesidadService.getAllDependencias();
                 }).then(function (Dependencias) {
                     dependenciaData = Dependencias;
-
-                    return necesidadService.groupByApropiacion(trNecesidad.Ffapropiacion, true);
-                }).then(function (data) {
-                    apropiacionesGrouped = data;
-
-                    return necesidadService.getApropiacionesData(apropiacionesGrouped);
-                }).then(function (data) {
-                    apropiacionesData = data;
-
+                    apropiacionesData = trNecesidad.Ffapropiacion;
                     return necesidadService.getParametroEstandar();
                 }).then(function (response) {
                     perfil_data = response.data;
@@ -115,7 +106,7 @@ angular.module('contractualClienteApp')
                                         [{ alignment: "center", text: [{ bold: true, text: "Fecha de Solicitud: " }, moment(trNecesidad.Necesidad.FechaSolicitud).format("D [de] MMMM [de] YYYY")] }],
                                         [{ style: "title1", text: "JUSTIFICACIÓN (Identifique de forma clara y conta la necesidad de la contratación)" }],
                                         [{ alignment: "justify", text: trNecesidad.Necesidad.Justificacion.toUpperCase() }],
-                                        [{ style: "title2", text: "ESPECIFICACIONES TÉCNICAS: Si la compra o el servicio que contempla especificaciones del orden técnico describalas." }],
+                                        [{ style: "title2", text: "ESPECIFICACIONES TÉCNICAS: Si la compra o el servicio contempla especificaciones del orden técnico descríbalas." }],
                                         [
                                             {
                                                 table: {
@@ -125,7 +116,11 @@ angular.module('contractualClienteApp')
                                                         ["Descripción", "", "Cantidad", "Unidad"],
                                                         [
                                                             ["Cod. 1", "Especificación:"],
-                                                            [perfil.ValorParametro, "Actividad", { text: trNecesidad.ActividadEspecifica ? trNecesidad.ActividadEspecifica.map(function (ae, i) { return (i + 1).toString() + '. ' + ae.Descripcion }).join('. ') : "Ninguna", alignment: "justify" }],
+                                                            [perfil.ValorParametro, "Actividad",
+                                                            {
+                                                                text: trNecesidad.ActividadEspecifica ?
+                                                                    trNecesidad.ActividadEspecifica.map(function (ae, i) { return (i + 1).toString() + '. ' + ae.Descripcion }).join('. ') : "Ninguna", alignment: "justify"
+                                                            }],
                                                             { text: 1, alignment: 'center' },
                                                             ""
                                                         ]
@@ -184,13 +179,13 @@ angular.module('contractualClienteApp')
                                         [{ style: "title1", text: "Plan de Contratación/Rubro Presupuestal y/o centro de costos".toUpperCase() }],
                                         // [//generar desde aqui curl http://10.20.0.254/financiera_api/v1/apropiacion/?query=Id:44529
                                         [
-                                            Array.prototype.concat.apply([], apropiacionesGrouped.map(function (apg, i) {
+                                            Array.prototype.concat.apply([], apropiacionesData.map(function (apg, i) {
                                                 return [{
                                                     margin: [0, 0, 0, 5],
                                                     columnGap: 10,
                                                     columns: [
-                                                        { text: apropiacionesData[i].Rubro.Codigo, width: "auto" },
-                                                        { text: apropiacionesData[i].Rubro.Nombre.toUpperCase(), width: "*" },
+                                                        { text: apg.Apropiacion.Rubro.Codigo, width: "auto" },
+                                                        { text: apg.Apropiacion.Rubro.Nombre.toUpperCase(), width: "*" },
                                                         { text: $filter('currency')(apg.Monto, '$'), width: "auto" }
                                                     ]
                                                 }].concat([
@@ -206,23 +201,52 @@ angular.module('contractualClienteApp')
                                                         ]
                                                     }
                                                 ]).concat(
-                                                    apg.fuentes.map(function (f, i) {
+                                                    apg.Fuentes.map(function (f, i) {
                                                         return {
                                                             columnGap: 10,
                                                             columns: [
                                                                 { text: i + 1, width: "15%" },
                                                                 { text: dependenciaDestino.Nombre.toUpperCase() },
-                                                                { text: f.FuenteFinanciamiento.Codigo, width: "6%" },
-                                                                { text: f.FuenteFinanciamiento.Nombre },
-                                                                { text: $filter('currency')(f.Monto, '$'), width: "auto" },
+                                                                { text: f.InfoFuente[0].Codigo, width: "6%" },
+                                                                { text: f.InfoFuente[0].Nombre },
+                                                                { text: $filter('currency')(f.MontoParcial, '$'), width: "auto" },
                                                             ]
                                                         }
                                                     })
+                                                ).concat([
+                                                    {
+                                                        margin: [0, 5, 0, 5],
+                                                        alignment: "center",
+                                                        columnGap: 10,
+                                                        columns: [
+                                                            { text: "", width: "15%" },
+                                                            { text: "Producto".toUpperCase() },
+                                                            { text: "", width: "6%" },
+                                                            { text: "Descripción".toUpperCase() },
+                                                            { text: "" },
+                                                        ]
+                                                    }
+                                                ]).concat(
+                                                    apg.Productos != null ? apg.Productos.map(function (p) {
+                                                        return {
+                                                            columnGap: 10,
+                                                            columns: [
+                                                                { text: "", width: "15%" },
+                                                                { text: p.ProductoRubroInfo[0].Producto.Nombre.toUpperCase() },
+                                                                { text: "", width: "6%" },
+                                                                { text: p.ProductoRubroInfo[0].Producto.Descripcion },
+                                                                { text: "" },
+                                                            ]
+                                                        }
+                                                    }) : ""
                                                 );
                                             }))
                                         ],
                                         [{ style: "title1", text: "Marco Legal".toUpperCase() }],
-                                        [{ text: "Ningunas" }],
+                                        [{
+                                            text: (trNecesidad.MarcoLegalNecesidad && trNecesidad.MarcoLegalNecesidad.length > 0) ?
+                                                trNecesidad.MarcoLegalNecesidad.map(function (ml, i) { return (i + 1).toString() + ". " + ml.MarcoLegal.NombreDocumento }).join("\n") : "Ninguno"
+                                        }],
                                         //TODO: agregar los requisitos minimos a la lógica de negocios
                                         // [{ style: "title1", text: "Requisitos Mínimos".toUpperCase() }],
                                         // [[

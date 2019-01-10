@@ -62,9 +62,9 @@ angular.module('contractualClienteApp')
           $scope.$watch('initFuenteApropiacion', function () {
             self.fuenteapropiacion = [];
             $scope.initFuenteapropiacion.forEach(function (fuente) {
-              var tmp = self.gridOptions.data.filter(function (e) { return e.FuenteFinanciamiento.Id == fuente.FuenteFinanciamiento.Id })
+              var tmp = self.gridOptions.data.filter(function (e) { return e.FuenteFinanciamiento.Id == fuente.FuenteFinanciamiento[0].Id })
               if (tmp.length > 0) {
-                tmp[0].Monto = fuente.Monto;
+                tmp[0].MontoParcial = fuente.MontoParcial;
                 $scope.fuenteapropiacion.push(tmp[0]); //enriquecer actividades
                 self.gridApi.selection.selectRow(tmp[0]); //seleccionar las filas
               }

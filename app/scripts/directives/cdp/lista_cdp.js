@@ -59,8 +59,7 @@ angular.module('contractualClienteApp')
                         financieraRequest.get('disponibilidad_apropiacion', 'limit=-1&query=Disponibilidad.Id:' + $scope.cdp.Id).then(function(response) {
 
                             $scope.rubros = response.data;
-                            var gridOptions_rubros;
-                            gridOptions_rubros.data = response.data;
+
                             angular.forEach($scope.rubros, function(data) {
                                 var rp = {
                                     Disponibilidad: data.Disponibilidad, // se construye rp auxiliar para obtener el saldo del CDP para la apropiacion seleccionada
