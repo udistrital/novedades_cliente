@@ -282,8 +282,8 @@ angular.module('contractualClienteApp')
         //*--------------Funciones para recargar grids que han sido seleccionados -------------* //
         self.RecargarDatosPersonas = function (offset, query) {
             var p = $.param({
-                vigencia: self.resolucion.Vigencia,
-                periodo: self.resolucion.Periodo,
+                vigencia: self.resolucion.VigenciaCarga,
+                periodo: self.resolucion.PeriodoCarga,
                 tipo_vinculacion: self.resolucion.Dedicacion,
                 facultad: self.resolucion.IdFacultad,
                 nivel_academico: self.resolucion.NivelAcademico_nombre,

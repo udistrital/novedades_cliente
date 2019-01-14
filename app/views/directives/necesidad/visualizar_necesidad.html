@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-12">
         <h3 class="page-header">{{ 'NECESIDAD' | translate }} <span ng-show="estado === d_visualizarNecesidad.estados.aprobada">{{d_visualizarNecesidad.v_necesidad.Numero}}
-          {{"DE" | translate}} {{d_visualizarNecesidad.v_necesidad.Vigencia}}</span>
+            {{"DE" | translate}} {{d_visualizarNecesidad.v_necesidad.Vigencia}}</span>
           <span class="pull-right text-info">{{d_visualizarNecesidad.v_necesidad.EstadoNecesidad.Nombre}}</span></h3>
       </div>
 
@@ -17,9 +17,16 @@
 
   </div>
   <div class="panel-body">
-
-    <cite class="text-info pull-right">{{"NUMERO_ELABORACION" | translate}}:
-      {{d_visualizarNecesidad.v_necesidad.NumeroElaboracion}}</cite>
+    <div class="text-info pull-right text-right">
+      <cite class=""> {{d_visualizarNecesidad.v_necesidad.NumeroElaboracion || '-'}}</cite><br>
+      <cite class=""> {{d_visualizarNecesidad.v_necesidad.Numero || '-'}}</cite><br>
+      <cite class=""> {{d_visualizarNecesidad.solicitud_disponibilidad.Numero || '-'}}</cite>
+    </div>
+    <div class="text-info pull-right">
+      <cite class="">{{"NUMERO_ELABORACION_NECESIDAD" | translate}}: </cite><br>
+      <cite class="">{{"NUMERO_NECESIDAD_COMPACTO" | translate}}: </cite><br>
+      <cite class="">{{"NUMERO_SOLICITUD_NECESIDAD" | translate}}: </cite>
+    </div>
 
 
     <h3 class="text-info">{{"RESPONSABLES" | translate}}</h3>
@@ -71,7 +78,12 @@
           <ul ng-repeat="inv in d_visualizarNecesidad.ff_necesidad track by $index">
             <strong>{{inv.Apropiacion.Rubro.Codigo}}</strong> {{inv.Apropiacion.Rubro.Nombre}}
             <li ng-repeat='f in inv.Fuentes'>
-              {{f.FuenteFinanciamiento.Nombre}} <strong>{{"Monto" | translate}}:</strong> {{f.MontoParcial | currency}}
+              {{f.InfoFuente[0].Nombre}} <strong>{{"Monto" | translate}}:</strong> {{f.MontoParcial | currency}}
+            </li>
+            <br><strong ng-if="inv.Productos.length">{{"PRODUCTOS" | translate}}</strong>
+            <li ng-repeat='p in inv.Productos'>
+              <strong>{{p.ProductoRubroInfo[0].Producto.Nombre}}:</strong>
+              {{p.ProductoRubroInfo[0].Producto.Descripcion}}
             </li>
           </ul>
         </p>
@@ -94,14 +106,14 @@
           <li ng-repeat="doc in d_visualizarNecesidad.marco_legal track by $index">{{doc.MarcoLegal.NombreDocumento}}</li>
         </p>
       </div>
-      <div class="col-sm-6" ng-show="estado == d_visualizarNecesidad.estados.rechazada">
+      <div class="col-sm-6" ng-show="d_visualizarNecesidad.verJustificacion">
         <h3 class="text-info">{{"NECESIDAD_JUSTIFICACION_RECHAZO" | translate}}</h3>
 
-        <p class="text-justify">
+        <p class="text-justify" ng-repeat="justificacion_rechazo in d_visualizarNecesidad.justificaciones_rechazo">
           <strong>{{"NECESIDAD_FECHA_RECHAZO" | translate}}:</strong>
-          {{d_visualizarNecesidad.justificacion_rechazo.Fecha | date:'dd/MM/yyyy':'UTC' }} <br>
+          {{justificacion_rechazo.Fecha | date:'dd/MM/yyyy':'UTC' }} <br>
           <strong>{{"NECESIDAD_JUSTIFICACION_DESCRIPCION_RECHAZO" | translate}}:</strong><br>
-          {{d_visualizarNecesidad.justificacion_rechazo.Justificacion}}
+          {{justificacion_rechazo.Justificacion}}
         </p>
       </div>
     </div>
