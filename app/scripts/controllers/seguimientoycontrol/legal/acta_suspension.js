@@ -661,7 +661,7 @@ angular.module('contractualClienteApp')
               body:[
                 [
                   '',
-                  {text: '\n\n_____________________________________ \n ' + self.contrato_obj.ordenador_gasto_nombre + ' \n CC: ' + self.contrato_obj.ordenador_gasto_documento + '\n Ordenador del Gasto ', style: 'topHeader', alignment: 'center'},
+                  {text: '\n\n_____________________________________ \n ' + self.contrato_obj.ordenador_gasto_nombre + ' \n CC: ' + self.contrato_obj.ordenador_gasto_documento + '\n Ordenador de Gasto ', style: 'topHeader', alignment: 'center'},
                   '',
                 ],
                 [
