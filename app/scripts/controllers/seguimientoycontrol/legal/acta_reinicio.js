@@ -24,6 +24,12 @@ angular.module('contractualClienteApp')
     self.contrato_obj = {};
     self.estado_ejecucion = {};
     self.n_solicitud = null;
+    self.auxiliar=0;
+    self.novedad_suspension='';
+    self.novedad_reinicio='';
+    self.novedad_motivo='';
+    self.auxiliar=0;
+    self.auxiliar=0;
 
     self.estados = [];
 
@@ -63,20 +69,24 @@ angular.module('contractualClienteApp')
                 if(elementos_cesion != null){
                     var last_cesion = response_nosql.data[response_nosql.data.length - 1];
                     self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
-                    if (self.contrato_obj.tipo_novedad == "59d79683867ee188e42d8c97") {
+
+                     argoNosqlRequest.get('tiponovedad', self.contrato_obj.tipo_novedad ).then(function(response_cesion_nosql){
+                        if (response_cesion_nosql.data[0].nombre == "cesión") {
                         self.contrato_obj.contratista = last_cesion.cesionario;
                         self.contrato_obj.cesion = 1;
-                    }else if (self.contrato_obj.tipo_novedad == "59d79683867ee188e42d8c98") {
-                        self.contrato_obj.contratista = last_cesion.cesionario;
-                    }else if (self.contrato_obj.tipo_novedad == "59d7965e867ee188e42d8c72") {
-                        self.contrato_obj.contratista = last_cesion.cesionario;
-                    }else if (self.contrato_obj.tipo_novedad == "59d7985e867ee188e42d8e64") {
-                        self.contrato_obj.contratista = last_cesion.cesionario;
-                    }else if (self.contrato_obj.tipo_novedad == "59d79894867ee188e42d8e9b") {
-                        self.contrato_obj.contratista = last_cesion.cesionario;
-                    }else if (self.contrato_obj.tipo_novedad == "59d79904867ee188e42d8f02") {
-                        self.contrato_obj.contratista = last_cesion.cesionario;
-                    }
+                        }else if (response_cesion_nosql.data[0].nombre == "acta_inicio_cesion") {
+                            self.contrato_obj.contratista = last_cesion.cesionario;
+                        }else if (response_cesion_nosql.data[0].nombre == "suspensión") {
+                            self.contrato_obj.contratista = last_cesion.cesionario;
+                        }else if (response_cesion_nosql.data[0].nombre == "adición") {
+                            self.contrato_obj.contratista = last_cesion.cesionario;
+                        }else if (response_cesion_nosql.data[0].nombre == "prórroga") {
+                            self.contrato_obj.contratista = last_cesion.cesionario;
+                        }else if (response_cesion_nosql.data[0].nombre == "adición/prórroga") {
+                            self.contrato_obj.contratista = last_cesion.cesionario;
+                        } 
+                     }); 
+                    
                 }
                 
                 amazonAdministrativaRequest.get('informacion_proveedor', $.param({
@@ -93,14 +103,21 @@ angular.module('contractualClienteApp')
                             coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(c_response){
                                 self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
                                 self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;  
-                                argoNosqlRequest.get('novedad', self.contrato_id + '/' + self.contrato_obj.vigencia).then(function(response){
+                                argoNosqlRequest.get('novedad', self.contrato_obj.id + '/' + self.contrato_obj.vigencia).then(function(response){
                                         for(var i = 0 ; i < response.data.length ; i++){
-                                            if(response.data[i].tiponovedad == "59d7965e867ee188e42d8c72"){
-                                                self.suspension_id_nov = response.data[i]._id;
-                                                self.f_suspension = new Date(response.data[i].fechasuspension);
-                                                self.f_reinicio = new Date(response.data[i].fechareinicio);
-                                                self.motivo_suspension = response.data[i].motivo;
-                                            }
+                                            self.auxiliar=response.data[i]._id;
+                                            self.novedad_suspension=response.data[i].fechasuspension;
+                                            self.novedad_reinicio=response.data[i].fechareinicio;
+                                            self.novedad_motivo=response.data[i].motivo;
+                                            argoNosqlRequest.get('tiponovedad', response.data[i].tiponovedad ).then(function(response_cesion_nosql_2){
+                                                if(response_cesion_nosql_2.data[0].nombre == "suspensión"){
+                                                    self.suspension_id_nov = self.auxiliar;
+                                                    self.f_suspension = new Date(self.novedad_suspension);
+                                                    self.f_reinicio = new Date(self.novedad_reinicio);
+                                                    self.motivo_suspension = self.novedad_motivo;
+                                               }
+                                            });
+                                            
                                         } 
                                 });
                                 amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
@@ -124,14 +141,20 @@ angular.module('contractualClienteApp')
                                         coreAmazonRequest.get('ciudad','query=Id:' + ip_response.data[0].IdCiudadContacto).then(function(c_response){
                                             self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
                                             self.contrato_obj.contratista_tipo_documento = 'NIT'; 
-                                            argoNosqlRequest.get('novedad', self.contrato_id + '/' + self.contrato_obj.vigencia).then(function(response){
+                                            argoNosqlRequest.get('novedad',self.contrato_obj.id + '/' + self.contrato_obj.vigencia).then(function(response){
                                                 for(var i = 0 ; i < response.data.length ; i++){
-                                                    if(response.data[i].tiponovedad == "59d7965e867ee188e42d8c72"){
-                                                        self.suspension_id_nov = response.data[i]._id;
-                                                        self.f_suspension = new Date(response.data[i].fechasuspension);
-                                                        self.f_reinicio = new Date(response.data[i].fechareinicio);
-                                                        self.motivo_suspension = response.data[i].motivo;
+                                                    self.auxiliar=response.data[i]._id;
+                                                    self.novedad_suspension=response.data[i].fechasuspension;
+                                                    self.novedad_reinicio=response.data[i].fechareinicio;
+                                                    self.novedad_motivo=response.data[i].motivo;
+                                                    argoNosqlRequest.get('tiponovedad', response.data[i].tiponovedad ).then(function(response_cesion_nosql_2){
+                                                    if(response_cesion_nosql_2.data[0].nombre == "suspensión"){
+                                                        self.suspension_id_nov = self.auxiliar;
+                                                        self.f_suspension = new Date(self.novedad_suspension);
+                                                        self.f_reinicio = new Date(self.novedad_reinicio);
+                                                        self.motivo_suspension = self.novedad_motivo;
                                                     }
+                                                    });
                                                 }
                                             });
 
