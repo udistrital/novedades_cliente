@@ -32,8 +32,8 @@ var conf_cloud = {
     NUXEO_SERVICE:"https://documental.portaloas.udistrital.edu.co/nuxeo/",
     HOMOLOGACION_SERVICE:"https://autenticacion.portaloas.udistrital.edu.co/apioas/dependencias_api/v1/",
     TOKEN: {
-        AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
-        URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
+        AUTORIZATION_URL: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
+        URL_USER_INFO: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/userinfo",
         CLIENTE_ID: "XdBq4QOfEZYT0cl_8qDh3fmF5_Qa",
         REDIRECT_URL: "http://administrativa.portaloas.udistrital.edu.co/",
         RESPONSE_TYPE: "code",
