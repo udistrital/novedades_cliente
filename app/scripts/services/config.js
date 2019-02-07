@@ -43,7 +43,7 @@ var conf_cloud = {
         SIGN_OUT_REDIRECT_URL: "http://administrativa.portaloas.udistrital.edu.co/",
         SIGN_OUT_APPEND_TOKEN: "true",
         REFRESH_TOKEN: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/token",
-        CLIENT_SECRET: "XdBq4QOfEZYT0cl_8qDh3fmF5_Qa"
+        CLIENT_SECRET: "UkwfXdBbWorsh0vZfq_96hY4jVca"
     },
 };
 var conf_presentacion = {
