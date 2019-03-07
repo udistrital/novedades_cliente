@@ -19,7 +19,7 @@ angular.module('contractualClienteApp')
             var terceraFila = [];
             var columnas = [];
             var tituloHoras = 'HORAS_SEMANALES';
-            if (nivelAcademico == 'POSGRADO') {
+            if (nivelAcademico === 'POSGRADO') {
                 tituloHoras = 'HORAS_SEMESTRALES'
             }
 
