@@ -18,6 +18,9 @@ angular.module('contractualClienteApp')
     self.objeto_docente = [];
     self.nombres_docentes_incumplidos = '';
     self.mes = '';
+    self.periodo = '';
+
+    self.periodos= ['2018-3','2019-1'];
 
     self.meses = [{
         Id: 1,
@@ -423,7 +426,9 @@ angular.module('contractualClienteApp')
                 var contenido = [];
                 contenido.push( {text:'EL SUSCRITO COORDINADOR DEL PROYECTO CURRICULAR DE ' + self.coordinador.nombre_proyecto_curricular + ' DE LA ' + self.facultad.Padre.Nombre + ' DE LA UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
                 contenido.push({text:'CERTIFICA QUE: ', bold: true,  alignment: 'center', style:'top_space'}, '\n\n\n\n');
-                contenido.push({text:'Los Docentes de Vinculación Especial contratados para el periodo Académico 2018-3, del Proyecto Curricular de ' + self.coordinador.nombre_proyecto_curricular + ' cumplieron a cabalidad con las funciones docentes durante el mes de ' +self.mes.Nombre+ ' de ' +self.anio+ ' (según calendario académico).', style:'general_font'}, '\n\n')
+
+                contenido.push({text:'Los Docentes de Vinculación Especial contratados para el periodo Académico '+self.periodo+', del Proyecto Curricular de ' + self.coordinador.nombre_proyecto_curricular + ' cumplieron a cabalidad con las funciones docentes durante el mes de ' +self.mes.Nombre+ ' de ' +self.anio+ ' (según calendario académico).', style:'general_font'}, '\n\n')
+
                 if(self.docentes_incumplidos){
                   contenido.push({text:'A excepción de las siguientes novedades: ', style:'general_font'}, '\n')
                   angular.forEach(self.docentes_incumplidos, function(value) {

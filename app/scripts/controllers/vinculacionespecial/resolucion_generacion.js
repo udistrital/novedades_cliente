@@ -15,7 +15,10 @@ angular.module('contractualClienteApp')
         self.CurrentDate = new Date();
         self.anioPeriodo = new Date().getFullYear();
         self.objeto_facultad = {};
-
+        self.vigencias = [];
+        for (var v = 2018; v <= self.anioPeriodo; v++){
+            self.vigencias.push(v);
+        }
         self.resolucionesExpedidasPeriodo = {
             paginationPageSizes: [10, 15, 20],
             paginationPageSize: 10,
@@ -191,7 +194,9 @@ angular.module('contractualClienteApp')
                 NumeroSemanas: parseInt(self.resolucion.numeroSemanas),
                 Periodo: parseInt(self.resolucion.Periodo),
                 IdTipoResolucion: tipoResolucion,
-                IdDependenciaFirma: self.firmaRector ? 7 : self.objeto_facultad.Id
+                IdDependenciaFirma: self.firmaRector ? 7 : self.objeto_facultad.Id,
+                PeriodoCarga: self.mostrarCamposCarga ? parseInt(self.resolucion.PeriodoCarga) : parseInt(self.resolucion.Periodo),
+                VigenciaCarga: self.mostrarCamposCarga ? self.resolucion.VigenciaCarga : (new Date()).getFullYear()
             };
 
             var resolucionVinculacionDocenteData = {

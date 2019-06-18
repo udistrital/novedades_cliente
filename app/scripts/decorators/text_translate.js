@@ -621,6 +621,10 @@ var text_es = {
     ASOCIAR_RESOLUCION: "Asociar resolución",
     VIGENCIA: "Vigencia",
     FIRMA_RECTOR: "Firma rector",
+    CARGA_DIFERENTE_VIGENCIA: "Carga académica de un periodo anterior",
+    VIGENCIA_CARGA: "Vigencia de la carga académica",
+    PERIODO_CARGA: "Periodo de la carga académica",
+    PERIODO_RESOLUCION: "Periodo de la resolución",
     /*---Script---*/
     INFORMACION_CONTENIDO: "Los artículos son creados por defecto y pueden ser editados",
     CONFIRMAR_GUARDAR_RESOLUCION: "Guardar resolución",
@@ -673,10 +677,11 @@ var text_es = {
     NOMBRE_COMPLETO: "NOMBRE COMPLETO",
     CARGO_PDF: "CARGO",
     FIRMA: "FIRMA",
-    ELABORO: "Elaboró",
+    ELABORO: "PROYECTÓ",
     PROYECTO: "Proyecto",
     REVISO: "Revisó",
     APROBO: "Aprobó",
+    REVISO_APROBO: "REVISÓ Y APROBÓ",
     OF_DOCENCIA: "OFICINA DE DOCENCIA",
     TIPO_DOC: "Tipo de documento",
     PERIODO_VINCULACION: "Periodo de vinculación",
@@ -864,7 +869,7 @@ var text_es = {
     ENLACE_GUARDADO: "Enlace guardado",
     ENLACE_SE_HA_GUARDADO: "Se ha guardado el enlace",
     DEBE_PEGAR_ENLACE: "Debe pegar el enlace y seleccionar un ítem",
-
+    SEL_PERIODO: "PERIODO",
 
     //Modal informe de gestión docente
     TITULO_MODAL_INFORME_DOC: "INFORME DE GESTIÓN DOCENTE",
@@ -1300,6 +1305,7 @@ var text_en = {
     ENLACE_GUARDADO: "Link saved",
     ENLACE_SE_HA_GUARDADO: "The link has been saved",
     DEBE_PEGAR_ENLACE: "You must paste a link and select an item",
+    SEL_PERIODO: "PERIOD",
 
 
     //Modal informe de gestión docente
@@ -1331,6 +1337,10 @@ var text_en = {
     NO_PUEDE_REDUCIR: "Can't reduce hours",
     DEBE_APROBAR_CARGA: "New hours must be approved",
     FIRMA_RECTOR: "Rector signature",
+    CARGA_DIFERENTE_VIGENCIA: "Select previous period",
+    VIGENCIA_CARGA: "Academic charge validity",
+    PERIODO_CARGA: "Academic charge period",
+    PERIODO_RESOLUCION: "Document period",
 
     //RESOLUCION_REPORTES
     REPORTE: "Report",
