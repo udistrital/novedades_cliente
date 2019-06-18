@@ -19,16 +19,16 @@ angular.module('contractualClienteApp')
     self.n_solicitud = null;
     self.fecha_inicio = "";
     self.motivo = "";
-    self.num_oficio= 0;
+    self.num_oficio= null;
     self.estado_suspendido = "{}";
     self.contrato_id = $routeParams.contrato_id;
     self.contrato_vigencia = $routeParams.contrato_vigencia;
     self.contrato_obj = {};
-    self.numero_solicitud = 0;
-    self.numero_oficio_estado_cuentas = 0;
+    self.numero_solicitud = null;
+    self.numero_oficio_estado_cuentas = null;
     self.valor_desembolsado = '';
     self.saldo_contratista = '';
-    self.saldo_universidad = '';
+    self.saldo_universidad = null;
     self.fecha_solicitud = new Date();
     self.fecha_terminacion_anticipada = new Date();
     self.estados= [];
@@ -174,11 +174,7 @@ angular.module('contractualClienteApp')
     self.generarActa = function(){
 
       if($scope.formTerminacion.$valid){
-        
-
-
         self.terminacion_nov = {};
-
         self.terminacion_nov.contrato = self.contrato_obj.id;
         self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
         self.terminacion_nov.motivo = self.motivo;
@@ -190,10 +186,7 @@ angular.module('contractualClienteApp')
         self.terminacion_nov.valor_desembolsado = self.valor_desembolsado;
         self.terminacion_nov.saldo_contratista = self.saldo_contratista;
         self.terminacion_nov.saldo_universidad = self.saldo_universidad;
-        self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;
-        
-
-
+        self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;      
         self.contrato_estado = {};
         self.contrato_estado.NumeroContrato = self.contrato_obj.id;
         self.contrato_estado.Vigencia = self.contrato_obj.vigencia;

@@ -41,7 +41,7 @@
 
                 <div class="col-md-6">
                   <label>
-                    {{'NUMERO_SOLICITUD' | translate}}
+                    {{'NUMERO_SOLICITUD' | translate}} *:
                   </label>
                   <br>
                   <md-input-container style="margin:0;">
@@ -54,7 +54,7 @@
 
                 <div class="col-md-6">
                   <label style="width:100%;">
-                    {{'NUMERO_OFICIO' | translate}}
+                    {{'NUMERO_OFICIO' | translate}} *:
                   </label>
                   <md-input-container style="margin:0;">
                     <input type="number" name="num_oficio" ng-model="sLactaCesion.num_oficio" required id="oficio" >
@@ -98,7 +98,7 @@
                 </div>
 
               <div class="form-group col-md-12" >
-                <label for="consideraciones">{{'OTRAS_OBSERVACIONES' | translate}}</label>
+                <label for="consideraciones">{{'OTRAS_OBSERVACIONES' | translate}} *:</label>
                 <textarea class="form-control" required name="observaciones" style="border-radius:0;" ng-model="sLactaCesion.observaciones" id="observaciones" rows="3"></textarea>
               </div>
               </form>

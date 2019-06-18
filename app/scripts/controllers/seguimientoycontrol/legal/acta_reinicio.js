@@ -18,18 +18,18 @@ angular.module('contractualClienteApp')
     var self = this;
     self.f_suspension = new Date();
     self.f_reinicio = new Date();
-    self.diff_dias = 0;
+    self.diff_dias = null;
     self.contrato_id = $routeParams.contrato_id;
     self.contrato_vigencia = $routeParams.contrato_vigencia;
     self.contrato_obj = {};
     self.estado_ejecucion = {};
     self.n_solicitud = null;
-    self.auxiliar=0;
+    self.auxiliar=null;
     self.novedad_suspension='';
     self.novedad_reinicio='';
     self.novedad_motivo='';
-    self.auxiliar=0;
-    self.auxiliar=0;
+    self.auxiliar=null;
+    self.auxiliar=null;
 
     self.estados = [];
 
