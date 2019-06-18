@@ -46,7 +46,7 @@
                       <b>{{'NUMERO_SOLICITUD' | translate}} *:</b>
                     </p>
                     <md-input-container style="margin:0;">
-                      <input type="number" id="n_solicitud" name="n_solicitud" ng-model="sLactaTerminacionAnticipada.numero_solicitud" ng-disabled="false" required>
+                      <input type="number" id="numero_solicitud" name="numero_solicitud" ng-model="sLactaTerminacionAnticipada.numero_solicitud" ng-disabled="false" required>
                       <div ng-messages="formTerminacion.n_solicitud.$error">
                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                       </div>
@@ -57,7 +57,7 @@
                       {{'NUMERO_OFICIO_ESTADO_CUENTAS' | translate}} *:
                     </label>
                     <md-input-container style="margin:0;">
-                      <input type="number" name="num_oficio" ng-model="sLactaTerminacionAnticipada.numero_oficio_estado_cuentas"  id="oficio" required>
+                      <input type="number" name="numero_oficio_estado_cuentas" ng-model="sLactaTerminacionAnticipada.numero_oficio_estado_cuentas"  id="numero_oficio_estado_cuentas" required>
                       <div ng-messages="formTerminacion.num_oficio.$error">
                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                       </div>

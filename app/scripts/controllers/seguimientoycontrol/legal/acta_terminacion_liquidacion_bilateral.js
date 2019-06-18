@@ -59,11 +59,6 @@ angular.module('contractualClienteApp')
         query: "Id:" + wso_response.data.contrato.tipo_contrato
       })).then(function(tc_response){
         self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
-            //http://jbpm.udistritaloas.edu.co:8280/services/financiera_produccion/cdprp/757/2018/01
-           /* financieraRequest.get('cdprp', self.contrato_obj.NumeroContrato  + '/' + self.contrato_obj.vigencia + '/01'  ).then(function(cdp_response){
-                   console.log(cdp_response.data[0]);       
-            });
-            */
             amazonAdministrativaRequest.get('acta_inicio', '?limit=-1&query=NumeroContrato:'  + self.contrato_obj.NumeroContrato ).then(function(acta_response){
                   var fechas_acta = acta_response.data;
                   if(fechas_acta != null){
@@ -75,10 +70,6 @@ angular.module('contractualClienteApp')
                      });
                   }               
             });
-
-
-
-
 
         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
           var elementos_cesion = response_nosql.data;
@@ -174,6 +165,7 @@ angular.module('contractualClienteApp')
     self.generarActa = function(){
 
       if($scope.formTerminacion.$valid){
+          
         self.terminacion_nov = {};
         self.terminacion_nov.contrato = self.contrato_obj.id;
         self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
@@ -264,7 +256,6 @@ angular.module('contractualClienteApp')
      * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
      */
     self.formato_generacion_pdf = function(){
-
        //argoNosqlRequest.get('plantilladocumento','59d79809867ee188e42d8e0d').then(function(response){
        //var str_plantilla = response.data[0].plantilla;
        //var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
