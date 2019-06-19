@@ -62,20 +62,22 @@ angular.module('contractualClienteApp')
             if(elementos_cesion != null){
                 var last_cesion = response_nosql.data[response_nosql.data.length-1];
                 self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
-                if (self.contrato_obj.tipo_novedad == '59d79683867ee188e42d8c97') {
-                    self.contrato_obj.contratista = last_cesion.cesionario;
-                    self.contrato_obj.cesion = 1;                    
-                }else if (self.contrato_obj.tipo_novedad == "59d79683867ee188e42d8c98") {
-                    self.contrato_obj.contratista = last_cesion.cesionario;
-                }else if (self.contrato_obj.tipo_novedad == "59d796ac867ee188e42d8cbf") {
-                    self.contrato_obj.contratista = last_cesion.cesionario;
-                }else if (self.contrato_obj.tipo_novedad == "59d7985e867ee188e42d8e64") {
-                    self.contrato_obj.contratista = last_cesion.cesionario;
-                }else if (self.contrato_obj.tipo_novedad == "59d79894867ee188e42d8e9b") {
-                    self.contrato_obj.contratista = last_cesion.cesionario;
-                }else if (self.contrato_obj.tipo_novedad == "59d79904867ee188e42d8f02") {
-                    self.contrato_obj.contratista = last_cesion.cesionario;
-                }
+                argoNosqlRequest.get('tiponovedad', self.contrato_obj.tipo_novedad ).then(function(response_cesion_nosql){
+                    if (response_cesion_nosql.data[0].nombre == 'cesión') {
+                        self.contrato_obj.contratista = last_cesion.cesionario;
+                        self.contrato_obj.cesion = 1;                    
+                    }else if (response_cesion_nosql.data[0].nombre == "acta_inicio_cesion") {
+                        self.contrato_obj.contratista = last_cesion.cesionario;
+                    }else if (response_cesion_nosql.data[0].nombre == "reinicio") {
+                        self.contrato_obj.contratista = last_cesion.cesionario;
+                    }else if (response_cesion_nosql.data[0].nombre == "adición") {
+                        self.contrato_obj.contratista = last_cesion.cesionario;
+                    }else if (response_cesion_nosql.data[0].nombre == "prórroga") {
+                        self.contrato_obj.contratista = last_cesion.cesionario;
+                    }else if (response_cesion_nosql.data[0].nombre == "adición/prórroga") {
+                        self.contrato_obj.contratista = last_cesion.cesionario;
+                    }
+                }); 
             }
             
             amazonAdministrativaRequest.get('informacion_proveedor', $.param({

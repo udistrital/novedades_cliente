@@ -46,19 +46,19 @@
                       <b>{{'NUMERO_SOLICITUD' | translate}} *:</b>
                     </p>
                     <md-input-container style="margin:0;">
-                      <input type="number" id="n_solicitud" name="n_solicitud" required value="0" ng-model="sLactaTerminacionAnticipada.numero_solicitud" ng-disabled="false" min="0">
-                      <div ng-messages="formSuspension.n_solicitud.$error">
+                      <input type="number" id="numero_solicitud" name="numero_solicitud" ng-model="sLactaTerminacionAnticipada.numero_solicitud" ng-disabled="false" required>
+                      <div ng-messages="formTerminacion.n_solicitud.$error">
                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                       </div>
                     </md-input-container>
                   </div>
                   <div class="form-group col-md-6">
                     <label style="width:100%;">
-                      {{'NUMERO_OFICIO_ESTADO_CUENTAS' | translate}}
+                      {{'NUMERO_OFICIO_ESTADO_CUENTAS' | translate}} *:
                     </label>
                     <md-input-container style="margin:0;">
-                      <input type="number" name="num_oficio" value="0" ng-model="sLactaTerminacionAnticipada.numero_oficio_estado_cuentas" required id="oficio" >
-                      <div ng-messages="formCesion.num_oficio.$error">
+                      <input type="number" name="numero_oficio_estado_cuentas" ng-model="sLactaTerminacionAnticipada.numero_oficio_estado_cuentas"  id="numero_oficio_estado_cuentas" required>
+                      <div ng-messages="formTerminacion.num_oficio.$error">
                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                       </div>
                     </md-input-container>
@@ -66,11 +66,11 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-md-6" >
-                    <label for="fechainicio">{{'FECHA_SOLICITUD' | translate}}:</label> <br>
+                    <label for="fechasolicitud">{{'FECHA_SOLICITUD' | translate}}:</label> <br>
                     <md-datepicker ng-model="sLactaTerminacionAnticipada.fecha_solicitud"> </md-datepicker>
                   </div>
                   <div class="form-group col-md-6" >
-                    <label for="fechainicio">{{'FECHA_TERMINACION_ANTICIPADA' | translate}}:</label> <br>
+                    <label for="fechaterminacion">{{'FECHA_TERMINACION_ANTICIPADA' | translate}}:</label> <br>
                     <md-datepicker ng-model="sLactaTerminacionAnticipada.fecha_terminacion_anticipada"> </md-datepicker>
                   </div>
                 </div>
@@ -78,22 +78,22 @@
                 <div class="row">
                   <div class="form-group col-md-6">
                     <label style="width:100%;">
-                      {{'VALOR_DESEMBOLSADO' | translate}}
+                      {{'VALOR_DESEMBOLSADO' | translate}} *:
                     </label>
                     <md-input-container style="margin:0;">
-                      <input type="number" name="num_oficio" ng-model="sLactaTerminacionAnticipada.valor_desembolsado" required id="oficio" >
-                      <div ng-messages="formCesion.num_oficio.$error">
+                      <input type="number" name="valor_desembolsado" ng-model="sLactaTerminacionAnticipada.valor_desembolsado"  id="valor_desembolsado" required>
+                      <div ng-messages="formTerminacion.valor_desembolsado.$error">
                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                       </div>
                     </md-input-container>
                   </div>
                   <div class="form-group col-md-6">
                     <label style="width:100%;">
-                      {{'SALDO_A_FAVOR_CONTRATISTA' | translate}}
+                      {{'SALDO_A_FAVOR_CONTRATISTA' | translate}} *:
                     </label>
                     <md-input-container style="margin:0;">
-                      <input type="number" name="num_oficio" ng-model="sLactaTerminacionAnticipada.saldo_contratista" required id="oficio" >
-                      <div ng-messages="formCesion.num_oficio.$error">
+                      <input type="number" name="saldo_contratista" ng-model="sLactaTerminacionAnticipada.saldo_contratista" id="saldo_contratista" required>
+                      <div ng-messages="formTerminacion.saldo_contratista.$error">
                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                       </div>
                     </md-input-container>
@@ -102,13 +102,13 @@
                 <div class="row">
                   <div class="form-group col-md-6">
                     <label style="width:100%;">
-                      {{'SALDO_A_FAVOR_UNIVERSIDAD' | translate}}
+                      {{'SALDO_A_FAVOR_UNIVERSIDAD' | translate}} *:
                     </label>
                     <md-input-container style="margin:0;">
-                      <input type="number" name="num_oficio" ng-model="sLactaTerminacionAnticipada.saldo_universidad" required id="oficio" >
-                      <div ng-messages="formCesion.num_oficio.$error">
+                      <input type="number" name="saldo_universidad" ng-model="sLactaTerminacionAnticipada.saldo_universidad" id="saldo_universidad" required >
+                      <div ng-messages="formTerminacion.saldo_universidad.$error">
                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                      </div>
+                      </div>                      
                     </md-input-container>
                   </div>
                 </div>

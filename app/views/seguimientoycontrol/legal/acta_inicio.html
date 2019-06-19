@@ -49,7 +49,7 @@
                   <md-input-container style="margin:0;">
                     <input type="number" name="diff_dias" id="periodo" required ng-model="sLactaInicio.diff_dias" ng-disabled="true" min="0">
                     <div ng-messages="diff_dias.$error">
-                      <div ng-message="required">Este campo es requerido.</div>
+                      <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                     </div>
                   </md-input-container>
                 </div>

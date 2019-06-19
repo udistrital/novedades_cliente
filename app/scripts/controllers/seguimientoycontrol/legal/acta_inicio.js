@@ -66,13 +66,20 @@ angular.module('contractualClienteApp')
         //Verificar si el contrato ha tenido cesion
         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.VigenciaContrato).then(function(response_nosql){
             var elementos_cesion = response_nosql.data;
+            
             if(elementos_cesion != null){
                 var last_cesion = response_nosql.data[response_nosql.data.length-1];
                 self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
-                if (self.contrato_obj.tipo_novedad == '59d79683867ee188e42d8c97') {
-                    self.contrato_obj.contratista = last_cesion.cesionario;
-                    self.contrato_obj.cesion = 1;
-                }
+                //Verificar si la novedade es cesión para realizar acta de inicio
+                argoNosqlRequest.get('tiponovedad', self.contrato_obj.tipo_novedad ).then(function(response_cesion_nosql){
+                     if(response_cesion_nosql.data[0].nombre == "cesión")
+                     {
+                         self.contrato_obj.contratista = last_cesion.cesionario;   
+                         self.contrato_obj.cesion = 1;
+                     }     
+                                       
+                });    
+                   
             }
             //Obtencion de datos del contratista
             amazonAdministrativaRequest.get('informacion_proveedor', $.param({
