@@ -49,7 +49,7 @@ angular.module('contractualClienteApp')
       self.contrato_obj.vigencia = wso_response.data.contrato.vigencia;
       self.contrato_obj.supervisor = wso_response.data.contrato.supervisor.nombre;
       self.contrato_obj.supervisor_documento = wso_response.data.contrato.supervisor.documento_identificacion;
-      self.contrato_obj.contratista = wso_response.data.contrato.contratista;
+      self.contrato_obj.contratista = wso_response.data.contrato.contratista;numero_solicitud
       self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
       self.contrato_obj.NumeroContrato = wso_response.data.contrato.numero_contrato;
       self.contrato_obj.UnidadEjecucion = String(wso_response.data.contrato.unidad_ejecucion);
@@ -78,7 +78,7 @@ angular.module('contractualClienteApp')
               var last_cesion = response_nosql.data[response_nosql.data.length - 1];
               self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
               argoNosqlRequest.get('tiponovedad', self.contrato_obj.tipo_novedad ).then(function(response_cesion_nosql){
-                  if (response_cesion_nosql.data[0].nombre == "cesión") {
+                  if (response_cesion_nosql.data[0].nombre == "cesión") {numero_solicitud
                     self.contrato_obj.contratista = last_cesion.cesionario;
                     self.contrato_obj.cesion = 1;
                   }else if (response_cesion_nosql.data[0].nombre == "acta_inicio_cesion") {
@@ -173,8 +173,8 @@ angular.module('contractualClienteApp')
         self.terminacion_nov.tiponovedad = "59d79809867ee188e42d8e0d";
         self.terminacion_nov.fecharegistro = new Date();
         self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
-        self.terminacion_nov.numerosolicitud = self.n_solicitud;
-        self.terminacion_nov.numerooficioestadocuentas = self.num_oficio;
+        self.terminacion_nov.numerosolicitud = self.numero_solicitud;
+        self.terminacion_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
         self.terminacion_nov.valor_desembolsado = self.valor_desembolsado;
         self.terminacion_nov.saldo_contratista = self.saldo_contratista;
         self.terminacion_nov.saldo_universidad = self.saldo_universidad;
@@ -185,7 +185,7 @@ angular.module('contractualClienteApp')
         self.contrato_estado.FechaRegistro = new Date();
         self.contrato_estado.Estado = self.estado_suspendido;
         self.contrato_estado.Usuario = "usuario_prueba";
-
+        //self.formato_generacion_pdf();
          //primero obtenemos el estado actual - en esta caso es 'En ejecucion'
         //Se guarda en la posicion [0] del arreglo estados el estado actual
         //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a terminacion anticipada - devuelve si es true o false
@@ -232,11 +232,7 @@ angular.module('contractualClienteApp')
             }
           });
         });  
-
-
-
-      }
-      else{
+      }else{
         swal(
           $translate.instant('TITULO_ERROR'),
           $translate.instant('DESCRIPCION_ERROR'),
@@ -635,13 +631,13 @@ angular.module('contractualClienteApp')
                 
                 'Que el objeto es '+  self.contrato_obj.objeto + '.\n\n',
 
-                'Que el '+  self.contrato_obj.tipo_contrato + ' se perfeccionó y ejecutó mediante Registro Presupuestal No.  ' + '.\n\n',
+                'Que el '+  self.contrato_obj.tipo_contrato + ' se perfeccionó y ejecutó mediante Registro Presupuestal No. __________' + '.\n\n',
 
                 'Que el/la señor(a) '+  self.contrato_obj.contratista_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento +  ' No. ' +  self.contrato_obj.contratista_documento + 
-                ' Expedida en ' + self.contrato_obj.contratista_ciudad_documento + ' mediante oficio de fecha __________________ de __________de  ________, le solicita la aceptación de la Terminación Bilateral del ' + self.contrato_obj.tipo_contrato  +
+                ' Expedida en ' + self.contrato_obj.contratista_ciudad_documento + ' mediante oficio de fecha '+self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud)+', le solicita la aceptación de la Terminación Bilateral del ' + self.contrato_obj.tipo_contrato  +
                 ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia +' al Supervisor del mismo.\n\n',
 
-                'Que mediante oficio _____________ el Supervisor y/o el Ordenador del Gasto de el ' + self.contrato_obj.tipo_contrato + ', solicitan al Jefe de la Sección de Presupuesto de la Universidad Distrital, la elaboración del estado de cuenta del ' +self.contrato_obj.tipo_contrato+' referido.\n\n',
+                'Que mediante oficio '+ numberFormat(self.terminacion_nov.numerooficioestadocuentas+'')+' el Supervisor y/o el Ordenador del Gasto de el ' + self.contrato_obj.tipo_contrato + ', solicitan al Jefe de la Sección de Presupuesto de la Universidad Distrital, la elaboración del estado de cuenta del ' +self.contrato_obj.tipo_contrato+' referido.\n\n',
 
                 'Que según lo establecido en el ' + self.contrato_obj.tipo_contrato + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ', el plazo de duración se pactó en ' + 
                 tiempoEjecucion(self.contrato_obj.plazo, self.contrato_obj.UnidadEjecucion) + '  (contados a partir del perfeccionamiento de la Orden y/o Contrato ), es decir del ' +  self.contrato_obj.tipo_contrato + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + '.\n\n',
@@ -709,8 +705,7 @@ angular.module('contractualClienteApp')
                             {   
                                 text: [
                                        {text: ' CLÁUSULA TERCERA : ', bold:true},
-                                       { text:'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' suscrito el día ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) +
-                                               self.contrato_obj.contratista_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento +  ' No. ' +  self.contrato_obj.contratista_documento + 
+                                       { text:'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' suscrito el día ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) +' '+ self.contrato_obj.contratista_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento +  ' No. ' +  self.contrato_obj.contratista_documento + 
                                                ' Expedida en ' + self.contrato_obj.contratista_ciudad_documento + ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del ' + self.contrato_obj.tipo_contrato + ' en mención, declarandose a paz y salvo por todo concepto una vez se apruebe el pago de la cláusula segunda de la presente Acta.\n\n '}
                                 ],
                                 
