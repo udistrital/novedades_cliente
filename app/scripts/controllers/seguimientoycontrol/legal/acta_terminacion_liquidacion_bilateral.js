@@ -185,8 +185,7 @@ angular.module('contractualClienteApp')
         self.contrato_estado.FechaRegistro = new Date();
         self.contrato_estado.Estado = self.estado_suspendido;
         self.contrato_estado.Usuario = "usuario_prueba";
-        //self.formato_generacion_pdf();
-         //primero obtenemos el estado actual - en esta caso es 'En ejecucion'
+        //primero obtenemos el estado actual - en esta caso es 'En ejecucion'
         //Se guarda en la posicion [0] del arreglo estados el estado actual
         //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a terminacion anticipada - devuelve si es true o false
         //si es true guardamos la novedad - y enviamos el cambio de estado del contrato
@@ -247,12 +246,13 @@ angular.module('contractualClienteApp')
      * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
      */
     self.formato_generacion_pdf = function(){
-       //argoNosqlRequest.get('plantilladocumento','59d79809867ee188e42d8e0d').then(function(response){
-       //var str_plantilla = response.data[0].plantilla;
-       //var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
-       var output = self.get_plantilla();
-       pdfMake.createPdf(output).download('acta_terminacion_anticipada.pdf');
-       $location.path('/seguimientoycontrol/legal');
+        //argoNosqlRequest.get('plantilladocumento','59d79809867ee188e42d8e0d').then(function(response){
+        //var str_plantilla = response.data[0].plantilla;
+        //var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
+        var output = self.get_plantilla();
+        pdfMake.createPdf(output).download('acta_terminacion_anticipada_'+numberFormat(self.terminacion_nov.contrato+'')+'.pdf');
+        /*pdfMake.createPdf(output).download('acta_terminacion_anticipada_'+numberFormat(self.terminacion_nov.contrato+'')+'.pdf');*/
+        $location.path('/seguimientoycontrol/legal');
         swal(
             'Buen trabajo!',
             'Se ha generado el acta, se iniciará la descarga',
