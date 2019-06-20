@@ -190,34 +190,29 @@ angular.module('contractualClienteApp')
         //Se guarda en la posicion [0] del arreglo estados el estado actual
         //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a terminacion anticipada - devuelve si es true o false
         //si es true guardamos la novedad - y enviamos el cambio de estado del contrato
+
         contratoRequest.get('contrato_estado', self.contrato_id+'/'+self.contrato_vigencia).then(function (response) {
           if(response.data.contratoEstado.estado.nombreEstado == "En ejecucion"){
             var estado_temp_from = {
               "NombreEstado": "ejecucion"
             }
           }
-
-          self.estados[0] = estado_temp_from;
-          adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
+        self.estados[0] = estado_temp_from;
+        adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
             self.validacion = vc_response.data;
             if (self.validacion=="true") {
-
-
-              argoNosqlRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
+                argoNosqlRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
                 if (response_nosql.status == 200 || response.statusText == "Ok") {
 
-                  var cambio_estado_contrato = {
-                    "_postcontrato_estado":{
-                      "estado":8,
-                      "usuario":"CC123456",
-                      "numero_contrato_suscrito":self.contrato_id,
-                      "vigencia":parseInt(self.contrato_vigencia)
-                    }
-                  };
-
-                  
-                  contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
-                    
+                    var cambio_estado_contrato = {
+                        "_postcontrato_estado":{
+                        "estado":8,
+                        "usuario":"CC123456",
+                        "numero_contrato_suscrito":self.contrato_id,
+                        "vigencia":parseInt(self.contrato_vigencia)
+                        }
+                    };                  
+                    contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {                    
                     if (response.status == 200 || response.statusText == "OK") {
                       swal(
                         $translate.instant('TITULO_BUEN_TRABAJO'),
@@ -231,7 +226,7 @@ angular.module('contractualClienteApp')
               });
             }
           });
-        });  
+        });
       }else{
         swal(
           $translate.instant('TITULO_ERROR'),
@@ -296,7 +291,7 @@ angular.module('contractualClienteApp')
     self.format_date_letter_mongo = function(param){
       var date = new Date(param);
       var dd = date.getDate();
-      var mm = date.getMonth()+1;
+      var mm = date.getMonth();
       var yyyy = date.getFullYear();
       var fecha = new Date(yyyy,mm,dd);
       var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
