@@ -65,26 +65,27 @@ La pruebas se relizan con [karma](https://karma-runner.github.io/latest/index.ht
 * **Herramienta utilizada**: [AngularJS generator](https://github.com/fabianLeon/oas)
 
 * **APIs** para despliegue local:
-WSO2_SERVICE: Servidor en local de la oficina
-ACADEMICA_SERVICE: Servidor en local de la oficina
-ACADEMICA_WSO_SERVICE: Servidor JBPM
-ADMINISTRATIVA_MID_SERVICE: Servidor en local de la oficina
-ADMINISTRATIVA_SERVICE: Servidor en local de la oficina
-ADMINISTRATIVA_PRUEBAS_SERVICE: Servidor en local de la oficina
-RESOLUCION_SERVICE: Servidor en local de la oficina
-ARGO_NOSQL_SERVICE: Local -> http://localhost:8083/v1/
-ARKA_SERVICE: Servidor en local de la oficina
-CONFIGURACION_SERVICE: Servidor en local de la oficina
-CORE_SERVICE: Servidor en local de la oficina
-CORE_AMAZON_SERVICE: Servidor en local de la oficina
-FINANCIERA_MID_SERVICE: Servidor en local de la oficina
-FINANCIERA_SERVICE: Servidor en local de la oficina
-NOTIFICACION_WS: Servidor de notificaciones de local de la oficina
-OIKOS_SERVICE: Servidor en local de la oficina
-OIKOS_AMAZON_SERVICE: Servidor en local de la oficina
-PAGOS_SERVICE: Servidor en local de la oficina,
-TITAN_SERVICE: Servidor en local de la oficina
-SICAPITAL_SERVICE: Servidor de Si Capital de local de la oficina
-CONTRATO_SERVICE: Servidor en local de la oficina
-NUXEO_SERVICE: Servidor de nuxeo(Gestor Documental)
+
+  * WSO2_SERVICE: Servidor en local de la oficina
+  * ACADEMICA_SERVICE: Servidor en local de la oficina
+  * ACADEMICA_WSO_SERVICE: Servidor JBPM
+  * ADMINISTRATIVA_MID_SERVICE: Servidor en local de la oficina
+  * ADMINISTRATIVA_SERVICE: Servidor en local de la oficina
+  * ADMINISTRATIVA_PRUEBAS_SERVICE: Servidor en local de la oficina
+  * RESOLUCION_SERVICE: Servidor en local de la oficina
+  * ARGO_NOSQL_SERVICE: Local -> http://localhost:8083/v1/
+  * ARKA_SERVICE: Servidor en local de la oficina
+  * CONFIGURACION_SERVICE: Servidor en local de la oficina
+  * CORE_SERVICE: Servidor en local de la oficina
+  * CORE_AMAZON_SERVICE: Servidor en local de la oficina
+  * FINANCIERA_MID_SERVICE: Servidor en local de la oficina
+  * FINANCIERA_SERVICE: Servidor en local de la oficina
+  * NOTIFICACION_WS: Servidor de notificaciones de local de la oficina
+  * OIKOS_SERVICE: Servidor en local de la oficina
+  * OIKOS_AMAZON_SERVICE: Servidor en local de la oficina
+  * PAGOS_SERVICE: Servidor en local de la oficina
+  * TITAN_SERVICE: Servidor en local de la oficina
+  * SICAPITAL_SERVICE: Servidor de Si Capital de local de la oficina
+  * CONTRATO_SERVICE: Servidor en local de la oficina
+  * NUXEO_SERVICE: Servidor de nuxeo(Gestor Documental)
 
