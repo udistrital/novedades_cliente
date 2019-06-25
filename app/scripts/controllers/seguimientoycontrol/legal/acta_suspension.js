@@ -441,7 +441,7 @@ angular.module('contractualClienteApp')
     self.formato_generacion_pdf = function(){
       argoNosqlRequest.get('plantilladocumento','5a133759d9963a4c9025fbac').then(function(response){
         var docDefinition = self.get_pdf();
-        pdfMake.createPdf(docDefinition).download('acta_suspension.pdf');
+        pdfMake.createPdf(docDefinition).download('acta_suspension_contrato_'+self.contrato_id+'.pdf');
         $location.path('/seguimientoycontrol/legal');
       });
     }
