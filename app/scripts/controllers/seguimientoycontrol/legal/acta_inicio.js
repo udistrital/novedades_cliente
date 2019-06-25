@@ -386,7 +386,7 @@ angular.module('contractualClienteApp')
      */
     self.formato_generacion_pdf = function(){
         var docDefinition = self.formato_pdf();
-        pdfMake.createPdf(docDefinition).download('acta_inicio.pdf');
+        pdfMake.createPdf(docDefinition).download('acta_inicio_contrato_'+self.contrato_id+'.pdf');
     }
 
     /**

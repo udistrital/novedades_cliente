@@ -569,7 +569,7 @@ angular.module('contractualClienteApp')
         argoNosqlRequest.get('plantilladocumento','5a133759d9963a4c9025fbac').then(function(response){
             //var docDefinition = JSON.stringify(eval("(" + response.data[0].plantilla + ")" ));
             var docDefinition = self.get_pdf();
-            pdfMake.createPdf(docDefinition).download('acta_reinicio.pdf');
+            pdfMake.createPdf(docDefinition).download('acta_reinicio_contrato_'+self.contrato_id+'.pdf');
             $location.path('/seguimientoycontrol/legal');
         });
     }

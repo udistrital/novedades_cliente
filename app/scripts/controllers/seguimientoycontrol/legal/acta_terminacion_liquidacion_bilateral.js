@@ -251,7 +251,6 @@ angular.module('contractualClienteApp')
         //var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
         var output = self.get_plantilla();
         pdfMake.createPdf(output).download('acta_terminacion_anticipada_'+numberFormat(self.terminacion_nov.contrato+'')+'.pdf');
-        /*pdfMake.createPdf(output).download('acta_terminacion_anticipada_'+numberFormat(self.terminacion_nov.contrato+'')+'.pdf');*/
         $location.path('/seguimientoycontrol/legal');
         swal(
             'Buen trabajo!',

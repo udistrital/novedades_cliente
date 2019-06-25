@@ -357,7 +357,7 @@ angular.module('contractualClienteApp')
      */
     self.formato_generacion_pdf = function(){
         var docDefinition = self.formato_pdf();
-        pdfMake.createPdf(docDefinition).download('acta_adicion_prorroga.pdf');
+        pdfMake.createPdf(docDefinition).download('acta_adicion_prorroga_contrato_'+self.contrato_id+'.pdf');
     }
 
     /**

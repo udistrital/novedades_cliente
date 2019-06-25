@@ -334,7 +334,8 @@ angular.module('contractualClienteApp')
             var str_plantilla = response.data[0].plantilla;
             var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
             var output = self.get_plantilla();
-            pdfMake.createPdf(output).download('acta_cesion.pdf');
+            pdfMake.createPdf(output).download('acta_cesion_contrato_'+self.contrato_id+'.pdf');
+            
             $location.path('/seguimientoycontrol/legal');
         });
     }
