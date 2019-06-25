@@ -37,12 +37,12 @@ angular.module('contractualClienteApp').constant('CONF', {
     });
 ```
 Ahora se puede correr el api de la siguiente manera:
-    ```shell 
+    ```
         grunt serve
     ```
 
 Para crear el build de la aplicación:
-    ```shell 
+    ```
         grunt build
     ```
 
@@ -54,7 +54,7 @@ Inicalmente se verá una pantalla sin menú ni opciones de navegación, para acc
 ## Pruebas unitaras
 
 La pruebas se relizan con [karma](https://karma-runner.github.io/latest/index.html), ejecutar el comando:
-    ```shell 
+    ```
         grunt test
     ```
 
