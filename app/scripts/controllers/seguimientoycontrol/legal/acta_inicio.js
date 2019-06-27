@@ -779,7 +779,7 @@ angular.module('contractualClienteApp')
         if (unidad == '205') {
             var meses = tiempo / 30;
             if (meses > 1) {
-                meses = floor(meses);
+                meses = Math.floor(meses);
                 var parcial = meses * 30;
                 var dias = tiempo - parcial;
                 var plazo = meses + " mes(es) y " + dias + " dia(s) ";
