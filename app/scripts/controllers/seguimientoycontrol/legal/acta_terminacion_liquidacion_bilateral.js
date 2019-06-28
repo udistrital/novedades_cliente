@@ -251,7 +251,7 @@ angular.module('contractualClienteApp')
         //var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
         var output = self.get_plantilla();
         pdfMake.createPdf(output).download('acta_terminacion_anticipada_'+numberFormat(self.terminacion_nov.contrato+'')+'.pdf');
-        $location.path('/seguimientoycontrol/legal');
+       $location.path('/seguimientoycontrol/legal');
         swal(
             'Buen trabajo!',
             'Se ha generado el acta, se iniciará la descarga',
@@ -523,7 +523,7 @@ angular.module('contractualClienteApp')
         if (unidad == '205') {
             var meses = tiempo / 30;
             if (meses > 1) {
-                meses = floor(meses);
+                meses = Math.floor(meses);
                 var parcial = meses * 30;
                 var dias = tiempo - parcial;
                 var plazo = meses + " mes(es) y " + dias + " dia(s) ";
@@ -537,7 +537,7 @@ angular.module('contractualClienteApp')
             var plazo = meses + " mes(es) ";
         }
         return plazo;
-    }
+    }self.contrato_obj
 
 
     self.get_plantilla = function(){
@@ -589,7 +589,7 @@ angular.module('contractualClienteApp')
                             {text: self.contrato_obj.contratista_nombre + ", mayor de edad, identificado(a) con " + self.contrato_obj.contratista_tipo_documento +  " No. " +  self.contrato_obj.contratista_documento + " Expedida en " + self.contrato_obj.contratista_ciudad_documento,  style: 'topHeader'}                                     
                         ],
                         [ 
-                            {text: 'Valor:',  bold: true,  style: 'topHeader'},               
+                            {text: 'Valor:',  bold: true,  style: 'topHeadtiempoEjecucioner'},               
                             {text: NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + ")",  style: 'topHeader'}       
                         ],                       
                         [ 

@@ -63,24 +63,23 @@ angular.module('contractualClienteApp')
                 self.estados[1] = estado_temp_to;
             }
         });
+       
+        console.log( self.contrato_obj)
         //Verificar si el contrato ha tenido cesion
         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.VigenciaContrato).then(function(response_nosql){
             var elementos_cesion = response_nosql.data;
-            
             if(elementos_cesion != null){
                 var last_cesion = response_nosql.data[response_nosql.data.length-1];
                 self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
-                //Verificar si la novedade es cesión para realizar acta de inicio
-                argoNosqlRequest.get('tiponovedad', self.contrato_obj.tipo_novedad ).then(function(response_cesion_nosql){
-                     if(response_cesion_nosql.data[0].nombre == "cesión")
-                     {
-                         self.contrato_obj.contratista = last_cesion.cesionario;   
-                         self.contrato_obj.cesion = 1;
-                     }     
+                if (self.contrato_obj.tipo_novedad == "59d79683867ee188e42d8c97") {
+                    
+                        self.contrato_obj.contratista = last_cesion.cesionario;   
+                        self.contrato_obj.cesion = 1;                       
+                        
                                        
-                });    
-                   
+                }      
             }
+
             //Obtencion de datos del contratista
             amazonAdministrativaRequest.get('informacion_proveedor', $.param({
                 query: "Id:" + self.contrato_obj.contratista
@@ -99,13 +98,9 @@ angular.module('contractualClienteApp')
                     coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(c_response){  
                          self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
                          self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;   
-                    });           
-
-
-                });
-               
+                    });          
+                });             
             });
-
             //Obtencion de datos del Supervisor
             amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
                 query: "Id:" + self.contrato_obj.supervisor_cedula
@@ -263,6 +258,8 @@ angular.module('contractualClienteApp')
                 valorfinalcontrato: 0,
                 vigencia: "2017"
             }
+
+            
             //Se verifica si el contrato tiene cesion (0=no tiene cesion)
             if (self.contrato_obj.cesion == 0) {
                 self.contrato_estado = {
@@ -782,7 +779,7 @@ angular.module('contractualClienteApp')
         if (unidad == '205') {
             var meses = tiempo / 30;
             if (meses > 1) {
-                meses = floor(meses);
+                meses = Math.floor(meses);
                 var parcial = meses * 30;
                 var dias = tiempo - parcial;
                 var plazo = meses + " mes(es) y " + dias + " dia(s) ";
