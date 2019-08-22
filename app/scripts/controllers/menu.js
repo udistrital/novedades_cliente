@@ -23,7 +23,9 @@ angular.module('contractualClienteApp')
 
         // optiene los menus segun el rol
         var roles = rolesService.roles().toString().replace(/,/g, '%2C');
+        
         configuracionRequest.get('menu_opcion_padre/ArbolMenus/ADMINISTRADOR_NOVEDADES/Novedades', '').then(function (response) {
+
             $rootScope.my_menu = response.data;
 
         });
