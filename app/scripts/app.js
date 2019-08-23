@@ -109,26 +109,6 @@ angular
                 controller: 'RpSolicitudCtrl',
                 controllerAs: 'rpSolicitud'
             })
-            .when('/seguimientoycontrol/financiero', {
-                templateUrl: 'views/seguimientoycontrol/financiero.html',
-                controller: 'SeguimientoycontrolFinancieroCtrl',
-                controllerAs: 'sFinanciero'
-            })
-            .when('/seguimientoycontrol/financiero/contrato', {
-                templateUrl: 'views/seguimientoycontrol/financiero/contrato.html',
-                controller: 'SeguimientoycontrolFinancieroContratoCtrl',
-                controllerAs: 'sFcontrato'
-            })
-            .when('/seguimientoycontrol/financiero/ordenes_pago', {
-                templateUrl: 'views/seguimientoycontrol/financiero/ordenes_pago.html',
-                controller: 'SeguimientoycontrolFinancieroOrdenesPagoCtrl',
-                controllerAs: 'sFordenesPago'
-            })
-            .when('/seguimientoycontrol/financiero/estadisticas', {
-                templateUrl: 'views/seguimientoycontrol/financiero/estadisticas.html',
-                controller: 'SeguimientoycontrolFinancieroEstadisticasCtrl',
-                controllerAs: 'sFestadisticas'
-            })
             .when('/plantillas/generacion_minuta', {
                 templateUrl: 'views/plantillas/generacion_plantilla.html',
                 controller: 'GeneracionPlantillaCtrl',
