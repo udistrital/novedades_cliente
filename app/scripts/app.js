@@ -99,26 +99,6 @@ angular
                 controller: 'AboutCtrl',
                 controllerAs: 'about'
             })
-            .when('/necesidad/solicitud_necesidad/:IdNecesidad?', {
-                templateUrl: 'views/necesidad/solicitud_necesidad.html',
-                controller: 'SolicitudNecesidadCtrl',
-                controllerAs: 'solicitudNecesidad'
-            })
-            .when('/necesidades', {
-                templateUrl: 'views/necesidad/necesidades.html',
-                controller: 'NecesidadesCtrl',
-                controllerAs: 'necesidades'
-            })
-            .when('/necesidad/necesidad-pdf/:IdNecesidad?', {
-                templateUrl: 'views/necesidad/pdfnecesidad.html',
-                controller: 'PdfnecesidadCtrl',
-                controllerAs: 'necesidadPdf'
-            })
-            .when('/necesidad/necesidad_reportes', {
-                templateUrl: 'views/necesidad/necesidad_reportes.html',
-                controller: 'NecesidadReportesCtrl',
-                controllerAs: 'necesidadReportes'
-            })
             .when('/rp_solicitud_personas', {
                 templateUrl: 'views/rp/rp_solicitud_personas.html',
                 controller: 'RpSolicitudPersonasCtrl',
