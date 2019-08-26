@@ -133,7 +133,7 @@ var conf_local = {
     ADMINISTRATIVA_SERVICE: "http://10.20.0.254/administrativa_api/v1/",
     ADMINISTRATIVA_PRUEBAS_SERVICE: "http://10.20.0.254/administrativa_amazon_api/v1/",
     RESOLUCION_SERVICE: "http://10.20.0.254/resoluciones_crud/v1/",
-    ARGO_NOSQL_SERVICE: "http://localhost:8083/v1/",
+    ARGO_NOSQL_SERVICE: "http://10.20.0.254/novedades_api/v1/",
     ARKA_SERVICE: "https://autenticacion.udistrital.edu.co:8244/arka_api_crud/v1/",
     CONFIGURACION_SERVICE: "http://10.20.0.254/configuracion_api/v1/",
     CORE_SERVICE: "http://10.20.0.254/core_api/v1/",
