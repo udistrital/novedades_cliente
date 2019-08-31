@@ -153,16 +153,14 @@ var conf_local = {
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
-        CLIENTE_ID: "pszmROXqfec4pTShgF_fn2DAAX0a",
-        REDIRECT_URL: "http://localhost:9000/",
-        RESPONSE_TYPE: "code",
-        SCOPE: "openid email",
+        CLIENTE_ID: "Mn1C6ugP29WgPSf4Zfjrm3t8Hoka",
+        REDIRECT_URL: "http://10.20.0.254/novedades/",
+        RESPONSE_TYPE: "id_token token",
+        SCOPE: "openid email documento",
         BUTTON_CLASS: "btn btn-warning btn-sm",
         SIGN_OUT_URL: "https://autenticacion.udistrital.edu.co/oidc/logout",
-        SIGN_OUT_REDIRECT_URL: "http://localhost:9000/",
+        SIGN_OUT_REDIRECT_URL: "http://10.20.0.254/novedades/",
         SIGN_OUT_APPEND_TOKEN: "true",
-        REFRESH_TOKEN: "https://autenticacion.udistrital.edu.co/oauth2/token",
-        CLIENT_SECRET: "2crHq2IRkFHEVTBfpznLhKHyKVIa"
     },
 };
 
