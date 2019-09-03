@@ -63,12 +63,26 @@ angular
         'requestService',
         'gridApiService',
         'colombiaHolidaysService',
-        'nuxeoClient'
+        'nuxeoClient',
+        'implicitToken'
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');
-    })
-    .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+      })
+      .factory('httpRequestInterceptor', function () {
+          return {
+              request: function (config) {
+  
+                  if (window.localStorage.getItem('access_token') !== undefined && window.localStorage.getItem('access_token') !== null) {
+                      config.headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('access_token');
+                  }
+                  config.headers['Accept'] = 'application/json';
+  
+                  return config;
+              }
+          };
+      })
+      .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
         cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
         cfpLoadingBarProvider.spinnerTemplate = '<div class="loading-div"><div><span class="fa loading-spinner"></div><div class="fa sub-loading-div">Por favor espere, cargando...</div></div>';
     }])
@@ -76,6 +90,9 @@ angular
         $mdDateLocaleProvider.formatDate = function(date) {
             return date ? moment.utc(date).format('YYYY-MM-DD') : '';
         };
+    })
+    .config(function ($httpProvider) {
+        $httpProvider.interceptors.push('httpRequestInterceptor')
     })
     .config(['$locationProvider', '$routeProvider' ,'$httpProvider', function($locationProvider, $routeProvider, $httpProvider) {
     
