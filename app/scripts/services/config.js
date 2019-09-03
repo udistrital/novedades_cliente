@@ -42,8 +42,8 @@ var conf_cloud = {
         SIGN_OUT_URL: "https://autenticacion.udistrital.edu.co/oidc/logout",
         SIGN_OUT_REDIRECT_URL: "http://administrativa.portaloas.udistrital.edu.co/",
         SIGN_OUT_APPEND_TOKEN: "true",
-        REFRESH_TOKEN: "https://autenticacion.udistrital.edu.co/oauth2/token",
-        CLIENT_SECRET: "lrVuDATX1o8TfXxz_jrEzBA2iIoa"
+        // REFRESH_TOKEN: "https://autenticacion.udistrital.edu.co/oauth2/token",
+        // CLIENT_SECRET: "lrVuDATX1o8TfXxz_jrEzBA2iIoa"
     },
 };
 var conf_presentacion = {
@@ -84,7 +84,7 @@ var conf_presentacion = {
     },
 };
 
-var conf_pruebas = {
+var conf_test = {
     WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
     ACADEMICA_SERVICE: "http://10.20.0.127/urano/index.php?data=B-7djBQWvIdLAEEycbH1n6e-3dACi5eLUOb63vMYhGq0kPBs7NGLYWFCL0RSTCu1yTlE5hH854MOgmjuVfPWyvdpaJDUOyByX-ksEPFIrrQQ7t1p4BkZcBuGD2cgJXeD",
     ACADEMICA_WSO_SERVICE: "https://jbpm.udistritaloas.edu.co:8243/services/academicaProxy/",
@@ -110,17 +110,17 @@ var conf_pruebas = {
     NUXEO_SERVICE: "https://documental.udistrital.edu.co/nuxeo/",
     HOMOLOGACION_SERVICE:"https://autenticacion.udistrital.edu.co:8244/dependencias_api/v1/",
     TOKEN: {
-        AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
-        URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
+        AUTORIZATION_URL: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
+        URL_USER_INFO: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/userinfo",
         CLIENTE_ID: "iONJ2Rqghur6GOSWyWVUjs1R3Tca",
-        REDIRECT_URL: "http://10.20.0.254/argo/",
-        RESPONSE_TYPE: "code",
-        SCOPE: "openid email",
+        REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co",
+        RESPONSE_TYPE: "id_token token",
+        SCOPE: "openid email documento",
         BUTTON_CLASS: "btn btn-warning btn-sm",
-        SIGN_OUT_URL: "https://autenticacion.udistrital.edu.co/oidc/logout",
-        SIGN_OUT_REDIRECT_URL: "http://10.20.0.254/argo/",
+        SIGN_OUT_URL: "https://autenticacion.portaloas.udistrital.edu.co/oidc/logout",
+        SIGN_OUT_REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co",
         SIGN_OUT_APPEND_TOKEN: "true",
-        REFRESH_TOKEN: "https://autenticacion.udistrital.edu.co/oauth2/token",
+        REFRESH_TOKEN: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/token",
         CLIENT_SECRET: "5srUXoy2myc4gtZfW3whfqxR5gIa"
     },
 };
@@ -166,6 +166,6 @@ var conf_local = {
 
 angular.module('contractualClienteApp')
     .constant('CONF', {
-        GENERAL: conf_local
+        GENERAL: conf_test
     });
 
