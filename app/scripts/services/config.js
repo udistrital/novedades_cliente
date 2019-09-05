@@ -112,13 +112,13 @@ var conf_test = {
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/userinfo",
-        CLIENTE_ID: "iONJ2Rqghur6GOSWyWVUjs1R3Tca",
-        REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co",
+        CLIENTE_ID: "OwOV0X4cpYgbSpDfm_FPKF0J6bwa",
+        REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co/",
         RESPONSE_TYPE: "id_token token",
         SCOPE: "openid email documento",
         BUTTON_CLASS: "btn btn-warning btn-sm",
         SIGN_OUT_URL: "https://autenticacion.portaloas.udistrital.edu.co/oidc/logout",
-        SIGN_OUT_REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co",
+        SIGN_OUT_REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co/",
         SIGN_OUT_APPEND_TOKEN: "true",
         REFRESH_TOKEN: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/token",
         CLIENT_SECRET: "5srUXoy2myc4gtZfW3whfqxR5gIa"
