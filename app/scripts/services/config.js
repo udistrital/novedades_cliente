@@ -84,28 +84,28 @@ var conf_presentacion = {
     },
 };
 
-var conf_pruebas = {
-    WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
-    ACADEMICA_SERVICE: "http://10.20.0.127/urano/index.php?data=B-7djBQWvIdLAEEycbH1n6e-3dACi5eLUOb63vMYhGq0kPBs7NGLYWFCL0RSTCu1yTlE5hH854MOgmjuVfPWyvdpaJDUOyByX-ksEPFIrrQQ7t1p4BkZcBuGD2cgJXeD",
-    ACADEMICA_WSO_SERVICE: "https://jbpm.udistritaloas.edu.co:8243/services/academicaProxy/",
+var conf_test = {
+    //WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
+    //ACADEMICA_SERVICE: "http://10.20.0.127/urano/index.php?data=B-7djBQWvIdLAEEycbH1n6e-3dACi5eLUOb63vMYhGq0kPBs7NGLYWFCL0RSTCu1yTlE5hH854MOgmjuVfPWyvdpaJDUOyByX-ksEPFIrrQQ7t1p4BkZcBuGD2cgJXeD",
+    //ACADEMICA_WSO_SERVICE: "https://jbpm.udistritaloas.edu.co:8243/services/academicaProxy/",
     ADMINISTRATIVA_MID_SERVICE: "http://10.20.0.254/administrativa_mid_api/v1/",
     ADMINISTRATIVA_SERVICE: "http://10.20.0.254/administrativa_api/v1/",
     ADMINISTRATIVA_PRUEBAS_SERVICE: "http://10.20.0.254/administrativa_amazon_api/v1/",
-    ARKA_SERVICE: "https://autenticacion.udistrital.edu.co:8244/arka_api_crud/v1/",
+    //ARKA_SERVICE: "https://autenticacion.udistrital.edu.co:8244/arka_api_crud/v1/",
     CONFIGURACION_SERVICE: "http://10.20.0.254/configuracion_api/v1/",
     CORE_SERVICE: "http://10.20.0.254/core_api/v1/",
     CORE_AMAZON_SERVICE: "http://10.20.0.254/core_amazon_crud/v1/",
     FINANCIERA_MID_SERVICE: "http://10.20.0.254/financiera_mid_api/v1/",
     FINANCIERA_SERVICE: "http://10.20.0.254/financiera_api/v1/",
-    MODELS_SERVICE: "scripts/models/",
-    NOTIFICACION_WS: "ws://10.20.2.134:8080/ws/join",
+    //MODELS_SERVICE: "scripts/models/",
+    //NOTIFICACION_WS: "ws://10.20.2.134:8080/ws/join",
     OIKOS_SERVICE: "http://10.20.0.254/oikos_api/v1/",
-    OIKOS_AMAZON_SERVICE: "http://10.20.0.254/oikos_amazon_api/v1/",
-    PAGOS_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services/academicaProxyService/ingresos_concepto/",
+    //OIKOS_AMAZON_SERVICE: "http://10.20.0.254/oikos_amazon_api/v1/",
+    //PAGOS_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services/academicaProxyService/ingresos_concepto/",
     RESOLUCION_SERVICE: "http://10.20.0.254/resoluciones_crud/v1/",
     ARGO_NOSQL_SERVICE: "http://10.20.2.43:8083/v1/",
-    TITAN_SERVICE: "http://10.20.0.254/titan_api_crud/v1/",
-    SICAPITAL_SERVICE: "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/",
+    //TITAN_SERVICE: "http://10.20.0.254/titan_api_crud/v1/",
+    //SICAPITAL_SERVICE: "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/",
     CONTRATO_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services/contratoSuscritoProxyService/",
     NUXEO_SERVICE: "https://documental.udistrital.edu.co/nuxeo/",
     HOMOLOGACION_SERVICE:"https://autenticacion.udistrital.edu.co:8244/dependencias_api/v1/",
@@ -166,6 +166,6 @@ var conf_local = {
 
 angular.module('contractualClienteApp')
     .constant('CONF', {
-        GENERAL: conf_local
+        GENERAL: test
     });
 
