@@ -166,6 +166,6 @@ var conf_local = {
 
 angular.module('contractualClienteApp')
     .constant('CONF', {
-        GENERAL: test
+        GENERAL: conf_test
     });
 
