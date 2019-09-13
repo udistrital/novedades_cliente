@@ -120,12 +120,49 @@ var conf_test = {
         SIGN_OUT_URL: "https://autenticacion.portaloas.udistrital.edu.co/oidc/logout",
         SIGN_OUT_REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co",
         SIGN_OUT_APPEND_TOKEN: "true",
-        // REFRESH_TOKEN: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/token",
-        // CLIENT_SECRET: "5srUXoy2myc4gtZfW3whfqxR5gIa"
     },
 };
 
 var conf_local = {
+    //WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
+    //ACADEMICA_SERVICE: "http://10.20.0.127/urano/index.php?data=B-7djBQWvIdLAEEycbH1n6e-3dACi5eLUOb63vMYhGq0kPBs7NGLYWFCL0RSTCu1yTlE5hH854MOgmjuVfPWyvdpaJDUOyByX-ksEPFIrrQQ7t1p4BkZcBuGD2cgJXeD",
+    //ACADEMICA_WSO_SERVICE: "https://jbpm.udistritaloas.edu.co:8243/services/academicaProxy/",
+    ADMINISTRATIVA_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_mid_api/v1/",
+    ADMINISTRATIVA_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_crud_api/v1/",
+    ADMINISTRATIVA_PRUEBAS_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_amazon_api/v1/",
+    //ARKA_SERVICE: "https://autenticacion.udistrital.edu.co:8244/arka_api_crud/v1/",
+    CONFIGURACION_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/configuracion_crud_api/v1/",
+    CORE_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/core_api/v1/",
+    CORE_AMAZON_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/core_amazon_crud/v1/",
+    FINANCIERA_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/financiera_mid_api/v1/",
+    FINANCIERA_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/financiera_crud_api/v1/",
+    //MODELS_SERVICE: "scripts/models/",
+    //NOTIFICACION_WS: "ws://10.20.2.134:8080/ws/join",
+    OIKOS_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/oikos_crud_api/v1/",
+    //OIKOS_AMAZON_SERVICE: "http://10.20.0.254/oikos_amazon_api/v1/",
+    //PAGOS_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services/academicaProxyService/ingresos_concepto/",
+    RESOLUCION_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_crud_api/v1/",
+    ARGO_NOSQL_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1",
+    //TITAN_SERVICE: "http://10.20.0.254/titan_api_crud/v1/",
+    //SICAPITAL_SERVICE: "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/",
+    CONTRATO_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services/contratoSuscritoProxyService/",
+    NUXEO_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/nuxeo_api/v1/",
+    HOMOLOGACION_SERVICE:"https://autenticacion.udistrital.edu.co:8244/dependencias_api/v1/",
+    TOKEN: {
+        AUTORIZATION_URL: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
+        URL_USER_INFO: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/userinfo",
+        CLIENTE_ID: "OwOV0X4cpYgbSpDfm_FPKF0J6bwa",
+        REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co",
+        RESPONSE_TYPE: "id_token token",
+        SCOPE: "openid email documento",
+        BUTTON_CLASS: "btn btn-warning btn-sm",
+        SIGN_OUT_URL: "https://autenticacion.portaloas.udistrital.edu.co/oidc/logout",
+        SIGN_OUT_REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co",
+        SIGN_OUT_APPEND_TOKEN: "true",
+    },
+};
+
+var conf_local_2 = {
     //WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
     //ACADEMICA_SERVICE: "http://10.20.0.127/urano/index.php?data=B-7djBQWvIdLAEEycbH1n6e-3dACi5eLUOb63vMYhGq0kPBs7NGLYWFCL0RSTCu1yTlE5hH854MOgmjuVfPWyvdpaJDUOyByX-ksEPFIrrQQ7t1p4BkZcBuGD2cgJXeD",
     //ACADEMICA_WSO_SERVICE: "https://jbpm.udistritaloas.edu.co:8243/services/academicaProxy/",
@@ -163,6 +200,7 @@ var conf_local = {
         SIGN_OUT_APPEND_TOKEN: "true",
     },
 };
+
 
 angular.module('contractualClienteApp')
     .constant('CONF', {
