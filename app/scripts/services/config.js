@@ -118,7 +118,7 @@ var conf_test = {
         SCOPE: "openid email documento",
         BUTTON_CLASS: "btn btn-warning btn-sm",
         SIGN_OUT_URL: "https://autenticacion.portaloas.udistrital.edu.co/oidc/logout",
-        SIGN_OUT_REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co/",
+        SIGN_OUT_REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co",
         SIGN_OUT_APPEND_TOKEN: "true",
         // REFRESH_TOKEN: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/token",
         // CLIENT_SECRET: "5srUXoy2myc4gtZfW3whfqxR5gIa"
