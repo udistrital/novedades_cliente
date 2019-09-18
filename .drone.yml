@@ -56,7 +56,7 @@ steps:
       - push
       - pull_request
 
-  - name: notify-telegram
+  - name: NotifyTelegram
   image: appleboy/drone-telegram
   settings:
     token:
