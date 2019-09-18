@@ -103,7 +103,7 @@ var conf_test = {
     //OIKOS_AMAZON_SERVICE: "http://10.20.0.254/oikos_amazon_api/v1/",
     //PAGOS_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services/academicaProxyService/ingresos_concepto/",
     RESOLUCION_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_crud_api/v1/",
-    ARGO_NOSQL_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1",
+    ARGO_NOSQL_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",
     //TITAN_SERVICE: "http://10.20.0.254/titan_api_crud/v1/",
     //SICAPITAL_SERVICE: "http://10.20.0.127/sicws/ws/sicapitalAPI.php/?/",
     CONTRATO_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services/contratoSuscritoProxyService/",
