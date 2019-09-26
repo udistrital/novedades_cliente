@@ -16,7 +16,6 @@ steps:
       - test
       event:
       - push
-      - pull_request
 
   - name: publish-s3-test  
     image: plugins/s3
@@ -35,7 +34,6 @@ steps:
       - test
       event:
       - push
-      - pull_request
 
   - name: publish-s3-master  
     image: plugins/s3
@@ -54,25 +52,27 @@ steps:
       - master
       event:
       - push
-      - pull_request
 
-  - name: notify-telegram
-  image: appleboy/drone-telegram
-  settings:
-    token:
-      from_secret: telegram_token
-    to:
-      from_secret: telegram_to
-    format: html
-    message: >
-      {{#success build.status}} With Drone 1.0 
-        <code>{{repo.owner}}/{{repo.name}}</code> <a href="{{build.link}}">SUCCESS</a> 
-        <code>{{commit.branch}}</code>@<a href="{{commit.link}}">{{truncate commit.sha 7}}</a>
-      {{else}}
-        <code>{{repo.owner}}/{{repo.name}}</code> <a href="{{build.link}}">FAILURE</a>
-        <code>{{commit.branch}}</code>@<a href="{{commit.link}}">{{truncate commit.sha 7}}</a>
-      {{/success}}
-  when:
-    status:
-    - failure
-    - success
+  - name: NotifyTelegram
+    image: appleboy/drone-telegram
+    settings:
+      token:
+        from_secret: telegram_token
+      to:
+        from_secret: telegram_to
+      format: html
+      message: >
+        {{#success build.status}}
+          <code>{{repo.owner}}/{{repo.name}}</code> <a href="{{build.link}}">SUCCESS</a> 
+          <code>{{commit.branch}}</code>@<a href="{{commit.link}}">{{truncate commit.sha 7}}</a><code> By:{{commit.author}}</code>
+        {{else}}
+          <code>{{repo.owner}}/{{repo.name}}</code> <a href="{{build.link}}">FAILURE</a>
+          <code>{{commit.branch}}</code>@<a href="{{commit.link}}">{{truncate commit.sha 7}}</a><code> By:{{commit.author}}</code>
+        {{/success}}
+    when:
+      branch:
+      - master
+      - test
+      status:
+      - failure
+      - success
