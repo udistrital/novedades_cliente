@@ -83,7 +83,7 @@ var conf_presentacion = {
         CLIENT_SECRET: "lrVuDATX1o8TfXxz_jrEzBA2iIoa"
     },
 };
-
+ 
 var conf_test = {
     //WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
     //ACADEMICA_SERVICE: "http://10.20.0.127/urano/index.php?data=B-7djBQWvIdLAEEycbH1n6e-3dACi5eLUOb63vMYhGq0kPBs7NGLYWFCL0RSTCu1yTlE5hH854MOgmjuVfPWyvdpaJDUOyByX-ksEPFIrrQQ7t1p4BkZcBuGD2cgJXeD",
