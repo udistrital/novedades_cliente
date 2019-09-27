@@ -76,7 +76,7 @@ angular.module('contractualClienteApp')
                     })).then(function(tc_response){
                         self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
                         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
-                            var elementos_cesion = response_nosql.data;
+                            var elementos_cesion = response_nosql.data.Body;
                             console.log(elementos_cesion)
                             if(elementos_cesion != null){
                                 var last_cesion = response_nosql.data[response_nosql.data.length - 1];
