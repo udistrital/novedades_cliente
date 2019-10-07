@@ -25,7 +25,6 @@ angular.module('contractualClienteApp')
     self.estado_resultado_response = false;
     amazonAdministrativaRequest.get('vigencia_contrato','').then(function(response) {
             $scope.vigencias = response.data;
-
     });
 
     /**
