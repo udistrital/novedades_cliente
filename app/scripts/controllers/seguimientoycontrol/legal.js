@@ -37,11 +37,12 @@ angular.module('contractualClienteApp')
      */
     self.buscar_contrato = function(){
         contratoRequest.get('contrato', +self.contrato_id+'/'+self.contrato_vigencia).then(function(wso_response){
+            console.log(wso_response.data.contrato.contratista)
             if(wso_response.data.contrato.numero_contrato_suscrito){
                 self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
                 self.contrato_obj.valor = wso_response.data.contrato.valor_contrato;
-                self.contrato_obj.objeto = wso_response.data.contrato.objeto_contrato;
-                self.contrato_obj.fecha_registro = wso_response.data.contrato.fecha_registro;
+                self.contrato_obj.objeto = wso_response.data.contrato.objeto_contrato;                
+                self.contrato_obj.fecha_registro = wso_response.data.contrato.fecha_registro;                
                 self.contrato_obj.ordenador_gasto_nombre = wso_response.data.contrato.ordenador_gasto.nombre_ordenador;
                 self.contrato_obj.ordenador_gasto_rol = wso_response.data.contrato.ordenador_gasto.rol_ordenador;
                 self.contrato_obj.vigencia = wso_response.data.contrato.vigencia;
@@ -104,26 +105,21 @@ angular.module('contractualClienteApp')
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                 }
                             }
-                            amazonAdministrativaRequest.get('informacion_proveedor', $.param({
-                                query: "Id:" + self.contrato_obj.contratista
-                            })).then(function(ip_response) {
+                            amazonAdministrativaRequest.get('informacion_proveedor?query=Id:'+self.contrato_obj.contratista).then(function(ip_response) {
                                 self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                                 self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
+                                if(ip_response.data[0].Tipopersona=='NATURAL'){  
+                                    amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:'+self.contrato_obj.contratista_documento).then(function(ipn_response){                                                                     
 
-                                if(ip_response.data[0].Tipopersona=='NATURAL'){
-                                    amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
-                                    query: "Id:" + ip_response.data[0].NumDocumento
-                                    })).then(function(ipn_response){
                                         coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(c_response){
+                                            console.log(c_response.data[0].Nombre)                                            
                                             self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
                                             self.estado_resultado_response = true;
                                         });
                                     });
                                 }
                                 else{
-                                    amazonAdministrativaRequest.get('informacion_persona_juridica', $.param({
-                                    query: "Id:" + ip_response.data[0].NumDocumento
-                                    })).then(function(ipn_response){
+                                    amazonAdministrativaRequest.get('informacion_persona_juridica?query=Id:'+ip_response.data[0].NumDocumento).then(function(ipn_response){
                                         amazonAdministrativaRequest.get('informacion_proveedor','query=num_documento:' + ip_response.data[0].NumDocumento).then(function(ip_response){
                                             coreAmazonRequest.get('ciudad','query=Id:' + ip_response.data[0].IdCiudadContacto).then(function(c_response){
                                             self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
@@ -133,9 +129,7 @@ angular.module('contractualClienteApp')
 
                                        
                                     });
-                                }
-
-                                
+                                }                                
                             });
                         });
                     });
