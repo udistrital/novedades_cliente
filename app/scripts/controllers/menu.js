@@ -118,8 +118,7 @@ angular.module('contractualClienteApp')
 
         if ($scope.token_service.live_token()) {
             self.perfil = $scope.token_service.getRoles();
-            // configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + self.perfil + '/Necesidades','').then(function (response) {
-            configuracionRequest.get('menu_opcion_padre/ArbolMenus/ADMINISTRADOR_NOVEDADES/Novedades', '').then(function (response) {
+            configuracionRequest.get('menu_opcion_padre/ArbolMenus/ADMINISTRADOR_NOVEDADES/Novedades','').then(function (response) {
                 $rootScope.my_menu = response.data;
                 console.info(response.data);
                 /*configuracionRequest.update_menu(https://10.20.0.162:9443/store/apis/authenticate response.data);
