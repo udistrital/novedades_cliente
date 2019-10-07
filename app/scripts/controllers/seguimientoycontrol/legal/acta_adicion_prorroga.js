@@ -47,18 +47,15 @@ angular.module('contractualClienteApp')
         self.fecha_reg_dia = res[2];
         self.fecha_reg_mes = meses[parseInt(res[1]-1)];
         self.fecha_reg_ano = res[0];
-
-        amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
-            query:"Id:"+self.contrato_obj.supervisor_cedula
-        })).then(function(ipn_response) {
-            self.contrato_obj.supervisor_persona_natural = ipn_response.data;
+        
+        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:'+self.contrato_obj.supervisor_cedula).then(function(ipn_response){                          self.contrato_obj.supervisor_persona_natural = ipn_response.data;
             coreAmazonRequest.get('ciudad','query=Id:' + self.contrato_obj.supervisor_persona_natural[0].IdCiudadExpedicionDocumento).then(function(c_response){
                 self.contrato_obj.supervisor_ciudad_cedula = c_response.data[0].Nombre;
             });
         });
 
         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.VigenciaContrato).then(function(response_nosql){
-            var elementos_cesion = response_nosql.data;
+            var elementos_cesion = response_nosql.data.Body;
             if(elementos_cesion != null){
                 var last_cesion = response_nosql.data[response_nosql.data.length-1];
                 self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
@@ -80,9 +77,7 @@ angular.module('contractualClienteApp')
                 }); 
             }
             
-            amazonAdministrativaRequest.get('informacion_proveedor', $.param({
-                query: "Id:" + self.contrato_obj.contratista
-            })).then(function(ip_response) {
+            amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function(ip_response) {
                 var elementos_contratista = Object.keys(ip_response.data[0]).length;
                 if (elementos_contratista > 0) {
                     self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;

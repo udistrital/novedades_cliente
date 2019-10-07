@@ -109,7 +109,6 @@ angular.module('contractualClienteApp')
                                 self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
                                 if(ip_response.data[0].Tipopersona=='NATURAL'){  
                                     amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:'+self.contrato_obj.contratista_documento).then(function(ipn_response){                                                                     
-
                                         coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(c_response){
                                             console.log(c_response.data[0].Nombre)                                            
                                             self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
