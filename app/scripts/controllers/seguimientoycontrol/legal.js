@@ -26,7 +26,7 @@ angular.module('contractualClienteApp')
     amazonAdministrativaRequest.get('vigencia_contrato','').then(function(response) {
             $scope.vigencias = response.data;
     });
-
+    
     /**
      * @ngdoc method
      * @name get_contratos_vigencia
@@ -78,7 +78,7 @@ angular.module('contractualClienteApp')
                         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
                             var elementos_cesion = response_nosql.data.Body;
                             console.log(elementos_cesion)
-                            if(elementos_cesion != null){
+                           /* if(elementos_cesion != null){
                                 var last_cesion = response_nosql.data[response_nosql.data.length - 1];
                                 self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
                                 if (self.contrato_obj.tipo_novedad == "59d79683867ee188e42d8c97") {
@@ -103,7 +103,7 @@ angular.module('contractualClienteApp')
                                 }else if (self.contrato_obj.tipo_novedad == "59d79904867ee188e42d8f02") {
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                 }
-                            }
+                            }*/
                             amazonAdministrativaRequest.get('informacion_proveedor?query=Id:'+self.contrato_obj.contratista).then(function(ip_response) {
                                 self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                                 self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
