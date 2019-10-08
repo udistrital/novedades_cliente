@@ -57,6 +57,7 @@ angular.module('contractualClienteApp')
                 self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
                 argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
                     var elementos_cesion = response_nosql.data;
+                    /*TO DO
                     if(elementos_cesion != null){
                         var last_cesion = response_nosql.data[response_nosql.data.length - 1];
                         self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
@@ -79,7 +80,7 @@ angular.module('contractualClienteApp')
                                 self.contrato_obj.contratista = last_cesion.cesionario;
                             }
                         });    
-                    }
+                    }*/
                     amazonAdministrativaRequest.get('informacion_proveedor', $.param({
                         query: "Id:" + self.contrato_obj.contratista
                     })).then(function(ip_response) {
@@ -265,7 +266,6 @@ angular.module('contractualClienteApp')
                     self.cesion_nov.vigencia = String(self.contrato_obj.vigencia);
                     self.cesion_nov.fechaoficio = new Date(self.f_oficio);
                     self.cesion_nov.fecharegistro = self.contrato_obj.fecha_registro;
-
                     argoNosqlRequest.post('novedad', self.cesion_nov).then(function(response_nosql){
                         if(response_nosql.status == 200  || response_nosql.statusText == "OK"){
                             swal(
@@ -334,9 +334,8 @@ angular.module('contractualClienteApp')
             var str_plantilla = response.data[0].plantilla;
             var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
             var output = self.get_plantilla();
-            pdfMake.createPdf(output).download('acta_cesion_contrato_'+self.contrato_id+'.pdf');
-            
-            $location.path('/seguimientoycontrol/legal');
+            pdfMake.createPdf(output).download('acta_cesion_contrato_'+self.contrato_id+'.pdf');            
+           $location.path('/seguimientoycontrol/legal');
         });
     }
 
