@@ -89,7 +89,6 @@ angular.module('contractualClienteApp')
             }); 
         });
         amazonAdministrativaRequest.get('tipo_contrato?query=Id:'+wso_response.data.contrato.tipo_contrato).then(function(tc_response){
-            console.log(tc_response.data[0])
             self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
         });
     });
@@ -181,7 +180,7 @@ angular.module('contractualClienteApp')
             $scope.nuevo_valor_contrato = "";
         }else{
             $('.panel_adicion').show("fast");
-
+//TO DO: REvisar esta consulta ya que no devulve los datos que son. Solo devulve los datos del primer contrato.
             amazonAdministrativaRequest.get('contrato_disponibilidad?query=NumeroContrato:'+ self.contrato_id+'&Vigencia:'+self.VigenciaContrato).then(function(response) {
                 self.contrato_obj.NumeroCdp = response.data[0].NumeroCdp;
             });
