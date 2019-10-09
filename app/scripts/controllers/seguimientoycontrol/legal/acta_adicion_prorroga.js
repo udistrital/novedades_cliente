@@ -57,7 +57,7 @@ angular.module('contractualClienteApp')
         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.VigenciaContrato).then(function(response_nosql){
             var elementos_cesion = response_nosql.data.Body;
             if(elementos_cesion != null){
-                var last_cesion = response_nosql.data[response_nosql.data.length-1];
+                var last_cesion = elementos_cesion[elementos_cesion.length-1];
                 self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
                 argoNosqlRequest.get('tiponovedad', self.contrato_obj.tipo_novedad ).then(function(response_cesion_nosql){
                     if (response_cesion_nosql.data[0].nombre == 'cesión') {
@@ -75,8 +75,8 @@ angular.module('contractualClienteApp')
                         self.contrato_obj.contratista = last_cesion.cesionario;
                     }
                 }); 
-            }
-            
+            }          
+
             amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function(ip_response) {
                 var elementos_contratista = Object.keys(ip_response.data[0]).length;
                 if (elementos_contratista > 0) {
@@ -88,10 +88,8 @@ angular.module('contractualClienteApp')
                 }
             }); 
         });
-
-        amazonAdministrativaRequest.get('tipo_contrato', $.param({
-            query:"Id:"+wso_response.data.contrato.tipo_contrato
-        })).then(function(tc_response){
+        amazonAdministrativaRequest.get('tipo_contrato?query=Id:'+wso_response.data.contrato.tipo_contrato).then(function(tc_response){
+            console.log(tc_response.data[0])
             self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
         });
     });
@@ -184,9 +182,7 @@ angular.module('contractualClienteApp')
         }else{
             $('.panel_adicion').show("fast");
 
-            amazonAdministrativaRequest.get('contrato_disponibilidad', $.param({
-                query:"NumeroContrato:" + self.contrato_id
-            })).then(function(response) {
+            amazonAdministrativaRequest.get('contrato_disponibilidad?query=NumeroContrato:'+ self.contrato_id+'&Vigencia:'+self.VigenciaContrato).then(function(response) {
                 self.contrato_obj.NumeroCdp = response.data[0].NumeroCdp;
             });
             $scope.fecha_adicion = new Date();

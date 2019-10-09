@@ -103,7 +103,6 @@ angular.module('contractualClienteApp')
                             }
                             //Obtiene los datos aosicados al proveedor
                             amazonAdministrativaRequest.get('informacion_proveedor?query=Id:'+self.contrato_obj.contratista).then(function(ip_response) {
-                                console.log(ip_response.data[0])
                                 self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                                 self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
                                 if(ip_response.data[0].Tipopersona=='NATURAL'){  
