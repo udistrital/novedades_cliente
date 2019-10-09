@@ -14,7 +14,6 @@ angular.module('contractualClienteApp')
         'AngularJS',
         'Karma'
     ];
-
     var self = this;
     self.estado_contrato_obj = {};
     self.estado_resultado_response = 0;
@@ -24,7 +23,7 @@ angular.module('contractualClienteApp')
     self.contrato_obj = {};
     self.estado_resultado_response = false;
     amazonAdministrativaRequest.get('vigencia_contrato','').then(function(response) {
-            $scope.vigencias = response.data;
+        $scope.vigencias = response.data;
     });
     
     /**
@@ -36,7 +35,6 @@ angular.module('contractualClienteApp')
      */
     self.buscar_contrato = function(){
         contratoRequest.get('contrato', +self.contrato_id+'/'+self.contrato_vigencia).then(function(wso_response){
-            console.log(wso_response.data.contrato.contratista)
             if(wso_response.data.contrato.numero_contrato_suscrito){
                 self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
                 self.contrato_obj.valor = wso_response.data.contrato.valor_contrato;
@@ -48,6 +46,7 @@ angular.module('contractualClienteApp')
                 self.contrato_obj.contratista = wso_response.data.contrato.contratista;
                 self.contrato_obj.cesion = 0;
 
+                //Obtiene el estado del contrato.
                 contratoRequest.get('contrato_estado', +self.contrato_id+'/'+self.contrato_vigencia).then(function(ce_response){
                     self.estado_contrato_obj.estado = ce_response.data.contratoEstado.estado.id; 
                     if (self.estado_contrato_obj.estado == 7) {
@@ -71,15 +70,13 @@ angular.module('contractualClienteApp')
                             'info'
                         );
                     }
-                    amazonAdministrativaRequest.get('tipo_contrato', $.param({
-                        query: "Id:" + wso_response.data.contrato.tipo_contrato
-                    })).then(function(tc_response){
+                    //Obtiene el tipo de contrato y el tipo de la ultima novedad hecha para saber si el contrato fue cedido.
+                    amazonAdministrativaRequest.get('tipo_contrato?query=Id:'+ wso_response.data.contrato.tipo_contrato).then(function(tc_response){
                         self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
                         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
                             var elementos_cesion = response_nosql.data.Body;
-                            console.log(elementos_cesion)
-                           /* if(elementos_cesion != null){
-                                var last_cesion = response_nosql.data[response_nosql.data.length - 1];
+                            if(elementos_cesion != null){
+                                var last_cesion = elementos_cesion[elementos_cesion.length - 1];
                                 self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
                                 if (self.contrato_obj.tipo_novedad == "59d79683867ee188e42d8c97") {
                                     self.contrato_obj.contratista = last_cesion.cesionario;
@@ -103,14 +100,15 @@ angular.module('contractualClienteApp')
                                 }else if (self.contrato_obj.tipo_novedad == "59d79904867ee188e42d8f02") {
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                 }
-                            }*/
+                            }
+                            //Obtiene los datos aosicados al proveedor
                             amazonAdministrativaRequest.get('informacion_proveedor?query=Id:'+self.contrato_obj.contratista).then(function(ip_response) {
+                                console.log(ip_response.data[0])
                                 self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                                 self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
                                 if(ip_response.data[0].Tipopersona=='NATURAL'){  
                                     amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:'+self.contrato_obj.contratista_documento).then(function(ipn_response){                                                                     
                                         coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(c_response){
-                                            console.log(c_response.data[0].Nombre)                                            
                                             self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
                                             self.estado_resultado_response = true;
                                         });
