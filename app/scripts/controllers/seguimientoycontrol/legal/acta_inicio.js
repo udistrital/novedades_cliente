@@ -268,6 +268,7 @@ angular.module('contractualClienteApp')
                     }
 
                     self.estados[0] = estado_temp_from;
+//TO DO: Revisar este endPoint ya que está fallando la petición.
                     adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                         self.validacion = vc_response.data;
                         if(self.validacion == "true"){

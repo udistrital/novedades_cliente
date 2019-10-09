@@ -54,10 +54,9 @@ angular.module('contractualClienteApp')
      ).then(function(tc_response){
         self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
-          var elementos_cesion = response_nosql.data;
-          /*
+          var elementos_cesion = response_nosql.data.Body;
           if(elementos_cesion != null){
-              var last_cesion = response_nosql.data[response_nosql.data.length - 1];
+              var last_cesion = elementos_cesion[elementos_cesion.length - 1];
               self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
                argoNosqlRequest.get('tiponovedad', self.contrato_obj.tipo_novedad ).then(function(response_cesion_nosql){
                   if (response_cesion_nosql.data[0].nombre == "cesión") {
@@ -79,9 +78,8 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.contratista = last_cesion.cesionario;
                     self.contrato_obj.cesion = 0;
                   }
-               }); 
-              
-          }*/
+               });             
+          }
 
           amazonAdministrativaRequest.get('informacion_proveedor?query=Id:'+ self.contrato_obj.contratista).then(function(ip_response) {
             self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
@@ -190,6 +188,8 @@ angular.module('contractualClienteApp')
             }
           }
           self.estados[0] = estado_temp_from;
+          console.log(self.estados)
+//TO DO: Revisar este endPoint ya que está fallando la petición.
           adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
             self.validacion = vc_response.data;
             if (self.validacion=="true") {
@@ -213,10 +213,7 @@ angular.module('contractualClienteApp')
                         $translate.instant('DESCRIPCION_SUSPENSION') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
                         'success'
                       );
-
-
-                      self.formato_generacion_pdf();
-                    
+                      self.formato_generacion_pdf();                    
                     }
                   });
                 }
@@ -261,7 +258,6 @@ angular.module('contractualClienteApp')
    
 
     function Unidades(num){
-
         switch(num)
         {
             case 1: return "Un";
