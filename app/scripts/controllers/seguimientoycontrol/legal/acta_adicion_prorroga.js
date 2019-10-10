@@ -180,7 +180,8 @@ angular.module('contractualClienteApp')
             $scope.nuevo_valor_contrato = "";
         }else{
             $('.panel_adicion').show("fast");
-            amazonAdministrativaRequest.get('contrato_disponibilidad?query=NumeroContrato:'+ self.contrato_id+'&Vigencia:'+self.VigenciaContrato).then(function(response) {
+//TO DO: Revisar bien esta petición.
+            amazonAdministrativaRequest.get('contrato_disponibilidad?query=NumeroContrato:'+ self.contrato_id+',Vigencia:'+self.VigenciaContrato).then(function(response) {
                 self.contrato_obj.NumeroCdp = response.data[0].NumeroCdp;
             });
             $scope.fecha_adicion = new Date();
