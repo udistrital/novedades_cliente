@@ -118,9 +118,7 @@ angular.module('contractualClienteApp')
                                 });
 
                                  //Obtención de datos del jefe de juridica
-                                amazonAdministrativaRequest.get('supervisor_contrato', $.param({
-                                    query: "CargoId.Id:78" , sortby: "FechaFin" , order: "desc", limit: '1'
-                                })).then(function(jj_response){
+                                amazonAdministrativaRequest.get('supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1').then(function(jj_response){
                                         self.contrato_obj.jefe_juridica_documento=jj_response.data[0].Documento;
                                          amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
                                             query: "Id:" + self.contrato_obj.jefe_juridica_documento              

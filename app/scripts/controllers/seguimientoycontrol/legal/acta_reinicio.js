@@ -32,14 +32,10 @@ angular.module('contractualClienteApp')
     self.auxiliar=null;
 
     self.estados = [];
-
-    amazonAdministrativaRequest.get('estado_contrato', $.param({
-        query: "NombreEstado:" + "En ejecucion"
-    })).then(function(ec_response){
+     amazonAdministrativaRequest.get('estado_contrato?query=NombreEstado:' + "En ejecucion").then(function(ec_response){
         var estado_temp_to = {
             "NombreEstado": "ejecucion"
         }
-
         if(ec_response.data[0].NombreEstado == "En ejecucion"){
             self.estados[1] = estado_temp_to;
         }
@@ -59,9 +55,7 @@ angular.module('contractualClienteApp')
         self.contrato_obj.contratista = wso_response.data.contrato.contratista;
         self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
 
-        amazonAdministrativaRequest.get('tipo_contrato', $.param({
-            query:"Id:"+wso_response.data.contrato.tipo_contrato
-        })).then(function(tc_response){
+        amazonAdministrativaRequest.get('tipo_contrato?query=Id:'+wso_response.data.contrato.tipo_contrato).then(function(tc_response){
             self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
 
             argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
@@ -89,21 +83,17 @@ angular.module('contractualClienteApp')
                     
                 }
                 
-                amazonAdministrativaRequest.get('informacion_proveedor', $.param({
-                    query: "Id:" + self.contrato_obj.contratista
-                })).then(function(ip_response) {
+                amazonAdministrativaRequest.get('informacion_proveedor?query=Id:'+self.contrato_obj.contratista).then(function(ip_response) {
                     self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                     self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
 
-
                     if(ip_response.data[0].Tipopersona=='NATURAL'){
-                        amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
-                        query: "Id:" + ip_response.data[0].NumDocumento
-                        })).then(function(ipn_response){
+                        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:'+ ip_response.data[0].NumDocumento).then(function(ipn_response){
                             coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(c_response){
                                 self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
                                 self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;  
                                 argoNosqlRequest.get('novedad', self.contrato_obj.id + '/' + self.contrato_obj.vigencia).then(function(response){
+                                        console.log(response.data)
                                         for(var i = 0 ; i < response.data.length ; i++){
                                             self.auxiliar=response.data[i]._id;
                                             self.novedad_suspension=response.data[i].fechasuspension;
@@ -120,9 +110,7 @@ angular.module('contractualClienteApp')
                                             
                                         } 
                                 });
-                                amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
-                                query: "Id:" + self.contrato_obj.supervisor_cedula              
-                                })).then(function(ispn_response){
+                                amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:'+self.contrato_obj.supervisor_cedula ).then(function(ispn_response){
                                      coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(sc_response){
                                          self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
                                          self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro; 
@@ -133,15 +121,14 @@ angular.module('contractualClienteApp')
                         });
                     }
                     else{
-                        amazonAdministrativaRequest.get('informacion_persona_juridica', $.param({
-                        query: "Id:" + ip_response.data[0].NumDocumento
-                        })).then(function(ipn_response){
+                        amazonAdministrativaRequest.get('informacion_persona_juridica?query=Id:'+ ip_response.data[0].NumDocumento).then(function(ipn_response){
 
-                            amazonAdministrativaRequest.get('informacion_proveedor','query=num_documento:' + ip_response.data[0].NumDocumento).then(function(ip_response){
+                            amazonAdministrativaRequest.get('informacion_proveedor?query=num_documento:' + ip_response.data[0].NumDocumento).then(function(ip_response){
                                         coreAmazonRequest.get('ciudad','query=Id:' + ip_response.data[0].IdCiudadContacto).then(function(c_response){
                                             self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
                                             self.contrato_obj.contratista_tipo_documento = 'NIT'; 
                                             argoNosqlRequest.get('novedad',self.contrato_obj.id + '/' + self.contrato_obj.vigencia).then(function(response){
+                                                console.log(respo.data)
                                                 for(var i = 0 ; i < response.data.length ; i++){
                                                     self.auxiliar=response.data[i]._id;
                                                     self.novedad_suspension=response.data[i].fechasuspension;
@@ -158,9 +145,7 @@ angular.module('contractualClienteApp')
                                                 }
                                             });
 
-                                            amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
-                                            query: "Id:" + self.contrato_obj.supervisor_cedula              
-                                            })).then(function(ispn_response){
+                                            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:'+self.contrato_obj.supervisor_cedula).then(function(ispn_response){
                                                  coreAmazonRequest.get('ciudad','query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function(sc_response){
                                                      self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
                                                      self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro; 
@@ -175,13 +160,9 @@ angular.module('contractualClienteApp')
                      });
                     }
                       //Obtención de datos del jefe de juridica
-                    amazonAdministrativaRequest.get('supervisor_contrato', $.param({
-                        query: "CargoId.Id:78" , sortby: "FechaFin" , order: "desc", limit: '1'
-                    })).then(function(jj_response){
+                    amazonAdministrativaRequest.get('supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1').then(function(jj_response){
                             self.contrato_obj.jefe_juridica_documento=jj_response.data[0].Documento;
-                             amazonAdministrativaRequest.get('informacion_persona_natural', $.param({
-                                query: "Id:" + self.contrato_obj.jefe_juridica_documento              
-                            })).then(function(ijpn_response){
+                             amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:'+ self.contrato_obj.jefe_juridica_documento).then(function(ijpn_response){
                                 coreAmazonRequest.get('ciudad','query=Id:' + ijpn_response.data[0].IdCiudadExpedicionDocumento).then(function(scj_response){
                                     self.contrato_obj.jefe_juridica_ciudad_documento = scj_response.data[0].Nombre;
                                     self.contrato_obj.jefe_juridica_tipo_documento = ijpn_response.data[0].TipoDocumento.ValorParametro; 
