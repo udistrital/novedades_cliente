@@ -72,7 +72,7 @@ angular.module('contractualClienteApp')
                     }
                     //Obtiene el tipo de contrato y el tipo de la ultima novedad hecha para saber si el contrato fue cedido.
                     amazonAdministrativaRequest.get('tipo_contrato?query=Id:'+ wso_response.data.contrato.tipo_contrato).then(function(tc_response){
-                        self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
+                        self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;                        
                         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
                             var elementos_cesion = response_nosql.data.Body;
                             if(elementos_cesion != null){

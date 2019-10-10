@@ -273,7 +273,6 @@ angular.module('contractualClienteApp')
                         self.validacion = vc_response.data;
                         if(self.validacion == "true"){
                             argoNosqlRequest.post('actainicio', self.data_acta_inicio).then(function(response_nosql){
-                                console.log(self.data_acta_inicio)
                                 if(response_nosql.status == 200 || response_nosql.statusText == "OK"){
                                     var cambio_estado_contrato = {
                                         "_postcontrato_estado":{
