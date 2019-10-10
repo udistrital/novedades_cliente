@@ -57,13 +57,12 @@ angular.module('contractualClienteApp')
 
         amazonAdministrativaRequest.get('tipo_contrato?query=Id:'+wso_response.data.contrato.tipo_contrato).then(function(tc_response){
             self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
-
+//TO DO Se debe hacer una prueba de un contrato que haya sido cesinado y suspendido para posteriormente hacer un reinicio.
             argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
-                var elementos_cesion = response_nosql.data;
+                var elementos_cesion = response_nosql.data.Body;
                 if(elementos_cesion != null){
-                    var last_cesion = response_nosql.data[response_nosql.data.length - 1];
+                    var last_cesion = elementos_cesion[elementos_cesion.length - 1];
                     self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
-
                      argoNosqlRequest.get('tiponovedad', self.contrato_obj.tipo_novedad ).then(function(response_cesion_nosql){
                         if (response_cesion_nosql.data[0].nombre == "cesión") {
                         self.contrato_obj.contratista = last_cesion.cesionario;
