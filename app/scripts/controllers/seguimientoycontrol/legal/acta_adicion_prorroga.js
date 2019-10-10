@@ -180,7 +180,6 @@ angular.module('contractualClienteApp')
             $scope.nuevo_valor_contrato = "";
         }else{
             $('.panel_adicion').show("fast");
-//TO DO: REvisar esta consulta ya que no devulve los datos que son. Solo devulve los datos del primer contrato.
             amazonAdministrativaRequest.get('contrato_disponibilidad?query=NumeroContrato:'+ self.contrato_id+'&Vigencia:'+self.VigenciaContrato).then(function(response) {
                 self.contrato_obj.NumeroCdp = response.data[0].NumeroCdp;
             });
