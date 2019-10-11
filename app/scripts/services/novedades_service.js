@@ -4,7 +4,7 @@
  * @ngdoc service
  * @name novedadesService.novedadesRequest
  * @description
- * # novedadesService
+ * # novedadesRequest
  * Factory in the novedadesService
  */
 angular.module('novedadesService', [])

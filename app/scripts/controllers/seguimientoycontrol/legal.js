@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolLegalCtrl', function ($log,$location,$scope,administrativaRequest, argoNosqlRequest, amazonAdministrativaRequest, coreAmazonRequest, $window,$translate, contratoRequest, agoraRequest) {
+.controller('SeguimientoycontrolLegalCtrl', function ($scope, argoNosqlRequest, amazonAdministrativaRequest, coreAmazonRequest, $translate, contratoRequest) {
     this.awesomeThings = [
         'HTML5 Boilerplate',
         'AngularJS',
@@ -25,7 +25,6 @@ angular.module('contractualClienteApp')
     amazonAdministrativaRequest.get('vigencia_contrato','').then(function(response) {
         $scope.vigencias = response.data;
     });
-
    
     /**
      * @ngdoc method
@@ -75,6 +74,7 @@ angular.module('contractualClienteApp')
                     amazonAdministrativaRequest.get('tipo_contrato?query=Id:'+ wso_response.data.contrato.tipo_contrato).then(function(tc_response){
                         self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;                        
                         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
+                            console.log(response_nosql.data.Body)
                             var elementos_cesion = response_nosql.data.Body;
                             if(elementos_cesion != null){
                                 var last_cesion = elementos_cesion[elementos_cesion.length - 1];

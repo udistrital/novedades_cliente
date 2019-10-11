@@ -8,12 +8,13 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolLegalActaAdicionProrrogaCtrl', function ($log, $scope, $routeParams, coreAmazonRequest, administrativaRequest,contratoRequest,$translate,argoNosqlRequest,agoraRequest,amazonAdministrativaRequest) {
+.controller('SeguimientoycontrolLegalActaAdicionProrrogaCtrl', function ($scope, $routeParams, coreAmazonRequest, contratoRequest,$translate,argoNosqlRequest, amazonAdministrativaRequest,novedadesRequest, novedadesMidRequest) {
+
     this.awesomeThings = [
         'HTML5 Boilerplate',
         'AngularJS',
         'Karma'
-    ];
+    ];      
 
     var self = this;
     self.contrato_id = $routeParams.contrato_id;
@@ -181,7 +182,7 @@ angular.module('contractualClienteApp')
         }else{
             $('.panel_adicion').show("fast");
 //TO DO: Revisar bien esta petición.
-            amazonAdministrativaRequest.get('contrato_disponibilidad?query=NumeroContrato:'+ self.contrato_id+',Vigencia:'+self.VigenciaContrato).then(function(response) {
+            amazonAdministrativaRequest.get('contrato_disponibilidad?query=NumeroContrato:'+ self.contrato_id+'&Vigencia:'+self.VigenciaContrato).then(function(response) {
                 self.contrato_obj.NumeroCdp = response.data[0].NumeroCdp;
             });
             $scope.fecha_adicion = new Date();
@@ -261,14 +262,20 @@ angular.module('contractualClienteApp')
      * @description
      * funcion que valida la data de la novedad
      */
-    self.generarActa = function(){
+    self.generarActa = function(){   
         if ($scope.adicion) {
             $scope.estado_novedad = "Adición";
+            novedadesRequest.get('tipo_novedad','query=Nombre:'+$scope.estado_novedad ).then(function(nc_response){
+                console.log(nc_response.data[0].CodigoAbreviacion)
+            });
             $scope.alert = 'DESCRIPCION_ADICION';
             $scope.tiponovedad = '59d7985e867ee188e42d8e64';
         }
         if ($scope.prorroga) {
-            $scope.estado_novedad = "Prorroga";
+            $scope.estado_novedad = "Prórroga";
+            novedadesRequest.get('tipo_novedad','query=Nombre:'+$scope.estado_novedad ).then(function(nc_response){
+                console.log(nc_response.data[0].CodigoAbreviacion)
+            });
             $scope.alert = 'DESCRIPCION_PRORROGA';
             $scope.tiponovedad = '59d79894867ee188e42d8e9b';
             if ($scope.adicion != true && $scope.prorroga == true){
@@ -279,6 +286,10 @@ angular.module('contractualClienteApp')
             $scope.estado_novedad = "Adición y Prorroga";
             $scope.alert = 'DESCRIPCION_ADICION_PRORROGA';
             $scope.tiponovedad = '59d79904867ee188e42d8f02';
+            novedadesRequest.get('tipo_novedad','query=Nombre:Adición/Prórroga').then(function(nc_response){
+                console.log(nc_response.data[0].CodigoAbreviacion)
+            });
+        
         }
         if ($scope.estado_novedad != false) {
             self.data_acta_adicion_prorroga = {
@@ -295,7 +306,8 @@ angular.module('contractualClienteApp')
                 tiponovedad: $scope.tiponovedad,
                 cesionario: parseInt(self.contrato_obj.contratista)
             }
-            argoNosqlRequest.post('novedad', self.data_acta_adicion_prorroga).then(function(request){
+
+            novedadesMidRequest.post('novedad', self.data_acta_adicion_prorroga).then(function(request){
                 if (request.status == 200) {
                     self.formato_generacion_pdf();
                     swal({
@@ -310,7 +322,7 @@ angular.module('contractualClienteApp')
                         window.location.href = "#/seguimientoycontrol/legal";
                     });
                     $scope.estado_novedad = undefined;
-                }
+                }    
             });
         }
     };

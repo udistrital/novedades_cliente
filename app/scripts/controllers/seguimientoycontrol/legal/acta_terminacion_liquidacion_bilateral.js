@@ -181,11 +181,10 @@ angular.module('contractualClienteApp')
           }
         self.estados[0] = estado_temp_from;
         adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
-            self.validacion = vc_response.data;
+            self.validacion = vc_response.data.Body;
             if (self.validacion=="true") {
                 argoNosqlRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
-                if (response_nosql.status == 200 || response.statusText == "Ok") {
-
+                if (response_nosql.data.Code == 200 || response.statusText == "Ok") {        
                     var cambio_estado_contrato = {
                         "_postcontrato_estado":{
                         "estado":8,
@@ -194,7 +193,9 @@ angular.module('contractualClienteApp')
                         "vigencia":parseInt(self.contrato_vigencia)
                         }
                     };                  
-                    contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {                    
+                    console.log(cambio_estado_contrato)
+                    contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {      
+                        contratoRequest.log(response)              
                     if (response.status == 200 || response.statusText == "OK") {
                       swal(
                         $translate.instant('TITULO_BUEN_TRABAJO'),
