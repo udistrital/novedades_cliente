@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolLegalActaSuspensionCtrl', function ($location, $log, $scope, $routeParams, $translate, amazonAdministrativaRequest, argoNosqlRequest, coreAmazonRequest, agoraRequest, adminMidRequest, contratoRequest) {
+  .controller('SeguimientoycontrolLegalActaSuspensionCtrl', function ($location, $scope, $routeParams, $translate, amazonAdministrativaRequest, argoNosqlRequest, coreAmazonRequest, novedadesMidRequest, adminMidRequest, contratoRequest) {
     this.awesomeThings = [
         'HTML5 Boilerplate',
         'AngularJS',
@@ -191,12 +191,12 @@ angular.module('contractualClienteApp')
           }
           self.estados[0] = estado_temp_from;
           console.log(self.estados)
-//TO DO: Revisar este endPoint ya que está fallando la petición.
           adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
-            self.validacion = vc_response.data;
+            self.validacion = vc_response.data.Body;
             if (self.validacion=="true") {
-              argoNosqlRequest.post('novedad', self.suspension_nov).then(function (response_nosql) {
-                if (response_nosql.status == 200 || response.statusText == "Ok") {
+              novedadesMidRequest.post('novedad', self.suspension_nov).then(function(request_novedades){
+                console.log(request_novedades)
+                if (request_novedades.status == 200 || response.statusText == "Ok") {
 
                   var cambio_estado_contrato = {
                     "_postcontrato_estado":{

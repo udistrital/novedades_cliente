@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-  .controller('SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl', function ($location, $log, $scope, $routeParams, $translate, amazonAdministrativaRequest, argoNosqlRequest, coreAmazonRequest, agoraRequest, adminMidRequest, contratoRequest, financieraRequest) {
+  .controller('SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl', function ($location, $scope, $routeParams, $translate, amazonAdministrativaRequest, argoNosqlRequest, coreAmazonRequest, novedadesMidRequest, adminMidRequest, contratoRequest) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -183,8 +183,8 @@ angular.module('contractualClienteApp')
         adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
             self.validacion = vc_response.data.Body;
             if (self.validacion=="true") {
-                argoNosqlRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
-                if (response_nosql.data.Code == 200 || response.statusText == "Ok") {        
+                novedadesMidRequest.post('novedad', self.terminacion_nov).then(function(request_novedades){
+                if (request_novedades.data.Code == 200 || response.statusText == "Ok") {        
                     var cambio_estado_contrato = {
                         "_postcontrato_estado":{
                         "estado":8,
@@ -194,6 +194,7 @@ angular.module('contractualClienteApp')
                         }
                     };                  
                     console.log(cambio_estado_contrato)
+                    //TO DO: REvisar esta peticion y que está fallando.
                     contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {      
                         contratoRequest.log(response)              
                     if (response.status == 200 || response.statusText == "OK") {

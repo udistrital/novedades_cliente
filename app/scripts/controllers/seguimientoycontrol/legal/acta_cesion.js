@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolLegalActaCesionCtrl', function ($translate, $location, $log, $scope, $routeParams, coreAmazonRequest, administrativaRequest, amazonAdministrativaRequest, contratoRequest, agoraRequest, argoNosqlRequest) {
+.controller('SeguimientoycontrolLegalActaCesionCtrl', function ($translate, $location, $scope, $routeParams, coreAmazonRequest, amazonAdministrativaRequest, contratoRequest, novedadesMidRequest, argoNosqlRequest) {
 
     var self = this;
 
@@ -51,8 +51,8 @@ angular.module('contractualClienteApp')
             self.contrato_obj.ordenador_resolucion = ord_response.data[ord_response.data.length-1].InfoResolucion;
             amazonAdministrativaRequest.get('tipo_contrato?query=Id:'+wso_response.data.contrato.tipo_contrato).then(function(tc_response){
                 self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
-                argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
-                    var elementos_cesion = response_nosql.data.Body;
+                argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(request_novedades){
+                    var elementos_cesion = request_novedades.data.Body;
                     if(elementos_cesion != null){
                         var last_cesion = elementos_cesion[elementos_cesion.length - 1];
                         self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
@@ -245,8 +245,10 @@ angular.module('contractualClienteApp')
                     self.cesion_nov.vigencia = String(self.contrato_obj.vigencia);
                     self.cesion_nov.fechaoficio = new Date(self.f_oficio);
                     self.cesion_nov.fecharegistro = self.contrato_obj.fecha_registro;
-                    argoNosqlRequest.post('novedad', self.cesion_nov).then(function(response_nosql){
-                        if(response_nosql.status == 200  || response_nosql.statusText == "OK"){
+                    //TODO Realizar pruebas apenas Brayan confirme que ya se puede hacer POST
+                    novedadesMidRequest.post('novedad', self.cesion_nov).then(function(request_novedades){
+                        console.log(request_novedades)
+                        if(request_novedades.status == 200  || request_novedades.statusText == "OK"){
                             swal(
                                     $translate.instant('TITULO_BUEN_TRABAJO'),
                                     $translate.instant('DESCRIPCION_CESION') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
@@ -255,7 +257,6 @@ angular.module('contractualClienteApp')
                             self.formato_generacion_pdf();
                         }
                     });
-                     self.formato_generacion_pdf();
                 });
             });
         }else{

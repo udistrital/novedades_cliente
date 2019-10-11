@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolLegalActaReinicioCtrl', function ($location, $log, $scope, $routeParams, $translate, adminMidRequest, contratoRequest, amazonAdministrativaRequest, coreAmazonRequest, argoNosqlRequest, agoraRequest) {
+.controller('SeguimientoycontrolLegalActaReinicioCtrl', function ($location, $scope, $routeParams, $translate, adminMidRequest, contratoRequest, amazonAdministrativaRequest, coreAmazonRequest, argoNosqlRequest, novedadesMidRequest) {
     this.awesomeThings = [
         'HTML5 Boilerplate',
         'AngularJS',
