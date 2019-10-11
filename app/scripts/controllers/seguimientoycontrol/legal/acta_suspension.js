@@ -36,6 +36,8 @@ angular.module('contractualClienteApp')
       self.estados[1] = ec_response.data[0];
     });
 
+    console.log(self.estados)
+
     contratoRequest.get('contrato', self.contrato_id+'/'+self.contrato_vigencia).then(function(wso_response){
       self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
       self.contrato_obj.valor = wso_response.data.contrato.valor_contrato;

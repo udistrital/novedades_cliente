@@ -261,6 +261,7 @@ angular.module('contractualClienteApp')
                 
 
                 contratoRequest.get('contrato_estado', self.contrato_id+'/'+self.contrato_vigencia).then(function(ce_response){
+                    console.log(ce_response.data.contratoEstado.estado.nombreEstado)
                     if(ce_response.data.contratoEstado.estado.nombreEstado == "Suscrito"){
                         var estado_temp_from = {
                             "NombreEstado": "suscrito"
@@ -268,6 +269,8 @@ angular.module('contractualClienteApp')
                     }
 
                     self.estados[0] = estado_temp_from;
+
+                    
 //TO DO: Revisar este endPoint ya que está fallando la petición.
                     adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                         self.validacion = vc_response.data;

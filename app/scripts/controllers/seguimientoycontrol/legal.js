@@ -25,7 +25,8 @@ angular.module('contractualClienteApp')
     amazonAdministrativaRequest.get('vigencia_contrato','').then(function(response) {
         $scope.vigencias = response.data;
     });
-    
+
+   
     /**
      * @ngdoc method
      * @name get_contratos_vigencia
@@ -121,8 +122,6 @@ angular.module('contractualClienteApp')
                                             self.estado_resultado_response = true;
                                              });
                                         });
-
-                                       
                                     });
                                 }                                
                             });
@@ -165,7 +164,6 @@ angular.module('contractualClienteApp')
             gridApi.selection.on.rowSelectionChanged($scope, function(row){
                 self.row_c = row.entity;
                 self.estado_resultado_response = 0;
-
                 contratoRequest.get('contrato_estado', +self.row_c.contrato.numero_contrato_suscrito+'/'+self.row_c.contrato.vigencia).then(function(response) {
                     var estado = response.data.contratoEstado.estado;
                         if (estado.id != 8) {
