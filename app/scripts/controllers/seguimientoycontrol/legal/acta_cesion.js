@@ -246,7 +246,8 @@ angular.module('contractualClienteApp')
                     self.cesion_nov.fechaoficio = new Date(self.f_oficio);
                     self.cesion_nov.fecharegistro = self.contrato_obj.fecha_registro;
                     //TODO Realizar pruebas apenas Brayan confirme que ya se puede hacer POST
-                    novedadesMidRequest.post('novedad', self.cesion_nov).then(function(request_novedades){
+                    self.formato_generacion_pdf();
+                    /*novedadesMidRequest.post('novedad', self.cesion_nov).then(function(request_novedades){
                         console.log(request_novedades)
                         if(request_novedades.status == 200  || request_novedades.statusText == "OK"){
                             swal(
@@ -256,7 +257,7 @@ angular.module('contractualClienteApp')
                                 );
                             self.formato_generacion_pdf();
                         }
-                    });
+                    });*/
                 });
             });
         }else{
@@ -315,7 +316,7 @@ angular.module('contractualClienteApp')
             var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
             var output = self.get_plantilla();
             pdfMake.createPdf(output).download('acta_cesion_contrato_'+self.contrato_id+'.pdf');            
-           $location.path('/seguimientoycontrol/legal');
+           //$location.path('/seguimientoycontrol/legal');
         });
     }
 
@@ -383,7 +384,11 @@ angular.module('contractualClienteApp')
                         ],
                         [
                             {text: 'No. Contrato:', bold: true, style: 'topHeader'},
-                            {text: self.contrato_id + ' , suscrito el ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion),  style: 'topHeader'}
+                            {text: self.contrato_id,  style: 'topHeader'}
+                        ],
+                        [
+                            {text: 'FECHA DE SUSCRIPCIÓN:', bold: true, style: 'topHeader'},
+                            {text :self.format_date_letter(self.contrato_obj.FechaSuscripcion),  style: 'topHeader'}
                         ],
                         [ 
                             {text: 'Contratante:',  bold: true,  style: 'topHeader'},               
@@ -435,7 +440,7 @@ angular.module('contractualClienteApp')
                 
                 'Que mediante escrito de fecha _____________________ el Contratista '+  self.contrato_obj.contratista_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento +  ' No. ' +  self.contrato_obj.contratista_documento + 
                 ' Expedida en ' + self.contrato_obj.contratista_ciudad_documento + ' (cedente), solicita a ' + self.contrato_obj.ordenador_gasto_nombre + ' con CÉDULA DE CIUDADANÍA ' + self.contrato_obj.ordenador_gasto_documento +  ', quién cumple la función de Ordenador de Gasto, la  ' +
-                ' autorización para realizar la Cesión del ' + self.contrato_obj.tipo_contrato  + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + '.\n\n',
+                ' autorización para realizar la Cesión del ' + self.contrato_obj.tipo_contrato  + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ', a partir del'+self.cesion_nov.fechacesion+ '\n\n',
 
 
                 'Que mediante oficio No. ________________ de fecha _________________________, el ' +  self.contrato_obj.ordenador_gasto_rol + ' de la Universidad Distrital Francisco José de Caldas, ' +  self.contrato_obj.ordenador_gasto_nombre + ' solicita a la Oficina Asesora Jurídica la ' +
