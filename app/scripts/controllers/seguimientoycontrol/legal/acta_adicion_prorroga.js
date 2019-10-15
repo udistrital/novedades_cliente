@@ -307,6 +307,8 @@ angular.module('contractualClienteApp')
                 cesionario: parseInt(self.contrato_obj.contratista)
             }
 
+            self.formato_generacion_pdf();
+            /*
             novedadesMidRequest.post('novedad', self.data_acta_adicion_prorroga).then(function(request){
                 if (request.status == 200) {
                     self.formato_generacion_pdf();
@@ -323,7 +325,7 @@ angular.module('contractualClienteApp')
                     });
                     $scope.estado_novedad = undefined;
                 }    
-            });
+            });*/
         }
     };
 
@@ -372,10 +374,30 @@ angular.module('contractualClienteApp')
     self.formato_pdf = function(){
         return {
             content: [       
-            {
-                style: ['bottom_space'],
-                image: 'logo_ud', fit:[80,110], rowSpan: 3, alignment: 'center', fontSize: 12
-            }, 
+                {
+                    style: ['bottom_space'],
+                    table: {
+                      widths:[65, '*', 120, 65],
+                      body:[
+                        [
+                          {image: 'logo_ud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10},
+                          {text: 'SOLICITUD DE ADICIÓN O PRORROGA',  bold: true, alignment: 'center', fontSize: 12},
+                          {text: 'Código: GJ-PR-002-FR-011', fontSize: 9},
+                          {image: 'logo_sigud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10}
+                        ],
+                        [ ' ',
+                          {text: 'Macroproceso: Gestión de Recursos', alignment: 'center', fontSize: 12},
+                          {text: 'Versión: 03', fontSize: 9, margin: [0, 6]},
+                          ' '
+                        ],
+                        [ ' ',
+                          {text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 12, margin: [0, 3]},
+                          {text: 'Fecha de Aprobación: 12/10/2017', fontSize: 9},
+                          ' '
+                        ],
+                      ]
+                    }
+                },
             {         
                 style:['general_font'],         
                 text:[      
