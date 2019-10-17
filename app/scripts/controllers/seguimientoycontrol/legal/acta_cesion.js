@@ -353,11 +353,10 @@ angular.module('contractualClienteApp')
      */
     self.get_plantilla = function(){
         return {
-
-            pageSize: 'LEGAL',
-            pageMargins: [40, 90, 40, 60],
+            pageSize: 'LETTER',
+            pageMargins: [40, 120, 40, 60],
             header: {
-                margin: 10,
+                margin: [30, 20],
                 columns: [
                     {
                         table: {
@@ -385,13 +384,12 @@ angular.module('contractualClienteApp')
         
                 ]
             },
-            content: [
-                
+            content: [               
             
             {
 			style: ['table'],
 			table: {
-                widths:[160, 300],
+                widths:[160, '*'],
 				body: [
 					[
                         {text: 'CONTRATO', bold: true, style: 'topHeader'},
@@ -453,32 +451,27 @@ angular.module('contractualClienteApp')
                         ]
             },
             {
-                style:['general_font'],
-                text: [
-                    {text: '1. ', bold: true},                
+                style:['general_list'],
+                ol: [
                     {text: 'Que mediante escrito de fecha _____________________ el Contratista '+  self.contrato_obj.contratista_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento +  ' No. ' +  self.contrato_obj.contratista_documento + 
                     ' Expedida en ' + self.contrato_obj.contratista_ciudad_documento + ' (cedente), solicita a ' + self.contrato_obj.ordenador_gasto_nombre + ' con CÉDULA DE CIUDADANÍA ' + self.contrato_obj.ordenador_gasto_documento +  ', quién cumple la función de Ordenador de Gasto, la  ' +
-                    ' autorización para realizar la Cesión del ' + self.contrato_obj.tipo_contrato  + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ', a partir del '+self.format_date_letter(self.cesion_nov.fechacesion)+ ' a '+self.cesionario_obj.nombre  + ' ' + self.cesionario_obj.apellidos + ", mayor de edad, identificado(a) con " + self.cesionario_obj.tipo_documento +  " No. " +  self.cesionario_obj.identificacion + " Expedida en " + self.cesionario_obj.ciudad+'(cesionario), quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n\n\n\n\n'}
-                ]},                
-                {style:['general_font'],
-                text: [
+                    ' autorización para realizar la Cesión del ' + self.contrato_obj.tipo_contrato  + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ', a partir del __________________________ a '+self.cesionario_obj.nombre  + ' ' + self.cesionario_obj.apellidos + ", mayor de edad, identificado(a) con " + self.cesionario_obj.tipo_documento +  " No. " +  self.cesionario_obj.identificacion + " Expedida en " + self.cesionario_obj.ciudad+'(cesionario), quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n\n'},
 
-                    {text: '2. ', bold: true},
-                    {text: 'Que mediante oficio No. ' +self.cesion_nov.numerooficioestadocuentas+ ' de fecha '+self.format_date_letter(self.cesion_nov.fechaoficio)+' , el ' +  self.contrato_obj.ordenador_gasto_rol + ' de la Universidad Distrital Francisco José de Caldas, ' +  self.contrato_obj.ordenador_gasto_nombre + ' solicita a la Oficina Asesora Jurídica la elaboración del Acta de cesión al ' + self.contrato_obj.tipo_contrato + ' No. '+ self.contrato_id +' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ' y como Ordenador de Gasto según ' +
+                    {text: 'Que mediante oficio No. ' +self.cesion_nov.numerooficioestadocuentas+ ' de fecha ________________________________, el ' +  self.contrato_obj.ordenador_gasto_rol + ' de la Universidad Distrital Francisco José de Caldas, ' +  self.contrato_obj.ordenador_gasto_nombre + ' solicita a la Oficina Asesora Jurídica la elaboración del Acta de cesión al ' + self.contrato_obj.tipo_contrato + ' No. '+ self.contrato_id +' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ' y como Ordenador de Gasto según ' +
                     self.contrato_obj.ordenador_gasto_resolucion + ', manifiesta que aprueba la cesión del ' + self.contrato_obj.tipo_contrato + ' en su totalidad.\n\n'},
 
-                    {text: '3. ', bold: true},
                     {text:'Por lo anterior, se cede el ' + self.contrato_obj.tipo_contrato + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ' a nombre de ' +  self.contrato_obj.contratista_nombre + 
                     ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento +  ' No. ' +  self.contrato_obj.contratista_documento + ' Expedida en ' + self.contrato_obj.contratista_ciudad_documento + ', a ' +
                     self.cesionario_obj.nombre  + ' ' + self.cesionario_obj.apellidos + ", mayor de edad, identificado(a) con " + self.cesionario_obj.tipo_documento +  " No. " +  self.cesionario_obj.identificacion + " Expedida en " + self.cesionario_obj.ciudad + ', quién cumple con el perfil requerido de acuerdo con lo establecido en el objeto y continuará con las obligaciones derivadas del ' + self.contrato_obj.tipo_contrato + ' en mención a partir de  _______________________________.\n\n'},
                 ]
+                
             },
             {
               
                 style:['general_font'],
                 text:[
-                {text:'Otras consideraciones: ', bold:true}, '\n\n' + self.cesion_nov.observacion + '\n\n' +
-                'La presente acta se perfecciona e inicia su ejecución con la firma de las partes y la aceptación del cesionario a partir de: ____________________.' + '\n\n\n'
+                {text:'Otras consideraciones: ', bold:true}, '\n\n' + self.cesion_nov.observacion + '\n\n\n\n' +
+                'La presente acta se perfecciona e inicia su ejecución con la firma de las partes y la aceptación del cesionario a partir de: ____________________.' + '\n\n\n\n\n'
                 ]
             },
             {
@@ -510,7 +503,7 @@ angular.module('contractualClienteApp')
             },
             {
                 style:['general_font'],
-                text:['\n\n\nElaboró: _____________________________________ \n\n\n']
+                text:['Elaboró: _____________________________________ \n\n\n']
             },
             {
                 style:['general_font'],
@@ -548,9 +541,8 @@ angular.module('contractualClienteApp')
                     alignment: 'justify',
                     fontSize: 10 
                 },
-                table:{   
-                    margin: [0, 20, 0, 20],
-                    alignment: 'center',
+                table:{  
+                    margin: [30, 0, 30, 0],
                     border : "0"
                 }   
             },

@@ -373,31 +373,38 @@ angular.module('contractualClienteApp')
      */
     self.formato_pdf = function(){
         return {
-            content: [       
-                {
-                    style: ['bottom_space'],
-                    table: {
-                      widths:[65, '*', 120, 65],
+            pageSize: 'LETTER',
+            pageMargins: [40, 120, 40, 60],
+            header: {
+                margin: [30, 20],
+                columns: [
+                    {
+                        table: {
+                            widths:[65, '*', 130, 65],
                       body:[
                         [
                           {image: 'logo_ud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10},
-                          {text: 'SOLICITUD DE ADICIÓN O PRORROGA',  bold: true, alignment: 'center', fontSize: 12},
-                          {text: 'Código: GJ-PR-002-FR-011', fontSize: 9},
+                          {text: 'ACTA DE CESIÓN',  bold: true, alignment: 'center', fontSize: 12},
+                          {text: 'Código: GJ-PR-002-FR-008', fontSize: 9},
                           {image: 'logo_sigud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10}
                         ],
                         [ ' ',
                           {text: 'Macroproceso: Gestión de Recursos', alignment: 'center', fontSize: 12},
-                          {text: 'Versión: 03', fontSize: 9, margin: [0, 6]},
+                          {text: 'Versión: 02', fontSize: 9, margin: [0, 6]},
                           ' '
                         ],
                         [ ' ',
-                          {text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 12, margin: [0, 3]},
+                          {text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 12},
                           {text: 'Fecha de Aprobación: 12/10/2017', fontSize: 9},
                           ' '
                         ],
                       ]
+                        },
                     }
-                },
+        
+                ]
+            },
+            content: [
             {         
                 style:['general_font'],         
                 text:[      
@@ -469,31 +476,6 @@ angular.module('contractualClienteApp')
                 {text: 'Teniendo en cuenta que el valor a adicionar no supera el 50% del inicialmente pactado, la solicitud se ajusta a lo consagrado en el inciso 2º del artículo 86 de la Resolución de Rectoría 262 de 2015 (Procedimiento para Adición, Prórroga o Modificación del Contrato), resultando procedente suscribir el presente documento. '},
                 ]
             },
-            {         
-                style:['footer'], pageBreak: 'after',
-                text:[     
-                {text: ''}, '\n\n',
-                {text:[
-                        {text: '________________________________________________________\n'},
-                        {text: 'UNIVERSIDAD DISTRITAL FRANCISCO JOSE DE CALDAS\n'},
-                        {text: 'OFICINA ASESORA JURIDICA\n'},
-                        {text: 'CARRERA 7 No. 40B-53, Piso 9\n'},
-                        {text: 'Teléfono 33393300, Ext. 1911 y 1912\n'},
-                        {text: 'Bogotá D.C.'}
-                      ]
-                },
-                ]       
-            },
-            {
-                style: ['bottom_space'],
-                image: 'logo_ud', fit:[80,110], rowSpan: 3, alignment: 'center', fontSize: 12
-            },   
-            {         
-                style:['general_font'],         
-                text:[      
-                {text: 'PRÓRROGA Y ADICIÓN AL '+self.contrato_obj.tipo_contrato.toUpperCase()+' No. '+self.contrato_id+' DE '+self.fecha_reg_ano+' CELEBRADO ENTRE LA UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS Y '+self.contrato_obj.contratista_nombre, bold:true, alignment: 'center'}, '\n\n'
-                ]       
-            }, 
             {         
                 style:['general_font'],   
                 text:[
@@ -586,21 +568,6 @@ angular.module('contractualClienteApp')
                     ]         
                 }       
             },  
-            {         
-                style:['footer'],
-                text:[     
-                {text: ''}, '\n\n',
-                {text:[
-                        {text: '________________________________________________________\n', bold: true},
-                        {text: 'UNIVERSIDAD DISTRITAL FRANCISCO JOSE DE CALDAS\n'},
-                        {text: 'OFICINA ASESORA JURIDICA\n'},
-                        {text: 'CARRERA 7 No. 40B-53, Piso 9\n'},
-                        {text: 'Teléfono 33393300, Ext. 1911 y 1912\n'},
-                        {text: 'Bogotá D.C.'}
-                      ]
-                },
-                ]       
-            },
             ],
             styles: {
                 top_space: {
