@@ -191,8 +191,7 @@ angular.module('contractualClienteApp')
           }
           self.estados[0] = estado_temp_from;
           console.log(self.estados)
-          self.formato_generacion_pdf();  
-          /*
+          //self.formato_generacion_pdf();  
           adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
             self.validacion = vc_response.data.Body;
             if (self.validacion=="true") {
@@ -223,7 +222,7 @@ angular.module('contractualClienteApp')
                 }
               });
             }
-          });*/
+          });
         });
       }else{
         swal(
@@ -586,7 +585,7 @@ angular.module('contractualClienteApp')
                         ],
                         [ 
                         {text: 'FECHA DE SUSPENSIÓN',  bold: true,  style: 'topHeader'},               
-                        {text: self.suspension_nov.periodosuspension + ' día(s)',  style: 'topHeader'}                                     
+                        {text: self.format_date(self.suspension_nov.fechasuspension),  style: 'topHeader'}                                     
                         ],
                         [ 
                         {text: 'FECHA DE REINICIO',  bold: true,  style: 'topHeader'},               
