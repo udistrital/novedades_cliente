@@ -32,6 +32,7 @@ angular.module('contractualClienteApp')
      * Funcion para la carga de toda la informacion de un contrato especifico
      */
     contratoRequest.get('contrato', self.contrato_id+'/'+self.contrato_vigencia).then(function(wso_response){
+        console.log(wso_response.data.contrato.ordenador_gasto)
         self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
         self.contrato_obj.valor = wso_response.data.contrato.valor_contrato;
         self.contrato_obj.objeto = wso_response.data.contrato.objeto_contrato;
@@ -215,7 +216,7 @@ angular.module('contractualClienteApp')
         if($scope.formCesion.$valid){
             amazonAdministrativaRequest.get('informacion_proveedor?query=NumDocumento:'+
             self.cesionario_obj.identificacion).then(function(response_ces){
-
+                
                 amazonAdministrativaRequest.get('informacion_proveedor?query=NumDocumento:'+
                 self.contrato_obj.contratista_documento).then(function(response_ced){
                     self.cesion_nov = {};
@@ -249,11 +250,10 @@ angular.module('contractualClienteApp')
                     self.cesion_nov.valorfinalcontrato = 0;
                     self.cesion_nov.vigencia = String(self.contrato_obj.vigencia);
                     self.cesion_nov.fechaoficio = new Date(self.f_oficio);
-                    self.cesion_nov.fecharegistro = self.contrato_obj.fecha_registro;
+                    self.cesion_nov.fecharegistro = self.replaceAt(self.contrato_obj.fecha_registro,10,'T')                   
+
                     //TODO Realizar pruebas apenas Brayan confirme que ya se puede hacer POST
-                    self.formato_generacion_pdf();
-                    /*novedadesMidRequest.post('novedad', self.cesion_nov).then(function(request_novedades){
-                        console.log(request_novedades)
+                    novedadesMidRequest.post('novedad', self.cesion_nov).then(function(request_novedades){
                         if(request_novedades.status == 200  || request_novedades.statusText == "OK"){
                             swal(
                                     $translate.instant('TITULO_BUEN_TRABAJO'),
@@ -262,7 +262,7 @@ angular.module('contractualClienteApp')
                                 );
                             self.formato_generacion_pdf();
                         }
-                    });*/
+                    });
                 });
             });
         }else{
@@ -273,6 +273,19 @@ angular.module('contractualClienteApp')
                 );
         }
     };
+    /**
+     * @ngdoc method
+     * @name replaceAt
+     * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
+     * @description
+     * funcion para el formateo de objetos tipo fecha a formato dd/mm/yyyy
+     * @param {date} param
+     */
+
+    self.replaceAt = function(string, index, replace) {
+        return string.substring(0, index) + replace + string.substring(index + 1);
+      };
+
 
     /**
      * @ngdoc method
@@ -316,13 +329,11 @@ angular.module('contractualClienteApp')
      * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
      */
     self.formato_generacion_pdf = function(){
-        argoNosqlRequest.get('plantilladocumento','59d79414867ee188e42d8a59').then(function(response){
             var str_plantilla = response.data[0].plantilla;
             var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
             var output = self.get_plantilla();
             pdfMake.createPdf(output).download('acta_cesion_contrato_'+self.contrato_id+'.pdf');            
-           //$location.path('/seguimientoycontrol/legal');
-        });
+            $location.path('/seguimientoycontrol/legal');    
     }
 
     /**

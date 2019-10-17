@@ -60,7 +60,9 @@ angular.module('contractualClienteApp')
             if(elementos_cesion != null){
                 var last_cesion = elementos_cesion[elementos_cesion.length-1];
                 self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
+                console.log(self.contrato_obj.tipo_novedad )
                 argoNosqlRequest.get('tiponovedad', self.contrato_obj.tipo_novedad ).then(function(response_cesion_nosql){
+                    console.log(response_cesion_nosql)
                     if (response_cesion_nosql.data[0].nombre == 'cesión') {
                         self.contrato_obj.contratista = last_cesion.cesionario;
                         self.contrato_obj.cesion = 1;                    
