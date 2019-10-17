@@ -191,6 +191,8 @@ angular.module('contractualClienteApp')
           }
           self.estados[0] = estado_temp_from;
           console.log(self.estados)
+          self.formato_generacion_pdf();  
+          /*
           adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
             self.validacion = vc_response.data.Body;
             if (self.validacion=="true") {
@@ -221,7 +223,7 @@ angular.module('contractualClienteApp')
                 }
               });
             }
-          });
+          });*/
         });
       }else{
         swal(
@@ -424,7 +426,7 @@ angular.module('contractualClienteApp')
       argoNosqlRequest.get('plantilladocumento','5a133759d9963a4c9025fbac').then(function(response){
         var docDefinition = self.get_pdf();
         pdfMake.createPdf(docDefinition).download('acta_suspension_contrato_'+self.contrato_id+'.pdf');
-        $location.path('/seguimientoycontrol/legal');
+       // $location.path('/seguimientoycontrol/legal');
       });
     }
 
@@ -513,42 +515,49 @@ angular.module('contractualClienteApp')
      */
     self.get_pdf = function(){
       return {
+        pageSize: 'LETTER',
+            pageMargins: [40, 120, 40, 60],
+            header: {
+                margin: [30, 20],
+                columns: [
+                    {
+                        table: {
+                            widths:[65, '*', 130, 65],
+                      body:[
+                        [
+                          {image: 'logo_ud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10},
+                          {text: 'ACTA DE SUSPENSIÓN',  bold: true, alignment: 'center', fontSize: 12},
+                          {text: 'Código: GJ-PR-002-FR-010', fontSize: 9},
+                          {image: 'logo_sigud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10}
+                        ],
+                        [ ' ',
+                          {text: 'Macroproceso: Gestión de Recursos', alignment: 'center', fontSize: 12},
+                          {text: 'Versión: 02', fontSize: 9, margin: [0, 6]},
+                          ' '
+                        ],
+                        [ ' ',
+                          {text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 12},
+                          {text: 'Fecha de Aprobación: 12/10/2017', fontSize: 9},
+                          ' '
+                        ],
+                      ]
+                        },
+                    }
+        
+                ]
+            },
         content: [
-          {
-            style: ['bottom_space'],
-            table: {
-              widths:[65, '*', 120, 65],
-              body:[
-                [
-                  {image: 'logo_ud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10},
-                  {text: 'ACTA DE SUSPENSIÓN', alignment: 'center', fontSize: 12},
-                  {text: 'Código: GJ-PR-002-FR-010', fontSize: 9},
-                  {image: 'logo_sigud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10}
-                ],
-                [ ' ',
-                  {text: 'Macroproceso: Gestión de Recursos', alignment: 'center', fontSize: 12},
-                  {text: 'Versión: 02', fontSize: 9, margin: [0, 6]},
-                  ' '
-                ],
-                [ ' ',
-                  {text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 12, margin: [0, 3]},
-                  {text: 'Fecha de Aprobación: 12/10/2017', fontSize: 9},
-                  ' '
-                ],
-              ]
-            }
-          },
           {
               style:['table'], 
                 table: { 
-                    widths:[100, 400],
+                    widths:[160, '*'],
                     body:[
                         [
-                        {text: 'Contrato:', bold: true, style: 'topHeader'},
+                        {text: 'CONTRATO', bold: true, style: 'topHeader'},
                         {text:  self.contrato_obj.tipo_contrato,  style: 'topHeader'}
                         ],
                         [
-                        {text: 'No. Contrato:', bold: true, style: 'topHeader'},
+                        {text: 'No. CONTRATO', bold: true, style: 'topHeader'},
                          { text:[
                             {text:  self.contrato_id, bold: true, style: 'topHeader'},
                             {text: ' suscrito el ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion),  style: 'topHeader'}
@@ -556,37 +565,41 @@ angular.module('contractualClienteApp')
                          }
                         ],
                         [ 
-                        {text: 'Contratante:',  bold: true,  style: 'topHeader'},               
+                        {text: 'CONTRANTE',  bold: true,  style: 'topHeader'},               
                         {text: 'Universidad Distrital Francísco José de Caldas',  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'Contratista:',  bold: true,  style: 'topHeader'},               
+                        {text: 'CONTRATISTA',  bold: true,  style: 'topHeader'},               
                         {text: self.contrato_obj.contratista_nombre + ", mayor de edad, identificado(a) con " + self.contrato_obj.contratista_tipo_documento +  " No. " +  self.contrato_obj.contratista_documento + " Expedida en " + self.contrato_obj.contratista_ciudad_documento,  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'Objeto:',  bold: true,  style: 'topHeader'},               
+                        {text: 'OBJETO',  bold: true,  style: 'topHeader'},               
                         {text:  self.contrato_obj.objeto,  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'Valor:',  bold: true,  style: 'topHeader'},               
+                        {text: 'VALOR',  bold: true,  style: 'topHeader'},               
                         {text: NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + ")",  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'Fecha de inicio:',  bold: true,  style: 'topHeader'},               
+                        {text: 'FECHA DE INICIO',  bold: true,  style: 'topHeader'},               
                         {text: self.format_date(self.suspension_nov.fechasuspension),  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'Periodo de suspensión:',  bold: true,  style: 'topHeader'},               
+                        {text: 'FECHA DE SUSPENSIÓN',  bold: true,  style: 'topHeader'},               
                         {text: self.suspension_nov.periodosuspension + ' día(s)',  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'Fecha de reinicio:',  bold: true,  style: 'topHeader'},               
+                        {text: 'FECHA DE REINICIO',  bold: true,  style: 'topHeader'},               
                         {text: self.format_date(self.suspension_nov.fechareinicio),  style: 'topHeader'}                                     
                         ]
 
                     ]
                 }, 
-                layout: 'noBorders', 
+                layout: {
+                  fillColor: function (rowIndex, node, columnIndex) {
+                    return (rowIndex % 2 === 0) ? null : '#d4d4d4';
+                  }
+                } 
           },
           {
             style:['general_font'],
@@ -596,7 +609,7 @@ angular.module('contractualClienteApp')
               'Entre los subscritos a saber, '+ self.contrato_obj.supervisor_nombre_completo +' identificado con ' + self.contrato_obj.supervisor_tipo_documento + ' No. '+ self.contrato_obj.supervisor_documento +' de '+ self.contrato_obj.supervisor_ciudad_documento + 
               ' y ' + self.contrato_obj.contratista_nombre + ' identificado con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ' de ' + self.contrato_obj.contratista_ciudad_documento +
               ' en su calidad de contratista, hemos determinado SUSPENDER el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id +' de '+ self.contrato_vigencia +
-              ' durante el periodo comprendido entre el día ' + self.format_date_letter_mongo(self.f_inicio) + ' y el dia ' + self.format_date_letter_mongo(self.f_reinicio) + '.\n\n',
+              ' durante el periodo comprendido entre el día ' + self.format_date_letter_mongo(self.f_inicio) + ' y el dia ' + self.format_date_letter_mongo(self.f_reinicio) + ' del año'+self.contrato_vigencia+' .\n\n',
 
               {text:'MOTIVO DE LA SUSPENSIÓN', bold:true}, '\n\n',
               self.suspension_nov.motivo, '\n\n',
@@ -605,33 +618,6 @@ angular.module('contractualClienteApp')
               'Suspender el Contrato ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de '+ self.contrato_vigencia +
               ', durante el periodo comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechareinicio) + '.\n\n',
             ]
-          },
-          {
-            style: ['bottom_space'],
-            pageBreak: 'before',
-            table:{
-              widths:[65, '*', 120, 65],
-              body:[
-                [
-                  {image: 'logo_ud', fit:[65, 120], rowSpan: 3, alignment: 'center', fontSize: 10},
-                  {text: 'ACTA DE SUSPENSIÓN', alignment: 'center', fontSize: 12},
-                  {text: 'Código: GJ-PR- 002-FR- 010', fontSize: 9},
-                  {image: 'logo_sigud', fit:[65, 120], rowSpan: 3, alignment: 'center', fontSize: 10}
-                ],
-                [
-                  ' ',
-                  {text: 'Macroproceso: Gestión administrativa y contratación', alignment: 'center', fontSize: 12},
-                  {text: 'Versión: 01', fontSize: 9, margin: [0, 6]},
-                  ' '
-                ],
-                [
-                  ' ',
-                  {text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 12, margin: [0, 3]},
-                  {text: 'Fecha de Aprobación: 20/03/14', fontSize: 9},
-                  ' '
-                ]
-              ]
-            }
           },
           {
             style:['general_font'],
