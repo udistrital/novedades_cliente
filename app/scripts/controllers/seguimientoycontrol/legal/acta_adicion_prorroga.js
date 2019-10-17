@@ -307,8 +307,6 @@ angular.module('contractualClienteApp')
                 cesionario: parseInt(self.contrato_obj.contratista)
             }
 
-            self.formato_generacion_pdf();
-            /*
             novedadesMidRequest.post('novedad', self.data_acta_adicion_prorroga).then(function(request){
                 if (request.status == 200) {
                     self.formato_generacion_pdf();
@@ -325,7 +323,7 @@ angular.module('contractualClienteApp')
                     });
                     $scope.estado_novedad = undefined;
                 }    
-            });*/
+            });
         }
     };
 
@@ -384,13 +382,13 @@ angular.module('contractualClienteApp')
                       body:[
                         [
                           {image: 'logo_ud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10},
-                          {text: 'ACTA DE CESIÓN',  bold: true, alignment: 'center', fontSize: 12},
-                          {text: 'Código: GJ-PR-002-FR-008', fontSize: 9},
+                          {text: 'SOLICITUD DE ADICIÓN O PRORROGA',  bold: true, alignment: 'center', fontSize: 12},
+                          {text: 'Código: GJ-PR-002-FR-011', fontSize: 9},
                           {image: 'logo_sigud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10}
                         ],
                         [ ' ',
                           {text: 'Macroproceso: Gestión de Recursos', alignment: 'center', fontSize: 12},
-                          {text: 'Versión: 02', fontSize: 9, margin: [0, 6]},
+                          {text: 'Versión: 03', fontSize: 9, margin: [0, 6]},
                           ' '
                         ],
                         [ ' ',

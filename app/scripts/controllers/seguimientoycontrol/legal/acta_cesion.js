@@ -251,8 +251,8 @@ angular.module('contractualClienteApp')
                     self.cesion_nov.fechaoficio = new Date(self.f_oficio);
                     self.cesion_nov.fecharegistro = self.contrato_obj.fecha_registro;
                     //TODO Realizar pruebas apenas Brayan confirme que ya se puede hacer POST
-                    self.formato_generacion_pdf();
-                    /*novedadesMidRequest.post('novedad', self.cesion_nov).then(function(request_novedades){
+                    //self.formato_generacion_pdf();
+                    novedadesMidRequest.post('novedad', self.cesion_nov).then(function(request_novedades){
                         console.log(request_novedades)
                         if(request_novedades.status == 200  || request_novedades.statusText == "OK"){
                             swal(
@@ -262,7 +262,7 @@ angular.module('contractualClienteApp')
                                 );
                             self.formato_generacion_pdf();
                         }
-                    });*/
+                    });
                 });
             });
         }else{
@@ -321,7 +321,7 @@ angular.module('contractualClienteApp')
             var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
             var output = self.get_plantilla();
             pdfMake.createPdf(output).download('acta_cesion_contrato_'+self.contrato_id+'.pdf');            
-           //$location.path('/seguimientoycontrol/legal');
+           $location.path('/seguimientoycontrol/legal');
         });
     }
 
