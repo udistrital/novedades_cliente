@@ -181,6 +181,8 @@ angular.module('contractualClienteApp')
                         }
                     }
                     self.estados[0] = estado_temp_from;
+                    self.formato_generacion_pdf();
+                    /*
                     adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                         self.validacion = vc_response.data.Body;
                         if (self.validacion == "true") {
@@ -210,7 +212,7 @@ angular.module('contractualClienteApp')
                                 }
                             });
                         }
-                    });
+                    });*/
                 });
             } else {
                 swal(
@@ -237,7 +239,7 @@ angular.module('contractualClienteApp')
             //var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
             var output = self.get_plantilla();
             pdfMake.createPdf(output).download('acta_terminacion_anticipada_' + numberFormat(self.terminacion_nov.contrato + '') + '.pdf');
-            $location.path('/seguimientoycontrol/legal');
+          //  $location.path('/seguimientoycontrol/legal');
             swal(
                 'Buen trabajo!',
                 'Se ha generado el acta, se iniciará la descarga',

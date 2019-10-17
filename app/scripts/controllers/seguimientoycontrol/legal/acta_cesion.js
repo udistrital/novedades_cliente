@@ -251,8 +251,8 @@ angular.module('contractualClienteApp')
                     self.cesion_nov.fechaoficio = new Date(self.f_oficio);
                     self.cesion_nov.fecharegistro = self.contrato_obj.fecha_registro;
                     //TODO Realizar pruebas apenas Brayan confirme que ya se puede hacer POST
-                    //self.formato_generacion_pdf();
-                    novedadesMidRequest.post('novedad', self.cesion_nov).then(function(request_novedades){
+                    self.formato_generacion_pdf();
+                    /*novedadesMidRequest.post('novedad', self.cesion_nov).then(function(request_novedades){
                         console.log(request_novedades)
                         if(request_novedades.status == 200  || request_novedades.statusText == "OK"){
                             swal(
@@ -262,7 +262,7 @@ angular.module('contractualClienteApp')
                                 );
                             self.formato_generacion_pdf();
                         }
-                    });
+                    });*/
                 });
             });
         }else{
@@ -321,7 +321,7 @@ angular.module('contractualClienteApp')
             var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
             var output = self.get_plantilla();
             pdfMake.createPdf(output).download('acta_cesion_contrato_'+self.contrato_id+'.pdf');            
-           $location.path('/seguimientoycontrol/legal');
+           //$location.path('/seguimientoycontrol/legal');
         });
     }
 
@@ -343,6 +343,25 @@ angular.module('contractualClienteApp')
         
        return fecha.toLocaleDateString("es-ES", options);
     };
+
+    /**
+     * @ngdoc method
+     * @name format_date
+     * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
+     * @description
+     * funcion para el formateo de objetos tipo fecha mongo a formato a letra  nombre dia, año mes y dia 
+     * @param {date} param
+     */
+
+    self.format_date_letter_mongo = function(param){
+        var date = new Date(param);
+        var dd = date.getDate();
+        var mm = date.getMonth();
+        var yyyy = date.getFullYear();
+        var fecha = new Date(yyyy,mm,dd);
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return fecha.toLocaleDateString("es-ES", options);  
+      };
 
     /**
      * @ngdoc method
@@ -453,11 +472,11 @@ angular.module('contractualClienteApp')
             {
                 style:['general_list'],
                 ol: [
-                    {text: 'Que mediante escrito de fecha _____________________ el Contratista '+  self.contrato_obj.contratista_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento +  ' No. ' +  self.contrato_obj.contratista_documento + 
+                    {text: 'Que mediante escrito de fecha '+self.format_date_letter_mongo(self.cesion_nov.fechaoficio) +' el Contratista '+  self.contrato_obj.contratista_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento +  ' No. ' +  self.contrato_obj.contratista_documento + 
                     ' Expedida en ' + self.contrato_obj.contratista_ciudad_documento + ' (cedente), solicita a ' + self.contrato_obj.ordenador_gasto_nombre + ' con CÉDULA DE CIUDADANÍA ' + self.contrato_obj.ordenador_gasto_documento +  ', quién cumple la función de Ordenador de Gasto, la  ' +
-                    ' autorización para realizar la Cesión del ' + self.contrato_obj.tipo_contrato  + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ', a partir del __________________________ a '+self.cesionario_obj.nombre  + ' ' + self.cesionario_obj.apellidos + ", mayor de edad, identificado(a) con " + self.cesionario_obj.tipo_documento +  " No. " +  self.cesionario_obj.identificacion + " Expedida en " + self.cesionario_obj.ciudad+'(cesionario), quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n\n'},
+                    ' autorización para realizar la Cesión del ' + self.contrato_obj.tipo_contrato  + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ', a partir del '+self.format_date_letter_mongo(self.cesion_nov.fechacesion) +' a '+self.cesionario_obj.nombre  + ' ' + self.cesionario_obj.apellidos + ", mayor de edad, identificado(a) con " + self.cesionario_obj.tipo_documento +  " No. " +  self.cesionario_obj.identificacion + " Expedida en " + self.cesionario_obj.ciudad+'(cesionario), quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n\n'},
 
-                    {text: 'Que mediante oficio No. ' +self.cesion_nov.numerooficioestadocuentas+ ' de fecha ________________________________, el ' +  self.contrato_obj.ordenador_gasto_rol + ' de la Universidad Distrital Francisco José de Caldas, ' +  self.contrato_obj.ordenador_gasto_nombre + ' solicita a la Oficina Asesora Jurídica la elaboración del Acta de cesión al ' + self.contrato_obj.tipo_contrato + ' No. '+ self.contrato_id +' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ' y como Ordenador de Gasto según ' +
+                    {text: 'Que mediante oficio No. ' +self.cesion_nov.numerooficioestadocuentas+ ' de fecha ' +self.format_date_letter_mongo(self.cesion_nov.fechaoficio) +', el ' +  self.contrato_obj.ordenador_gasto_rol + ' de la Universidad Distrital Francisco José de Caldas, ' +  self.contrato_obj.ordenador_gasto_nombre + ' solicita a la Oficina Asesora Jurídica la elaboración del Acta de cesión al ' + self.contrato_obj.tipo_contrato + ' No. '+ self.contrato_id +' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ' y como Ordenador de Gasto según ' +
                     self.contrato_obj.ordenador_gasto_resolucion + ', manifiesta que aprueba la cesión del ' + self.contrato_obj.tipo_contrato + ' en su totalidad.\n\n'},
 
                     {text:'Por lo anterior, se cede el ' + self.contrato_obj.tipo_contrato + ' No. '+ self.contrato_id +' de '+ self.contrato_vigencia + ' de fecha ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ' a nombre de ' +  self.contrato_obj.contratista_nombre + 

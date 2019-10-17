@@ -191,8 +191,8 @@ angular.module('contractualClienteApp')
           }
           self.estados[0] = estado_temp_from;
           console.log(self.estados)
-          //self.formato_generacion_pdf();  
-          adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
+          self.formato_generacion_pdf();  
+          /*adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
             self.validacion = vc_response.data.Body;
             if (self.validacion=="true") {
               novedadesMidRequest.post('novedad', self.suspension_nov).then(function(request_novedades){
@@ -222,7 +222,7 @@ angular.module('contractualClienteApp')
                 }
               });
             }
-          });
+          });*/
         });
       }else{
         swal(
