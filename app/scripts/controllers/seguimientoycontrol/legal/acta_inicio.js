@@ -383,89 +383,89 @@ angular.module('contractualClienteApp')
      */
     self.formato_pdf = function(){
         return {
-            content: [       
-            {         
-                style: ['bottom_space'],         
-                table: {           
-                    widths:[65, '*', 120, 65],           
-                    body:[             
-                        [               
-                        {image: 'logo_ud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10},               
-                        {text: 'ACTA DE INICIO DE CONTRATO DE CPS', alignment: 'center', fontSize: 12},               
-                        {text: 'Código: GJ-PR-001-FR-004', fontSize: 9},               
-                        {image: 'logo_sigud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10, margin: [0, 30]}             
-                        ],             
-                        [ 
-                            ' ',               
-                            {text: 'Macroproceso: Gestión administrativa y contratación', alignment: 'center', fontSize: 12},               
-                            {text: 'Versión: 04', fontSize: 9, margin: [0, 6]},               
-                            ' '             
-                        ],             
-                        [ 
-                            ' ',               
-                            {text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 12, margin: [0, 3]},               
-                            {text: 'Fecha de Aprobación: 21/10/16', fontSize: 9},               
-                            ' '             
-                        ],           
-                    ]         
-                }       
-            }, 
+            pageSize: 'LETTER',
+            pageMargins: [40, 120, 40, 60],
+            header: {
+                margin: [30, 20],
+                columns: [
+                    {
+                        table: {
+                            widths:[65, '*', 130, 65],
+                      body:[
+                        [
+                          {image: 'logo_ud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10},
+                          {text: 'ACTA DE DE INICIO',  bold: true, alignment: 'center', fontSize: 12},
+                          {text: 'Código: GJ-PR-001-FR-004', fontSize: 9},
+                          {image: 'logo_sigud', fit:[65,120], rowSpan: 3, alignment: 'center', fontSize: 10}
+                        ],
+                        [ ' ',
+                          {text: 'Macroproceso: Gestión Administrativa y Contratación', alignment: 'center', fontSize: 12},
+                          {text: 'Versión: 04', fontSize: 9, margin: [0, 6]},
+                          ' '
+                        ],
+                        [ ' ',
+                          {text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 12},
+                          {text: 'Fecha de Aprobación: 21/10/16', fontSize: 9},
+                          ' '
+                        ],
+                      ]
+                        },
+                    }
+        
+                ]
+            },
+            content: [     
             {         
                 style:['table'], 
                 table: { 
                     widths:[180, 320],
                     body:[
                         [
-                        {text: 'CONTRATO No: ', bold: true, style: 'topHeader'},
+                        {text: 'CONTRATO No', bold: true, style: 'topHeader'},
                         { text:[
                             {text:  self.contrato_id, bold: true, style: 'topHeader'},
                             {text: ' suscrito el ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion),  style: 'topHeader'}
                             ]
-                        }
-                        
+                        }                        
                         ],
                         [ 
-                        {text: 'TIPO DE CONTRATO:',  bold: true,  style: 'topHeader'},               
-                        {text: self.contrato_obj.tipo_contrato,  style: 'topHeader'}                                     
-                        ],
+                            {text: 'OBJETO',  bold: true,  style: 'topHeader'},               
+                            {text: self.contrato_obj.objeto,  style: 'topHeader'}                                     
+                        ],                        
                         [ 
-                        {text: 'OBJETO:',  bold: true,  style: 'topHeader'},               
-                        {text: self.contrato_obj.objeto,  style: 'topHeader'}                                     
-                        ],
-                        [ 
-                        {text: 'VALOR:',  bold: true,  style: 'topHeader'},               
+                        {text: 'VALOR',  bold: true,  style: 'topHeader'},               
                         {text:  NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + ")",  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'CONTRATISTA:',  bold: true,  style: 'topHeader'},               
+                        {text: 'CONTRATISTA',  bold: true,  style: 'topHeader'},               
                         {text: self.contrato_obj.contratista_nombre + ", mayor de edad, identificado(a) con " + self.contrato_obj.contratista_tipo_documento +  " No. " +  self.contrato_obj.contratista_documento + " Expedida en " + self.contrato_obj.contratista_ciudad_documento,  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'PLAZO:',  bold: true,  style: 'topHeader'},               
+                        {text: 'PLAZO',  bold: true,  style: 'topHeader'},               
                         {text: tiempoEjecucion(self.contrato_obj.plazo, self.contrato_obj.UnidadEjecucion),  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'FECHA DE INICIO:',  bold: true,  style: 'topHeader'},               
+                        {text: 'FECHA DE INICIO',  bold: true,  style: 'topHeader'},               
                         {text: self.format_date(self.fecha_inicio),  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'FECHA DE TERMINACIÓN:',  bold: true,  style: 'topHeader'},               
+                        {text: 'FECHA DE TERMINACIÓN',  bold: true,  style: 'topHeader'},               
                         {text: self.format_date(self.fecha_fin),  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'SUPERVISOR UNIVERSIDAD DISTRITAL FRANCISCO JOSE DE CALDAS:',  bold: true,  style: 'topHeader'},               
+                        {text: 'SUPERVISOR UNIVERSIDAD DISTRITAL FRANCISCO JOSE DE CALDAS',  bold: true,  style: 'topHeader'},               
                         {text: self.contrato_obj.supervisor_cargo,  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'No. POLIZA:',  bold: true,  style: 'topHeader'},               
+                        {text: 'No. POLIZA',  bold: true,  style: 'topHeader'},               
                         {text:  self.poliza_obj.numero_poliza,  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'FECHA DE EXPEDICIÓN DE PÓLIZA:',  bold: true,  style: 'topHeader'},               
+                        {text: 'FECHA DE EXPEDICIÓN DE PÓLIZA',  bold: true,  style: 'topHeader'},               
                         {text:  self.format_date_letter(self.poliza_obj.fecha_expedicion),  style: 'topHeader'}                                     
                         ],
                         [ 
-                        {text: 'FECHA DE APROBACIÓN DE PÓLIZA:',  bold: true,  style: 'topHeader'},               
+                        {text: 'FECHA DE APROBACIÓN DE PÓLIZA',  bold: true,  style: 'topHeader'},               
                         {text:  self.format_date_letter(self.poliza_obj.fecha_aprobacion),  style: 'topHeader'}                                     
                         ],
 
