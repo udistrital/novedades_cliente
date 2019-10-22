@@ -489,7 +489,6 @@ angular.module('contractualClienteApp')
             self.contrato_estado.FechaRegistro = self.contrato_obj.fecha_registro;
             self.contrato_estado.Estado = self.estado_ejecucion;
             self.contrato_estado.Usuario = "up";
-
             contratoRequest.get('contrato_estado', self.contrato_id+'/'+self.contrato_vigencia).then(function(ce_response){
                 if(ce_response.data.contratoEstado.estado.nombreEstado == "Suspendido"){
                     var estado_temp_from = {
@@ -519,7 +518,7 @@ angular.module('contractualClienteApp')
                                                     $translate.instant('DESCRIPCION_REINICIO') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
                                                     'success'
                                                 );
-                                            self.formato_generacion_pdf();
+                                          
                                         }
                                     });
                                 }
@@ -546,12 +545,9 @@ angular.module('contractualClienteApp')
      * Funcion para la obtencion de la plantilla para la generacion del pdf del acta
      */
     self.formato_generacion_pdf = function(){
-        argoNosqlRequest.get('plantilladocumento','5a133759d9963a4c9025fbac').then(function(response){
-            //var docDefinition = JSON.stringify(eval("(" + response.data[0].plantilla + ")" ));
             var docDefinition = self.get_pdf();
             pdfMake.createPdf(docDefinition).download('acta_reinicio_contrato_'+self.contrato_id+'.pdf');
-            $location.path('/seguimientoycontrol/legal');
-        });
+            //$location.path('/seguimientoycontrol/legal');
     }
 
     /**
@@ -605,7 +601,7 @@ angular.module('contractualClienteApp')
                         {text:  self.contrato_obj.tipo_contrato,  style: 'topHeader'}
                         ],
                         [
-                        {text: 'Ńo. CONTRATO', bold: true, style: 'topHeader'},
+                        {text: 'No. CONTRATO', bold: true, style: 'topHeader'},
                          { text:[
                             {text:  self.contrato_id, bold: true, style: 'topHeader'},
                             {text: ' suscrito el ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion),  style: 'topHeader'}
