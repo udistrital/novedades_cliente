@@ -53,14 +53,15 @@ angular.module('contractualClienteApp')
         self.contrato_obj.cesion = 0; //Variable para cotrolar si el contrato tiene cesion
         self.estados= [];
         // Obtiene el estado al cual se quiere pasar el contrato
-        amazonAdministrativaRequest.get('estado_contrato?NombreEstado: En ejecucion').then(function(ec_response){
+        amazonAdministrativaRequest.get('estado_contrato?NombreEstado:' + "En ejecucion").then(function(ec_response){
+            console.log(ec_response)
             var estado_temp_to = {
                 "NombreEstado": "ejecucion"
             }
             if(ec_response.data[0].NombreEstado == "En ejecucion"){
                 self.estados[1] = estado_temp_to;
             }
-        });       
+        });      
         
         //Verificar si el contrato ha tenido cesion
         argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.VigenciaContrato).then(function(response_nosql){
@@ -261,7 +262,6 @@ angular.module('contractualClienteApp')
                 
 
                 contratoRequest.get('contrato_estado', self.contrato_id+'/'+self.contrato_vigencia).then(function(ce_response){
-                    console.log(ce_response.data.contratoEstado.estado.nombreEstado)
                     if(ce_response.data.contratoEstado.estado.nombreEstado == "Suscrito"){
                         var estado_temp_from = {
                             "NombreEstado": "suscrito"
@@ -270,9 +270,10 @@ angular.module('contractualClienteApp')
 
                     self.estados[0] = estado_temp_from;
 
-                    
+                    console.log(self.estados[0])
 //TO DO: Revisar este endPoint ya que está fallando la petición.
                     adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
+                        console.log(vc_response)
                         self.validacion = vc_response.data;
                         if(self.validacion == "true"){
                             argoNosqlRequest.post('actainicio', self.data_acta_inicio).then(function(response_nosql){

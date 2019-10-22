@@ -190,9 +190,8 @@ angular.module('contractualClienteApp')
             }
           }
           self.estados[0] = estado_temp_from;
-          console.log(self.estados)
-          self.formato_generacion_pdf();  
-          /*adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
+          
+          adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
             self.validacion = vc_response.data.Body;
             if (self.validacion=="true") {
               novedadesMidRequest.post('novedad', self.suspension_nov).then(function(request_novedades){
@@ -207,8 +206,8 @@ angular.module('contractualClienteApp')
                       "vigencia":parseInt(self.contrato_vigencia)
                     }
                   };
-
-                  contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
+                  //self.formato_generacion_pdf();
+                 contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
                    
                    if (response.status == 200 || response.statusText == "OK") {
                       swal(
@@ -222,7 +221,7 @@ angular.module('contractualClienteApp')
                 }
               });
             }
-          });*/
+          });
         });
       }else{
         swal(
@@ -422,11 +421,9 @@ angular.module('contractualClienteApp')
      * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
      */
     self.formato_generacion_pdf = function(){
-      argoNosqlRequest.get('plantilladocumento','5a133759d9963a4c9025fbac').then(function(response){
         var docDefinition = self.get_pdf();
         pdfMake.createPdf(docDefinition).download('acta_suspension_contrato_'+self.contrato_id+'.pdf');
        // $location.path('/seguimientoycontrol/legal');
-      });
     }
 
 

@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-.controller('SeguimientoycontrolLegalCtrl', function ($scope, argoNosqlRequest, amazonAdministrativaRequest, coreAmazonRequest, $translate, contratoRequest, novedadesMidRequest) {
+.controller('SeguimientoycontrolLegalCtrl', function ($scope, amazonAdministrativaRequest, coreAmazonRequest, $translate, contratoRequest, novedadesMidRequest, novedadesRequest) {
     this.awesomeThings = [
         'HTML5 Boilerplate',
         'AngularJS',
@@ -49,6 +49,7 @@ angular.module('contractualClienteApp')
                 //Obtiene el estado del contrato.
                 contratoRequest.get('contrato_estado', +self.contrato_id+'/'+self.contrato_vigencia).then(function(ce_response){
                     self.estado_contrato_obj.estado = ce_response.data.contratoEstado.estado.id; 
+                    console.log(self.estado_contrato_obj.estado)
                     if (self.estado_contrato_obj.estado == 7) {
                         swal(
                             $translate.instant('CONTRATO_CANCELADO'),
@@ -73,34 +74,41 @@ angular.module('contractualClienteApp')
                     //Obtiene el tipo de contrato y el tipo de la ultima novedad hecha para saber si el contrato fue cedido.
                     amazonAdministrativaRequest.get('tipo_contrato?query=Id:'+ wso_response.data.contrato.tipo_contrato).then(function(tc_response){
                         self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;                        
-                        argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
-                            console.log(response_nosql.data.Body)
-                            var elementos_cesion = response_nosql.data.Body;
-                            if(elementos_cesion != null){
-                                var last_cesion = elementos_cesion[elementos_cesion.length - 1];
-                                self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
-                                if (self.contrato_obj.tipo_novedad == "59d79683867ee188e42d8c97") {
-                                    self.contrato_obj.contratista = last_cesion.cesionario;
-                                    self.estado_contrato_obj.estado = 1;
-                                    swal(
-                                        $translate.instant('INFORMACION'),
-                                        $translate.instant('DESCRIPCION_ACTA_CESION'),
-                                        'info'
-                                    );
-                                }else if (self.contrato_obj.tipo_novedad == "59d79683867ee188e42d8c98") {
-                                    self.contrato_obj.contratista = last_cesion.cesionario;
-                                    self.contrato_obj.estado_contrato_obj = 0;
-                                }else if (self.contrato_obj.tipo_novedad == "59d7965e867ee188e42d8c72") {
-                                    self.contrato_obj.contratista = last_cesion.cesionario;
-                                }else if (self.contrato_obj.tipo_novedad == "59d796ac867ee188e42d8cbf") {
-                                    self.contrato_obj.contratista = last_cesion.cesionario;
-                                }else if (self.contrato_obj.tipo_novedad == "59d7985e867ee188e42d8e64") {
-                                    self.contrato_obj.contratista = last_cesion.cesionario;
-                                }else if (self.contrato_obj.tipo_novedad == "59d79894867ee188e42d8e9b") {
-                                    self.contrato_obj.contratista = last_cesion.cesionario;
-                                }else if (self.contrato_obj.tipo_novedad == "59d79904867ee188e42d8f02") {
-                                    self.contrato_obj.contratista = last_cesion.cesionario;
-                                }
+                        novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function(response_nosql){
+                            var elementos_cesion = response_nosql.data.Body;  
+                            console.log(response_nosql)
+                            if(elementos_cesion.length==='0'){  
+                                var last_cesion = elementos_cesion[elementos_cesion.length - 1];                                
+                                novedadesRequest.get('tipo_novedad', 'query=Id:'+last_cesion.tiponovedad).then(function(nr_response){
+                                    self.contrato_obj.tipo_novedad=nr_response.data[0].CodigoAbreviacion;
+                                    console.log( nr_response.data[0].CodigoAbreviacion) 
+                                    
+                                    if (self.contrato_obj.tipo_novedad == "NP_CES") {
+                                        self.contrato_obj.contratista = last_cesion.cesionario;
+                                        self.estado_contrato_obj.estado = 1;
+                                        swal(
+                                            $translate.instant('INFORMACION'),
+                                            $translate.instant('DESCRIPCION_ACTA_CESION'),
+                                            'info'
+                                        );
+                                    }else if (self.contrato_obj.tipo_novedad == "NP_SUS") {
+                                        self.contrato_obj.contratista = last_cesion.cesionario;
+                                    }else if (self.contrato_obj.tipo_novedad == "NP_REI") {
+                                        self.contrato_obj.contratista = last_cesion.cesionario;
+                                    }else if (self.contrato_obj.tipo_novedad == "NP_ADI") {
+                                        self.contrato_obj.contratista = last_cesion.cesionario;
+                                    }else if (self.contrato_obj.tipo_novedad == "NP_PRO") {
+                                        self.contrato_obj.contratista = last_cesion.cesionario;
+                                    }else if (self.contrato_obj.tipo_novedad == "NP_ADPRO") {
+                                        self.contrato_obj.contratista = last_cesion.cesionario;
+                                    }
+
+
+
+                                });
+                                
+                                                           
+                               
                             }
                             //Obtiene los datos aosicados al proveedor
                             amazonAdministrativaRequest.get('informacion_proveedor?query=Id:'+self.contrato_obj.contratista).then(function(ip_response) {

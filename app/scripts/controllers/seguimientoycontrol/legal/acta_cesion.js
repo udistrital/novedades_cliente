@@ -329,8 +329,6 @@ angular.module('contractualClienteApp')
      * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
      */
     self.formato_generacion_pdf = function(){
-            var str_plantilla = response.data[0].plantilla;
-            var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
             var output = self.get_plantilla();
             pdfMake.createPdf(output).download('acta_cesion_contrato_'+self.contrato_id+'.pdf');            
             $location.path('/seguimientoycontrol/legal');    
