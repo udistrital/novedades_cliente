@@ -271,11 +271,12 @@ angular.module('contractualClienteApp')
             }
             if ($scope.prorroga) {
                 $scope.estado_novedad = "Prórroga";
-                novedadesRequest.get('tipo_novedad', 'query=Nombre:' + $scope.estado_novedad).then(function (nc_response) {
-                    console.log(nc_response.data[0].CodigoAbreviacion)
-                });
                 $scope.alert = 'DESCRIPCION_PRORROGA';
-                $scope.tiponovedad = '59d79894867ee188e42d8e9b';
+                novedadesRequest.get('tipo_novedad', 'query=Nombre:' + $scope.estado_novedad).then(function (nc_response) {
+                    $scope.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+                });
+               
+                
                 if ($scope.adicion != true && $scope.prorroga == true) {
                     $scope.valor_adicion = "0";
                 }
@@ -284,9 +285,8 @@ angular.module('contractualClienteApp')
 
                 $scope.estado_novedad = "Adición y Prorroga";
                 $scope.alert = 'DESCRIPCION_ADICION_PRORROGA';
-                $scope.tiponovedad = '59d79904867ee188e42d8f02';
                 novedadesRequest.get('tipo_novedad', 'query=Nombre:Adición/Prórroga').then(function (nc_response) {
-                    console.log(nc_response.data[0].CodigoAbreviacion)
+                    $scope.tiponovedad = nc_response.data[0].CodigoAbreviacion;
                 });
 
             }
