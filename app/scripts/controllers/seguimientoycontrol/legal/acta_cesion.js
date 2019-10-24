@@ -53,7 +53,6 @@ angular.module('contractualClienteApp')
                 amazonAdministrativaRequest.get('tipo_contrato?query=Id:' + wso_response.data.contrato.tipo_contrato).then(function (tc_response) {
                     self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
                     novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
-
                         var elementos_cesion = response_sql.data.Body;
                         if (elementos_cesion.length != '0') {
                             var last_cesion = elementos_cesion[elementos_cesion.length - 1];
@@ -61,7 +60,7 @@ angular.module('contractualClienteApp')
                                 self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
                                 if (self.contrato_obj.tipo_novedad == "NP_CES") {
                                     self.contrato_obj.contratista = last_cesion.cesionario;
-                                    self.estado_contrato_obj.estado = 1;
+                                    self.contrato_obj.cesion = 1;
                                 } else if (self.contrato_obj.tipo_novedad == "NP_REI" || self.contrato_obj.tipo_novedad == "NP_ADI" || self.contrato_obj.tipo_novedad == "NP_PRO" || self.contrato_obj.tipo_novedad == "NP_ADPRO" || self.contrato_obj.tipo_novedad == "NP_SUS") {
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                 }

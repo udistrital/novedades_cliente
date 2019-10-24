@@ -64,7 +64,7 @@ angular.module('contractualClienteApp')
                         self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
                         if (self.contrato_obj.tipo_novedad == "NP_CES") {
                             self.contrato_obj.contratista = last_cesion.cesionario;
-                            self.estado_contrato_obj.estado = 1;
+                            self.contrato_obj.cesion = 1;
                             swal(
                                 $translate.instant('INFORMACION'),
                                 $translate.instant('DESCRIPCION_ACTA_CESION'),
