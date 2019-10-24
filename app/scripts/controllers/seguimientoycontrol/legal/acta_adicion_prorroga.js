@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SeguimientoycontrolLegalActaAdicionProrrogaCtrl', function ($scope, $routeParams, coreAmazonRequest, contratoRequest, $translate, argoNosqlRequest, amazonAdministrativaRequest, novedadesRequest, novedadesMidRequest) {
+    .controller('SeguimientoycontrolLegalActaAdicionProrrogaCtrl', function ($scope, $routeParams, coreAmazonRequest, contratoRequest, $translate, amazonAdministrativaRequest, novedadesRequest, novedadesMidRequest) {
 
         this.awesomeThings = [
             'HTML5 Boilerplate',
@@ -29,7 +29,6 @@ angular.module('contractualClienteApp')
 
         contratoRequest.get('contrato', +self.contrato_id + '/' + self.contrato_vigencia).then(function (wso_response) {
             $scope.response_contrato = wso_response;
-            console.log(wso_response.data)
             self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
             self.contrato_obj.TipoContrato = wso_response.data.contrato.tipo_contrato;
             self.contrato_obj.ObjetoContrato = wso_response.data.contrato.objeto_contrato;
@@ -56,25 +55,23 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.supervisor_ciudad_cedula = c_response.data[0].Nombre;
                 });
             });
-
-            argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.VigenciaContrato).then(function (response_nosql) {
-                var elementos_cesion = response_nosql.data.Body;
-                if (elementos_cesion != null) {
+            
+            novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.VigenciaContrato).then(function(response_sql){
+                var elementos_cesion = response_sql.data.Body;  
+                if(elementos_cesion.length!='0'){  
                     var last_cesion = elementos_cesion[elementos_cesion.length - 1];
-                    self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
-                    argoNosqlRequest.get('tiponovedad', self.contrato_obj.tipo_novedad).then(function (response_cesion_nosql) {
-                        if (response_cesion_nosql.data[0].nombre == 'cesión') {
+                    console.log(last_cesion)
+                    novedadesRequest.get('tipo_novedad', 'query=Id:'+last_cesion.tiponovedad).then(function(nr_response){
+                        self.contrato_obj.tipo_novedad=nr_response.data[0].CodigoAbreviacion;
+                        if (self.contrato_obj.tipo_novedad == "NP_CES") {
                             self.contrato_obj.contratista = last_cesion.cesionario;
-                            self.contrato_obj.cesion = 1;
-                        } else if (response_cesion_nosql.data[0].nombre == "acta_inicio_cesion") {
-                            self.contrato_obj.contratista = last_cesion.cesionario;
-                        } else if (response_cesion_nosql.data[0].nombre == "reinicio") {
-                            self.contrato_obj.contratista = last_cesion.cesionario;
-                        } else if (response_cesion_nosql.data[0].nombre == "adición") {
-                            self.contrato_obj.contratista = last_cesion.cesionario;
-                        } else if (response_cesion_nosql.data[0].nombre == "prórroga") {
-                            self.contrato_obj.contratista = last_cesion.cesionario;
-                        } else if (response_cesion_nosql.data[0].nombre == "adición/prórroga") {
+                            self.estado_contrato_obj.estado = 1;
+                            swal(
+                                $translate.instant('INFORMACION'),
+                                $translate.instant('DESCRIPCION_ACTA_CESION'),
+                                'info'
+                            );
+                        } else if (self.contrato_obj.tipo_novedad == "NP_REI"|| self.contrato_obj.tipo_novedad == "NP_ADI" || self.contrato_obj.tipo_novedad == "NP_PRO" || self.contrato_obj.tipo_novedad == "NP_ADPRO") {
                             self.contrato_obj.contratista = last_cesion.cesionario;
                         }
                     });
@@ -267,11 +264,10 @@ angular.module('contractualClienteApp')
         self.generarActa = function () {
             if ($scope.adicion) {
                 $scope.estado_novedad = "Adición";
-                novedadesRequest.get('tipo_novedad', 'query=Nombre:' + $scope.estado_novedad).then(function (nc_response) {
-                    console.log(nc_response.data[0].CodigoAbreviacion)
-                });
                 $scope.alert = 'DESCRIPCION_ADICION';
-                $scope.tiponovedad = '59d7985e867ee188e42d8e64';
+                novedadesRequest.get('tipo_novedad', 'query=Nombre:' + $scope.estado_novedad).then(function (nc_response) {
+                    $scope.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+                });
             }
             if ($scope.prorroga) {
                 $scope.estado_novedad = "Prórroga";
@@ -285,6 +281,7 @@ angular.module('contractualClienteApp')
                 }
             }
             if ($scope.adicion == true && $scope.prorroga == true) {
+
                 $scope.estado_novedad = "Adición y Prorroga";
                 $scope.alert = 'DESCRIPCION_ADICION_PRORROGA';
                 $scope.tiponovedad = '59d79904867ee188e42d8f02';
@@ -308,8 +305,7 @@ angular.module('contractualClienteApp')
                     tiponovedad: $scope.tiponovedad,
                     cesionario: parseInt(self.contrato_obj.contratista)
                 }
-                self.formato_generacion_pdf();
-                /*
+
                 novedadesMidRequest.post('novedad', self.data_acta_adicion_prorroga).then(function(request){
                     if (request.status == 200) {
                         self.formato_generacion_pdf();
@@ -322,11 +318,11 @@ angular.module('contractualClienteApp')
                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                             allowOutsideClick: false
                         }).then(function () {
-                            window.location.href = "#/seguimientoycontrol/legal";
+                           // window.location.href = "#/seguimientoycontrol/legal";
                         });
                         $scope.estado_novedad = undefined;
                     }    
-                });*/
+                });
             }
         };
 
