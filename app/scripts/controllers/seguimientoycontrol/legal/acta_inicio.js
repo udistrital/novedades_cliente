@@ -300,7 +300,7 @@ angular.module('contractualClienteApp')
                         });
                     });
                 } else {
-                    console.log("Entre a ingresdar una novedad que no esxixte")
+                    self.crearActa();
                     argoNosqlRequest.post('novedad', self.cesion_nov).then(function (response_nosql) {
                         if (response_nosql.status == 200 || response_nosql.statusText == "OK") {
                             self.crearActa();
@@ -328,7 +328,7 @@ angular.module('contractualClienteApp')
                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                 allowOutsideClick: false
             }).then(function () {
-                window.location.href = "#/seguimientoycontrol/legal";
+                //window.location.href = "#/seguimientoycontrol/legal";
             });
         };
 
@@ -468,7 +468,7 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'FECHA DE EXPEDICIÓN DE PÓLIZA', bold: true, style: 'topHeader' },
-                                    { text: self.format_date_letter(self.poliza_obj.fecha_expedicion), style: 'topHeader' }
+                                    { text: ''+self.poliza_obj.fecha_expedicion, style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'FECHA DE APROBACIÓN DE PÓLIZA', bold: true, style: 'topHeader' },
@@ -550,7 +550,7 @@ angular.module('contractualClienteApp')
                     topHeader: {
                         margin: [0, 0, 0, 0],
                         alignment: 'justify',
-                        fontSize: 9
+                        fontSize: 9,
                     },
                     table: {
                         margin: [0, 0, 0, 0],
@@ -729,6 +729,7 @@ angular.module('contractualClienteApp')
         }
 
         function Fecha_Mes(x) {
+            var t=''
             switch (x) {
                 case 1:
                     return "Enero";
