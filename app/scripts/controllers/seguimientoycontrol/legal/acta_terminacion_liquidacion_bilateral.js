@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl', function ($scope, $routeParams, $translate, amazonAdministrativaRequest, argoNosqlRequest, coreAmazonRequest, contratoRequest) {
+    .controller('SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl', function ($location,$scope, $routeParams, $translate, amazonAdministrativaRequest, adminMidRequest, coreAmazonRequest, contratoRequest, novedadesMidRequest, novedadesRequest) {
         this.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -53,8 +53,6 @@ angular.module('contractualClienteApp')
             self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
             self.contrato_obj.NumeroContrato = wso_response.data.contrato.numero_contrato;
             self.contrato_obj.UnidadEjecucion = String(wso_response.data.contrato.unidad_ejecucion);
-            console.log(self.contrato_obj.contratista)
-
             amazonAdministrativaRequest.get('tipo_contrato', $.param({
                 query: "Id:" + wso_response.data.contrato.tipo_contrato
             })).then(function (tc_response) {
@@ -65,36 +63,27 @@ angular.module('contractualClienteApp')
                         self.contrato_obj.FechaInicio = acta_response.data[0].FechaInicio;
                     }
                     else {
-                        argoNosqlRequest.get('actainicio', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function (acta_response_nosql) {
+
+                        /*argoNosqlRequest.get('actainicio', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function (acta_response_nosql) {
                             self.contrato_obj.FechaInicio = acta_response_nosql.data[0].fechainicio;
-                        });
+                        });*/
                     }
                 });
-
-                argoNosqlRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function (response_nosql) {
-                    console.log("Entro aquí")
-                    var elementos_cesion = response_nosql.data;
-
-                    /*if(elementos_cesion != null){
-                        var last_cesion = response_nosql.data[response_nosql.data.length - 1];
-                        self.contrato_obj.tipo_novedad = last_cesion.tiponovedad;
-                        argoNosqlRequest.get('tiponovedad', self.contrato_obj.tipo_novedad ).then(function(response_cesion_nosql){
-                            if (response_cesion_nosql.data[0].nombre == "cesión") {numero_solicitud
-                              self.contrato_obj.contratista = last_cesion.cesionario;
-                              self.contrato_obj.cesion = 1;
-                            }else if (response_cesion_nosql.data[0].nombre == "acta_inicio_cesion") {
-                              self.contrato_obj.contratista = last_cesion.cesionario;
-                            }else if (response_cesion_nosql.data[0].nombre == "adición") {
-                              self.contrato_obj.contratista = last_cesion.cesionario;
-                            }else if (response_cesion_nosql.data[0].nombre == "prórroga") {
-                              self.contrato_obj.contratista = last_cesion.cesionario;
-                            }else if (response_cesion_nosql.data[0].nombre == "adición/prórroga") {
-                              self.contrato_obj.contratista = last_cesion.cesionario;
+                novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
+                    console.log(self.contrato_obj.id)
+                    var elementos_cesion = response_sql.data.Body;
+                    if (elementos_cesion.length != '0') {
+                        var last_cesion = elementos_cesion[elementos_cesion.length - 1];
+                        novedadesRequest.get('tipo_novedad', 'query=Id:' + last_cesion.tiponovedad).then(function (nr_response) {
+                            self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
+                            if (self.contrato_obj.tipo_novedad == "NP_CES") {
+                                self.contrato_obj.contratista = last_cesion.cesionario;
+                                self.contrato_obj.cesion = 1;
+                            } else if (self.contrato_obj.tipo_novedad == "NP_ADI" || self.contrato_obj.tipo_novedad == "NP_PRO" || self.contrato_obj.tipo_novedad == "NP_ADPRO") {
+                                self.contrato_obj.contratista = last_cesion.cesionario;
                             }
-                        }); 
-                          
-                       
-                    }*/
+                        });
+                    }
 
                     amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
                         self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
@@ -158,69 +147,70 @@ angular.module('contractualClienteApp')
         self.generarActa = function () {
 
             if ($scope.formTerminacion.$valid) {
+                novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
 
-                self.terminacion_nov = {};
-                self.terminacion_nov.contrato = self.contrato_obj.id;
-                self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
-                self.terminacion_nov.motivo = self.motivo;
-                self.terminacion_nov.tiponovedad = "59d79809867ee188e42d8e0d";
-                self.terminacion_nov.fecharegistro = new Date();
-                self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
-                self.terminacion_nov.numerosolicitud = self.numero_solicitud;
-                self.terminacion_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
-                self.terminacion_nov.valor_desembolsado = self.valor_desembolsado;
-                self.terminacion_nov.saldo_contratista = self.saldo_contratista;
-                self.terminacion_nov.saldo_universidad = self.saldo_universidad;
-                self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;
-                self.contrato_estado = {};
-                self.contrato_estado.NumeroContrato = self.contrato_obj.id;
-                self.contrato_estado.Vigencia = self.contrato_obj.vigencia;
-                self.contrato_estado.FechaRegistro = new Date();
-                self.contrato_estado.Estado = self.estado_suspendido;
-                self.contrato_estado.Usuario = "usuario_prueba";
-                //primero obtenemos el estado actual - en esta caso es 'En ejecucion'
-                //Se guarda en la posicion [0] del arreglo estados el estado actual
-                //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a terminacion anticipada - devuelve si es true o false
-                //si es true guardamos la novedad - y enviamos el cambio de estado del contrato
+                    self.terminacion_nov = {};
+                    self.terminacion_nov.contrato = self.contrato_obj.id;
+                    self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
+                    self.terminacion_nov.motivo = self.motivo;
+                    self.terminacion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+                    self.terminacion_nov.fecharegistro = new Date();
+                    self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
+                    self.terminacion_nov.numerosolicitud = self.numero_solicitud;
+                    self.terminacion_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
+                    self.terminacion_nov.valor_desembolsado = self.valor_desembolsado;
+                    self.terminacion_nov.saldo_contratista = self.saldo_contratista;
+                    self.terminacion_nov.saldo_universidad = self.saldo_universidad;
+                    self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;
+                    self.contrato_estado = {};
+                    self.contrato_estado.NumeroContrato = self.contrato_obj.id;
+                    self.contrato_estado.Vigencia = self.contrato_obj.vigencia;
+                    self.contrato_estado.FechaRegistro = new Date();
+                    self.contrato_estado.Estado = self.estado_suspendido;
+                    self.contrato_estado.Usuario = "usuario_prueba";
 
-                self.formato_generacion_pdf();
 
-                /*contratoRequest.get('contrato_estado', self.contrato_id+'/'+self.contrato_vigencia).then(function (response) {
-                  if(response.data.contratoEstado.estado.nombreEstado == "En ejecucion"){
-                    var estado_temp_from = {
-                      "NombreEstado": "ejecucion"
-                    }
-                  }
-                self.estados[0] = estado_temp_from;
-                adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
-                    self.validacion = vc_response.data;
-                    if (self.validacion=="true") {
-                        argoNosqlRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
-                        if (response_nosql.status == 200 || response.statusText == "Ok") {
-        
-                            var cambio_estado_contrato = {
-                                "_postcontrato_estado":{
-                                "estado":8,
-                                "usuario":"CC123456",
-                                "numero_contrato_suscrito":self.contrato_id,
-                                "vigencia":parseInt(self.contrato_vigencia)
-                                }
-                            };                  
-                            contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {                    
-                            if (response.status == 200 || response.statusText == "OK") {
-                              swal(
-                                $translate.instant('TITULO_BUEN_TRABAJO'),
-                                $translate.instant('DESCRIPCION_SUSPENSION') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
-                                'success'
-                              );
-                              self.formato_generacion_pdf();
+                    //primero obtenemos el estado actual - en esta caso es 'En ejecucion'
+                    //Se guarda en la posicion [0] del arreglo estados el estado actual
+                    //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a terminacion anticipada - devuelve si es true o false
+                    //si es true guardamos la novedad - y enviamos el cambio de estado del contrato              
+                    contratoRequest.get('contrato_estado', self.contrato_id + '/' + self.contrato_vigencia).then(function (response) {
+                        if (response.data.contratoEstado.estado.nombreEstado == "En ejecucion") {
+                            var estado_temp_from = {
+                                "NombreEstado": "ejecucion"
                             }
-                          });
                         }
-                      });
-                    }
-                  });
-                });*/
+                        self.estados[0] = estado_temp_from;
+                        adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
+                            if (vc_response.data.Body == "true") {
+                                novedadesMidRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
+                                if (response_nosql.status == 200 || response.statusText == "Ok") {
+                
+                                    var cambio_estado_contrato = {
+                                        "_postcontrato_estado":{
+                                        "estado":8,
+                                        "usuario":"CC123456",
+                                        "numero_contrato_suscrito":self.contrato_id,
+                                        "vigencia":parseInt(self.contrato_vigencia)
+                                        }
+                                    };                  
+                                    contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {   
+                                        console.log(response)                 
+                                    if (response.status == 200 || response.statusText == "OK") {
+                                      swal(
+                                        $translate.instant('TITULO_BUEN_TRABAJO'),
+                                        $translate.instant('DESCRIPCION_SUSPENSION') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
+                                        'success'
+                                      );
+                                      self.formato_generacion_pdf();
+                                    }
+                                  });
+                                }
+                              });
+                            }
+                        });
+                    });
+                });
             } else {
                 swal(
                     $translate.instant('TITULO_ERROR'),
@@ -241,18 +231,14 @@ angular.module('contractualClienteApp')
          * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
          */
         self.formato_generacion_pdf = function () {
-            //argoNosqlRequest.get('plantilladocumento','59d79809867ee188e42d8e0d').then(function(response){
-            //var str_plantilla = response.data[0].plantilla;
-            //var docDefinition = JSON.parse(JSON.stringify(str_plantilla));
             var output = self.get_plantilla();
             pdfMake.createPdf(output).download('acta_terminacion_anticipada_' + numberFormat(self.terminacion_nov.contrato + '') + '.pdf');
-            // $location.path('/seguimientoycontrol/legal');
+            $location.path('/seguimientoycontrol/legal');
             swal(
                 'Buen trabajo!',
                 'Se ha generado el acta, se iniciará la descarga',
                 'success'
             )
-            //});
         }
 
         /**
