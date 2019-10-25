@@ -176,54 +176,53 @@ angular.module('contractualClienteApp')
             if ($scope.formCesion.$valid) {
                 amazonAdministrativaRequest.get('informacion_proveedor?query=NumDocumento:' +
                     self.cesionario_obj.identificacion).then(function (response_ces) {
-
-                        amazonAdministrativaRequest.get('informacion_proveedor?query=NumDocumento:' +
-                            self.contrato_obj.contratista_documento).then(function (response_ced) {
-                                self.cesion_nov = {};
-                                self.cesion_nov.aclaracion = "";
-                                self.cesion_nov.camposaclaracion = null;
-                                self.cesion_nov.camposmodificacion = null;
-                                self.cesion_nov.camposmodificados = null;
-                                self.cesion_nov.cedente = parseInt(response_ced.data[0].Id);
-                                self.cesion_nov.cesionario = parseInt(response_ces.data[0].Id);
-                                self.cesion_nov.contrato = self.contrato_obj.id;
-                                self.cesion_nov.fechaadicion = "0001-01-01T00:00:00Z";
-                                self.cesion_nov.fechacesion = new Date(self.f_cesion);
-                                self.cesion_nov.fechaliquidacion = "0001-01-01T00:00:00Z";
-                                self.cesion_nov.fechaprorroga = "0001-01-01T00:00:00Z";
-                                self.cesion_nov.fechareinicio = "0001-01-01T00:00:00Z";
-                                self.cesion_nov.fechasolicitud = new Date();
-                                self.cesion_nov.fechasuspension = "0001-01-01T00:00:00Z";
-                                self.cesion_nov.fechaterminacionanticipada = "0001-01-01T00:00:00Z";
-                                self.cesion_nov.motivo = "";
-                                self.cesion_nov.numeroactaentrega = 0;
-                                self.cesion_nov.numerocdp = "";
-                                self.cesion_nov.numerooficioestadocuentas = self.num_oficio;
-                                self.cesion_nov.numerosolicitud = self.n_solicitud;
-                                self.cesion_nov.observacion = self.observaciones;
-                                self.cesion_nov.periodosuspension = 0;
-                                self.cesion_nov.plazoactual = 0;
-                                self.cesion_nov.poliza = "";
-                                self.cesion_nov.tiempoprorroga = 0;
-                                self.cesion_nov.tiponovedad = "59d79683867ee188e42d8c97";
-                                self.cesion_nov.valoradicion = 0;
-                                self.cesion_nov.valorfinalcontrato = 0;
-                                self.cesion_nov.vigencia = String(self.contrato_obj.vigencia);
-                                self.cesion_nov.fechaoficio = new Date(self.f_oficio);
-                                self.cesion_nov.fecharegistro = self.replaceAt(self.contrato_obj.fecha_registro, 10, 'T')
-
-                                //TODO Realizar pruebas apenas Brayan confirme que ya se puede hacer POST
-                                novedadesMidRequest.post('novedad', self.cesion_nov).then(function (request_novedades) {
-                                    if (request_novedades.status == 200 || request_novedades.statusText == "OK") {
-                                        swal(
-                                            $translate.instant('TITULO_BUEN_TRABAJO'),
-                                            $translate.instant('DESCRIPCION_CESION') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
-                                            'success'
-                                        );
-                                        self.formato_generacion_pdf();
-                                    }
+                        novedadesRequest.get('tipo_novedad', 'query=Nombre:Cesión').then(function (nc_response) {
+                            amazonAdministrativaRequest.get('informacion_proveedor?query=NumDocumento:' +
+                                self.contrato_obj.contratista_documento).then(function (response_ced) {
+                                    self.cesion_nov = {};
+                                    self.cesion_nov.aclaracion = "";
+                                    self.cesion_nov.camposaclaracion = null;
+                                    self.cesion_nov.camposmodificacion = null;
+                                    self.cesion_nov.camposmodificados = null;
+                                    self.cesion_nov.cedente = parseInt(response_ced.data[0].Id);
+                                    self.cesion_nov.cesionario = parseInt(response_ces.data[0].Id);
+                                    self.cesion_nov.contrato = self.contrato_obj.id;
+                                    self.cesion_nov.fechaadicion = "0001-01-01T00:00:00Z";
+                                    self.cesion_nov.fechacesion = new Date(self.f_cesion);
+                                    self.cesion_nov.fechaliquidacion = "0001-01-01T00:00:00Z";
+                                    self.cesion_nov.fechaprorroga = "0001-01-01T00:00:00Z";
+                                    self.cesion_nov.fechareinicio = "0001-01-01T00:00:00Z";
+                                    self.cesion_nov.fechasolicitud = new Date();
+                                    self.cesion_nov.fechasuspension = "0001-01-01T00:00:00Z";
+                                    self.cesion_nov.fechaterminacionanticipada = "0001-01-01T00:00:00Z";
+                                    self.cesion_nov.motivo = "";
+                                    self.cesion_nov.numeroactaentrega = 0;
+                                    self.cesion_nov.numerocdp = "";
+                                    self.cesion_nov.numerooficioestadocuentas = self.num_oficio;
+                                    self.cesion_nov.numerosolicitud = self.n_solicitud;
+                                    self.cesion_nov.observacion = self.observaciones;
+                                    self.cesion_nov.periodosuspension = 0;
+                                    self.cesion_nov.plazoactual = 0;
+                                    self.cesion_nov.poliza = "";
+                                    self.cesion_nov.tiempoprorroga = 0;
+                                    self.cesion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+                                    self.cesion_nov.valoradicion = 0;
+                                    self.cesion_nov.valorfinalcontrato = 0;
+                                    self.cesion_nov.vigencia = String(self.contrato_obj.vigencia);
+                                    self.cesion_nov.fechaoficio = new Date(self.f_oficio);
+                                    self.cesion_nov.fecharegistro = self.replaceAt(self.contrato_obj.fecha_registro, 10, 'T')
+                                    novedadesMidRequest.post('novedad', self.cesion_nov).then(function (request_novedades) {
+                                        if (request_novedades.status == 200 || request_novedades.statusText == "OK") {
+                                            swal(
+                                                $translate.instant('TITULO_BUEN_TRABAJO'),
+                                                $translate.instant('DESCRIPCION_CESION') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
+                                                'success'
+                                            );
+                                            self.formato_generacion_pdf();
+                                        }
+                                    });
                                 });
-                            });
+                        });
                     });
             } else {
                 swal(
