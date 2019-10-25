@@ -79,7 +79,8 @@ angular
                       config.headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('access_token');
                   }
                   config.headers['Accept'] = 'application/json';
-  
+                  config.headers['Content-Type'] = 'application/json';
+                  
                   return config;
               }
           };
