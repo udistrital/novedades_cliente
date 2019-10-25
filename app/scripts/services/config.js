@@ -135,7 +135,7 @@ var conf_local = {
     MODELS_SERVICE: "scripts/models/",
     OIKOS_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/oikos_crud_api/v1/",
     ARGO_NOSQL_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",
-    CONTRATO_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_jbpm/v1/",
+    CONTRATO_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_jbpm/v2/",
     NUXEO_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/nuxeo_api/v1/",
     HOMOLOGACION_SERVICE:"https://autenticacion.udistrital.edu.co:8244/dependencias_api/v1/",
     NOVEDADES_SERVICE:"http://localhost:8080/v1/",
