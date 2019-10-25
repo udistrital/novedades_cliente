@@ -184,6 +184,7 @@ angular.module('contractualClienteApp')
                         adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                             if (vc_response.data.Body == "true") {
                                 novedadesMidRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
+                                    
                                 if (response_nosql.status == 200 || response.statusText == "Ok") {
                 
                                     var cambio_estado_contrato = {
