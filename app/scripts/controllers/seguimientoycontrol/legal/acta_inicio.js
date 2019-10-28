@@ -54,7 +54,7 @@ angular.module('contractualClienteApp')
             self.contrato_obj.cesion = 0; //Variable para cotrolar si el contrato tiene cesion
             self.estados = [];
             // Obtiene el estado al cual se quiere pasar el contrato
-            amazonAdministrativaRequest.get('estado_contrato?NombreEstado:' + "En ejecucion").then(function (ec_response) {
+            amazonAdministrativaRequest.get('estado_contrato?query=NombreEstado:' + "En ejecucion").then(function (ec_response) {
                 var estado_temp_to = {
                     "NombreEstado": "ejecucion"
                 }
@@ -62,7 +62,6 @@ angular.module('contractualClienteApp')
                     self.estados[1] = estado_temp_to;
                 }
             });
-
             //Verificar si el contrato ha tenido cesion
             novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.VigenciaContrato).then(function (response_sql) {
                 var elementos_cesion = response_sql.data.Body;
@@ -222,7 +221,7 @@ angular.module('contractualClienteApp')
                     cedente: 0,
                     cesionario: self.contrato_obj.contratista,
                     contrato: self.contrato_obj.id,
-                    fechaadicion: "0001-01-01T00:00:00Z",
+                    fechaadicion: "0001-01-0…1T00:00:00Z",
                     fechacesion: "0001-01-01T00:00:00Z",
                     fechaliquidacion: "0001-01-01T00:00:00Z",
                     fechaprorroga: "0001-01-01T00:00:00Z",
@@ -272,12 +271,9 @@ angular.module('contractualClienteApp')
                         }
 
                         self.estados[0] = estado_temp_from;
-
-                        console.log(self.estados[0])
-                        //TO DO: Revisar este endPoint ya que está fallando la petición.
+                        
                         adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
-                            console.log(vc_response)
-                            self.validacion = vc_response.data;
+                            self.validacion = vc_response.data.Body;
                             if (self.validacion == "true") {
                                 argoNosqlRequest.post('actainicio', self.data_acta_inicio).then(function (response_nosql) {
                                     if (response_nosql.status == 200 || response_nosql.statusText == "OK") {
