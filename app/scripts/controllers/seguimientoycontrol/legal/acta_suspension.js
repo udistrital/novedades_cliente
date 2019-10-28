@@ -199,14 +199,14 @@ angular.module('contractualClienteApp')
                     contratoRequest.get('contrato_estado', +self.contrato_id + '/' + self.contrato_vigencia).then(function (ce_response) {
                       console.log(ce_response)
                     });
-                    /*if (response.status == 200 || response.statusText == "OK") {
+                    if (response.status == 200 || response.statusText == "OK") {
                       swal(
                         $translate.instant('TITULO_BUEN_TRABAJO'),
                         $translate.instant('DESCRIPCION_SUSPENSION') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
                         'success'
                       );
                       self.formato_generacion_pdf();
-                    }*/
+                    }
                   });
                 }
               });
@@ -408,7 +408,7 @@ angular.module('contractualClienteApp')
     self.formato_generacion_pdf = function () {
       var docDefinition = self.get_pdf();
       pdfMake.createPdf(docDefinition).download('acta_suspension_contrato_' + self.contrato_id + '.pdf');
-      //$location.path('/seguimientoycontrol/legal');
+      $location.path('/seguimientoycontrol/legal');
     }
 
 

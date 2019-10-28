@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SeguimientoycontrolLegalActaReinicioCtrl', function ($location, $scope, $routeParams, $translate, adminMidRequest, contratoRequest, amazonAdministrativaRequest, coreAmazonRequest, argoNosqlRequest, novedadesMidRequest, novedadesRequest) {
+    .controller('SeguimientoycontrolLegalActaReinicioCtrl', function ($location, $scope, $routeParams, $translate, adminMidRequest, contratoRequest, amazonAdministrativaRequest, coreAmazonRequest, novedadesMidRequest, novedadesRequest) {
         this.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -57,14 +57,11 @@ angular.module('contractualClienteApp')
 
             amazonAdministrativaRequest.get('tipo_contrato?query=Id:' + wso_response.data.contrato.tipo_contrato).then(function (tc_response) {
                 self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
-                //TO DO Se debe hacer una prueba de un contrato que haya sido cesinado y suspendido para posteriormente hacer un reinicio.
-
                 novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
                     var elementos_cesion = response_sql.data.Body;
                     if (elementos_cesion.length != '0') {
                         var last_cesion = elementos_cesion[elementos_cesion.length - 1];
                         novedadesRequest.get('tipo_novedad', 'query=Id:' + last_cesion.tiponovedad).then(function (nr_response) {
-                            console.log(nr_response)
                             self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
                             if (self.contrato_obj.tipo_novedad == "NP_CES") {
                                 self.contrato_obj.contratista = last_cesion.cesionario;
@@ -84,17 +81,16 @@ angular.module('contractualClienteApp')
                                     self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
                                     self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
                                     novedadesMidRequest.get('novedad', self.contrato_obj.id + '/' + self.contrato_obj.vigencia).then(function (response) {
-                                        console.log(response.data)
-                                        for (var i = 0; i < response.data.length; i++) {
-                                            self.auxiliar = response.data[i]._id;
-                                            self.novedad_suspension = response.data[i].fechasuspension;
-                                            self.novedad_reinicio = response.data[i].fechareinicio;
-                                            self.novedad_motivo = response.data[i].motivo;
-                                            novedadesRequest.get('tiponovedad', 'query=Id:' +response.data[i].tiponovedad).then(function (response_cesion_nosql_2) {
-                                                if (response_cesion_nosql_2.data[0].nombre == "suspensión") {
+                                        for (var i = 0; i < response.data.Body.length; i++) {
+                                            self.auxiliar = response.data.Body[i].id;
+                                            self.novedad_suspension = response.data.Body[i].fechasuspension;
+                                            self.novedad_reinicio = response.data.Body[i].fechareinicio;
+                                            self.novedad_motivo = response.data.Body[i].motivo;
+                                            novedadesRequest.get('tipo_novedad', 'query=Id:' + response.data.Body[i].tiponovedad).then(function (nr_response) {
+                                                if (nr_response.data[0].CodigoAbreviacion == "NP_SUS") {
                                                     self.suspension_id_nov = self.auxiliar;
-                                                    self.f_suspension = new Date(self.novedad_suspension);
-                                                    self.f_reinicio = new Date(self.novedad_reinicio);
+                                                    self.f_suspension = new Date(self.novedad_suspension.substr(0,16));
+                                                    self.f_reinicio = new Date(self.novedad_reinicio.substr(0,16));
                                                     self.motivo_suspension = self.novedad_motivo;
                                                 }
                                             });
@@ -118,21 +114,22 @@ angular.module('contractualClienteApp')
                                     coreAmazonRequest.get('ciudad', 'query=Id:' + ip_response.data[0].IdCiudadContacto).then(function (c_response) {
                                         self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
                                         self.contrato_obj.contratista_tipo_documento = 'NIT';
-                                        argoNosqlRequest.get('novedad', self.contrato_obj.id + '/' + self.contrato_obj.vigencia).then(function (response) {
-                                            console.log(respo.data)
-                                            for (var i = 0; i < response.data.length; i++) {
-                                                self.auxiliar = response.data[i]._id;
-                                                self.novedad_suspension = response.data[i].fechasuspension;
-                                                self.novedad_reinicio = response.data[i].fechareinicio;
-                                                self.novedad_motivo = response.data[i].motivo;
-                                                argoNosqlRequest.get('tiponovedad', response.data[i].tiponovedad).then(function (response_cesion_nosql_2) {
-                                                    if (response_cesion_nosql_2.data[0].nombre == "suspensión") {
+
+                                        novedadesMidRequest.get('novedad', self.contrato_obj.id + '/' + self.contrato_obj.vigencia).then(function (response) {
+                                            for (var i = 0; i < response.data.Body.length; i++) {
+                                                self.auxiliar = response.data.Body[i].id;
+                                                self.novedad_suspension = response.data.Body[i].fechasuspension;
+                                                self.novedad_reinicio = response.data.Body[i].fechareinicio;
+                                                self.novedad_motivo = response.data.Body[i].motivo;
+                                                novedadesRequest.get('tipo_novedad', 'query=Id:' + response.data.Body[i].tiponovedad).then(function (nr_response) {
+                                                    if (nr_response.data[0].CodigoAbreviacion == "NP_SUS") {
                                                         self.suspension_id_nov = self.auxiliar;
-                                                        self.f_suspension = new Date(self.novedad_suspension);
-                                                        self.f_reinicio = new Date(self.novedad_reinicio);
+                                                        self.f_suspension = new Date(self.novedad_suspension.substr(0,16));
+                                                        self.f_reinicio = new Date(self.novedad_reinicio.substr(0,16));
                                                         self.motivo_suspension = self.novedad_motivo;
                                                     }
                                                 });
+    
                                             }
                                         });
 
@@ -185,6 +182,7 @@ angular.module('contractualClienteApp')
             var timeDiff = 0;
 
             if (dt2 != null) {
+                //console.log(self.f_reinicio )
                 timeDiff = Math.abs(dt2.getTime() - dt1.getTime());
             }
 
@@ -454,26 +452,36 @@ angular.module('contractualClienteApp')
          */
         self.generarActa = function () {
             if ($scope.formReinicio.$valid) {
-                self.reinicio_nov = {};
-                self.reinicio_nov.tiponovedad = "59d796ac867ee188e42d8cbf";
-                self.reinicio_nov.numerosolicitud = self.n_solicitud;
-                self.reinicio_nov.contrato = self.contrato_obj.id;
-                self.reinicio_nov.vigencia = String(self.contrato_obj.vigencia);
-                self.reinicio_nov.periodosuspension = self.diff_dias;
-                self.reinicio_nov.fechasuspension = self.f_suspension;
-                self.reinicio_nov.fechareinicio = self.f_reinicio;
-                self.reinicio_nov.fecharegistro = new Date();
-                self.reinicio_nov.fechasolicitud = new Date();
-                self.reinicio_nov.motivo = self.motivo_suspension;
-                self.reinicio_nov.observacion = "";
-                self.reinicio_nov.cesionario = parseInt(self.contrato_obj.contratista);
+                novedadesRequest.get('tipo_novedad', 'query=Nombre:Reinicio').then(function (nc_response) {
+                    self.reinicio_nov = {};
+                    self.reinicio_nov.contrato = self.contrato_obj.id;
+                    self.reinicio_nov.vigencia = String(self.contrato_obj.vigencia);
+                    self.reinicio_nov.motivo = self.motivo_suspension;
+                    self.reinicio_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+                    self.reinicio_nov.fecharegistro = new Date();
+                    self.reinicio_nov.fechasolicitud = new Date();
+                    self.reinicio_nov.numerosolicitud = self.n_solicitud;
+                    self.reinicio_nov.numerooficioestadocuentas = 0;
+                    self.reinicio_nov.valor_desembolsado= 0;
+                    self.reinicio_nov.saldo_contratista= 0;
+                    self.reinicio_nov.saldo_universidad=0;
+                    self.reinicio_nov.fecha_terminacion_anticipada= "0001-01-01T00:00:00Z";
+                    self.reinicio_nov.periodosuspension = self.diff_dias; 
+                    self.reinicio_nov.fechasuspension = self.f_suspension;
+                    self.reinicio_nov.fechareinicio = self.f_reinicio;                
+                    self.reinicio_nov.observacion = "";
+                    self.reinicio_nov.cesionario = parseInt(self.contrato_obj.contratista);
 
-                self.contrato_estado = {};
-                self.contrato_estado.NumeroContrato = self.contrato_obj.id;
-                self.contrato_estado.Vigencia = self.contrato_obj.vigencia;
-                self.contrato_estado.FechaRegistro = self.contrato_obj.fecha_registro;
-                self.contrato_estado.Estado = self.estado_ejecucion;
-                self.contrato_estado.Usuario = "up";
+
+
+                    self.contrato_estado = {};
+                    self.contrato_estado.NumeroContrato = self.contrato_obj.id;
+                    self.contrato_estado.Vigencia = self.contrato_obj.vigencia;
+                    self.contrato_estado.FechaRegistro = self.contrato_obj.fecha_registro;
+                    self.contrato_estado.Estado = self.estado_ejecucion;
+                    self.contrato_estado.Usuario = "up";
+
+                });
                 contratoRequest.get('contrato_estado', self.contrato_id + '/' + self.contrato_vigencia).then(function (ce_response) {
                     if (ce_response.data.contratoEstado.estado.nombreEstado == "Suspendido") {
                         var estado_temp_from = {
@@ -483,9 +491,10 @@ angular.module('contractualClienteApp')
 
                     self.estados[0] = estado_temp_from;
                     adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
-                        self.validacion = vc_response.data;
+                        self.validacion = vc_response.data.Body;
                         if (self.validacion == "true") {
-                            argoNosqlRequest.put('novedad', self.suspension_id_nov, self.reinicio_nov).then(function (response_nosql) {
+
+                            novedadesMidRequest.post('novedad', self.reinicio_nov).then(function (response_nosql) {
                                 if (response_nosql.status == 200 || response_nosql.statusText == "OK") {
                                     var cambio_estado_contrato = {
                                         "_postcontrato_estado": {
@@ -494,16 +503,17 @@ angular.module('contractualClienteApp')
                                             "numero_contrato_suscrito": self.contrato_id,
                                             "vigencia": parseInt(self.contrato_vigencia)
                                         }
-                                    };
+                                    }
+                                    
 
                                     contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
                                         if (response.status == 200 || response.statusText == "OK") {
+                                            self.formato_generacion_pdf();
                                             swal(
                                                 $translate.instant('TITULO_BUEN_TRABAJO'),
                                                 $translate.instant('DESCRIPCION_REINICIO') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
                                                 'success'
                                             );
-
                                         }
                                     });
                                 }
@@ -532,7 +542,7 @@ angular.module('contractualClienteApp')
         self.formato_generacion_pdf = function () {
             var docDefinition = self.get_pdf();
             pdfMake.createPdf(docDefinition).download('acta_reinicio_contrato_' + self.contrato_id + '.pdf');
-            //$location.path('/seguimientoycontrol/legal');
+            $location.path('/seguimientoycontrol/legal');
         }
 
         /**
