@@ -530,9 +530,9 @@ angular.module('contractualClienteApp')
                         margin: [45, 0, 25, 0]
                     },
                     topHeader: {
-                        margin: [20, 0, 20, 0],
+                        margin: [15, 0, 15, 0],
                         alignment: 'justify',
-                        fontSize: 10
+                        fontSize: 9
                     },
                     table: {
                         margin: [30, 0, 30, 0],

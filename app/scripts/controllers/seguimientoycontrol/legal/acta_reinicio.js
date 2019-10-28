@@ -725,9 +725,9 @@ angular.module('contractualClienteApp')
                         alignment: 'justify'
                     },
                     topHeader: {
-                        margin: [0, 0, 0, 0],
+                        margin: [15, 0, 15, 0],
                         alignment: 'justify',
-                        fontSize: 11
+                        fontSize: 9
                     },
                     table: {
                         margin: [0, 0, 0, 0],

@@ -710,7 +710,7 @@ angular.module('contractualClienteApp')
                         border: "0"
                     },
                     topHeader: {
-                        margin: [20, 0, 20, 0],
+                        margin: [15, 0, 15, 0],
                         alignment: 'justify',
                         fontSize: 10
                     },
