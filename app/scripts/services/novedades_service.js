@@ -2,16 +2,16 @@
 
 /**
  * @ngdoc service
- * @name financieraService.financieraRequest
+ * @name novedadesService.novedadesRequest
  * @description
- * # financieraService
- * Factory in the financieraService
+ * # novedadesRequest
+ * Factory in the novedadesService
  */
-angular.module('financieraService', [])
-    .factory('financieraRequest', function($http, token_service, CONF) {
+angular.module('novedadesService', [])
+    .factory('novedadesRequest', function($http, token_service, CONF) {
         // Service logic
         // ...
-        var path = CONF.GENERAL.FINANCIERA_SERVICE;
+        var path = CONF.GENERAL.NOVEDADES_SERVICE;
         return {
             get: function(tabla, params) {
                 return $http.get(path + tabla + "/?" + params, token_service.setting_bearer.headers);

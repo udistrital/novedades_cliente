@@ -53,26 +53,26 @@ steps:
       event:
       - push
 
-  #- name: NotifyTelegram
-  #  image: appleboy/drone-telegram
-  #  settings:
-  #    token:
-  #      from_secret: telegram_token
-  #    to:
-  #      from_secret: telegram_to
-  #    format: html
-  #    message: >
-  #      {{#success build.status}}
-  #        <code>{{repo.owner}}/{{repo.name}}</code> <a href="{{build.link}}">SUCCESS</a> 
-  #        <code>{{commit.branch}}</code>@<a href="{{commit.link}}">{{truncate commit.sha 7}}</a><code> By:{{commit.author}}</code>
-  #      {{else}}
-  #        <code>{{repo.owner}}/{{repo.name}}</code> <a href="{{build.link}}">FAILURE</a>
-  #        <code>{{commit.branch}}</code>@<a href="{{commit.link}}">{{truncate commit.sha 7}}</a><code> By:{{commit.author}}</code>
-  #      {{/success}}
-  #  when:
-  #    branch:
-  #    - master
-  #    - test
-  #    status:
-  #    - failure
-  #    - success
+  - name: NotifyTelegram
+    image: appleboy/drone-telegram
+    settings:
+      token:
+        from_secret: telegram_token
+      to:
+        from_secret: telegram_to
+      format: html
+      message: >
+        {{#success build.status}}
+          <code>{{repo.owner}}/{{repo.name}}</code> <a href="{{build.link}}">SUCCESS</a> 
+          <code>{{commit.branch}}</code>@<a href="{{commit.link}}">{{truncate commit.sha 7}}</a><code> By:{{commit.author}}</code>
+        {{else}}
+          <code>{{repo.owner}}/{{repo.name}}</code> <a href="{{build.link}}">FAILURE</a>
+          <code>{{commit.branch}}</code>@<a href="{{commit.link}}">{{truncate commit.sha 7}}</a><code> By:{{commit.author}}</code>
+        {{/success}}
+    when:
+      branch:
+      - master
+      - test
+      status:
+      - failure
+      - success

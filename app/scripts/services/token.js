@@ -168,6 +168,6 @@ angular.module('implicitToken', [])
             }
         };
         service.setExpiresAt();
-        service.timer();
+        service.timer();       
         return service;
     });
