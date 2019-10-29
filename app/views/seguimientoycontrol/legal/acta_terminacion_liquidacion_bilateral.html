@@ -111,6 +111,21 @@
                       </div>                      
                     </md-input-container>
                   </div>
+                  <div class="form-group col-md-6">
+                    <label style="width:100%;">
+                      {{'SALDO_A_FAVOR' | translate}} *:
+                    </label>
+                    <md-input-container style="margin:0;">
+                      <select name="a_favor_de" class="form-control" ng-model="sLactaTerminacionAnticipada.a_favor_de">
+                        <option value="">--- Selecione una opción ---</option> 
+                        <option value="Universidad">Universidad Distrital</option>
+                        <option value="Contratista">Contratista</option>
+                      </select><br>
+                      <div ng-messages="formTerminacion.saldo_universidad.$error">
+                        <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                      </div>  
+                    </md-input-container>
+                  </div>
                 </div>
               </form>
             </div>

@@ -49,7 +49,6 @@ angular.module('contractualClienteApp')
                     //Obtiene el estado del contrato.
                     contratoRequest.get('contrato_estado', +self.contrato_id + '/' + self.contrato_vigencia).then(function (ce_response) {
                         self.estado_contrato_obj.estado = ce_response.data.contratoEstado.estado.id;
-                        console.log(self.estado_contrato_obj.estado)
                         if (self.estado_contrato_obj.estado == 7) {
                             swal(
                                 $translate.instant('CONTRATO_CANCELADO'),
