@@ -80,7 +80,6 @@ La pruebas se relizan con [karma](https://karma-runner.github.io/latest/index.ht
   * CORE_AMAZON_SERVICE: Servidor en local de la oficina
   * FINANCIERA_MID_SERVICE: Servidor en local de la oficina
   * FINANCIERA_SERVICE: Servidor en local de la oficina
-  * NOTIFICACION_WS: Servidor de notificaciones de local de la oficina
   * OIKOS_SERVICE: Servidor en local de la oficina
   * OIKOS_AMAZON_SERVICE: Servidor en local de la oficina
   * PAGOS_SERVICE: Servidor en local de la oficina
