@@ -160,11 +160,11 @@ angular.module('contractualClienteApp')
             if (self.a_favor_de == "Universidad") {
                 self.a_favor.entidad = "la Universidad Distrital.";
                 self.a_favor.valor = self.terminacion_nov.saldo_universidad;
-                self.a_favor.existe = "no existe";
+                self.a_favor.existe = "no existe un saldo a favor de este.";
             } else if (self.a_favor_de == "Contratista") {
                 self.a_favor.entidad = "el Contratista.";
                 self.a_favor.valor = self.terminacion_nov.saldo_contratista;
-                self.a_favor.existe = "existe";
+                self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(self.terminacion_nov.saldo_contratista + '');
             }
         }
 
@@ -704,7 +704,7 @@ angular.module('contractualClienteApp')
                             {
                                 text: [
                                     { text: ' CLÁUSULA SEGUNDA : ', bold: true },
-                                    { text: ' Teniendo en cuenta que el Contratista ' + self.contrato_obj.contratista_nombre + ', ejecutó los servicios hasta el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', y ' + self.a_favor.existe + ' un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(self.terminacion_nov.saldo_contratista + '') + '.\n\n' }
+                                    { text: ' Teniendo en cuenta que el Contratista ' + self.contrato_obj.contratista_nombre + ', ejecutó los servicios hasta el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', y ' + self.a_favor.existe+ '.\n\n' }
                                 ]
                             }
                         ]

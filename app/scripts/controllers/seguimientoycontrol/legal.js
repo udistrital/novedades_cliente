@@ -46,6 +46,22 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.contratista = wso_response.data.contrato.contratista;
                     self.contrato_obj.cesion = 0;
 
+                    //http://pruebasapi.intranetoas.udistrital.edu.co:8104/v1/contrato_suscrito?query=NumeroContratoSuscrito:1178&Vigencia:2019
+
+                    /*
+                    //Se obtiene los datos de Acta de Inicio.
+                    amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
+                        self.contrato_obj.NumeroContrato=acta_response.data[acta_response.data.length-1].NumeroContrato.Id;
+                         amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
+                            console.log(acta_response.data);
+                        });
+                    });*/ 
+
+                   
+                
+                    
+
+
                     //Obtiene el estado del contrato.
                     contratoRequest.get('contrato_estado', +self.contrato_id + '/' + self.contrato_vigencia).then(function (ce_response) {
                         self.estado_contrato_obj.estado = ce_response.data.contratoEstado.estado.id;
