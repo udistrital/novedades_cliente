@@ -571,7 +571,6 @@ angular.module('contractualClienteApp')
          * Funcion que retorna la plantilla para la generacion del acta en pdf
          */
         self.get_pdf = function () {
-            self.reinicio_nov.motivo='Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión Motivo de suspensión'
             return {
                 pageSize: 'LETTER',
                 pageMargins: [50, 110, 50, 45],

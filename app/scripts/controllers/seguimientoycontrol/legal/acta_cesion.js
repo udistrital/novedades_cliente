@@ -98,11 +98,12 @@ angular.module('contractualClienteApp')
                             amazonAdministrativaRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenador_gasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
                                 self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
                                 self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
-                                coreAmazonRequest.get('ciudad', 'query=Id:' + og_response.data[0].IdCiudad).then(function (sc_response) {
-                                    self.contrato_obj.ordenador_gasto__ciudad_documento = sc_response.data[0].Nombre;
+                                amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + og_response.data[0].Documento ).then(function (ispn_response) {
+                                    self.contrato_obj.ordenador_gasto_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
                                 });
-
-
+                                coreAmazonRequest.get('ciudad', 'query=Id:' + og_response.data[0].IdCiudad).then(function (sc_response) {
+                                    self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
+                                });
                             });
 
                             //Obtención de datos del jefe de juridica
@@ -221,7 +222,8 @@ angular.module('contractualClienteApp')
                                     self.cesion_nov.vigencia = String(self.contrato_obj.vigencia);
                                     self.cesion_nov.fechaoficio = new Date(self.f_oficio);
                                     self.cesion_nov.fecharegistro = self.replaceAt(self.contrato_obj.fecha_registro, 10, 'T')
-                                    novedadesMidRequest.post('novedad', self.cesion_nov).then(function (request_novedades) {
+                                    self.formato_generacion_pdf();
+                                    /*novedadesMidRequest.post('novedad', self.cesion_nov).then(function (request_novedades) {
                                         if (request_novedades.status == 200 || request_novedades.statusText == "OK") {
                                             swal(
                                                 $translate.instant('TITULO_BUEN_TRABAJO'),
@@ -230,7 +232,7 @@ angular.module('contractualClienteApp')
                                             );
                                             self.formato_generacion_pdf();
                                         }
-                                    });
+                                    });*/
                                 });
                         });
                     });
@@ -300,7 +302,7 @@ angular.module('contractualClienteApp')
         self.formato_generacion_pdf = function () {
             var output = self.get_plantilla();
             pdfMake.createPdf(output).download('acta_cesion_contrato_' + self.contrato_id + '.pdf');
-            $location.path('/seguimientoycontrol/legal');
+            //$location.path('/seguimientoycontrol/legal');
         }
 
         /**
@@ -367,12 +369,12 @@ angular.module('contractualClienteApp')
                                     ],
                                     [' ',
                                         { text: 'Macroproceso: Gestión de Recursos', alignment: 'center', fontSize: 9 },
-                                        { text: 'Versión: 02', margin: [0, 2], fontSize: 9 },
+                                        { text: 'Versión: 03', margin: [0, 2], fontSize: 9 },
                                         ' '
                                     ],
                                     [' ',
                                         { text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 9 },
-                                        { text: 'Fecha de Aprobación: 12/10/2017', fontSize: 9 },
+                                        { text: 'Fecha de Aprobación: 30/07/2019', fontSize: 9 },
                                         ' '
                                     ],
                                 ]
@@ -402,15 +404,15 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'FECHA DE INICIO', bold: true, style: 'topHeader' },
-                                    { text: self.format_date_letter(self.contrato_obj.FechaSuscripcion), style: 'topHeader' }
+                                    { text: self.format_date_letter_mongo( self.contrato_obj.Inicio), style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'ORDENADOR DEL GASTO', bold: true, style: 'topHeader' },
-                                    { text: 'Universidad Distrital Francísco José de Caldas', style: 'topHeader' }
+                                    { text: self.contrato_obj.ordenador_gasto_nombre + ', mayor de edad, identificado(a) con '+ self.contrato_obj.ordenador_gasto_tipo_documento + ' No. '+ self.contrato_obj.ordenador_gasto_documento + " Expedida en " +self.contrato_obj.ordenador_gasto_ciudad_documento , style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'SUPERVISOR', bold: true, style: 'topHeader' },
-                                    { text: 'Universidad Distrital Francísco José de Caldas', style: 'topHeader' }
+                                    { text: self.contrato_obj.supervisor_nombre + ", mayor de edad, identificado(a) con " + self.contrato_obj.supervisor_tipo_documento + " No. " + self.contrato_obj.supervisor_cedula+ " Expedida en " + self.contrato_obj.supervisor_ciudad_documento , style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'CEDENTE', bold: true, style: 'topHeader' },
@@ -491,7 +493,7 @@ angular.module('contractualClienteApp')
                             { text: 'Ordenador de Gasto: \n\n', bold: true },
                             '\n\n\n_____________________________________ \n',
                             self.contrato_obj.ordenador_gasto_nombre + ' \n',
-                            'CC. No. ' + self.contrato_obj.ordenador_gasto_documento + ' de ' + self.contrato_obj.ordenador_gasto__ciudad_documento + '\n'
+                            'CC. No. ' + self.contrato_obj.ordenador_gasto_documento + ' de ' + self.contrato_obj.ordenador_gasto_ciudad_documento + '\n'
                         ]
                     },
                     {
