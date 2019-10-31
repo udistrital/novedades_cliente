@@ -47,6 +47,16 @@ angular.module('contractualClienteApp')
             self.contrato_obj.supervisor_documento = wso_response.data.contrato.supervisor.documento_identificacion;
             self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
 
+            //Se obtiene los datos de Acta de Inicio.
+            amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
+                self.contrato_obj.NumeroContrato = acta_response.data[acta_response.data.length - 1].NumeroContrato.Id;
+                console.log(self.contrato_obj.NumeroContrato)
+                amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
+                    self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
+                    console.log(self.contrato_obj.Inicio);
+                });
+            });
+
 
             amazonAdministrativaRequest.get('ordenadores?query=IdOrdenador:' + wso_response.data.contrato.ordenador_gasto.id).then(function (ord_response) {
                 self.contrato_obj.ordenador_resolucion = ord_response.data[ord_response.data.length - 1].InfoResolucion;
@@ -341,27 +351,27 @@ angular.module('contractualClienteApp')
         self.get_plantilla = function () {
             return {
                 pageSize: 'LETTER',
-                pageMargins: [40, 120, 40, 60],
+                pageMargins: [50, 110, 50, 45],
                 header: {
-                    margin: [30, 20],
+                    margin: [40, 30],
                     columns: [
                         {
                             table: {
-                                widths: [65, '*', 130, 65],
+                                widths: [50, '*', 130, 70],
                                 body: [
                                     [
-                                        { image: 'logo_ud', fit: [65, 120], rowSpan: 3, alignment: 'center', fontSize: 10 },
-                                        { text: 'ACTA DE CESIÓN', bold: true, alignment: 'center', fontSize: 12 },
-                                        { text: 'Código: GJ-PR-002-FR-008', fontSize: 9 },
-                                        { image: 'logo_sigud', fit: [65, 120], rowSpan: 3, alignment: 'center', fontSize: 10 }
+                                        { image: 'logo_ud', fit: [43, 80], rowSpan: 3, alignment: 'center', fontSize: 9 },
+                                        { text: 'ACTA DE SUSPENSIÓN', bold: true, alignment: 'center', fontSize: 9 },
+                                        { text: 'Código: GJ-PR-002-FR-010', fontSize: 9 },
+                                        { image: 'logo_sigud', fit: [65, 120], margin: [3, 0], rowSpan: 3, alignment: 'center', fontSize: 9 }
                                     ],
                                     [' ',
-                                        { text: 'Macroproceso: Gestión de Recursos', alignment: 'center', fontSize: 12 },
-                                        { text: 'Versión: 02', fontSize: 9, margin: [0, 6] },
+                                        { text: 'Macroproceso: Gestión de Recursos', alignment: 'center', fontSize: 9 },
+                                        { text: 'Versión: 02', margin: [0, 2], fontSize: 9 },
                                         ' '
                                     ],
                                     [' ',
-                                        { text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 12 },
+                                        { text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 9 },
                                         { text: 'Fecha de Aprobación: 12/10/2017', fontSize: 9 },
                                         ' '
                                     ],
@@ -376,7 +386,7 @@ angular.module('contractualClienteApp')
                     {
                         style: ['table'],
                         table: {
-                            widths: [160, '*'],
+                            widths: [120, '*'],
                             body: [
                                 [
                                     { text: 'CONTRATO', bold: true, style: 'topHeader' },
@@ -391,7 +401,15 @@ angular.module('contractualClienteApp')
                                     { text: self.format_date_letter(self.contrato_obj.FechaSuscripcion), style: 'topHeader' }
                                 ],
                                 [
-                                    { text: 'CONTRATANTE', bold: true, style: 'topHeader' },
+                                    { text: 'FECHA DE INICIO', bold: true, style: 'topHeader' },
+                                    { text: self.format_date_letter(self.contrato_obj.FechaSuscripcion), style: 'topHeader' }
+                                ],
+                                [
+                                    { text: 'ORDENADOR DEL GASTO', bold: true, style: 'topHeader' },
+                                    { text: 'Universidad Distrital Francísco José de Caldas', style: 'topHeader' }
+                                ],
+                                [
+                                    { text: 'SUPERVISOR', bold: true, style: 'topHeader' },
                                     { text: 'Universidad Distrital Francísco José de Caldas', style: 'topHeader' }
                                 ],
                                 [
@@ -532,7 +550,7 @@ angular.module('contractualClienteApp')
                     topHeader: {
                         margin: [15, 0, 15, 0],
                         alignment: 'justify',
-                        fontSize: 9
+                        fontSize: 8
                     },
                     table: {
                         margin: [30, 0, 30, 0],

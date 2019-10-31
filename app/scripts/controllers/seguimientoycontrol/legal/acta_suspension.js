@@ -30,6 +30,7 @@ angular.module('contractualClienteApp')
     self.contrato_obj = {};
     self.elaboro = '';
     self.estados = [];
+    //Obtiene los datos de quien elaboró la Novedad
     amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + token_service.getPayload().documento).then(function (ipn_response) {
       self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
     });
@@ -173,7 +174,8 @@ angular.module('contractualClienteApp')
           self.suspension_nov.fecharegistro = new Date();
           self.suspension_nov.fechasolicitud = new Date();
           self.suspension_nov.fechasuspension = self.f_inicio;
-          self.suspension_nov.fechareinicio = self.f_fin;
+          self.suspension_nov.fechareinicio = self.f_reinicio;
+          self.suspension_nov.fechafinsuspension = self.f_fin;
           self.suspension_nov.cesionario = parseInt(self.contrato_obj.contratista);
           self.contrato_estado = {};
           self.contrato_estado.NumeroContrato = self.contrato_obj.id;
@@ -193,9 +195,8 @@ angular.module('contractualClienteApp')
             }
           }
           self.estados[0] = estado_temp_from;
-          self.formato_generacion_pdf();
-
-          /*adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
+         // self.formato_generacion_pdf();
+        adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
             self.validacion = vc_response.data.Body;
             if (self.validacion == "true") {
 
@@ -227,7 +228,7 @@ angular.module('contractualClienteApp')
                 }
               });
             }
-          });*/
+          });
         });
       } else {
         swal(
@@ -424,7 +425,7 @@ angular.module('contractualClienteApp')
     self.formato_generacion_pdf = function () {
       var docDefinition = self.get_pdf();
       pdfMake.createPdf(docDefinition).download('acta_suspension_contrato_' + self.contrato_id + '.pdf');
-      //$location.path('/seguimientoycontrol/legal');
+      $location.path('/seguimientoycontrol/legal');
     }
 
 
@@ -587,7 +588,7 @@ angular.module('contractualClienteApp')
                 ],
                 [
                   { text: 'FECHA DE REINICIO', bold: true, style: 'topHeader' },
-                  { text: self.format_date_letter_mongo(self.f_reinicio), style: 'topHeader' }
+                  { text: self.format_date_letter_mongo(self.suspension_nov.fechareinicio), style: 'topHeader' }
                 ]
 
               ]
@@ -612,7 +613,7 @@ angular.module('contractualClienteApp')
               self.suspension_nov.motivo, '\n\n',
 
               'Por los motivos antes expuestos las partes acuerdan: ', '\n\n',
-              'Suspender el Contrato ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ', durante el periodo comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechareinicio) + '.\n\n',
+              'Suspender el Contrato ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ', durante el periodo comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
             ]
           },
           {
