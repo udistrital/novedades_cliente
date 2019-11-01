@@ -379,6 +379,8 @@ var text_es = {
     NUMERO_OFICIO_ESTADO_CUENTAS:"Número oficio estado de cuentas",
     FECHA_OFICIO:"Fecha oficio",
     FECHA_CESION:"Fecha cesión",
+    FECHA_TERMINACION_CEDENTE: "Fecha de terminación del cedente",
+    VALOR_A_FAVOR:"Valor a favor de cedente",
     OTRAS_OBSERVACIONES:"Otras observaciones",
     INFORMACION_CESIONARIO:"INFORMACIÓN CESIONARIO",
     SELECCIONAR_CESIONARIO:"Seleccionar cesionario",

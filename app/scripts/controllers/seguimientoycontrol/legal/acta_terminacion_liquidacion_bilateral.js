@@ -542,8 +542,7 @@ angular.module('contractualClienteApp')
                 var plazo = meses + " mes(es) ";
             }
             return plazo;
-        } self.contrato_obj
-
+        } 
 
         self.get_plantilla = function () {
             return {

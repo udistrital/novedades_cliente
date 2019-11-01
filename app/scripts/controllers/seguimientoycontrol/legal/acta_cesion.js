@@ -18,8 +18,11 @@ angular.module('contractualClienteApp')
         self.texto_busqueda = '';
         self.persona_sel = '';
         self.num_oficio = null;
+        self.valor_desembolsado =null;
+        self.valor_a_favor= '';
         self.f_oficio = new Date();
         self.f_cesion = new Date();
+        self.f_terminacion = new Date();
         self.f_hoy = new Date();
         self.observaciones = "";
         self.n_solicitud = null;
@@ -46,6 +49,8 @@ angular.module('contractualClienteApp')
             self.contrato_obj.contratista = wso_response.data.contrato.contratista;
             self.contrato_obj.supervisor_documento = wso_response.data.contrato.supervisor.documento_identificacion;
             self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
+            self.contrato_obj.plazo = wso_response.data.contrato.plazo_ejecucion;
+
 
             //Se obtiene los datos de Acta de Inicio.
             amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
@@ -53,7 +58,7 @@ angular.module('contractualClienteApp')
                 console.log(self.contrato_obj.NumeroContrato)
                 amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
                     self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
-                    console.log(self.contrato_obj.Inicio);
+                    self.contrato_obj.Fin = acta_response.data[0].FechaFin
                 });
             });
 
@@ -98,7 +103,7 @@ angular.module('contractualClienteApp')
                             amazonAdministrativaRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenador_gasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
                                 self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
                                 self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
-                                amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + og_response.data[0].Documento ).then(function (ispn_response) {
+                                amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + og_response.data[0].Documento).then(function (ispn_response) {
                                     self.contrato_obj.ordenador_gasto_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
                                 });
                                 coreAmazonRequest.get('ciudad', 'query=Id:' + og_response.data[0].IdCiudad).then(function (sc_response) {
@@ -184,7 +189,15 @@ angular.module('contractualClienteApp')
          * actualizacion de los datos del contrato y reporte de la novedad
          */
         self.generarActa = function () {
-            if ($scope.formCesion.$valid) {
+            var f_inicio_contrato = moment(self.contrato_obj.Inicio);
+            var f_cesion = moment(self.f_terminacion);
+            var f_terminacion_contrato = moment(self.contrato_obj.Fin);
+
+
+            console.log((f_terminacion_contrato.diff(f_inicio_contrato, 'days'))-(f_cesion.diff(f_inicio_contrato, 'days')));
+
+
+           /* if ($scope.formCesion.$valid) {
                 amazonAdministrativaRequest.get('informacion_proveedor?query=NumDocumento:' +
                     self.cesionario_obj.identificacion).then(function (response_ces) {
                         novedadesRequest.get('tipo_novedad', 'query=Nombre:Cesión').then(function (nc_response) {
@@ -222,7 +235,8 @@ angular.module('contractualClienteApp')
                                     self.cesion_nov.vigencia = String(self.contrato_obj.vigencia);
                                     self.cesion_nov.fechaoficio = new Date(self.f_oficio);
                                     self.cesion_nov.fecharegistro = self.replaceAt(self.contrato_obj.fecha_registro, 10, 'T')
-                                    self.formato_generacion_pdf();
+                                    
+                                  self.formato_generacion_pdf();
                                     /*novedadesMidRequest.post('novedad', self.cesion_nov).then(function (request_novedades) {
                                         if (request_novedades.status == 200 || request_novedades.statusText == "OK") {
                                             swal(
@@ -232,7 +246,7 @@ angular.module('contractualClienteApp')
                                             );
                                             self.formato_generacion_pdf();
                                         }
-                                    });*/
+                                    });
                                 });
                         });
                     });
@@ -242,7 +256,7 @@ angular.module('contractualClienteApp')
                     $translate.instant('DESCRIPCION_ERROR'),
                     'error'
                 );
-            }
+            }*/
         };
         /**
          * @ngdoc method
@@ -291,6 +305,189 @@ angular.module('contractualClienteApp')
 
             return r_date;
         };
+        /**
+        * @ngdoc method
+        * @name numberFormat
+        * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaInicioCtrl
+        * @description
+        * funcion que formatea los valores de la fecha
+        */
+       function numberFormat(numero) {
+        // Variable que contendra el resultado final
+        var resultado = "";
+        var nuevoNumero = 0;
+        // Si el numero empieza por el valor "-" (numero negativo)
+        if (numero[0] == "-") {
+            // Cogemos el numero eliminando las posibles comas que tenga, y sin el signo negativo
+            nuevoNumero = numero.replace(/\,/g, '').substring(1);
+        } else {
+            // Cogemos el numero eliminando las posibles comas que tenga
+            nuevoNumero = numero.replace(/\,/g, '');
+        }
+        // Si tiene decimales, se los quitamos al numero
+        if (numero.indexOf(".") >= 0)
+            nuevoNumero = nuevoNumero.substring(0, nuevoNumero.indexOf("."));
+        // Ponemos un punto cada 3 caracteres
+        for (var j = 0, i = nuevoNumero.length - 1; i >= 0; i-- , j++)
+            resultado = nuevoNumero.charAt(i) + ((j > 0) && (j % 3 == 0) ? "," : "") + resultado;
+        // Si tiene decimales, se lo añadimos al numero una vez forateado con los separadores de miles
+        if (numero.indexOf(".") >= 0)
+            resultado += numero.substring(numero.indexOf("."));
+        if (numero[0] == "-") {
+            // Devolvemos el valor añadiendo al inicio el signo negativo
+            return "-" + resultado;
+        } else {
+            return resultado;
+        }
+    }
+    function Unidades(num) {
+
+        switch (num) {
+            case 1: return "Un";
+            case 2: return "Dos";
+            case 3: return "Tres";
+            case 4: return "Cuatro";
+            case 5: return "Cinco";
+            case 6: return "Seis";
+            case 7: return "Siete";
+            case 8: return "Ocho";
+            case 9: return "Nueve";
+        }
+
+        return "";
+    }//Unidades()
+
+    function Decenas(num) {
+
+        var decena = Math.floor(num / 10);
+        var unidad = num - (decena * 10);
+
+        switch (decena) {
+            case 1:
+                switch (unidad) {
+                    case 0: return "Diez";
+                    case 1: return "Once";
+                    case 2: return "Doce";
+                    case 3: return "Trece";
+                    case 4: return "Catorce";
+                    case 5: return "Quince";
+                    default: return "Dieci" + Unidades(unidad);
+                }
+            case 2:
+                switch (unidad) {
+                    case 0: return "Veinte";
+                    default: return "Veinti" + Unidades(unidad);
+                }
+            case 3: return DecenasY("Treinta", unidad);
+            case 4: return DecenasY("Cuarenta", unidad);
+            case 5: return DecenasY("Cincuenta", unidad);
+            case 6: return DecenasY("Sesenta", unidad);
+            case 7: return DecenasY("Setenta", unidad);
+            case 8: return DecenasY("Ochenta", unidad);
+            case 9: return DecenasY("Noventa", unidad);
+            case 0: return Unidades(unidad);
+        }
+    }//Decenas()
+
+    function DecenasY(strSin, numUnidades) {
+        if (numUnidades > 0)
+            return strSin + " Y " + Unidades(numUnidades)
+
+        return strSin;
+    }//DecenasY()
+
+    function Centenas(num) {
+        var centenas = Math.floor(num / 100);
+        var decenas = num - (centenas * 100);
+
+        switch (centenas) {
+            case 1:
+                if (decenas > 0)
+                    return "Ciento " + Decenas(decenas);
+                return "Cien";
+            case 2: return "Doscientos " + Decenas(decenas);
+            case 3: return "Trescientos " + Decenas(decenas);
+            case 4: return "Cuatroscientos " + Decenas(decenas);
+            case 5: return "Quinientos " + Decenas(decenas);
+            case 6: return "Seiscientos" + Decenas(decenas);
+            case 7: return "Setecientos " + Decenas(decenas);
+            case 8: return "Ochocientos " + Decenas(decenas);
+            case 9: return "Novecientos " + Decenas(decenas);
+        }
+
+        return Decenas(decenas);
+    }//Centenas()
+
+    function Seccion(num, divisor, strSingular, strPlural) {
+        var cientos = Math.floor(num / divisor)
+        var resto = num - (cientos * divisor)
+        var letras = "";
+        if (cientos > 0)
+            if (cientos > 1)
+                letras = Centenas(cientos) + " " + strPlural;
+            else
+                letras = strSingular;
+        if (resto > 0)
+            letras += "";
+        return letras;
+    }//Seccion()
+
+    function Miles(num) {
+        var divisor = 1000;
+        var cientos = Math.floor(num / divisor)
+        var resto = num - (cientos * divisor)
+
+        var strMiles = Seccion(num, divisor, "Un Mil", "Mil");
+        var strCentenas = Centenas(resto);
+
+        if (strMiles == "")
+            return strCentenas;
+
+        return strMiles + " " + strCentenas;
+    }//Miles()
+
+    function Millones(num) {
+        var divisor = 1000000;
+        var cientos = Math.floor(num / divisor)
+        var resto = num - (cientos * divisor)
+
+        var strMillones = Seccion(num, divisor, "Un Millón ", "Millones ");
+        var strMiles = Miles(resto);
+
+        if (strMillones == "")
+            return strMiles;
+
+        return strMillones + " " + strMiles;
+    }//Millones()
+    function NumeroALetras(num) {
+        var data = {
+            numero: num,
+            enteros: Math.floor(num),
+            centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
+            letrasCentavos: "",
+            letrasMonedaPlural: 'Pesos',//“PESOS”, 'Dólares', 'Bolívares', 'etcs'
+            letrasMonedaSingular: 'Peso', //“PESO”, 'Dólar', 'Bolivar', 'etc'
+
+            letrasMonedaCentavoPlural: "Centavos",
+            letrasMonedaCentavoSingular: "Centavo"
+        };
+
+        if (data.centavos > 0) {
+            data.letrasCentavos = "Con " + (function () {
+                if (data.centavos == 1)
+                    return Millones(data.centavos) + " " + data.letrasMonedaCentavoSingular;
+                else
+                    return Millones(data.centavos) + " " + data.letrasMonedaCentavoPlural;
+            })();
+        };
+
+        if (data.enteros == 0)
+            return "Cero " + data.letrasMonedaPlural + " " + data.letrasCentavos;
+        if (data.enteros == 1)
+            return Millones(data.enteros) + " " + data.letrasMonedaSingular + " " + data.letrasCentavos;
+        else
+            return Millones(data.enteros) + " " + data.letrasMonedaPlural + " " + data.letrasCentavos;
+    }//NumeroALetras()
 
         /**
          * @ngdoc method
@@ -342,6 +539,14 @@ angular.module('contractualClienteApp')
             var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             return fecha.toLocaleDateString("es-ES", options);
         };
+
+        self.valor_contrato_cesionario= function () {
+            return self.contrato_obj.valor - (self.valor_a_favor+self.valor_desembolsado);
+        }
+
+        self.nuevo_plazo= function(){
+
+        }
 
         /**
          * @ngdoc method
@@ -396,7 +601,13 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'No. CONTRATO', bold: true, style: 'topHeader' },
-                                    { text: self.contrato_id, style: 'topHeader' }
+                                    {
+                                        text: [
+                                            { text: self.contrato_id, bold: true },
+                                            { text: ' suscrito el ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) }
+                                        ],
+                                        style: 'topHeader'
+                                    }
                                 ],
                                 [
                                     { text: 'FECHA DE SUSCRIPCIÓN', bold: true, style: 'topHeader' },
@@ -404,15 +615,15 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'FECHA DE INICIO', bold: true, style: 'topHeader' },
-                                    { text: self.format_date_letter_mongo( self.contrato_obj.Inicio), style: 'topHeader' }
+                                    { text: self.format_date_letter_mongo(self.contrato_obj.Inicio), style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'ORDENADOR DEL GASTO', bold: true, style: 'topHeader' },
-                                    { text: self.contrato_obj.ordenador_gasto_nombre + ', mayor de edad, identificado(a) con '+ self.contrato_obj.ordenador_gasto_tipo_documento + ' No. '+ self.contrato_obj.ordenador_gasto_documento + " Expedida en " +self.contrato_obj.ordenador_gasto_ciudad_documento , style: 'topHeader' }
+                                    { text: self.contrato_obj.ordenador_gasto_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.ordenador_gasto_tipo_documento + ' No. ' + self.contrato_obj.ordenador_gasto_documento + " Expedida en " + self.contrato_obj.ordenador_gasto_ciudad_documento, style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'SUPERVISOR', bold: true, style: 'topHeader' },
-                                    { text: self.contrato_obj.supervisor_nombre + ", mayor de edad, identificado(a) con " + self.contrato_obj.supervisor_tipo_documento + " No. " + self.contrato_obj.supervisor_cedula+ " Expedida en " + self.contrato_obj.supervisor_ciudad_documento , style: 'topHeader' }
+                                    { text: self.contrato_obj.supervisor_nombre + ", mayor de edad, identificado(a) con " + self.contrato_obj.supervisor_tipo_documento + " No. " + self.contrato_obj.supervisor_cedula + " Expedida en " + self.contrato_obj.supervisor_ciudad_documento, style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'CEDENTE', bold: true, style: 'topHeader' },
@@ -436,30 +647,60 @@ angular.module('contractualClienteApp')
                         style: ['general_font'],
                         text: [
                             {
-                                text: '\n\nLa presente Acta hace parte del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ', cuyo objeto es: \n\n' + self.contrato_obj.objeto + ' De acuerdo con la propuesta de servicios que forma parte integral del presente Contrato.'
+                                text: '\n\nDe una parte, ' + self.contrato_obj.ordenador_gasto_nombre + ' mayor de edad vecino(a) de esta ciudad, identificado(a) con ' + self.contrato_obj.ordenador_gasto_tipo_documento + ' número ' + self.contrato_obj.ordenador_gasto_documento + " expedida en " + self.contrato_obj.ordenador_gasto_ciudad_documento + ', quien actúa en calidad de ' + self.contrato_obj.ordenador_gasto_rol + ', y Ordenador del Gasto, del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ', de otra, ' + self.contrato_obj.contratista_nombre + ', identificado(a) con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ', como ',
                             },
                             {
-                                text: '\n\nFirmada por ' + self.contrato_obj.supervisor_nombre_completo + ', mayor de edad, identificado(a) con ' + self.contrato_obj.supervisor_tipo_documento + ' No.' +
-                                    self.contrato_obj.supervisor_cedula + ' Expedida en ' + self.contrato_obj.supervisor_ciudad_documento + ' en calidad de ' + self.contrato_obj.supervisor_rol + ' como LA UNIVERSIDAD y ' +
-                                    self.contrato_obj.contratista_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento +
-                                    ' Expedida en ' + self.contrato_obj.contratista_ciudad_documento + ' como EL CONTRATISTA.'
+                                text: [{
+                                    text: 'CONTRATISTA CEDENTE', bold: true,
+
+                                }]
                             },
                             {
-                                text: '\n\nDe conformidad con el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) + ', en la CLÁUSULA OCTAVA. CESIÓN DEL CONTRATO, establece: '
+                                text: ', y ' + self.cesionario_obj.nombre + ' ' + self.cesionario_obj.apellidos + ' con ' + self.cesionario_obj.tipo_documento + ' No. ' + self.cesionario_obj.identificacion + ', como ',
                             },
                             {
                                 text: [
-                                    { text: '"El contratista no podrá ceder total ni parcialmente los derechos y obligaciones emanadas de esta Orden a persona natural o jurídica, sino con autorización previa y por escrito de la Universidad". ', italics: true }
-                                ]
-                            },
-                            {
-                                text: '\n\nLa presente Cesión se lleva a cabo en la forma que se determina a continuación, previa las siguientes consideraciones:\n\n  '
+                                    { text: 'CONTRATISTA CESIONARIO', bold: true, }
+                                ],
+                                text: ', acordamos suscribir la presente “acta de cesión de contrato”, previas las siguientes consideraciones:\n\n\n'
                             },
                         ]
                     },
                     {
                         style: ['general_list'],
                         ol: [
+                            {
+                                text:
+                                    'Que entre la Universidad Distrital Francisco José de Caldas y el señor '+self.contrato_obj.contratista_nombre+', se suscribió el '+self.contrato_obj.tipo_contrato+' No. '+ self.contrato_obj.id+' de '+self.contrato_obj.vigencia+', cuyo objeto es “'+self.contrato_obj.objeto +'.”\n\n'
+
+                            },
+                            {
+                                text:
+                                    'Que la CLÁUSULA OCTAVA del '+self.contrato_obj.tipo_contrato+' No. '+ self.contrato_obj.id+' de '+self.contrato_obj.vigencia+', establece que “El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de LA UNIVERSIDAD”. \n\n'
+
+                            },
+                            {
+                                text:
+                                    'Que mediante escrito de fecha '+ self.format_date_letter_mongo(self.f_oficio) +', el Contratista '+self.contrato_obj.contratista_nombre+', solicita a '+ self.contrato_obj.supervisor_nombre+' quien cumple la función supervisor, la autorización para realizar la Cesión del '+self.contrato_obj.tipo_contrato+' a partir del día '+self.format_date_letter_mongo(self.f_cesion) +', a '+self.cesionario_obj.nombre + ' ' + self.cesionario_obj.apellidos+' quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n\n'
+
+                            },
+                            {
+                                text: [
+                                    { text: 'Que mediante oficio No. '+self.num_oficio+' de fecha '+ self.format_date_letter_mongo(self.f_oficio) +', el supervisor del '+self.contrato_obj.tipo_contrato+' No. '+ self.contrato_obj.id+' de '+self.contrato_obj.vigencia+', le comunicó al señor (a) '+self.contrato_obj.ordenador_gasto_nombre+' en calidad de Ordenador el Gasto del citado contrato, la autorización para ceder el mismo, a partir del día '+self.format_date_letter_mongo(self.f_cesion) +', y aportó un estado financiero expedido por la Sección de Presupuesto, en donde informa lo siguiente:' }
+                                ],
+                                ul: [
+                                    'Por los servicios prestados por el señor (a) '+self.contrato_obj.contratista_nombre+' CONTRATISTA CEDENTE, hasta el día '+self.format_date_letter_mongo(self.f_terminacion)+' se reconoció un valor total de ' + NumeroALetras(self.valor_desembolsado+'') + '($' + numberFormat(self.valor_desembolsado+'') + '), y ejecutor del contrato un plazo de '+self.contrato_obj.plazo+'.\n',
+                                    'Existe un valor pendiente por cancelar al señor '+self.contrato_obj.contratista_nombre+', por valor de ' + NumeroALetras(self.valor_a_favor+'') + '($' + numberFormat(self.valor_a_favor+'') + '), que corresponden al periodo comprendido entre el día '+self.format_date_letter_mongo(self.contrato_obj.f_terminacion)+' al dia '+self.format_date_letter_mongo(self.contrato_obj.Inicio)+'.\n',
+                                    'La suma a ceder al señor (a) '+self.cesionario_obj.nombre + ' ' + self.cesionario_obj.apellidos+' es de '+NumeroALetras(self.valor_contrato_cesionario()+'') + '($' + numberFormat(self.valor_contrato_cesionario()+'') + '), por una plazo de _______.\n',
+                                ],
+                                text:'\n\n'
+                            },
+                            {
+                                text:
+                                    'Que por medio del oficio __________ de fecha _________, recibido por la Oficina Asesora Jurídica, el señor (a) ___________________________, como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de cesión del Contrato de Prestación de Servicios No. ____ de _____, a partir del _____ de _____ del presente año, a favor de ____________________ (CESIONARIO).\n\n'
+
+                            },
+
                             {
                                 text: 'Que mediante escrito de fecha ' + self.format_date_letter_mongo(self.cesion_nov.fechaoficio) + ' el Contratista ' + self.contrato_obj.contratista_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento +
                                     ' Expedida en ' + self.contrato_obj.contratista_ciudad_documento + ' (cedente), solicita a ' + self.contrato_obj.ordenador_gasto_nombre + ' con CÉDULA DE CIUDADANÍA ' + self.contrato_obj.ordenador_gasto_documento + ', quién cumple la función de Ordenador de Gasto, la  ' +
@@ -540,12 +781,12 @@ angular.module('contractualClienteApp')
                         marginBottom: 30
                     },
                     general_font: {
-                        fontSize: 10,
+                        fontSize: 9,
                         alignment: 'justify',
                         margin: [25, 0, 25, 0]
                     },
                     general_list: {
-                        fontSize: 10,
+                        fontSize: 9,
                         alignment: 'justify',
                         margin: [45, 0, 25, 0]
                     },
