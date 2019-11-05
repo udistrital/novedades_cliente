@@ -47,7 +47,33 @@
             </div>
           </div>
         </div>
+
+        <div class=" panel panel-primary">
+            <div class="panel-heading">
+              <center>
+                <h4><b>{{'INFORMACION_CESIONARIO' | translate}}</b></h4>
+              </center>
+            </div>
+            <div class="panel-body">
+              <div ng-if="sLactaCesion.cesionario_obj.nombre == null">
+                {{'SELECCIONAR_CESIONARIO' | translate}}
+              </div>
+              <div ng-if="sLactaCesion.cesionario_obj.nombre != null">
+                <div class="col-md-6"><b>{{'NOMBRES' | translate}}</b></div>
+                <div class="col-md-6"> {{sLactaCesion.cesionario_obj.nombre}}</div>
+                <div class="col-md-6"><b>{{'APELLIDOS' | translate}}</b></div>
+                <div class="col-md-6"> {{sLactaCesion.cesionario_obj.apellidos}} </div>
+                <div class="col-md-6"><b>{{'TIPO_DOCUMENTO' | translate}}</b></div>
+                <div class="col-md-6"> {{sLactaCesion.cesionario_obj.tipo_documento}}</div>
+                <div class="col-md-6"><b>{{'DOCUMENTO_CONTRATISTA' | translate}}</b></div>
+                <div class="col-md-6"> {{sLactaCesion.cesionario_obj.identificacion}} </div>
+                <div class="col-md-6"><b>{{'TIPO_PERSONA' | translate}}</b></div>
+                <div class="col-md-6"> {{'PERSONA_NATURAL' | translate}} </div>
+              </div>
+            </div>
+          </div>
       </div>
+
       <div class="col-md-6">
         <div class=" panel panel-primary">
           <div class="panel-heading">
@@ -158,32 +184,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class=" panel panel-primary">
-          <div class="panel-heading">
-            <center>
-              <h4><b>{{'INFORMACION_CESIONARIO' | translate}}</b></h4>
-            </center>
-          </div>
-          <div class="panel-body">
-            <div ng-if="sLactaCesion.cesionario_obj.nombre == null">
-              {{'SELECCIONAR_CESIONARIO' | translate}}
-            </div>
-            <div ng-if="sLactaCesion.cesionario_obj.nombre != null">
-              <div class="col-md-6"><b>{{'NOMBRES' | translate}}</b></div>
-              <div class="col-md-6"> {{sLactaCesion.cesionario_obj.nombre}}</div>
-              <div class="col-md-6"><b>{{'APELLIDOS' | translate}}</b></div>
-              <div class="col-md-6"> {{sLactaCesion.cesionario_obj.apellidos}} </div>
-              <div class="col-md-6"><b>{{'TIPO_DOCUMENTO' | translate}}</b></div>
-              <div class="col-md-6"> {{sLactaCesion.cesionario_obj.tipo_documento}}</div>
-              <div class="col-md-6"><b>{{'DOCUMENTO_CONTRATISTA' | translate}}</b></div>
-              <div class="col-md-6"> {{sLactaCesion.cesionario_obj.identificacion}} </div>
-              <div class="col-md-6"><b>{{'TIPO_PERSONA' | translate}}</b></div>
-              <div class="col-md-6"> {{'PERSONA_NATURAL' | translate}} </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>
 
   </div>

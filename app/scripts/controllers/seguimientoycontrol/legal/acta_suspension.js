@@ -195,8 +195,8 @@ angular.module('contractualClienteApp')
             }
           }
           self.estados[0] = estado_temp_from;
-         // self.formato_generacion_pdf();
-        adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
+          //self.formato_generacion_pdf();
+          adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
             self.validacion = vc_response.data.Body;
             if (self.validacion == "true") {
 
@@ -619,7 +619,7 @@ angular.module('contractualClienteApp')
           {
             style: ['general_font'],
             text: [
-              'La presente suspensión rige una vez perfeccionado por los intervinientes, para constancia, firman las partes en la fecha ___________________________________________ .' + '\n\n\n\n'
+              'La presente suspensión rige una vez perfeccionado por los intervinientes, para constancia, firman las partes en la \n\nfecha ___________________________________________ .' + '\n\n\n\n'
             ]
           },
           {
@@ -648,17 +648,7 @@ angular.module('contractualClienteApp')
             },
             layout: 'noBorders',
           },
-          {
-
-            style: ['general_font'],
-            text: [
-              {
-                text: [
-                  { text: '\n\n' }
-                ]
-              }
-            ]
-          },
+          '\n',
           {
             style: 'table3',
             table: {
@@ -688,20 +678,12 @@ angular.module('contractualClienteApp')
 
         ],
         styles: {
-          top_space: {
-            fontSize: 11,
-            marginTop: 30
-          },
-          bottom_space: {
-            fontSize: 11,
-            marginBottom: 30
-          },
           general_font: {
-            fontSize: 9,
+            fontSize: 10,
             alignment: 'justify'
           },
           topHeader: {
-            margin: [15, 0, 15, 0],
+            margin: [5, 0, 5, 0],
             alignment: 'justify',
             fontSize: 8
           },
@@ -713,7 +695,7 @@ angular.module('contractualClienteApp')
           table2: {
             margin: [25, 0, 25, 0],
             border: "0",
-            fontSize: 9,
+            fontSize: 10,
           },
           table3: {
             fontSize: 8

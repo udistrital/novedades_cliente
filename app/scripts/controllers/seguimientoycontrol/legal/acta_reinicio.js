@@ -29,6 +29,7 @@ angular.module('contractualClienteApp')
         self.novedad_suspension = '';
         self.novedad_reinicio = '';
         self.novedad_motivo = '';
+        self.novedad_finsuspension = '';
         self.auxiliar = null;
         self.elaboro = '';
         self.estados = [];
@@ -498,9 +499,10 @@ angular.module('contractualClienteApp')
                     self.contrato_estado.Usuario = "up";
 
                 });
-                //self.formato_generacion_pdf();
 
                 contratoRequest.get('contrato_estado', self.contrato_id + '/' + self.contrato_vigencia).then(function (ce_response) {
+                    //self.formato_generacion_pdf();
+
                     if (ce_response.data.contratoEstado.estado.nombreEstado == "Suspendido") {
                         var estado_temp_from = {
                             "NombreEstado": "suspendido"
@@ -508,37 +510,37 @@ angular.module('contractualClienteApp')
                     }
 
                     self.estados[0] = estado_temp_from;
-                     adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
-                         self.validacion = vc_response.data.Body;
-                         if (self.validacion == "true") {
- 
-                             novedadesMidRequest.post('novedad', self.reinicio_nov).then(function (response_nosql) {
-                                 if (response_nosql.status == 200 || response_nosql.statusText == "OK") {
-                                     var cambio_estado_contrato = {
-                                         "_postcontrato_estado": {
-                                             "estado": 4,
-                                             "usuario": "CC123456",
-                                             "numero_contrato_suscrito": self.contrato_id,
-                                             "vigencia": parseInt(self.contrato_vigencia)
-                                         }
-                                     }
-                                     
- 
-                                     contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
-                                         if (response.status == 200 || response.statusText == "OK") {
-                                             self.formato_generacion_pdf();
-                                             swal(
-                                                 $translate.instant('TITULO_BUEN_TRABAJO'),
-                                                 $translate.instant('DESCRIPCION_REINICIO') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
-                                                 'success'
-                                             );
-                                         }
-                                     });
-                                 }
-                             });
- 
-                         }
-                     });
+                    adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
+                        self.validacion = vc_response.data.Body;
+                        if (self.validacion == "true") {
+
+                            novedadesMidRequest.post('novedad', self.reinicio_nov).then(function (response_nosql) {
+                                if (response_nosql.status == 200 || response_nosql.statusText == "OK") {
+                                    var cambio_estado_contrato = {
+                                        "_postcontrato_estado": {
+                                            "estado": 4,
+                                            "usuario": "CC123456",
+                                            "numero_contrato_suscrito": self.contrato_id,
+                                            "vigencia": parseInt(self.contrato_vigencia)
+                                        }
+                                    }
+
+
+                                    contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
+                                        if (response.status == 200 || response.statusText == "OK") {
+                                            self.formato_generacion_pdf();
+                                            swal(
+                                                $translate.instant('TITULO_BUEN_TRABAJO'),
+                                                $translate.instant('DESCRIPCION_REINICIO') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
+                                                'success'
+                                            );
+                                        }
+                                    });
+                                }
+                            });
+
+                        }
+                    });
 
                 });
             } else {
@@ -742,25 +744,18 @@ angular.module('contractualClienteApp')
                     },
                 ],
                 styles: {
-                    top_space: {
-                        fontSize: 11,
-                        marginTop: 30
-                    },
-                    bottom_space: {
-                        fontSize: 11,
-                        marginBottom: 30
-                    },
                     general_font: {
-                        fontSize: 11,
-                        alignment: 'justify'
+                        fontSize: 10,
+                        alignment: 'justify',
+                        margin: [25, 0, 25, 0]
                     },
                     topHeader: {
-                        margin: [15, 0, 15, 0],
+                        margin: [5, 0, 5, 0],
                         alignment: 'justify',
-                        fontSize: 9
+                        fontSize: 8
                     },
                     table: {
-                        margin: [0, 0, 0, 0],
+                        margin: [30, 0, 30, 0],
                         border: "0"
                     },
                     tableInfo: {
@@ -773,7 +768,7 @@ angular.module('contractualClienteApp')
                     table2: {
                         margin: [25, 0, 25, 0],
                         border: "0",
-                        fontSize: 9,
+                        fontSize: 10,
                     },
                 },
                 images: {
