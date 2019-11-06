@@ -45,7 +45,6 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.vigencia = wso_response.data.contrato.vigencia;
                     self.contrato_obj.contratista = wso_response.data.contrato.contratista;
                     self.contrato_obj.cesion = 0;
-
                     //Obtiene el estado del contrato.
                     contratoRequest.get('contrato_estado', +self.contrato_id + '/' + self.contrato_vigencia).then(function (ce_response) {
                         self.estado_contrato_obj.estado = ce_response.data.contratoEstado.estado.id;
@@ -57,16 +56,15 @@ angular.module('contractualClienteApp')
                                 'info'
                             );
                         }
-                        if (self.estado_contrato_obj.estado == 6) {
+                        if (self.estado_contrato_obj.estado == 6||self.estado_contrato_obj.estado == 8) {
                             swal(
                                 $translate.instant('CONTRATO_FINALIZADO'),
                                 '',
                                 'info'
                             );
-                        }
-                        if (self.estado_contrato_obj.estado == 8) {
+                        }if(self.estado_contrato_obj.estado == 3) {
                             swal(
-                                $translate.instant('CONTRATO_FINALIZADO'),
+                                $translate.instant('CONTRATO_INICIO'),
                                 '',
                                 'info'
                             );
@@ -83,11 +81,18 @@ angular.module('contractualClienteApp')
                                         if (self.contrato_obj.tipo_novedad == "NP_CES") {
                                             self.contrato_obj.contratista = last_cesion.cesionario;
                                             self.estado_contrato_obj.estado = 1;
-                                            swal(
+                                            if(self.estado_contrato_obj.estado == 1) {
+                                                swal(
+                                                    $translate.instant('CONTRATO_INICIO'),
+                                                    '',
+                                                    'info'
+                                                );
+                                            }
+                                           /* swal(
                                                 $translate.instant('INFORMACION'),
                                                 $translate.instant('DESCRIPCION_ACTA_CESION'),
                                                 'info'
-                                            );
+                                            );*/
                                         } else if (self.contrato_obj.tipo_novedad == "NP_SUS" || self.contrato_obj.tipo_novedad == "NP_REI"
                                             || self.contrato_obj.tipo_novedad == "NP_ADI" || self.contrato_obj.tipo_novedad == "NP_PRO"
                                             || self.contrato_obj.tipo_novedad == "NP_ADPRO") {
