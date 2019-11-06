@@ -910,6 +910,7 @@ var text_es = {
     NUMERO_CONTRATO: "NÚMERO CONTRATO",
     CONTRATO_CANCELADO: "Contrato cancelado",
     CONTRATO_FINALIZADO: "Contrato finalizado",
+    CONTRATO_INICIO: "Contrato sin acta de inicio",
     RP: "RP",
     ANIO:" vigencia "
 };
