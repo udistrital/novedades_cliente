@@ -295,6 +295,16 @@ var text_es = {
     ESTADO_DEL_BIEN: "ESTADO DEL BIEN",
     TIEMPO_CONTRATO: "Tiempo contrato (Días)",
     //ACTA DE ADICION/PRORROGA
+    ESTADO_FISICO: "Estado Físico",
+    FECHA_ULTIMO_CORTE:"Fecha ultimo corte",
+    AVANCE_FISICO_EJECUTADO: "Porcentaje de avance físico ejecutado",
+    AVANCE_FISICO_PROGRAMADO: "Porcentaje de avance físico programado",
+    ESTADO_FINANCIERO: "Estado Financiero",
+    VALOR_EJECUTADO: "Valor ejecutado",
+
+
+
+
     ACTA_ADICION_PRORROGA: "ACTA DE ADICIÓN / PRORROGA",
     PLAZO_INICIAL_MESES: "Plazo inicial (En meses)",
     FECHA_INICIACION: "Fecha de Iniciación",

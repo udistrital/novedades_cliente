@@ -61,10 +61,8 @@ angular.module('contractualClienteApp')
       //Se obtiene los datos de Acta de Inicio.
       amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
         self.contrato_obj.NumeroContrato = acta_response.data[acta_response.data.length - 1].NumeroContrato.Id;
-        console.log(self.contrato_obj.NumeroContrato)
         amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
             self.contrato_obj.Inicio=acta_response.data[0].FechaInicio
-            console.log(self.contrato_obj.Inicio);
         });
       });
 
@@ -72,12 +70,10 @@ angular.module('contractualClienteApp')
       ).then(function (tc_response) {
         self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
         novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
-          console.log(response_sql.data.Body)
           var elementos_cesion = response_sql.data.Body;
           if (elementos_cesion.length != '0') {
             var last_cesion = elementos_cesion[elementos_cesion.length - 1];
             novedadesRequest.get('tipo_novedad', 'query=Id:' + last_cesion.tiponovedad).then(function (nr_response) {
-              console.log(nr_response)
               self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
               if (self.contrato_obj.tipo_novedad == "NP_CES") {
                 self.contrato_obj.contratista = last_cesion.cesionario;
@@ -212,10 +208,6 @@ angular.module('contractualClienteApp')
                     }
                   };
                   contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
-                   
-                    contratoRequest.get('contrato_estado', +self.contrato_id + '/' + self.contrato_vigencia).then(function (ce_response) {
-                      console.log(ce_response)
-                    });
                     if (response.status == 200 || response.statusText == "OK") {
                       swal(
                         $translate.instant('TITULO_BUEN_TRABAJO'),
