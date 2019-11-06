@@ -205,6 +205,7 @@ var text_es = {
     VALOR_DESEMBOLSADO: "Valor desembolsado",
     SALDO_A_FAVOR_CONTRATISTA:"Saldo a favor del contratista",
     SALDO_A_FAVOR_UNIVERSIDAD:"Saldo a favor de la Universidad",
+    SALDO_A_FAVOR:"Sado a favor de: ",
     //SEGUMIENTO FINANCIERO
     SEGUIMIENTO_FINANCIERO: "Seguimiento financiero del contrato",
     DATOS_CONTRATO: "Datos contrato",
@@ -294,6 +295,16 @@ var text_es = {
     ESTADO_DEL_BIEN: "ESTADO DEL BIEN",
     TIEMPO_CONTRATO: "Tiempo contrato (Días)",
     //ACTA DE ADICION/PRORROGA
+    ESTADO_FISICO: "Estado Físico",
+    FECHA_ULTIMO_CORTE:"Fecha ultimo corte",
+    AVANCE_FISICO_EJECUTADO: "Porcentaje de avance físico ejecutado",
+    AVANCE_FISICO_PROGRAMADO: "Porcentaje de avance físico programado",
+    ESTADO_FINANCIERO: "Estado Financiero",
+    VALOR_EJECUTADO: "Valor ejecutado",
+
+
+
+
     ACTA_ADICION_PRORROGA: "ACTA DE ADICIÓN / PRORROGA",
     PLAZO_INICIAL_MESES: "Plazo inicial (En meses)",
     FECHA_INICIACION: "Fecha de Iniciación",
@@ -378,11 +389,14 @@ var text_es = {
     NUMERO_OFICIO_ESTADO_CUENTAS:"Número oficio estado de cuentas",
     FECHA_OFICIO:"Fecha oficio",
     FECHA_CESION:"Fecha cesión",
+    FECHA_TERMINACION_CEDENTE: "Fecha de terminación del cedente",
+    VALOR_A_FAVOR:"Valor a favor de cedente",
     OTRAS_OBSERVACIONES:"Otras observaciones",
     INFORMACION_CESIONARIO:"INFORMACIÓN CESIONARIO",
     SELECCIONAR_CESIONARIO:"Seleccionar cesionario",
     ACTA_REINICIO:"ACTA DE REINICIO",
-    FECHA_SUSPENSION:"Fecha suspension",
+    FECHA_SUSPENSION_INICIO:"Fecha inicio suspensión",
+    FECHA_SUSPENSION_FIN:"Fecha fin suspensión",    
     FECHA_REINICIO:"Fecha reinicio",
     PERIODO_SUSPENSION:"Periodo suspension (Días)",
     ACTA_SUSPENSION:"ACTA DE SUSPENSIÓN",
@@ -896,6 +910,7 @@ var text_es = {
     NUMERO_CONTRATO: "NÚMERO CONTRATO",
     CONTRATO_CANCELADO: "Contrato cancelado",
     CONTRATO_FINALIZADO: "Contrato finalizado",
+    CONTRATO_INICIO: "Contrato sin acta de inicio",
     RP: "RP",
     ANIO:" vigencia "
 };

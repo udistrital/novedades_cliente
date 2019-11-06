@@ -18,14 +18,12 @@ angular.module('contractualClienteApp')
         $scope.actual = "";
         $scope.token_service = token_service;
         $scope.breadcrumb = [];
-
         $scope.perfil = "ADMINISTRADOR ARGO";
-
         //Rama cumplidos
         $scope.logout = function () {
             token_service.logout();
         };
-        if (token_service.live_token()) {
+        if (token_service.live_token()) {            
             $scope.token = token_service.getPayload();
             if (!angular.isUndefined($scope.token.role)) {
                 var roles = "";
