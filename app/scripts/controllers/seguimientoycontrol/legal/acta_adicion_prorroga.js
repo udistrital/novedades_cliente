@@ -338,8 +338,8 @@ angular.module('contractualClienteApp')
                 self.valor_ejecutado= $scope.valor_ejecutado;
                 self.pocentaje_ejecutado= ((self.valor_ejecutado*100)/ self.contrato_obj.ValorContrato).toFixed(2);
 
-                self.formato_generacion_pdf();
-                /*novedadesMidRequest.post('novedad', self.data_acta_adicion_prorroga).then(function (request) {
+               // self.formato_generacion_pdf();
+                novedadesMidRequest.post('novedad', self.data_acta_adicion_prorroga).then(function (request) {
                     if (request.status == 200) {
                         self.formato_generacion_pdf();
                         swal({
@@ -355,7 +355,7 @@ angular.module('contractualClienteApp')
                         });
                         $scope.estado_novedad = undefined;
                     }
-                });*/
+                });
             }
         };
 
