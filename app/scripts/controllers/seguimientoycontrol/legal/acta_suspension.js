@@ -37,9 +37,7 @@ angular.module('contractualClienteApp')
       self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
     });
 
-    amazonAdministrativaRequest.get('estado_contrato', $.param({
-      query: "NombreEstado:" + "Suspendido"
-    })).then(function (ec_response) {
+    amazonAdministrativaRequest.get('estado_contrato?query=NombreEstado:Suspendido').then(function (ec_response) {
       self.estados[1] = ec_response.data[0];
     });
 
