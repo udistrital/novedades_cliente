@@ -33,9 +33,11 @@ angular.module('contractualClienteApp')
         self.auxiliar = null;
         self.elaboro = '';
         self.estados = [];
+        //self.elaboro_cedula=token_service.getPayload().documento
+        self.elaboro_cedula = 19483708
 
         //Obtiene los datos de quien elaboró la Novedad
-        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + token_service.getPayload().documento).then(function (ipn_response) {
+        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.elaboro_cedula).then(function (ipn_response) {
             self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
         });
 
