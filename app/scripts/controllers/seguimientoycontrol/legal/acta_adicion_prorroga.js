@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SeguimientoycontrolLegalActaAdicionProrrogaCtrl', function ($scope, $routeParams, token_service,coreAmazonRequest, contratoRequest, $translate, amazonAdministrativaRequest, novedadesRequest, novedadesMidRequest) {
+    .controller('SeguimientoycontrolLegalActaAdicionProrrogaCtrl', function ($scope, $routeParams, token_service, coreAmazonRequest, contratoRequest, $translate, amazonAdministrativaRequest, novedadesRequest, novedadesMidRequest) {
 
         this.awesomeThings = [
             'HTML5 Boilerplate',
@@ -29,16 +29,15 @@ angular.module('contractualClienteApp')
         self.fecha_inicio = new Date();
         self.fecha_ultimo_corte_fisico = new Date();
         self.fecha_ultimo_corte_financiero = new Date();
-        self.valor_ejecutado='';        
-        self.pocentaje_ejecutado='';
-        self.elaboro='';
+        self.valor_ejecutado = '';
+        self.pocentaje_ejecutado = '';
+        self.elaboro = '';
+        //self.elaboro_cedula=token_service.getPayload().documento
+        self.elaboro_cedula = 19483708
         //Obtiene los datos de quien elaboró la Novedad
-    amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + token_service.getPayload().documento).then(function (ipn_response) {
-        self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
-      });
-
-
-
+        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.elaboro_cedula).then(function (ipn_response) {
+            self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
+        });
         contratoRequest.get('contrato', +self.contrato_id + '/' + self.contrato_vigencia).then(function (wso_response) {
             $scope.response_contrato = wso_response;
             self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
@@ -61,8 +60,8 @@ angular.module('contractualClienteApp')
             self.fecha_reg_ano = res[0];
 
 
-             //Se obtiene los datos de Acta de Inicio.
-             amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
+            //Se obtiene los datos de Acta de Inicio.
+            amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
                 self.contrato_obj.NumeroContrato = acta_response.data[acta_response.data.length - 1].NumeroContrato.Id;
                 amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
                     self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
@@ -77,7 +76,7 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.supervisor_nombre = ipn_response.data[0].PrimerNombre + " " + ipn_response.data[0].SegundoNombre + " " + ipn_response.data[0].PrimerApellido + " " + ipn_response.data[0].SegundoApellido;
 
                 });
-            });            
+            });
 
             novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.VigenciaContrato).then(function (response_sql) {
                 var elementos_cesion = response_sql.data.Body;
@@ -98,7 +97,7 @@ angular.module('contractualClienteApp')
                         }
                     });
                 }
-            //Se obtienen datos relacionados al contrastista.
+                //Se obtienen datos relacionados al contrastista.
                 amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
                     var elementos_contratista = Object.keys(ip_response.data[0]).length;
                     if (elementos_contratista > 0) {
@@ -335,10 +334,10 @@ angular.module('contractualClienteApp')
                     tiponovedad: $scope.tiponovedad,
                     cesionario: parseInt(self.contrato_obj.contratista)
                 }
-                self.valor_ejecutado= $scope.valor_ejecutado;
-                self.pocentaje_ejecutado= ((self.valor_ejecutado*100)/ self.contrato_obj.ValorContrato).toFixed(2);
+                self.valor_ejecutado = $scope.valor_ejecutado;
+                self.pocentaje_ejecutado = ((self.valor_ejecutado * 100) / self.contrato_obj.ValorContrato).toFixed(2);
 
-               // self.formato_generacion_pdf();
+                // self.formato_generacion_pdf();
                 novedadesMidRequest.post('novedad', self.data_acta_adicion_prorroga).then(function (request) {
                     if (request.status == 200) {
                         self.formato_generacion_pdf();
@@ -486,10 +485,10 @@ angular.module('contractualClienteApp')
                                     { text: 'TIPO DE CONTRATO', bold: true, style: 'topHeader' },
                                     { text: self.contrato_obj.tipo_contrato, style: 'topHeader' }
                                 ],
-                              /* [
-                                    { text: 'CONTRATO', bold: true, style: 'topHeader' },
-                                    { text: self.contrato_obj.tipo_contrato, style: 'topHeader' }
-                                ],*/
+                                /* [
+                                      { text: 'CONTRATO', bold: true, style: 'topHeader' },
+                                      { text: self.contrato_obj.tipo_contrato, style: 'topHeader' }
+                                  ],*/
                                 [
                                     { text: 'No. CONTRATO', bold: true, style: 'topHeader' },
                                     {
@@ -510,7 +509,7 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'PLAZO INICIAL', bold: true, style: 'topHeader' },
-                                    { text: self.contrato_obj.PlazoEjecucion+' meses', style: 'topHeader' }
+                                    { text: self.contrato_obj.PlazoEjecucion + ' meses', style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'VIGENCIA', bold: true, style: 'topHeader' },
@@ -526,11 +525,11 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'CONTRATISTA', bold: true, style: 'topHeader' },
-                                    { text: self.contrato_obj.contratista_nombre + ", mayor de edad, identificado(a) con "+self.contrato_obj.contratista_tipo_Documento+" No. " + self.contrato_obj.contratista_documento + " Expedida en "+self.contrato_obj.contratista_ciudad_cedula +".", style: 'topHeader' }
+                                    { text: self.contrato_obj.contratista_nombre + ", mayor de edad, identificado(a) con " + self.contrato_obj.contratista_tipo_Documento + " No. " + self.contrato_obj.contratista_documento + " Expedida en " + self.contrato_obj.contratista_ciudad_cedula + ".", style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'SUPERVISOR', bold: true, style: 'topHeader' },
-                                    { text: self.contrato_obj.supervisor_nombre + ", mayor de edad, identificado(a) con "+self.contrato_obj.supervisor_tipo_Documento+" No. " + self.contrato_obj.supervisor_cedula + " Expedida en "+self.contrato_obj.supervisor_ciudad_cedula+".", style: 'topHeader' }
+                                    { text: self.contrato_obj.supervisor_nombre + ", mayor de edad, identificado(a) con " + self.contrato_obj.supervisor_tipo_Documento + " No. " + self.contrato_obj.supervisor_cedula + " Expedida en " + self.contrato_obj.supervisor_ciudad_cedula + ".", style: 'topHeader' }
                                 ]
                             ]
                         },
@@ -638,15 +637,15 @@ angular.module('contractualClienteApp')
                             body: [
                                 [
                                     { text: 'Plazo actual del contrato', bold: true, style: 'topHeader' },
-                                    { text: self.contrato_obj.PlazoEjecucion +' meses', style: 'topHeader' }
+                                    { text: self.contrato_obj.PlazoEjecucion + ' meses', style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'Fecha de terminación actual del contrato', bold: true, style: 'topHeader' },
                                     { text: self.format_date_letter_mongo(self.contrato_obj.Fin), style: 'topHeader' }
                                 ],
                                 [
-                                    { text: 'Valor actual del contrato', bold: true,style: 'topHeader' },
-                                    { text: '$' + numberFormat(self.contrato_obj.ValorContrato) + ' M/Cte.' , style: 'topHeader' }
+                                    { text: 'Valor actual del contrato', bold: true, style: 'topHeader' },
+                                    { text: '$' + numberFormat(self.contrato_obj.ValorContrato) + ' M/Cte.', style: 'topHeader' }
                                 ],
                             ]
                         },
@@ -661,7 +660,7 @@ angular.module('contractualClienteApp')
                             text: '\nf. Estado Físico\n\n', bold: true, alignment: 'center'
                         },
                         {
-                            text: 'Hasta el '+self.format_date_letter_mongo(self.fecha_ultimo_corte_fisico)+', el proyecto presentaba un avance físico ejecutado del '+$scope.avance_ejecutado+'% contra un avance físico programado del '+ $scope.avance_programado +'%.'
+                            text: 'Hasta el ' + self.format_date_letter_mongo(self.fecha_ultimo_corte_fisico) + ', el proyecto presentaba un avance físico ejecutado del ' + $scope.avance_ejecutado + '% contra un avance físico programado del ' + $scope.avance_programado + '%.'
                         },
                     ],
 
@@ -669,7 +668,7 @@ angular.module('contractualClienteApp')
                         text: '\n\ng. Estado Fiananciero\n\n', bold: true, alignment: 'center'
                     },
                     {
-                        text: 'Hasta el '+self.format_date_letter_mongo(self.fecha_ultimo_corte_financiero)+', el proyecto presentaba un valor ejecutado del $ '+numberFormat(self.valor_ejecutado+'')+'  que corresponde '+self.pocentaje_ejecutado+'% con respecto al valor del contrato.'
+                        text: 'Hasta el ' + self.format_date_letter_mongo(self.fecha_ultimo_corte_financiero) + ', el proyecto presentaba un valor ejecutado del $ ' + numberFormat(self.valor_ejecutado + '') + '  que corresponde ' + self.pocentaje_ejecutado + '% con respecto al valor del contrato.'
                     },
                     {
                         text: '\n\nh. Solicitud de Adición\n\n', bold: true, alignment: 'center'

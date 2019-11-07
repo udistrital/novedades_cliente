@@ -30,8 +30,10 @@ angular.module('contractualClienteApp')
     self.contrato_obj = {};
     self.elaboro = '';
     self.estados = [];
+    //self.elaboro_cedula=token_service.getPayload().documento
+    self.elaboro_cedula = 19483708
     //Obtiene los datos de quien elaboró la Novedad
-    amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + token_service.getPayload().documento).then(function (ipn_response) {
+    amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.elaboro_cedula).then(function (ipn_response) {
       self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
     });
 
@@ -62,7 +64,7 @@ angular.module('contractualClienteApp')
       amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
         self.contrato_obj.NumeroContrato = acta_response.data[acta_response.data.length - 1].NumeroContrato.Id;
         amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
-            self.contrato_obj.Inicio=acta_response.data[0].FechaInicio
+          self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
         });
       });
 
@@ -520,12 +522,12 @@ angular.module('contractualClienteApp')
                   ],
                   [' ',
                     { text: 'Macroproceso: Gestión de Recursos', alignment: 'center', fontSize: 9 },
-                    { text: 'Versión: 02',margin: [0,2], fontSize: 9 },
+                    { text: 'Versión: 02', margin: [0, 2], fontSize: 9 },
                     ' '
                   ],
                   [' ',
                     { text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 9 },
-                    { text: 'Fecha de Aprobación: 12/10/2017', fontSize:9 },
+                    { text: 'Fecha de Aprobación: 12/10/2017', fontSize: 9 },
                     ' '
                   ],
                 ]
