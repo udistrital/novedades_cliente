@@ -34,10 +34,12 @@ angular.module('contractualClienteApp')
         self.fecha_terminacion_anticipada = new Date();
         self.estados = [];
         self.elaboro = '';
+        //self.elaboro_cedula=token_service.getPayload().documento
+        self.elaboro_cedula = 19483708
         amazonAdministrativaRequest.get('estado_contrato?query=NombreEstado:' + "Suspendido").then(function (ec_response) {
             self.estados[1] = ec_response.data[0];
         });
-        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + token_service.getPayload().documento).then(function (ipn_response) {
+        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.elaboro_cedula).then(function (ipn_response) {
             self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
         });
 

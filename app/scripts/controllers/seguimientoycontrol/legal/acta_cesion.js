@@ -27,9 +27,11 @@ angular.module('contractualClienteApp')
         self.observaciones = "";
         self.n_solicitud = null;
         self.elaboro = '';
+        //self.elaboro_cedula=token_service.getPayload().documento
+        self.elaboro_cedula = 19483708
 
         //Obtiene los datos de quien elaboró la Novedad
-        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + token_service.getPayload().documento).then(function (ipn_response) {
+        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.elaboro_cedula).then(function (ipn_response) {
             self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
         });
         /**
@@ -60,7 +62,6 @@ angular.module('contractualClienteApp')
             //Se obtiene los datos de Acta de Inicio.
             amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
                 self.contrato_obj.NumeroContrato = acta_response.data[acta_response.data.length - 1].NumeroContrato.Id;
-                console.log(self.contrato_obj.NumeroContrato)
                 amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
                     self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
                     self.contrato_obj.Fin = acta_response.data[0].FechaFin
@@ -721,7 +722,7 @@ angular.module('contractualClienteApp')
 
                                 },
                                 {
-                                    text: 'El señor (a) '+self.contrato_obj.contratista_nombre+' cede el '+self.contrato_obj.tipo_contrato+' No.'+self.contrato_obj.id+', suscrito el día '+ self.format_date_letter_mongo(self.f_oficio) +', a ' + self.cesionario_obj.nombre + ' ' + self.cesionario_obj.apellidos + ' (CESIONARIO), en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día '+ self.format_date_letter_mongo(self.f_cesion) +'.\n\n',
+                                    text: 'El señor (a) ' + self.contrato_obj.contratista_nombre + ' cede el ' + self.contrato_obj.tipo_contrato + ' No.' + self.contrato_obj.id + ', suscrito el día ' + self.format_date_letter_mongo(self.f_oficio) + ', a ' + self.cesionario_obj.nombre + ' ' + self.cesionario_obj.apellidos + ' (CESIONARIO), en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día ' + self.format_date_letter_mongo(self.f_cesion) + '.\n\n',
                                 },
 
                             ],
@@ -730,7 +731,7 @@ angular.module('contractualClienteApp')
                                     text: 'CLAUSULA SEGUNDA: GARANTÍA. EL CESIONARIO ', bold: true,
                                 },
                                 {
-                                    text: 'se compromete a modificar la Póliza de Cumplimiento expedida en virtud del '+self.contrato_obj.tipo_contrato+' No. '+self.contrato_obj.id+' de '+self.contrato_obj.vigencia+' o a expedir una nueva de conformidad con la suscripción del presente documento. \n\n',
+                                    text: 'se compromete a modificar la Póliza de Cumplimiento expedida en virtud del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_obj.id + ' de ' + self.contrato_obj.vigencia + ' o a expedir una nueva de conformidad con la suscripción del presente documento. \n\n',
                                 }
                             ],
                             [
@@ -769,7 +770,7 @@ angular.module('contractualClienteApp')
                                     { text: 'CC. ' + self.contrato_obj.contratista_documento, bold: false, style: 'topHeader' }
                                 ],
                                 [
-                                    { text:  self.contrato_obj.ordenador_gasto_rol, bold: true, style: 'topHeader' },
+                                    { text: self.contrato_obj.ordenador_gasto_rol, bold: true, style: 'topHeader' },
                                     { text: 'Cedente', bold: true, style: 'topHeader' }
                                 ],
                                 [
@@ -782,7 +783,7 @@ angular.module('contractualClienteApp')
                                     { text: '', bold: false, style: 'topHeader' }
                                 ],
                                 [
-                                    { text: '' +self.cesionario_obj.nombre + ' ' + self.cesionario_obj.apellidos, bold: false, style: 'topHeader' },
+                                    { text: '' + self.cesionario_obj.nombre + ' ' + self.cesionario_obj.apellidos, bold: false, style: 'topHeader' },
                                     { text: '', bold: false, style: 'topHeader' }
 
                                 ],
@@ -791,7 +792,7 @@ angular.module('contractualClienteApp')
                                     { text: '', bold: false, style: 'topHeader' }
                                 ],
                                 [
-                                    { text:  'Cesionario', bold: true, style: 'topHeader' },
+                                    { text: 'Cesionario', bold: true, style: 'topHeader' },
                                     { text: '', style: 'topHeader' }
                                 ],
 
