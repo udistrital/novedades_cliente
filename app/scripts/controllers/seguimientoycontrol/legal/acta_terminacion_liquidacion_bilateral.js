@@ -342,7 +342,7 @@ angular.module('contractualClienteApp')
                 today = temp_arr[2] + '/' + temp_arr[1] + '/' + temp_arr[0]
             } else {
                 var dd = date.getDate();
-                var mm = date.getMonth() + 1;
+                var mm = date.getMonth();
                 var yyyy = date.getFullYear();
                 if (dd < 10) {
                     dd = '0' + dd;
