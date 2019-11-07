@@ -32,6 +32,7 @@ angular.module('contractualClienteApp')
         self.valor_ejecutado = '';
         self.pocentaje_ejecutado = '';
         self.elaboro = '';
+        self.tiponovedad = '';
         //self.elaboro_cedula=token_service.getPayload().documento
         self.elaboro_cedula = 19483708
         //Obtiene los datos de quien elaboró la Novedad
@@ -283,6 +284,37 @@ angular.module('contractualClienteApp')
             });
         }
 
+        function generateTipoNovedad(callback) {
+            if ($scope.adicion == true && $scope.prorroga != true) {
+                $scope.estado_novedad = "Adición";
+                $scope.alert = 'DESCRIPCION_ADICION';
+                novedadesRequest.get('tipo_novedad', 'query=Nombre:' + $scope.estado_novedad).then(function (nc_response) {
+                    self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+                    callback(self.tiponovedad);
+                });
+            }
+            if ($scope.adicion != true && $scope.prorroga == true) {
+                $scope.estado_novedad = "Prórroga";
+                $scope.alert = 'DESCRIPCION_PRORROGA';
+                novedadesRequest.get('tipo_novedad', 'query=Nombre:' + $scope.estado_novedad).then(function (nc_response) {
+                    self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+                    callback(self.tiponovedad);
+                });
+                $scope.valor_adicion = "0";
+            }
+            if ($scope.adicion == true && $scope.prorroga == true) {
+
+                $scope.estado_novedad = "Adición y Prorroga";
+                $scope.alert = 'DESCRIPCION_ADICION_PRORROGA';
+                novedadesRequest.get('tipo_novedad', 'query=Nombre:Adición/Prórroga').then(function (nc_response) {
+                    self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+                    callback(self.tiponovedad);
+                });
+            }
+
+        }
+
+
         /**
          * @ngdoc method
          * @name generarActa
@@ -291,35 +323,7 @@ angular.module('contractualClienteApp')
          * funcion que valida la data de la novedad
          */
         self.generarActa = function () {
-            if ($scope.adicion) {
-                $scope.estado_novedad = "Adición";
-                $scope.alert = 'DESCRIPCION_ADICION';
-                novedadesRequest.get('tipo_novedad', 'query=Nombre:' + $scope.estado_novedad).then(function (nc_response) {
-                    $scope.tiponovedad = nc_response.data[0].CodigoAbreviacion;
-                });
-            }
-            if ($scope.prorroga) {
-                $scope.estado_novedad = "Prórroga";
-                $scope.alert = 'DESCRIPCION_PRORROGA';
-                novedadesRequest.get('tipo_novedad', 'query=Nombre:' + $scope.estado_novedad).then(function (nc_response) {
-                    $scope.tiponovedad = nc_response.data[0].CodigoAbreviacion;
-                });
-
-
-                if ($scope.adicion != true && $scope.prorroga == true) {
-                    $scope.valor_adicion = "0";
-                }
-            }
-            if ($scope.adicion == true && $scope.prorroga == true) {
-
-                $scope.estado_novedad = "Adición y Prorroga";
-                $scope.alert = 'DESCRIPCION_ADICION_PRORROGA';
-                novedadesRequest.get('tipo_novedad', 'query=Nombre:Adición/Prórroga').then(function (nc_response) {
-                    $scope.tiponovedad = nc_response.data[0].CodigoAbreviacion;
-                });
-
-            }
-            if ($scope.estado_novedad != false) {
+            generateTipoNovedad(function (tiponovedad) {
                 self.data_acta_adicion_prorroga = {
                     contrato: self.contrato_obj.id,
                     numerosolicitud: $scope.numero_solicitud,
@@ -331,13 +335,11 @@ angular.module('contractualClienteApp')
                     fechaprorroga: $scope.fecha_prorroga,
                     vigencia: String(self.contrato_obj.VigenciaContrato),
                     motivo: $scope.motivo,
-                    tiponovedad: $scope.tiponovedad,
+                    tiponovedad: tiponovedad,
                     cesionario: parseInt(self.contrato_obj.contratista)
                 }
                 self.valor_ejecutado = $scope.valor_ejecutado;
                 self.pocentaje_ejecutado = ((self.valor_ejecutado * 100) / self.contrato_obj.ValorContrato).toFixed(2);
-
-                // self.formato_generacion_pdf();
                 novedadesMidRequest.post('novedad', self.data_acta_adicion_prorroga).then(function (request) {
                     if (request.status == 200) {
                         self.formato_generacion_pdf();
@@ -355,7 +357,7 @@ angular.module('contractualClienteApp')
                         $scope.estado_novedad = undefined;
                     }
                 });
-            }
+            });
         };
 
         /**
@@ -369,7 +371,7 @@ angular.module('contractualClienteApp')
         self.format_date = function (param) {
             var date = new Date(param);
             var dd = date.getDate();
-            var mm = date.getMonth() + 1;
+            var mm = date.getMonth();
             var yyyy = date.getFullYear();
             if (dd < 10) {
                 dd = '0' + dd;

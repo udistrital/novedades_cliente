@@ -227,7 +227,7 @@ angular.module('contractualClienteApp')
                 today = 'Día: ' + temp_arr[2] + ' Mes: ' + temp_arr[1] + ' Año: ' + temp_arr[0]
             } else {
                 var dd = date.getDate();
-                var mm = date.getMonth() + 1;
+                var mm = date.getMonth();
                 var yyyy = date.getFullYear();
                 if (dd < 10) {
                     dd = '0' + dd;
@@ -271,7 +271,7 @@ angular.module('contractualClienteApp')
         self.format_date_letter_mongo = function (param) {
             var date = new Date(param);
             var dd = date.getDate();
-            var mm = date.getMonth() + 1;
+            var mm = date.getMonth();
             var yyyy = date.getFullYear();
             var fecha = new Date(yyyy, mm, dd);
             var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };

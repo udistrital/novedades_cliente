@@ -244,7 +244,7 @@ angular.module('contractualClienteApp')
     self.format_date = function (param) {
       var date = new Date(param);
       var dd = date.getDate();
-      var mm = date.getMonth() + 1;
+      var mm = date.getMonth();
       var yyyy = date.getFullYear();
       if (dd < 10) {
         dd = '0' + dd;
@@ -603,10 +603,10 @@ angular.module('contractualClienteApp')
               ' en su calidad de contratista, hemos determinado SUSPENDER el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
               ' durante el periodo comprendido entre el día ' + self.format_date_letter_mongo(self.f_inicio) + ' y el dia ' + self.format_date_letter_mongo(self.f_fin) + ' del año ' + self.contrato_vigencia + ' .\n\n',
 
-              { text: 'MOTIVO DE LA SUSPENSIÓN', bold: true }, '\n\n',
+              { text: 'MOTIVO DE LA SUSPENSIÓN', bold: true }, '\n',
               self.suspension_nov.motivo, '\n\n',
 
-              'Por los motivos antes expuestos las partes acuerdan: ', '\n\n',
+              'Por los motivos antes expuestos las partes acuerdan: ', '\n',
               'Suspender el Contrato ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ', durante el periodo comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
             ]
           },
