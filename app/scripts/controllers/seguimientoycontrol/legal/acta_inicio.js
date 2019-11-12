@@ -37,7 +37,6 @@ angular.module('contractualClienteApp')
         }
 
         contratoRequest.get('contrato', self.contrato_id + '/' + self.contrato_vigencia).then(function (wso_response) {
-            console.log(wso_response.data.contrato)
             self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
             self.contrato_obj.objeto = wso_response.data.contrato.objeto_contrato;
             self.contrato_obj.valor = wso_response.data.contrato.valor_contrato;
@@ -67,7 +66,6 @@ angular.module('contractualClienteApp')
                 var elementos_cesion = response_sql.data.Body;
                 if (elementos_cesion.length != '0') {
                     var last_cesion = elementos_cesion[elementos_cesion.length - 1];
-                    console.log(last_cesion.tiponovedad)
                     novedadesRequest.get('tipo_novedad', 'query=Id:' + last_cesion.tiponovedad).then(function (nr_response) {
                         self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
                         if (self.contrato_obj.tipo_novedad == "NP_CES") {
