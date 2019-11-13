@@ -34,8 +34,8 @@ angular.module('contractualClienteApp')
         self.fecha_terminacion_anticipada = new Date();
         self.estados = [];
         self.elaboro = '';
-        //self.elaboro_cedula=token_service.getPayload().documento
-        self.elaboro_cedula = 19483708
+        self.elaboro_cedula=token_service.getPayload().documento
+        //self.elaboro_cedula = 19483708
         amazonAdministrativaRequest.get('estado_contrato?query=NombreEstado:' + "Suspendido").then(function (ec_response) {
             self.estados[1] = ec_response.data[0];
         });
