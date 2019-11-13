@@ -79,19 +79,19 @@ angular.module('contractualClienteApp')
                                         self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
                                         if (self.contrato_obj.tipo_novedad == "NP_CES") {
                                             self.contrato_obj.contratista = last_cesion.cesionario;
-                                            self.estado_contrato_obj.estado = 1;
+                                           /* self.estado_contrato_obj.estado = 1;
                                             if (self.estado_contrato_obj.estado == 1) {
                                                 swal(
                                                     $translate.instant('CONTRATO_INICIO'),
                                                     '',
                                                     'info'
                                                 );
-                                            }
-                                            /* swal(
+                                            }*/
+                                            swal(
                                                  $translate.instant('INFORMACION'),
                                                  $translate.instant('DESCRIPCION_ACTA_CESION'),
                                                  'info'
-                                             );*/
+                                             );
                                         } else if (self.contrato_obj.tipo_novedad == "NP_SUS" || self.contrato_obj.tipo_novedad == "NP_REI"
                                             || self.contrato_obj.tipo_novedad == "NP_ADI" || self.contrato_obj.tipo_novedad == "NP_PRO"
                                             || self.contrato_obj.tipo_novedad == "NP_ADPRO") {
