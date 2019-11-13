@@ -34,8 +34,8 @@ angular.module('contractualClienteApp')
         self.fecha_terminacion_anticipada = new Date();
         self.estados = [];
         self.elaboro = '';
-        //self.elaboro_cedula=token_service.getPayload().documento
-        self.elaboro_cedula = 19483708
+        self.elaboro_cedula=token_service.getPayload().documento
+        //self.elaboro_cedula = 19483708
         amazonAdministrativaRequest.get('estado_contrato?query=NombreEstado:' + "Suspendido").then(function (ec_response) {
             self.estados[1] = ec_response.data[0];
         });
@@ -114,8 +114,13 @@ angular.module('contractualClienteApp')
                             //self.contrato_obj.cdp_numero=response.data[0].NumeroCdp;
                             //self.contrato_obj.cdp_fecha=response.data[0].FechaRegistro;
                             // });
-
-                        });
+                        }).catch(
+                            swal(
+                                $translate.instant('INFORMACION'),
+                                $translate.instant('No se pudo obtener datos del CDP y del RP'),
+                                'info'
+                            )
+                        );
 
                         self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                         self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
