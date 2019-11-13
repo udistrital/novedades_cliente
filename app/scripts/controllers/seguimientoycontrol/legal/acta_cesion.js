@@ -138,7 +138,6 @@ angular.module('contractualClienteApp')
 
         amazonAdministrativaRequest.get('informacion_persona_natural?fields=Id,PrimerNombre,SegundoNombre,PrimerApellido,SegundoApellido,FechaExpedicionDocumento,TipoDocumento,IdCiudadExpedicionDocumento&limit=0').then(function (response) {
             self.persona_natural_items = response.data;
-            console.log(self.persona_natural_items)
         });
 
         /**

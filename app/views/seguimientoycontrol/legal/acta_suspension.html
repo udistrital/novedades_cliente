@@ -7,12 +7,12 @@
         <div class=" panel panel-primary" >
           <div class="panel-heading"><center><h4><b>{{'INFORMACION' | translate}}</b></h4></center></div>
           <div class="panel-body">
-            <div class="col-md-6"><b>{{'NUMERO_CONTRATO' | translate}}</b></div>
-            <div class="col-md-6"><p>{{sLactaSuspension.contrato_obj.id}}</p></div>
-            <div class="col-md-6"><b>{{'CONTRATANTE' | translate}}</b></div>
-            <div class="col-md-6"><p>{{'UNIVERSIDAD_NOMBRE' | translate}}</p></div>
-            <div class="col-md-6"><b>{{'CONTRATISTA' | translate}}</b></div>
-            <div class="col-md-6" ng-if="sLactaSuspension.contrato_obj.contratista_documento != null">
+            <div class="col-md-4"><b>{{'NUMERO_CONTRATO' | translate}}</b></div>
+            <div class="col-md-8"><p>{{sLactaSuspension.contrato_obj.id}}</p></div>
+            <div class="col-md-4"><b>{{'CONTRATANTE' | translate}}</b></div>
+            <div class="col-md-8"><p>{{'UNIVERSIDAD_NOMBRE' | translate}}</p></div>
+            <div class="col-md-4"><b>{{'CONTRATISTA' | translate}}</b></div>
+            <div class="col-md-8" ng-if="sLactaSuspension.contrato_obj.contratista_documento != null">
               <p>
                 {{sLactaSuspension.contrato_obj.contratista_nombre}} <br>
                 <span style="color:#555; font-size:14px;">
@@ -20,18 +20,18 @@
                 </span>
               </p>
             </div>
-            <div class="col-md-6" ng-if="sLactaSuspension.contrato_obj.contratista_documento == null">
+            <div class="col-md-8" ng-if="sLactaSuspension.contrato_obj.contratista_documento == null">
               <p>{{'NO_REGISTRA' | translate}}</p>
             </div>
-            <div class="col-md-6"><b>{{'OBJETO' | translate}}</b></div>
-            <div class="col-md-6" ng-if="sLactaSuspension.contrato_obj.objeto != null">
+            <div class="col-md-4"><b>{{'OBJETO' | translate}}</b></div>
+            <div class="col-md-8" ng-if="sLactaSuspension.contrato_obj.objeto != null">
               <p>{{sLactaSuspension.contrato_obj.objeto}}</p>
             </div>
-            <div class="col-md-6" ng-if="sLactaSuspension.contrato_obj.objeto == null">
+            <div class="col-md-8" ng-if="sLactaSuspension.contrato_obj.objeto == null">
               <p>{{'NO_REGISTRA' | translate}}</p>
             </div>
-            <div class="col-md-6"><b>{{'VALOR_CONTRATO' | translate}}</b></div>
-            <div class="col-md-6"><p>{{sLactaSuspension.contrato_obj.valor | currency}}</p></div>
+            <div class="col-md-4"><b>{{'VALOR_CONTRATO' | translate}}</b></div>
+            <div class="col-md-8"><p>{{sLactaSuspension.contrato_obj.valor | currency}}</p></div>
           </div>
         </div>
       </div>
