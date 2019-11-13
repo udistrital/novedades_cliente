@@ -103,6 +103,7 @@ angular.module('contractualClienteApp')
                     }
 
                     amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
+
                         adminMidRequest.get('aprobacion_pago/contratos_contratista/' + ip_response.data[0].NumDocumento).then(function (response) {
                             amazonAdministrativaRequest.get('contrato_disponibilidad?query=NumeroCdp:' + response.data[0].NumeroCdp + '&VigenciaCdp:' + response.data[0].VigenciaCdp).then(function (response) {
                                 self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
@@ -114,14 +115,13 @@ angular.module('contractualClienteApp')
                             //self.contrato_obj.cdp_numero=response.data[0].NumeroCdp;
                             //self.contrato_obj.cdp_fecha=response.data[0].FechaRegistro;
                             // });
-                        })/*.catch(
+                        }).catch(function (error) {
                             swal(
                                 $translate.instant('INFORMACION'),
                                 $translate.instant('No se pudo obtener datos del CDP y del RP'),
                                 'info'
                             )
-                        );*/
-
+                        });
                         self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                         self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
 
