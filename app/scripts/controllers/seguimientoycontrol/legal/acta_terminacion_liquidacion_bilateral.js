@@ -114,13 +114,13 @@ angular.module('contractualClienteApp')
                             //self.contrato_obj.cdp_numero=response.data[0].NumeroCdp;
                             //self.contrato_obj.cdp_fecha=response.data[0].FechaRegistro;
                             // });
-                        }).catch(
+                        })/*.catch(
                             swal(
                                 $translate.instant('INFORMACION'),
                                 $translate.instant('No se pudo obtener datos del CDP y del RP'),
                                 'info'
                             )
-                        );
+                        );*/
 
                         self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                         self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;

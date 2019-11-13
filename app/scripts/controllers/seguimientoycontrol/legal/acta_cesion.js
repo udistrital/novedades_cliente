@@ -27,8 +27,8 @@ angular.module('contractualClienteApp')
         self.observaciones = "";
         self.n_solicitud = null;
         self.elaboro = '';
-        //self.elaboro_cedula=token_service.getPayload().documento
-        self.elaboro_cedula = 19483708
+        self.elaboro_cedula=token_service.getPayload().documento
+        //self.elaboro_cedula = 19483708
 
         //Obtiene los datos de quien elaboró la Novedad
         amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.elaboro_cedula).then(function (ipn_response) {
