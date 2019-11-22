@@ -74,15 +74,23 @@ angular.module('contractualClienteApp')
                             novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
                                 var elementos_cesion = response_sql.data.Body;
                                 if (elementos_cesion.length != '0') {
-                                    var last_cesion = elementos_cesion[elementos_cesion.length - 1];
-                                    novedadesRequest.get('tipo_novedad', 'query=Id:' + last_cesion.tiponovedad).then(function (nr_response) {
+                                    var last_newness = elementos_cesion[elementos_cesion.length - 1];
+                                    novedadesRequest.get('tipo_novedad', 'query=Id:' + last_newness.tiponovedad).then(function (nr_response) {
                                         self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
                                         if (self.contrato_obj.tipo_novedad == "NP_CES") {
-                                            self.contrato_obj.contratista = last_cesion.cesionario;
+                                            self.contrato_obj.contratista = last_newness.cesionario;
+                                            if(last_newness.poliza===""){
+                                                self.estado_contrato_obj.estado=1
+                                                swal(
+                                                    $translate.instant('INFORMACION'),
+                                                    $translate.instant('DESCRIPCION_ACTA_CESION'),
+                                                    'info'
+                                                );
+                                            }
                                         } else if (self.contrato_obj.tipo_novedad == "NP_SUS" || self.contrato_obj.tipo_novedad == "NP_REI"
                                             || self.contrato_obj.tipo_novedad == "NP_ADI" || self.contrato_obj.tipo_novedad == "NP_PRO"
                                             || self.contrato_obj.tipo_novedad == "NP_ADPRO") {
-                                            self.contrato_obj.contratista = last_cesion.cesionario;
+                                            self.contrato_obj.contratista = last_newness.cesionario;
                                         }
                                         //Obtiene los datos aosicados al proveedor de un contrato que ha tenido una novedad
                                         amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
