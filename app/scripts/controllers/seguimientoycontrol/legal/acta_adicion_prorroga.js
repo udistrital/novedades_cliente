@@ -41,7 +41,6 @@ angular.module('contractualClienteApp')
             self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
         });
         contratoRequest.get('contrato', +self.contrato_id + '/' + self.contrato_vigencia).then(function (wso_response) {
-            console.log(wso_response.data.contrato)
             $scope.response_contrato = wso_response;
             self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
             self.contrato_obj.TipoContrato = wso_response.data.contrato.tipo_contrato;

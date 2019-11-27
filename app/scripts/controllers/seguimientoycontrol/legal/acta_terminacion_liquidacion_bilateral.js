@@ -64,12 +64,9 @@ angular.module('contractualClienteApp')
             self.contrato_obj.UnidadEjecucion = String(wso_response.data.contrato.unidad_ejecucion);
 
             //Se obtiene los datos de Acta de Inicio.
-            amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
-                self.contrato_obj.NumeroContrato = acta_response.data[acta_response.data.length - 1].NumeroContrato.Id;
-                amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
-                    self.contrato_obj.FechaInicio = acta_response.data[0].FechaInicio
-                    self.contrato_obj.FechaFin = acta_response.data[0].FechaFin
-                });
+            amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
+                self.contrato_obj.FechaInicio = acta_response.data[0].FechaInicio
+                self.contrato_obj.FechaFin = acta_response.data[0].FechaFin
             });
 
             //Obtención de datos del ordenador del gasto

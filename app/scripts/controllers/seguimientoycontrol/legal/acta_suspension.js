@@ -55,15 +55,12 @@ angular.module('contractualClienteApp')
       self.contrato_obj.supervisor_documento = wso_response.data.contrato.supervisor.documento_identificacion;
       self.contrato_obj.contratista = wso_response.data.contrato.contratista;
       self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
-
-
+      self.contrato_obj.NumeroContrato = wso_response.data.contrato.numero_contrato;
 
       //Se obtiene los datos de Acta de Inicio.
-      amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
-        self.contrato_obj.NumeroContrato = acta_response.data[acta_response.data.length - 1].NumeroContrato.Id;
-        amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
+      amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
           self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
-        });
+          self.contrato_obj.Fin = acta_response.data[0].FechaFin
       });
 
       amazonAdministrativaRequest.get('tipo_contrato?query=Id:' + wso_response.data.contrato.tipo_contrato
