@@ -66,6 +66,17 @@ angular.module('contractualClienteApp')
                         self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
                         if (self.contrato_obj.tipo_novedad == "NP_CES") {
                             self.contrato_obj.contratista = last_newness.cesionario;
+                            //Obtencion de datos del contratista
+                            amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
+                                self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
+                                self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
+                                amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
+                                    coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
+                                        self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
+                                        self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
+                                    });
+                                });
+                            });
                         }
                         //Trae los datos de la poliza del contrato acutal guardado en el esquema novedades
                         novedadesRequest.get('poliza', 'query=IdNovedadesPoscontractuales:' + last_newness.id).then(function (nrp_response) {
@@ -75,17 +86,7 @@ angular.module('contractualClienteApp')
                             //poliza.FechaModificacion = poliza.FechaModificacion.slice(0, -12)
                         });
 
-                        //Obtencion de datos del contratista
-                        amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
-                            self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
-                            self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
-                            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
-                                coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
-                                    self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
-                                    self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
-                                });
-                            });
-                        });
+
                     });
                 }
             });

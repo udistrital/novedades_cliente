@@ -84,46 +84,56 @@ angular.module('contractualClienteApp')
                 var elementos_cesion = response_sql.data.Body;
                 if (elementos_cesion.length != '0') {
                     var last_cesion = elementos_cesion[elementos_cesion.length - 1];
-                    novedadesRequest.get('tipo_novedad', 'query=Id:' + last_cesion.tiponovedad).then(function (nr_response) {
-                        self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
-                        if (self.contrato_obj.tipo_novedad == "NP_CES") {
-                            self.contrato_obj.contratista = last_cesion.cesionario;
-                            self.contrato_obj.cesion = 1;
-                        } else if (self.contrato_obj.tipo_novedad == "NP_REI" || self.contrato_obj.tipo_novedad == "NP_ADI" || self.contrato_obj.tipo_novedad == "NP_PRO" || self.contrato_obj.tipo_novedad == "NP_ADPRO") {
-                            self.contrato_obj.contratista = last_cesion.cesionario;
-                        }
-                    });
-                }
-                //Se obtienen datos relacionados al contrastista.
-                amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
-                    adminMidRequest.get('aprobacion_pago/contratos_contratista/' + ip_response.data[0].NumDocumento).then(function (response) {
-                        self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
-                        self.contrato_obj.cdp_anno = response.data[0].VigenciaCdp;
-                    }).catch(function (error) {
-                        swal(
-                            $translate.instant('INFORMACION'),
-                            $translate.instant('No se pudo obtener datos del CDP'),
-                            'info'
-                        )
-                    });
-
-                    var elementos_contratista = Object.keys(ip_response.data[0]).length;
-                    if (elementos_contratista > 0) {
+                    self.contrato_obj.contratista = last_cesion.cesionario;
+                    amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + last_cesion.cesionario).then(function (ip_response) {
                         self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                         self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
+                        //Se obtienen datos relacionados al contrastista.
                         amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.contratista_documento).then(function (ipn_response) {
                             coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
                                 self.contrato_obj.contratista_tipo_Documento = ipn_response.data[0].TipoDocumento.ValorParametro
                                 self.contrato_obj.contratista_ciudad_cedula = c_response.data[0].Nombre;
                             });
                         });
+                        //Consulta el CDP
+                        adminMidRequest.get('aprobacion_pago/contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
+                            self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
+                            self.contrato_obj.cdp_anno = response.data[0].VigenciaCdp;
+                        }).catch(function (error) {
+                            swal(
+                                $translate.instant('INFORMACION'),
+                                $translate.instant('No se pudo obtener datos del CDP'),
+                                'info'
+                            )
+                        });
+                    });
+                } else {
+                    //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
+                    amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
+                        self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
+                        self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
+                        //Se obtienen datos relacionados al contrastista.
+                        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.contratista_documento).then(function (ipn_response) {
+                            coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
+                                self.contrato_obj.contratista_tipo_Documento = ipn_response.data[0].TipoDocumento.ValorParametro
+                                self.contrato_obj.contratista_ciudad_cedula = c_response.data[0].Nombre;
+                            });
+                        });
+                        //Consulta el CDP
+                        adminMidRequest.get('aprobacion_pago/contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
+                            self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
+                            self.contrato_obj.cdp_anno = response.data[0].VigenciaCdp;
+                        }).catch(function (error) {
+                            swal(
+                                $translate.instant('INFORMACION'),
+                                $translate.instant('No se pudo obtener datos del CDP'),
+                                'info'
+                            )
+                        });
+                    });
 
+                }
 
-                    } else {
-                        self.contrato_obj.contratista_documento = $translate.instant('NO_REGISTRA');
-                        self.contrato_obj.contratista_nombre = $translate.instant('NO_REGISTRA');
-                    }
-                });
             });
             amazonAdministrativaRequest.get('tipo_contrato?query=Id:' + wso_response.data.contrato.tipo_contrato).then(function (tc_response) {
                 self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
