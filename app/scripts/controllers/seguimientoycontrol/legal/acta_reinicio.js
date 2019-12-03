@@ -33,7 +33,7 @@ angular.module('contractualClienteApp')
         self.auxiliar = null;
         self.elaboro = '';
         self.estados = [];
-        self.elaboro_cedula=token_service.getPayload().documento
+        self.elaboro_cedula = token_service.getPayload().documento
         //self.elaboro_cedula = 19483708
 
         //Obtiene los datos de quien elaboró la Novedad
@@ -41,12 +41,9 @@ angular.module('contractualClienteApp')
             self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
         });
 
-        amazonAdministrativaRequest.get('estado_contrato?query=NombreEstado:' + "En ejecucion").then(function (ec_response) {
-            var estado_temp_to = {
-                "NombreEstado": "ejecucion"
-            }
+        amazonAdministrativaRequest.get('estado_contrato?query=NombreEstado:En ejecucion').then(function (ec_response) {
             if (ec_response.data[0].NombreEstado == "En ejecucion") {
-                self.estados[1] = estado_temp_to;
+                self.estados[1] = { "NombreEstado": "ejecucion" };
             }
         });
 
@@ -64,130 +61,75 @@ angular.module('contractualClienteApp')
             self.contrato_obj.contratista = wso_response.data.contrato.contratista;
             self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
             self.contrato_obj.supervisor_cargo = wso_response.data.contrato.supervisor.cargo;
-
+            self.contrato_obj.NumeroContrato = wso_response.data.contrato.numero_contrato;
 
             //Se obtiene los datos de Acta de Inicio.
-            amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
-                self.contrato_obj.NumeroContrato = acta_response.data[acta_response.data.length - 1].NumeroContrato.Id;
-                amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
-                    self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
+            amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
+                self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
+                self.contrato_obj.Fin = acta_response.data[0].FechaFin
+            });
+
+            //Obtención de datos del jefe de juridica
+            amazonAdministrativaRequest.get('supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
+                self.contrato_obj.jefe_juridica_documento = jj_response.data[0].Documento;
+                amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.jefe_juridica_documento).then(function (ijpn_response) {
+                    coreAmazonRequest.get('ciudad', 'query=Id:' + ijpn_response.data[0].IdCiudadExpedicionDocumento).then(function (scj_response) {
+                        self.contrato_obj.jefe_juridica_ciudad_documento = scj_response.data[0].Nombre;
+                        self.contrato_obj.jefe_juridica_tipo_documento = ijpn_response.data[0].TipoDocumento.ValorParametro;
+                        self.contrato_obj.jefe_juridica_nombre_completo = ijpn_response.data[0].PrimerNombre + " " + ijpn_response.data[0].SegundoNombre + " " + ijpn_response.data[0].PrimerApellido + " " + ijpn_response.data[0].SegundoApellido;
+                    });
                 });
             });
 
+            //Obtención de datos del supervisor
+            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ispn_response) {
+                coreAmazonRequest.get('ciudad', 'query=Id:' + ispn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
+                    self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
+                    self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
+                    self.contrato_obj.supervisor_nombre_completo = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " + ispn_response.data[0].SegundoApellido;
+                });
+            });
+
+            //Trae datos del tipo de contrato.
             amazonAdministrativaRequest.get('tipo_contrato?query=Id:' + wso_response.data.contrato.tipo_contrato).then(function (tc_response) {
                 self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
-                novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
-                    var elementos_cesion = response_sql.data.Body;
-                    if (elementos_cesion.length != '0') {
-                        var last_cesion = elementos_cesion[elementos_cesion.length - 1];
-                        novedadesRequest.get('tipo_novedad', 'query=Id:' + last_cesion.tiponovedad).then(function (nr_response) {
-                            self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
-                            if (self.contrato_obj.tipo_novedad == "NP_CES") {
-                                self.contrato_obj.contratista = last_cesion.cesionario;
-                                self.contrato_obj.cesion = 1;
-                            } else if (self.contrato_obj.tipo_novedad == "NP_ADI" || self.contrato_obj.tipo_novedad == "NP_PRO" || self.contrato_obj.tipo_novedad == "NP_ADPRO" || self.contrato_obj.tipo_novedad == "NP_SUS") {
-                                self.contrato_obj.contratista = last_cesion.cesionario;
-                            }
-                        });
-                    }
+            });
+
+            novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function (response) {
+                var elementos_cesion = response.data.Body;
+                if (elementos_cesion.length != '0') {
+                    var last_cesion = elementos_cesion[elementos_cesion.length - 1];
+                    self.contrato_obj.contratista = last_cesion.cesionario;
+                    //Consulta datos del contratista
                     amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
                         self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                         self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
-
-                        if (ip_response.data[0].Tipopersona == 'NATURAL') {
-                            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
-                                coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
-                                    self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
-                                    self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
-                                    novedadesMidRequest.get('novedad', self.contrato_obj.id + '/' + self.contrato_obj.vigencia).then(function (response) {
-                                        for (var i = 0; i < response.data.Body.length; i++) {
-                                            self.auxiliar = response.data.Body[i].id;
-                                            self.novedad_suspension = response.data.Body[i].fechasuspension;
-                                            self.novedad_reinicio = response.data.Body[i].fechareinicio;
-                                            self.novedad_motivo = response.data.Body[i].motivo;
-                                            self.novedad_finsuspension = response.data.Body[i].fechafinsuspension;
-                                            novedadesRequest.get('tipo_novedad', 'query=Id:' + response.data.Body[i].tiponovedad).then(function (nr_response) {
-                                                if (nr_response.data[0].CodigoAbreviacion == "NP_SUS") {
-                                                    self.suspension_id_nov = self.auxiliar;
-                                                    self.f_suspension = new Date(self.novedad_suspension.substr(0, 16));
-                                                    self.f_reinicio = new Date(self.novedad_reinicio.substr(0, 16));
-                                                    self.f_finsuspension = new Date(self.novedad_finsuspension.substr(0, 16))
-                                                    self.motivo_suspension = self.novedad_motivo;
-                                                }
-                                            });
-
-                                        }
-                                    });
-                                    amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ispn_response) {
-                                        coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
-                                            self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
-                                            self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
-                                            self.contrato_obj.supervisor_nombre_completo = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " + ispn_response.data[0].SegundoApellido;
-                                        });
-                                    });
-                                });
+                        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
+                            coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
+                                self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre
+                                self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro
                             });
-                        }
-                        else {
-                            amazonAdministrativaRequest.get('informacion_persona_juridica?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
-
-                                amazonAdministrativaRequest.get('informacion_proveedor?query=num_documento:' + ip_response.data[0].NumDocumento).then(function (ip_response) {
-                                    coreAmazonRequest.get('ciudad', 'query=Id:' + ip_response.data[0].IdCiudadContacto).then(function (c_response) {
-                                        self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
-                                        self.contrato_obj.contratista_tipo_documento = 'NIT';
-
-                                        novedadesMidRequest.get('novedad', self.contrato_obj.id + '/' + self.contrato_obj.vigencia).then(function (response) {
-                                            for (var i = 0; i < response.data.Body.length; i++) {
-                                                self.auxiliar = response.data.Body[i].id;
-                                                self.novedad_suspension = response.data.Body[i].fechasuspension;
-                                                self.novedad_reinicio = response.data.Body[i].fechareinicio;
-                                                self.novedad_motivo = response.data.Body[i].motivo;
-                                                self.novedad_finsuspension = response.data.Body[i].fechafinsuspension;
-                                                novedadesRequest.get('tipo_novedad', 'query=Id:' + response.data.Body[i].tiponovedad).then(function (nr_response) {
-                                                    if (nr_response.data[0].CodigoAbreviacion == "NP_SUS") {
-                                                        self.suspension_id_nov = self.auxiliar;
-                                                        self.f_suspension = new Date(self.novedad_suspension.substr(0, 16));
-                                                        self.f_reinicio = new Date(self.novedad_reinicio.substr(0, 16));
-                                                        self.f_finsuspension = new Date(self.novedad_finsuspension.substr(0, 16))
-                                                        self.motivo_suspension = self.novedad_motivo;
-                                                    }
-                                                });
-
-                                            }
-                                        });
-
-                                        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ispn_response) {
-                                            coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
-                                                self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
-                                                self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
-                                                self.contrato_obj.supervisor_nombre_completo = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " + ispn_response.data[0].SegundoApellido;
-                                            });
-                                        });
-
-
-
-                                    });
-                                });
-                            });
-                        }
-                        //Obtención de datos del jefe de juridica
-                        amazonAdministrativaRequest.get('supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
-                            self.contrato_obj.jefe_juridica_documento = jj_response.data[0].Documento;
-                            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.jefe_juridica_documento).then(function (ijpn_response) {
-                                coreAmazonRequest.get('ciudad', 'query=Id:' + ijpn_response.data[0].IdCiudadExpedicionDocumento).then(function (scj_response) {
-                                    self.contrato_obj.jefe_juridica_ciudad_documento = scj_response.data[0].Nombre;
-                                    self.contrato_obj.jefe_juridica_tipo_documento = ijpn_response.data[0].TipoDocumento.ValorParametro;
-                                    self.contrato_obj.jefe_juridica_nombre_completo = ijpn_response.data[0].PrimerNombre + " " + ijpn_response.data[0].SegundoNombre + " " + ijpn_response.data[0].PrimerApellido + " " + ijpn_response.data[0].SegundoApellido;
-                                });
-                            });
-
                         });
-
-
-
-
                     });
-                });
+
+                    //Trae los datos de la ultima novedad de suspensión para cargar datos.
+                    for (var i = 0; i < elementos_cesion.length; i++) {
+                        self.auxiliar = elementos_cesion[i].id;
+                        self.novedad_suspension = elementos_cesion[i].fechasuspension;
+                        self.novedad_reinicio = elementos_cesion[i].fechareinicio;
+                        self.novedad_motivo = elementos_cesion[i].motivo;
+                        self.novedad_finsuspension = elementos_cesion[i].fechafinsuspension;
+                        novedadesRequest.get('tipo_novedad', 'query=Id:' + elementos_cesion[i].tiponovedad).then(function (nr_response) {
+                            if (nr_response.data[0].CodigoAbreviacion == "NP_SUS") {
+                                self.suspension_id_nov = self.auxiliar;
+                                self.f_suspension = new Date(self.novedad_suspension.substr(0, 16));
+                                self.f_reinicio = new Date(self.novedad_reinicio.substr(0, 16));
+                                self.f_finsuspension = new Date(self.novedad_finsuspension.substr(0, 16))
+                                self.motivo_suspension = self.novedad_motivo;
+                            }
+                        });
+                    }
+                }
             });
         });
 
@@ -203,11 +145,9 @@ angular.module('contractualClienteApp')
             var dt1 = self.f_suspension;
             var dt2 = self.f_finsuspension;
             var timeDiff = 0;
-
             if (dt2 != null) {
                 timeDiff = Math.abs(dt2.getTime() - dt1.getTime());
             }
-
             self.diff_dias = Math.ceil(timeDiff / (1000 * 3600 * 24));
         });
 
@@ -255,7 +195,6 @@ angular.module('contractualClienteApp')
             var yyyy = cadena[0];
             var fecha = new Date(yyyy, mm, dd);
             var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
             return fecha.toLocaleDateString("es-ES", options);
         };
 
@@ -503,8 +442,6 @@ angular.module('contractualClienteApp')
                 });
 
                 contratoRequest.get('contrato_estado', self.contrato_id + '/' + self.contrato_vigencia).then(function (ce_response) {
-                    //self.formato_generacion_pdf();
-
                     if (ce_response.data.contratoEstado.estado.nombreEstado == "Suspendido") {
                         var estado_temp_from = {
                             "NombreEstado": "suspendido"
@@ -515,7 +452,6 @@ angular.module('contractualClienteApp')
                     adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                         self.validacion = vc_response.data.Body;
                         if (self.validacion == "true") {
-
                             novedadesMidRequest.post('novedad', self.reinicio_nov).then(function (response_nosql) {
                                 if (response_nosql.status == 200 || response_nosql.statusText == "OK") {
                                     var cambio_estado_contrato = {
@@ -526,8 +462,6 @@ angular.module('contractualClienteApp')
                                             "vigencia": parseInt(self.contrato_vigencia)
                                         }
                                     }
-
-
                                     contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
                                         if (response.status == 200 || response.statusText == "OK") {
                                             self.formato_generacion_pdf();
@@ -540,10 +474,8 @@ angular.module('contractualClienteApp')
                                     });
                                 }
                             });
-
                         }
                     });
-
                 });
             } else {
                 swal(
