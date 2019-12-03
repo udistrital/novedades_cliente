@@ -94,56 +94,6 @@
                     placeholder="{{'MOTIVO_NOVEDAD' | translate}}" required></textarea>
                 </div>
               </div>
-              <hr>
-              <div class="row" style="border: 0px solid;">
-                <div class="col-md-12">
-                  <center><label>{{'ESTADO_FISICO' | translate}}</label></center>
-                </div>
-                <div class="col-md-12">
-                  <label>{{'FECHA_ULTIMO_CORTE' | translate}}</label>
-                  <md-datepicker ng-model="sLactaAdicionProrroga.fecha_ultimo_corte_fisico"></md-datepicker>
-                  <br><br>
-                </div>
-                <div class="col-xs-12 col-md-6">
-                    <label>{{'AVANCE_FISICO_EJECUTADO' | translate}}*</label>
-                    <md-input-container style="margin:0;">
-                      <input type="number" id="avance_ejecutado" name="avance_ejecutado" ng-model="avance_ejecutado" min="0" max="100" required>
-                      <div ng-messages="formadipro.avance_ejecutado.$error">
-                        <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                      </div>
-                    </md-input-container>
-                  </div>
-                  <div class="col-xs-12 col-md-6">
-                      <label>{{'AVANCE_FISICO_PROGRAMADO' | translate}}*</label>
-                      <md-input-container style="margin:0;">
-                        <input type="number" id="avance_programado" name="avance_programado" ng-model="avance_programado" min="0" max="100" required>
-                        <div ng-messages="formadipro.avance_programado.$error">
-                          <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                        </div>
-                      </md-input-container>
-                    </div>
-              </div>
-              <hr>
-              <div class="row" style="border: 0px solid;">
-                  <div class="col-md-12">
-                    <center><label>{{'ESTADO_FINANCIERO' | translate}}</label></center>
-                  </div>
-                  <div class="col-xs-12 col-md-6">
-                    <label>{{'FECHA_ULTIMO_CORTE' | translate}}</label>
-                    <md-datepicker ng-model="sLactaAdicionProrroga.fecha_ultimo_corte_financiero"></md-datepicker>
-                  </div>
-                  <div class="col-xs-12 col-md-6">
-                      <label>{{'VALOR_EJECUTADO' | translate}}*</label>
-                      <md-input-container style="margin:0;">
-                        <input type="number" id="valor_ejecutado" name="valor_ejecutado" ng-model="valor_ejecutado" min="0" required>
-                        <div ng-messages="formadipro.valor_ejecutado.$error">
-                          <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                        </div>
-                      </md-input-container>
-                    
-                </div>
-
-            </div>
           </div>
           <div class="panel panel-primary panel_adicion" style="display: none;">
             <div class="panel-heading">
