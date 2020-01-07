@@ -37,7 +37,8 @@ angular.module("contractualClienteApp").constant("CONF", {
     ARGO_NOSQL_SERVICE:
       "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",
     CONTRATO_SERVICE:
-      "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_jbpm/v2/",
+      "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_jbpm/v1/",
+      // "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_jbpm/v2/",
     NUXEO_SERVICE:
       "https://autenticacion.portaloas.udistrital.edu.co/apioas/nuxeo_api/v1/",
     HOMOLOGACION_SERVICE:
