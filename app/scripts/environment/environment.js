@@ -46,7 +46,8 @@ angular.module("contractualClienteApp").constant("CONF", {
     //NOVEDADES_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",
     NOVEDADES_SERVICE: "http://localhost:8080/v1/",
     NOVEDADES_MID_SERVICE: "http://localhost:8502/v1/",
-    // NOVEDADES_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_mid/v1/",
+    // NOVEDADES_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_mid/v1/"
+    NOTIFICACION_WS: "wss://pruebasapi.portaloas.udistrital.edu.co:8116/ws/join",
     TOKEN: {
       AUTORIZATION_URL:
         "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
