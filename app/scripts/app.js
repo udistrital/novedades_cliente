@@ -66,7 +66,8 @@ angular
         'nuxeoClient',
         'implicitToken',
         'novedadesService',
-        'novedadesMidService'
+        'novedadesMidService',
+        'core'
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');
