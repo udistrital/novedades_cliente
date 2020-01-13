@@ -43,6 +43,7 @@ angular.module('contractualClienteApp')
         contratoRequest.get('contrato', +self.contrato_id + '/' + self.contrato_vigencia).then(function (wso_response) {
             $scope.response_contrato = wso_response;
             self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
+            self.contrato_obj.ordenador_gasto_id = wso_response.data.contrato.ordenador_gasto.id;
             self.contrato_obj.TipoContrato = wso_response.data.contrato.tipo_contrato;
             self.contrato_obj.ObjetoContrato = wso_response.data.contrato.objeto_contrato;
             self.contrato_obj.ValorContrato = wso_response.data.contrato.valor_contrato;
@@ -77,6 +78,19 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.supervisor_ciudad_cedula = c_response.data[0].Nombre;
                     self.contrato_obj.supervisor_nombre = ipn_response.data[0].PrimerNombre + " " + ipn_response.data[0].SegundoNombre + " " + ipn_response.data[0].PrimerApellido + " " + ipn_response.data[0].SegundoApellido;
 
+                });
+            });
+
+            //Obtención de datos del ordenador del gasto
+            amazonAdministrativaRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenador_gasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
+                self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
+                self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
+                console.log(og_response.data[0])
+                amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + og_response.data[0].Documento).then(function (ispn_response) {
+                    self.contrato_obj.ordenador_gasto_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
+                });
+                coreAmazonRequest.get('ciudad', 'query=Id:' + og_response.data[0].IdCiudad).then(function (sc_response) {
+                    self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
                 });
             });
 
@@ -427,17 +441,40 @@ angular.module('contractualClienteApp')
          */
         self.formato_pdf = function () {
             return {
+                pageSize: 'LETTER',
+                pageMargins: [50, 125, 50, 70],
+                header: {
+                    margin: [70, 20],
+                    table: {
+                        widths: ['*'],
+                        body: [
+                            [{ image: 'logo_ud', fit: [50, 65], alignment: 'center' }],
+                            [{
+                                text: 'MODIFICACIÓN: PRÓRROGA Y ADICIÓN No.______ AL ' + self.contrato_obj.tipo_contrato.toUpperCase() + ' No. ' + self.contrato_id + ' DE ' + self.fecha_reg_ano +
+                                    ' CELEBRADO ENTRE LA UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS Y ' + self.contrato_obj.contratista_nombre, bold: true, alignment: 'center', fontSize: 9,
+                            }]
+                        ],
+
+                    },
+                    layout: 'noBorders'
+                },
+                footer: {
+                    table: {
+                        widths: ['*'],
+                        body: [
+                            [{ text: '_______________________________________________________________________________________', alignment: 'center', fontSize: 6 }],
+                            [{ text: 'UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS', alignment: 'center', fontSize: 6 }],
+                            [{ text: 'OFICINA ASESORA JURÍDICA', alignment: 'center', fontSize: 6 }],
+                            [{ text: 'CARRERA 7 No. 40B-53, Piso 9', alignment: 'center', fontSize: 6 }],
+                            [{ text: 'Teléfono 33393300, Ext. 1911 y 1912', alignment: 'center', fontSize: 6 }],
+                            [{ text: 'Bogotá D.C.', alignment: 'center', fontSize: 6 }],
+                        ],
+
+                    },
+                    layout: 'noBorders'
+                },
                 content: [
-                    {
-                        style: ['bottom_space'],
-                        image: 'logo_ud', fit: [80, 110], rowSpan: 3, alignment: 'center', fontSize: 12
-                    },
-                    {
-                        style: ['general_font'],
-                        text: [
-                            { text: 'PRÓRROGA Y ADICIÓN AL ' + self.contrato_obj.tipo_contrato.toUpperCase() + ' No. ' + self.contrato_id + ' DE ' + self.fecha_reg_ano + ' CELEBRADO ENTRE LA UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS Y ' + self.contrato_obj.contratista_nombre, bold: true, alignment: 'center' }, '\n\n'
-                        ]
-                    },
+
                     {
                         style: ['general_font'],
                         text: [
@@ -504,32 +541,6 @@ angular.module('contractualClienteApp')
                             { text: 'en calidad de ordenador del gasto, solicitó a la Oficina Asesora Jurídica de esta, la elaboración del presente documento. ' },
                             { text: '9) ', bold: true },
                             { text: 'Teniendo en cuenta que el valor a adicionar no supera el 50% del inicialmente pactado, la solicitud se ajusta a lo consagrado en el inciso 2º del artículo 86 de la Resolución de Rectoría 262 de 2015 (Procedimiento para Adición, Prórroga o Modificación del Contrato), resultando procedente suscribir el presente documento. ' },
-                        ]
-                    },
-                    {
-                        style: ['footer'], pageBreak: 'after',
-                        text: [
-                            { text: '' }, '\n\n',
-                            {
-                                text: [
-                                    { text: '________________________________________________________\n' },
-                                    { text: 'UNIVERSIDAD DISTRITAL FRANCISCO JOSE DE CALDAS\n' },
-                                    { text: 'OFICINA ASESORA JURIDICA\n' },
-                                    { text: 'CARRERA 7 No. 40B-53, Piso 9\n' },
-                                    { text: 'Teléfono 33393300, Ext. 1911 y 1912\n' },
-                                    { text: 'Bogotá D.C.' }
-                                ]
-                            },
-                        ]
-                    },
-                    {
-                        style: ['bottom_space'],
-                        image: 'logo_ud', fit: [80, 110], rowSpan: 3, alignment: 'center', fontSize: 12
-                    },
-                    {
-                        style: ['general_font'],
-                        text: [
-                            { text: 'PRÓRROGA Y ADICIÓN AL ' + self.contrato_obj.tipo_contrato.toUpperCase() + ' No. ' + self.contrato_id + ' DE ' + self.fecha_reg_ano + ' CELEBRADO ENTRE LA UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS Y ' + self.contrato_obj.contratista_nombre, bold: true, alignment: 'center' }, '\n\n'
                         ]
                     },
                     {
@@ -625,22 +636,6 @@ angular.module('contractualClienteApp')
                                 ],
                             ]
                         }
-                    },
-                    {
-                        style: ['footer'],
-                        text: [
-                            { text: '' }, '\n\n',
-                            {
-                                text: [
-                                    { text: '________________________________________________________\n', bold: true },
-                                    { text: 'UNIVERSIDAD DISTRITAL FRANCISCO JOSE DE CALDAS\n' },
-                                    { text: 'OFICINA ASESORA JURIDICA\n' },
-                                    { text: 'CARRERA 7 No. 40B-53, Piso 9\n' },
-                                    { text: 'Teléfono 33393300, Ext. 1911 y 1912\n' },
-                                    { text: 'Bogotá D.C.' }
-                                ]
-                            },
-                        ]
                     },
                 ],
                 styles: {
