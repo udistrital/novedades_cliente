@@ -27,6 +27,7 @@ angular.module('contractualClienteApp')
         self.fecha.mes = meses[f.getMonth()];
         self.fecha.anio = f.getFullYear();
         self.fecha_inicio = new Date();
+        self.fecha_oficio = new Date();
         self.fecha_ultimo_corte_fisico = new Date();
         self.fecha_ultimo_corte_financiero = new Date();
         self.valor_ejecutado = '';
@@ -44,6 +45,8 @@ angular.module('contractualClienteApp')
             $scope.response_contrato = wso_response;
             self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
             self.contrato_obj.ordenador_gasto_id = wso_response.data.contrato.ordenador_gasto.id;
+            self.contrato_obj.ordenador_gasto_nombre = wso_response.data.contrato.ordenador_gasto.nombre_ordenador;
+            self.contrato_obj.ordenador_gasto_rol = wso_response.data.contrato.ordenador_gasto.rol_ordenador;
             self.contrato_obj.TipoContrato = wso_response.data.contrato.tipo_contrato;
             self.contrato_obj.ObjetoContrato = wso_response.data.contrato.objeto_contrato;
             self.contrato_obj.ValorContrato = wso_response.data.contrato.valor_contrato;
@@ -85,6 +88,7 @@ angular.module('contractualClienteApp')
             amazonAdministrativaRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenador_gasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
                 self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
                 self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
+                self.contrato_obj.ordenador_gasto_Inicio = og_response.data[0].FechaInicio;
                 console.log(og_response.data[0])
                 amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + og_response.data[0].Documento).then(function (ispn_response) {
                     self.contrato_obj.ordenador_gasto_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
@@ -145,9 +149,7 @@ angular.module('contractualClienteApp')
                             )
                         });
                     });
-
                 }
-
             });
             amazonAdministrativaRequest.get('tipo_contrato?query=Id:' + wso_response.data.contrato.tipo_contrato).then(function (tc_response) {
                 self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
@@ -202,10 +204,6 @@ angular.module('contractualClienteApp')
             var valor_valido_prorroga = plazo_actual_dias * 0.5;
             $scope.valor_prorroga_final = valor_prorroga;
             $scope.nuevo_plazo_contrato = $scope.cantidad_meses_letras + cantidad_meses + " ) " + $translate.instant('MENSAJE_MESES') + " " + $scope.cantidad_dias_letras + cantidad_dias + " ) " + $translate.instant('DIAS');
-
-
-
-
             if (valor_prorroga <= valor_valido_prorroga) {
                 var valor_plazo_dias = parseInt(valor_prorroga) + plazo_actual_dias;
                 var valor_plazo_meses = valor_plazo_dias / (30);
@@ -434,6 +432,25 @@ angular.module('contractualClienteApp')
         /**
          * @ngdoc method
          * @name format_date
+         * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
+         * @description
+         * funcion para el formateo de objetos tipo fecha mongo a formato a letra  nombre dia, año mes y dia 
+         * @param {date} param
+         */
+
+        self.format_date_letter_mongo = function (param) {
+            var date = new Date(param);
+            var dd = date.getDate();
+            var mm = date.getMonth();
+            var yyyy = date.getFullYear();
+            var fecha = new Date(yyyy, mm, dd);
+            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return fecha.toLocaleDateString("es-ES", options);
+        };
+
+        /**
+         * @ngdoc method
+         * @name format_date
          * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaAdicionProrrogaCtrl
          * @description
          * funcion para el formateo de objetos tipo fecha a formato dd/mm/yyyy
@@ -479,103 +496,161 @@ angular.module('contractualClienteApp')
                         style: ['general_font'],
                         text: [
                             { text: 'Entre los suscritos, ' },
-                            { text: 'CARLOS JAVIER MOSQUERA SUAREZ, ', bold: true },
-                            { text: 'mayor de edad, vecino de esta ciudad, identificado con cédula de ciudadanía No.79.296.179 expedida en Bogotá D.C., ' },
-                            { text: 'quien actúa en calidad de Rector (E), de conformidad con la Resolución No. 01 del 29 de Enero de 2015 y posesionado mediante Acta del 02 de Febrero de 2015, así como en nombre y representación legal de la ' },
+                            { text: self.contrato_obj.ordenador_gasto_nombre + ', ', bold: true },
+                            {
+                                text: 'mayor de edad, vecino de esta ciudad, identificado con cédula de ciudadanía No. ' + self.contrato_obj.ordenador_gasto_documento + ' expedida en Bogotá D.C., ' +
+                                    'quien actúa en calidad de ' + self.contrato_obj.ordenador_gasto_rol + ', de conformidad con la Resolución No. ' + self.contrato_obj.ordenador_gasto_resolucion +
+                                    ' del ' + self.format_date_letter_mongo(self.contrato_obj.ordenador_gasto_Inicio) + ', así como en nombre y representación legal de la '
+                            },
                             { text: 'UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS, ', bold: true },
                             { text: 'ente universitario autónomo, de conformidad con la Ley 30 de 1992, debidamente autorizado para contratar, según Acuerdo No. 003 de 2015 del Consejo Superior Universitario, quien en lo sucesivo se denominará ' },
                             { text: 'LA UNIVERSIDAD, ', bold: true },
-                            { text: 'con NIT 899.999.230-7, ' },
-                            { text: 'y, de otra, ' },
-                            { text: '' + self.contrato_obj.supervisor_nombre + ', ', bold: true },
-                            { text: 'identificado con la cedula de ciudadanía No. ' + self.contrato_obj.supervisor_cedula + ' de ' + self.contrato_obj.supervisor_ciudad_cedula + ', quien obra en nombre y representación de ' },
-                            { text: '' + self.contrato_obj.contratista_nombre + ', ', bold: true },
-                            { text: 'con NIT ' + self.contrato_obj.contratista_documento + ', y quien  para los efectos del presente documento, se denominará ' },
+                            { text: 'con NIT 899.999.230-7, y, de otra, ' },
+                            { text: self.contrato_obj.contratista_nombre + ', ', bold: true },
+                            {
+                                text: 'identificado con ' + self.contrato_obj.contratista_tipo_Documento + ' No. ' + self.contrato_obj.contratista_documento + ' de ' + self.contrato_obj.contratista_ciudad_cedula +
+                                    ', y quien  para los efectos del presente documento, se denominará '
+                            },
                             { text: 'EL CONTRATISTA, ', bold: true },
-                            { text: 'acordamos ' + adicionProrroga + ' del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.fecha_reg_ano + ', teniendo en cuenta los siguientes documentos y consideraciones: ' },
-                            { text: '1) ', bold: true },
-                            { text: 'El ' + self.fecha_reg_dia + ' de ' + self.fecha_reg_mes + ' de ' + self.fecha_reg_ano + ', del ' + self.contrato_obj.tipo_contrato + ' ' },
-                            { text: 'LA UNIVERSIDAD y EL CONTRATISTA ', bold: true },
-                            { text: 'suscribieron el Contrato de Prestación de Servicios No. ' + self.contrato_id + ' de ' + self.fecha_reg_ano + ', ' },
-                            { text: 'cuyo objeto es "' + self.contrato_obj.ObjetoContrato },
-                            { text: '" (Cláusula 1). ' },
-                            { text: '2) ', bold: true },
-                            { text: 'Como plazo de ejecución del contrato se estableció ' },
-                            { text: '' + $scope.contrato_plazo_letras + self.contrato_obj.PlazoEjecucion + ' ) MESES, ', bold: true },
-                            { text: 'contados a partir de la suscripción de la correspondiente acta de inicio (cláusula 6), lo cual tuvo lugar el ' + self.fecha_reg_dia + ' de ' + self.fecha_reg_mes + ' de ' + self.fecha_reg_ano + '. ' },
-                            { text: '3) ', bold: true },
-                            { text: 'En la cláusula número 3, se pactó como valor la suma de ' },
-                            { text: '' + $scope.valor_contrato_letras + ' MONEDA CORRIENTE ($' + numberFormat(self.contrato_obj.ValorContrato) + ' M/Cte.) ', bold: true },
-                            { text: 'incluido IVA; ' },
-                            { text: 'suma equivalente a ' + $scope.cantidad_salarios_minimos + ' salarios mínimos legales mensuales vigentes para el año ' + self.fecha.anio + ' ($781.242 SMMLV). ' },
-                            { text: '4) ', bold: true },
-                            { text: '[Relacionar otrosíes que    hayan   sido    realizados  al  contrato, con   fecha,  motivo  del otrosí  y   en  caso    de  ser de  adición  y/o     prórroga,   relacionar  plazo   y   valor]. ' },
-                            { text: '5) ', bold: true },
-                            { text: 'Que, con fecha ' + self.fecha_reg_dia + ' de ' + self.fecha_reg_mes + ' de ' + self.fecha_reg_ano + ', ' },
-                            { text: 'el Rector de ' },
-                            { text: 'LA UNIVERSIDAD, ', bold: true },
-                            { text: 'como Ordenador del Gasto, suscribió el formato de “solicitud de necesidad” No. ' + $scope.numero_solicitud + ', ' },
-                            { text: 'en el cual solicita la ' + $scope.estado_novedad + ' del contrato de que se viene hablando, en su orden, en ' },
-                            { text: '' + $scope.valor_adicion_letras + ' MONEDA CORRIENTE ($' + $scope.valor_adicion + ' M/Cte.), ', bold: true },
-                            { text: 'y un plazo de ' },
-                            { text: '' + $scope.contrato_prorroga_letras + '' + $scope.valor_prorroga_final + ') días, ', bold: true },
-                            { text: 'que justifica de la siguiente manera: “' + $scope.motivo + '”. ' },
-                            { text: '6) ', bold: true },
-                            { text: 'Que mediante “formato de solicitud de adición y/o prórroga”, de la fecha ' + self.fecha_inicio + ', el Representante Legal de ' + self.contrato_obj.contratista_nombre + ', en su condición de Interventor del ' },
-                            { text: '' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + 'de ' + self.fecha_reg_ano + ', presenta para firma conjunta del Rector de ' },
-                            { text: 'LA UNIVERSIDAD', bold: true },
-                            { text: ' y del representante legal de ' },
-                            { text: 'EL CONTRATISTA', bold: true },
-                            { text: ', tal solicitud con el siguiente fundamento: “' + $scope.motivo + '”. ' },
-                            { text: '7) ', bold: true },
-                            { text: 'Que a la solicitud, emanada de ' },
-                            { text: 'EL CONTRATISTA,', bold: true },
-                            { text: ' que se anexa al mencionado “formato de ' },
-                            { text: 'solicitud de adición y/o prórroga”, en el sentido de que se adicione el valor del contrato y que ' },
-                            { text: 'se prorrogue el plazo de ejecución, se anexa certificado en el sentido de que se encuentra al día ' },
-                            { text: 'en el pago de sus obligaciones parafiscales y con el Sistema Integral de Seguridad Social. ' },
-                            { text: '8) ', bold: true },
-                            { text: 'Que mediante oficio No. ___________ de ______, con cordis 201XIEXXX de la misma fecha, ' },
-                            { text: 'el Rector de ' },
-                            { text: 'LA UNIVERSIDAD, ', bold: true },
-                            { text: 'en calidad de ordenador del gasto, solicitó a la Oficina Asesora Jurídica de esta, la elaboración del presente documento. ' },
-                            { text: '9) ', bold: true },
-                            { text: 'Teniendo en cuenta que el valor a adicionar no supera el 50% del inicialmente pactado, la solicitud se ajusta a lo consagrado en el inciso 2º del artículo 86 de la Resolución de Rectoría 262 de 2015 (Procedimiento para Adición, Prórroga o Modificación del Contrato), resultando procedente suscribir el presente documento. ' },
-                        ]
+                            {
+                                text: 'acordamos ' + adicionProrroga + ' del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de '
+                                    + self.fecha_reg_ano + ', teniendo en cuenta los siguientes documentos y consideraciones: \n\n'
+                            },
+                        ],
                     },
                     {
                         style: ['general_font'],
+                        ol: [
+                            {
+                                text: [
+                                    {
+                                        text: 'El ' + self.fecha_reg_dia + ' de ' + self.fecha_reg_mes + ' de ' + self.fecha_reg_ano +
+                                            ', del ' + self.contrato_obj.tipo_contrato + ' '
+                                    },
+                                    { text: 'LA UNIVERSIDAD y EL CONTRATISTA ', bold: true },
+                                    {
+                                        text: 'suscribieron el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' +
+                                            self.fecha_reg_ano + ', cuyo objeto es "' + self.contrato_obj.ObjetoContrato + '" (Cláusula 1).'
+                                    },
+
+                                ]
+                            },
+                            {
+                                text: [
+                                    { text: 'Como plazo de ejecución del contrato se estableció ' },
+                                    { text: '' + $scope.contrato_plazo_letras + self.contrato_obj.PlazoEjecucion + ' ) MESES, ', bold: true },
+                                    { text: 'lo cual tuvo lugar el ' + self.fecha_reg_dia + ' de ' + self.fecha_reg_mes + ' de ' + self.fecha_reg_ano + '. ' },
+                                ]
+                            },
+                            {
+                                text: [
+                                    { text: 'En la cláusula número 3, se pactó como valor la suma de ' },
+                                    { text: '' + $scope.valor_contrato_letras + ' MONEDA CORRIENTE ($' + numberFormat(self.contrato_obj.ValorContrato) + ' M/Cte.) ', bold: true },
+                                    { text: 'incluido IVA.' },
+                                ]
+                            },
+                            {
+                                text: [
+                                    {
+                                        text: 'Que mediante oficio ' + $scope.numero_oficio + ', recibido por la Oficina Asesora Jurídica el día '
+                                            + self.format_date_letter_mongo(self.fecha_inicio) + ', el ' + self.contrato_obj.ordenador_gasto_rol + ' de '
+                                    },
+                                    { text: 'LA UNIVERSIDAD, ', bold: true },
+                                    { text: 'como Ordenador del Gasto, solicitud la adición de ' },
+                                    { text: '' + $scope.valor_adicion_letras + ' MONEDA CORRIENTE ($' + $scope.valor_adicion + ' M/Cte.), ', bold: true },
+                                    { text: 'y prórroga de ' },
+                                    { text: '' + $scope.contrato_prorroga_letras + '' + $scope.valor_prorroga_final + ') días, ', bold: true },
+                                    {
+                                        text: 'del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.fecha_reg_ano
+                                            + ', cuya justificación se encuentra descrita en la Solicitud de Necesidad No. ' + $scope.numero_solicitud + ' del día ' + self.format_date_letter_mongo(self.fecha_oficio) + '.'
+                                    },
+                                ]
+                            },
+                            {
+                                text: 'Teniendo en cuenta que el valor a adicionar no supera el 50% del inicialmente pactado, la solicitud se ajusta a lo consagrado en el inciso 2º' +
+                                    ' del artículo 86 de la Resolución de Rectoría 262 de 2015 (Procedimiento para Adición, Prórroga o Modificación del Contrato), resultando procedente ' +
+                                    'suscribir el presente documento. '
+                            },
+                            {
+                                text: [
+                                    { text: 'Que quienes suscriben el presente documento son plenamente capaces para hacerlo y obligarse, además de que la Oficina Asesora Jurídica de ' },
+                                    { text: 'LA UNIVERSIDAD ', bold: true },
+                                    { text: 'verificó la ausencia de antecedentes disciplinarios, judiciales y fiscales. ' },
+                                ]
+                            },
+                            {
+                                text: [
+                                    { text: 'Que se cuenta con disponibilidad presupuestal para atender la presente adición, ' },
+                                    { text: 'como se desprende del Certificado de Disponibilidad Presupuestal No. ' + self.contrato_obj.cdp_numero + ' de ' + self.contrato_obj.cdp_anno + ', ' },
+                                    { text: 'expedido por la Sección de Presupuesto. ' },
+                                ]
+                            },
+                            {
+                                text: 'Que el acto aquí planteado es jurídicamente viable, de acuerdo con lo establecido en las normas civiles y comerciales pertinentes, y, en especial,' +
+                                    ' en el Estatuto de Contratación de la Universidad Distrital Francisco José de Caldas y demás normas reglamentarias pertinentes y vigentes. En consecuencia' +
+                                    ' de lo anterior, las partes acuerdan:\n\n'
+                            },
+
+                        ],
+                    }, {
+                        style: ['general_font'],
                         text: [
-                            { text: '10) ', bold: true },
-                            { text: 'Que quienes suscriben el presente documento son plenamente capaces para hacerlo y obligarse, además de que la Oficina Asesora Jurídica de ' },
-                            { text: 'LA UNIVERSIDAD ', bold: true },
-                            { text: 'verificó la ausencia de antecedentes disciplinarios, judiciales y fiscales. ' },
-                            { text: '11) ', bold: true },
-                            { text: 'Que se cuenta con disponibilidad presupuestal para atender la presente adición, ' },
-                            { text: 'como se desprende del Certificado de Disponibilidad Presupuestal No. ' + self.contrato_obj.cdp_numero + ' de ' + self.contrato_obj.cdp_anno + ', ' },
-                            { text: 'expedido por la Sección de Presupuesto. ' },
-                            { text: '12) ', bold: true },
-                            { text: 'Que el acto aquí planteado es jurídicamente viable, de acuerdo con lo establecido en las normas civiles y comerciales pertinentes, y, en especial, en el Estatuto de Contratación de la Universidad Distrital Francisco José de Caldas y demás normas reglamentarias pertinentes y vigentes. En consecuencia de lo anterior, las partes acuerdan:' }, '\n\n',
-                            { text: 'CLÁUSULA PRIMERA.- ', bold: true },
-                            { text: 'El nuevo valor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.fecha_reg_ano + ', a que se refiere su ' },
-                            { text: 'cláusula 3, es la suma de  ' },
-                            { text: '' + $scope.nuevo_valor_contrato_letras + ' MONEDA CORRIENTE ($' + $scope.nuevo_valor_contrato + ' M/Cte.), ' },
-                            { text: 'incluido [el valor del AIU], impuestos, tasas, contribuciones, estampillas y permisos. ' }, '\n\n',
-                            { text: 'CLÁUSULA SEGUNDA.- ', bold: true },
-                            { text: 'El nuevo plazo de ejecución de contrato en mención, en los términos estipulados en la cláusula 6, es de ' },
-                            { text: '' + $scope.nuevo_plazo_contrato + ', ', bold: true },
-                            { text: 'los cuales vencen ___________________________' }, '\n\n',
-                            { text: 'CLÁUSULA TERCERA.- ', bold: true },
-                            { text: 'Las clausulas y condiciones no modificadas por el presente instrumento continúan vigentes en los términos del contrato primigenio. ' }, '\n\n',
-                            { text: 'CLÁUSULA CUARTA.- ', bold: true },
-                            { text: 'El presente modificatorio se  perfecciona con su firma por los representantes legales de las partes, mientras que ' },
-                            { text: 'EL CONTRATISTA ', bold: true },
-                            { text: 'deberá  ajustar el valor y la vigencia de las garantías por este constituidas, a lo acordado en el presente documento.' }, '\n\n',
-                            { text: 'Las partes  manifiestan libremente  que han procedido   a   la  lectura total   y   cuidadosa   del presente ' },
-                            { text: 'documento,  por lo  que,    en  consecuencia,   se  obligan en   todos  sus órdenes y   manifestaciones. ' }, '\n',
-                            { text: 'Para constancia, se firma en Bogotá, D.C., a los ' + self.fecha.dia_mes + ' días del mes de ' + self.fecha.mes + ' del año ' + self.fecha.anio + '.' }, '\n\n\n',
+                            { text: 'CLÁUSULA PRIMERA.-  ADICIONAR', bold: true },
+                            {
+                                text: ' al valor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.fecha_reg_ano + ', la suma de ' +
+                                    $scope.valor_adicion_letras + ' MONEDA CORRIENTE ($' + $scope.valor_adicion + ' M/Cte.), '
+                            }, '\n\n',
+
+                            { text: 'CLÁUSULA SEGUNDA.-', bold: true },
+                            { text: ' Como consecuencia de lo anterior, ' },
+                            { text: 'MODIFICAR', bold: true },
+                            { text: ' la CLAUSULA 3 del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.fecha_reg_ano + 'la cual quedará así: \n' },
+                            {
+                                style: ['general_font'],
+                                text: [
+                                    '“El valor del presente contrato corresponde a la suma de' + $scope.nuevo_valor_contrato_letras + ' MONEDA CORRIENTE ($' +
+                                    $scope.nuevo_valor_contrato + ' M/Cte.) , incluido IVA, así como todos los impuestos y retenciones legamente establecidos…”.'
+                                ]
+                            }
+                            , '\n\n',
+
+                            { text: 'CLÁUSULA TERCERA.- PRORROGAR', bold: true },
+                            {
+                                text: 'el plazo de ejecución del' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de '
+                                    + self.fecha_reg_ano + ' en ' + $scope.contrato_prorroga_letras + '' + $scope.valor_prorroga_final + ') DÍAS.'
+                            }, '\n\n',
+
+                            { text: 'CLÁUSULA CUARTA.-', bold: true },
+                            { text: ' como consecuencia de lo anterior, ' },
+                            { text: 'MODIFICAR', bold: true },
+                            { text: ' la CLAUSULA 6 del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.fecha_reg_ano + 'la cual quedará así: \n' },
+                            {
+                                style: ['general_font'],
+                                text: [
+                                    '“El plazo de ejecución del contrato será de ' + $scope.nuevo_plazo_contrato + ', contados a partir de los requisitos de ejecución…”.'
+                                ]
+                            }
+                            , '\n\n',
+
+                            { text: 'CLÁUSULA QUINTA.-', bold: true },
+                            {
+                                text: 'Las cláusulas y condiciones no modificadas por el presente instrumento continúan vigentes en los términos del contrato primigenio.'
+                            }, '\n\n',
+
+                            { text: 'CLÁUSULA SEXTA.-', bold: true },
+                            {
+                                text: 'La presente prórroga y adición requiere para su perfeccionamiento y legalización, la suscripción de la misma por las partes, ' +
+                                    'la actualización y aprobación de las garantías, y la expedición del Registro presupuestal.'
+                            }, '\n\n',
+
+                            {
+                                text: 'Las partes manifiestan libremente que han procedido a la lectura total y cuidadosa del presente documento, por lo que, en consecuencia,'+
+                                ' se obligan en todos sus órdenes y manifestaciones.'
+                            }, '\n\n',
+                            { text: 'Para constancia, se firma en Bogotá, D.C., a los _____________________________________________________________.' }, '\n\n\n',
                         ]
                     },
+
                     {
                         style: ['table'],
                         table: {

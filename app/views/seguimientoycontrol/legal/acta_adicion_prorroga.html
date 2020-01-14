@@ -75,7 +75,7 @@
               </div>
               <hr>
               <div class="row" style="border: 0px solid;">
-                <div class="col-xs-12 col-md-6">
+                <div class="col-xs-12 col-md-6">                                  
                   <label>{{'NUMERO_SOLICITUD' | translate}}*</label>
                   <md-input-container style="margin:0;">
                     <input type="number" id="solicitud" name="solicitud" ng-model="numero_solicitud" min="0" required>
@@ -88,6 +88,22 @@
                   <label>{{'FECHA_SOLICITUD' | translate}}</label>
                   <md-datepicker ng-model="sLactaAdicionProrroga.fecha_inicio"></md-datepicker>
                 </div>
+              </div>
+              <div class="row" style="border: 0px solid;"></div>
+                <div class="col-xs-12 col-md-6">
+                  <label>{{'NUMERO_OFICIO' | translate}}*</label>
+                  <md-input-container style="margin:0;">
+                    <input type="number" id="oficio" name="oficio" ng-model="numero_oficio" min="0" required>
+                    <div ng-messages="formadipro.solicitud.$error">
+                      <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                    </div>
+                  </md-input-container>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                  <label>{{'FECHA_OFICIO' | translate}}</label>
+                  <md-datepicker ng-model="sLactaAdicionProrroga.fecha_oficio"></md-datepicker>
+                </div>
+                
                 <div class="col-xs-12 col-md-12">
                   <label for="motivo">{{'MOTIVO' | translate}}</label>
                   <textarea style="height: 100px;" class="form-control" id="motivo" ng-model="motivo" rows="3" maxlength="249" 
