@@ -912,7 +912,7 @@ var text_es = {
     //Carga documentos contratista
     TITULO_CARGA_CONTRATISTA: "CARGA SOPORTES CONTRATISTA",
     NOM_CONTRATISTA: "NOMBRE CONTRATISTA",
-    NUMERO_CONTRATO: "NÚMERO CONTRATO",
+    NUMERO_CONTRATO: "Número Contrato",
     CONTRATO_CANCELADO: "Contrato cancelado",
     CONTRATO_FINALIZADO: "Contrato finalizado",
     CONTRATO_INICIO: "Contrato sin acta de inicio",
