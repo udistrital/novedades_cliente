@@ -13,65 +13,81 @@
             </center>
           </div>
           <div class="panel-body">
-            <div class="col-md-4"><b>{{'NUMERO_CONTRATO' | translate}}</b></div>
-            <div class="col-md-8">
-              <p>{{sLactaCesion.contrato_obj.id}}</p>
+            <div class="row">
+              <div class="col-md-4"><b>{{'NUMERO_CONTRATO' | translate}}</b></div>
+              <div class="col-md-8">
+                <p>{{sLactaCesion.contrato_obj.id}}</p>
+              </div>
             </div>
-            <div class="col-md-4"><b>{{'CONTRATANTE' | translate}}</b></div>
-            <div class="col-md-8">
-              <p>{{'UNIVERSIDAD_NOMBRE' | translate}}</p>
+            <div class="row">
+              <div class="col-md-4"><b>{{'CONTRATANTE' | translate}}</b></div>
+              <div class="col-md-8">
+                <p>{{'UNIVERSIDAD_NOMBRE' | translate}}</p>
+              </div>
             </div>
-            <div class="col-md-4"><b>{{'CONTRATISTA' | translate}}</b></div>
-            <div class="col-md-8" ng-if="sLactaCesion.contrato_obj.contratista_documento != null">
-              <p>
-                {{sLactaCesion.contrato_obj.contratista_nombre}} <br>
-                <span style="color:#555; font-size:14px;">
-                  {{sLactaCesion.contrato_obj.contratista_documento}}
-                </span>
-              </p>
+            <div class="row">
+              <div class="col-md-4"><b>{{'CONTRATISTA' | translate}}</b></div>
+              <div class="col-md-8" ng-if="sLactaCesion.contrato_obj.contratista_documento != null">
+                <p>
+                  {{sLactaCesion.contrato_obj.contratista_nombre}} <br>
+                  <span style="color:#555; font-size:14px;">
+                    {{sLactaCesion.contrato_obj.contratista_documento}}
+                  </span>
+                </p>
+              </div>
+              <div class="col-md-8" ng-if="sLactaCesion.contrato_obj.contratista_documento == null">
+                <p>{{'NO_REGISTRA' | translate}}</p>
+              </div>
             </div>
-            <div class="col-md-8" ng-if="sLactaCesion.contrato_obj.contratista_documento == null">
-              <p>{{'NO_REGISTRA' | translate}}</p>
+            <div class="row">
+              <div class="col-md-4"><b>{{'OBJETO' | translate}}</b></div>
+              <div class="col-md-8">
+                <p>{{sLactaCesion.contrato_obj.objeto}}</p>
+              </div>
             </div>
-            <div class="col-md-4"><b>{{'OBJETO' | translate}}</b></div>
-            <div class="col-md-8">
-              <p>{{sLactaCesion.contrato_obj.objeto}}</p>
+            <div class="row">
+              <div class="col-md-4"><b>{{'VALOR_CONTRATO' | translate}}</b></div>
+              <div class="col-md-8">
+                <p>{{sLactaCesion.contrato_obj.valor | currency}}</p>
+              </div>
             </div>
-            <div class="col-md-4"><b>{{'VALOR_CONTRATO' | translate}}</b></div>
-            <div class="col-md-8">
-              <p>{{sLactaCesion.contrato_obj.valor | currency}}</p>
-            </div>
-            <div class="col-md-4"><b>{{'ORDENADOR_DE_GASTO' | translate}}</b></div>
-            <div class="col-md-8">
-              <p>{{sLactaCesion.contrato_obj.ordenador_gasto_nombre}}</p>
+            <div class="row">
+              <div class="col-md-4"><b>{{'ORDENADOR_DE_GASTO' | translate}}</b></div>
+              <div class="col-md-8">
+                <p>{{sLactaCesion.contrato_obj.ordenador_gasto_nombre}}</p>
+              </div>
             </div>
           </div>
         </div>
 
         <div class=" panel panel-default">
-            <div class="panel-heading">
-              <center>
-                <h4><b>{{'INFORMACION_CESIONARIO' | translate}}</b></h4>
-              </center>
+          <div class="panel-heading">
+            <center>
+              <h4><b>{{'INFORMACION_CESIONARIO' | translate}}</b></h4>
+            </center>
+          </div>
+          <div class="panel-body">
+            <div ng-if="sLactaCesion.cesionario_obj.nombre == null">
+              {{'SELECCIONAR_CESIONARIO' | translate}}
             </div>
-            <div class="panel-body">
-              <div ng-if="sLactaCesion.cesionario_obj.nombre == null">
-                {{'SELECCIONAR_CESIONARIO' | translate}}
+            <div ng-if="sLactaCesion.cesionario_obj.nombre != null">
+              <div class="row">
+                <div class="col-md-4"><b>Cesionario</b></div>
+                <div class="col-md-8">
+                  {{sLactaCesion.cesionario_obj.nombre}} {{sLactaCesion.cesionario_obj.apellidos}} 
+                </div>
               </div>
-              <div ng-if="sLactaCesion.cesionario_obj.nombre != null">
-                <div class="col-md-6"><b>{{'NOMBRES' | translate}}</b></div>
-                <div class="col-md-6"> {{sLactaCesion.cesionario_obj.nombre}}</div>
-                <div class="col-md-6"><b>{{'APELLIDOS' | translate}}</b></div>
-                <div class="col-md-6"> {{sLactaCesion.cesionario_obj.apellidos}} </div>
-                <div class="col-md-6"><b>{{'TIPO_DOCUMENTO' | translate}}</b></div>
-                <div class="col-md-6"> {{sLactaCesion.cesionario_obj.tipo_documento}}</div>
-                <div class="col-md-6"><b>{{'DOCUMENTO_CONTRATISTA' | translate}}</b></div>
-                <div class="col-md-6"> {{sLactaCesion.cesionario_obj.identificacion}} </div>
-                <div class="col-md-6"><b>{{'TIPO_PERSONA' | translate}}</b></div>
-                <div class="col-md-6"> {{'PERSONA_NATURAL' | translate}} </div>
+              <div class="row">
+                <div class="col-md-4"><b>{{'DOCUMENTO_CONTRATISTA' | translate}}</b></div>
+                <div class="col-md-8">{{sLactaCesion.cesionario_obj.identificacion}}</div>
+              </div>
+              <div class="row">
+                <div class="col-md-4"><b>{{'TIPO_DOCUMENTO' | translate}}</b></div>
+                <div class="col-md-8">{{sLactaCesion.cesionario_obj.tipo_documento}}</div>
               </div>
             </div>
           </div>
+        </div>
       </div>
 
       <div class="col-md-6">
@@ -177,14 +193,14 @@
 
               <div class="form-group col-md-12">
                 <label for="consideraciones">{{'OTRAS_OBSERVACIONES' | translate}} *:</label>
-                <textarea class="form-control" required name="observaciones" style="border-radius:0;" maxlength="249" 
+                <textarea class="form-control" required name="observaciones" style="border-radius:0;" maxlength="249"
                   ng-model="sLactaCesion.observaciones" id="observaciones" rows="3"></textarea>
               </div>
             </form>
           </div>
         </div>
       </div>
-      
+
     </div>
 
   </div>
