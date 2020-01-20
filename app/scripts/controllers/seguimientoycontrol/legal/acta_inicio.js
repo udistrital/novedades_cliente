@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SeguimientoycontrolLegalActaInicioCtrl', function ($log, $scope, $routeParams, $translate, argoNosqlRequest, contratoRequest, coreAmazonRequest, amazonAdministrativaRequest, adminMidRequest, novedadesMidRequest, novedadesRequest) {
+    .controller('SeguimientoycontrolLegalActaInicioCtrl', function ($log, $scope, $routeParams, $translate, argoNosqlRequest, contratoRequest, coreAmazonRequest, agoraRequest, adminMidRequest, novedadesMidRequest, novedadesRequest) {
         this.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -37,59 +37,62 @@ angular.module('contractualClienteApp')
             }
         });
 
-        contratoRequest.get('contrato', self.contrato_id + '/' + self.contrato_vigencia).then(function (wso_response) {
-            self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
-            self.contrato_obj.objeto = wso_response.data.contrato.objeto_contrato;
-            self.contrato_obj.valor = wso_response.data.contrato.valor_contrato;
-            self.contrato_obj.plazo = wso_response.data.contrato.plazo_ejecucion;
-            self.contrato_obj.supervisor = wso_response.data.contrato.supervisor.nombre;
-            self.contrato_obj.supervisor_cedula = wso_response.data.contrato.supervisor.documento_identificacion;
-            self.contrato_obj.supervisor_cargo = wso_response.data.contrato.supervisor.cargo;
-            self.contrato_obj.VigenciaContrato = wso_response.data.contrato.vigencia;
-            self.contrato_obj.FechaRegistro = wso_response.data.contrato.FechaRegistro;
-            self.contrato_obj.contratista = String(wso_response.data.contrato.contratista);
-            self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
-            self.contrato_obj.UnidadEjecucion = String(wso_response.data.contrato.unidad_ejecucion);
+        agoraRequest.get('contrato_general/?query=ContratoSuscrito.NumeroContratoSuscrito:' + self.contrato_id + ',VigenciaContrato:' + self.contrato_vigencia).then(function (agora_response) {
+            if (agora_response.data.length > 0) {
+                self.contrato_obj.numero_contrato = self.contrato_id;
+                self.contrato_obj.id = agora_response.data[0].ContratoSuscrito[0].Id;
+                self.contrato_obj.valor = agora_response.data[0].ValorContrato;
+                self.contrato_obj.objeto = agora_response.data[0].ObjetoContrato;
+                self.contrato_obj.vigencia = self.contrato_vigencia;
+                self.contrato_obj.contratista = agora_response.data[0].Contratista;
+                self.contrato_obj.cesion = 0;
+                self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
+                self.contrato_obj.supervisor_cedula = agora_response.data[0].Supervisor.Documento;
 
+                //Teae el nombre del supervisor
+                agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ipns_response) {
+                    self.contrato_obj.supervisor_nombre_completo = ipns_response.data[0].PrimerNombre + " " + ipns_response.data[0].SegundoNombre + " " + ipns_response.data[0].PrimerApellido + " " + ipns_response.data[0].SegundoApellido;
+                });
 
-            //Obtencion de datos del Supervisor
-            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ipns_response) {
-                self.contrato_obj.supervisor_nombre_completo = ipns_response.data[0].PrimerNombre + " " + ipns_response.data[0].SegundoNombre + " " + ipns_response.data[0].PrimerApellido + " " + ipns_response.data[0].SegundoApellido;
-            });
-
-            //Verificar si el contrato ha tenido cesion
-            novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.VigenciaContrato).then(function (response_sql) {
-                var elementos_cesion = response_sql.data.Body;
-                if (elementos_cesion.length != '0') {
-                    var last_newness = elementos_cesion[elementos_cesion.length - 1];
-                    novedadesRequest.get('tipo_novedad', 'query=Id:' + last_newness.tiponovedad).then(function (nr_response) {
-                        self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
-                        if (self.contrato_obj.tipo_novedad == "NP_CES") {
-                            self.contrato_obj.contratista = last_newness.cesionario;
-                            //Obtencion de datos del contratista
-                            amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
-                                self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
-                                self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
-                                amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
-                                    coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
-                                        self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
-                                        self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
+                //Verificar si el contrato ha tenido cesion
+                novedadesMidRequest.get('novedad', self.contrato_obj.numero_contrato + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
+                    var elementos_cesion = response_sql.data.Body;
+                    if (elementos_cesion.length != '0') {
+                        var last_newness = elementos_cesion[elementos_cesion.length - 1];
+                        novedadesRequest.get('tipo_novedad', 'query=Id:' + last_newness.tiponovedad).then(function (nr_response) {
+                            self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
+                            if (self.contrato_obj.tipo_novedad == "NP_CES") {
+                                self.contrato_obj.contratista = last_newness.cesionario;
+                                //Obtencion de datos del contratista
+                                agoraRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
+                                    self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
+                                    self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
+                                    agoraRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
+                                        coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
+                                            self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
+                                            self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
+                                        });
                                     });
                                 });
+                            }
+                            //Trae los datos de la poliza del contrato acutal guardado en el esquema novedades
+                            novedadesRequest.get('poliza', 'query=IdNovedadesPoscontractuales:' + last_newness.id).then(function (nrp_response) {
+                                poliza = nrp_response.data[0];
+                                poliza.FechaCreacion = poliza.FechaCreacion.slice(0, -12);
+                                delete poliza.FechaModificacion;
+                                //poliza.FechaModificacion = poliza.FechaModificacion.slice(0, -12)
                             });
-                        }
-                        //Trae los datos de la poliza del contrato acutal guardado en el esquema novedades
-                        novedadesRequest.get('poliza', 'query=IdNovedadesPoscontractuales:' + last_newness.id).then(function (nrp_response) {
-                            poliza = nrp_response.data[0]
-                            poliza.FechaCreacion = poliza.FechaCreacion.slice(0, -12);
-                            delete poliza.FechaModificacion
-                            //poliza.FechaModificacion = poliza.FechaModificacion.slice(0, -12)
                         });
-
-
-                    });
-                }
-            });
+                    }
+                });
+            } else {
+                swal(
+                    $translate.instant('TITULO_ERROR'),
+                    $translate.instant('No se pudo traer los datos asociados al contrato, por favor busque nuevamente el contrato.'),
+                    'error'
+                );
+                window.location.href = "#/seguimientoycontrol/legal";
+            }
         });
 
         /**
@@ -107,20 +110,21 @@ angular.module('contractualClienteApp')
                     'error'
                 )
             } else {
-                poliza.EntidadAseguradoraId = $scope.selected.id
-                poliza.NumeroPolizaId = self.numero_poliza
+                poliza.EntidadAseguradoraId = $scope.selected.id;
+                poliza.NumeroPolizaId = self.numero_poliza;
                 novedadesRequest.put('poliza', poliza.Id, poliza).then(function (nr_response) {
-                    swal({
+                    console.log(nr_response)
+                    /*swal({
                         title: $translate.instant('TITULO_BUEN_TRABAJO'),
                         type: 'success',
-                        html: 'Se registró exitosamente la poliza del ' + self.contrato_obj.id + $translate.instant('ANIO') + self.contrato_obj.VigenciaContrato,
+                        html: 'Se registró exitosamente la poliza del ' + self.contrato_obj.numero_contrato + $translate.instant('ANIO') + self.contrato_obj.vigencia,
                         showCloseButton: false,
                         showCancelButton: false,
                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                         allowOutsideClick: false
                     }).then(function () {
                         window.location.href = "#/seguimientoycontrol/legal";
-                    });
+                    });*/
                 }).catch(function (error) {
                     swal(
                         'Oops...',

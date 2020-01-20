@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SeguimientoycontrolLegalCtrl', function ($scope, coreAmazonRequest, $translate, novedadesMidRequest, novedadesRequest, agoraRequest) {
+    .controller('SeguimientoycontrolLegalCtrl', function ($scope, $translate, novedadesMidRequest, novedadesRequest, agoraRequest) {
         this.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -22,6 +22,7 @@ angular.module('contractualClienteApp')
         self.vigencia_seleccionada = self.vigencias[0];
         self.contrato_obj = {};
         self.estado_resultado_response = false;
+        self.estado_contrato_obj.estado=0;
         agoraRequest.get('vigencia_contrato', '').then(function (response) {
             $scope.vigencias = response.data;
         });
@@ -46,12 +47,9 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.contratista = agora_response.data[0].Contratista;
                     self.contrato_obj.cesion = 0;
 
-                    console.log(self.contrato_obj)
-
                     //Obtiene el estado del contrato.
                     agoraRequest.get('contrato_estado?query=NumeroContrato:' + self.contrato_obj.id + ',Vigencia:' + self.contrato_obj.vigencia).then(function (ce_response) {
                         self.estado_contrato_obj.estado = ce_response.data[ce_response.data.length - 1].Estado.Id;
-                        console.info(self.estado_contrato_obj.estado)
                         if (self.estado_contrato_obj.estado == 7) {
                             swal(
                                 $translate.instant('CONTRATO_CANCELADO'),
@@ -78,12 +76,13 @@ angular.module('contractualClienteApp')
                             var elementos_cesion = response_sql.data.Body;
                             if (elementos_cesion.length != '0') {
                                 var last_newness = elementos_cesion[elementos_cesion.length - 1];
+                                console.log(last_newness)
                                 novedadesRequest.get('tipo_novedad', 'query=Id:' + last_newness.tiponovedad).then(function (nr_response) {
                                     self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
                                     if (self.contrato_obj.tipo_novedad == "NP_CES") {
                                         self.contrato_obj.contratista = last_newness.cesionario;
                                         if (last_newness.poliza === "") {
-                                            self.estado_contrato_obj.estado = 1
+                                            self.estado_contrato_obj.estado = 10
                                             swal(
                                                 $translate.instant('INFORMACION'),
                                                 $translate.instant('DESCRIPCION_ACTA_CESION'),
@@ -128,7 +127,6 @@ angular.module('contractualClienteApp')
                         'error'
                     );
                 }
-
             });
         }
 
