@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SeguimientoycontrolLegalActaCesionCtrl', function ($translate, $location, $scope, $routeParams, token_service, coreAmazonRequest, amazonAdministrativaRequest, contratoRequest, novedadesMidRequest, novedadesRequest) {
+    .controller('SeguimientoycontrolLegalActaCesionCtrl', function ($translate, $location, $scope, $routeParams, agoraRequest, token_service, coreAmazonRequest, amazonAdministrativaRequest, contratoRequest, novedadesMidRequest, novedadesRequest) {
 
         var self = this;
 
@@ -27,113 +27,107 @@ angular.module('contractualClienteApp')
         self.observaciones = "";
         self.n_solicitud = null;
         self.elaboro = '';
-        self.elaboro_cedula = token_service.getPayload().documento
-        //self.elaboro_cedula = 19483708
+        self.elaboro_cedula = token_service.getPayload().documento;
 
         //Obtiene los datos de quien elaboró la Novedad
         amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.elaboro_cedula).then(function (ipn_response) {
             self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
         });
 
-        /**
-         * @ngdoc method
-         * @name contratoRequest
-         * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
-         * @description
-         * Funcion para la carga de toda la informacion de un contrato especifico
-         */
-        contratoRequest.get('contrato', self.contrato_id + '/' + self.contrato_vigencia).then(function (wso_response) {
-            self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
-            self.contrato_obj.valor = wso_response.data.contrato.valor_contrato;
-            self.contrato_obj.objeto = wso_response.data.contrato.objeto_contrato;
-            self.contrato_obj.fecha_registro = wso_response.data.contrato.fecha_registro;
-            self.contrato_obj.ordenador_gasto_id = wso_response.data.contrato.ordenador_gasto.id;
-            self.contrato_obj.ordenador_gasto_nombre = wso_response.data.contrato.ordenador_gasto.nombre_ordenador;
-            self.contrato_obj.ordenador_gasto_rol = wso_response.data.contrato.ordenador_gasto.rol_ordenador;
-            self.contrato_obj.vigencia = wso_response.data.contrato.vigencia;
-            self.contrato_obj.supervisor_nombre = wso_response.data.contrato.supervisor.nombre;
-            self.contrato_obj.supervisor_rol = wso_response.data.contrato.supervisor.cargo;
-            self.contrato_obj.supervisor_cedula = wso_response.data.contrato.supervisor.documento_identificacion;
-            self.contrato_obj.contratista = wso_response.data.contrato.contratista;
-            self.contrato_obj.supervisor_documento = wso_response.data.contrato.supervisor.documento_identificacion;
-            self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
-            self.contrato_obj.plazo = wso_response.data.contrato.plazo_ejecucion;
-            self.contrato_obj.NumeroContrato = wso_response.data.contrato.numero_contrato;
+        agoraRequest.get('contrato_general/?query=ContratoSuscrito.NumeroContratoSuscrito:' + self.contrato_id + ',VigenciaContrato:' + self.contrato_vigencia).then(function (agora_response) {
+            if (agora_response.data.length > 0) {
+                self.contrato_obj.numero_contrato = self.contrato_id;
+                self.contrato_obj.id = agora_response.data[0].ContratoSuscrito[0].Id;
+                self.contrato_obj.valor = agora_response.data[0].ValorContrato;
+                self.contrato_obj.objeto = agora_response.data[0].ObjetoContrato;
+                self.contrato_obj.fecha_registro = agora_response.data[0].FechaRegistro;
+                self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
+                self.contrato_obj.vigencia = self.contrato_vigencia;
+                self.contrato_obj.supervisor_cedula = agora_response.data[0].Supervisor.Documento;
+                self.contrato_obj.supervisor_rol = agora_response.data[0].Supervisor.Cargo;
+                self.contrato_obj.contratista = agora_response.data[0].Contratista;
+                self.contrato_obj.fecha_suscripcion = String(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
+                self.contrato_obj.tipo_contrato = agora_response.data[0].TipoContrato.TipoContrato;
+                self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
 
-            //Se obtiene los datos de Acta de Inicio.
-            amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
-                self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
-                self.contrato_obj.Fin = acta_response.data[0].FechaFin
-            });
-
-            //Obtiene datos del supervisor del contrato.
-            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_documento).then(function (ispn_response) {
-                self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
-                self.contrato_obj.supervisor_nombre_completo = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " + ispn_response.data[0].SegundoApellido;
-                coreAmazonRequest.get('ciudad', 'query=Id:' + ispn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
-                    self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
+                //Se obtiene los datos de Acta de Inicio.
+                amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.id).then(function (acta_response) {
+                    self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
+                    self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                 });
-            });
 
-            //Obtención de datos del ordenador del gasto
-            amazonAdministrativaRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenador_gasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
-                self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
-                self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
-                amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + og_response.data[0].Documento).then(function (ispn_response) {
-                    self.contrato_obj.ordenador_gasto_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
+                //Se obtiene los datos de Acta de Inicio.
+                amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.id).then(function (acta_response) {
+                    self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
+                    self.contrato_obj.Fin = acta_response.data[0].FechaFin
                 });
-                coreAmazonRequest.get('ciudad', 'query=Id:' + og_response.data[0].IdCiudad).then(function (sc_response) {
-                    self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
+
+                //Obtiene datos del supervisor del contrato.
+                amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ispn_response) {
+                    self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
+                    self.contrato_obj.supervisor_nombre = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " + ispn_response.data[0].SegundoApellido;
+                    coreAmazonRequest.get('ciudad', 'query=Id:' + ispn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
+                        self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
+                    });
                 });
-            });
 
-            //Consulta la descripciòn del tipo de contrato
-            amazonAdministrativaRequest.get('tipo_contrato?query=Id:' + wso_response.data.contrato.tipo_contrato).then(function (tc_response) {
-                self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
-            });
+                //Obtención de datos del ordenador del gasto
+                amazonAdministrativaRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
+                    self.contrato_obj.ordenadorGasto_nombre = og_response.data[0].NombreOrdenador;
+                    self.contrato_obj.ordenadorGasto_rol = og_response.data[0].RolOrdenador;
+                    self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
+                    self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
+                    amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + og_response.data[0].Documento).then(function (ispn_response) {
+                        self.contrato_obj.ordenador_gasto_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
+                    });
+                    coreAmazonRequest.get('ciudad', 'query=Id:' + og_response.data[0].IdCiudad).then(function (sc_response) {
+                        self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
+                    });
+                });
 
-            novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
-                var elementos_cesion = response_sql.data.Body;
-                if (elementos_cesion.length != '0') {
-                    var last_cesion = elementos_cesion[elementos_cesion.length - 1];
-                    self.contrato_obj.contratista = last_cesion.cesionario;
-                    //Obtencion de datos del contratista
-                    amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' +last_cesion.cesionario).then(function (ip_response) {
-                        self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
-                        self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
-                        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
-                            self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
-                            coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
-                                self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
+                novedadesMidRequest.get('novedad', self.contrato_obj.numero_contrato + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
+                    var elementos_cesion = response_sql.data.Body;
+                    if (elementos_cesion.length != '0') {
+                        var last_cesion = elementos_cesion[elementos_cesion.length - 1];
+                        self.contrato_obj.contratista = last_cesion.cesionario;
+                        //Obtencion de datos del contratista
+                        amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + last_cesion.cesionario).then(function (ip_response) {
+                            self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
+                            self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
+                            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
+                                self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
+                                coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
+                                    self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
+                                });
+                            });
+                        });
+                    } else {
+                        //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
+                        amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
+                            self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
+                            self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
+                            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
+                                self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
+                                coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
+                                    self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
+                                });
+                            });
+                        });
+                    }
+
+                    //Obtención de datos del jefe de juridica
+                    amazonAdministrativaRequest.get('supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
+                        self.contrato_obj.jefe_juridica_documento = jj_response.data[0].Documento;
+                        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.jefe_juridica_documento).then(function (ijpn_response) {
+                            coreAmazonRequest.get('ciudad', 'query=Id:' + ijpn_response.data[0].IdCiudadExpedicionDocumento).then(function (scj_response) {
+                                self.contrato_obj.jefe_juridica_ciudad_documento = scj_response.data[0].Nombre;
+                                self.contrato_obj.jefe_juridica_tipo_documento = ijpn_response.data[0].TipoDocumento.ValorParametro;
+                                self.contrato_obj.jefe_juridica_nombre_completo = ijpn_response.data[0].PrimerNombre + " " + ijpn_response.data[0].SegundoNombre + " " + ijpn_response.data[0].PrimerApellido + " " + ijpn_response.data[0].SegundoApellido;
                             });
                         });
                     });
-                }else {
-                    //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
-                    amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' +self.contrato_obj.contratista).then(function (ip_response) {
-                        self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
-                        self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
-                        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
-                            self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
-                            coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
-                                self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre;
-                            });
-                        });
-                    });
-                }
-
-                //Obtención de datos del jefe de juridica
-                amazonAdministrativaRequest.get('supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
-                    self.contrato_obj.jefe_juridica_documento = jj_response.data[0].Documento;
-                    amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.jefe_juridica_documento).then(function (ijpn_response) {
-                        coreAmazonRequest.get('ciudad', 'query=Id:' + ijpn_response.data[0].IdCiudadExpedicionDocumento).then(function (scj_response) {
-                            self.contrato_obj.jefe_juridica_ciudad_documento = scj_response.data[0].Nombre;
-                            self.contrato_obj.jefe_juridica_tipo_documento = ijpn_response.data[0].TipoDocumento.ValorParametro;
-                            self.contrato_obj.jefe_juridica_nombre_completo = ijpn_response.data[0].PrimerNombre + " " + ijpn_response.data[0].SegundoNombre + " " + ijpn_response.data[0].PrimerApellido + " " + ijpn_response.data[0].SegundoApellido;
-                        });
-                    });
                 });
-            });
+            }
         });
 
         amazonAdministrativaRequest.get('informacion_persona_natural?fields=Id,PrimerNombre,SegundoNombre,PrimerApellido,SegundoApellido,FechaExpedicionDocumento,TipoDocumento,IdCiudadExpedicionDocumento&limit=0').then(function (response) {
@@ -209,7 +203,7 @@ angular.module('contractualClienteApp')
                                     self.cesion_nov.camposmodificados = null;
                                     self.cesion_nov.cedente = parseInt(response_ced.data[0].Id);
                                     self.cesion_nov.cesionario = parseInt(response_ces.data[0].Id);
-                                    self.cesion_nov.contrato = self.contrato_obj.id;
+                                    self.cesion_nov.contrato = self.contrato_obj.numero_contrato;
                                     self.cesion_nov.fechaadicion = "0001-01-01T00:00:00Z";
                                     self.cesion_nov.fechacesion = new Date(self.f_cesion);
                                     self.cesion_nov.fechaliquidacion = "0001-01-01T00:00:00Z";
@@ -240,7 +234,7 @@ angular.module('contractualClienteApp')
                                         if (request_novedades.status == 200 || request_novedades.statusText == "OK") {
                                             swal(
                                                 $translate.instant('TITULO_BUEN_TRABAJO'),
-                                                $translate.instant('DESCRIPCION_CESION') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
+                                                $translate.instant('DESCRIPCION_CESION') + self.contrato_obj.numero_contrato + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
                                                 'success'
                                             );
                                             self.formato_generacion_pdf();
@@ -603,14 +597,14 @@ angular.module('contractualClienteApp')
                                     {
                                         text: [
                                             { text: self.contrato_id, bold: true },
-                                            { text: ' suscrito el ' + self.format_date_letter(self.contrato_obj.FechaSuscripcion) }
+                                            { text: ' suscrito el ' + self.format_date_letter(self.contrato_obj.fecha_suscripcion) }
                                         ],
                                         style: 'topHeader'
                                     }
                                 ],
                                 [
                                     { text: 'FECHA DE SUSCRIPCIÓN', bold: true, style: 'topHeader' },
-                                    { text: self.format_date_letter(self.contrato_obj.FechaSuscripcion), style: 'topHeader' }
+                                    { text: self.format_date_letter(self.contrato_obj.fecha_suscripcion), style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'FECHA DE INICIO', bold: true, style: 'topHeader' },
@@ -618,7 +612,7 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'ORDENADOR DEL GASTO', bold: true, style: 'topHeader' },
-                                    { text: self.contrato_obj.ordenador_gasto_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.ordenador_gasto_tipo_documento + ' No. ' + self.contrato_obj.ordenador_gasto_documento + " Expedida en " + self.contrato_obj.ordenador_gasto_ciudad_documento, style: 'topHeader' }
+                                    { text: self.contrato_obj.ordenadorGasto_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.ordenador_gasto_tipo_documento + ' No. ' + self.contrato_obj.ordenador_gasto_documento + " Expedida en " + self.contrato_obj.ordenador_gasto_ciudad_documento, style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'SUPERVISOR', bold: true, style: 'topHeader' },
@@ -646,7 +640,7 @@ angular.module('contractualClienteApp')
                         style: ['general_font'],
                         text: [
                             {
-                                text: '\n\nDe una parte, ' + self.contrato_obj.ordenador_gasto_nombre + ' mayor de edad vecino(a) de esta ciudad, identificado(a) con ' + self.contrato_obj.ordenador_gasto_tipo_documento + ' número ' + self.contrato_obj.ordenador_gasto_documento + " expedida en " + self.contrato_obj.ordenador_gasto_ciudad_documento + ', quien actúa en calidad de ' + self.contrato_obj.ordenador_gasto_rol + ', y Ordenador del Gasto, del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ', de otra, ' + self.contrato_obj.contratista_nombre + ', identificado(a) con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ', como ',
+                                text: '\n\nDe una parte, ' + self.contrato_obj.ordenadorGasto_nombre + ' mayor de edad vecino(a) de esta ciudad, identificado(a) con ' + self.contrato_obj.ordenador_gasto_tipo_documento + ' número ' + self.contrato_obj.ordenador_gasto_documento + " expedida en " + self.contrato_obj.ordenador_gasto_ciudad_documento + ', quien actúa en calidad de ' + self.contrato_obj.ordenadorGasto_rol + ', y Ordenador del Gasto, del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ', de otra, ' + self.contrato_obj.contratista_nombre + ', identificado(a) con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ', como ',
                             },
                             {
                                 text: [{
@@ -670,12 +664,12 @@ angular.module('contractualClienteApp')
                         ol: [
                             {
                                 text:
-                                    'Que entre la Universidad Distrital Francisco José de Caldas y el señor ' + self.contrato_obj.contratista_nombre + ', se suscribió el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_obj.id + ' de ' + self.contrato_obj.vigencia + ', cuyo objeto es “' + self.contrato_obj.objeto + '”\n\n'
+                                    'Que entre la Universidad Distrital Francisco José de Caldas y el señor ' + self.contrato_obj.contratista_nombre + ', se suscribió el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_obj.numero_contrato + ' de ' + self.contrato_obj.vigencia + ', cuyo objeto es “' + self.contrato_obj.objeto + '”\n\n'
 
                             },
                             {
                                 text:
-                                    'Que la CLÁUSULA OCTAVA del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_obj.id + ' de ' + self.contrato_obj.vigencia + ', establece que “El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de LA UNIVERSIDAD”. \n\n'
+                                    'Que la CLÁUSULA OCTAVA del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_obj.numero_contrato + ' de ' + self.contrato_obj.vigencia + ', establece que “El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de LA UNIVERSIDAD”. \n\n'
 
                             },
                             {
@@ -685,7 +679,7 @@ angular.module('contractualClienteApp')
                             },
                             [
 
-                                { text: 'Que mediante oficio No. ' + self.num_oficio + ' de fecha ' + self.format_date_letter_mongo(self.f_oficio) + ', el supervisor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_obj.id + ' de ' + self.contrato_obj.vigencia + ', le comunicó al señor (a) ' + self.contrato_obj.ordenador_gasto_nombre + ' en calidad de Ordenador el Gasto del citado contrato, la autorización para ceder el mismo, a partir del día ' + self.format_date_letter_mongo(self.f_cesion) + ', y aportó un estado financiero expedido por la Sección de Presupuesto, en donde informa lo siguiente:' },
+                                { text: 'Que mediante oficio No. ' + self.num_oficio + ' de fecha ' + self.format_date_letter_mongo(self.f_oficio) + ', el supervisor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_obj.numero_contrato + ' de ' + self.contrato_obj.vigencia + ', le comunicó al señor (a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador el Gasto del citado contrato, la autorización para ceder el mismo, a partir del día ' + self.format_date_letter_mongo(self.f_cesion) + ', y aportó un estado financiero expedido por la Sección de Presupuesto, en donde informa lo siguiente:' },
                                 {
                                     ul: [
                                         'Por los servicios prestados por el señor (a) ' + self.contrato_obj.contratista_nombre + ' CONTRATISTA CEDENTE, hasta el día ' + self.format_date_letter_mongo(self.f_terminacion) + ' se reconoció un valor total de ' + NumeroALetras(self.valor_desembolsado + '') + '($' + numberFormat(self.valor_desembolsado + '') + '), y ejecutor del contrato un plazo de ' + self.contrato_obj.plazo + ' meses.\n',
@@ -697,7 +691,7 @@ angular.module('contractualClienteApp')
                             ],
                             {
                                 text:
-                                    'Que por medio del oficio ' + self.num_oficio + ' de fecha ' + self.format_date_letter_mongo(self.f_oficio) + ', recibido por la Oficina Asesora Jurídica, el señor (a) ' + self.contrato_obj.ordenador_gasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de cesión del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_obj.id + ' de ' + self.contrato_obj.vigencia + ', a partir día ' + self.format_date_letter_mongo(self.f_cesion) + ', a favor de ' + self.cesionario_obj.nombre + ' ' + self.cesionario_obj.apellidos + '.\n\n'
+                                    'Que por medio del oficio ' + self.num_oficio + ' de fecha ' + self.format_date_letter_mongo(self.f_oficio) + ', recibido por la Oficina Asesora Jurídica, el señor (a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de cesión del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_obj.numero_contrato + ' de ' + self.contrato_obj.vigencia + ', a partir día ' + self.format_date_letter_mongo(self.f_cesion) + ', a favor de ' + self.cesionario_obj.nombre + ' ' + self.cesionario_obj.apellidos + '.\n\n'
                             },
                         ]
 
@@ -719,7 +713,7 @@ angular.module('contractualClienteApp')
 
                                 },
                                 {
-                                    text: 'El señor (a) ' + self.contrato_obj.contratista_nombre + ' cede el ' + self.contrato_obj.tipo_contrato + ' No.' + self.contrato_obj.id + ', suscrito el día ' + self.format_date_letter_mongo(self.f_oficio) + ', a ' + self.cesionario_obj.nombre + ' ' + self.cesionario_obj.apellidos + ' (CESIONARIO), en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día ' + self.format_date_letter_mongo(self.f_cesion) + '.\n\n',
+                                    text: 'El señor (a) ' + self.contrato_obj.contratista_nombre + ' cede el ' + self.contrato_obj.tipo_contrato + ' No.' + self.contrato_obj.numero_contrato + ', suscrito el día ' + self.format_date_letter_mongo(self.f_oficio) + ', a ' + self.cesionario_obj.nombre + ' ' + self.cesionario_obj.apellidos + ' (CESIONARIO), en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día ' + self.format_date_letter_mongo(self.f_cesion) + '.\n\n',
                                 },
 
                             ],
@@ -728,7 +722,7 @@ angular.module('contractualClienteApp')
                                     text: 'CLAUSULA SEGUNDA: GARANTÍA. EL CESIONARIO ', bold: true,
                                 },
                                 {
-                                    text: 'se compromete a modificar la Póliza de Cumplimiento expedida en virtud del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_obj.id + ' de ' + self.contrato_obj.vigencia + ' o a expedir una nueva de conformidad con la suscripción del presente documento. \n\n',
+                                    text: 'se compromete a modificar la Póliza de Cumplimiento expedida en virtud del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_obj.numero_contrato + ' de ' + self.contrato_obj.vigencia + ' o a expedir una nueva de conformidad con la suscripción del presente documento. \n\n',
                                 }
                             ],
                             [
@@ -758,8 +752,8 @@ angular.module('contractualClienteApp')
                                     { text: '______________________________________', bold: false, style: 'topHeader' }
                                 ],
                                 [
-                                    { text: '' + self.contrato_obj.ordenador_gasto_nombre, bold: false, style: 'topHeader' },
-                                    { text: '' + self.contrato_obj.contratista_nombre, bold: false, style: 'topHeader' }
+                                    { text: self.contrato_obj.ordenadorGasto_nombre, bold: false, style: 'topHeader' },
+                                    { text: self.contrato_obj.contratista_nombre, bold: false, style: 'topHeader' }
 
                                 ],
                                 [
@@ -767,7 +761,7 @@ angular.module('contractualClienteApp')
                                     { text: 'CC. ' + self.contrato_obj.contratista_documento, bold: false, style: 'topHeader' }
                                 ],
                                 [
-                                    { text: self.contrato_obj.ordenador_gasto_rol, bold: true, style: 'topHeader' },
+                                    { text: self.contrato_obj.ordenadorGasto_rol, bold: true, style: 'topHeader' },
                                     { text: 'Cedente', bold: true, style: 'topHeader' }
                                 ],
                                 [

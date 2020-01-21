@@ -4,14 +4,13 @@
   <form id="formulario" ng-submit="sLactaInicio.generarActa()" method="post">
     <div class="panel-body">
       <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-1"></div>
         <div class="col-xs-12 col-sm-12 col-md-6">
           <div class="panel panel-default">
             <div class="panel-heading"><center><h4><b>{{'INFORMACION_ACTA_INICIO' | translate}}</b></h4></center></div>
             <div class="panel-body">
               <div class="row">
                 <div class="col-md-4"><b>{{'NUMERO_CONTRATO' | translate}}</b></div>
-                <div class="col-md-8"><p>{{sLactaInicio.contrato_obj.id}}</p></div>
+                <div class="col-md-8"><p>{{sLactaInicio.contrato_obj.numero_contrato}}</p></div>
                 <div class="col-md-4"><b>{{'OBJETO' | translate}}</b></div>
                 <div class="col-md-8"> <p>{{sLactaInicio.contrato_obj.objeto}}</p> </div>
                 <div class="col-md-4"><b>{{'VALOR_TOTAL_CONTRATO' | translate}}</b></div>
@@ -32,7 +31,7 @@
           </div>
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-4">
+        <div class="col-xs-12 col-sm-12 col-md-6">
           <div class="panel panel-default" style="height: 382px;">
             <div class="panel-heading"><center><h4><b>{{'INFORMACION_NOVEDAD' | translate}}</b></h4></center></div>
             <div class="panel-body">
@@ -62,7 +61,6 @@
               </div>
           </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-1"></div>
       </div>
     </div>
     <div class="panel-footer">
