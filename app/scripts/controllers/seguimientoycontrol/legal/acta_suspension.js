@@ -194,14 +194,12 @@ angular.module('contractualClienteApp')
             }
           }
           self.estados[0] = estado_temp_from;
-          //self.formato_generacion_pdf();
           adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
             self.validacion = vc_response.data.Body;
             if (self.validacion == "true") {
 
               novedadesMidRequest.post('novedad', self.suspension_nov).then(function (request_novedades) {
                 if (request_novedades.status == 200 || response.statusText == "Ok") {
-
                   var cambio_estado_contrato = {
                     "_postcontrato_estado": {
                       "estado": 2,
@@ -210,8 +208,15 @@ angular.module('contractualClienteApp')
                       "vigencia": parseInt(self.contrato_vigencia)
                     }
                   };
+                  console.log(cambio_estado_contrato)
                   contratoRequest.post('contrato_estado', cambio_estado_contrato).then(function (response) {
+                    
+
+                    contratoRequest.get('contrato_estado', +self.contrato_id + '/' + self.contrato_vigencia).then(function (ce_response) {
+                      console.log(ce_response)
+                    });
                     if (response.status == 200 || response.statusText == "OK") {
+
                       swal(
                         $translate.instant('TITULO_BUEN_TRABAJO'),
                         $translate.instant('DESCRIPCION_SUSPENSION') + self.contrato_obj.id + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
