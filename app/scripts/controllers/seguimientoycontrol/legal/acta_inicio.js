@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SeguimientoycontrolLegalActaInicioCtrl', function ($log, $scope, $routeParams, $translate, argoNosqlRequest, contratoRequest, coreAmazonRequest, agoraRequest, adminMidRequest, novedadesMidRequest, novedadesRequest) {
+    .controller('SeguimientoycontrolLegalActaInicioCtrl', function ($log, $scope, $routeParams, $translate, coreAmazonRequest, agoraRequest, novedadesMidRequest, novedadesRequest) {
         this.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -114,7 +114,7 @@ angular.module('contractualClienteApp')
                 poliza.NumeroPolizaId = self.numero_poliza;
                 novedadesRequest.put('poliza', poliza.Id, poliza).then(function (nr_response) {
                     console.log(nr_response)
-                    /*swal({
+                    swal({
                         title: $translate.instant('TITULO_BUEN_TRABAJO'),
                         type: 'success',
                         html: 'Se registró exitosamente la poliza del ' + self.contrato_obj.numero_contrato + $translate.instant('ANIO') + self.contrato_obj.vigencia,
@@ -124,7 +124,7 @@ angular.module('contractualClienteApp')
                         allowOutsideClick: false
                     }).then(function () {
                         window.location.href = "#/seguimientoycontrol/legal";
-                    });*/
+                    });
                 }).catch(function (error) {
                     swal(
                         'Oops...',

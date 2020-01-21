@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SeguimientoycontrolLegalActaAdicionProrrogaCtrl', function ($scope, $routeParams, adminMidRequest, token_service, coreAmazonRequest, contratoRequest, $translate, amazonAdministrativaRequest, novedadesRequest, novedadesMidRequest) {
+    .controller('SeguimientoycontrolLegalActaAdicionProrrogaCtrl', function ($scope, $routeParams, agoraRequest,adminMidRequest, token_service, coreAmazonRequest, contratoRequest, $translate, amazonAdministrativaRequest, novedadesRequest, novedadesMidRequest) {
 
         this.awesomeThings = [
             'HTML5 Boilerplate',
@@ -34,127 +34,141 @@ angular.module('contractualClienteApp')
         self.pocentaje_ejecutado = '';
         self.elaboro = '';
         self.tiponovedad = '';
-        self.elaboro_cedula = token_service.getPayload().documento
+        self.elaboro_cedula = token_service.getPayload().documento;
         var adicionProrroga = '';
-        //self.elaboro_cedula = 19483708
-        //Obtiene los datos de quien elaboró la Novedad
+
         amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.elaboro_cedula).then(function (ipn_response) {
             self.elaboro = ipn_response.data[0].PrimerNombre + ' ' + ipn_response.data[0].SegundoNombre + ' ' + ipn_response.data[0].PrimerApellido + ' ' + ipn_response.data[0].SegundoApellido
         });
-        contratoRequest.get('contrato', +self.contrato_id + '/' + self.contrato_vigencia).then(function (wso_response) {
-            $scope.response_contrato = wso_response;
-            self.contrato_obj.id = wso_response.data.contrato.numero_contrato_suscrito;
-            self.contrato_obj.ordenador_gasto_id = wso_response.data.contrato.ordenador_gasto.id;
-            self.contrato_obj.ordenador_gasto_nombre = wso_response.data.contrato.ordenador_gasto.nombre_ordenador;
-            self.contrato_obj.ordenador_gasto_rol = wso_response.data.contrato.ordenador_gasto.rol_ordenador;
-            self.contrato_obj.TipoContrato = wso_response.data.contrato.tipo_contrato;
-            self.contrato_obj.ObjetoContrato = wso_response.data.contrato.objeto_contrato;
-            self.contrato_obj.ValorContrato = wso_response.data.contrato.valor_contrato;
-            self.contrato_obj.PlazoEjecucion = wso_response.data.contrato.plazo_ejecucion;
-            self.contrato_obj.supervisor_rol = wso_response.data.contrato.supervisor.cargo;
-            self.contrato_obj.supervisor_cedula = wso_response.data.contrato.supervisor.documento_identificacion;
-            self.contrato_obj.FechaRegistro = wso_response.data.contrato.fecha_registro;
-            self.contrato_obj.FechaSuscripcion = String(wso_response.data.contrato.fecha_suscripcion);
-            self.contrato_obj.VigenciaContrato = wso_response.data.contrato.vigencia;
-            self.contrato_obj.OrdenadorGasto = wso_response.data.contrato.ordenador_gasto.nombre_ordenador;
-            self.contrato_obj.RolOrdenadorGasto = wso_response.data.contrato.ordenador_gasto.rol_ordenador;
-            self.contrato_obj.contratista = wso_response.data.contrato.contratista;
-            var fecha_reg = self.contrato_obj.FechaRegistro;
-            var res = fecha_reg.split("-");
-            self.fecha_reg_dia = res[2];
-            self.fecha_reg_mes = meses[parseInt(res[1] - 1)];
-            self.fecha_reg_ano = res[0];
+        agoraRequest.get('contrato_general/?query=ContratoSuscrito.NumeroContratoSuscrito:' + self.contrato_id + ',VigenciaContrato:' + self.contrato_vigencia).then(function (agora_response) {
+            if (agora_response.data.length > 0) {
+                self.contrato_obj.contratista = agora_response.data[0].Contratista;
+                self.contrato_obj.cesion = 0;
+                self.contrato_obj.numero_contrato = self.contrato_id;
+                self.contrato_obj.id = agora_response.data[0].ContratoSuscrito[0].Id;
+                self.contrato_obj.ordenadorGasto_id= agora_response.data[0].OrdenadorGasto;
+                self.contrato_obj.tipo_contrato = agora_response.data[0].TipoContrato.TipoContrato;
+                self.contrato_obj.objeto = agora_response.data[0].ObjetoContrato;
+                self.contrato_obj.valor = agora_response.data[0].ValorContrato;
+                self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
+                self.contrato_obj.supervisor_cedula = agora_response.data[0].Supervisor.Documento;
+                self.contrato_obj.supervisor_rol =  agora_response.data[0].Supervisor.Cargo;
+                self.contrato_obj.fecha_registro = agora_response.data[0].FechaRegistro;
+                self.contrato_obj.fecha_suscripcion = String(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
+                self.contrato_obj.vigencia = self.contrato_vigencia;          
 
 
-            //Se obtiene los datos de Acta de Inicio.
-            amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.id).then(function (acta_response) {
-                self.contrato_obj.NumeroContrato = acta_response.data[acta_response.data.length - 1].NumeroContrato.Id;
-                amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
-                    self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
-                    self.contrato_obj.Fin = acta_response.data[0].FechaFin
-                });
-            });
-            //Se obtienen datos relacionados al supervisor.
-            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ipn_response) {
+              
+                var fecha_reg = self.contrato_obj.fecha_registro;
+                var res = fecha_reg.split("-");
+                self.fecha_reg_dia = res[2];
+                self.fecha_reg_mes = meses[parseInt(res[1] - 1)];
+                self.fecha_reg_ano = res[0];
+    
+  //Se obtiene los datos de Acta de Inicio.
+  amazonAdministrativaRequest.get('contrato_suscrito?query=NumeroContratoSuscrito:' + self.contrato_obj.numero_contrato ).then(function (acta_response) {
+    self.contrato_obj.NumeroContrato = acta_response.data[acta_response.data.length - 1].NumeroContrato.Id;
+    amazonAdministrativaRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.NumeroContrato).then(function (acta_response) {
+        self.contrato_obj.Inicio = acta_response.data[0].FechaInicio
+        self.contrato_obj.Fin = acta_response.data[0].FechaFin
+    });
+});
+//Se obtienen datos relacionados al supervisor.
+amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ipn_response) {
+    coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
+        self.contrato_obj.supervisor_tipo_Documento = ipn_response.data[0].TipoDocumento.ValorParametro
+        self.contrato_obj.supervisor_ciudad_cedula = c_response.data[0].Nombre;
+        self.contrato_obj.supervisor_nombre = ipn_response.data[0].PrimerNombre + " " + ipn_response.data[0].SegundoNombre + " " + ipn_response.data[0].PrimerApellido + " " + ipn_response.data[0].SegundoApellido;
+
+    });
+});
+
+//Obtención de datos del ordenador del gasto
+amazonAdministrativaRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
+    self.contrato_obj.ordenadorGasto_nombre = og_response.data[0].NombreOrdenador;
+    self.contrato_obj.ordenadorGasto_rol = og_response.data[0].RolOrdenador;
+
+    self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
+    self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
+    self.contrato_obj.ordenador_gasto_Inicio = og_response.data[0].FechaInicio;
+    console.log(og_response.data[0])
+    amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + og_response.data[0].Documento).then(function (ispn_response) {
+        self.contrato_obj.ordenador_gasto_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
+    });
+    coreAmazonRequest.get('ciudad', 'query=Id:' + og_response.data[0].IdCiudad).then(function (sc_response) {
+        self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
+    });
+});
+
+novedadesMidRequest.get('novedad', self.contrato_obj.numero_contrato  + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
+    var elementos_cesion = response_sql.data.Body;
+    if (elementos_cesion.length != '0') {
+        var last_cesion = elementos_cesion[elementos_cesion.length - 1];
+        self.contrato_obj.contratista = last_cesion.cesionario;
+        amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + last_cesion.cesionario).then(function (ip_response) {
+            self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
+            self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
+            //Se obtienen datos relacionados al contrastista.
+            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.contratista_documento).then(function (ipn_response) {
                 coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
-                    self.contrato_obj.supervisor_tipo_Documento = ipn_response.data[0].TipoDocumento.ValorParametro
-                    self.contrato_obj.supervisor_ciudad_cedula = c_response.data[0].Nombre;
-                    self.contrato_obj.supervisor_nombre = ipn_response.data[0].PrimerNombre + " " + ipn_response.data[0].SegundoNombre + " " + ipn_response.data[0].PrimerApellido + " " + ipn_response.data[0].SegundoApellido;
-
+                    self.contrato_obj.contratista_tipo_Documento = ipn_response.data[0].TipoDocumento.ValorParametro
+                    self.contrato_obj.contratista_ciudad_cedula = c_response.data[0].Nombre;
                 });
             });
-
-            //Obtención de datos del ordenador del gasto
-            amazonAdministrativaRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenador_gasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
-                self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
-                self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
-                self.contrato_obj.ordenador_gasto_Inicio = og_response.data[0].FechaInicio;
-                console.log(og_response.data[0])
-                amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + og_response.data[0].Documento).then(function (ispn_response) {
-                    self.contrato_obj.ordenador_gasto_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
-                });
-                coreAmazonRequest.get('ciudad', 'query=Id:' + og_response.data[0].IdCiudad).then(function (sc_response) {
-                    self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
-                });
-            });
-
-            novedadesMidRequest.get('novedad', self.contrato_obj.id + "/" + self.contrato_obj.VigenciaContrato).then(function (response_sql) {
-                var elementos_cesion = response_sql.data.Body;
-                if (elementos_cesion.length != '0') {
-                    var last_cesion = elementos_cesion[elementos_cesion.length - 1];
-                    self.contrato_obj.contratista = last_cesion.cesionario;
-                    amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + last_cesion.cesionario).then(function (ip_response) {
-                        self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
-                        self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
-                        //Se obtienen datos relacionados al contrastista.
-                        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.contratista_documento).then(function (ipn_response) {
-                            coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
-                                self.contrato_obj.contratista_tipo_Documento = ipn_response.data[0].TipoDocumento.ValorParametro
-                                self.contrato_obj.contratista_ciudad_cedula = c_response.data[0].Nombre;
-                            });
-                        });
-                        //Consulta el CDP
-                        adminMidRequest.get('aprobacion_pago/contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
-                            self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
-                            self.contrato_obj.cdp_anno = response.data[0].VigenciaCdp;
-                        }).catch(function (error) {
-                            swal(
-                                $translate.instant('INFORMACION'),
-                                $translate.instant('No se pudo obtener datos del CDP'),
-                                'info'
-                            )
-                        });
-                    });
-                } else {
-                    //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
-                    amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
-                        self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
-                        self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
-                        //Se obtienen datos relacionados al contrastista.
-                        amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.contratista_documento).then(function (ipn_response) {
-                            coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
-                                self.contrato_obj.contratista_tipo_Documento = ipn_response.data[0].TipoDocumento.ValorParametro
-                                self.contrato_obj.contratista_ciudad_cedula = c_response.data[0].Nombre;
-                            });
-                        });
-                        //Consulta el CDP
-                        adminMidRequest.get('aprobacion_pago/contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
-                            self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
-                            self.contrato_obj.cdp_anno = response.data[0].VigenciaCdp;
-                        }).catch(function (error) {
-                            swal(
-                                $translate.instant('INFORMACION'),
-                                $translate.instant('No se pudo obtener datos del CDP'),
-                                'info'
-                            )
-                        });
-                    });
-                }
-            });
-            amazonAdministrativaRequest.get('tipo_contrato?query=Id:' + wso_response.data.contrato.tipo_contrato).then(function (tc_response) {
-                self.contrato_obj.tipo_contrato = tc_response.data[0].TipoContrato;
+            //Consulta el CDP
+            adminMidRequest.get('aprobacion_pago/contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
+                self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
+                self.contrato_obj.cdp_anno = response.data[0].VigenciaCdp;
+            }).catch(function (error) {
+                swal(
+                    $translate.instant('INFORMACION'),
+                    $translate.instant('No se pudo obtener datos del CDP'),
+                    'info'
+                )
             });
         });
+    } else {
+        //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
+        amazonAdministrativaRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
+            self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
+            self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
+            //Se obtienen datos relacionados al contrastista.
+            amazonAdministrativaRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.contratista_documento).then(function (ipn_response) {
+                coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
+                    self.contrato_obj.contratista_tipo_Documento = ipn_response.data[0].TipoDocumento.ValorParametro
+                    self.contrato_obj.contratista_ciudad_cedula = c_response.data[0].Nombre;
+                });
+            });
+            //Consulta el CDP
+            adminMidRequest.get('aprobacion_pago/contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
+                self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
+                self.contrato_obj.cdp_anno = response.data[0].VigenciaCdp;
+            }).catch(function (error) {
+                swal(
+                    $translate.instant('INFORMACION'),
+                    $translate.instant('No se pudo obtener datos del CDP'),
+                    'info'
+                )
+            });
+        });
+    }
+});
+
+            }
+        });
+
+
+
+
+
+
+      /*  contratoRequest.get('contrato', +self.contrato_id + '/' + self.contrato_vigencia).then(function (wso_response) {
+
+           
+
+          
+           
+        });*/
 
         /**
          * @ngdoc method
@@ -165,8 +179,8 @@ angular.module('contractualClienteApp')
          */
         $scope.total_valor_contrato = function (evento) {
             var valor_adicion = (evento.target.value).replace(/[^0-9\.]/g, '');
-            var valor_contrato = parseFloat(valor_adicion) + parseFloat(self.contrato_obj.ValorContrato);
-            var valor_valido_adicion = self.contrato_obj.ValorContrato * 0.5;
+            var valor_contrato = parseFloat(valor_adicion) + parseFloat(self.contrato_obj.valor);
+            var valor_valido_adicion = self.contrato_obj.valor * 0.5;
             if (valor_adicion <= valor_valido_adicion) {
                 $scope.nuevo_valor_contrato = numberFormat(String(valor_contrato));
                 $scope.valor_adicion_letras = numeroALetras(valor_adicion, {
@@ -200,7 +214,7 @@ angular.module('contractualClienteApp')
          */
         $scope.total_plazo_contrato = function (evento) {
             var valor_prorroga = evento.target.value;
-            var plazo_actual_dias = parseInt(self.contrato_obj.PlazoEjecucion) * (30);
+            var plazo_actual_dias = parseInt(self.contrato_obj.plazo) * (30);
             var valor_valido_prorroga = plazo_actual_dias * 0.5;
             $scope.valor_prorroga_final = valor_prorroga;
             $scope.nuevo_plazo_contrato = $scope.cantidad_meses_letras + cantidad_meses + " ) " + $translate.instant('MENSAJE_MESES') + " " + $scope.cantidad_dias_letras + cantidad_dias + " ) " + $translate.instant('DIAS');
@@ -300,7 +314,7 @@ angular.module('contractualClienteApp')
                     $translate.instant('DESCRIPCION_ADVERTENCIA'),
                     'info');
             }
-            var valor_contrato_inicial = self.contrato_obj.ValorContrato;
+            var valor_contrato_inicial = self.contrato_obj.valor;
             $scope.valor_contrato_letras = numeroALetras(valor_contrato_inicial, {
                 plural: $translate.instant('PESOS'),
                 singular: $translate.instant('PESO'),
@@ -308,7 +322,7 @@ angular.module('contractualClienteApp')
                 centSingular: $translate.instant('CENTAVO')
             });
             $scope.cantidad_salarios_minimos = (valor_contrato_inicial / 737717).toFixed(2);
-            $scope.contrato_plazo_letras = numeroALetras(self.contrato_obj.PlazoEjecucion, {
+            $scope.contrato_plazo_letras = numeroALetras(self.contrato_obj.plazo, {
                 plural: $translate.instant('('),
                 singular: $translate.instant('(')
             });
@@ -325,7 +339,7 @@ angular.module('contractualClienteApp')
                 $scope.alert = 'DESCRIPCION_ADICION';
                 novedadesRequest.get('tipo_novedad', 'query=Nombre:' + $scope.estado_novedad).then(function (nc_response) {
                     self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
-                    $scope.nuevo_plazo_contrato = self.contrato_obj.PlazoEjecucion + " meses";
+                    $scope.nuevo_plazo_contrato = self.contrato_obj.plazo + " meses";
                     callback(self.tiponovedad);
                 });
             }
@@ -362,7 +376,7 @@ angular.module('contractualClienteApp')
         self.generarActa = function () {
             generateTipoNovedad(function (tiponovedad) {
                 self.data_acta_adicion_prorroga = {
-                    contrato: self.contrato_obj.id,
+                    contrato: self.contrato_obj.numero_contrato ,
                     numerosolicitud: $scope.numero_solicitud,
                     fechasolicitud: self.fecha_inicio,
                     numerocdp: String(self.contrato_obj.NumeroCdp),
@@ -370,7 +384,7 @@ angular.module('contractualClienteApp')
                     fechaadicion: $scope.fecha_adicion,
                     tiempoprorroga: $scope.tiempo_prorroga,
                     fechaprorroga: $scope.fecha_prorroga,
-                    vigencia: String(self.contrato_obj.VigenciaContrato),
+                    vigencia: String(self.contrato_obj.vigencia),
                     motivo: $scope.motivo,
                     tiponovedad: tiponovedad,
                     cesionario: parseInt(self.contrato_obj.contratista)
@@ -378,8 +392,8 @@ angular.module('contractualClienteApp')
 
                 if ($scope.nuevo_valor_contrato == undefined) {
                     console.log("No hay valor adicionado")
-                    $scope.nuevo_valor_contrato = numberFormat(String(self.contrato_obj.ValorContrato));
-                    $scope.nuevo_valor_contrato_letras = numeroALetras(String(self.contrato_obj.ValorContrato), {
+                    $scope.nuevo_valor_contrato = numberFormat(String(self.contrato_obj.valor));
+                    $scope.nuevo_valor_contrato_letras = numeroALetras(String(self.contrato_obj.valor), {
                         plural: $translate.instant('PESOS'),
                         singular: $translate.instant('PESO'),
                         centPlural: $translate.instant('CENTAVOS'),
@@ -400,7 +414,7 @@ angular.module('contractualClienteApp')
                         swal({
                             title: $translate.instant('TITULO_BUEN_TRABAJO'),
                             type: 'success',
-                            html: $translate.instant($scope.alert) + self.contrato_obj.id + $translate.instant('ANIO') + self.contrato_obj.VigenciaContrato + '.',
+                            html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato  + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
                             showCloseButton: false,
                             showCancelButton: false,
                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
@@ -493,10 +507,10 @@ angular.module('contractualClienteApp')
                         style: ['general_font'],
                         text: [
                             { text: 'Entre los suscritos, ' },
-                            { text: self.contrato_obj.ordenador_gasto_nombre + ', ', bold: true },
+                            { text: self.contrato_obj.ordenadorGasto_nombre + ', ', bold: true },
                             {
                                 text: 'mayor de edad, vecino de esta ciudad, identificado con cédula de ciudadanía No. ' + self.contrato_obj.ordenador_gasto_documento + ' expedida en Bogotá D.C., ' +
-                                    'quien actúa en calidad de ' + self.contrato_obj.ordenador_gasto_rol + ', de conformidad con la Resolución No. ' + self.contrato_obj.ordenador_gasto_resolucion +
+                                    'quien actúa en calidad de ' + self.contrato_obj.ordenadorGasto_rol + ', de conformidad con la Resolución No. ' + self.contrato_obj.ordenador_gasto_resolucion +
                                     ' del ' + self.format_date_letter_mongo(self.contrato_obj.ordenador_gasto_Inicio) + ', así como en nombre y representación legal de la '
                             },
                             { text: 'UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS, ', bold: true },
@@ -527,7 +541,7 @@ angular.module('contractualClienteApp')
                                     { text: 'LA UNIVERSIDAD y EL CONTRATISTA ', bold: true },
                                     {
                                         text: 'suscribieron el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' +
-                                            self.fecha_reg_ano + ', cuyo objeto es "' + self.contrato_obj.ObjetoContrato + '" (Cláusula 1).'
+                                            self.fecha_reg_ano + ', cuyo objeto es "' + self.contrato_obj.objeto + '" (Cláusula 1).'
                                     },
 
                                 ]
@@ -535,14 +549,14 @@ angular.module('contractualClienteApp')
                             {
                                 text: [
                                     { text: 'Como plazo de ejecución del contrato se estableció ' },
-                                    { text: '' + $scope.contrato_plazo_letras + self.contrato_obj.PlazoEjecucion + ' ) MESES, ', bold: true },
+                                    { text: '' + $scope.contrato_plazo_letras + self.contrato_obj.plazo + ' ) MESES, ', bold: true },
                                     { text: 'contados a partir de la suscripción de la correspondiente acta de inicio, lo cual tuvo lugar el ' + self.fecha_reg_dia + ' de ' + self.fecha_reg_mes + ' de ' + self.fecha_reg_ano + '. ' },
                                 ]
                             },
                             {
                                 text: [
                                     { text: 'En la cláusula número 3, se pactó como valor la suma de ' },
-                                    { text: '' + $scope.valor_contrato_letras + ' MONEDA CORRIENTE ($' + numberFormat(self.contrato_obj.ValorContrato) + ' M/Cte.) ', bold: true },
+                                    { text: '' + $scope.valor_contrato_letras + ' MONEDA CORRIENTE ($' + numberFormat(String(self.contrato_obj.valor)) + ' M/Cte.) ', bold: true },
                                     { text: 'incluido IVA.' },
                                 ]
                             },
@@ -555,7 +569,7 @@ angular.module('contractualClienteApp')
                                 text: [
                                     {
                                         text: 'Que mediante oficio ' + $scope.numero_oficio + ', recibido por la Oficina Asesora Jurídica el día '
-                                            + self.format_date_letter_mongo(self.fecha_inicio) + ', el ' + self.contrato_obj.ordenador_gasto_rol + ' de '
+                                            + self.format_date_letter_mongo(self.fecha_inicio) + ', el ' + self.contrato_obj.ordenadorGasto_rol + ' de '
                                     },
                                     { text: 'LA UNIVERSIDAD, ', bold: true },
                                     { text: 'como Ordenador del Gasto, solicitud la adición de ' },
@@ -655,8 +669,8 @@ angular.module('contractualClienteApp')
                                     {
                                         text: [
                                             '______________________________________\n',
-                                            { text: self.contrato_obj.ordenador_gasto_nombre + '\n', bold: true },
-                                            { text: self.contrato_obj.ordenador_gasto_rol + '\n' },
+                                            { text: self.contrato_obj.ordenadorGasto_nombre + '\n', bold: true },
+                                            { text: self.contrato_obj.ordenadorGasto_rol + '\n' },
                                             'La Universidad'
                                         ]
                                     },

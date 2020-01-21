@@ -26,19 +26,19 @@
               <div class="row">
                 <div class="col-sm-12 col-md-4"><b>{{'NUMERO_CONTRATO' | translate}}</b></div>
                 <div class="col-sm-12 col-md-8">
-                  <p>{{sLactaAdicionProrroga.contrato_obj.id}}</p>
+                  <p>{{sLactaAdicionProrroga.contrato_obj.numero_contrato }}</p>
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-12 col-md-4"><b>{{'OBJETO' | translate}}</b></div>
                 <div class="col-sm-12 col-md-8">
-                  <p>{{sLactaAdicionProrroga.contrato_obj.ObjetoContrato}}</p>
+                  <p>{{sLactaAdicionProrroga.contrato_obj.objeto}}</p>
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-12 col-md-4"><b>{{'VALOR_TOTAL_CONTRATO' | translate}}</b></div>
                 <div class="col-sm-12 col-md-8">
-                  <p>{{sLactaAdicionProrroga.contrato_obj.ValorContrato | currency}}</p>
+                  <p>{{sLactaAdicionProrroga.contrato_obj.valor | currency}}</p>
                 </div>
               </div>
               <div class="row">
@@ -50,7 +50,7 @@
               <div class="row">
                 <div class="col-sm-12 col-md-4"><b>{{'PLAZO_INICIAL_MESES' | translate}}</b></div>
                 <div class="col-sm-12 col-md-8">
-                  <p>{{sLactaAdicionProrroga.contrato_obj.PlazoEjecucion}}</p>
+                  <p>{{sLactaAdicionProrroga.contrato_obj.plazo}}</p>
                 </div>
               </div>
               <div class="row">
@@ -62,7 +62,7 @@
               <div class="row">
                 <div class="col-sm-12 col-md-4"><b>{{'FECHA_INICIACION' | translate}}</b></div>
                 <div class="col-sm-12 col-md-8">
-                  <p>{{sLactaAdicionProrroga.contrato_obj.FechaRegistro | date : format : timezone}}</p>
+                  <p>{{sLactaAdicionProrroga.contrato_obj.fecha_registro | date : format : timezone}}</p>
                 </div>
               </div>
             </div>

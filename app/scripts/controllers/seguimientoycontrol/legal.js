@@ -76,7 +76,6 @@ angular.module('contractualClienteApp')
                             var elementos_cesion = response_sql.data.Body;
                             if (elementos_cesion.length != '0') {
                                 var last_newness = elementos_cesion[elementos_cesion.length - 1];
-                                console.log(last_newness)
                                 novedadesRequest.get('tipo_novedad', 'query=Id:' + last_newness.tiponovedad).then(function (nr_response) {
                                     self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
                                     if (self.contrato_obj.tipo_novedad == "NP_CES") {
