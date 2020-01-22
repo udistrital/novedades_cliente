@@ -8,7 +8,7 @@
           <div class="panel-heading"><center><h4><b>{{'INFORMACION' | translate}}</b></h4></center></div>
           <div class="panel-body">
             <div class="col-md-4"><b>{{'NUMERO_CONTRATO' | translate}}</b></div>
-            <div class="col-md-8"><p>{{sLactaReinicio.contrato_obj.id}}</p></div>
+            <div class="col-md-8"><p>{{sLactaReinicio.contrato_obj.numero_contrato}}</p></div>
             <div class="col-md-4"><b>{{'CONTRATANTE' | translate}}</b></div>
             <div class="col-md-8"><p>{{'UNIVERSIDAD_NOMBRE' | translate}}</p></div>
             <div class="col-md-4"><b>{{'CONTRATISTA' | translate}}</b></div>
@@ -24,10 +24,10 @@
               <p>{{'NO_REGISTRA' | translate}}</p>
             </div>
             <div class="col-md-4"><b>{{'SUPERVISOR' | translate}}</b></div>
-            <div class="col-md-8" ng-if="sLactaReinicio.contrato_obj.supervisor_nombre != null">
-              <p>{{sLactaReinicio.contrato_obj.supervisor_nombre}}</p>
+            <div class="col-md-8" ng-if="sLactaReinicio.contrato_obj.supervisor_nombre_completo != null">
+              <p>{{sLactaReinicio.contrato_obj.supervisor_nombre_completo}}</p>
             </div>
-            <div class="col-md-8" ng-if="sLactaReinicio.contrato_obj.supervisor_nombre == null">
+            <div class="col-md-8" ng-if="sLactaReinicio.contrato_obj.supervisor_nombre_completo == null">
               <p>No registra</p>
             </div>
             <div class="col-md-4"><b>{{'OBJETO' | translate}}</b></div>
