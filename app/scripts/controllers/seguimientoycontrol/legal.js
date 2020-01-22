@@ -48,7 +48,7 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.cesion = 0;
 
                     //Obtiene el estado del contrato.
-                    agoraRequest.get('contrato_estado?query=NumeroContrato:' + self.contrato_obj.id + ',Vigencia:' + self.contrato_obj.vigencia).then(function (ce_response) {
+                    agoraRequest.get('contrato_estado?query=NumeroContrato:' + self.contrato_obj.id + ',Vigencia:' + self.contrato_obj.vigencia+'&sortby=Id&order=desc&limit=1').then(function (ce_response) {
                         self.estado_contrato_obj.estado = ce_response.data[ce_response.data.length - 1].Estado.Id;
                         if (self.estado_contrato_obj.estado == 7) {
                             swal(

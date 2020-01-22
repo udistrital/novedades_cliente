@@ -229,15 +229,17 @@ angular.module('contractualClienteApp')
                                     self.cesion_nov.fechaoficio = new Date(self.f_oficio);
                                     self.cesion_nov.fecharegistro = self.replaceAt(self.contrato_obj.fecha_registro, 10, 'T')
 
-                                    //self.formato_generacion_pdf();
                                     novedadesMidRequest.post('novedad', self.cesion_nov).then(function (request_novedades) {
                                         if (request_novedades.status == 200 || request_novedades.statusText == "OK") {
+                                            self.formato_generacion_pdf();
                                             swal(
                                                 $translate.instant('TITULO_BUEN_TRABAJO'),
                                                 $translate.instant('DESCRIPCION_CESION') + self.contrato_obj.numero_contrato + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
                                                 'success'
-                                            );
-                                            self.formato_generacion_pdf();
+                                            ).then(function () {
+                                                window.location.href = "#/seguimientoycontrol/legal";
+                                            });
+
                                         }
                                     });
                                 });
@@ -492,7 +494,6 @@ angular.module('contractualClienteApp')
         self.formato_generacion_pdf = function () {
             var output = self.get_plantilla();
             pdfMake.createPdf(output).download('acta_cesion_contrato_' + self.contrato_id + '.pdf');
-            $location.path('/seguimientoycontrol/legal');
         }
 
         /**
@@ -510,7 +511,6 @@ angular.module('contractualClienteApp')
             var yyyy = cadena[0];
             var fecha = new Date(yyyy, mm, dd);
             var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
             return fecha.toLocaleDateString("es-ES", options);
         };
 
@@ -535,10 +535,6 @@ angular.module('contractualClienteApp')
 
         self.valor_contrato_cesionario = function () {
             return self.contrato_obj.valor - (self.valor_a_favor + self.valor_desembolsado);
-        }
-
-        self.nuevo_plazo = function () {
-
         }
 
         /**
