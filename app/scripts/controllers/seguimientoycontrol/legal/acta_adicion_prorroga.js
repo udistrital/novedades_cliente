@@ -8,7 +8,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('SeguimientoycontrolLegalActaAdicionProrrogaCtrl', function ($scope, $routeParams, agoraRequest, adminMidRequest, token_service, coreAmazonRequest, contratoRequest, $translate, novedadesRequest, novedadesMidRequest) {
+    .controller('SeguimientoycontrolLegalActaAdicionProrrogaCtrl', function ($scope, $routeParams, agoraRequest, adminMidRequest, token_service, coreAmazonRequest, $translate, novedadesRequest, novedadesMidRequest) {
 
         this.awesomeThings = [
             'HTML5 Boilerplate',
@@ -392,7 +392,6 @@ angular.module('contractualClienteApp')
                     });
                     $scope.valor_adicion = numberFormat('0');
                 }
-
                 novedadesMidRequest.post('novedad', self.data_acta_adicion_prorroga).then(function (request) {
                     if (request.status == 200) {
                         self.formato_generacion_pdf();
