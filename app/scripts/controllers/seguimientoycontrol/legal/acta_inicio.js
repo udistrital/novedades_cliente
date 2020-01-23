@@ -80,7 +80,6 @@ angular.module('contractualClienteApp')
                                 poliza = nrp_response.data[0];
                                 poliza.FechaCreacion = poliza.FechaCreacion.slice(0, -12);
                                 delete poliza.FechaModificacion;
-                                //poliza.FechaModificacion = poliza.FechaModificacion.slice(0, -12)
                             });
                         });
                     }
