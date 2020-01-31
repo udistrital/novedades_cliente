@@ -84,7 +84,7 @@ angular.module('contractualClienteApp')
                 agoraRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
                     self.contrato_obj.ordenadorGasto_nombre = og_response.data[0].NombreOrdenador;
                     self.contrato_obj.ordenadorGasto_rol = og_response.data[0].RolOrdenador;
-                    
+
                     self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
                     self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
                     self.contrato_obj.ordenador_gasto_Inicio = og_response.data[0].FechaInicio;

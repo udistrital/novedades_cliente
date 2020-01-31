@@ -122,7 +122,6 @@ angular.module('contractualClienteApp')
                         }
                     }
                 });
-
             }
         });
 

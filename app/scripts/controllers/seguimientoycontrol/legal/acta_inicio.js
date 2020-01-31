@@ -112,7 +112,6 @@ angular.module('contractualClienteApp')
                 poliza.EntidadAseguradoraId = $scope.selected.id;
                 poliza.NumeroPolizaId = self.numero_poliza;
                 novedadesRequest.put('poliza', poliza.Id, poliza).then(function (nr_response) {
-                    console.log(nr_response)
                     swal({
                         title: $translate.instant('TITULO_BUEN_TRABAJO'),
                         type: 'success',

@@ -53,17 +53,11 @@ angular.module('contractualClienteApp')
                 self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                 self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
                 self.contrato_obj.vigencia = self.contrato_vigencia;
-
                 self.contrato_obj.supervisor_cedula = agora_response.data[0].Supervisor.Documento;
-
                 self.contrato_obj.supervisor_rol = agora_response.data[0].Supervisor.Cargo;
                 self.contrato_obj.contratista = agora_response.data[0].Contratista;
                 self.contrato_obj.fecha_suscripcion = String(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
                 self.contrato_obj.tipo_contrato = agora_response.data[0].TipoContrato.TipoContrato;
-
-                console.log(self.contrato_obj)
-
-
 
                 //Se obtiene los datos de Acta de Inicio.
                 agoraRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.id).then(function (acta_response) {
@@ -80,7 +74,7 @@ angular.module('contractualClienteApp')
                     agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.ordenador_gasto_documento).then(function (ipn_response) {
                         self.contrato_obj.ordenador_gasto_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
                         coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
-                            self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre
+                            self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
                         });
                     });
                 });
@@ -88,14 +82,11 @@ angular.module('contractualClienteApp')
                 //Obtención de datos del supervisor.
                 agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ispn_response) {
                     coreAmazonRequest.get('ciudad', 'query=Id:' + ispn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
-
                         self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
                         self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
                         self.contrato_obj.supervisor_nombre_completo = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " + ispn_response.data[0].SegundoApellido;
                     });
                 });
-
-
 
                 //Obtención de datos del jefe de juridica
                 agoraRequest.get('supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
@@ -108,7 +99,6 @@ angular.module('contractualClienteApp')
                         });
                     });
                 });
-
 
                 novedadesMidRequest.get('novedad', self.contrato_obj.numero_contrato + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
                     var elementos_cesion = response_sql.data.Body;
@@ -174,7 +164,6 @@ angular.module('contractualClienteApp')
             }
         });
 
-
         self.selecionarSaldo = function () {
             if (self.a_favor_de == "Universidad") {
                 self.a_favor.entidad = "la Universidad Distrital.";
@@ -186,7 +175,6 @@ angular.module('contractualClienteApp')
                 self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(self.terminacion_nov.saldo_contratista + '');
             }
         }
-
 
         /**
          * @ngdoc method
@@ -208,7 +196,6 @@ angular.module('contractualClienteApp')
 
             if ($scope.formTerminacion.$valid) {
                 novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
-
                     self.terminacion_nov = {};
                     self.terminacion_nov.contrato = self.contrato_obj.id;
                     self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
@@ -233,21 +220,15 @@ angular.module('contractualClienteApp')
                     //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a terminacion anticipada - devuelve si es true o false
                     //si es true guardamos la novedad - y enviamos el cambio de estado del contrato 
                     self.selecionarSaldo()
-
                     agoraRequest.get('contrato_estado?query=NumeroContrato:' + self.contrato_obj.id + ',Vigencia:' + self.contrato_obj.vigencia + '&sortby=Id&order=desc&limit=1').then(function (ce_response) {
                         if (ce_response.data[ce_response.data.length - 1].Estado.NombreEstado == "En ejecucion") {
                             var estado_temp_from = {
                                 "NombreEstado": "ejecucion"
                             }
-
-
                             self.estados[0] = estado_temp_from;
-
                             adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                                 if (vc_response.data.Body == "true") {
                                     novedadesMidRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
-
-
                                         if (response_nosql.status == 200 || response.statusText == "Ok") {
                                             agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
                                                 if (response.status == 201 || Object.keys(response.data) > 0) {
@@ -285,10 +266,7 @@ angular.module('contractualClienteApp')
                     'error'
                 );
             }
-
         };
-
-
 
         /**
          * @ngdoc method
@@ -781,7 +759,7 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: '' + self.contrato_obj.contratista_nombre, bold: false, style: 'topHeader' },
-                                    { text: '' + self.contrato_obj.ordenadorGasto_nombre , bold: false, style: 'topHeader' }
+                                    { text: '' + self.contrato_obj.ordenadorGasto_nombre, bold: false, style: 'topHeader' }
 
                                 ],
                                 [
