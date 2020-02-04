@@ -38,7 +38,7 @@ bower install
 
 ### Ejecución del proyecto
 
-Para ejcutar el proyecto localmente se deben de verificar las variables de los diferentes servicios las cuales se encuentran en la ruta `./app/scripts/enviroment` , en esta ruta se encuentran 3 archivos uno para cada ambiente (dev, test, prod)
+Para ejcutar el proyecto localmente se deben de verificar las variables de los diferentes servicios las cuales se encuentran en la ruta `/app/scripts/enviroment` , en esta ruta se encuentran 3 archivos uno para cada ambiente (dev, test, prod)
 
 
 Ahora se puede correr el api de la siguiente manera:
