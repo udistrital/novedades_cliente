@@ -23,21 +23,18 @@ Se hace uso de :
 ### Configuración del proyecto
 
 * Clonar el repositorio:
-    ```shell
-        git clone https://github.com/udistrital/novedades_cliente
-    ```
+```shell
+git clone https://github.com/udistrital/novedades_cliente
+```
 * Instalar yo, grunt, bower y generator- karma y generator-oas
-    ```shell
-        npm install -g grunt-cli bower yo generator-karma generator-oas
-    ```
+```shell
+npm install -g grunt-cli bower yo generator-karma generator-oas
+```
 * Instalar dependencias
-    ```shell
-        npm install
-    ```
-    ```shell
-        bower install
-    ```
-
+```shell
+npm install
+bower install
+```
 
 ### Ejecución del proyecto
 
@@ -45,23 +42,23 @@ Para ejcutar el proyecto localmente se deben de verificar las variables de los d
 
 
 Ahora se puede correr el api de la siguiente manera:
-    ```
-        grunt serve
-    ```
+```shell
+grunt serve
+```
 
 Para crear el build de la aplicación:
-    ```
-        grunt build
-    ```
+```shell
+grunt build
+```
 
 El cliente se depliega en el puerto [9000](http://localhost:9000).
 
 ### Pruebas unitaras
 
 La pruebas se relizan con [karma](https://karma-runner.github.io/latest/index.html), ejecutar el comando:
-    ```
-        grunt test
-    ```
+```
+grunt test
+```
 
 
 ## Licencia
