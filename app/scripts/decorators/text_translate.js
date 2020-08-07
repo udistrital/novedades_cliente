@@ -205,6 +205,7 @@ var text_es = {
     VALOR_DESEMBOLSADO: "Valor desembolsado",
     SALDO_A_FAVOR_CONTRATISTA:"Saldo a favor del contratista",
     SALDO_A_FAVOR_UNIVERSIDAD:"Saldo a favor de la Universidad",
+    SALDO_A_FAVOR:"Sado a favor de: ",
     //SEGUMIENTO FINANCIERO
     SEGUIMIENTO_FINANCIERO: "Seguimiento financiero del contrato",
     DATOS_CONTRATO: "Datos contrato",
@@ -266,6 +267,8 @@ var text_es = {
     SELECCIONE_UNA_NOVEDAD: "Por favor seleccione la novedad",
     CREAR_NOVEDAD_ADICION_PRORROGA: "Crear Novedad de Adición y/o Prorroga",
     CREAR_ACTA_INICIO: "Crear Acta de Inicio",
+    AGREGAR_POLIZA2: "Asociar Póliza",
+    AGREGAR_POLIZA:"Agregar Poliza para el Cesionario",
     CREAR_NOVEDAD_SUSPENSION: "Crear Novedad de Suspensión",
     CREAR_NOVEDAD_REINICIO: "Crear Novedad de Reinicio",
     CREAR_NOVEDAD_CESION: "Crear Novedad de Cesión",
@@ -281,7 +284,7 @@ var text_es = {
     INFORMACION_ACTA_INICIO: "INFORMACIÓN",
     PLAZO_MESES: "Plazo (en meses)",
     NO_REGISTRA_ACTA_INICIO: "No registra",
-    NUMERO_POLIZA: "Número de poliza",
+    NUMERO_POLIZA: "Número de póliza",
     FECHA_EXPEDICION_POLIZA: "Fecha Expedición de Póliza",
     FECHA_APROBACION_POLIZA: "Fecha Aprobación de Póliza",
     INFORMACION_NOVEDAD: "INFORMACIÓN DE LA NOVEDAD",
@@ -293,7 +296,19 @@ var text_es = {
     DEPENDENCIA_MAY: "DEPENDENCIA",
     ESTADO_DEL_BIEN: "ESTADO DEL BIEN",
     TIEMPO_CONTRATO: "Tiempo contrato (Días)",
+    NUMERO_POLIZA:"Numero de la Póliza",
+    ENTIDAD_ASEGURADORA:"Entidad Aseguradora",
     //ACTA DE ADICION/PRORROGA
+    ESTADO_FISICO: "Estado Físico",
+    FECHA_ULTIMO_CORTE:"Fecha ultimo corte",
+    AVANCE_FISICO_EJECUTADO: "Porcentaje de avance físico ejecutado",
+    AVANCE_FISICO_PROGRAMADO: "Porcentaje de avance físico programado",
+    ESTADO_FINANCIERO: "Estado Financiero",
+    VALOR_EJECUTADO: "Valor ejecutado",
+
+
+
+
     ACTA_ADICION_PRORROGA: "ACTA DE ADICIÓN / PRORROGA",
     PLAZO_INICIAL_MESES: "Plazo inicial (En meses)",
     FECHA_INICIACION: "Fecha de Iniciación",
@@ -378,11 +393,14 @@ var text_es = {
     NUMERO_OFICIO_ESTADO_CUENTAS:"Número oficio estado de cuentas",
     FECHA_OFICIO:"Fecha oficio",
     FECHA_CESION:"Fecha cesión",
+    FECHA_TERMINACION_CEDENTE: "Fecha de terminación del cedente",
+    VALOR_A_FAVOR:"Valor a favor de cedente",
     OTRAS_OBSERVACIONES:"Otras observaciones",
     INFORMACION_CESIONARIO:"INFORMACIÓN CESIONARIO",
     SELECCIONAR_CESIONARIO:"Seleccionar cesionario",
     ACTA_REINICIO:"ACTA DE REINICIO",
-    FECHA_SUSPENSION:"Fecha suspension",
+    FECHA_SUSPENSION_INICIO:"Fecha inicio suspensión",
+    FECHA_SUSPENSION_FIN:"Fecha fin suspensión",    
     FECHA_REINICIO:"Fecha reinicio",
     PERIODO_SUSPENSION:"Periodo suspension (Días)",
     ACTA_SUSPENSION:"ACTA DE SUSPENSIÓN",
@@ -406,7 +424,7 @@ var text_es = {
     DESCRIPCION_CESION:"Se registro exitosamente la novedad de cesión al contrato # ",
     DESCRIPCION_SUSPENSION:"Se registro exitosamente la novedad de suspensión al contrato # ",
     DESCRIPCION_REINICIO:"Se registro exitosamente la novedad de reinicio al contrato # ",
-    DESCRIPCION_ACTA_CESION:"Acta de inicio para cesionario del contrato",
+    DESCRIPCION_ACTA_CESION:"Ingresar póliza para habilitar creación de novedades sobre el contrato",
     //CONTRATO_DETALLE
     INFORMACION_CONTRATO: "Información Vinculación",
     FORMA_PAGO: "Forma de pago",
@@ -761,6 +779,7 @@ var text_es = {
     INFORMACION_CANCELAR: "Información de la cancelación",
     INFORMACION_MODIFICACION: "Información de la modificación",
     ACTA_INICIO: "Acta Inicio",
+    POLIZA: "Ingreso Datos de la Póliza",
 
 
     //MODULO CUMPLIDO
@@ -893,9 +912,10 @@ var text_es = {
     //Carga documentos contratista
     TITULO_CARGA_CONTRATISTA: "CARGA SOPORTES CONTRATISTA",
     NOM_CONTRATISTA: "NOMBRE CONTRATISTA",
-    NUMERO_CONTRATO: "NÚMERO CONTRATO",
+    NUMERO_CONTRATO: "Número Contrato",
     CONTRATO_CANCELADO: "Contrato cancelado",
     CONTRATO_FINALIZADO: "Contrato finalizado",
+    CONTRATO_INICIO: "Contrato sin acta de inicio",
     RP: "RP",
     ANIO:" vigencia "
 };

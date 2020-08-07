@@ -12,8 +12,6 @@ angular.module('financieraService', [])
         // Service logic
         // ...
         var path = CONF.GENERAL.FINANCIERA_SERVICE;
-        //var path = "http://127.0.0.1:8080/v1/";
-        // Public API here
         return {
             get: function(tabla, params) {
                 return $http.get(path + tabla + "/?" + params, token_service.setting_bearer.headers);

@@ -1,95 +1,104 @@
 <br>
 <div class="panel panel-default">
-  <div><center><h3 class="titulo-centrado">{{'ACTA_INICIO' | translate}}</h3></center></div>
+  <div>
+    <center>
+      <h3 class="titulo-centrado">{{'POLIZA' | translate}}</h3>
+    </center>
+  </div>
   <form id="formulario" ng-submit="sLactaInicio.generarActa()" method="post">
     <div class="panel-body">
       <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-1"></div>
-        <div class="col-xs-12 col-sm-12 col-md-5">
-          <div class="panel panel-primary">
-            <div class="panel-heading"><center><h4><b>{{'INFORMACION_ACTA_INICIO' | translate}}</b></h4></center></div>
+        <div class="col-xs-12 col-sm-12 col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <center>
+                <h4><b>{{'INFORMACION_ACTA_INICIO' | translate}}</b></h4>
+              </center>
+            </div>
             <div class="panel-body">
               <div class="row">
-                <div class="col-md-6"><b>{{'NUMERO_CONTRATO' | translate}}</b></div>
-                <div class="col-md-6"><p>{{sLactaInicio.contrato_obj.id}}</p></div>
-                <div class="col-md-6"><b>{{'OBJETO' | translate}}</b></div>
-                <div class="col-md-6"> <p>{{sLactaInicio.contrato_obj.objeto}}</p> </div>
-                <div class="col-md-6"><b>{{'VALOR_TOTAL_CONTRATO' | translate}}</b></div>
-                <div class="col-md-6"><p>{{sLactaInicio.contrato_obj.valor | currency}}</p></div>
-                <div class="col-md-6"><b>{{'DATOS_CONTRATISTA' | translate}}</b></div>
-                <div class="col-md-6"><p>{{sLactaInicio.contrato_obj.contratista_nombre}}</p></div>
-                <div class="col-md-6"><b>{{'PLAZO_MESES' | translate}}</b></div>
-                <div class="col-md-6"><p>{{sLactaInicio.contrato_obj.plazo}}</p></div>
-                <div class="col-md-6"><b>{{'SUPERVISOR' | translate}}</b></div>
-                <div class="col-md-6" ng-if="sLactaInicio.contrato_obj.supervisor != null">
-                  <p>{{sLactaInicio.contrato_obj.supervisor}}</p>
+                <div class="col-md-4"><b>{{'NUMERO_CONTRATO' | translate}}</b></div>
+                <div class="col-md-8">
+                  <p>{{sLactaInicio.contrato_obj.numero_contrato}}</p>
                 </div>
-                <div class="col-md-6" ng-if="sLactaInicio.contrato_obj.supervisor == null">
+              </div>
+              <div class="row">
+                <div class="col-md-4"><b>{{'OBJETO' | translate}}</b></div>
+                <div class="col-md-8">
+                  <p>{{sLactaInicio.contrato_obj.objeto}}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4"><b>{{'VALOR_TOTAL_CONTRATO' | translate}}</b></div>
+                <div class="col-md-8">
+                  <p>{{sLactaInicio.contrato_obj.valor | currency}}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4"><b>{{'DATOS_CONTRATISTA' | translate}}</b></div>
+                <div class="col-md-8">
+                  <p>{{sLactaInicio.contrato_obj.contratista_nombre}}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4"><b>{{'PLAZO_MESES' | translate}}</b></div>
+                <div class="col-md-8">
+                  <p>{{sLactaInicio.contrato_obj.plazo}}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4"><b>{{'SUPERVISOR' | translate}}</b></div>
+                <div class="col-md-8" ng-if="sLactaInicio.contrato_obj.supervisor_nombre_completo != null">
+                  <p>{{sLactaInicio.contrato_obj.supervisor_nombre_completo}}</p>
+                </div>
+                <div class="col-md-8" ng-if="sLactaInicio.contrato_obj.supervisor_nombre_completo == null">
                   <p>{{'NO_REGISTRA_ACTA_INICIO' | translate}}</p>
                 </div>
-                <div class="col-md-6"><b>{{'NUMERO_POLIZA' | translate}}</b></div>
-                <div class="col-md-6"><p>{{sLactaInicio.poliza_obj.numero_poliza}}</p></div>
-                <div class="col-md-6"><b>{{'FECHA_APROBACION_POLIZA' | translate}}</b></div>
-                <div class="col-md-6"><p>{{sLactaInicio.poliza_obj.fecha_aprobacion | date : format : timezone}}</p></div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-5">
-          <div class="panel panel-primary" style="height: 382px;">
-            <div class="panel-heading"><center><h4><b>{{'INFORMACION_NOVEDAD' | translate}}</b></h4></center></div>
+        <div class="col-xs-12 col-sm-12 col-md-6">
+          <div class="panel panel-default" style="height: 382px;">
+            <div class="panel-heading">
+              <center>
+                <h4><b>{{'INFORMACION_NOVEDAD' | translate}}</b></h4>
+              </center>
+            </div>
             <div class="panel-body">
               <div class="row" style="border: 0px solid;">
                 <hr>
-                <div class="form-group col-md-6">
-                  <p>
-                    <b>{{'TIEMPO_CONTRATO' | translate}} *</b>
-                  </p>
+                <div class="col-xs-12 col-md-12">
+                  <label>{{'NUMERO_POLIZA' | translate}}* </label>
                   <md-input-container style="margin:0;">
-                    <input type="number" name="diff_dias" id="periodo" required ng-model="sLactaInicio.diff_dias" ng-disabled="true" min="0">
-                    <div ng-messages="diff_dias.$error">
+                    <input type="text" id="numero_poliza" name="numero_poliza" ng-model="sLactaInicio.numero_poliza"
+                      required>
+                    <div ng-messages="formadipro.numero_poliza.$error">
                       <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                     </div>
                   </md-input-container>
                 </div>
-                <div class="form-group col-md-6" >
-                  <label for="fechainicio">{{'FECHA_INICIO' | translate}}:</label> <br>
-                  <md-datepicker ng-model="sLactaInicio.fecha_inicio"> </md-datepicker>
-                </div>
-                <div class="form-group col-md-6" >
-                  <label for="fechareinicio">{{'FECHA_FIN' | translate}}:</label> <br>
-                  <md-datepicker ng-model="sLactaInicio.fecha_fin" md-min-date="sLactaInicio.fecha_inicio"></md-datepicker>
-                </div>
-              </div>
-            </div>
-            <hr>
-          </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-1"></div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-1"></div>
-        <div class="col-xs-12 col-sm-12 col-md-10">
-          <div class="panel panel-primary">
-            <div class="panel-heading"><center><h4><b>{{'INVENTARIO' | translate}}</b></h4></center></div>
-            <div class="panel-body">
-              <div class="row">
                 <div class="col-xs-12 col-md-12">
-                  <div ui-grid="sLactaInicio.gridOptions" class="myGrid" style="height: 15em;"></div>
+                  <label>{{'ENTIDAD_ASEGURADORA' | translate}}* </label>
+                  <md-input-container style="margin:0;">
+                    <select name="select" class="form-control" ng-model="selected"
+                      ng-options="item as item.label for item in items track by item.id">
+                      <option value="">--- Selecione una opción ---</option>
+                    </select><br>
+                  </md-input-container>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-1"></div>
       </div>
     </div>
     <div class="panel-footer">
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center;">
           <button class="btn btn-primary btn-lg">
-            <span class="glyphicon glyphicon-file"></span> {{'CREAR_ACTA_INICIO' | translate}}
+            <span class="glyphicon glyphicon-file"></span> {{'AGREGAR_POLIZA2' | translate}}
           </button>
         </div>
       </div>

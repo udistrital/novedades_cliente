@@ -64,7 +64,10 @@ angular
         'gridApiService',
         'colombiaHolidaysService',
         'nuxeoClient',
-        'implicitToken'
+        'implicitToken',
+        'novedadesService',
+        'novedadesMidService',
+        'core'
     ])
     .run(function(amMoment) {
         amMoment.changeLocale('es');
@@ -77,14 +80,16 @@ angular
                       config.headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('access_token');
                   }
                   config.headers['Accept'] = 'application/json';
-  
+                  config.headers['Content-Type'] = 'application/json';
+                  
                   return config;
               }
           };
       })
       .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
         cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
-        cfpLoadingBarProvider.spinnerTemplate = '<div class="loading-div"><div><span class="fa loading-spinner"></div><div class="fa sub-loading-div">Por favor espere, cargando...</div></div>';
+        // cfpLoadingBarProvider.spinnerTemplate = '<div class="loading-div"><div><span class="fa loading-spinner"></div><div class="fa sub-loading-div">Por favor espere, cargando...</div></div>';
+        cfpLoadingBarProvider.spinnerTemplate = '';
     }])
     .config(function($mdDateLocaleProvider) {
         $mdDateLocaleProvider.formatDate = function(date) {
