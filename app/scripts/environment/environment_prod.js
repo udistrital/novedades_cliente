@@ -60,7 +60,7 @@ angular.module("contractualClienteApp").constant("CONF", {
       SIGN_OUT_URL:
         "https://autenticacion.portaloas.udistrital.edu.co/oidc/logout",
       SIGN_OUT_REDIRECT_URL:
-        "https://pruebasnovedades.portaloas.udistrital.edu.co/",
+        "https://pruebasnovedades.portaloas.udistrital.edu.co",
       SIGN_OUT_APPEND_TOKEN: "true"
     }
   }
