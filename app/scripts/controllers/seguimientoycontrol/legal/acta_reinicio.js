@@ -86,7 +86,6 @@ angular.module('contractualClienteApp')
                         self.contrato_obj.supervisor_nombre_completo = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " + ispn_response.data[0].SegundoApellido;
                     });
                 });
-
                 novedadesMidRequest.get('novedad', self.contrato_obj.numero_contrato + "/" + self.contrato_obj.vigencia).then(function (response) {
                     var elementos_cesion = response.data.Body;
                     if (elementos_cesion.length != '0') {
