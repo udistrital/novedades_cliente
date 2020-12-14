@@ -16,7 +16,7 @@ angular.module('contractualClienteApp')
         ];
 
         var self = this;
-        self.f_inicio_suspension = new Date();
+        self.f_suspension = new Date();
         self.f_finsuspension = new Date();
         self.f_reinicio = new Date();
         self.diff_dias = null;
@@ -86,25 +86,22 @@ angular.module('contractualClienteApp')
                         self.contrato_obj.supervisor_nombre_completo = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " + ispn_response.data[0].SegundoApellido;
                     });
                 });
-
-                //Consulta datos del contratista
-                agoraRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
-                    self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
-                    self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
-                    agoraRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
-                        coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
-                            self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre
-                            self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro
-                        });
-                    });
-                });
-
-                /*novedadesMidRequest.get('novedad', self.contrato_obj.numero_contrato + "/" + self.contrato_obj.vigencia).then(function (response) {
+                novedadesMidRequest.get('novedad', self.contrato_obj.numero_contrato + "/" + self.contrato_obj.vigencia).then(function (response) {
                     var elementos_cesion = response.data.Body;
                     if (elementos_cesion.length != '0') {
                         var last_cesion = elementos_cesion[elementos_cesion.length - 1];
                         self.contrato_obj.contratista = last_cesion.cesionario;
-                        
+                        //Consulta datos del contratista
+                        agoraRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
+                            self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
+                            self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
+                            agoraRequest.get('informacion_persona_natural?query=Id:' + ip_response.data[0].NumDocumento).then(function (ipn_response) {
+                                coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (c_response) {
+                                    self.contrato_obj.contratista_ciudad_documento = c_response.data[0].Nombre
+                                    self.contrato_obj.contratista_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro
+                                });
+                            });
+                        });
                         //Trae los datos de la ultima novedad de suspensión para cargar datos.
                         for (var i = 0; i < elementos_cesion.length; i++) {
                             self.auxiliar = elementos_cesion[i].id;
@@ -123,7 +120,7 @@ angular.module('contractualClienteApp')
                             });
                         }
                     }
-                });*/
+                });
             }
         });
 
@@ -136,44 +133,13 @@ angular.module('contractualClienteApp')
          * @param {date} f_reinicio
          */
         $scope.$watch('sLactaReinicio.f_finsuspension', function () {
-            var dt1 = self.f_inicio_suspension;
+            var dt1 = self.f_suspension;
             var dt2 = self.f_finsuspension;
             var timeDiff = 0;
             if (dt2 != null) {
                 timeDiff = Math.abs(dt2.getTime() - dt1.getTime());
             }
-            var last_time = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            if (last_time == 0) {
-                self.diff_dias = null;
-              } else {
-                self.diff_dias = last_time;
-              }
-        });
-
-        /**
-         * @ngdoc method
-         * @name FechaMinima_finsuspension
-         * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaReinicioCtrl
-         * @description
-         * Funcion que observa la fecha inicial para dar la fecha minima de finsuspension
-         * 
-         * @param {date} f_inicio_suspension
-         */
-        $scope.$watch('sLactaReinicio.f_inicio_suspension', function () {
-            self.f_finsuspension=self.f_inicio_suspension;
-        });
-
-        /**
-         * @ngdoc method
-         * @name FechaMinima_reinicio
-         * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaReinicioCtrl
-         * @description
-         * Funcion que observa la fecha fin suspension para dar la fecha minima de reinicio
-         * 
-         * @param {date} f_finsuspension
-         */
-        $scope.$watch('sLactaReinicio.f_finsuspension', function () {
-            self.f_reinicio=self.f_finsuspension;
+            self.diff_dias = Math.ceil(timeDiff / (1000 * 3600 * 24));
         });
 
         /**
@@ -462,7 +428,7 @@ angular.module('contractualClienteApp')
                     self.reinicio_nov.saldo_universidad = 0;
                     self.reinicio_nov.fecha_terminacion_anticipada = "0001-01-01T00:00:00Z";
                     self.reinicio_nov.periodosuspension = self.diff_dias;
-                    self.reinicio_nov.fechasuspension = self.f_inicio_suspension;
+                    self.reinicio_nov.fechasuspension = self.f_suspension;
                     self.reinicio_nov.fechareinicio = self.f_reinicio;
                     self.reinicio_nov.observacion = "";
                     self.reinicio_nov.cesionario = parseInt(self.contrato_obj.contratista);
@@ -481,7 +447,7 @@ angular.module('contractualClienteApp')
                             "NombreEstado": "suspendido"
                         }
                     }
-                    self.formato_generacion_pdf();
+
                     self.estados[0] = estado_temp_from;
                     adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                         self.validacion = vc_response.data.Body;
@@ -613,7 +579,7 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'PERIODO SUSPENSIÓN', bold: true, style: 'topHeader' },
-                                    { text: 'Del día ' + self.format_date_letter_mongo(self.f_inicio_suspension) + ' al ' + self.format_date_letter_mongo(self.f_finsuspension), style: 'topHeader' }
+                                    { text: 'Del día ' + self.format_date_letter_mongo(self.f_suspension) + ' al ' + self.format_date_letter_mongo(self.f_finsuspension), style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'FECHA DE REINICIO', bold: true, style: 'topHeader' },
