@@ -291,6 +291,9 @@ angular.module('contractualClienteApp')
                     $('#tiempo_prorroga').prop('required', true);
                 } else {
                     $('#tiempo_prorroga').prop('required', false);
+                    if($scope.valor_prorroga_final==undefined){
+                        $scope.valor_prorroga_final=0;
+                    }
                 }
             } else {
                 $scope.estado_novedad = false;
@@ -407,7 +410,37 @@ angular.module('contractualClienteApp')
                             window.location.href = "#/seguimientoycontrol/legal";
                         });
                         $scope.estado_novedad = undefined;
+                    }else{
+                        //respuesta incorrecta, ej: 400/500
+                        $scope.alert='DESCRIPCION_ERROR_ADICION_PRORROGA';
+                        swal({
+                            title: $translate.instant('TITULO_ERROR_ACTA'),
+                            type: 'error',
+                            html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato 
+                            + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false
+                        }).then(function () {
+                            
+                        });
                     }
+                }).catch(function(error) {
+                    //Servidor no disponible
+                    $scope.alert='DESCRIPCION_ERROR_ADICION_PRORROGA';
+                    swal({
+                        title: $translate.instant('TITULO_ERROR_ACTA'),
+                        type: 'error',
+                        html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato
+                         + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false
+                    }).then(function () {
+                        
+                    });
                 });
             });
         };
@@ -606,7 +639,7 @@ angular.module('contractualClienteApp')
                             { text: 'MODIFICAR', bold: true },
                             { text: ' la CLAUSULA 3 del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.fecha_reg_ano + 'la cual quedará así: \n' },
                             {
-                                text: '“El valor del presente contrato corresponde a la suma de' + $scope.nuevo_valor_contrato_letras + ' MONEDA CORRIENTE ($' +
+                                text: '“El valor del presente contrato corresponde a la suma de ' + $scope.nuevo_valor_contrato_letras + ' MONEDA CORRIENTE ($' +
                                     $scope.nuevo_valor_contrato + ' M/Cte.) , incluido IVA, así como todos los impuestos y retenciones legamente establecidos…”.', italics: true
 
                             }
@@ -614,7 +647,7 @@ angular.module('contractualClienteApp')
 
                             { text: 'CLÁUSULA TERCERA.- PRORROGAR', bold: true },
                             {
-                                text: 'el plazo de ejecución del' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de '
+                                text: 'el plazo de ejecución del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de '
                                     + self.fecha_reg_ano + ' en ' + $scope.contrato_prorroga_letras + '' + $scope.valor_prorroga_final + ') DÍAS.'
                             }, '\n\n',
 

@@ -190,11 +190,11 @@ angular.module('contractualClienteApp')
               var estado_temp_from = {
                 "NombreEstado": "ejecucion"
               }
-
               self.estados[0] = estado_temp_from;
               adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                 self.validacion = vc_response.data.Body;
                 if (self.validacion == "true") {
+                  self.formato_generacion_pdf();
                   novedadesMidRequest.post('novedad', self.suspension_nov).then(function (request_novedades) {
                     if (request_novedades.status == 200 || response.statusText == "Ok") {
                       agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
@@ -207,11 +207,40 @@ angular.module('contractualClienteApp')
                           ).then(function () {
                             window.location.href = "#/seguimientoycontrol/legal";
                           });
+                        } else {
+                          //respuesta incorrecta, ej: 400/500
+                          $scope.alert = 'DESCRIPCION_ERROR_SUSPENSION';
+                          swal({
+                            title: $translate.instant('TITULO_ERROR_ACTA'),
+                            type: 'error',
+                            html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato
+                              + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false
+                          }).then(function () {
+
+                          });
                         }
                       });
                     }
-                  });
+                  }).catch(function (error) {
+                    //Servidor no disponible
+                    $scope.alert = 'DESCRIPCION_ERROR_SUSPENSION';
+                    swal({
+                      title: $translate.instant('TITULO_ERROR_ACTA'),
+                      type: 'error',
+                      html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato
+                        + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                      showCloseButton: true,
+                      showCancelButton: false,
+                      confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                      allowOutsideClick: false
+                    }).then(function () {
 
+                    });
+                  });
                 }
               });
             } else {
@@ -446,7 +475,7 @@ angular.module('contractualClienteApp')
       if (numero.indexOf(".") >= 0)
         nuevoNumero = nuevoNumero.substring(0, nuevoNumero.indexOf("."));
       // Ponemos un punto cada 3 caracteres
-      for (var j = 0, i = nuevoNumero.length - 1; i >= 0; i-- , j++)
+      for (var j = 0, i = nuevoNumero.length - 1; i >= 0; i--, j++)
         resultado = nuevoNumero.charAt(i) + ((j > 0) && (j % 3 == 0) ? "," : "") + resultado;
       // Si tiene decimales, se lo añadimos al numero una vez forateado con los separadores de miles
       if (numero.indexOf(".") >= 0)

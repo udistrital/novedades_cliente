@@ -408,6 +408,7 @@ var text_es = {
     CAMPO_REQUERIDO:"Este campo es obligatorio",
     //ALERTAS
     TITULO_ERROR:"Errores en el formulario",
+    TITULO_ERROR_ACTA:"Error al generar el acta",
     TITULO_BUEN_TRABAJO:"¡Buen trabajo!",
     TITULO_ADVERTENCIA:"Advertencia",
     DESCRIPCION_ADVERTENCIA: "Primero debe seleccionar un tipo de novedad!",
@@ -420,11 +421,15 @@ var text_es = {
     DESCRIPCION_ADICION:"Se registro exitosamente la novedad de 'Adición'<br>al contrato # ",
     DESCRIPCION_PRORROGA:"Se registro exitosamente la novedad de 'Prorroga'<br>al contrato # ",
     DESCRIPCION_ADICION_PRORROGA:"Se registro exitosamente la novedad de 'Adición y Prorroga'<br>al contrato # ",
+    DESCRIPCION_ERROR_ADICION_PRORROGA:"No se pudo registrar la novedad de 'Adición y/o Prorroga'<br>al contrato # ",
     DESCRIPCION_INICIO_ERROR_FECHA:"La fecha fin debe ser mayor a la fecha inicio!",
     DESCRIPCION_CESION:"Se registro exitosamente la novedad de cesión al contrato # ",
     DESCRIPCION_SUSPENSION:"Se registro exitosamente la novedad de suspensión al contrato # ",
+    DESCRIPCION_ERROR_SUSPENSION:"No se pudo registrar la novedad de suspensión al contrato # ",
     DESCRIPCION_REINICIO:"Se registro exitosamente la novedad de reinicio al contrato # ",
     DESCRIPCION_ACTA_CESION:"Ingresar póliza para habilitar creación de novedades sobre el contrato",
+    DESCRIPCION_TERMINACION:"Se registro exitosamente la novedad de terminacion anticipada<br>al contrato # ",
+    DESCRIPCION_ERROR_TERMINACION:"No se pudo registrar la novedad de terminacion anticipada<br>al contrato # ",
     //CONTRATO_DETALLE
     INFORMACION_CONTRATO: "Información Vinculación",
     FORMA_PAGO: "Forma de pago",
