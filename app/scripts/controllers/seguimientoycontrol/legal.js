@@ -35,6 +35,15 @@ angular.module('contractualClienteApp')
          * funcion para obtener la totalidad de los contratos por vigencia seleccionada
          */
         self.buscar_contrato = function() {
+            if (self.contrato_id==undefined || self.contrato_vigencia==undefined){
+                self.estado_resultado_response = false;
+                swal(
+                    $translate.instant('Los campos del formulario son obligatorios'),
+                    $translate.instant(''),
+                    'error'
+                );
+                return
+            }
             agoraRequest.get('contrato_general/?query=ContratoSuscrito.NumeroContratoSuscrito:' + self.contrato_id + ',VigenciaContrato:' + self.contrato_vigencia).then(function(agora_response) {
                 if (agora_response.data.length > 0) {
                     self.contrato_obj.numero_contrato = self.contrato_id;
