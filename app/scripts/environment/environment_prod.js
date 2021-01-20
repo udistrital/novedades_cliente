@@ -14,7 +14,6 @@ angular.module("contractualClienteApp").constant("CONF", {
   APP: "argo", // Nombre de la app, esto cargará el logo.
   APP_MENU: "Novedades", // Ingrese valor de la aplicación asociado al menú registrado en wso2
   GENERAL: {
-    WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
     ADMINISTRATIVA_MID_SERVICE:
       "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_mid_api/v1/",
     ADMINISTRATIVA_SERVICE:
@@ -60,7 +59,7 @@ angular.module("contractualClienteApp").constant("CONF", {
       SIGN_OUT_URL:
         "https://autenticacion.portaloas.udistrital.edu.co/oidc/logout",
       SIGN_OUT_REDIRECT_URL:
-        "https://pruebasnovedades.portaloas.udistrital.edu.co",
+        "https://novedades.portaloas.udistrital.edu.co",
       SIGN_OUT_APPEND_TOKEN: "true"
     }
   }
