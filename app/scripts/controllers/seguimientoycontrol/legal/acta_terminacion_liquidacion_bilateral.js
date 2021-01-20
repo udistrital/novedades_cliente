@@ -172,7 +172,7 @@ angular.module('contractualClienteApp')
             } else if (self.a_favor_de == "Contratista") {
                 self.a_favor.entidad = "el Contratista.";
                 self.a_favor.valor = self.terminacion_nov.saldo_contratista;
-                self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(self.terminacion_nov.saldo_contratista + '');
+                self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(self.terminacion_nov.saldo_contratista + '');
             }
         }
 
@@ -233,18 +233,51 @@ angular.module('contractualClienteApp')
                                             agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
                                                 if (response.status == 201 || Object.keys(response.data) > 0) {
                                                     self.formato_generacion_pdf();
-                                                    swal(
-                                                        $translate.instant('TITULO_BUEN_TRABAJO'),
-                                                        $translate.instant('DESCRIPCION_SUSPENSION') + self.contrato_obj.numero_contrato + ' ' + $translate.instant('ANIO') + ': ' + self.contrato_obj.vigencia,
-                                                        'success'
-                                                    ).then(function () {
+                                                    $scope.alert= 'DESCRIPCION_TERMINACION' 
+                                                    swal({
+                                                        title: $translate.instant('TITULO_BUEN_TRABAJO'),
+                                                        type: 'success',
+                                                        html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                        showCloseButton: false,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                        allowOutsideClick: false
+                                                    }).then(function () {
                                                         window.location.href = "#/seguimientoycontrol/legal";
                                                     });
                                                 }
-
+                                            });
+                                        } else {
+                                            //respuesta incorrecta, ej: 400/500
+                                            $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                            swal({
+                                                title: $translate.instant('TITULO_ERROR_ACTA'),
+                                                type: 'error',
+                                                html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato
+                                                    + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                showCloseButton: true,
+                                                showCancelButton: false,
+                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                allowOutsideClick: false
+                                            }).then(function () {
 
                                             });
                                         }
+                                    }).catch(function (error) {
+                                        //Servidor no disponible
+                                        $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                        swal({
+                                            title: $translate.instant('TITULO_ERROR_ACTA'),
+                                            type: 'error',
+                                            html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato
+                                                + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false
+                                        }).then(function () {
+
+                                        });
                                     });
                                 }
                             });
@@ -277,13 +310,7 @@ angular.module('contractualClienteApp')
          */
         self.formato_generacion_pdf = function () {
             var output = self.get_plantilla();
-            pdfMake.createPdf(output).download('acta_terminacion_anticipada_' + numberFormat(self.terminacion_nov.contrato + '') + '.pdf');
-            $location.path('/seguimientoycontrol/legal');
-            swal(
-                'Buen trabajo!',
-                'Se ha generado el acta, se iniciará la descarga',
-                'success'
-            )
+            pdfMake.createPdf(output).download('acta_terminacion_anticipada_' + self.contrato_id + '.pdf');
         }
 
         /**
@@ -378,7 +405,7 @@ angular.module('contractualClienteApp')
             if (numero.indexOf(".") >= 0)
                 nuevoNumero = nuevoNumero.substring(0, nuevoNumero.indexOf("."));
             // Ponemos un punto cada 3 caracteres
-            for (var j = 0, i = nuevoNumero.length - 1; i >= 0; i-- , j++)
+            for (var j = 0, i = nuevoNumero.length - 1; i >= 0; i--, j++)
                 resultado = nuevoNumero.charAt(i) + ((j > 0) && (j % 3 == 0) ? "," : "") + resultado;
             // Si tiene decimales, se lo añadimos al numero una vez forateado con los separadores de miles
             if (numero.indexOf(".") >= 0)
@@ -646,7 +673,7 @@ angular.module('contractualClienteApp')
                                             self.contrato_obj.ordenador_gasto_documento + ' de ' + self.contrato_obj.ordenador_gasto_ciudad_documento + ' quien actúa en calidad de ' + self.contrato_obj.ordenadorGasto_rol + ' según ' + self.contrato_obj.ordenador_gasto_resolucion + ' y ordenador del gasto, y por la otra ' + self.contrato_obj.contratista_nombre + ', mayor de edad, e identificado(a) con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ' de ' + self.contrato_obj.contratista_ciudad_documento + ' quíén actúa en calidad de contratista, hemos convenido en'
                                     },
                                     { text: ' TERMINAR ANTICIPADAMENTE Y POR MUTUO ACUERDO ', bold: true },
-                                    { text: ' y en consecuencia liquidar a partir de la firma de la presente acta, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' suscrito el día ' + self.format_date_letter(self.contrato_obj.fecha_suscripcion) + '.' }
+                                    { text: ' y en consecuencia liquidar a partir de la firma de la presente acta, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' suscrito el día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.' }
                                 ]
                             },
                             {
@@ -660,7 +687,7 @@ angular.module('contractualClienteApp')
 
                             'Que el objeto del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' es: "' + self.contrato_obj.objeto + '".\n\n',
 
-                            'Que el valor del  ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó por la suma de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + "), y un plazo de " + self.contrato_obj.plazo + ' meses, contados partir del acta de inicio, lo cual tuvo lugar el día ' + self.format_date_letter(self.contrato_obj.fecha_suscripcion) + '.\n\n',
+                            'Que el valor del  ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó por la suma de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + "), y un plazo de " + self.contrato_obj.plazo + ' meses, contados partir del acta de inicio, lo cual tuvo lugar el día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
 
                             'Que el ' + self.contrato_obj.tipo_contrato + ' se perfeccionó y ejecutó mediante Registro Presupuestal No. ' + self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n',
 
@@ -729,7 +756,7 @@ angular.module('contractualClienteApp')
                                 text: [
                                     { text: ' CLÁUSULA TERCERA : ', bold: true },
                                     {
-                                        text: 'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' + self.format_date_letter(self.contrato_obj.fecha_suscripcion) + ' a nombre de ' + self.contrato_obj.contratista_nombre + ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del mismo, declarandose a paz y salvo por todo concepto una vez se compruebe el pago de la cláusula segunda de la presente Acta.\n\n '
+                                        text: 'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' a nombre de ' + self.contrato_obj.contratista_nombre + ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del mismo, declarandose a paz y salvo por todo concepto una vez se compruebe el pago de la cláusula segunda de la presente Acta.\n\n '
                                     }
                                 ],
 

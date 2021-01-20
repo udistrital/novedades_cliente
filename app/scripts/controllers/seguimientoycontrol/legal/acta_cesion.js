@@ -593,14 +593,14 @@ angular.module('contractualClienteApp')
                                     {
                                         text: [
                                             { text: self.contrato_id, bold: true },
-                                            { text: ' suscrito el ' + self.format_date_letter(self.contrato_obj.fecha_suscripcion) }
+                                            { text: ' suscrito el ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) }
                                         ],
                                         style: 'topHeader'
                                     }
                                 ],
                                 [
                                     { text: 'FECHA DE SUSCRIPCIÓN', bold: true, style: 'topHeader' },
-                                    { text: self.format_date_letter(self.contrato_obj.fecha_suscripcion), style: 'topHeader' }
+                                    { text: self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion), style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'FECHA DE INICIO', bold: true, style: 'topHeader' },
