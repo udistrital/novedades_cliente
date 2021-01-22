@@ -45,7 +45,7 @@ angular.module('contractualClienteApp')
                 self.contrato_obj.contratista = agora_response.data[0].Contratista;
                 self.contrato_obj.cesion = 0;
                 self.contrato_obj.numero_contrato = self.contrato_id;
-                self.contrato_obj.id = agora_response.data[0].ContratoSuscrito[0].Id;
+                self.contrato_obj.id = agora_response.data[0].ContratoSuscrito[0].NumeroContrato.Id;
                 self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                 self.contrato_obj.tipo_contrato = agora_response.data[0].TipoContrato.TipoContrato;
                 self.contrato_obj.objeto = agora_response.data[0].ObjetoContrato;
