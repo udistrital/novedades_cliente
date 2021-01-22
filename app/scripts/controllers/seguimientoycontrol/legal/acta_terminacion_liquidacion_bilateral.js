@@ -191,7 +191,8 @@ angular.module('contractualClienteApp')
                 },
                 "NumeroContrato": self.contrato_obj.id.toString(),
                 "Usuario": token_service.getPayload().documento_compuesto,
-                "Vigencia": parseInt(self.contrato_vigencia)
+                "Vigencia": parseInt(self.contrato_vigencia),
+                "FechaRegistro": new Date()
             };
 
             if ($scope.formTerminacion.$valid) {
