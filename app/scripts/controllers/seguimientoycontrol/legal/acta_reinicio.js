@@ -49,7 +49,7 @@ angular.module('contractualClienteApp')
         agoraRequest.get('contrato_general/?query=ContratoSuscrito.NumeroContratoSuscrito:' + self.contrato_id + ',VigenciaContrato:' + self.contrato_vigencia).then(function (agora_response) {
             if (agora_response.data.length > 0) {
                 self.contrato_obj.numero_contrato = self.contrato_id;
-                self.contrato_obj.id = agora_response.data[0].ContratoSuscrito[0].Id;
+                self.contrato_obj.id = agora_response.data[0].ContratoSuscrito[0].NumeroContrato.Id;
                 self.contrato_obj.valor = String(agora_response.data[0].ValorContrato);
                 self.contrato_obj.objeto = agora_response.data[0].ObjetoContrato;
                 self.contrato_obj.fecha_registro = agora_response.data[0].FechaRegistro;
@@ -409,8 +409,9 @@ angular.module('contractualClienteApp')
                     "Id": 4
                 },
                 "NumeroContrato": self.contrato_obj.id.toString(),
-                "Usuario": "CC123456",
-                "Vigencia": parseInt(self.contrato_vigencia)
+                "Usuario": token_service.getPayload().documento_compuesto,
+                "Vigencia": parseInt(self.contrato_vigencia),
+                "FechaRegistro": new Date()
             }
             if ($scope.formReinicio.$valid) {
                 novedadesRequest.get('tipo_novedad', 'query=Nombre:Reinicio').then(function (nc_response) {
