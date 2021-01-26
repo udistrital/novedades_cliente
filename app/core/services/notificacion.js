@@ -37,7 +37,7 @@ angular.module('notificacionService', [])
         var user = "";
 
         var queryNotification = function () {
-            configuracionRequest.get('notificacion_estado_usuario?query=Usuario:' + payload.sub + ',Activo:true&sortby=notificacion&order=asc&limit=-1', '')
+            /*configuracionRequest.get('notificacion_estado_usuario?query=Usuario:' + payload.sub + ',Activo:true&sortby=notificacion&order=asc&limit=-1', '')
                 .then(function (response) {
                     if (response !== null) {
                         notificacion_estado_usuario = response.data;
@@ -60,7 +60,7 @@ angular.module('notificacionService', [])
                         });
                         methods.update_novistos();
                     }
-                });
+                });*/
         };
         if (token_service.live_token()) {
 
@@ -94,7 +94,7 @@ angular.module('notificacionService', [])
                     // console.log("open websocket with " + localStorage.getItem('access_token'))
                     $interval(function(){dataStream.send('ping')}, TIME_PING)
                 });
-                queryNotification();
+                //queryNotification();
             }
         }
 
