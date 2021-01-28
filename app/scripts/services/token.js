@@ -39,7 +39,6 @@ if (window.localStorage.getItem('access_token') === null ||
                 window.alert('There was an error processing the token.');
             } else {
                 // alert('something else other than 200 was returned');
-                // console.log(req);
             }
         }
     };
@@ -112,7 +111,6 @@ angular.module('implicitToken', [])
             },
             getPayload: function () {
                 var id_token = window.localStorage.getItem('id_token').split('.');
-                return JSON.parse(atob(id_token[1]));
             },
             logout: function () {
                 window.location.replace(service.logout_url);

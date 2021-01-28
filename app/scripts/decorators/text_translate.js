@@ -205,7 +205,7 @@ var text_es = {
     VALOR_DESEMBOLSADO: "Valor desembolsado",
     SALDO_A_FAVOR_CONTRATISTA:"Saldo a favor del contratista",
     SALDO_A_FAVOR_UNIVERSIDAD:"Saldo a favor de la Universidad",
-    SALDO_A_FAVOR:"Sado a favor de: ",
+    SALDO_A_FAVOR:"Saldo a favor de: ",
     //SEGUMIENTO FINANCIERO
     SEGUIMIENTO_FINANCIERO: "Seguimiento financiero del contrato",
     DATOS_CONTRATO: "Datos contrato",
