@@ -119,7 +119,7 @@
                   {{'NUMERO_OFICIO' | translate}} *:
                 </label>
                 <md-input-container style="margin:0;">
-                  <input type="number" name="num_oficio" ng-model="sLactaCesion.num_oficio" required id="oficio">
+                  <input type="number" name="num_oficio" ng-model="sLactaCesion.num_oficio" required id="oficio" min="0">
                   <div ng-messages="formCesion.num_oficio.$error">
                     <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                   </div>

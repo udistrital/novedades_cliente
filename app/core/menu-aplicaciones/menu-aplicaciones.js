@@ -196,5 +196,7 @@ angular.module('core')
                     nuevasAplicaciones = nuevasAplicaciones.filter(function (categoria) { return (categoria.aplicaciones.length > 0) });  
                         $scope.categorias = nuevasAplicaciones;
                     
-                }).catch(function (error) {console.log(error)});
+                }).catch(function (error) {
+                    
+                });
         });

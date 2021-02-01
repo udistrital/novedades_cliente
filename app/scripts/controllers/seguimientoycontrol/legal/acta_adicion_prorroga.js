@@ -378,7 +378,6 @@ angular.module('contractualClienteApp')
                     tiponovedad: tiponovedad,
                     cesionario: parseInt(self.contrato_obj.contratista)
                 }
-
                 if ($scope.nuevo_valor_contrato == undefined) {
                     $scope.nuevo_valor_contrato = numberFormat(String(self.contrato_obj.valor));
                     $scope.nuevo_valor_contrato_letras = numeroALetras(String(self.contrato_obj.valor), {

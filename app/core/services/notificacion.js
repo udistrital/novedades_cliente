@@ -37,7 +37,7 @@ angular.module('notificacionService', [])
         var user = "";
 
         var queryNotification = function () {
-            configuracionRequest.get('notificacion_estado_usuario?query=Usuario:' + payload.sub + ',Activo:true&sortby=notificacion&order=asc&limit=-1', '')
+            /*configuracionRequest.get('notificacion_estado_usuario?query=Usuario:' + payload.sub + ',Activo:true&sortby=notificacion&order=asc&limit=-1', '')
                 .then(function (response) {
                     if (response !== null) {
                         notificacion_estado_usuario = response.data;
@@ -60,7 +60,7 @@ angular.module('notificacionService', [])
                         });
                         methods.update_novistos();
                     }
-                });
+                });*/
         };
         if (token_service.live_token()) {
 
@@ -85,16 +85,14 @@ angular.module('notificacionService', [])
                 var dataStream = $websocket(CONF.GENERAL.NOTIFICACION_WS + "?id=" + localStorage.getItem('access_token'));
                 dataStream.onMessage(function (message) {
                     var mensage = JSON.parse(message.data);
-                    // console.log(mensage);
                     methods.addMessage(mensage);
                     methods.update_novistos();
                 });
 
                 dataStream.onOpen(function() {
-                    // console.log("open websocket with " + localStorage.getItem('access_token'))
                     $interval(function(){dataStream.send('ping')}, TIME_PING)
                 });
-                queryNotification();
+                //queryNotification();
             }
         }
 
@@ -117,12 +115,10 @@ angular.module('notificacionService', [])
             },
 
             changeStateNoView: function () {
-                // console.info(user)
-                // console.log(methods.log.filter(function (data) { return (data.Estado).toLowerCase() === 'enviada' }))
+                
                 if (methods.log.filter(function (data) { return (data.Estado).toLowerCase() === 'enviada' }).length >= 1) {
                     configuracionRequest.post('notificacion_estado_usuario/changeStateNoView/' + user, {})
                         .then(function (response) {
-                            // console.log(response);
                             methods.log = [];
                             methods.queryNotification();
                         })
@@ -134,16 +130,13 @@ angular.module('notificacionService', [])
             },
 
             update_novistos: function () {
-                // console.info((methods.log.filter(function (data) { return ((data.Estado).toLowerCase() == 'enviada') })).length);
                 methods.no_vistos = (methods.log.filter(function (data) { return (data.Estado.toLowerCase() === 'enviada') })).length;
             },
 
             changeStateToView: function (id, estado) {
-                // console.log(estado);
                 if (estado === 'noleida') {
                     var noti = methods.getNotificacionEstadoUsuario(id);
                     var path = 'notificacion_estado_usuario/changeStateToView/' + noti.Id;
-                    // console.log(path)
                     configuracionRequest.get(path, '')
                         .then(function (response) {
                             methods.log = [];

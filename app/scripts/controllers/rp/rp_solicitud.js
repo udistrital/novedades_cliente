@@ -128,7 +128,6 @@ angular.module('contractualClienteApp')
                 angular.forEach(response.data, function(data) {
                     financieraMidRequest.get('disponibilidad/ListaDisponibilidades/' + response.data[0].VigenciaCdp, 'limit=1&query=Estado.Nombre__not_in:Agotado,NumeroDisponibilidad:' + data.NumeroCdp + "&UnidadEjecutora=" + 1).then(function(response) {
                         self.gridOptions_cdp.data.push(response.data[0]);
-                        console.log(response);
                         
                         if (response.data.Body === null || response.status !== 200) {
 

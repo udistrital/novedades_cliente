@@ -7,7 +7,7 @@
  * Controller of the contractualClienteApp
  */
 angular.module('contractualClienteApp')
-    .controller('menuCtrl', function ($location, $http, rolesService, $window, $scope, $rootScope, token_service, configuracionRequest, notificacion, $translate, $route, $mdSidenav) {
+    .controller('menuCtrl', function ($location,CONF, $http, rolesService, $window, $scope, $rootScope, token_service, configuracionRequest, notificacion, $translate, $route, $mdSidenav) {
         var paths = [];
         $scope.language = {
             es: "btn btn-primary btn-circle btn-outline active",
@@ -40,7 +40,7 @@ angular.module('contractualClienteApp')
                 }
 
                 roles = roles.replace(/,/g, '%2C');
-                configuracionRequest.get('menu_opcion_padre/ArbolMenus/ADMINISTRADOR_NOVEDADES/Novedades','').then(function(response) {
+                configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + roles+ '/' + CONF.APP_MENU,'').then(function(response) {
                     $rootScope.my_menu = response.data;
 
                 })
