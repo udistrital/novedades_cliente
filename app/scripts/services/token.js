@@ -39,7 +39,6 @@ if (window.localStorage.getItem('access_token') === null ||
                 window.alert('There was an error processing the token.');
             } else {
                 // alert('something else other than 200 was returned');
-                // console.log(req);
             }
         }
     };
