@@ -196,7 +196,7 @@ angular.module('contractualClienteApp')
             };
 
             if ($scope.formTerminacion.$valid) {
-                /*novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
+                novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
                     self.terminacion_nov = {};
                     self.terminacion_nov.contrato = self.contrato_obj.id;
                     self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
@@ -292,7 +292,7 @@ angular.module('contractualClienteApp')
                             });
                         }
                     });
-                });*/
+                });
             } else {
                 swal(
                     $translate.instant('TITULO_ERROR'),
