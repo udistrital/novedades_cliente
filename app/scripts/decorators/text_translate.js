@@ -1,12 +1,12 @@
 "use strict";
 
 /**
-* @ngdoc function
-* @name contractualClienteApp.decorator:TextTranslate
-* @description
-* # TextTranslate
-* Decorator of the contractualClienteApp
-*/
+ * @ngdoc function
+ * @name contractualClienteApp.decorator:TextTranslate
+ * @description
+ * # TextTranslate
+ * Decorator of the contractualClienteApp
+ */
 var text_es = {
     OK: "Ok",
     ERROR: "Error",
@@ -49,7 +49,7 @@ var text_es = {
     TITULO: "GENERATOR-OAS",
     MENSAJE_INICIAL: "Ahora puede comenzar con el desarrollo ...",
 
-    UNIVERSIDAD_NOMBRE:"Universidad Distrital Francisco José de Caldas",
+    UNIVERSIDAD_NOMBRE: "Universidad Distrital Francisco José de Caldas",
 
     CODIGO: "Código",
     //solicitud_necesidad
@@ -203,9 +203,9 @@ var text_es = {
     OBJETO: "Objeto",
     ORDENADOR: "Ordenador",
     VALOR_DESEMBOLSADO: "Valor desembolsado",
-    SALDO_A_FAVOR_CONTRATISTA:"Saldo a favor del contratista",
-    SALDO_A_FAVOR_UNIVERSIDAD:"Saldo a favor de la Universidad",
-    SALDO_A_FAVOR:"Saldo a favor de: ",
+    SALDO_A_FAVOR_CONTRATISTA: "Saldo a favor del contratista",
+    SALDO_A_FAVOR_UNIVERSIDAD: "Saldo a favor de la Universidad",
+    SALDO_A_FAVOR: "Saldo a favor de: ",
     //SEGUMIENTO FINANCIERO
     SEGUIMIENTO_FINANCIERO: "Seguimiento financiero del contrato",
     DATOS_CONTRATO: "Datos contrato",
@@ -265,10 +265,11 @@ var text_es = {
     NOVEDADES: "Novedades",
     SEGUIMIENTO_LEGAL: "Seguimiento Legal",
     SELECCIONE_UNA_NOVEDAD: "Por favor seleccione la novedad",
+    LISTA_NOVEDADES: "Seleccione la novedad a consultar",
     CREAR_NOVEDAD_ADICION_PRORROGA: "Crear Novedad de Adición y/o Prorroga",
     CREAR_ACTA_INICIO: "Crear Acta de Inicio",
     AGREGAR_POLIZA2: "Asociar Póliza",
-    AGREGAR_POLIZA:"Agregar Poliza para el Cesionario",
+    AGREGAR_POLIZA: "Agregar Poliza para el Cesionario",
     CREAR_NOVEDAD_SUSPENSION: "Crear Novedad de Suspensión",
     CREAR_NOVEDAD_REINICIO: "Crear Novedad de Reinicio",
     CREAR_NOVEDAD_CESION: "Crear Novedad de Cesión",
@@ -278,9 +279,9 @@ var text_es = {
     CREAR_NOVEDAD_TERMINACION_BILATERAL: "Crear Novedad de Terminación Anticipada",
     CREAR_NOVEDAD_OTRO_SI_MODIFICATORIO: "Crear Otro Sí Modificatorio",
     CREAR_NOVEDAD_OTRO_SI_ACLARATORIO: "Crear Otro Sí Aclaratorio",
-    SELECCIONAR_CONTRATO:"Seleccionar contrato",
-      //ACTA INICIO
-    ACTA_INICIO_MAY: "ACTA DE INICIO",                           
+    SELECCIONAR_CONTRATO: "Seleccionar contrato",
+    //ACTA INICIO
+    ACTA_INICIO_MAY: "ACTA DE INICIO",
     INFORMACION_ACTA_INICIO: "INFORMACIÓN",
     PLAZO_MESES: "Plazo (en meses)",
     NO_REGISTRA_ACTA_INICIO: "No registra",
@@ -290,17 +291,17 @@ var text_es = {
     INFORMACION_NOVEDAD: "INFORMACIÓN DE LA NOVEDAD",
     INVENTARIO: "INVENTARIO",
     TIPO_BIEN: "TIPO DE BIEN",
-    PLACA: "PLACA",  
+    PLACA: "PLACA",
     DESCRIPCION_MAY: "DESCRIPCIÓN",
     SEDE: "SEDE",
     DEPENDENCIA_MAY: "DEPENDENCIA",
     ESTADO_DEL_BIEN: "ESTADO DEL BIEN",
     TIEMPO_CONTRATO: "Tiempo contrato (Días)",
-    NUMERO_POLIZA:"Numero de la Póliza",
-    ENTIDAD_ASEGURADORA:"Entidad Aseguradora",
+    NUMERO_POLIZA: "Numero de la Póliza",
+    ENTIDAD_ASEGURADORA: "Entidad Aseguradora",
     //ACTA DE ADICION/PRORROGA
     ESTADO_FISICO: "Estado Físico",
-    FECHA_ULTIMO_CORTE:"Fecha ultimo corte",
+    FECHA_ULTIMO_CORTE: "Fecha ultimo corte",
     AVANCE_FISICO_EJECUTADO: "Porcentaje de avance físico ejecutado",
     AVANCE_FISICO_PROGRAMADO: "Porcentaje de avance físico programado",
     ESTADO_FINANCIERO: "Estado Financiero",
@@ -382,54 +383,54 @@ var text_es = {
     CERO: "CERO ",
     //ACTA DE CESION
     ACTA_CESION: "ACTA DE CESIÓN",
-    INFORMACION:"INFORMACIÓN",
-    NO_REGISTRA:"No Registra",
-    CONTRATANTE:"Contratante",
-    CONTRATISTA:"Contratista",
-    ORDENADOR_DE_GASTO:"Ordenador de gasto",
-    CEDULA_CESIONARIO:"Cédula cesionario",
+    INFORMACION: "INFORMACIÓN",
+    NO_REGISTRA: "No Registra",
+    CONTRATANTE: "Contratante",
+    CONTRATISTA: "Contratista",
+    ORDENADOR_DE_GASTO: "Ordenador de gasto",
+    CEDULA_CESIONARIO: "Cédula cesionario",
     PERSONA_NATURAL: "Natural",
-    NUMERO_OFICIO:"Número oficio",
-    NUMERO_OFICIO_ESTADO_CUENTAS:"Número oficio estado de cuentas",
-    FECHA_OFICIO:"Fecha oficio",
-    FECHA_CESION:"Fecha cesión",
+    NUMERO_OFICIO: "Número oficio",
+    NUMERO_OFICIO_ESTADO_CUENTAS: "Número oficio estado de cuentas",
+    FECHA_OFICIO: "Fecha oficio",
+    FECHA_CESION: "Fecha cesión",
     FECHA_TERMINACION_CEDENTE: "Fecha de terminación del cedente",
-    VALOR_A_FAVOR:"Valor a favor de cedente",
-    OTRAS_OBSERVACIONES:"Otras observaciones",
-    INFORMACION_CESIONARIO:"INFORMACIÓN CESIONARIO",
-    SELECCIONAR_CESIONARIO:"Seleccionar cesionario",
-    ACTA_REINICIO:"ACTA DE REINICIO",
-    FECHA_SUSPENSION_INICIO:"Fecha inicio suspensión",
-    FECHA_SUSPENSION_FIN:"Fecha fin suspensión",    
-    FECHA_REINICIO:"Fecha reinicio",
-    PERIODO_SUSPENSION:"Periodo suspension (Días)",
-    ACTA_SUSPENSION:"ACTA DE SUSPENSIÓN",
-    MOTIVO_SUSPENSION:"Motivo de suspensión",
-    CAMPO_REQUERIDO:"Este campo es obligatorio",
+    VALOR_A_FAVOR: "Valor a favor de cedente",
+    OTRAS_OBSERVACIONES: "Otras observaciones",
+    INFORMACION_CESIONARIO: "INFORMACIÓN CESIONARIO",
+    SELECCIONAR_CESIONARIO: "Seleccionar cesionario",
+    ACTA_REINICIO: "ACTA DE REINICIO",
+    FECHA_SUSPENSION_INICIO: "Fecha inicio suspensión",
+    FECHA_SUSPENSION_FIN: "Fecha fin suspensión",
+    FECHA_REINICIO: "Fecha reinicio",
+    PERIODO_SUSPENSION: "Periodo suspension (Días)",
+    ACTA_SUSPENSION: "ACTA DE SUSPENSIÓN",
+    MOTIVO_SUSPENSION: "Motivo de suspensión",
+    CAMPO_REQUERIDO: "Este campo es obligatorio",
     //ALERTAS
-    TITULO_ERROR:"Errores en el formulario",
-    TITULO_ERROR_ACTA:"Error al generar el acta",
-    TITULO_BUEN_TRABAJO:"¡Buen trabajo!",
-    TITULO_ADVERTENCIA:"Advertencia",
+    TITULO_ERROR: "Errores en el formulario",
+    TITULO_ERROR_ACTA: "Error al generar el acta",
+    TITULO_BUEN_TRABAJO: "¡Buen trabajo!",
+    TITULO_ADVERTENCIA: "Advertencia",
     DESCRIPCION_ADVERTENCIA: "Primero debe seleccionar un tipo de novedad!",
     DESCRIPCION_ADVERTENCIA_ADICION: "El valor de la adición no puede ser superior al 50% del valor del contrato.",
     DESCRIPCION_ADVERTENCIA_PRORROGA: "El valor de la prórroga no puede ser superior al 50% del tiempo de ejecución del contrato.",
-    DESCRIPCION_ERROR:"Llenar los campos obligatorios en el formulario",
-    DESCRIPCION_INICIO:"Se registro exitosamente la novedad de 'Acta de inicio'<br>al contrato # ",
-    DESCRIPCION_INICIO_1:"El estado del presente contrato se actualizo a 'Ejecución'.",
-    DESCRIPCION_ERROR_LEGAL:"Contrato no encontrado",
-    DESCRIPCION_ADICION:"Se registro exitosamente la novedad de 'Adición'<br>al contrato # ",
-    DESCRIPCION_PRORROGA:"Se registro exitosamente la novedad de 'Prorroga'<br>al contrato # ",
-    DESCRIPCION_ADICION_PRORROGA:"Se registro exitosamente la novedad de 'Adición y Prorroga'<br>al contrato # ",
-    DESCRIPCION_ERROR_ADICION_PRORROGA:"No se pudo registrar la novedad de 'Adición y/o Prorroga'<br>al contrato # ",
-    DESCRIPCION_INICIO_ERROR_FECHA:"La fecha fin debe ser mayor a la fecha inicio!",
-    DESCRIPCION_CESION:"Se registro exitosamente la novedad de cesión al contrato # ",
-    DESCRIPCION_SUSPENSION:"Se registro exitosamente la novedad de suspensión al contrato # ",
-    DESCRIPCION_ERROR_SUSPENSION:"No se pudo registrar la novedad de suspensión al contrato # ",
-    DESCRIPCION_REINICIO:"Se registro exitosamente la novedad de reinicio al contrato # ",
-    DESCRIPCION_ACTA_CESION:"Ingresar póliza para habilitar creación de novedades sobre el contrato",
-    DESCRIPCION_TERMINACION:"Se registro exitosamente la novedad de terminacion anticipada<br>al contrato # ",
-    DESCRIPCION_ERROR_TERMINACION:"No se pudo registrar la novedad de terminacion anticipada<br>al contrato # ",
+    DESCRIPCION_ERROR: "Llenar los campos obligatorios en el formulario",
+    DESCRIPCION_INICIO: "Se registro exitosamente la novedad de 'Acta de inicio'<br>al contrato # ",
+    DESCRIPCION_INICIO_1: "El estado del presente contrato se actualizo a 'Ejecución'.",
+    DESCRIPCION_ERROR_LEGAL: "Contrato no encontrado",
+    DESCRIPCION_ADICION: "Se registro exitosamente la novedad de 'Adición'<br>al contrato # ",
+    DESCRIPCION_PRORROGA: "Se registro exitosamente la novedad de 'Prorroga'<br>al contrato # ",
+    DESCRIPCION_ADICION_PRORROGA: "Se registro exitosamente la novedad de 'Adición y Prorroga'<br>al contrato # ",
+    DESCRIPCION_ERROR_ADICION_PRORROGA: "No se pudo registrar la novedad de 'Adición y/o Prorroga'<br>al contrato # ",
+    DESCRIPCION_INICIO_ERROR_FECHA: "La fecha fin debe ser mayor a la fecha inicio!",
+    DESCRIPCION_CESION: "Se registro exitosamente la novedad de cesión al contrato # ",
+    DESCRIPCION_SUSPENSION: "Se registro exitosamente la novedad de suspensión al contrato # ",
+    DESCRIPCION_ERROR_SUSPENSION: "No se pudo registrar la novedad de suspensión al contrato # ",
+    DESCRIPCION_REINICIO: "Se registro exitosamente la novedad de reinicio al contrato # ",
+    DESCRIPCION_ACTA_CESION: "Ingresar póliza para habilitar creación de novedades sobre el contrato",
+    DESCRIPCION_TERMINACION: "Se registro exitosamente la novedad de terminacion anticipada<br>al contrato # ",
+    DESCRIPCION_ERROR_TERMINACION: "No se pudo registrar la novedad de terminacion anticipada<br>al contrato # ",
     //CONTRATO_DETALLE
     INFORMACION_CONTRATO: "Información Vinculación",
     FORMA_PAGO: "Forma de pago",
@@ -458,13 +459,13 @@ var text_es = {
         CONFIRMAR: "Confirmar",
         AGREGAR: "Agregar",
         REGISTRAR: "Registrar",
-        SOLICITAR_RP:"Solicitar RP",
+        SOLICITAR_RP: "Solicitar RP",
         QUITAR_RUBRO: "Quitar",
-        VER_SEGUIMIENTO_FINANCIERO:"Ver seguimiento financiero"
+        VER_SEGUIMIENTO_FINANCIERO: "Ver seguimiento financiero"
     },
 
 
-   
+
     //CONTRATO_REGISTRO
     DATOS_BASICOS: "Información básica",
     DISPONIBILIDAD: "Disponibilidad",
@@ -922,7 +923,7 @@ var text_es = {
     CONTRATO_FINALIZADO: "Contrato finalizado",
     CONTRATO_INICIO: "Contrato sin acta de inicio",
     RP: "RP",
-    ANIO:" vigencia "
+    ANIO: " vigencia "
 };
 
 var text_en = {
@@ -1165,9 +1166,10 @@ var text_en = {
     DOCENTES_SELECCIONADOS_REVERSAR: "Teachers selected to be reversed",
     //SEGUIMIENTO LEGAL
     NOVEDADES: "Novelty",
-    DESCRIPCION_ERROR_LEGAL:"Imposible to find contract",
+    DESCRIPCION_ERROR_LEGAL: "Imposible to find contract",
     SEGUIMIENTO_LEGAL: "Legal Tracking",
     SELECCIONE_UNA_NOVEDAD: "Please select the novelty",
+    LISTA_NOVEDADES: "Select the novelty to consult",
     CREAR_NOVEDAD_ADICION_PRORROGA: "Create Novelty Addition and / or Extension",
     CREAR_ACTA_INICIO: "Create Minutes of Beginning",
     CREAR_NOVEDAD_SUSPENSION: "Create Novelty Suspension",
@@ -1177,7 +1179,7 @@ var text_en = {
     FECHA_TERMINACION_ANTICIPADA: "Date Early Termination",
     CREAR_NOVEDAD_TERMINACION_ANTICIPADA: "Create Novelty Early Termination",
     CREAR_NOVEDAD_TERMINACION_BILATERAL: "Create Novelty of Early Termination",
-    SELECCIONAR_CONTRATO:"Choose contract",
+    SELECCIONAR_CONTRATO: "Choose contract",
     CREAR_NOVEDAD_OTRO_SI_MODIFICATORIO: "Create Other Yes Modification",
     CREAR_NOVEDAD_OTRO_SI_ACLARATORIO: "Create Other Yes Clear",
 
@@ -1380,7 +1382,7 @@ var text_en = {
 };
 
 angular.module('contractualClienteApp')
-    .config(function ($translateProvider) {
+    .config(function($translateProvider) {
         $translateProvider
             .translations("es", text_es)
             .translations("en", text_en);
