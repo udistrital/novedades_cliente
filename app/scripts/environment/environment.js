@@ -36,6 +36,7 @@ angular.module("contractualClienteApp").constant("CONF", {
         //NOVEDADES_MID_SERVICE: "http://localhost:8013/v1/",
         DOCUMENTOS_CRUD: "http://pruebasapi2.intranetoas.udistrital.edu.co:8094/v1/",
         NOTIFICACION_WS: "wss://pruebasapi.portaloas.udistrital.edu.co:8116/ws/join",
+        AUTENTICATION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/autenticacion_mid/v1/",
         TOKEN: {
             AUTORIZATION_URL: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
             URL_USER_INFO: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/userinfo",
@@ -46,7 +47,7 @@ angular.module("contractualClienteApp").constant("CONF", {
             BUTTON_CLASS: "btn btn-warning btn-sm",
             SIGN_OUT_URL: "https://autenticacion.portaloas.udistrital.edu.co/oidc/logout",
             SIGN_OUT_REDIRECT_URL: "http://localhost:9000/",
-            SIGN_OUT_APPEND_TOKEN: "true"
-        }
-    }
+            SIGN_OUT_APPEND_TOKEN: "true",
+        },
+    },
 });

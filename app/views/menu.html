@@ -89,31 +89,31 @@
                         </a>
                     </li>
                 </ul>-->
-                <!-- /.dropdown -->
-                <li class="dropdown" ng-if="token_service.live_token()">
-                    <a class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li>
-                            <a ng-click="">
-                                <i class="fa fa-sign-in fa-fw"></i> {{token_service.token.sub}}</a>
-                            </a>
-                        </li>
-                        <li><a><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a ng-click="signOut(); token_service.logout() "><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <li class="dropdown" ng-show="!token_service.live_token()">
-                    <oauth2 authorization-url="{{token_service.config.AUTORIZATION_URL}}" client-id="{{token_service.config.CLIENTE_ID}}" redirect-url="{{token_service.config.REDIRECT_URL}}" response-type="{{token_service.config.RESPONSE_TYPE}}" scope="{{token_service.config.SCOPE}}"
-                        sign-out-append-token="{{SIGN_OUT_APPEND_TOKEN}}" sign-out-url="{{SIGN_OUT_URL}}" sign-out-redirect-url="{{SIGN_OUT_REDIRECT_URL}}" button-class="{{token_service.config.BUTTON_CLASS}}" signInText="Inicio Sesión" signOutText="Cerrar Sesión">
-                    </oauth2>
-                </li>
-                <!-- /.dropdown -->
+            <!-- /.dropdown -->
+            <li class="dropdown" ng-if="token_service.live_token()">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li>
+                        <a ng-click="">
+                            <i class="fa fa-sign-in fa-fw"></i> {{token_service.token.sub}}</a>
+                        </a>
+                    </li>
+                    <li><a><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a ng-click="signOut(); token_service.logout() "><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <li class="dropdown" ng-show="!token_service.live_token()">
+                <oauth2 authorization-url="{{token_service.config.AUTORIZATION_URL}}" client-id="{{token_service.config.CLIENTE_ID}}" redirect-url="{{token_service.config.REDIRECT_URL}}" response-type="{{token_service.config.RESPONSE_TYPE}}" scope="{{token_service.config.SCOPE}}"
+                    sign-out-append-token="{{SIGN_OUT_APPEND_TOKEN}}" sign-out-url="{{SIGN_OUT_URL}}" sign-out-redirect-url="{{SIGN_OUT_REDIRECT_URL}}" button-class="{{token_service.config.BUTTON_CLASS}}" signInText="Inicio Sesión" signOutText="Cerrar Sesión">
+                </oauth2>
+            </li>
+            <!-- /.dropdown -->
         </ul>
     </div>
     <!-- /.navbar-header -->

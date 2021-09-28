@@ -40,8 +40,9 @@ var conf_cloud = {
         SIGN_OUT_REDIRECT_URL: "http://administrativa.portaloas.udistrital.edu.co/",
         SIGN_OUT_APPEND_TOKEN: "true",
         REFRESH_TOKEN: "https://autenticacion.udistrital.edu.co/oauth2/token",
-        CLIENT_SECRET: "lrVuDATX1o8TfXxz_jrEzBA2iIoa"
+        CLIENT_SECRET: "lrVuDATX1o8TfXxz_jrEzBA2iIoa",
     },
+    AUTENTICATION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/autenticacion_mid/v1/",
 };
 
 var conf_test = {
@@ -75,6 +76,7 @@ var conf_test = {
         SIGN_OUT_REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co/",
         SIGN_OUT_APPEND_TOKEN: "true",
     },
+    AUTENTICATION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/autenticacion_mid/v1/",
 };
 
 var conf_local = {
@@ -109,6 +111,7 @@ var conf_local = {
         SIGN_OUT_REDIRECT_URL: "http://localhost:9000/",
         SIGN_OUT_APPEND_TOKEN: "true",
     },
+    AUTENTICATION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/autenticacion_mid/v1/",
 };
 
 angular.module('contractualClienteApp')

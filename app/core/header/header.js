@@ -1,5 +1,3 @@
-
-
 'use strict';
 /**
  * @ngdoc function
@@ -11,7 +9,7 @@
 
 angular.module('core')
     .controller('headerCtrl',
-        function (token_service, CONF, behaviorTheme, $scope, notificacion) {
+        function(token_service, CONF, behaviorTheme, $scope, notificacion) {
 
             $scope.token_service = token_service;
 
@@ -22,15 +20,16 @@ angular.module('core')
                 $scope.isLogin = true;
                 $scope.notificacion = notificacion;
                 $scope.token = token_service.getPayload();
+                $scope.token.sub = $scope.token.email == undefined ? $scope.token.sub : $scope.token.email;
             } else {
                 $scope.isLogin = false;
             }
-            $scope.logout = function () {
+            $scope.logout = function() {
                 token_service.logout();
             }
             $scope.sidebarClases = behaviorTheme.sidebar;
 
-            $scope.toogleCerrarSesion = function () {
+            $scope.toogleCerrarSesion = function() {
                 var buttonCerrarSesion = document.getElementById('header-button-cerrarsesion-container');
                 if (buttonCerrarSesion.style.display === "none" || buttonCerrarSesion.style.display === "") {
                     buttonCerrarSesion.style.display = "block";
@@ -38,18 +37,18 @@ angular.module('core')
                     buttonCerrarSesion.style.display = "none";
                 }
             }
-            $scope.toogleAplicaciones = function () {
+            $scope.toogleAplicaciones = function() {
                 behaviorTheme.toogleAplicacion();
             }
 
-            $scope.togglenotify = function () {
+            $scope.togglenotify = function() {
                 if (!behaviorTheme.notificacion.open) {
                     notificacion.changeStateNoView();
                 }
                 behaviorTheme.toogleNotificacion();
             }
 
-            $scope.sidebarEvent = function () {
+            $scope.sidebarEvent = function() {
                 behaviorTheme.toogleSidebar();
             }
             var mediaquery = window.matchMedia("(max-width: 855px)");
@@ -58,5 +57,3 @@ angular.module('core')
                 behaviorTheme.toogleSidebar();
             }
         });
-
-
