@@ -32,6 +32,7 @@ angular.module("contractualClienteApp").constant("CONF", {
         NOVEDADES_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",
         NOVEDADES_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_mid/v1/",
         DOCUMENTOS_CRUD: "https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2",
+        AUTENTICATION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/autenticacion_mid/v1/",
         TOKEN: {
             AUTORIZATION_URL: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
             URL_USER_INFO: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/userinfo",
@@ -42,7 +43,7 @@ angular.module("contractualClienteApp").constant("CONF", {
             BUTTON_CLASS: "btn btn-warning btn-sm",
             SIGN_OUT_URL: "https://autenticacion.portaloas.udistrital.edu.co/oidc/logout",
             SIGN_OUT_REDIRECT_URL: "https://pruebasnovedades.portaloas.udistrital.edu.co",
-            SIGN_OUT_APPEND_TOKEN: "true"
-        }
-    }
+            SIGN_OUT_APPEND_TOKEN: "true",
+        },
+    },
 });
