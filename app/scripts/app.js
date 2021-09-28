@@ -69,6 +69,7 @@ angular
         "novedadesMidService",
         "documentosCrudService",
         "core",
+        "autenticacionMidService",
     ])
     .run(function(amMoment) {
         amMoment.changeLocale("es");

@@ -69,7 +69,7 @@
         </div>
         <div ng-if="isLogin" ng-include="'core/header/header.html'" ng-controller="headerCtrl">
         </div>
-        <div ng-if="isLogin" class="body-container-menuaplicaciones" ng-include="'core/menu-aplicaciones/menu-aplicaciones.html'" ng-controller="menuaplicacionesCtrl">
+        <div ng-if="isLogin" class="body-container-menuCtrl" ng-include="'core/menu-aplicaciones/menu-aplicaciones.html'" ng-controller="menuCtrl">
         </div>
         <div ng-if="isLogin" class="body-container-notificaciones" ng-include="'core/notificaciones/notificaciones.html'" ng-controller="notificacionesCtrl">
         </div>
@@ -149,6 +149,7 @@
 
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="core/services/implicit_token.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="core/core.module.js"></script>
@@ -156,18 +157,18 @@
     <script src="core/footer/footer.js"></script>
     <script src="core/menu-lateral/menu-lateral.js"></script>
     <script src="core/menu-lateral/opciones-component/opciones-directive.js"></script>
-    <script src="core/menu-aplicaciones/menu-aplicaciones.js"></script>
+    <!-- <script src="core/menu-aplicaciones/menu-aplicaciones.js"></script> -->
     <script src="core/notificaciones/notificaciones.js"></script>
     <script src="core/services/notificacion.js"></script>
     <script src="core/services/theme.js"></script>
-    <script src="core/services/implicit_token.js"></script>
+    <script src="scripts/services/autenticacion_mid_service.js"></script>
     <!-- endbuild -->
 </body>
 <!-- build:js({.tmp,app}) scripts/extras.js -->
 <script src="scripts/environment/environment.js"></script>
 <!-- <script src="scripts/services/token.js"></script> -->
 <!-- <script src="scripts/services/notificacion.js"></script> -->
-<!-- <script src="scripts/controllers/menu.js"></script> -->
+<script src="scripts/controllers/menu.js"></script>
 <!-- <script src="scripts/controllers/footer.js"></script> -->
 <!-- <script src="scripts/controllers/notificaciones.js"></script> -->
 <script src="bower_components/moment/locale/es.js"></script>

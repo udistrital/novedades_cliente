@@ -10,7 +10,7 @@
 // First, parse the query string
 if (window.localStorage.getItem('access_token') === null ||
     window.localStorage.getItem('access_token') === undefined) {
-    window.localStorage.clear(); 
+    window.localStorage.clear();
     var params = {},
         queryString = location.hash.substring(1),
         regex = /([^&=]+)=([^&]*)/g;
@@ -29,9 +29,9 @@ if (window.localStorage.getItem('access_token') === null ||
         window.localStorage.setItem('state', params['state']);
         window.localStorage.setItem('expires_in', params['expires_in']);
     } else {
-        window.localStorage.clear();     
+        window.localStorage.clear();
     }
-    req.onreadystatechange = function (e) {
+    req.onreadystatechange = function(e) {
         if (req.readyState === 4) {
             if (req.status === 200) {
                 // window.location = params.state;
@@ -45,21 +45,21 @@ if (window.localStorage.getItem('access_token') === null ||
 }
 
 angular.module('implicitToken', [])
-    .factory('token_service', function (CONF, md5, $interval) {
+    .factory('token_service', function(CONF, md5, $interval) {
 
         var service = {
             //session: $localStorage.default(params),
             header: null,
             token: null,
             logout_url: null,
-            generateState: function () {
+            generateState: function() {
                 var text = ((Date.now() + Math.random()) * Math.random()).toString().replace('.', '');
                 return md5.createHash(text);
             },
             setting_bearer: {
                 headers: {}
             },
-            getHeader: function () {
+            getHeader: function() {
                 service.setting_bearer = {
                     headers: {
                         'Accept': 'application/json',
@@ -68,7 +68,7 @@ angular.module('implicitToken', [])
                 };
                 return service.setting_bearer;
             },
-            login: function () {
+            login: function() {
                 if (!CONF.GENERAL.TOKEN.nonce) {
                     CONF.GENERAL.TOKEN.nonce = service.generateState();
                 }
@@ -84,12 +84,12 @@ angular.module('implicitToken', [])
                     url += '&nonce=' + encodeURIComponent(CONF.GENERAL.TOKEN.nonce);
                 }
                 url += '&state=' + encodeURIComponent(CONF.GENERAL.TOKEN.state);
-                window.location = url;               
+                window.location = url;
                 return url;
             },
-            live_token: function () {
+            live_token: function() {
                 if (window.localStorage.getItem('id_token') === 'undefined' || window.localStorage.getItem('id_token') === null || service.logoutValid()) {
-                    
+
                     service.login();
                     service.token = service.getPayload()
                     return false;
@@ -105,22 +105,22 @@ angular.module('implicitToken', [])
                     service.logout_url += '?id_token_hint=' + window.localStorage.getItem('id_token');
                     service.logout_url += '&post_logout_redirect_uri=' + CONF.GENERAL.TOKEN.SIGN_OUT_REDIRECT_URL;
                     service.logout_url += '&state=' + window.localStorage.getItem('state');
-                    service.token = service.getPayload()                    
+                    service.token = service.getPayload()
                     return true;
                 }
             },
-            getPayload: function () {
+            getPayload: function() {
                 var id_token = window.localStorage.getItem('id_token').split('.');
                 return JSON.parse(atob(id_token[1]));
             },
-            logout: function () {
+            logout: function() {
                 window.location.replace(service.logout_url);
             },
-            expired: function () {
+            expired: function() {
                 return (new Date(window.localStorage.getItem('expires_at')) < new Date());
             },
 
-            setExpiresAt: function () {
+            setExpiresAt: function() {
                 if (angular.isUndefined(window.localStorage.getItem('expires_at')) || window.localStorage.getItem('expires_at') === null) {
                     var expires_at = new Date();
                     expires_at.setSeconds(expires_at.getSeconds() + parseInt(window.localStorage.getItem('expires_in')) - 60); // 60 seconds less to secure browser and response latency
@@ -128,9 +128,9 @@ angular.module('implicitToken', [])
                 }
             },
 
-            timer: function () {
+            timer: function() {
                 if (!angular.isUndefined(window.localStorage.getItem('expires_at')) || window.localStorage.getItem('expires_at') === null) {
-                    $interval(function () {
+                    $interval(function() {
                         if (service.expired()) {
                             window.localStorage.clear();
                         }
@@ -138,7 +138,7 @@ angular.module('implicitToken', [])
                 }
             },
 
-            logoutValid: function () {
+            logoutValid: function() {
                 var state;
                 var valid = true;
                 var queryString = location.search.substring(1);
@@ -156,9 +156,9 @@ angular.module('implicitToken', [])
                 return valid;
             },
 
-            getRoles: function () {
+            getRoles: function() {
                 var roles = [];
-                angular.forEach(service.token.role, function (data) {
+                angular.forEach(service.token.role, function(data) {
                     if (data.split("/")[0] !== null && !angular.isUndefined(data.split("/")[0])) {
                         roles.push(data.split("/")[0]);
                     }
@@ -167,6 +167,6 @@ angular.module('implicitToken', [])
             }
         };
         service.setExpiresAt();
-        service.timer();       
+        service.timer();
         return service;
     });
