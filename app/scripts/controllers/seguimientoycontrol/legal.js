@@ -105,27 +105,6 @@ angular
                                         swal($translate.instant("CONTRATO_INICIO"), "", "info");
                                     }
                                     //obtener los documentos y soportes por contrato
-                                    // novedadesRequest
-                                    //     .get(
-                                    //         "documentos_contrato",
-                                    //         "query=NumeroContrato:" +
-                                    //         self.contrato_obj.numero_contrato +
-                                    //         ",Vigencia:" +
-                                    //         self.contrato_obj.vigencia
-                                    //     )
-                                    //     .then(function(doc_response) {
-                                    //         if (doc_response.data != null) {
-                                    //             $scope.documentos = [];
-                                    //             for (var i = 0; i < doc_response.data.length; i++) {
-                                    //                 $scope.documentos.push({
-                                    //                     idDocumento: doc_response.data[i].IdDocumento,
-                                    //                     enlace: doc_response.data[i].Enlace,
-                                    //                     label: doc_response.data[i].NombreDocumento,
-                                    //                 });
-                                    //             }
-                                    //         }
-                                    //     });
-
                                     documentosCrudRequest.get("documento", "query=Descripcion:" + self.contrato_obj.numero_contrato + "" + parseInt(self.contrato_obj.vigencia)).then(function(doc_response) {
                                         if (doc_response.data != null) {
                                             $scope.documentos = [];
