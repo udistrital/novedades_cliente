@@ -332,11 +332,12 @@ angular.module('contractualClienteApp')
                 );
 
             const pdfDocGenerator = pdfMake.createPdf(output);
-            pdfDocGenerator.getBase64((data) => {
+            pdfDocGenerator.getBase64(function(data) {
                 pdfMakerService.saveDocGestorDoc(
                     data,
                     "acta_terminacion_anticipada_" +
-                    self.contrato_id + "_" +
+                    self.contrato_id +
+                    "_" +
                     dateTime +
                     ".pdf",
                     self

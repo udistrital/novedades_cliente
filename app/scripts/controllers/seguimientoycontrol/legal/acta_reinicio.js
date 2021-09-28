@@ -740,7 +740,7 @@ angular
                 $location.path("/seguimientoycontrol/legal");
 
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-                pdfDocGenerator.getBase64((data) => {
+                pdfDocGenerator.getBase64(function(data) {
                     pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_reinicio_contrato_" +

@@ -689,7 +689,7 @@ angular
                     );
 
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-                pdfDocGenerator.getBase64((data) => {
+                pdfDocGenerator.getBase64(function(data) {
                     pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_suspension_contrato_" +

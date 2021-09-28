@@ -757,8 +757,7 @@ angular
                         ".pdf"
                     );
 
-                const pdfDocGenerator = pdfMake.createPdf(output);
-                pdfDocGenerator.getBase64((data) => {
+                pdfDocGenerator.getBase64(function(data) {
                     pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_cesion_contrato_" +
