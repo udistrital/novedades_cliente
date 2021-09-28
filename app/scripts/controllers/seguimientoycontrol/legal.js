@@ -17,7 +17,7 @@ angular
             novedadesMidRequest,
             novedadesRequest,
             agoraRequest,
-            documentosCrudRequest,
+            documentosCrudRequest
         ) {
             this.awesomeThings = ["HTML5 Boilerplate", "AngularJS", "Karma"];
             var self = this;
@@ -268,11 +268,13 @@ angular
                     novedadesMidRequest
                         .get("gestor_documental", self.documentoSelect.enlace)
                         .then(function(response) {
+                            // var elementos = response.data;
                             var elementos = response.data.Body;
                             var docB64 = elementos.file.split("'");
-                            let pdfWindow = window.open("");
+                            var pdfWindow = window.open("");
                             pdfWindow.document.write(
                                 "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
+                                // docB64[0] +
                                 docB64[1] +
                                 "'></iframe>"
                             );
