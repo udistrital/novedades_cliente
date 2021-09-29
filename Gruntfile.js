@@ -1,5 +1,5 @@
 // Generated on 2017-05-23 using generator-oas 0.1.3
-"use strict";
+'use strict';
 
 // # Globbing
 // for performance reasons we're only matching one level down:
@@ -8,23 +8,25 @@
 // 'test/spec/**/*.js'
 
 module.exports = function(grunt) {
+
     // Test wich SonarQube
-    grunt.loadNpmTasks("grunt-sonar-runner");
+    grunt.loadNpmTasks('grunt-sonar-runner');
+
 
     // Time how long tasks take. Can help when optimizing build times
-    require("time-grunt")(grunt);
+    require('time-grunt')(grunt);
 
     // Automatically load required Grunt tasks
-    require("jit-grunt")(grunt, {
-        useminPrepare: "grunt-usemin",
-        ngtemplates: "grunt-angular-templates",
-        cdnify: "grunt-google-cdn",
+    require('jit-grunt')(grunt, {
+        useminPrepare: 'grunt-usemin',
+        ngtemplates: 'grunt-angular-templates',
+        cdnify: 'grunt-google-cdn'
     });
 
     // Configurable paths for the application
     var appConfig = {
-        app: require("./bower.json").appPath || "app",
-        dist: "dist",
+        app: require('./bower.json').appPath || 'app',
+        dist: 'dist'
     };
 
     // Define the configuration for all the tasks
@@ -335,7 +337,7 @@ module.exports = function(grunt) {
         ngtemplates: {
             dist: {
                 options: {
-                    module: "titanClienteV2App",
+                    module: "contractualClienteApp",
                     htmlmin: "<%= htmlmin.dist.options %>",
                     usemin: "scripts/scripts.js",
                 },
@@ -459,67 +461,58 @@ module.exports = function(grunt) {
         },
     });
 
-    grunt.registerTask(
-        "serve",
-        "Compile then start a connect web server",
-        function(target) {
-            if (target === "dist") {
-                return grunt.task.run(["build", "connect:dist:keepalive"]);
-            }
 
-            grunt.task.run([
-                "clean:server",
-                "wiredep",
-                "concurrent:server",
-                "postcss:server",
-                "connect:livereload",
-                "watch",
-            ]);
+    grunt.registerTask('serve', 'Compile then start a connect web server', function(target) {
+        if (target === 'dist') {
+            return grunt.task.run(['build', 'connect:dist:keepalive']);
         }
-    );
 
-    grunt.registerTask(
-        "server",
-        'DEPRECATED TASK. Use the "serve" task instead',
-        function(target) {
-            grunt.log.warn(
-                "The `server` task has been deprecated. Use `grunt serve` to start a server."
-            );
-            grunt.task.run(["serve:" + target]);
-        }
-    );
+        grunt.task.run([
+            'clean:server',
+            'wiredep',
+            'concurrent:server',
+            'postcss:server',
+            'connect:livereload',
+            'watch'
+        ]);
+    });
 
-    grunt.registerTask("test", [
-        "clean:server",
-        "wiredep",
-        "concurrent:test",
-        "postcss",
-        "connect:test",
-        "karma",
+    grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function(target) {
+        grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
+        grunt.task.run(['serve:' + target]);
+    });
+
+    grunt.registerTask('test', [
+        'clean:server',
+        'wiredep',
+        'concurrent:test',
+        'postcss',
+        'connect:test',
+        'karma'
     ]);
 
-    grunt.registerTask("build", [
-        "clean:dist",
-        "wiredep",
-        "useminPrepare",
-        "concurrent:dist",
-        "postcss",
-        "ngtemplates",
-        "concat",
-        "ngAnnotate",
-        "copy:dist",
-        "cdnify",
-        "cssmin",
-        "uglify",
-        "filerev",
-        "usemin",
-        "htmlmin",
+    grunt.registerTask('build', [
+        'clean:dist',
+        'wiredep',
+        'useminPrepare',
+        'concurrent:dist',
+        'postcss',
+        'ngtemplates',
+        'concat',
+        'ngAnnotate',
+        'copy:dist',
+        'cdnify',
+        'cssmin',
+        'uglify',
+        'filerev',
+        'usemin',
+        'htmlmin'
     ]);
 
-    grunt.registerTask("default", [
-        "newer:jshint",
-        "newer:jscs",
-        "test",
-        "build",
+    grunt.registerTask('default', [
+        'newer:jshint',
+        'newer:jscs',
+        'test',
+        'build'
     ]);
 };
