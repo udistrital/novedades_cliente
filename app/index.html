@@ -10,19 +10,19 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
-    <link rel="stylesheet" href="bower_components/angular-tree-control/css/tree-control.css" />
-    <link rel="stylesheet" href="bower_components/sweetalert2/dist/sweetalert2.css" />
-    <link rel="stylesheet" href="bower_components/vis/dist/vis.css" />
-    <link rel="stylesheet" href="bower_components/font-awesome-animation/dist/font-awesome-animation.css" />
-    <link rel="stylesheet" href="bower_components/font-awesome-animation/dist/font-awesome-animation.min.css" />
-    <link rel="stylesheet" href="bower_components/nvd3/build/nv.d3.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
-    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
-    <link rel="stylesheet" href="bower_components/select2/select2.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap-fileinput/css/fileinput.min.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css">
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
+    <link rel="stylesheet" href="bower_components/angular-tree-control/css/tree-control.css">
+    <link rel="stylesheet" href="bower_components/sweetalert2/dist/sweetalert2.css">
+    <link rel="stylesheet" href="bower_components/vis/dist/vis.css">
+    <link rel="stylesheet" href="bower_components/font-awesome-animation/dist/font-awesome-animation.css">
+    <link rel="stylesheet" href="bower_components/font-awesome-animation/dist/font-awesome-animation.min.css">
+    <link rel="stylesheet" href="bower_components/nvd3/build/nv.d3.css">
+    <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.css">
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css">
+    <link rel="stylesheet" href="bower_components/select2/select2.css">
+    <link rel="stylesheet" href="bower_components/bootstrap-fileinput/css/fileinput.min.css">
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -53,11 +53,9 @@
     <link rel="stylesheet" href="https://pruebasassets.portaloas.udistrital.edu.co/logo-info.css">
     <link rel="stylesheet" href="https://pruebasassets.portaloas.udistrital.edu.co/isotipo-header.css">
     <link rel="stylesheet" href="https://pruebasassets.portaloas.udistrital.edu.co/logo-header.css">
-
 </head>
 
 <body ng-app="contractualClienteApp">
-
     <div ng-controller="headerCtrl">
         <div ng-if="!isLogin" id="nb-global-spinner" class="spinner">
             <div class="blob blob-0"></div>
@@ -67,27 +65,19 @@
             <div class="blob blob-4"></div>
             <div class="blob blob-5"></div>
         </div>
-        <div ng-if="isLogin" ng-include="'core/header/header.html'" ng-controller="headerCtrl">
-        </div>
-        <div ng-if="isLogin" class="body-container-menuCtrl" ng-include="'core/menu-aplicaciones/menu-aplicaciones.html'" ng-controller="menuCtrl">
-        </div>
-        <div ng-if="isLogin" class="body-container-notificaciones" ng-include="'core/notificaciones/notificaciones.html'" ng-controller="notificacionesCtrl">
-        </div>
+        <div ng-if="isLogin" ng-include="'core/header/header.html'" ng-controller="headerCtrl"></div>
+        <div ng-if="isLogin" class="body-container-menuCtrl" ng-include="'core/menu-aplicaciones/menu-aplicaciones.html'" ng-controller="menuCtrl"></div>
+        <div ng-if="isLogin" class="body-container-notificaciones" ng-include="'core/notificaciones/notificaciones.html'" ng-controller="notificacionesCtrl"></div>
         <div ng-if="isLogin" class="container-app">
             <div id="menu-sidebar-container" ng-class="sidebarClases.sidebarContainerClase" ng-controller="headerCtrl">
-                <div id="menu-sidebar" ng-include="'core/menu-lateral/menu-lateral.html'" ng-controller="menuLateralCtrl" ng-class="sidebarClases.sidebarDivClase">
-                </div>
+                <div id="menu-sidebar" ng-include="'core/menu-lateral/menu-lateral.html'" ng-controller="menuLateralCtrl" ng-class="sidebarClases.sidebarDivClase"></div>
             </div>
             <div ng-class="sidebarClases.containerBodyClase" ng-controller="headerCtrl">
-                <div ng-view="" ng-class="sidebarClases.containerDivClase" ng-controller="headerCtrl">
-                </div>
+                <div ng-view="" ng-class="sidebarClases.containerDivClase" ng-controller="headerCtrl"></div>
             </div>
         </div>
-        <div ng-if="isLogin" class="container-footer" ng-include="'core/footer/footer.html'" ng-controller="footerCtrl">
-        </div>
+        <div ng-if="isLogin" class="container-footer" ng-include="'core/footer/footer.html'" ng-controller="footerCtrl"></div>
     </div>
-
-
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
         ! function(A, n, g, u, l, a, r) {
@@ -100,7 +90,6 @@
         ga('create', 'UA-XXXXX-X');
         ga('send', 'pageview');
     </script>
-
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -146,8 +135,6 @@
     <script src="bower_components/excel-builder-js/dist/excel-builder.dist.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
-
-
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <!-- <script src="core/services/implicit_token.js"></script> -->
     <script src="scripts/services/implicit_token.js"></script>
@@ -175,7 +162,6 @@
 <script src="bower_components/moment/locale/es.js"></script>
 <script src="scripts/decorators/text_translate.js"></script>
 <script src="scripts/controllers/about.js"></script>
-
 <script src="scripts/services/financiera_service.js"></script>
 <script src="scripts/directives/actividades_economicas/lista_actividades_economicas.js"></script>
 <script src="scripts/services/administrativa_service.js"></script>
@@ -189,7 +175,6 @@
 <script src="scripts/directives/apropiaciones/productos_apropiacion.js"></script>
 <script src="scripts/directives/marco_legal/lista_documentos_legales.js"></script>
 <script src="scripts/directives/reportes/reportes_spagobi.js"></script>
-
 <script src="scripts/directives/necesidad/visualizar_necesidad.js"></script>
 <script src="scripts/controllers/rp/rp_solicitud.js"></script>
 <script src="scripts/controllers/rp/rp_solicitud_personas.js"></script>
@@ -204,22 +189,16 @@
 <script src="scripts/services/orden.js"></script>
 <script src="scripts/services/titan_service.js"></script>
 <script src="scripts/services/request_service.js"></script>
-
 <script src="scripts/controllers/plantillas/generacion_plantilla.js"></script>
 <script src="scripts/controllers/plantillas/lista_plantillas.js"></script>
 <script src="scripts/directives/plantillas/texto_enriquecido.js"></script>
 <script src="scripts/services/amazon_administrativa.js"></script>
-
 <script src="scripts/services/academica_service.js"></script>
-
 <script src="scripts/directives/btn_registro.js"></script>
 <script src="scripts/directives/avances/ver_solicitud.js"></script>
-
-
 <script src="scripts/services/core_amazon_api.js"></script>
 <script src="scripts/services/oikos_amazon_api.js"></script>
 <script src="scripts/services/resolucion.js"></script>
-
 <script src="scripts/services/contrato_service.js"></script>
 <script src="scripts/services/configuracion_service.js"></script>
 <script src="scripts/services/grid_options_service.js"></script>
@@ -236,13 +215,10 @@
 <script src="scripts/directives/avances/lista_avances.js"></script>
 <script src="scripts/services/resolucion_service.js"></script>
 <script src="scripts/services/roles_service.js"></script>
-
 <script src="scripts/services/argo_nosql_service.js"></script>
 <script src="scripts/services/novedades_service.js"></script>
 <script src="scripts/services/novedades_mid_service.js"></script>
 <script src="scripts/services/documentos_crud.js"></script>
-
-
 <script src="scripts/controllers/seguimientoycontrol/legal.js"></script>
 <script src="scripts/controllers/seguimientoycontrol/legal/acta_adicion_prorroga.js"></script>
 <script src="scripts/controllers/seguimientoycontrol/legal/acta_cesion.js"></script>
