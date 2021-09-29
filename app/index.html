@@ -42,8 +42,8 @@
     <link rel="stylesheet" href="core/css/core.css">
     <link rel="stylesheet" href="core/footer/footer.css">
     <link rel="stylesheet" href="core/header/header.css">
-    <link rel="stylesheet" href="core/menu-lateral/menu-lateral.css">
-    <link rel="stylesheet" href="core/menu-aplicaciones/menu-aplicaciones.css">
+    <link rel="stylesheet" href="menu-lateral/menu-lateral.css">
+    <link rel="stylesheet" href="menu-aplicaciones/menu-aplicaciones.css">
     <link rel="stylesheet" href="core/notificaciones/notificaciones.css">
     <link rel="stylesheet" href="core/css/ui-grid.css">
     <link rel="stylesheet" href="https://pruebasassets.portaloas.udistrital.edu.co/gaia-style.css">
@@ -69,13 +69,13 @@
         </div>
         <div ng-if="isLogin" ng-include="'core/header/header.html'" ng-controller="headerCtrl">
         </div>
-        <div ng-if="isLogin" class="body-container-menuCtrl" ng-include="'core/menu-aplicaciones/menu-aplicaciones.html'" ng-controller="menuCtrl">
+        <div ng-if="isLogin" class="body-container-menuCtrl" ng-include="'menu-aplicaciones/menu-aplicaciones.html'" ng-controller="menuCtrl">
         </div>
         <div ng-if="isLogin" class="body-container-notificaciones" ng-include="'core/notificaciones/notificaciones.html'" ng-controller="notificacionesCtrl">
         </div>
         <div ng-if="isLogin" class="container-app">
             <div id="menu-sidebar-container" ng-class="sidebarClases.sidebarContainerClase" ng-controller="headerCtrl">
-                <div id="menu-sidebar" ng-include="'core/menu-lateral/menu-lateral.html'" ng-controller="menuLateralCtrl" ng-class="sidebarClases.sidebarDivClase">
+                <div id="menu-sidebar" ng-include="'menu-lateral/menu-lateral.html'" ng-controller="menuLateralCtrl" ng-class="sidebarClases.sidebarDivClase">
                 </div>
             </div>
             <div ng-class="sidebarClases.containerBodyClase" ng-controller="headerCtrl">
@@ -156,8 +156,8 @@
     <script src="core/core.module.js"></script>
     <script src="core/header/header.js"></script>
     <script src="core/footer/footer.js"></script>
-    <script src="core/menu-lateral/menu-lateral.js"></script>
-    <script src="core/menu-lateral/opciones-component/opciones-directive.js"></script>
+    <script src="scripts/controllers/menu-lateral.js"></script>
+    <script src="menu-lateral/opciones-component/opciones-directive.js"></script>
     <!-- <script src="core/menu-aplicaciones/menu-aplicaciones.js"></script> -->
     <script src="core/notificaciones/notificaciones.js"></script>
     <script src="core/services/notificacion.js"></script>

@@ -21,40 +21,6 @@ angular.module('core')
             $scope.sidebarClases = behaviorTheme.sidebar;
 
             // obtiene los menus segun el rol
-            // if (token_service.live_token()) {
-            //     $scope.token = token_service.getPayload();
-            //     if (!angular.isUndefined($scope.token.role)) {
-            //         var roles = "";
-            //         if (typeof $scope.token.role === "object") {
-            //             var rl = [];
-            //             for (var index = 0; index < $scope.token.role.length; index++) {
-            //                 if ($scope.token.role[index].indexOf("/") < 0) {
-            //                     rl.push($scope.token.role[index]);
-            //                 }
-            //             }
-            //             roles = rl.toString();
-            //         } else {
-            //             roles = $scope.token.role;
-            //         }
-
-            //         roles = roles.replace(/,/g, '%2C');
-            //         configuracionRequest.get('menu_opcion_padre/ArbolMenus/' + roles + '/' + CONF.APP_MENU, '').then(function(response) {
-
-            //     $rootScope.menu = response.data;
-            //     behaviorTheme.initMenu(response.data);
-            //     $scope.menu = behaviorTheme.menu;
-
-            // })
-            // .catch(
-            //     function(response) {
-            //         $rootScope.menu = response.data;
-            //         behaviorTheme.initMenu(response.data);
-            //         $scope.menu = behaviorTheme.menu;
-
-            //     });
-            //     }
-            // }
-
             if (token_service.live_token()) {
                 token_service.getLoginData().then(function() {
                     $scope.token = token_service.getAppPayload();
