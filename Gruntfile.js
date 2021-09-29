@@ -17,10 +17,12 @@ module.exports = function(grunt) {
     require('time-grunt')(grunt);
 
     // Automatically load required Grunt tasks
-    require('jit-grunt')(grunt, {
-        useminPrepare: 'grunt-usemin',
-        ngtemplates: 'grunt-angular-templates',
-        cdnify: 'grunt-google-cdn'
+    require("jit-grunt")(grunt, {
+        useminPrepare: "grunt-usemin",
+        ngtemplates: "grunt-angular-templates",
+        cdnify: "grunt-google-cdn2",
+        chokidar: "grunt-chokidar",
+        serveStatic: "serve-static",
     });
 
     // Configurable paths for the application
