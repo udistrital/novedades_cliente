@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "angular": "^1.7.9",
-    "angular-cookies": "^1.6.9"
+    "angular-cookies": "^1.6.9",
+    "grunt-google-cdn2": "^0.6.0"
   }
 }
