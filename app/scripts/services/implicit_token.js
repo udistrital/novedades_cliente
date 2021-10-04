@@ -26,6 +26,7 @@ if (
     //
     req.open("GET", query, true);
     if (params.id_token !== null && params.id_token !== undefined) {
+        console.log("id_token inicial: ", params.id_token);
         window.localStorage.setItem("access_token", params.access_token);
         window.localStorage.setItem("id_token", params.id_token);
         window.localStorage.setItem("state", params.state);
@@ -70,12 +71,12 @@ angular
                             var appUserDocument;
                             var appUserRole;
                             /*var emailInfo = {
-                                                          //Email: "karianov@correo.udistrital.edu.co"
-                                                          //Email: appUserInfo.sub,
-                                                          Email: appUserInfo.email,
-                                                          Rol: appUserInfo.role,
-                                                          Documento: appUserInfo.documento
-                                                        };*/
+              //Email: "karianov@correo.udistrital.edu.co"
+              //Email: appUserInfo.sub,
+              Email: appUserInfo.email,
+              Rol: appUserInfo.role,
+              Documento: appUserInfo.documento
+            };*/
                             var userRol = {
                                 user: appUserInfo.email,
                             };
@@ -104,6 +105,7 @@ angular
                                     deferred.resolve(true);
                                 })
                                 .catch(function(excepcionAutenticacion) {
+                                    console.log("fallo la autenticacion");
                                     //service.logout();
                                 });
                         } else {
@@ -128,6 +130,7 @@ angular
                         headers: {
                             Accept: "application/json",
                             Authorization: "Bearer " + window.localStorage.getItem("access_token"),
+                            "Content-Type": "application/json",
                         },
                     };
                     return service.setting_bearer;
@@ -190,15 +193,20 @@ angular
                     var id_token = window.localStorage.getItem("id_token").split(".");
                     return JSON.parse(atob(id_token[1]));
                 },
-                // Contiene el documento para las búsquedas
                 getAppPayload: function() {
                     var id_token = window.localStorage.getItem("id_token").split(".");
                     var access_code = window.localStorage.getItem("access_code");
                     var access_role = window.localStorage.getItem("access_role");
-                    var data = JSON.parse(atob(id_token[1]));
-                    data.appUserDocument = JSON.parse(atob(access_code));
-                    data.appUserRole = JSON.parse(atob(access_role));
-                    data.role = JSON.parse(atob(access_role));
+                    var data = angular.fromJson(atob(id_token[1]));
+                    console.log(
+                        "access_code:",
+                        access_code,
+                        "access_role: ",
+                        access_role
+                    );
+                    data.appUserDocument = angular.fromJson(atob(access_code));
+                    data.appUserRole = angular.fromJson(atob(access_role));
+                    console.log("data:", data);
                     return data;
                 },
                 logout: function() {
@@ -219,21 +227,25 @@ angular
                         expires_at.setSeconds(
                             expires_at.getSeconds() +
                             parseInt(window.localStorage.getItem("expires_in")) -
-                            60
-                        ); // 60 seconds less to secure browser and response latency
+                            40
+                        ); // 40 seconds less to secure browser and response latency
                         window.localStorage.setItem("expires_at", expires_at);
                     }
                 },
 
                 timer: function() {
                     if (!angular.isUndefined(window.localStorage.getItem("expires_at")) ||
-                        window.localStorage.getItem("expires_at") === null
+                        window.localStorage.getItem("expires_at") === null ||
+                        window.localStorage.getItem("expires_at") === "Invalid Date"
                     ) {
                         $interval(function() {
                             if (service.expired()) {
-                                window.localStorage.clear();
+                                service.logout();
+                                service.clearStorage();
                             }
                         }, 5000);
+                    } else {
+                        window.location.reload();
                     }
                 },
 
@@ -247,11 +259,19 @@ angular
                         state = decodeURIComponent(m[2]);
                     }
                     if (window.localStorage.getItem("state") === state) {
-                        window.localStorage.clear();
+                        service.clearStorage();
+                        valid = true;
                     } else {
                         valid = false;
                     }
                     return valid;
+                },
+                clearStorage: function() {
+                    window.localStorage.removeItem("access_token");
+                    window.localStorage.removeItem("id_token");
+                    window.localStorage.removeItem("expires_in");
+                    window.localStorage.removeItem("state");
+                    window.localStorage.removeItem("expires_at");
                 },
             };
             service.setExpiresAt();
