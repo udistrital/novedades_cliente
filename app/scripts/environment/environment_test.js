@@ -31,7 +31,8 @@ angular.module("contractualClienteApp").constant("CONF", {
         HOMOLOGACION_SERVICE: "https://autenticacion.udistrital.edu.co:8244/dependencias_api/v1/",
         NOVEDADES_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",
         NOVEDADES_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_mid/v1/",
-        DOCUMENTOS_CRUD: "https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2",
+        // DOCUMENTOS_CRUD: "https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2",
+        DOCUMENTOS_CRUD: "http://pruebasapi2.intranetoas.udistrital.edu.co:8094/v1/",
         NOTIFICACION_WS: "wss://pruebasapi.portaloas.udistrital.edu.co:8116/ws/join",
         AUTENTICATION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/autenticacion_mid/v1/",
         TOKEN: {
