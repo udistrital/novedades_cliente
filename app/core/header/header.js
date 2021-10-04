@@ -17,10 +17,12 @@ angular.module('core')
             $scope.app_large = (CONF.APP.toLowerCase()).trim() + "-header";
 
             if (token_service.live_token()) {
-                $scope.isLogin = true;
-                $scope.notificacion = notificacion;
-                $scope.token = token_service.getPayload();
-                $scope.token.sub = $scope.token.email == undefined ? $scope.token.sub : $scope.token.email;
+                token_service.getLoginData().then(function() {
+                    $scope.isLogin = true;
+                    $scope.notificacion = notificacion;
+                    $scope.token = token_service.getPayload();
+                    $scope.token.sub = $scope.token.email == undefined ? $scope.token.sub : $scope.token.email;
+                });
             } else {
                 $scope.isLogin = false;
             }
