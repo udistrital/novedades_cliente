@@ -78,19 +78,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12" style="padding-left:25px;" ng-if="sLegal.estado_resultado_response == true">
-                                    <label for="boton_novedad">{{'LISTA_NOVEDADES' | translate}}</label>
-                                    <br>
-                                    <div>
-                                        <!-- <select name="select" class="form-control" ng-model="documentoSelect" ng-options="documento as documento.label for documento in documentos track by documento.idDocumento" ng-change="sLegal.buscar_documento()">
-                                          <option value="">--- Selecione ---</option>
-                                        </select> -->
-                                        <!-- <select class="form-control" ng-model="sLegal.documentoSelect" ng-change="sLegal.buscar_documento()">
-                                        <option ng-repeat="documento in documentos">{{documento.label}}</option>
-                                    </select> -->
-                                        <select name="select" class="form-control" ng-model="sLegal.documentoSelect" ng-options="documento as documento.label for documento in documentos" ng-change="sLegal.buscar_documento()">
-                                    </select>
-                                        </select>
+                                <div>
+
+                                    <div ng-if="sLegal.estado_resultado_response == true" ng-controller="SeguimientoycontrolLegalCtrl" class="md-padding" id="popupContainer" ng-cloak>
+                                        <md-button class="btn btn-primary dropdown-toggle" ng-click="showTabDialog($event)">
+                                            Ver novedades
+                                        </md-button>
                                     </div>
                                 </div>
                             </div>
