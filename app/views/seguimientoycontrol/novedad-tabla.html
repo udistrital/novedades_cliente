@@ -1,0 +1,38 @@
+<md-dialog aria-label="novedades">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>NOVEDADES</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    x
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Enlace</th>
+                        <th>Fecha creacion</th>
+                        <th>Ver documento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="documento in documentos">
+                        <td>{{ documento.label }}</td>
+                        <td>{{ documento.enlace }}</td>
+                        <td ng-bind="formatDate(documento.fechaCreacion) |  date:'yyyy-MM-dd H:mm:ss'"></td>
+                        <td>
+                            <md-button class="md-icon-button" ng-click="verDocumento(documento.enlace)">
+                                Ver
+                            </md-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>
