@@ -20,18 +20,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="documento in documentos">
+                    <tr ng-repeat="documento in documentos | limitTo:numLimit:start">
                         <td>{{ documento.label }}</td>
                         <td>{{ documento.enlace }}</td>
-                        <td ng-bind="formatDate(documento.fechaCreacion) |  date:'yyyy-MM-dd H:mm:ss'"></td>
+                        <td ng-bind="formatDate(documento.fechaCreacion) |  date:'yyyy-MM-dd H:mm:ss' : 'UTC'"></td>
+                        <!-- <td ng-bind="formatDate(documento.fechaCreacion) |  date:'yyyy-MM-dd H:mm:ss'"></td> -->
                         <td>
                             <md-button class="md-icon-button" ng-click="verDocumento(documento.enlace)">
                                 Ver
                             </md-button>
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan="5"><span style="padding:5px">{{numLimit}} registros por pagina</span> <span style='text-align: center'>Pagina# {{currentPage}} de {{pages}}</span>
+                            <span style="float:right;padding:5px"><a ng-hide="hidePrev()" href="" ng-click="PrevPage()">Prev</a></span>
+
+                            <span style="float:right;padding:5px"><a ng-hide="hideNext()" href="" ng-click="nextPage()">Next</a></span></td>
+                    </tr>
                 </tbody>
             </table>
+
             </div>
         </md-dialog-content>
     </form>
