@@ -114,21 +114,34 @@ angular
                                             "query=Descripcion:" +
                                             self.contrato_obj.numero_contrato +
                                             "" +
-                                            parseInt(self.contrato_obj.vigencia)
+                                            parseInt(self.contrato_obj.vigencia) +
+                                            "&limit=0"
                                         )
                                         .then(function(doc_response) {
                                             if (doc_response.data != null) {
                                                 $scope.documentos = [];
-                                                for (var i = 0; i < doc_response.data.length; i++) {
-                                                    if (doc_response.data[i].Id != undefined) {
+                                                for (
+                                                    var i = 0; i < doc_response.data.length; i++
+                                                ) {
+                                                    if (
+                                                        doc_response.data[i].Id !=
+                                                        undefined
+                                                    ) {
                                                         $scope.documentos.push({
                                                             idDocumento: doc_response.data[i].Id,
                                                             enlace: doc_response.data[i].Enlace,
                                                             label: doc_response.data[i].Nombre,
-                                                            fechaCreacion: doc_response.data[i].FechaCreacion,
+                                                            fechaCreacion: doc_response.data[i]
+                                                                .FechaCreacion,
                                                         });
                                                     }
                                                 }
+                                                // $scope.list =
+                                                //     $scope.$parent.documentos;
+                                                // $scope.config = {
+                                                //     itemsPerPage: 5,
+                                                //     fillLastPage: true
+                                                // }
                                             }
                                         });
 
@@ -283,6 +296,8 @@ angular
                         parent: angular.element(document.body),
                         targetEvent: ev,
                         clickOutsideToClose: true,
+                        restrict: "E",
+                        replace: true,
                         controller: DialogController,
                     })
                     .then(
@@ -313,8 +328,7 @@ angular
                         .then(function(response) {
                             var elementos = response.data.Body;
                             var docB64 = elementos.file.split("'");
-                            var file =
-                                docB64.length > 1 ? docB64[1] : docB64[0];
+                            var file = docB64.length > 1 ? docB64[1] : docB64[0];
                             var pdfWindow = window.open("");
                             pdfWindow.document.write(
                                 "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
@@ -327,6 +341,45 @@ angular
                     var dateOut = new Date(date);
                     return dateOut;
                 };
-            };
+
+                $scope.currentPage = 1;
+                $scope.numLimit = 5;
+                $scope.start = 0;
+
+                $scope.$watch("documentos", function(newVal) {
+                    if (newVal) {
+                        $scope.pages = Math.ceil(
+                            $scope.documentos.length / $scope.numLimit
+                        );
+                    }
+                });
+                $scope.hideNext = function() {
+                    if (
+                        $scope.start + $scope.numLimit <
+                        $scope.documentos.length
+                    ) {
+                        return false;
+                    } else return true;
+                };
+                $scope.hidePrev = function() {
+                    if ($scope.start === 0) {
+                        return true;
+                    } else return false;
+                };
+                $scope.nextPage = function() {
+                    console.log("next pages");
+                    $scope.currentPage++;
+                    $scope.start = $scope.start + $scope.numLimit;
+                    console.log($scope.start);
+                };
+                $scope.PrevPage = function() {
+                    if ($scope.currentPage > 1) {
+                        $scope.currentPage--;
+                    }
+                    console.log("next pages");
+                    $scope.start = $scope.start - $scope.numLimit;
+                    console.log($scope.start);
+                };
+            }
         }
     );

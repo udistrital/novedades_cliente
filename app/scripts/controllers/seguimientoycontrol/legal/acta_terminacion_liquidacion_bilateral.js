@@ -312,7 +312,7 @@ angular.module('contractualClienteApp')
             var dateTime =
                 new Date().getFullYear() +
                 "" +
-                new Date().getMonth() +
+                (new Date().getMonth() + 1) +
                 "" +
                 new Date().getDate() +
                 "" +
