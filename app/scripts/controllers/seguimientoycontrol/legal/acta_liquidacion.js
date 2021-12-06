@@ -17,9 +17,9 @@ angular.module('contractualClienteApp')
 
 
 
-    var self= this;
+    var self = this;
 
-    self.generarActa = function(){
+    self.generarActa = function () {
       swal(
         'Buen trabajo!',
         'Se ha generado el acta, se iniciará la descarga',

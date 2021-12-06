@@ -11,7 +11,7 @@ angular
     .module("contractualClienteApp")
     .controller(
         "SeguimientoycontrolLegalActaAdicionProrrogaCtrl",
-        function(
+        function (
             $scope,
             $routeParams,
             agoraRequest,
@@ -61,7 +61,7 @@ angular
 
             agoraRequest
                 .get("informacion_persona_natural?query=Id:" + self.elaboro_cedula)
-                .then(function(ipn_response) {
+                .then(function (ipn_response) {
                     self.elaboro =
                         ipn_response.data[0].PrimerNombre +
                         " " +
@@ -78,7 +78,7 @@ angular
                     ",VigenciaContrato:" +
                     self.contrato_vigencia
                 )
-                .then(function(agora_response) {
+                .then(function (agora_response) {
                     if (agora_response.data.length > 0) {
                         self.contrato_obj.contratista = agora_response.data[0].Contratista;
                         self.contrato_obj.cesion = 0;
@@ -114,7 +114,7 @@ angular
                                 "contrato_suscrito?query=NumeroContratoSuscrito:" +
                                 self.contrato_obj.numero_contrato
                             )
-                            .then(function(acta_response) {
+                            .then(function (acta_response) {
                                 self.contrato_obj.NumeroContrato =
                                     acta_response.data[
                                         acta_response.data.length - 1
@@ -124,7 +124,7 @@ angular
                                         "acta_inicio?query=NumeroContrato:" +
                                         self.contrato_obj.NumeroContrato
                                     )
-                                    .then(function(acta_response) {
+                                    .then(function (acta_response) {
                                         self.contrato_obj.inicio =
                                             acta_response.data[0].FechaInicio;
                                         self.contrato_obj.fin = acta_response.data[0].FechaFin;
@@ -136,14 +136,14 @@ angular
                                 "informacion_persona_natural?query=Id:" +
                                 self.contrato_obj.supervisor_cedula
                             )
-                            .then(function(ipn_response) {
+                            .then(function (ipn_response) {
                                 coreAmazonRequest
                                     .get(
                                         "ciudad",
                                         "query=Id:" +
                                         ipn_response.data[0].IdCiudadExpedicionDocumento
                                     )
-                                    .then(function(c_response) {
+                                    .then(function (c_response) {
                                         self.contrato_obj.supervisor_tipo_Documento =
                                             ipn_response.data[0].TipoDocumento.ValorParametro;
                                         self.contrato_obj.supervisor_ciudad_cedula =
@@ -166,7 +166,7 @@ angular
                                 self.contrato_obj.ordenadorGasto_id +
                                 "&sortby=FechaFin&order=desc&limit=1"
                             )
-                            .then(function(og_response) {
+                            .then(function (og_response) {
                                 self.contrato_obj.ordenadorGasto_nombre =
                                     og_response.data[0].NombreOrdenador;
                                 self.contrato_obj.ordenadorGasto_rol =
@@ -183,13 +183,13 @@ angular
                                         "informacion_persona_natural?query=Id:" +
                                         og_response.data[0].Documento
                                     )
-                                    .then(function(ispn_response) {
+                                    .then(function (ispn_response) {
                                         self.contrato_obj.ordenador_gasto_tipo_documento =
                                             ispn_response.data[0].TipoDocumento.ValorParametro;
                                     });
                                 coreAmazonRequest
                                     .get("ciudad", "query=Id:" + og_response.data[0].IdCiudad)
-                                    .then(function(sc_response) {
+                                    .then(function (sc_response) {
                                         self.contrato_obj.ordenador_gasto_ciudad_documento =
                                             sc_response.data[0].Nombre;
                                     });
@@ -202,7 +202,7 @@ angular
                                 "/" +
                                 self.contrato_obj.vigencia
                             )
-                            .then(function(response_sql) {
+                            .then(function (response_sql) {
                                 var elementos_cesion = response_sql.data.Body;
                                 if (elementos_cesion.length != "0") {
                                     var last_cesion =
@@ -212,7 +212,7 @@ angular
                                         .get(
                                             "informacion_proveedor?query=Id:" + last_cesion.cesionario
                                         )
-                                        .then(function(ip_response) {
+                                        .then(function (ip_response) {
                                             self.contrato_obj.contratista_documento =
                                                 ip_response.data[0].NumDocumento;
                                             self.contrato_obj.contratista_nombre =
@@ -223,14 +223,14 @@ angular
                                                     "informacion_persona_natural?query=Id:" +
                                                     self.contrato_obj.contratista_documento
                                                 )
-                                                .then(function(ipn_response) {
+                                                .then(function (ipn_response) {
                                                     coreAmazonRequest
                                                         .get(
                                                             "ciudad",
                                                             "query=Id:" +
                                                             ipn_response.data[0].IdCiudadExpedicionDocumento
                                                         )
-                                                        .then(function(c_response) {
+                                                        .then(function (c_response) {
                                                             self.contrato_obj.contratista_tipo_Documento =
                                                                 ipn_response.data[0].TipoDocumento.ValorParametro;
                                                             self.contrato_obj.contratista_ciudad_cedula =
@@ -243,13 +243,13 @@ angular
                                                     "aprobacion_pago/contratos_contratista/" +
                                                     self.contrato_obj.contratista_documento
                                                 )
-                                                .then(function(response) {
+                                                .then(function (response) {
                                                     self.contrato_obj.cdp_numero =
                                                         response.data[0].NumeroCdp;
                                                     self.contrato_obj.cdp_anno =
                                                         response.data[0].VigenciaCdp;
                                                 })
-                                                .catch(function(error) {
+                                                .catch(function (error) {
                                                     swal(
                                                         $translate.instant("INFORMACION"),
                                                         $translate.instant(
@@ -266,7 +266,7 @@ angular
                                             "informacion_proveedor?query=Id:" +
                                             self.contrato_obj.contratista
                                         )
-                                        .then(function(ip_response) {
+                                        .then(function (ip_response) {
                                             self.contrato_obj.contratista_documento =
                                                 ip_response.data[0].NumDocumento;
                                             self.contrato_obj.contratista_nombre =
@@ -277,14 +277,14 @@ angular
                                                     "informacion_persona_natural?query=Id:" +
                                                     self.contrato_obj.contratista_documento
                                                 )
-                                                .then(function(ipn_response) {
+                                                .then(function (ipn_response) {
                                                     coreAmazonRequest
                                                         .get(
                                                             "ciudad",
                                                             "query=Id:" +
                                                             ipn_response.data[0].IdCiudadExpedicionDocumento
                                                         )
-                                                        .then(function(c_response) {
+                                                        .then(function (c_response) {
                                                             self.contrato_obj.contratista_tipo_Documento =
                                                                 ipn_response.data[0].TipoDocumento.ValorParametro;
                                                             self.contrato_obj.contratista_ciudad_cedula =
@@ -297,13 +297,13 @@ angular
                                                     "aprobacion_pago/contratos_contratista/" +
                                                     self.contrato_obj.contratista_documento
                                                 )
-                                                .then(function(response) {
+                                                .then(function (response) {
                                                     self.contrato_obj.cdp_numero =
                                                         response.data[0].NumeroCdp;
                                                     self.contrato_obj.cdp_anno =
                                                         response.data[0].VigenciaCdp;
                                                 })
-                                                .catch(function(error) {
+                                                .catch(function (error) {
                                                     swal(
                                                         $translate.instant("INFORMACION"),
                                                         $translate.instant(
@@ -325,7 +325,7 @@ angular
              * @description
              * funcion para obtener el valor final del contrato
              */
-            $scope.total_valor_contrato = function(evento) {
+            $scope.total_valor_contrato = function (evento) {
                 var valor_adicion = evento.target.value.replace(/[^0-9\.]/g, "");
                 var valor_contrato =
                     parseFloat(valor_adicion) + parseFloat(self.contrato_obj.valor);
@@ -363,7 +363,7 @@ angular
              * @description
              * funcion para obtener el plazo del contrato
              */
-            $scope.total_plazo_contrato = function(evento) {
+            $scope.total_plazo_contrato = function (evento) {
                 var valor_prorroga = evento.target.value;
                 var plazo_actual_dias = parseInt(self.contrato_obj.plazo) * 30;
                 var valor_valido_prorroga = plazo_actual_dias * 0.5;
@@ -422,7 +422,7 @@ angular
              * @description
              * funcion para validar si se selecciono la novedad de adicion
              */
-            $scope.click_check_adicion = function() {
+            $scope.click_check_adicion = function () {
                 if ($(".panel_adicion").is(":visible")) {
                     $(".panel_adicion").hide("fast");
                     self.contrato_obj.NumeroCdp = "";
@@ -439,7 +439,7 @@ angular
                             "&Vigencia:" +
                             self.VigenciaContrato
                         )
-                        .then(function(response) {
+                        .then(function (response) {
                             self.contrato_obj.NumeroCdp = response.data[0].NumeroCdp;
                         });
                     $scope.fecha_adicion = new Date();
@@ -453,7 +453,7 @@ angular
              * @description
              * funcion para validar si se selecciono la novedad de prorroga
              */
-            $scope.click_check_prorroga = function() {
+            $scope.click_check_prorroga = function () {
                 if ($(".panel_prorroga").is(":visible")) {
                     $(".panel_prorroga").hide("fast");
                     $scope.tiempo_prorroga = "";
@@ -473,7 +473,7 @@ angular
              * @description
              * funcion para validar si se selecciono la novedad de adicion - prorroga
              */
-            self.comprobar_seleccion_novedad = function() {
+            self.comprobar_seleccion_novedad = function () {
                 if ($scope.adicion == true || $scope.prorroga == true) {
                     $scope.estado_novedad = true;
                     if ($scope.adicion == true) {
@@ -515,9 +515,9 @@ angular
                 });
                 $scope.contrato_prorroga_letras = numeroALetras(
                     $scope.valor_prorroga_final, {
-                        plural: $translate.instant("("),
-                        singular: $translate.instant("("),
-                    }
+                    plural: $translate.instant("("),
+                    singular: $translate.instant("("),
+                }
                 );
             };
 
@@ -528,7 +528,7 @@ angular
                     $scope.alert = "DESCRIPCION_ADICION";
                     novedadesRequest
                         .get("tipo_novedad", "query=Nombre:" + $scope.estado_novedad)
-                        .then(function(nc_response) {
+                        .then(function (nc_response) {
                             self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
                             $scope.nuevo_plazo_contrato = self.contrato_obj.plazo + " meses";
                             callback(self.tiponovedad);
@@ -540,7 +540,7 @@ angular
                     $scope.alert = "DESCRIPCION_PRORROGA";
                     novedadesRequest
                         .get("tipo_novedad", "query=Nombre:" + $scope.estado_novedad)
-                        .then(function(nc_response) {
+                        .then(function (nc_response) {
                             self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
                             callback(self.tiponovedad);
                         });
@@ -552,7 +552,7 @@ angular
                     $scope.alert = "DESCRIPCION_ADICION_PRORROGA";
                     novedadesRequest
                         .get("tipo_novedad", "query=Nombre:Adición/Prórroga")
-                        .then(function(nc_response) {
+                        .then(function (nc_response) {
                             self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
                             callback(self.tiponovedad);
                         });
@@ -566,8 +566,8 @@ angular
              * @description
              * funcion que valida la data de la novedad
              */
-            self.generarActa = function() {
-                generateTipoNovedad(function(tiponovedad) {
+            self.generarActa = function () {
+                generateTipoNovedad(function (tiponovedad) {
                     self.data_acta_adicion_prorroga = {
                         contrato: self.contrato_obj.numero_contrato,
                         numerosolicitud: $scope.numero_solicitud,
@@ -588,11 +588,11 @@ angular
                         );
                         $scope.nuevo_valor_contrato_letras = numeroALetras(
                             String(self.contrato_obj.valor), {
-                                plural: $translate.instant("PESOS"),
-                                singular: $translate.instant("PESO"),
-                                centPlural: $translate.instant("CENTAVOS"),
-                                centSingular: $translate.instant("CENTAVO"),
-                            }
+                            plural: $translate.instant("PESOS"),
+                            singular: $translate.instant("PESO"),
+                            centPlural: $translate.instant("CENTAVOS"),
+                            centSingular: $translate.instant("CENTAVO"),
+                        }
                         );
                         $scope.valor_adicion_letras = numeroALetras("0", {
                             plural: $translate.instant("PESOS"),
@@ -604,7 +604,7 @@ angular
                     }
                     novedadesMidRequest
                         .post("novedad", self.data_acta_adicion_prorroga)
-                        .then(function(request) {
+                        .then(function (request) {
                             if (request.status == 200) {
                                 self.formato_generacion_pdf();
                                 swal({
@@ -619,7 +619,7 @@ angular
                                     showCancelButton: false,
                                     confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                     allowOutsideClick: false,
-                                }).then(function() {
+                                }).then(function () {
                                     window.location.href = "#/seguimientoycontrol/legal";
                                 });
                                 $scope.estado_novedad = undefined;
@@ -638,10 +638,10 @@ angular
                                     showCancelButton: false,
                                     confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                     allowOutsideClick: false,
-                                }).then(function() {});
+                                }).then(function () { });
                             }
                         })
-                        .catch(function(error) {
+                        .catch(function (error) {
                             //Servidor no disponible
                             $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
                             swal({
@@ -656,7 +656,7 @@ angular
                                 showCancelButton: false,
                                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                 allowOutsideClick: false,
-                            }).then(function() {});
+                            }).then(function () { });
                         });
                 });
             };
@@ -668,7 +668,7 @@ angular
              * @description
              * funcion que permite generar el PDF del acta
              */
-            self.formato_generacion_pdf = function() {
+            self.formato_generacion_pdf = function () {
 
                 var dateTime =
                     new Date().getFullYear() +
@@ -689,7 +689,7 @@ angular
 
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
 
-                pdfDocGenerator.getBase64(function(data) {
+                pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_adicion_prorroga_contrato_" +
@@ -711,7 +711,7 @@ angular
              * @param {date} param
              */
 
-            self.format_date_letter_mongo = function(param) {
+            self.format_date_letter_mongo = function (param) {
                 var date = new Date(param);
                 var dd = date.getDate();
                 var mm = date.getMonth();
@@ -734,7 +734,7 @@ angular
              * funcion para el formateo de objetos tipo fecha a formato dd/mm/yyyy
              * @param {date} param
              */
-            self.formato_pdf = function() {
+            self.formato_pdf = function () {
                 return {
                     pageSize: "LETTER",
                     pageMargins: [50, 125, 50, 70],
@@ -756,7 +756,7 @@ angular
                                     bold: true,
                                     alignment: "center",
                                     fontSize: 9,
-                                }, ],
+                                },],
                             ],
                         },
                         layout: "noBorders",
@@ -769,401 +769,401 @@ angular
                                     text: "_______________________________________________________________________________________",
                                     alignment: "center",
                                     fontSize: 6,
-                                }, ],
+                                },],
                                 [{
                                     text: "UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS",
                                     alignment: "center",
                                     fontSize: 6,
-                                }, ],
+                                },],
                                 [{
                                     text: "OFICINA ASESORA JURÍDICA",
                                     alignment: "center",
                                     fontSize: 6,
-                                }, ],
+                                },],
                                 [{
                                     text: "CARRERA 7 No. 40B-53, Piso 9",
                                     alignment: "center",
                                     fontSize: 6,
-                                }, ],
+                                },],
                                 [{
                                     text: "Teléfono 33393300, Ext. 1911 y 1912",
                                     alignment: "center",
                                     fontSize: 6,
-                                }, ],
+                                },],
                                 [{ text: "Bogotá D.C.", alignment: "center", fontSize: 6 }],
                             ],
                         },
                         layout: "noBorders",
                     },
                     content: [{
-                            style: ["general_font"],
-                            text: [
-                                { text: "Entre los suscritos, " },
-                                {
-                                    text: self.contrato_obj.ordenadorGasto_nombre + ", ",
-                                    bold: true,
-                                },
-                                {
-                                    text: "mayor de edad, vecino de esta ciudad, identificado con cédula de ciudadanía No. " +
-                                        self.contrato_obj.ordenador_gasto_documento +
-                                        " expedida en Bogotá D.C., " +
-                                        "quien actúa en calidad de " +
-                                        self.contrato_obj.ordenadorGasto_rol +
-                                        ", de conformidad con la Resolución No. " +
-                                        self.contrato_obj.ordenador_gasto_resolucion +
-                                        ", así como en nombre y representación legal de la ",
-                                },
-                                {
-                                    text: "UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS, ",
-                                    bold: true,
-                                },
-                                {
-                                    text: "ente universitario autónomo, de conformidad con la Ley 30 de 1992, debidamente autorizado para contratar, según Acuerdo No. 003 de 2015 del Consejo Superior Universitario, quien en lo sucesivo se denominará ",
-                                },
-                                { text: "LA UNIVERSIDAD, ", bold: true },
-                                { text: "con NIT 899.999.230-7, y, de otra, " },
-                                {
-                                    text: self.contrato_obj.contratista_nombre + ", ",
-                                    bold: true,
-                                },
-                                {
-                                    text: "identificado con " +
-                                        self.contrato_obj.contratista_tipo_Documento +
-                                        " No. " +
-                                        self.contrato_obj.contratista_documento +
-                                        " de " +
-                                        self.contrato_obj.contratista_ciudad_cedula +
-                                        ", y quien  para los efectos del presente documento, se denominará ",
-                                },
-                                { text: "EL CONTRATISTA, ", bold: true },
-                                {
-                                    text: "acordamos " +
-                                        adicionProrroga +
-                                        " del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_id +
-                                        " de " +
-                                        self.fecha_reg_ano +
-                                        ", teniendo en cuenta los siguientes documentos y consideraciones: \n\n",
-                                },
-                            ],
-                        },
-                        {
-                            style: ["general_font"],
-                            ol: [{
-                                    text: [{
-                                            text: "El " +
-                                                self.fecha_reg_dia +
-                                                " de " +
-                                                self.fecha_reg_mes +
-                                                " de " +
-                                                self.fecha_reg_ano +
-                                                ", ",
-                                        },
-                                        { text: "LA UNIVERSIDAD y EL CONTRATISTA ", bold: true },
-                                        {
-                                            text: "suscribieron el " +
-                                                self.contrato_obj.tipo_contrato +
-                                                " No. " +
-                                                self.contrato_id +
-                                                " de " +
-                                                self.fecha_reg_ano +
-                                                ', cuyo objeto es "' +
-                                                self.contrato_obj.objeto +
-                                                '" (Cláusula 1).',
-                                        },
-                                    ],
-                                },
-                                {
-                                    text: [{
-                                            text: "Como plazo de ejecución del contrato se estableció ",
-                                        },
-                                        {
-                                            text: "" +
-                                                $scope.contrato_plazo_letras +
-                                                self.contrato_obj.plazo +
-                                                " ) MESES, ",
-                                            bold: true,
-                                        },
-                                        {
-                                            text: "contados a partir de la suscripción de la correspondiente acta de inicio, lo cual tuvo lugar el " +
-                                                self.fecha_reg_dia +
-                                                " de " +
-                                                self.fecha_reg_mes +
-                                                " de " +
-                                                self.fecha_reg_ano +
-                                                ". ",
-                                        },
-                                    ],
-                                },
-                                {
-                                    text: [{
-                                            text: "En la cláusula número 3, se pactó como valor la suma de ",
-                                        },
-                                        {
-                                            text: "" +
-                                                $scope.valor_contrato_letras +
-                                                " MONEDA CORRIENTE ($" +
-                                                numberFormat(String(self.contrato_obj.valor)) +
-                                                " M/Cte.) ",
-                                            bold: true,
-                                        },
-                                        { text: "incluido IVA." },
-                                    ],
-                                },
-                                // {
-                                //     text: [
-                                //         { text: '' },
-                                //     ]
-                                // },
-                                {
-                                    text: [{
-                                            text: "Que mediante oficio " +
-                                                $scope.numero_oficio +
-                                                ", recibido por la Oficina Asesora Jurídica el día " +
-                                                self.format_date_letter_mongo(self.fecha_inicio) +
-                                                ", el " +
-                                                self.contrato_obj.ordenadorGasto_rol +
-                                                " de ",
-                                        },
-                                        { text: "LA UNIVERSIDAD, ", bold: true },
-                                        {
-                                            text: "como Ordenador del Gasto, solicitud la adición de ",
-                                        },
-                                        {
-                                            text: "" +
-                                                $scope.valor_adicion_letras +
-                                                " MONEDA CORRIENTE ($" +
-                                                $scope.valor_adicion +
-                                                " M/Cte.), ",
-                                            bold: true,
-                                        },
-                                        { text: "y prórroga de " },
-                                        {
-                                            text: "" +
-                                                $scope.contrato_prorroga_letras +
-                                                "" +
-                                                $scope.valor_prorroga_final +
-                                                ") días, ",
-                                            bold: true,
-                                        },
-                                        {
-                                            text: "del " +
-                                                self.contrato_obj.tipo_contrato +
-                                                " No. " +
-                                                self.contrato_id +
-                                                " de " +
-                                                self.fecha_reg_ano +
-                                                ", cuya justificación se encuentra descrita en la Solicitud de Necesidad No. " +
-                                                $scope.numero_solicitud +
-                                                " del día " +
-                                                self.format_date_letter_mongo(self.fecha_oficio) +
-                                                ".",
-                                        },
-                                    ],
-                                },
-                                {
-                                    text: "Teniendo en cuenta que el valor a adicionar no supera el 50% del inicialmente pactado, la solicitud se ajusta a lo consagrado en el inciso 2º" +
-                                        " del artículo 86 de la Resolución de Rectoría 262 de 2015 (Procedimiento para Adición, Prórroga o Modificación del Contrato), resultando procedente " +
-                                        "suscribir el presente documento. ",
-                                },
-                                {
-                                    text: [{
-                                            text: "Que quienes suscriben el presente documento son plenamente capaces para hacerlo y obligarse, además de que la Oficina Asesora Jurídica de ",
-                                        },
-                                        { text: "LA UNIVERSIDAD ", bold: true },
-                                        {
-                                            text: "verificó la ausencia de antecedentes disciplinarios, judiciales y fiscales. ",
-                                        },
-                                    ],
-                                },
-                                {
-                                    text: [{
-                                            text: "Que se cuenta con disponibilidad presupuestal para atender la presente adición, ",
-                                        },
-                                        {
-                                            text: "como se desprende del Certificado de Disponibilidad Presupuestal No. " +
-                                                self.contrato_obj.cdp_numero +
-                                                " de " +
-                                                self.contrato_obj.cdp_anno +
-                                                ", ",
-                                        },
-                                        { text: "expedido por la Sección de Presupuesto. " },
-                                    ],
-                                },
-                                {
-                                    text: "Que el acto aquí planteado es jurídicamente viable, de acuerdo con lo establecido en las normas civiles y comerciales pertinentes, y, en especial," +
-                                        " en el Estatuto de Contratación de la Universidad Distrital Francisco José de Caldas y demás normas reglamentarias pertinentes y vigentes.\n\n",
-                                },
-                            ],
-                        },
-                        {
-                            style: ["general_font"],
+                        style: ["general_font"],
+                        text: [
+                            { text: "Entre los suscritos, " },
+                            {
+                                text: self.contrato_obj.ordenadorGasto_nombre + ", ",
+                                bold: true,
+                            },
+                            {
+                                text: "mayor de edad, vecino de esta ciudad, identificado con cédula de ciudadanía No. " +
+                                    self.contrato_obj.ordenador_gasto_documento +
+                                    " expedida en Bogotá D.C., " +
+                                    "quien actúa en calidad de " +
+                                    self.contrato_obj.ordenadorGasto_rol +
+                                    ", de conformidad con la Resolución No. " +
+                                    self.contrato_obj.ordenador_gasto_resolucion +
+                                    ", así como en nombre y representación legal de la ",
+                            },
+                            {
+                                text: "UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS, ",
+                                bold: true,
+                            },
+                            {
+                                text: "ente universitario autónomo, de conformidad con la Ley 30 de 1992, debidamente autorizado para contratar, según Acuerdo No. 003 de 2015 del Consejo Superior Universitario, quien en lo sucesivo se denominará ",
+                            },
+                            { text: "LA UNIVERSIDAD, ", bold: true },
+                            { text: "con NIT 899.999.230-7, y, de otra, " },
+                            {
+                                text: self.contrato_obj.contratista_nombre + ", ",
+                                bold: true,
+                            },
+                            {
+                                text: "identificado con " +
+                                    self.contrato_obj.contratista_tipo_Documento +
+                                    " No. " +
+                                    self.contrato_obj.contratista_documento +
+                                    " de " +
+                                    self.contrato_obj.contratista_ciudad_cedula +
+                                    ", y quien  para los efectos del presente documento, se denominará ",
+                            },
+                            { text: "EL CONTRATISTA, ", bold: true },
+                            {
+                                text: "acordamos " +
+                                    adicionProrroga +
+                                    " del " +
+                                    self.contrato_obj.tipo_contrato +
+                                    " No. " +
+                                    self.contrato_id +
+                                    " de " +
+                                    self.fecha_reg_ano +
+                                    ", teniendo en cuenta los siguientes documentos y consideraciones: \n\n",
+                            },
+                        ],
+                    },
+                    {
+                        style: ["general_font"],
+                        ol: [{
                             text: [{
-                                    text: "En consecuencia de lo anterior, las partes acuerdan:\n\n",
-                                },
-                                { text: "CLÁUSULA PRIMERA.-  ADICIONAR", bold: true },
-                                {
-                                    text: " al valor del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_id +
-                                        " de " +
-                                        self.fecha_reg_ano +
-                                        ", la suma de " +
-                                        $scope.valor_adicion_letras +
-                                        " MONEDA CORRIENTE ($" +
-                                        $scope.valor_adicion +
-                                        " M/Cte.).",
-                                },
-                                "\n\n",
-
-                                { text: "CLÁUSULA SEGUNDA.-", bold: true },
-                                { text: " Como consecuencia de lo anterior, " },
-                                { text: "MODIFICAR", bold: true },
-                                {
-                                    text: " la CLAUSULA 3 del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_id +
-                                        " de " +
-                                        self.fecha_reg_ano +
-                                        "la cual quedará así: \n",
-                                },
-                                {
-                                    text: "“El valor del presente contrato corresponde a la suma de " +
-                                        $scope.nuevo_valor_contrato_letras +
-                                        " MONEDA CORRIENTE ($" +
-                                        $scope.nuevo_valor_contrato +
-                                        " M/Cte.) , incluido IVA, así como todos los impuestos y retenciones legamente establecidos…”.",
-                                    italics: true,
-                                },
-                                "\n\n",
-
-                                { text: "CLÁUSULA TERCERA.- PRORROGAR", bold: true },
-                                {
-                                    text: "el plazo de ejecución del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_id +
-                                        " de " +
-                                        self.fecha_reg_ano +
-                                        " en " +
-                                        $scope.contrato_prorroga_letras +
-                                        "" +
-                                        $scope.valor_prorroga_final +
-                                        ") DÍAS.",
-                                },
-                                "\n\n",
-
-                                { text: "CLÁUSULA CUARTA.-", bold: true },
-                                { text: " como consecuencia de lo anterior, " },
-                                { text: "MODIFICAR", bold: true },
-                                {
-                                    text: " la CLAUSULA 6 del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_id +
-                                        " de " +
-                                        self.fecha_reg_ano +
-                                        " la cual quedará así: \n",
-                                },
-                                {
-                                    text: "“El plazo de ejecución del contrato será de " +
-                                        $scope.nuevo_plazo_contrato +
-                                        ", contados a partir de los requisitos de ejecución…”.",
-                                    italics: true,
-                                },
-                                "\n\n",
-
-                                { text: "CLÁUSULA QUINTA.-", bold: true },
-                                {
-                                    text: "Las cláusulas y condiciones no modificadas por el presente instrumento continúan vigentes en los términos del contrato primigenio.",
-                                },
-                                "\n\n",
-
-                                { text: "CLÁUSULA SEXTA.-", bold: true },
-                                {
-                                    text: "La presente prórroga y adición requiere para su perfeccionamiento y legalización, la suscripción de la misma por las partes, " +
-                                        "la actualización y aprobación de las garantías, y la expedición del Registro presupuestal.",
-                                },
-                                "\n\n",
-
-                                {
-                                    text: "Las partes manifiestan libremente que han procedido a la lectura total y cuidadosa del presente documento, por lo que, en consecuencia," +
-                                        " se obligan en todos sus órdenes y manifestaciones.",
-                                },
-                                "\n\n",
-                                {
-                                    text: "Para constancia, se firma en Bogotá, D.C., a los ______________________________________________.",
-                                },
-                                "\n\n\n\n\n\n",
+                                text: "El " +
+                                    self.fecha_reg_dia +
+                                    " de " +
+                                    self.fecha_reg_mes +
+                                    " de " +
+                                    self.fecha_reg_ano +
+                                    ", ",
+                            },
+                            { text: "LA UNIVERSIDAD y EL CONTRATISTA ", bold: true },
+                            {
+                                text: "suscribieron el " +
+                                    self.contrato_obj.tipo_contrato +
+                                    " No. " +
+                                    self.contrato_id +
+                                    " de " +
+                                    self.fecha_reg_ano +
+                                    ', cuyo objeto es "' +
+                                    self.contrato_obj.objeto +
+                                    '" (Cláusula 1).',
+                            },
                             ],
                         },
+                        {
+                            text: [{
+                                text: "Como plazo de ejecución del contrato se estableció ",
+                            },
+                            {
+                                text: "" +
+                                    $scope.contrato_plazo_letras +
+                                    self.contrato_obj.plazo +
+                                    " ) MESES, ",
+                                bold: true,
+                            },
+                            {
+                                text: "contados a partir de la suscripción de la correspondiente acta de inicio, lo cual tuvo lugar el " +
+                                    self.fecha_reg_dia +
+                                    " de " +
+                                    self.fecha_reg_mes +
+                                    " de " +
+                                    self.fecha_reg_ano +
+                                    ". ",
+                            },
+                            ],
+                        },
+                        {
+                            text: [{
+                                text: "En la cláusula número 3, se pactó como valor la suma de ",
+                            },
+                            {
+                                text: "" +
+                                    $scope.valor_contrato_letras +
+                                    " MONEDA CORRIENTE ($" +
+                                    numberFormat(String(self.contrato_obj.valor)) +
+                                    " M/Cte.) ",
+                                bold: true,
+                            },
+                            { text: "incluido IVA." },
+                            ],
+                        },
+                        // {
+                        //     text: [
+                        //         { text: '' },
+                        //     ]
+                        // },
+                        {
+                            text: [{
+                                text: "Que mediante oficio " +
+                                    $scope.numero_oficio +
+                                    ", recibido por la Oficina Asesora Jurídica el día " +
+                                    self.format_date_letter_mongo(self.fecha_inicio) +
+                                    ", el " +
+                                    self.contrato_obj.ordenadorGasto_rol +
+                                    " de ",
+                            },
+                            { text: "LA UNIVERSIDAD, ", bold: true },
+                            {
+                                text: "como Ordenador del Gasto, solicitud la adición de ",
+                            },
+                            {
+                                text: "" +
+                                    $scope.valor_adicion_letras +
+                                    " MONEDA CORRIENTE ($" +
+                                    $scope.valor_adicion +
+                                    " M/Cte.), ",
+                                bold: true,
+                            },
+                            { text: "y prórroga de " },
+                            {
+                                text: "" +
+                                    $scope.contrato_prorroga_letras +
+                                    "" +
+                                    $scope.valor_prorroga_final +
+                                    ") días, ",
+                                bold: true,
+                            },
+                            {
+                                text: "del " +
+                                    self.contrato_obj.tipo_contrato +
+                                    " No. " +
+                                    self.contrato_id +
+                                    " de " +
+                                    self.fecha_reg_ano +
+                                    ", cuya justificación se encuentra descrita en la Solicitud de Necesidad No. " +
+                                    $scope.numero_solicitud +
+                                    " del día " +
+                                    self.format_date_letter_mongo(self.fecha_oficio) +
+                                    ".",
+                            },
+                            ],
+                        },
+                        {
+                            text: "Teniendo en cuenta que el valor a adicionar no supera el 50% del inicialmente pactado, la solicitud se ajusta a lo consagrado en el inciso 2º" +
+                                " del artículo 86 de la Resolución de Rectoría 262 de 2015 (Procedimiento para Adición, Prórroga o Modificación del Contrato), resultando procedente " +
+                                "suscribir el presente documento. ",
+                        },
+                        {
+                            text: [{
+                                text: "Que quienes suscriben el presente documento son plenamente capaces para hacerlo y obligarse, además de que la Oficina Asesora Jurídica de ",
+                            },
+                            { text: "LA UNIVERSIDAD ", bold: true },
+                            {
+                                text: "verificó la ausencia de antecedentes disciplinarios, judiciales y fiscales. ",
+                            },
+                            ],
+                        },
+                        {
+                            text: [{
+                                text: "Que se cuenta con disponibilidad presupuestal para atender la presente adición, ",
+                            },
+                            {
+                                text: "como se desprende del Certificado de Disponibilidad Presupuestal No. " +
+                                    self.contrato_obj.cdp_numero +
+                                    " de " +
+                                    self.contrato_obj.cdp_anno +
+                                    ", ",
+                            },
+                            { text: "expedido por la Sección de Presupuesto. " },
+                            ],
+                        },
+                        {
+                            text: "Que el acto aquí planteado es jurídicamente viable, de acuerdo con lo establecido en las normas civiles y comerciales pertinentes, y, en especial," +
+                                " en el Estatuto de Contratación de la Universidad Distrital Francisco José de Caldas y demás normas reglamentarias pertinentes y vigentes.\n\n",
+                        },
+                        ],
+                    },
+                    {
+                        style: ["general_font"],
+                        text: [{
+                            text: "En consecuencia de lo anterior, las partes acuerdan:\n\n",
+                        },
+                        { text: "CLÁUSULA PRIMERA.-  ADICIONAR", bold: true },
+                        {
+                            text: " al valor del " +
+                                self.contrato_obj.tipo_contrato +
+                                " No. " +
+                                self.contrato_id +
+                                " de " +
+                                self.fecha_reg_ano +
+                                ", la suma de " +
+                                $scope.valor_adicion_letras +
+                                " MONEDA CORRIENTE ($" +
+                                $scope.valor_adicion +
+                                " M/Cte.).",
+                        },
+                            "\n\n",
+
+                        { text: "CLÁUSULA SEGUNDA.-", bold: true },
+                        { text: " Como consecuencia de lo anterior, " },
+                        { text: "MODIFICAR", bold: true },
+                        {
+                            text: " la CLAUSULA 3 del " +
+                                self.contrato_obj.tipo_contrato +
+                                " No. " +
+                                self.contrato_id +
+                                " de " +
+                                self.fecha_reg_ano +
+                                "la cual quedará así: \n",
+                        },
+                        {
+                            text: "“El valor del presente contrato corresponde a la suma de " +
+                                $scope.nuevo_valor_contrato_letras +
+                                " MONEDA CORRIENTE ($" +
+                                $scope.nuevo_valor_contrato +
+                                " M/Cte.) , incluido IVA, así como todos los impuestos y retenciones legamente establecidos…”.",
+                            italics: true,
+                        },
+                            "\n\n",
+
+                        { text: "CLÁUSULA TERCERA.- PRORROGAR", bold: true },
+                        {
+                            text: "el plazo de ejecución del " +
+                                self.contrato_obj.tipo_contrato +
+                                " No. " +
+                                self.contrato_id +
+                                " de " +
+                                self.fecha_reg_ano +
+                                " en " +
+                                $scope.contrato_prorroga_letras +
+                                "" +
+                                $scope.valor_prorroga_final +
+                                ") DÍAS.",
+                        },
+                            "\n\n",
+
+                        { text: "CLÁUSULA CUARTA.-", bold: true },
+                        { text: " como consecuencia de lo anterior, " },
+                        { text: "MODIFICAR", bold: true },
+                        {
+                            text: " la CLAUSULA 6 del " +
+                                self.contrato_obj.tipo_contrato +
+                                " No. " +
+                                self.contrato_id +
+                                " de " +
+                                self.fecha_reg_ano +
+                                " la cual quedará así: \n",
+                        },
+                        {
+                            text: "“El plazo de ejecución del contrato será de " +
+                                $scope.nuevo_plazo_contrato +
+                                ", contados a partir de los requisitos de ejecución…”.",
+                            italics: true,
+                        },
+                            "\n\n",
+
+                        { text: "CLÁUSULA QUINTA.-", bold: true },
+                        {
+                            text: "Las cláusulas y condiciones no modificadas por el presente instrumento continúan vigentes en los términos del contrato primigenio.",
+                        },
+                            "\n\n",
+
+                        { text: "CLÁUSULA SEXTA.-", bold: true },
+                        {
+                            text: "La presente prórroga y adición requiere para su perfeccionamiento y legalización, la suscripción de la misma por las partes, " +
+                                "la actualización y aprobación de las garantías, y la expedición del Registro presupuestal.",
+                        },
+                            "\n\n",
 
                         {
-                            style: ["table"],
-                            table: {
-                                widths: ["*", "*"],
-                                body: [
-                                    [{
-                                            text: [
-                                                "______________________________________\n",
-                                                {
-                                                    text: self.contrato_obj.ordenadorGasto_nombre + "\n",
-                                                    bold: true,
-                                                },
-                                                { text: self.contrato_obj.ordenadorGasto_rol + "\n" },
-                                                "La Universidad",
-                                            ],
-                                        },
+                            text: "Las partes manifiestan libremente que han procedido a la lectura total y cuidadosa del presente documento, por lo que, en consecuencia," +
+                                " se obligan en todos sus órdenes y manifestaciones.",
+                        },
+                            "\n\n",
+                        {
+                            text: "Para constancia, se firma en Bogotá, D.C., a los ______________________________________________.",
+                        },
+                            "\n\n\n\n\n\n",
+                        ],
+                    },
+
+                    {
+                        style: ["table"],
+                        table: {
+                            widths: ["*", "*"],
+                            body: [
+                                [{
+                                    text: [
+                                        "______________________________________\n",
                                         {
-                                            text: [
-                                                "______________________________________\n",
-                                                {
-                                                    text: self.contrato_obj.contratista_nombre + "\n",
-                                                    bold: true,
-                                                },
-                                                "El Contratista",
-                                            ],
+                                            text: self.contrato_obj.ordenadorGasto_nombre + "\n",
+                                            bold: true,
                                         },
+                                        { text: self.contrato_obj.ordenadorGasto_rol + "\n" },
+                                        "La Universidad",
                                     ],
+                                },
+                                {
+                                    text: [
+                                        "______________________________________\n",
+                                        {
+                                            text: self.contrato_obj.contratista_nombre + "\n",
+                                            bold: true,
+                                        },
+                                        "El Contratista",
+                                    ],
+                                },
                                 ],
-                            },
-                            layout: "noBorders",
+                            ],
                         },
-                        {
-                            style: ["general_font"],
-                            text: [{ text: "" }, "\n\n"],
-                        },
+                        layout: "noBorders",
+                    },
+                    {
+                        style: ["general_font"],
+                        text: [{ text: "" }, "\n\n"],
+                    },
                         "\n",
-                        {
-                            style: "table3",
-                            table: {
-                                widths: [65, 130, 130, "*"],
-                                body: [
-                                    [
-                                        "",
-                                        { text: "Nombre", bold: true },
-                                        { text: "Cargo", bold: true },
-                                        { text: "Firma", bold: true },
-                                    ],
-                                    [
-                                        { text: "Elaboró", bold: true },
-                                        "" + self.elaboro,
-                                        "Abogado Oficina Asesora Jurídica",
-                                        "",
-                                    ],
-                                    [
-                                        { text: "Revisó y Aprobó", bold: true },
-                                        "DIANA MIREYA PARRA CARDONA",
-                                        "Jefe Oficina Asesora Jurídica",
-                                        "",
-                                    ],
+                    {
+                        style: "table3",
+                        table: {
+                            widths: [65, 130, 130, "*"],
+                            body: [
+                                [
+                                    "",
+                                    { text: "Nombre", bold: true },
+                                    { text: "Cargo", bold: true },
+                                    { text: "Firma", bold: true },
                                 ],
-                            },
+                                [
+                                    { text: "Elaboró", bold: true },
+                                    "" + self.elaboro,
+                                    "Abogado Oficina Asesora Jurídica",
+                                    "",
+                                ],
+                                [
+                                    { text: "Revisó y Aprobó", bold: true },
+                                    "DIANA MIREYA PARRA CARDONA",
+                                    "Jefe Oficina Asesora Jurídica",
+                                    "",
+                                ],
+                            ],
                         },
+                    },
                     ],
                     styles: {
                         top_space: {
@@ -1212,7 +1212,7 @@ angular
              * @description
              * funcion para convertir valores numericos en letras
              */
-            var numeroALetras = (function() {
+            var numeroALetras = (function () {
                 function Unidades(num) {
                     switch (num) {
                         case 1:
@@ -1382,7 +1382,7 @@ angular
                     if (data.centavos > 0) {
                         data.letrasCentavos =
                             $translate.instant("CON") +
-                            (function() {
+                            (function () {
                                 if (data.centavos == 1)
                                     return (
                                         Millones(data.centavos) +
@@ -1443,9 +1443,9 @@ angular
                     nuevoNumero = nuevoNumero.substring(0, nuevoNumero.indexOf("."));
                 for (var j = 0, i = nuevoNumero.length - 1; i >= 0; i--, j++)
                     resultado =
-                    nuevoNumero.charAt(i) +
-                    (j > 0 && j % 3 == 0 ? "," : "") +
-                    resultado;
+                        nuevoNumero.charAt(i) +
+                        (j > 0 && j % 3 == 0 ? "," : "") +
+                        resultado;
                 if (numero.indexOf(".") >= 0)
                     resultado += numero.substring(numero.indexOf("."));
                 if (numero[0] == "-") {
@@ -1456,8 +1456,8 @@ angular
             }
         }
     )
-    .config(function($mdDateLocaleProvider) {
-        $mdDateLocaleProvider.formatDate = function(date) {
+    .config(function ($mdDateLocaleProvider) {
+        $mdDateLocaleProvider.formatDate = function (date) {
             return date ? moment(date).format("DD/MM/YYYY") : "";
         };
     });

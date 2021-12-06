@@ -18,7 +18,7 @@ angular.module('academicaService', [])
      * # academicaService
      * Fabrica sobre la cual se consumen los servicios proveidos por el API de financiera sobre los metodos GET, POST, PUT y DELETE
      */
-    .factory('academicaRequest', function($http, token_service, CONF) {
+    .factory('academicaRequest', function ($http, token_service, CONF) {
         var path = CONF.GENERAL.ACADEMICA_SERVICE;
         // Public API here
         return {
@@ -30,7 +30,7 @@ angular.module('academicaService', [])
              * @return {array|object} objeto u objetos del get
              * @description Metodo GET del servicio
              */
-            get: function(params) {
+            get: function (params) {
                 return $http.get(path + "&" + params, token_service.setting_bearer.headers);
             },
 
@@ -42,7 +42,7 @@ angular.module('academicaService', [])
              * @return {array|string} mensajes del evento en el servicio
              * @description Metodo POST del servicio
              */
-            post: function(elemento) {
+            post: function (elemento) {
                 return $http.post(path, elemento, token_service.setting_bearer.headers);
             }
         };
