@@ -11,7 +11,7 @@ angular
     .module("contractualClienteApp")
     .controller(
         "SeguimientoycontrolLegalActaSuspensionCtrl",
-        function(
+        function (
             $location,
             token_service,
             $scope,
@@ -45,7 +45,7 @@ angular
             //Obtiene los datos de quien elaboró la Novedad
             agoraRequest
                 .get("informacion_persona_natural?query=Id:" + self.elaboro_cedula)
-                .then(function(ipn_response) {
+                .then(function (ipn_response) {
                     self.elaboro =
                         ipn_response.data[0].PrimerNombre +
                         " " +
@@ -63,7 +63,7 @@ angular
                     ",VigenciaContrato:" +
                     self.contrato_vigencia
                 )
-                .then(function(agora_response) {
+                .then(function (agora_response) {
                     if (agora_response.data.length > 0) {
                         self.contrato_obj.numero_contrato = self.contrato_id;
                         self.contrato_obj.id =
@@ -90,7 +90,7 @@ angular
                         //Se obtiene los datos de Acta de Inicio.
                         agoraRequest
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
-                            .then(function(acta_response) {
+                            .then(function (acta_response) {
                                 self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                             });
@@ -101,14 +101,14 @@ angular
                                 "informacion_persona_natural?query=Id:" +
                                 self.contrato_obj.supervisor_cedula
                             )
-                            .then(function(ispn_response) {
+                            .then(function (ispn_response) {
                                 coreAmazonRequest
                                     .get(
                                         "ciudad",
                                         "query=Id:" +
                                         ispn_response.data[0].IdCiudadExpedicionDocumento
                                     )
-                                    .then(function(sc_response) {
+                                    .then(function (sc_response) {
                                         self.contrato_obj.supervisor_ciudad_documento =
                                             sc_response.data[0].Nombre;
                                         self.contrato_obj.supervisor_tipo_documento =
@@ -129,7 +129,7 @@ angular
                             .get(
                                 "supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1"
                             )
-                            .then(function(jj_response) {
+                            .then(function (jj_response) {
                                 self.contrato_obj.jefe_juridica_documento =
                                     jj_response.data[0].Documento;
                                 agoraRequest
@@ -137,14 +137,14 @@ angular
                                         "informacion_persona_natural?query=Id:" +
                                         self.contrato_obj.jefe_juridica_documento
                                     )
-                                    .then(function(ijpn_response) {
+                                    .then(function (ijpn_response) {
                                         coreAmazonRequest
                                             .get(
                                                 "ciudad",
                                                 "query=Id:" +
                                                 ijpn_response.data[0].IdCiudadExpedicionDocumento
                                             )
-                                            .then(function(scj_response) {
+                                            .then(function (scj_response) {
                                                 self.contrato_obj.jefe_juridica_ciudad_documento =
                                                     scj_response.data[0].Nombre;
                                                 self.contrato_obj.jefe_juridica_tipo_documento =
@@ -168,7 +168,7 @@ angular
                                 "/" +
                                 self.contrato_obj.vigencia
                             )
-                            .then(function(response_sql) {
+                            .then(function (response_sql) {
                                 var elementos_cesion = response_sql.data.Body;
                                 if (elementos_cesion.length != "0") {
                                     var last_cesion =
@@ -179,7 +179,7 @@ angular
                                         .get(
                                             "informacion_proveedor?query=Id:" + last_cesion.cesionario
                                         )
-                                        .then(function(ip_response) {
+                                        .then(function (ip_response) {
                                             self.contrato_obj.contratista_documento =
                                                 ip_response.data[0].NumDocumento;
                                             self.contrato_obj.contratista_nombre =
@@ -189,14 +189,14 @@ angular
                                                     "informacion_persona_natural?query=Id:" +
                                                     ip_response.data[0].NumDocumento
                                                 )
-                                                .then(function(ipn_response) {
+                                                .then(function (ipn_response) {
                                                     coreAmazonRequest
                                                         .get(
                                                             "ciudad",
                                                             "query=Id:" +
                                                             ipn_response.data[0].IdCiudadExpedicionDocumento
                                                         )
-                                                        .then(function(c_response) {
+                                                        .then(function (c_response) {
                                                             self.contrato_obj.contratista_ciudad_documento =
                                                                 c_response.data[0].Nombre;
                                                             self.contrato_obj.contratista_tipo_documento =
@@ -211,7 +211,7 @@ angular
                                             "informacion_proveedor?query=Id:" +
                                             self.contrato_obj.contratista
                                         )
-                                        .then(function(ip_response) {
+                                        .then(function (ip_response) {
                                             self.contrato_obj.contratista_documento =
                                                 ip_response.data[0].NumDocumento;
                                             self.contrato_obj.contratista_nombre =
@@ -221,14 +221,14 @@ angular
                                                     "informacion_persona_natural?query=Id:" +
                                                     ip_response.data[0].NumDocumento
                                                 )
-                                                .then(function(ipn_response) {
+                                                .then(function (ipn_response) {
                                                     coreAmazonRequest
                                                         .get(
                                                             "ciudad",
                                                             "query=Id:" +
                                                             ipn_response.data[0].IdCiudadExpedicionDocumento
                                                         )
-                                                        .then(function(c_response) {
+                                                        .then(function (c_response) {
                                                             self.contrato_obj.contratista_ciudad_documento =
                                                                 c_response.data[0].Nombre;
                                                             self.contrato_obj.contratista_tipo_documento =
@@ -249,7 +249,7 @@ angular
              * Funcion que observa el cambio de fechas y calcula el periodo de suspension
              * @param {date} Fecha de reinicio
              */
-            $scope.$watch("sLactaSuspension.f_fin", function() {
+            $scope.$watch("sLactaSuspension.f_fin", function () {
                 var dt1 = self.f_inicio;
                 var dt2 = self.f_fin;
                 var timeDiff = 0;
@@ -273,7 +273,7 @@ angular
              * funcion para la genracion del pdf del acta correspondiente a la novedad de suspension
              * actualizacion de los datos del contrato y reporte de la novedad
              */
-            self.generarActa = function() {
+            self.generarActa = function () {
                 var nuevoEstado = {
                     Estado: {
                         Id: 2,
@@ -287,7 +287,7 @@ angular
                 if ($scope.formSuspension.$valid) {
                     novedadesRequest
                         .get("tipo_novedad", "query=Nombre:Suspensión")
-                        .then(function(nc_response) {
+                        .then(function (nc_response) {
                             self.suspension_nov = {};
                             self.suspension_nov.tiponovedad =
                                 nc_response.data[0].CodigoAbreviacion;
@@ -319,7 +319,7 @@ angular
                     //Obtiene el estado del contrato.
                     agoraRequest
                         .get("estado_contrato?query=NombreEstado:Suspendido")
-                        .then(function(ec_response) {
+                        .then(function (ec_response) {
                             self.estados[1] = ec_response.data[0];
                             agoraRequest
                                 .get(
@@ -329,10 +329,10 @@ angular
                                     self.contrato_obj.vigencia +
                                     "&sortby=Id&order=desc&limit=1"
                                 )
-                                .then(function(ce_response) {
+                                .then(function (ce_response) {
                                     if (
                                         ce_response.data[ce_response.data.length - 1].Estado
-                                        .NombreEstado == "En ejecucion"
+                                            .NombreEstado == "En ejecucion"
                                     ) {
                                         var estado_temp_from = {
                                             NombreEstado: "ejecucion",
@@ -340,20 +340,20 @@ angular
                                         self.estados[0] = estado_temp_from;
                                         adminMidRequest
                                             .post("validarCambioEstado", self.estados)
-                                            .then(function(vc_response) {
+                                            .then(function (vc_response) {
                                                 self.validacion = vc_response.data.Body;
                                                 if (self.validacion == "true") {
                                                     self.formato_generacion_pdf();
                                                     novedadesMidRequest
                                                         .post("novedad", self.suspension_nov)
-                                                        .then(function(request_novedades) {
+                                                        .then(function (request_novedades) {
                                                             if (
                                                                 request_novedades.status == 200 ||
                                                                 response.statusText == "Ok"
                                                             ) {
                                                                 agoraRequest
                                                                     .post("contrato_estado", nuevoEstado)
-                                                                    .then(function(response) {
+                                                                    .then(function (response) {
                                                                         if (
                                                                             response.status == 201 ||
                                                                             Object.keys(response.data) > 0
@@ -372,7 +372,7 @@ angular
                                                                                 ": " +
                                                                                 self.contrato_obj.vigencia,
                                                                                 "success"
-                                                                            ).then(function() {
+                                                                            ).then(function () {
                                                                                 window.location.href =
                                                                                     "#/seguimientoycontrol/legal";
                                                                             });
@@ -394,12 +394,12 @@ angular
                                                                                 showCancelButton: false,
                                                                                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                                                 allowOutsideClick: false,
-                                                                            }).then(function() {});
+                                                                            }).then(function () { });
                                                                         }
                                                                     });
                                                             }
                                                         })
-                                                        .catch(function(error) {
+                                                        .catch(function (error) {
                                                             //Servidor no disponible
                                                             $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
                                                             swal({
@@ -414,7 +414,7 @@ angular
                                                                 showCancelButton: false,
                                                                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                                 allowOutsideClick: false,
-                                                            }).then(function() {});
+                                                            }).then(function () { });
                                                         });
                                                 }
                                             });
@@ -425,7 +425,7 @@ angular
                                                 "El contrato no se encuentra en ejecución debido a esto no se puede suspender."
                                             ),
                                             "info"
-                                        ).then(function() {
+                                        ).then(function () {
                                             window.location.href = "#/seguimientoycontrol/legal";
                                         });
                                     }
@@ -448,7 +448,7 @@ angular
              * funcion para el formateo de objetos tipo fecha a formato dd/mm/yyyy
              * @param {date} param
              */
-            self.format_date = function(param) {
+            self.format_date = function (param) {
                 var date = new Date(param);
                 var dd = date.getDate();
                 var mm = date.getMonth();
@@ -624,7 +624,7 @@ angular
                 if (data.centavos > 0) {
                     data.letrasCentavos =
                         "Con " +
-                        (function() {
+                        (function () {
                             if (data.centavos == 1)
                                 return (
                                     Millones(data.centavos) +
@@ -665,7 +665,7 @@ angular
              * @description
              * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
              */
-            self.formato_generacion_pdf = function() {
+            self.formato_generacion_pdf = function () {
                 var dateTime =
                     new Date().getFullYear() +
                     "" +
@@ -689,7 +689,7 @@ angular
                     );
 
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-                pdfDocGenerator.getBase64(function(data) {
+                pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_suspension_contrato_" +
@@ -727,9 +727,9 @@ angular
                 // Ponemos un punto cada 3 caracteres
                 for (var j = 0, i = nuevoNumero.length - 1; i >= 0; i--, j++)
                     resultado =
-                    nuevoNumero.charAt(i) +
-                    (j > 0 && j % 3 == 0 ? "," : "") +
-                    resultado;
+                        nuevoNumero.charAt(i) +
+                        (j > 0 && j % 3 == 0 ? "," : "") +
+                        resultado;
                 // Si tiene decimales, se lo añadimos al numero una vez forateado con los separadores de miles
                 if (numero.indexOf(".") >= 0)
                     resultado += numero.substring(numero.indexOf("."));
@@ -748,7 +748,7 @@ angular
              * funcion para el formateo de objetos tipo fecha a formato a letra  nombre dia, año mes y dia
              * @param {date} param
              */
-            self.format_date_letter = function(param) {
+            self.format_date_letter = function (param) {
                 var cadena = param.toString().split("-");
                 var dd = cadena[2];
                 var mm = cadena[1] - 1;
@@ -773,7 +773,7 @@ angular
              * @param {date} param
              */
 
-            self.format_date_letter_mongo = function(param) {
+            self.format_date_letter_mongo = function (param) {
                 var date = new Date(param);
                 var dd = date.getDate();
                 var mm = date.getMonth();
@@ -795,7 +795,7 @@ angular
              * @description
              * Funcion que retorna la plantilla del pdf en formato json
              */
-            self.get_pdf = function() {
+            self.get_pdf = function () {
                 return {
                     pageSize: "LETTER",
                     pageMargins: [50, 110, 50, 45],
@@ -806,27 +806,27 @@ angular
                                 widths: [50, "*", 130, 70],
                                 body: [
                                     [{
-                                            image: "logo_ud",
-                                            fit: [43, 80],
-                                            rowSpan: 3,
-                                            alignment: "center",
-                                            fontSize: 9,
-                                        },
-                                        {
-                                            text: "ACTA DE SUSPENSIÓN",
-                                            bold: true,
-                                            alignment: "center",
-                                            fontSize: 9,
-                                        },
-                                        { text: "Código: GJ-PR-002-FR-010", fontSize: 9 },
-                                        {
-                                            image: "logo_sigud",
-                                            fit: [65, 120],
-                                            margin: [3, 0],
-                                            rowSpan: 3,
-                                            alignment: "center",
-                                            fontSize: 9,
-                                        },
+                                        image: "logo_ud",
+                                        fit: [43, 80],
+                                        rowSpan: 3,
+                                        alignment: "center",
+                                        fontSize: 9,
+                                    },
+                                    {
+                                        text: "ACTA DE SUSPENSIÓN",
+                                        bold: true,
+                                        alignment: "center",
+                                        fontSize: 9,
+                                    },
+                                    { text: "Código: GJ-PR-002-FR-010", fontSize: 9 },
+                                    {
+                                        image: "logo_sigud",
+                                        fit: [65, 120],
+                                        margin: [3, 0],
+                                        rowSpan: 3,
+                                        alignment: "center",
+                                        fontSize: 9,
+                                    },
                                     ],
                                     [
                                         " ",
@@ -850,248 +850,248 @@ angular
                                     ],
                                 ],
                             },
-                        }, ],
+                        },],
                     },
                     content: [{
-                            style: ["table"],
-                            table: {
-                                widths: [120, "*"],
-                                body: [
-                                    [
-                                        { text: "CONTRATO", bold: true, style: "topHeader" },
-                                        {
-                                            text: self.contrato_obj.tipo_contrato,
-                                            style: "topHeader",
-                                        },
-                                    ],
-                                    [
-                                        { text: "No. CONTRATO", bold: true, style: "topHeader" },
-                                        {
-                                            text: [
-                                                { text: self.contrato_id, bold: true },
-                                                {
-                                                    text: " suscrito el " +
-                                                        self.format_date_letter_mongo(
-                                                            self.contrato_obj.fecha_suscripcion
-                                                        ),
-                                                },
-                                            ],
-                                            style: "topHeader",
-                                        },
-                                    ],
-                                    [
-                                        { text: "CONTRANTE", bold: true, style: "topHeader" },
-                                        {
-                                            text: "Universidad Distrital Francísco José de Caldas",
-                                            style: "topHeader",
-                                        },
-                                    ],
-                                    [
-                                        { text: "CONTRATISTA", bold: true, style: "topHeader" },
-                                        {
-                                            text: self.contrato_obj.contratista_nombre +
-                                                ", mayor de edad, identificado(a) con " +
-                                                self.contrato_obj.contratista_tipo_documento +
-                                                " No. " +
-                                                self.contrato_obj.contratista_documento +
-                                                " Expedida en " +
-                                                self.contrato_obj.contratista_ciudad_documento,
-                                            style: "topHeader",
-                                        },
-                                    ],
-                                    [
-                                        { text: "OBJETO", bold: true, style: "topHeader" },
-                                        { text: self.contrato_obj.objeto, style: "topHeader" },
-                                    ],
-                                    [
-                                        { text: "VALOR", bold: true, style: "topHeader" },
-                                        {
-                                            text: NumeroALetras(self.contrato_obj.valor) +
-                                                "($" +
-                                                numberFormat(self.contrato_obj.valor) +
-                                                ")",
-                                            style: "topHeader",
-                                        },
-                                    ],
-                                    [
-                                        { text: "FECHA DE INICIO", bold: true, style: "topHeader" },
-                                        {
-                                            text: self.format_date_letter_mongo(
-                                                self.contrato_obj.Inicio
-                                            ),
-                                            style: "topHeader",
-                                        },
-                                    ],
-                                    [{
-                                            text: "PERIODO SUSPENSIÓN",
-                                            bold: true,
-                                            style: "topHeader",
-                                        },
-                                        {
-                                            text: "Del día " +
-                                                self.format_date_letter_mongo(self.f_inicio) +
-                                                " al " +
-                                                self.format_date_letter_mongo(self.f_fin),
-                                            style: "topHeader",
-                                        },
-                                    ],
-                                    [{
-                                            text: "FECHA DE REINICIO",
-                                            bold: true,
-                                            style: "topHeader",
-                                        },
-                                        {
-                                            text: self.format_date_letter_mongo(
-                                                self.suspension_nov.fechareinicio
-                                            ),
-                                            style: "topHeader",
-                                        },
-                                    ],
+                        style: ["table"],
+                        table: {
+                            widths: [120, "*"],
+                            body: [
+                                [
+                                    { text: "CONTRATO", bold: true, style: "topHeader" },
+                                    {
+                                        text: self.contrato_obj.tipo_contrato,
+                                        style: "topHeader",
+                                    },
                                 ],
-                            },
-                            layout: {
-                                fillColor: function(rowIndex, node, columnIndex) {
-                                    return rowIndex % 2 === 0 ? null : "#d4d4d4";
+                                [
+                                    { text: "No. CONTRATO", bold: true, style: "topHeader" },
+                                    {
+                                        text: [
+                                            { text: self.contrato_id, bold: true },
+                                            {
+                                                text: " suscrito el " +
+                                                    self.format_date_letter_mongo(
+                                                        self.contrato_obj.fecha_suscripcion
+                                                    ),
+                                            },
+                                        ],
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    { text: "CONTRANTE", bold: true, style: "topHeader" },
+                                    {
+                                        text: "Universidad Distrital Francísco José de Caldas",
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    { text: "CONTRATISTA", bold: true, style: "topHeader" },
+                                    {
+                                        text: self.contrato_obj.contratista_nombre +
+                                            ", mayor de edad, identificado(a) con " +
+                                            self.contrato_obj.contratista_tipo_documento +
+                                            " No. " +
+                                            self.contrato_obj.contratista_documento +
+                                            " Expedida en " +
+                                            self.contrato_obj.contratista_ciudad_documento,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    { text: "OBJETO", bold: true, style: "topHeader" },
+                                    { text: self.contrato_obj.objeto, style: "topHeader" },
+                                ],
+                                [
+                                    { text: "VALOR", bold: true, style: "topHeader" },
+                                    {
+                                        text: NumeroALetras(self.contrato_obj.valor) +
+                                            "($" +
+                                            numberFormat(self.contrato_obj.valor) +
+                                            ")",
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    { text: "FECHA DE INICIO", bold: true, style: "topHeader" },
+                                    {
+                                        text: self.format_date_letter_mongo(
+                                            self.contrato_obj.Inicio
+                                        ),
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [{
+                                    text: "PERIODO SUSPENSIÓN",
+                                    bold: true,
+                                    style: "topHeader",
                                 },
-                            },
-                        },
-                        {
-                            style: ["general_font"],
-                            text: [
-                                "\n\n",
-
-                                "Entre los subscritos a saber, " +
-                                self.contrato_obj.supervisor_nombre_completo +
-                                " identificado con " +
-                                self.contrato_obj.supervisor_tipo_documento +
-                                " No. " +
-                                self.contrato_obj.supervisor_cedula +
-                                " de " +
-                                self.contrato_obj.supervisor_ciudad_documento +
-                                " en su calidad de supervisor, y " +
-                                self.contrato_obj.contratista_nombre +
-                                " identificado con " +
-                                self.contrato_obj.contratista_tipo_documento +
-                                " No. " +
-                                self.contrato_obj.contratista_documento +
-                                " de " +
-                                self.contrato_obj.contratista_ciudad_documento +
-                                " en su calidad de contratista, hemos determinado SUSPENDER el " +
-                                self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_id +
-                                " de " +
-                                self.contrato_vigencia +
-                                " durante el periodo comprendido entre el día " +
-                                self.format_date_letter_mongo(self.f_inicio) +
-                                " y el dia " +
-                                self.format_date_letter_mongo(self.f_fin) +
-                                " del año " +
-                                self.contrato_vigencia +
-                                " .\n\n",
-
-                                { text: "MOTIVO DE LA SUSPENSIÓN", bold: true },
-                                "\n",
-                                self.suspension_nov.motivo,
-                                "\n\n",
-
-                                "Por los motivos antes expuestos las partes acuerdan: ",
-                                "\n",
-                                "Suspender el Contrato " +
-                                self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_id +
-                                ", durante el periodo comprendido entre el día " +
-                                self.format_date_letter_mongo(
-                                    self.suspension_nov.fechasuspension
-                                ) +
-                                " y " +
-                                self.format_date_letter_mongo(
-                                    self.suspension_nov.fechafinsuspension
-                                ) +
-                                ".\n\n",
-                            ],
-                        },
-                        {
-                            style: ["general_font"],
-                            text: [
-                                "La presente suspensión rige una vez perfeccionado por los intervinientes, para constancia, firman las partes en la \n\nfecha ___________________________________________ ." +
-                                "\n\n\n\n",
-                            ],
-                        },
-                        {
-                            style: ["table2"],
-                            table: {
-                                widths: [270, 270],
-                                body: [
-                                    [{
-                                            text: "______________________________________",
-                                            bold: false,
-                                            style: "topHeader",
-                                        },
-                                        {
-                                            text: "______________________________________",
-                                            bold: false,
-                                            style: "topHeader",
-                                        },
-                                    ],
-                                    [{
-                                            text: "" + self.contrato_obj.contratista_nombre,
-                                            bold: false,
-                                            style: "topHeader",
-                                        },
-                                        {
-                                            text: "" + self.contrato_obj.supervisor_nombre_completo,
-                                            bold: false,
-                                            style: "topHeader",
-                                        },
-                                    ],
-                                    [{
-                                            text: "CC. " + self.contrato_obj.contratista_documento,
-                                            bold: false,
-                                            style: "topHeader",
-                                        },
-                                        {
-                                            text: "CC. " + self.contrato_obj.supervisor_cedula,
-                                            bold: false,
-                                            style: "topHeader",
-                                        },
-                                    ],
-                                    [
-                                        { text: "Contratista", bold: true, style: "topHeader" },
-                                        { text: "Supervisor", bold: true, style: "topHeader" },
-                                    ],
+                                {
+                                    text: "Del día " +
+                                        self.format_date_letter_mongo(self.f_inicio) +
+                                        " al " +
+                                        self.format_date_letter_mongo(self.f_fin),
+                                    style: "topHeader",
+                                },
                                 ],
-                            },
-                            layout: "noBorders",
+                                [{
+                                    text: "FECHA DE REINICIO",
+                                    bold: true,
+                                    style: "topHeader",
+                                },
+                                {
+                                    text: self.format_date_letter_mongo(
+                                        self.suspension_nov.fechareinicio
+                                    ),
+                                    style: "topHeader",
+                                },
+                                ],
+                            ],
                         },
+                        layout: {
+                            fillColor: function (rowIndex, node, columnIndex) {
+                                return rowIndex % 2 === 0 ? null : "#d4d4d4";
+                            },
+                        },
+                    },
+                    {
+                        style: ["general_font"],
+                        text: [
+                            "\n\n",
+
+                            "Entre los subscritos a saber, " +
+                            self.contrato_obj.supervisor_nombre_completo +
+                            " identificado con " +
+                            self.contrato_obj.supervisor_tipo_documento +
+                            " No. " +
+                            self.contrato_obj.supervisor_cedula +
+                            " de " +
+                            self.contrato_obj.supervisor_ciudad_documento +
+                            " en su calidad de supervisor, y " +
+                            self.contrato_obj.contratista_nombre +
+                            " identificado con " +
+                            self.contrato_obj.contratista_tipo_documento +
+                            " No. " +
+                            self.contrato_obj.contratista_documento +
+                            " de " +
+                            self.contrato_obj.contratista_ciudad_documento +
+                            " en su calidad de contratista, hemos determinado SUSPENDER el " +
+                            self.contrato_obj.tipo_contrato +
+                            " No. " +
+                            self.contrato_id +
+                            " de " +
+                            self.contrato_vigencia +
+                            " durante el periodo comprendido entre el día " +
+                            self.format_date_letter_mongo(self.f_inicio) +
+                            " y el dia " +
+                            self.format_date_letter_mongo(self.f_fin) +
+                            " del año " +
+                            self.contrato_vigencia +
+                            " .\n\n",
+
+                            { text: "MOTIVO DE LA SUSPENSIÓN", bold: true },
+                            "\n",
+                            self.suspension_nov.motivo,
+                            "\n\n",
+
+                            "Por los motivos antes expuestos las partes acuerdan: ",
+                            "\n",
+                            "Suspender el Contrato " +
+                            self.contrato_obj.tipo_contrato +
+                            " No. " +
+                            self.contrato_id +
+                            ", durante el periodo comprendido entre el día " +
+                            self.format_date_letter_mongo(
+                                self.suspension_nov.fechasuspension
+                            ) +
+                            " y " +
+                            self.format_date_letter_mongo(
+                                self.suspension_nov.fechafinsuspension
+                            ) +
+                            ".\n\n",
+                        ],
+                    },
+                    {
+                        style: ["general_font"],
+                        text: [
+                            "La presente suspensión rige una vez perfeccionado por los intervinientes, para constancia, firman las partes en la \n\nfecha ___________________________________________ ." +
+                            "\n\n\n\n",
+                        ],
+                    },
+                    {
+                        style: ["table2"],
+                        table: {
+                            widths: [270, 270],
+                            body: [
+                                [{
+                                    text: "______________________________________",
+                                    bold: false,
+                                    style: "topHeader",
+                                },
+                                {
+                                    text: "______________________________________",
+                                    bold: false,
+                                    style: "topHeader",
+                                },
+                                ],
+                                [{
+                                    text: "" + self.contrato_obj.contratista_nombre,
+                                    bold: false,
+                                    style: "topHeader",
+                                },
+                                {
+                                    text: "" + self.contrato_obj.supervisor_nombre_completo,
+                                    bold: false,
+                                    style: "topHeader",
+                                },
+                                ],
+                                [{
+                                    text: "CC. " + self.contrato_obj.contratista_documento,
+                                    bold: false,
+                                    style: "topHeader",
+                                },
+                                {
+                                    text: "CC. " + self.contrato_obj.supervisor_cedula,
+                                    bold: false,
+                                    style: "topHeader",
+                                },
+                                ],
+                                [
+                                    { text: "Contratista", bold: true, style: "topHeader" },
+                                    { text: "Supervisor", bold: true, style: "topHeader" },
+                                ],
+                            ],
+                        },
+                        layout: "noBorders",
+                    },
                         "\n",
-                        {
-                            style: "table3",
-                            table: {
-                                widths: [65, 130, 130, "*"],
-                                body: [
-                                    [
-                                        "",
-                                        { text: "Nombre", bold: true },
-                                        { text: "Cargo", bold: true },
-                                        { text: "Firma", bold: true },
-                                    ],
-                                    [
-                                        { text: "Elaboró", bold: true },
-                                        "" + self.elaboro,
-                                        "Abogado Oficina Asesora Jurídica",
-                                        "",
-                                    ],
-                                    [
-                                        { text: "Revisó y Aprobó", bold: true },
-                                        "DIANA MIREYA PARRA CARDONA",
-                                        "Jefe Oficina Asesora Jurídica",
-                                        "",
-                                    ],
+                    {
+                        style: "table3",
+                        table: {
+                            widths: [65, 130, 130, "*"],
+                            body: [
+                                [
+                                    "",
+                                    { text: "Nombre", bold: true },
+                                    { text: "Cargo", bold: true },
+                                    { text: "Firma", bold: true },
                                 ],
-                            },
+                                [
+                                    { text: "Elaboró", bold: true },
+                                    "" + self.elaboro,
+                                    "Abogado Oficina Asesora Jurídica",
+                                    "",
+                                ],
+                                [
+                                    { text: "Revisó y Aprobó", bold: true },
+                                    "DIANA MIREYA PARRA CARDONA",
+                                    "Jefe Oficina Asesora Jurídica",
+                                    "",
+                                ],
+                            ],
                         },
+                    },
                     ],
                     styles: {
                         general_font: {
