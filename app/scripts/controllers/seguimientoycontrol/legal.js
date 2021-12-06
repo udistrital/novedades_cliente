@@ -11,7 +11,7 @@ angular
     .module("contractualClienteApp")
     .controller(
         "SeguimientoycontrolLegalCtrl",
-        function(
+        function (
             $scope,
             $translate,
             novedadesMidRequest,
@@ -30,7 +30,7 @@ angular
             self.contrato_obj = {};
             self.estado_resultado_response = false;
             self.estado_contrato_obj.estado = 0;
-            agoraRequest.get("vigencia_contrato", "").then(function(response) {
+            agoraRequest.get("vigencia_contrato", "").then(function (response) {
                 $scope.vigencias = response.data;
             });
             // $scope.documentos = [];
@@ -44,7 +44,7 @@ angular
              * @description
              * funcion para obtener la totalidad de los contratos por vigencia seleccionada
              */
-            self.buscar_contrato = function() {
+            self.buscar_contrato = function () {
                 $scope.documentos = [];
                 self.estado_resultado_response = false;
                 self.documentoSelect = null;
@@ -67,7 +67,7 @@ angular
                         ",VigenciaContrato:" +
                         self.contrato_vigencia
                     )
-                    .then(function(agora_response) {
+                    .then(function (agora_response) {
                         if (agora_response.data.length > 0) {
                             self.contrato_obj.numero_contrato = self.contrato_id;
                             self.contrato_obj.id =
@@ -92,7 +92,7 @@ angular
                                     self.contrato_obj.vigencia +
                                     "&sortby=Id&order=desc&limit=1"
                                 )
-                                .then(function(ce_response) {
+                                .then(function (ce_response) {
                                     self.estado_contrato_obj.estado =
                                         ce_response.data[ce_response.data.length - 1].Estado.Id;
                                     if (self.estado_contrato_obj.estado == 7) {
@@ -117,12 +117,10 @@ angular
                                             parseInt(self.contrato_obj.vigencia) +
                                             "&limit=0"
                                         )
-                                        .then(function(doc_response) {
+                                        .then(function (doc_response) {
                                             if (doc_response.data != null) {
                                                 $scope.documentos = [];
-                                                for (
-                                                    var i = 0; i < doc_response.data.length; i++
-                                                ) {
+                                                for (var i = 0; i < doc_response.data.length; i++) {
                                                     if (
                                                         doc_response.data[i].Id !=
                                                         undefined
@@ -136,12 +134,6 @@ angular
                                                         });
                                                     }
                                                 }
-                                                // $scope.list =
-                                                //     $scope.$parent.documentos;
-                                                // $scope.config = {
-                                                //     itemsPerPage: 5,
-                                                //     fillLastPage: true
-                                                // }
                                             }
                                         });
 
@@ -153,9 +145,9 @@ angular
                                             "/" +
                                             self.contrato_obj.vigencia
                                         )
-                                        .then(function(response_sql) {
+                                        .then(function (response_sql) {
                                             var elementos_cesion = response_sql.data.Body;
-                                            if (elementos_cesion.length != "0") {
+                                            if (elementos_cesion != undefined && elementos_cesion.length != "0") {
                                                 var last_newness =
                                                     elementos_cesion[elementos_cesion.length - 1];
                                                 novedadesRequest
@@ -163,7 +155,7 @@ angular
                                                         "tipo_novedad",
                                                         "query=Id:" + last_newness.tiponovedad
                                                     )
-                                                    .then(function(nr_response) {
+                                                    .then(function (nr_response) {
                                                         self.contrato_obj.tipo_novedad =
                                                             nr_response.data[0].CodigoAbreviacion;
                                                         if (self.contrato_obj.tipo_novedad == "NP_CES") {
@@ -193,7 +185,7 @@ angular
                                                                 "informacion_proveedor?query=Id:" +
                                                                 self.contrato_obj.contratista
                                                             )
-                                                            .then(function(ip_response) {
+                                                            .then(function (ip_response) {
                                                                 self.contrato_obj.contratista_documento =
                                                                     ip_response.data[0].NumDocumento;
                                                                 self.contrato_obj.contratista_nombre =
@@ -202,13 +194,13 @@ angular
                                                             });
                                                     });
                                             } else {
-                                                //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
+                                                //Obtiene los datos aosicados al proveedor de un Rque no tiene novedades
                                                 agoraRequest
                                                     .get(
                                                         "informacion_proveedor?query=Id:" +
                                                         self.contrato_obj.contratista
                                                     )
-                                                    .then(function(ip_response) {
+                                                    .then(function (ip_response) {
                                                         self.contrato_obj.contratista_documento =
                                                             ip_response.data[0].NumDocumento;
                                                         self.contrato_obj.contratista_nombre =
@@ -218,7 +210,7 @@ angular
                                             }
                                         });
                                 })
-                                .catch(function(error) {
+                                .catch(function (error) {
                                     swal(
                                         $translate.instant("INFORMACION"),
                                         $translate.instant(
@@ -236,7 +228,7 @@ angular
                             );
                         }
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         self.estado_resultado_response = false;
                         swal(
                             $translate.instant("Contrato o fecha invalido"),
@@ -260,35 +252,35 @@ angular
                 multiSelect: false,
                 enableSelectAll: false,
                 columnDefs: [{
-                        field: "contrato.numero_contrato_suscrito",
-                        displayName: $translate.instant("CONTRATO"),
-                        width: 150,
-                    },
-                    {
-                        field: "contrato.vigencia",
-                        displayName: $translate.instant("VIGENCIA_CONTRATO"),
-                        width: 160,
-                    },
-                    {
-                        field: "informacion_proveedor.NumDocumento",
-                        displayName: $translate.instant("DOCUMENTO_CONTRATISTA"),
-                        width: 200,
-                    },
-                    {
-                        field: "informacion_proveedor.NomProveedor",
-                        displayName: $translate.instant("NOMBRE_CONTRATISTA"),
-                        width: 390,
-                    },
-                    {
-                        field: "contrato.valor_contrato",
-                        displayName: $translate.instant("VALOR"),
-                        cellFilter: "currency",
-                        width: 180,
-                    },
+                    field: "contrato.numero_contrato_suscrito",
+                    displayName: $translate.instant("CONTRATO"),
+                    width: 150,
+                },
+                {
+                    field: "contrato.vigencia",
+                    displayName: $translate.instant("VIGENCIA_CONTRATO"),
+                    width: 160,
+                },
+                {
+                    field: "informacion_proveedor.NumDocumento",
+                    displayName: $translate.instant("DOCUMENTO_CONTRATISTA"),
+                    width: 200,
+                },
+                {
+                    field: "informacion_proveedor.NomProveedor",
+                    displayName: $translate.instant("NOMBRE_CONTRATISTA"),
+                    width: 390,
+                },
+                {
+                    field: "contrato.valor_contrato",
+                    displayName: $translate.instant("VALOR"),
+                    cellFilter: "currency",
+                    width: 180,
+                },
                 ],
             };
 
-            $scope.showTabDialog = function(ev) {
+            $scope.showTabDialog = function (ev) {
                 $mdDialog
                     .show({
                         templateUrl: "views/seguimientoycontrol/novedad-tabla.html",
@@ -301,11 +293,11 @@ angular
                         controller: DialogController,
                     })
                     .then(
-                        function(answer) {
+                        function (answer) {
                             $scope.status =
                                 'You said the information was "' + answer + '".';
                         },
-                        function() {
+                        function () {
                             $scope.status = "You cancelled the dialog.";
                         }
                     );
@@ -313,19 +305,19 @@ angular
 
             function DialogController($scope, $mdDialog, documentos) {
                 $scope.documentos = documentos;
-                $scope.hide = function() {
+                $scope.hide = function () {
                     $mdDialog.hide();
                 };
-                $scope.cancel = function() {
+                $scope.cancel = function () {
                     $mdDialog.cancel();
                 };
-                $scope.answer = function(answer) {
+                $scope.answer = function (answer) {
                     $mdDialog.hide(answer);
                 };
-                $scope.verDocumento = function(enlace) {
+                $scope.verDocumento = function (enlace) {
                     novedadesMidRequest
                         .get("gestor_documental", enlace)
-                        .then(function(response) {
+                        .then(function (response) {
                             var elementos = response.data.Body;
                             var docB64 = elementos.file.split("'");
                             var file = docB64.length > 1 ? docB64[1] : docB64[0];
@@ -337,7 +329,7 @@ angular
                             );
                         });
                 };
-                $scope.formatDate = function(date) {
+                $scope.formatDate = function (date) {
                     var dateOut = new Date(date);
                     return dateOut;
                 };
@@ -346,14 +338,14 @@ angular
                 $scope.numLimit = 5;
                 $scope.start = 0;
 
-                $scope.$watch("documentos", function(newVal) {
+                $scope.$watch("documentos", function (newVal) {
                     if (newVal) {
                         $scope.pages = Math.ceil(
                             $scope.documentos.length / $scope.numLimit
                         );
                     }
                 });
-                $scope.hideNext = function() {
+                $scope.hideNext = function () {
                     if (
                         $scope.start + $scope.numLimit <
                         $scope.documentos.length
@@ -361,18 +353,18 @@ angular
                         return false;
                     } else return true;
                 };
-                $scope.hidePrev = function() {
+                $scope.hidePrev = function () {
                     if ($scope.start === 0) {
                         return true;
                     } else return false;
                 };
-                $scope.nextPage = function() {
+                $scope.nextPage = function () {
                     console.log("next pages");
                     $scope.currentPage++;
                     $scope.start = $scope.start + $scope.numLimit;
                     console.log($scope.start);
                 };
-                $scope.PrevPage = function() {
+                $scope.PrevPage = function () {
                     if ($scope.currentPage > 1) {
                         $scope.currentPage--;
                     }

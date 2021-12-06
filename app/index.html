@@ -66,11 +66,14 @@
             <div class="blob blob-5"></div>
         </div>
         <div ng-if="isLogin" ng-include="'core/header/header.html'" ng-controller="headerCtrl"></div>
-        <div ng-if="isLogin" class="body-container-menuCtrl" ng-include="'core/menu-aplicaciones/menu-aplicaciones.html'" ng-controller="menuCtrl"></div>
-        <div ng-if="isLogin" class="body-container-notificaciones" ng-include="'core/notificaciones/notificaciones.html'" ng-controller="notificacionesCtrl"></div>
+        <div ng-if="isLogin" class="body-container-menuCtrl"
+            ng-include="'core/menu-aplicaciones/menu-aplicaciones.html'" ng-controller="menuCtrl"></div>
+        <div ng-if="isLogin" class="body-container-notificaciones"
+            ng-include="'core/notificaciones/notificaciones.html'" ng-controller="notificacionesCtrl"></div>
         <div ng-if="isLogin" class="container-app">
             <div id="menu-sidebar-container" ng-class="sidebarClases.sidebarContainerClase" ng-controller="headerCtrl">
-                <div id="menu-sidebar" ng-include="'core/menu-lateral/menu-lateral.html'" ng-controller="menuLateralCtrl" ng-class="sidebarClases.sidebarDivClase"></div>
+                <div id="menu-sidebar" ng-include="'core/menu-lateral/menu-lateral.html'"
+                    ng-controller="menuLateralCtrl" ng-class="sidebarClases.sidebarDivClase"></div>
             </div>
             <div ng-class="sidebarClases.containerBodyClase" ng-controller="headerCtrl">
                 <div ng-view="" ng-class="sidebarClases.containerDivClase" ng-controller="headerCtrl"></div>
@@ -79,14 +82,15 @@
         <br>
         <br>
         <br>
-        <div ng-if="isLogin" class="container-footer" ng-include="'core/footer/footer.html'" ng-controller="footerCtrl"></div>
+        <div ng-if="isLogin" class="container-footer" ng-include="'core/footer/footer.html'" ng-controller="footerCtrl">
+        </div>
     </div>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
-        ! function(A, n, g, u, l, a, r) {
-            A.GoogleAnalyticsObject = l, A[l] = A[l] || function() {
-                    (A[l].q = A[l].q || []).push(arguments)
-                }, A[l].l = +new Date, a = n.createElement(g),
+        ! function (A, n, g, u, l, a, r) {
+            A.GoogleAnalyticsObject = l, A[l] = A[l] || function () {
+                (A[l].q = A[l].q || []).push(arguments)
+            }, A[l].l = +new Date, a = n.createElement(g),
                 r = n.getElementsByTagName(g)[0], a.src = u, r.parentNode.insertBefore(a, r)
         }(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 

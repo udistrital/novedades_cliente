@@ -12,7 +12,7 @@ angular.module('agoraService', [])
         var path = CONF.GENERAL.ADMINISTRATIVA_PRUEBAS_SERVICE;
         // Public API here
         return {
-            get: function(tabla) {
+            get: function (tabla) {
                 return $http.get(path + tabla, token_service.setting_bearer.headers);
             },
             post: function (tabla, elemento) {
