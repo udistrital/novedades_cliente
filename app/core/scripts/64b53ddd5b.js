@@ -7,7 +7,7 @@ window.FontAwesomeCdnConfig = {
   },
   reporting: {
     
-    enabled: true,
+    enabled: false,
     domains: "localhost, *.dev"
     
   },

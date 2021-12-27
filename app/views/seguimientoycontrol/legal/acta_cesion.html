@@ -106,7 +106,8 @@
                 </label>
                                 <br>
                                 <md-input-container style="margin:0;">
-                                    <input type="number" id="n_solicitud" name="n_solicitud" required ng-model="sLactaCesion.n_solicitud" ng-disabled="false" min="0">
+                                    <input type="number" id="n_solicitud" name="n_solicitud" required ng-model="sLactaCesion.n_solicitud" ng-disabled="false" 
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" min="0">
                                     <div ng-messages="formCesion.n_solicitud.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>
@@ -118,7 +119,8 @@
                   {{'NUMERO_OFICIO' | translate}} *:
                 </label>
                                 <md-input-container style="margin:0;">
-                                    <input type="number" name="num_oficio" ng-model="sLactaCesion.num_oficio" required id="oficio" min="0">
+                                    <input type="number" name="num_oficio" ng-model="sLactaCesion.num_oficio" required id="oficio" 
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" min="0">
                                     <div ng-messages="formCesion.num_oficio.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>
@@ -145,7 +147,8 @@
                     {{'VALOR_DESEMBOLSADO' | translate}} *:
                   </label>
                                     <md-input-container style="margin:0;">
-                                        <input type="number" name="valor_desembolsado" ng-model="sLactaCesion.valor_desembolsado" required id="valor_desembolsado">
+                                        <input type="number" name="valor_desembolsado" ng-model="sLactaCesion.valor_desembolsado" required id="valor_desembolsado"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                         <div ng-messages="formCesion.valor_desembolsado.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>
@@ -156,7 +159,8 @@
                     {{'VALOR_A_FAVOR' | translate}} *:
                   </label>
                                     <md-input-container style="margin:0;">
-                                        <input type="number" name="valor_a_favor" ng-model="sLactaCesion.valor_a_favor" required id="valor_a_favor">
+                                        <input type="number" name="valor_a_favor" ng-model="sLactaCesion.valor_a_favor" required id="valor_a_favor"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                         <div ng-messages="formCesion.valor_a_favor.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>

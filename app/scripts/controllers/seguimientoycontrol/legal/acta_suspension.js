@@ -42,6 +42,13 @@ angular
             self.elaboro = "";
             self.estados = [];
             self.elaboro_cedula = token_service.getPayload().documento;
+
+            const solic_input = document.getElementById("n_solicitud");
+            solic_input.addEventListener("input", function(){
+                if (this.value.length > 7) {
+                    this.value = this.value.slice(0,7);
+                }
+            });
             //Obtiene los datos de quien elaboró la Novedad
             agoraRequest
                 .get("informacion_persona_natural?query=Id:" + self.elaboro_cedula)

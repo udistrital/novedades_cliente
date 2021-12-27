@@ -233,15 +233,27 @@ angular
                                             .then(function (nr_response) {
                                                 if (nr_response.data[0].CodigoAbreviacion == "NP_SUS") {
                                                     self.suspension_id_nov = self.auxiliar;
-                                                    self.f_suspension = new Date(
-                                                        self.novedad_suspension.substr(0, 16)
-                                                    );
-                                                    self.f_reinicio = new Date(
-                                                        self.novedad_reinicio.substr(0, 16)
-                                                    );
-                                                    self.f_finsuspension = new Date(
-                                                        self.novedad_finsuspension.substr(0, 16)
-                                                    );
+                                                    try {
+                                                        self.f_suspension = new Date(
+                                                            self.novedad_suspension.substr(0, 16)
+                                                        );
+                                                    } catch (error) {
+                                                        console.info("No hay fecha de suspensión");
+                                                    }
+                                                    try {
+                                                        self.f_reinicio = new Date(
+                                                            self.novedad_reinicio.substr(0, 16)
+                                                        );
+                                                    } catch (error) {
+                                                        console.info("No hay fecha de reinicio");
+                                                    }
+                                                    try {
+                                                        self.f_finsuspension = new Date(
+                                                            self.novedad_finsuspension.substr(0, 16)
+                                                        );
+                                                    } catch (error) {
+                                                        console.info("No hay fecha fin de suspensión");
+                                                    }
                                                     self.motivo_suspension = self.novedad_motivo;
                                                 }
                                             });
