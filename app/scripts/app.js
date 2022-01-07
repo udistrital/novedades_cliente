@@ -87,6 +87,12 @@ angular
                 config.headers["Accept"] = "application/json";
                 config.headers["Content-Type"] = "application/json";
 
+                config.headers["X-Frame-Options"] = "sameorigin";
+                config.headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                config.headers["Pragma"] = "no-cache";
+                config.headers["X-Content-Type-Options"] = "nosniff";
+                config.headers["referrer-policy"] = "same-origin";
+
                 return config;
             },
         };
