@@ -61,7 +61,7 @@
     "fresh": "^0.5.2",
     "gaze": "^0.5.2",
     "getobject": "^1.0.2",
-    "gifsicle": "^6.1.0",
+    "gifsicle": "^3.0.4",
     "glob": "^7.2.0",
     "google-cdn": "^1.1.0",
     "grunt-google-cdn2": "^0.6.0",
