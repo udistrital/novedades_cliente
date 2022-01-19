@@ -59,6 +59,20 @@ angular
             self.elaboro_cedula = token_service.getPayload().documento;
             var adicionProrroga = "";
 
+            const input = document.getElementById("solicitud");
+            input.addEventListener("input", function(){
+                if (this.value.length > 11) {
+                    this.value = this.value.slice(0,11);
+                }
+            })
+            
+            const oficio_input = document.getElementById("oficio");
+            oficio_input.addEventListener("input", function(){
+                if (this.value.length > 11) {
+                    this.value = this.value.slice(0,11);
+                }
+            })
+
             agoraRequest
                 .get("informacion_persona_natural?query=Id:" + self.elaboro_cedula)
                 .then(function (ipn_response) {

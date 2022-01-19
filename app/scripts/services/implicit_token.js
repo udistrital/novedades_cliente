@@ -26,7 +26,7 @@ if (
     //
     req.open("GET", query, true);
     if (params.id_token !== null && params.id_token !== undefined) {
-        console.log("id_token inicial: ", params.id_token);
+        // console.log("id_token inicial: ", params.id_token);
         window.localStorage.setItem("access_token", params.access_token);
         window.localStorage.setItem("id_token", params.id_token);
         window.localStorage.setItem("state", params.state);
@@ -198,15 +198,15 @@ angular
                     var access_code = window.localStorage.getItem("access_code");
                     var access_role = window.localStorage.getItem("access_role");
                     var data = angular.fromJson(atob(id_token[1]));
-                    console.log(
-                        "access_code:",
-                        access_code,
-                        "access_role: ",
-                        access_role
-                    );
+                    // console.log(
+                    //     "access_code:",
+                    //     access_code,
+                    //     "access_role: ",
+                    //     access_role
+                    // );
                     data.appUserDocument = angular.fromJson(atob(access_code));
                     data.appUserRole = angular.fromJson(atob(access_role));
-                    console.log("data:", data);
+                    // console.log("data:", data);
                     return data;
                 },
                 logout: function() {

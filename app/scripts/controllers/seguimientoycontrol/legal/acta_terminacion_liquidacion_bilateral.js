@@ -35,6 +35,42 @@ angular.module('contractualClienteApp')
         self.estados = [];
         self.elaboro = '';
         self.elaboro_cedula = token_service.getPayload().documento;
+
+        const solic_input = document.getElementById("numero_solicitud");
+        solic_input.addEventListener("input", function(){
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0,11);
+            }
+        });
+        
+        const oficio_input = document.getElementById("numero_oficio_estado_cuentas");
+        oficio_input.addEventListener("input", function(){
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0,11);
+            }
+        });
+
+        const desembolsado_input = document.getElementById("valor_desembolsado");
+        desembolsado_input.addEventListener("input", function(){
+            if (this.value.length > 10) {
+                this.value = this.value.slice(0,10);
+            }
+        });
+
+        const saldocon_input = document.getElementById("saldo_contratista");
+        saldocon_input.addEventListener("input", function(){
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0,11);
+            }
+        });
+
+        const saldouni_input = document.getElementById("saldo_universidad");
+        saldouni_input.addEventListener("input", function(){
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0,11);
+            }
+        });
+
         agoraRequest.get('estado_contrato?query=NombreEstado:Suspendido').then(function (ec_response) {
             self.estados[1] = ec_response.data[0];
         });

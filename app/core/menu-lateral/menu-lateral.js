@@ -34,14 +34,15 @@ angular.module('core')
                             ) {
                                 if ($scope.token.appUserRole[index].indexOf(",") < 0) {
                                     rl.push(
-                                        $scope.token.appUserRole[index] == "Internal/everyone" ?
+                                        $scope.token.appUserRole[index] == "Internal/everyone" || 
+                                        $scope.token.appUserRole[index] == 
+                                        "Internal/selfsignup" ?
                                         "" :
                                         $scope.token.appUserRole[index]
                                     );
                                 }
                             }
                             roles = rl.toString();
-                            console.log(roles);
                         } else {
                             roles = $scope.token.appUserRole;
                         }
