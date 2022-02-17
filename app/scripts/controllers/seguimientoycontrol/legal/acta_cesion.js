@@ -441,11 +441,13 @@ angular
                                             novedadesMidRequest
                                                 .post("novedad", self.cesion_nov)
                                                 .then(function (request_novedades) {
+                                                    console.log("Prueba pop-up 0");
                                                     if (
                                                         request_novedades.status == 200 ||
                                                         request_novedades.statusText == "OK"
                                                     ) {
-                                                        self.formato_generacion_pdf();
+                                                        
+                                                        console.log("Prueba pop-up 1");
                                                         swal(
                                                             $translate.instant("TITULO_BUEN_TRABAJO"),
                                                             $translate.instant("DESCRIPCION_CESION") +
@@ -456,9 +458,11 @@ angular
                                                             self.contrato_obj.vigencia,
                                                             "success"
                                                         ).then(function () {
+                                                            console.log('prueba pop-up 2');
                                                             window.location.href =
                                                                 "#/seguimientoycontrol/legal";
                                                         });
+                                                        self.formato_generacion_pdf();
                                                     }
                                                 });
                                         });
@@ -1034,7 +1038,7 @@ angular
                                 self.contrato_obj.ordenadorGasto_nombre +
                                 " mayor de edad vecino(a) de esta ciudad, identificado(a) con " +
                                 self.contrato_obj.ordenador_gasto_tipo_documento +
-                                " número " +
+                                " Nro " +
                                 self.contrato_obj.ordenador_gasto_documento +
                                 " expedida en " +
                                 self.contrato_obj.ordenador_gasto_ciudad_documento +
@@ -1092,21 +1096,33 @@ angular
                                 self.contrato_obj.objeto +
                                 "”\n\n",
                         },
-                        {
+                        [
+                            {
                             text: "Que la CLÁUSULA OCTAVA del " +
                                 self.contrato_obj.tipo_contrato +
                                 " No. " +
                                 self.contrato_obj.numero_contrato +
                                 " de " +
                                 self.contrato_obj.vigencia +
-                                ", establece que “El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de LA UNIVERSIDAD”. \n\n",
-                        },
+                                ", establece que ",  
+                            },
+                            {                        
+                            text:'“El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de ', italic: true,
+                            },
+                            {
+                                                
+                            text: 'LA UNIVERSIDAD"', bold: true, italic: true,
+                                      
+                            },
+                               
+                        ],
+                        
                         {
                             text: "Que mediante escrito de fecha " +
                                 self.format_date_letter_mongo(self.f_oficio) +
                                 ", el Contratista " +
                                 self.contrato_obj.contratista_nombre +
-                                ", solicita a " +
+                                ", (cedente) solicita a " +
                                 self.contrato_obj.supervisor_nombre +
                                 " quien cumple la función supervisor, la autorización para realizar la Cesión del " +
                                 self.contrato_obj.tipo_contrato +
@@ -1116,7 +1132,7 @@ angular
                                 self.cesionario_obj.nombre +
                                 " " +
                                 self.cesionario_obj.apellidos +
-                                " quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n\n",
+                                " (cesionario) quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n\n",
                         },
                         [{
                             text: "Que mediante oficio No. " +
@@ -1139,7 +1155,7 @@ angular
                             ul: [
                                 "Por los servicios prestados por el señor (a) " +
                                 self.contrato_obj.contratista_nombre +
-                                " CONTRATISTA CEDENTE, hasta el día " +
+                                { text:" CONTRATISTA CEDENTE,", bold: true} + "hasta el día " +
                                 self.format_date_letter_mongo(self.f_terminacion) +
                                 " se reconoció un valor total de " +
                                 NumeroALetras(self.valor_desembolsado + "") +
@@ -1149,7 +1165,7 @@ angular
                                 self.contrato_obj.plazo +
                                 " meses.\n",
                                 "Existe un valor pendiente por cancelar al señor " +
-                                self.contrato_obj.contratista_nombre +
+                                self.contrato_obj.contratista_nombre + {text: " (CEDENTE),", bold: true} +
                                 ", por valor de " +
                                 NumeroALetras(self.valor_a_favor + "") +
                                 "($" +
@@ -1163,7 +1179,7 @@ angular
                                 ".\n",
                                 "La suma a ceder al señor (a) " +
                                 self.cesionario_obj.nombre +
-                                " " +
+                                {text: " (CESIONARIO)", bold: true }+
                                 self.cesionario_obj.apellidos +
                                 " es de " +
                                 NumeroALetras(self.valor_contrato_cesionario() + "") +
@@ -1193,7 +1209,7 @@ angular
                                 self.format_date_letter_mongo(self.f_cesion) +
                                 ", a favor de " +
                                 self.cesionario_obj.nombre +
-                                " " +
+                                {text: " (CESIONARIO)", bold: true} +
                                 self.cesionario_obj.apellidos +
                                 ".\n\n",
                         },
@@ -1216,7 +1232,7 @@ angular
                             },
                             {
                                 text: "El señor (a) " +
-                                    self.contrato_obj.contratista_nombre +
+                                    self.contrato_obj.contratista_nombre + {text: " (CEDENTE)", bold: true} +
                                     " cede el " +
                                     self.contrato_obj.tipo_contrato +
                                     " No." +
@@ -1226,8 +1242,8 @@ angular
                                     ", a " +
                                     self.cesionario_obj.nombre +
                                     " " +
-                                    self.cesionario_obj.apellidos +
-                                    " (CESIONARIO), en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día " +
+                                    self.cesionario_obj.apellidos + {text: "(CESIONARIO)", bold: true} +
+                                    ", en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día " +
                                     self.format_date_letter_mongo(self.f_cesion) +
                                     ".\n\n",
                             },
@@ -1251,7 +1267,7 @@ angular
                                 bold: true,
                             },
                             {
-                                text: "- En virtud de lo dispuesto en el Artículo 223 del decreto Ley 019 de 2012, en concordancia con el Artículo 2.2.1.1.1.7.1 del Decreto 1082 de 2015 y el manual de contratación vigente, se procederá a la publicación del presente documento de cesión en el SECOP que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente:\n\n",
+                                text: "- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se  procederá a la publicación del presente documento de cesión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente:\n\n",
                             },
                             ],
                             {
@@ -1270,48 +1286,60 @@ angular
                                     bold: false,
                                     style: "topHeader",
                                 },
-                                {
-                                    text: "______________________________________",
-                                    bold: false,
-                                    style: "topHeader",
-                                },
                                 ],
                                 [{
                                     text: self.contrato_obj.ordenadorGasto_nombre,
                                     bold: false,
                                     style: "topHeader",
                                 },
-                                {
-                                    text: self.contrato_obj.contratista_nombre,
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                ],
-                                [{
-                                    text: "CC. " + self.contrato_obj.ordenador_gasto_documento,
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                {
-                                    text: "CC. " + self.contrato_obj.contratista_documento,
-                                    bold: false,
-                                    style: "topHeader",
-                                },
                                 ],
                                 [{
                                     text: self.contrato_obj.ordenadorGasto_rol,
-                                    bold: true,
+                                    bold: false,
                                     style: "topHeader",
                                 },
-                                { text: "Cedente", bold: true, style: "topHeader" },
                                 ],
                                 [{
                                     text: "Ordenador de Gasto",
-                                    bold: true,
+                                    bold: false,
                                     style: "topHeader",
                                 },
-                                { text: "", bold: true, style: "topHeader" },
+                                //{ text: "", bold: true, style: "topHeader" },
                                 ],
+                                [
+                                    {
+                                        text: "\n\n\n\n______________________________________",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: self.contrato_obj.contratista_nombre,
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],                              
+                                                            
+                                                               
+                                // [{
+                                //     text: "CC. " + self.contrato_obj.ordenador_gasto_documento,
+                                //     bold: false,
+                                //     style: "topHeader",
+                                // },
+                                // {
+                                //     text: "CC. " + self.contrato_obj.contratista_documento,
+                                //     bold: false,
+                                //     style: "topHeader",
+                                // },
+                                // ],
+                                
+                                [
+                                    { text: "Cedente", bold: false, style: "topHeader" },
+                                ],
+                                
+                                
+                                
 
                                 [{
                                     text: "\n\n\n\n______________________________________",
@@ -1330,22 +1358,22 @@ angular
                                 },
                                 { text: "", bold: false, style: "topHeader" },
                                 ],
-                                [{
-                                    text: "CC. " + self.cesionario_obj.identificacion,
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                { text: "", bold: false, style: "topHeader" },
-                                ],
+                                // [{
+                                //     text: "CC. " + self.cesionario_obj.identificacion,
+                                //     bold: false,
+                                //     style: "topHeader",
+                                // },
+                                // { text: "", bold: false, style: "topHeader" },
+                                // ],
                                 [
-                                    { text: "Cesionario", bold: true, style: "topHeader" },
+                                    { text: "Cesionario", bold: false, style: "topHeader" },
                                     { text: "", style: "topHeader" },
                                 ],
                             ],
                         },
                         layout: "noBorders",
                     },
-                        "\n",
+                        "\n\n\n",
                     {
                         style: "table3",
                         table: {
@@ -1353,22 +1381,30 @@ angular
                             body: [
                                 [
                                     "",
+                                    { text: "Funcionario", bold: true },
                                     { text: "Nombre", bold: true },
                                     { text: "Cargo", bold: true },
                                     { text: "Firma", bold: true },
                                 ],
                                 [
-                                    { text: "Elaboró", bold: true },
+                                    { text: "Proyectó", bold: false },
                                     "" + self.elaboro,
-                                    "Abogado Oficina Asesora Jurídica",
+                                    //"Abogado Oficina Asesora Jurídica",
+                                    "",
                                     "",
                                 ],
                                 [
-                                    { text: "Revisó y Aprobó", bold: true },
-                                    "DIANA MIREYA PARRA CARDONA",
-                                    "Jefe Oficina Asesora Jurídica",
+                                    { text: "Revisó", bold: false },
+                                    "",
+                                    "",
                                     "",
                                 ],
+                                [
+                                    { text: "Aprobó", bold: false },
+                                    "",
+                                    "Jefe Oficina Asesora Jurídica",
+                                    "",
+                                ]
                             ],
                         },
                     },

@@ -10,7 +10,8 @@
 var conf_cloud = {
     WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
     ACADEMICA_WSO_SERVICE: "https://autenticacion.udistrital.edu.co:8244/academica_jbpm/v1/",
-    ADMINISTRATIVA_MID_SERVICE: "https:/c/tuleap.udistrital.edu.co/go_api/administrativa_mid_api/v1/",
+    //ADMINISTRATIVA_MID_SERVICE: "https:/c/tuleap.udistrital.edu.co/go_api/administrativa_mid_api/v1/",
+    ADMINISTRATIVA_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_mid_api/v1",
     ADMINISTRATIVA_SERVICE: "https://tuleap.udistrital.edu.co/go_api/administrativa_api/v1/",
     ADMINISTRATIVA_PRUEBAS_SERVICE: "https://tuleap.udistrital.edu.co/go_api/administrativa_amazon_api/v1/",
     RESOLUCION_SERVICE: "https://tuleap.udistrital.edu.co/go_api/resoluciones_crud/v1/",
@@ -97,7 +98,8 @@ var conf_local = {
     NUXEO_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/nuxeo_api/v1/",
     HOMOLOGACION_SERVICE: "https://autenticacion.udistrital.edu.co:8244/dependencias_api/v1/",
     NOVEDADES_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",
-    NOVEDADES_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_mid/v1/",
+    //NOVEDADES_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_mid/v1/",
+    NOVEDADES_MID_SERVICE: "localhost:8502/v1/",
     DOCUMENTOS_CRUD: "https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2",
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
