@@ -283,6 +283,7 @@ angular
              * funcion para la genracion del pdf del acta correspondiente a la novedad de suspension
              * actualizacion de los datos del contrato y reporte de la novedad
              */
+            
             self.generarActa = function () {
                 var nuevoEstado = {
                     Estado: {
