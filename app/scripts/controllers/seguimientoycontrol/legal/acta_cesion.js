@@ -46,26 +46,26 @@ angular
 
             const solic_input = document.getElementById("n_solicitud");
             solic_input.addEventListener("input", function(){
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0,7);
+                if (this.value.length > 11) {
+                    this.value = this.value.slice(0,11);
                 }
             });
             const oficio_input = document.getElementById("oficio");
             oficio_input.addEventListener("input", function(){
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0,7);
+                if (this.value.length > 11) {
+                    this.value = this.value.slice(0,11);
                 }
             });
             const valordes_input = document.getElementById("valor_desembolsado");
             valordes_input.addEventListener("input", function(){
-                if (this.value.length > 10) {
-                    this.value = this.value.slice(0,10);
+                if (this.value.length > 11) {
+                    this.value = this.value.slice(0,11);
                 }
             });
             const valorfavor_input = document.getElementById("valor_a_favor");
             valorfavor_input.addEventListener("input", function(){
-                if (this.value.length > 10) {
-                    this.value = this.value.slice(0,10);
+                if (this.value.length > 11) {
+                    this.value = this.value.slice(0,11);
                 }
             });
 
