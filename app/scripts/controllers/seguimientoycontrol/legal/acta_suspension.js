@@ -45,12 +45,10 @@ angular
 
             const solic_input = document.getElementById("n_solicitud");
             solic_input.addEventListener("input", function(){
-                if (this.value.length > 11) {
-                    this.value = this.value.slice(0,11);
+                if (this.value.length > 7) {
+                    this.value = this.value.slice(0,7);
                 }
             });
-
-          
             //Obtiene los datos de quien elaboró la Novedad
             agoraRequest
                 .get("informacion_persona_natural?query=Id:" + self.elaboro_cedula)
@@ -80,7 +78,6 @@ angular
                         self.contrato_obj.valor = String(
                             agora_response.data[0].ValorContrato
                         );
-                        self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                         self.contrato_obj.objeto = agora_response.data[0].ObjetoContrato;
                         self.contrato_obj.fecha_registro =
                             agora_response.data[0].FechaRegistro;
@@ -283,7 +280,6 @@ angular
              * funcion para la genracion del pdf del acta correspondiente a la novedad de suspension
              * actualizacion de los datos del contrato y reporte de la novedad
              */
-            
             self.generarActa = function () {
                 var nuevoEstado = {
                     Estado: {
@@ -305,7 +301,6 @@ angular
                             self.suspension_nov.numerosolicitud = self.n_solicitud;
                             self.suspension_nov.contrato = self.contrato_obj.numero_contrato;
                             self.suspension_nov.vigencia = String(self.contrato_obj.vigencia);
-                            self.suspension_nov.numerooficioestadocuentas=self.numero_oficio_estado_cuentas;
                             self.suspension_nov.motivo = self.motivo;
                             self.suspension_nov.periodosuspension = self.diff_dias;
                             self.suspension_nov.fecharegistro = new Date();
@@ -319,15 +314,10 @@ angular
                             self.contrato_estado = {};
                             self.contrato_estado.NumeroContrato =
                                 self.contrato_obj.numero_contrato;
-                                agoraRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
-                                    self.contrato_obj.ordenadorGasto_nombre = og_response.data[0].NombreOrdenador;
-                                });
-                            self.contrato_obj.ordenadorGasto_nombre = og_response.data[0].NombreOrdenador;
                             self.contrato_estado.Vigencia = self.contrato_obj.vigencia;
                             self.contrato_estado.FechaRegistro = new Date();
                             self.contrato_estado.Estado = self.estado_suspendido;
                             self.contrato_estado.Usuario = "usuario_prueba";
-
                         });
                     //primero obtenemos el estado actual - en esta caso es 'En ejecucion'
                     //Se guarda en la posicion [0] del arreglo estados el estado actual
@@ -355,7 +345,7 @@ angular
                                             NombreEstado: "ejecucion",
                                         };
                                         self.estados[0] = estado_temp_from;
-                                        //adminMidRequest
+                                        console.log(self.estados);
                                         novedadesMidRequest
                                             .post("validarCambioEstado", self.estados)
                                             .then(function (vc_response) {
@@ -853,7 +843,7 @@ angular
                                             alignment: "center",
                                             fontSize: 9,
                                         },
-                                        { text: "Versión: 03", margin: [0, 2], fontSize: 9 },
+                                        { text: "Versión: 02", margin: [0, 2], fontSize: 9 },
                                         " ",
                                     ],
                                     [
@@ -863,7 +853,7 @@ angular
                                             alignment: "center",
                                             fontSize: 9,
                                         },
-                                        { text: "Fecha de Aprobación: 30/07/2019", fontSize: 9 },
+                                        { text: "Fecha de Aprobación: 12/10/2017", fontSize: 9 },
                                         " ",
                                     ],
                                 ],
@@ -898,7 +888,7 @@ angular
                                     },
                                 ],
                                 [
-                                    { text: "CONTRATANTE", bold: true, style: "topHeader" },
+                                    { text: "CONTRANTE", bold: true, style: "topHeader" },
                                     {
                                         text: "Universidad Distrital Francísco José de Caldas",
                                         style: "topHeader",
@@ -941,7 +931,7 @@ angular
                                     },
                                 ],
                                 [{
-                                    text: "FECHA SUSPENSIÓN",
+                                    text: "PERIODO SUSPENSIÓN",
                                     bold: true,
                                     style: "topHeader",
                                 },
@@ -986,7 +976,7 @@ angular
                             self.contrato_obj.supervisor_cedula +
                             " de " +
                             self.contrato_obj.supervisor_ciudad_documento +
-                            "  en su calidad de supervisor, y " +
+                            " en su calidad de supervisor, y " +
                             self.contrato_obj.contratista_nombre +
                             " identificado con " +
                             self.contrato_obj.contratista_tipo_documento +
@@ -1006,56 +996,9 @@ angular
                             self.format_date_letter_mongo(self.f_fin) +
                             " del año " +
                             self.contrato_vigencia +
-                            ", previas las siguientes consideraciones :"+
-                            " \n\n",
-                        ]
-                    },
-                        {
-                            style: ['general_list'],
-                            ol: [
-                                'Que entre la Universidad Distrital Francisco José de Caldas y el señor (a) '+self.contrato_obj.contratista_nombre+' se suscribió el CPS No.' +self.contrato_id +' de '+self.contrato_vigencia +' cuyo objeto es“'+self.contrato_obj.objeto+'.”',
-                            
-                                'Que la cláusula del CPS No.'+self.contrato_id +' de '+self.contrato_vigencia+', establece que ',{text ='“Las partes contratantes podrán suspender la ejecución del contrato, mediante la suscripción de un acta en donde conste tal evento, cuando medie alguna de las siguientes causales: 1) Por circunstancias de fuerza mayor o caso fortuito, debidamente comprobadas, que imposibiliten su ejecución. 2) Por solicitud, debidamente sustentada, elevada por una de las partes. El término de suspensión no será computable para efecto del plazo de ejecución del contrato,ni dará derecho a exigir indemnización, sobrecostos o reajustes, ni a reclamar gastos diferentes a los pactados en el contrato.”.\n\n',italic:true,},
-                         
-                                'Que mediante escrito de fecha '+self.suspension_nov.fechasolicitud+' , el Contratista '+self.contrato_obj.contratista_nombre+', solicita a quien cumple la función supervisor, la autorización para realizar la Suspensión del Contrato de Prestación de Servicios durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +'y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'y el día del mes de del año .\n\n',
-                            
-                                'Que mediante oficio No ' + numberFormat(self.suspension_nov.numerooficioestadocuentas) +  ' de fecha ' +self.format_date_letter_mongo(self.suspension_nov.fechasolicitud)+' el Supervisor del CPS No.'+self.contrato_id +' de '+self.contrato_vigencia+', comunico al señor (a) '+self.contrato_obj.ordenadorGasto_nombre+' en calidad como Ordenador el Gasto, la autorización para suspender el mismo,durante el período comprendido a partir del '+self.contrato_obj.FechaInicio+'.\n\n',
+                            " .\n\n",
 
-                                'Que por medio del oficio '+ numberFormat(self.suspension_nov.numerooficioestadocuentas) + ' de fecha ' +self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud)+' recibido por la Oficina Asesora Jurídica, el señor (a) '+self.contrato_obj.ordenadorGasto_nombre+', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del Contrato de Prestación de Servicios  No.'+self.contrato_id +' de '+self.contrato_vigencia+' a partir del '+self.contrato_obj.FechaInicio+'.\n\n',
-                    
-                            ]
-                        },
-                        {   
-                            text:"Por lo anterior las partes acuerdan las siguientes "+
-                            {
-                                text:"CLÁUSULAS:", bold:true,
-                            }
-
-                        },
-                        {
-                            style: ['general_font'],
-                            text: [{
-                                text: [
-                                    { text: ' CLÁUSULA PRIMERA: SUSPENDER ', bold: true },
-                                    { text: ' el contrato de prestación de servicios No. ' + self.contrato_id + ', a partir del '+self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud)+'\n\n' }
-                                ]
-        
-        
-                            }]
-                        },
-                        {
-                            style: ['general_font'],
-                            text: [{
-                                text: [
-                                    { text: ' CLÁUSULA SEGUNDA: PUBLICACIÓN ', bold: true },
-                                    { text: ' - En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de suspensión en elSECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente.\n\n' }
-                                ]
-        
-        
-                            }]
-                        },
-
-                          /*  { text: "MOTIVO DE LA SUSPENSIÓN", bold: true },
+                            { text: "MOTIVO DE LA SUSPENSIÓN", bold: true },
                             "\n",
                             self.suspension_nov.motivo,
                             "\n\n",
@@ -1075,9 +1018,8 @@ angular
                                 self.suspension_nov.fechafinsuspension
                             ) +
                             ".\n\n",
-                            */
-                        //],
-                    //},
+                        ],
+                    },
                     {
                         style: ["general_font"],
                         text: [
@@ -1139,26 +1081,19 @@ angular
                             body: [
                                 [
                                     "",
-                                    { text: "Funcionario", bold: true },
                                     { text: "Nombre", bold: true },
                                     { text: "Cargo", bold: true },
                                     { text: "Firma", bold: true },
                                 ],
                                 [
                                     { text: "Elaboró", bold: true },
-                                    "",
-                                    "",
-                                    "",
-                                ],
-                                [
-                                    { text: "Revisó", bold: true },
-                                    "",
-                                    "",
+                                    "" + self.elaboro,
+                                    "Abogado Oficina Asesora Jurídica",
                                     "",
                                 ],
                                 [
-                                    { text: "Aprobó", bold: true },
-                                    "",
+                                    { text: "Revisó y Aprobó", bold: true },
+                                    "DIANA MIREYA PARRA CARDONA",
                                     "Jefe Oficina Asesora Jurídica",
                                     "",
                                 ],
