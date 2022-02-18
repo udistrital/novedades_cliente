@@ -36,6 +36,7 @@ angular
             // $scope.documentos = [];
 
             $scope.status = "  ";
+            
 
             /**
              * @ngdoc method
@@ -90,11 +91,13 @@ angular
                                     self.contrato_obj.id +
                                     ",Vigencia:" +
                                     self.contrato_obj.vigencia +
-                                    "&sortby=Id&order=desc&limit=1"
+                                    "&sortby=Id&order=desc&limit=1"                                    
                                 )
                                 .then(function (ce_response) {
+                                    console.log("datos peticion");
                                     self.estado_contrato_obj.estado =
                                         ce_response.data[ce_response.data.length - 1].Estado.Id;
+                                        console.log(self.estado_contrato_obj.estado);
                                     if (self.estado_contrato_obj.estado == 7) {
                                         swal($translate.instant("CONTRATO_CANCELADO"), "", "info");
                                     }
@@ -317,6 +320,7 @@ angular
                 $scope.verDocumento = function (enlace) {
                     novedadesMidRequest
                         .get("gestor_documental", enlace)
+                        //.get("http://localhost:8502/v1/novedad/221/2021", enlace)
                         .then(function (response) {
                             var elementos = response.data.Body;
                             var docB64 = elementos.file.split("'");
