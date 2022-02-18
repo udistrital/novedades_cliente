@@ -441,13 +441,13 @@ angular
                                             novedadesMidRequest
                                                 .post("novedad", self.cesion_nov)
                                                 .then(function (request_novedades) {
-                                                    console.log("Prueba pop-up 0");
+                                                    //console.log("Prueba pop-up 0");
                                                     if (
                                                         request_novedades.status == 200 ||
                                                         request_novedades.statusText == "OK"
                                                     ) {
                                                         
-                                                        console.log("Prueba pop-up 1");
+                                                        //console.log("Prueba pop-up 1");
                                                         swal(
                                                             $translate.instant("TITULO_BUEN_TRABAJO"),
                                                             $translate.instant("DESCRIPCION_CESION") +
@@ -458,7 +458,7 @@ angular
                                                             self.contrato_obj.vigencia,
                                                             "success"
                                                         ).then(function () {
-                                                            console.log('prueba pop-up 2');
+                                                            //console.log('prueba pop-up 2');
                                                             window.location.href =
                                                                 "#/seguimientoycontrol/legal";
                                                         });
