@@ -94,10 +94,10 @@ angular
                                     "&sortby=Id&order=desc&limit=1"                                    
                                 )
                                 .then(function (ce_response) {
-                                    console.log("datos peticion");
+                                    //console.log("datos peticion");
                                     self.estado_contrato_obj.estado =
                                         ce_response.data[ce_response.data.length - 1].Estado.Id;
-                                        console.log(self.estado_contrato_obj.estado);
+                                        //console.log(self.estado_contrato_obj.estado);
                                     if (self.estado_contrato_obj.estado == 7) {
                                         swal($translate.instant("CONTRATO_CANCELADO"), "", "info");
                                     }
