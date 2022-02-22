@@ -15,7 +15,7 @@
     "grunt-contrib-cssmin": "^4.0.0",
     "grunt-contrib-htmlmin": "^3.1.0",
     "grunt-contrib-imagemin": "^4.0.0",
-    "grunt-contrib-jshint": "^3.0.0",
+    "grunt-contrib-jshint": "^3.1.1",
     "grunt-contrib-uglify": "^5.0.1",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-filerev": "^2.1.2",
@@ -48,6 +48,7 @@
     "build": "grunt build"
   },
   "dependencies": {
+    "jshint": "^2.13.3",
     "angular": "^1.7.9",
     "angular-cookies": "^1.7.9",
     "bin-version-check": "^5.0.0",
