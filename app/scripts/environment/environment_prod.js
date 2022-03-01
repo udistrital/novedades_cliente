@@ -14,7 +14,8 @@ angular.module("contractualClienteApp").constant("CONF", {
     APP: "argo", // Nombre de la app, esto cargará el logo.
     APP_MENU: "Novedades", // Ingrese valor de la aplicación asociado al menú registrado en wso2
     GENERAL: {
-        ADMINISTRATIVA_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_mid_api/v1/",
+        //ADMINISTRATIVA_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_mid_api/v1/",
+        ADMINISTRATIVA_MID_SERVICE:"http://pruebasapi.intranetoas.udistrital.edu.co:8091/v1/",
         ADMINISTRATIVA_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_crud_api/v1/",
         ADMINISTRATIVA_PRUEBAS_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_amazon_api/v1/",
         CONFIGURACION_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/configuracion_crud_api/v1/",

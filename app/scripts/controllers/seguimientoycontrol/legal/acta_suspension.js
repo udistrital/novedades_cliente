@@ -49,6 +49,7 @@ angular
                     this.value = this.value.slice(0,7);
                 }
             });
+                        
             //Obtiene los datos de quien elaboró la Novedad
             agoraRequest
                 .get("informacion_persona_natural?query=Id:" + self.elaboro_cedula)
@@ -93,6 +94,21 @@ angular
                         self.contrato_obj.tipo_contrato =
                             agora_response.data[0].TipoContrato.TipoContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
+                        self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
+
+                        //Obtención de datos del ordenador del gasto
+                        agoraRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
+                            self.contrato_obj.ordenadorGasto_nombre = og_response.data[0].NombreOrdenador;
+                            self.contrato_obj.ordenadorGasto_rol = og_response.data[0].RolOrdenador;
+                            self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
+                            self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
+                            agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.ordenador_gasto_documento).then(function (ipn_response) {
+                            self.contrato_obj.ordenador_gasto_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
+                            coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
+                            self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
+                                });
+                            });
+                        });
 
                         //Se obtiene los datos de Acta de Inicio.
                         agoraRequest
@@ -346,12 +362,12 @@ angular
                                         };
                                         self.estados[0] = estado_temp_from;
                                         console.log(self.estados);
-                                        novedadesMidRequest
+                                        adminMidRequest
                                             .post("validarCambioEstado", self.estados)
                                             .then(function (vc_response) {
-                                                self.validacion = vc_response.data.Body;
+                                                self.validacion = vc_response.data;
                                                 if (self.validacion == "true") {
-                                                    self.formato_generacion_pdf();
+                                                    //self.formato_generacion_pdf();
                                                     novedadesMidRequest
                                                         .post("novedad", self.suspension_nov)
                                                         .then(function (request_novedades) {
@@ -888,7 +904,7 @@ angular
                                     },
                                 ],
                                 [
-                                    { text: "CONTRANTE", bold: true, style: "topHeader" },
+                                    { text: "CONTRATANTE", bold: true, style: "topHeader" },
                                     {
                                         text: "Universidad Distrital Francísco José de Caldas",
                                         style: "topHeader",
@@ -916,7 +932,7 @@ angular
                                     {
                                         text: NumeroALetras(self.contrato_obj.valor) +
                                             "($" +
-                                            numberFormat(String(self.contrato_obj.valor)) +
+                                            numberFormat(self.contrato_obj.valor) +
                                             ")",
                                         style: "topHeader",
                                     },
@@ -968,7 +984,7 @@ angular
                         text: [
                             "\n\n",
 
-                            "Entre los subscritos a saber, " +
+                            "Entre los suscritos a saber, " +
                             self.contrato_obj.supervisor_nombre_completo +
                             " identificado con " +
                             self.contrato_obj.supervisor_tipo_documento +
@@ -992,11 +1008,11 @@ angular
                             self.contrato_vigencia +
                             " durante el periodo comprendido entre el día " +
                             self.format_date_letter_mongo(self.f_inicio) +
-                            " y el dia" +
+                            " y el dia " +
                             self.format_date_letter_mongo(self.f_fin) +
-                            " del año, " +
+                            " del año " +
                             self.contrato_vigencia +
-                            "previas las siguientes consideraciones:\n\n",
+                            ", previas las siguientes consideraciones:\n\n",
 
                             // { text: "MOTIVO DE LA SUSPENSIÓN", bold: true },
                             // "\n",
@@ -1020,6 +1036,49 @@ angular
                             // ".\n\n",
                         ],
                     },
+                    {
+                        style: ['general_list'],
+                    ol: [
+                        'Que entre la Universidad Distrital Francisco José de Caldas y el señor (a) '+self.contrato_obj.contratista_nombre+' se suscribió el CPS No.' +self.contrato_id +' de '+self.contrato_vigencia +' cuyo objeto es“'+self.contrato_obj.objeto+'.”',
+
+                        'Que la cláusula del CPS No.'+self.contrato_id +' de '+self.contrato_vigencia+', establece que ',{text: '“Las partes contratantes podrán suspender la ejecución del contrato, mediante la suscripción de un acta en donde conste tal evento, cuando medie alguna de las siguientes causales: 1) Por circunstancias de fuerza mayor o caso fortuito, debidamente comprobadas, que imposibiliten su ejecución. 2) Por solicitud, debidamente sustentada, elevada por una de las partes. El término de suspensión no será computable para efecto del plazo de ejecución del contrato,ni dará derecho a exigir indemnización, sobrecostos o reajustes, ni a reclamar gastos diferentes a los pactados en el contrato.”.\n\n',italic:true,},
+
+                        'Que mediante escrito de fecha '+self.suspension_nov.fechasolicitud+' , el Contratista '+self.contrato_obj.contratista_nombre+', solicita a quien cumple la función supervisor, la autorización para realizar la Suspensión del Contrato de Prestación de Servicios durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +'y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',
+
+                        'Que mediante oficio No ' + numberFormat(self.suspension_nov.numerooficioestadocuentas) +  ' de fecha ' +self.format_date_letter_mongo(self.suspension_nov.fechasolicitud)+' el Supervisor del CPS No.'+self.contrato_id +' de '+self.contrato_vigencia+', comunico al señor (a) '+self.contrato_obj.ordenadorGasto_nombre+' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +'y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',
+
+                        'Que por medio del oficio '+ numberFormat(self.suspension_nov.numerooficioestadocuentas) + ' de fecha ' +self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud)+' recibido por la Oficina Asesora Jurídica, el señor (a) '+self.contrato_obj.ordenadorGasto_nombre+', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del Contrato de Prestación de Servicios  No.'+self.contrato_id +' de '+self.contrato_vigencia+' durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +'y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',
+                    ]
+                    },
+                    {   
+                        text:"Por lo anterior las partes acuerdan las siguientes "+
+                        {
+                            text:"CLÁUSULAS:", bold:true,
+                        }
+
+                    },
+                    {
+                        style: ['general_font'],
+                        text: [{
+                            text: [
+                                { text: ' CLÁUSULA PRIMERA: SUSPENDER ', bold: true },
+                                { text: 'el contrato de prestación de servicios No. ' + self.contrato_id + ', durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +'y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',}
+                            ]
+    
+    
+                        }]
+                    },
+                    {
+                        style: ['general_font'],
+                        text: [{
+                            text: [
+                                { text: ' CLÁUSULA SEGUNDA: PUBLICACIÓN ', bold: true },
+                                { text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de suspensión en elSECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente.\n\n' }
+                            ]
+    
+    
+                        }]
+                    },
                     // {
                     //     style: ["general_font"],
                     //     text: [
@@ -1027,97 +1086,6 @@ angular
                     //         "\n\n\n\n",
                     //     ],
                     // },
-                    {
-                        style: ["general_list"],
-                        ol: [
-                            {
-                                text:"Que entre la Universidad Distrital Francisco José de Caldas y el señor" + self.contrato_obj.contratista_nombre +
-                                ", se suscribió el " + self.contrato_obj.tipo_contrato + " No. " +
-                                self.contrato_id +
-                                " de " +
-                                self.contrato_vigencia + ", cuyo objeto es " + self.contrato_obj.objeto + ".\n"
-                            },
-                            [
-                                {
-                                    text:"Que la cláusula ___________ del " + self.contrato_obj.tipo_contrato +
-                                    " No. " +
-                                    self.contrato_id +
-                                    " de " +
-                                    self.contrato_vigencia + ", establece que "
-                                },
-                                {
-                                    text:"“Las partes contratantes podrán suspender la ejecución del contrato, mediante la suscripción de un acta en donde conste tal evento, cuando medie alguna de las siguientes causales: " +
-                                         "1) Por circunstancias de fuerza mayor o caso fortuito, debidamente comprobadas, que imposibiliten su ejecución. " + 
-                                         "2) Por solicitud, debidamente sustentada, elevada por una de las partes. El término de suspensión no será computable para efecto del plazo de ejecución del contrato, ni dará derecho a exigir indemnización, sobre-costos o reajustes, ni a reclamar gastos diferentes a los pactados en el contrato.”",
-                                    italics: true,     
-                                },
-                            ],
-                            {
-                                text:"Que mediante escrito de fecha " +
-                                self.format_date_letter_mongo(self.f_oficio) +
-                                ", el Contratista " +
-                                self.contrato_obj.contratista_nombre +
-                                ", (cedente) solicita a " +
-                                self.contrato_obj.supervisor_nombre +
-                                " quien cumple la función supervisor, la autorización para realizar la Suspensión del " +
-                                self.contrato_obj.tipo_contrato + "durante el período comprendido entre el día " +
-                                self.format_date_letter_mongo(
-                                        self.suspension_nov.fechasuspension
-                                        ) +
-                                " y " +
-                                self.format_date_letter_mongo(
-                                        self.suspension_nov.fechafinsuspension
-                                        ) +
-                                ".\n",
-                            },
-                            {
-                                text: "Que por medio del oficio No. " +
-                                self.num_oficio +
-                                " de fecha " +
-                                self.format_date_letter_mongo(self.f_oficio) +
-                                ", recibido por la Oficina Asesora Jurídica, el señor (a) " +
-                                self.contrato_obj.ordenadorGasto_nombre +
-                                ", como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del " +
-                                self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_obj.numero_contrato +
-                                " de " +
-                                self.contrato_obj.vigencia + ", durante el período comprendido entre el día " +
-                                self.format_date_letter_mongo(
-                                        self.suspension_nov.fechasuspension
-                                        ) +
-                                " y " +
-                                self.format_date_letter_mongo(
-                                        self.suspension_nov.fechafinsuspension
-                                        ) +
-                                ".\n",
-                            }
-                        ],
-                        
-                    },
-                    {
-                        style: ["general_font"],
-                        text:[{
-                            text:"Por lo anterior las partes acuerdan las siguientes "},{text:"CLÁUSULAS:\n\n", bold: true},
-                            {text: "CLÁUSULA PRIMERA: SUSPENDER ", bold: true}, {
-                                text: "el " + self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_obj.numero_contrato + ", durante el período comprendido entre el día " +
-                                self.format_date_letter_mongo(
-                                        self.suspension_nov.fechasuspension
-                                        ) +
-                                " y " +
-                                self.format_date_letter_mongo(
-                                        self.suspension_nov.fechafinsuspension
-                                        ) +
-                                ".\n",
-                            },
-                            {text: "CLÁUSULA SEGUNDA: PUBLICACIÓN. ", bold: true}, {
-                                text: "-En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de suspensión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente.\n\n"}                    
-                                                   
-                        ]
-                    },
-                    
                     {
                         style: ["table2"],
                         table: {
@@ -1127,54 +1095,83 @@ angular
                                     text: "______________________________________",
                                     bold: false,
                                     style: "topHeader",
-                                },                                
+                                },
                                 ],
                                 [{
                                     text: self.contrato_obj.ordenadorGasto_nombre,
                                     bold: false,
                                     style: "topHeader",
-                                }],
+                                },
+                                ],
+                                
                                 [{
                                     text: "Ordenador de Gasto",
                                     bold: false,
                                     style: "topHeader",
                                 },
+                                
                                 ],
-                                [{
-                                    text: "\n\n\n______________________________________",
-                                    bold: false,
-                                    style: "topHeader",
-                                },                                
+                                [
+                                    {
+                                        text: "\n\n______________________________________",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
                                 ],
+                                [
+                                    {
+                                        text: self.contrato_obj.supervisor_nombre_completo, 
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],                       
+                                [
+                                    { text: "Supervisor", bold: false, style: "topHeader" },
+                                ],                            
+                                                       
+                                                                
+                                                          
+                                                             
                                 [{
-                                    text: "" + self.contrato_obj.supervisor_nombre_completo,
-                                    bold: false,
-                                    style: "topHeader",
-                                },],
-                                [{
-                                    text: "Supervisor",
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                ],
-                                [{
-                                    text: "\n\n\n______________________________________",
-                                    bold: false,
-                                    style: "topHeader",
-                                },                                
-                                ],
-                                [{
-                                    text: "" + self.contrato_obj.contratista_nombre,
-                                    bold: false,
-                                    style: "topHeader",
-                                },                                
-                                ],
-                                [{
-                                    text: "Contratista",
+                                    text: "\n\n______________________________________",
                                     bold: false,
                                     style: "topHeader",
                                 },
+                                { text: "", bold: false, style: "topHeader" },
                                 ],
+                                [{
+                                    text: self.contrato_obj.contratista_nombre,
+                                    bold: false,
+                                    style: "topHeader",
+                                },
+                                { text: "", bold: false, style: "topHeader" },
+                                ],                                
+                                [
+                                    { text: "Contratista\n\n", bold: false, style: "topHeader" },
+                                    { text: "", style: "topHeader" },
+                                ],
+                                // [{
+                                //     text: "______________________________________",
+                                //     bold: false,
+                                //     style: "topHeader",
+                                // },
+                                // {
+                                //     text: "______________________________________",
+                                //     bold: false,
+                                //     style: "topHeader",
+                                // },
+                                // ],
+                                // [{
+                                //     text: "" + self.contrato_obj.contratista_nombre,
+                                //     bold: false,
+                                //     style: "topHeader",
+                                // },
+                                // {
+                                //     text: "" + self.contrato_obj.supervisor_nombre_completo,
+                                //     bold: false,
+                                //     style: "topHeader",
+                                // },
+                                // ],
                                 // [{
                                 //     text: "CC. " + self.contrato_obj.contratista_documento,
                                 //     bold: false,
@@ -1207,21 +1204,21 @@ angular
                                     { text: "Firma", bold: true },
                                 ],
                                 [
-                                    { text: "Proyectó", bold: false },
-                                    "", //+ self.elaboro,
-                                    "",//"Abogado Oficina Asesora Jurídica",
+                                    { text: "Elaboró", bold: true },
+                                    "", // + self.elaboro,
+                                    "", //Abogado Oficina Asesora Jurídica",
                                     "",
                                 ],
                                 [
-                                    { text: "Revisó", bold: false },
-                                    "",//"DIANA MIREYA PARRA CARDONA",
-                                    "",//"Jefe Oficina Asesora Jurídica",
+                                    { text: "Revisó", bold: true },
+                                    "", //"DIANA MIREYA PARRA CARDONA",
+                                    "", //"Jefe Oficina Asesora Jurídica",
                                     "",
                                 ],
                                 [
-                                    { text: "Aprobó", bold: false },
-                                    "",
-                                    { text: "Jefe Oficina Asesora Jurídica", bold: false },
+                                    { text: "Aprobó", bold: true },
+                                    "", //"DIANA MIREYA PARRA CARDONA",
+                                    "Jefe Oficina Asesora Jurídica",
                                     "",
                                 ],
                             ],
