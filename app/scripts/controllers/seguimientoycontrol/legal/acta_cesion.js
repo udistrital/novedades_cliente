@@ -1110,19 +1110,17 @@ angular
                                 self.contrato_obj.objeto +
                                 "”\n\n",
                             },
-                        [
+                        [{text:[
                             {
-                            text: "Que la CLÁUSULA OCTAVA del " +
+                            text: "Que la cláusula ______________ del " +
                                 self.contrato_obj.tipo_contrato +
                                 " No. " +
                                 self.contrato_obj.numero_contrato +
                                 " de " +
                                 self.contrato_obj.vigencia +
-                                ", establece que ",  
-                            },{text:'“El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de ', italics: true,},{
-                            text: 'LA UNIVERSIDAD"', bold: true, italics: true,               
-                            },
-                        ],              
+                                ", establece que "},{text:'“El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de ', italics: true,},{text: 'LA UNIVERSIDAD"\n\n', bold: true, italics: true,               
+                            }]
+                        }],              
                             
                                
                        
@@ -1159,7 +1157,7 @@ angular
                                 self.contrato_obj.ordenadorGasto_nombre +
                                 " en calidad de Ordenador el Gasto del citado contrato, la autorización para ceder el mismo, a partir del día " +
                                 self.format_date_letter_mongo(self.f_cesion) +
-                                ", y aportó un estado financiero expedido por la Sección de Presupuesto, en donde informa lo siguiente:",
+                                ", y aportó un estado financiero expedido por la Sección de Presupuesto, en donde informa lo siguiente:\n\n",
                         },
                         {
                             ul: [
@@ -1173,11 +1171,11 @@ angular
                                         numberFormat(String(self.valor_desembolsado) + "") +
                                         "), y ejecutor del contrato un plazo de " +
                                         self.contrato_obj.plazo +
-                                        " meses.\n"},
+                                        " meses.\n\n"},
                                     ],
-                                    [{
-                                        text: "Existe un valor pendiente por cancelar al señor " +
-                                        self.contrato_obj.contratista_nombre}, {text: " (CEDENTE),", bold: true}, {text: " por valor de " +
+                                    {
+                                        text:[
+                                        {text: "Existe un valor pendiente por cancelar al señor " +self.contrato_obj.contratista_nombre}, {text: "(CEDENTE), ", bold: true}, {text: "por valor de " +
                                         NumeroALetras(self.valor_a_favor + "") +
                                         "($" +
                                         numberFormat(String(self.valor_a_favor) + "") +
@@ -1185,26 +1183,27 @@ angular
                                         self.format_date_letter_mongo(self.contrato_obj.Inicio) +
                                         " al dia " +
                                         self.format_date_letter_mongo(self.f_terminacion) +
-                                        ".\n"},
+                                        ".\n\n"}],
                                         
-                                    ],
-                                    [{
-                                        text: "La suma a ceder al señor (a) " + self.cesionario_obj.nombre},{text: " (CESIONARIO)", bold: true },{
-                                        text: self.cesionario_obj.apellidos +
-                                        " es de " +
-                                        NumeroALetras(self.valor_contrato_cesionario() + "") +
-                                        "($" +
-                                        numberFormat(String(self.valor_contrato_cesionario()) + "") +
-                                        "), por un plazo de " +
-                                        self.contrato_obj.plazo_cesionario +
-                                        " días."},
-                                    ],
+                                    },
+                                    {   text:[                                
+                                        {text: "La suma a ceder al señor (a) " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos }, {text: " (CESIONARIO)", bold: true }, {text: " es de " +
+                                                NumeroALetras(self.valor_contrato_cesionario() + "") +
+                                                "($" +
+                                                numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                                                "), por un plazo de " +
+                                                self.contrato_obj.plazo_cesionario +
+                                                " días.\n\n"}],
+                                        
+                                                
+                                    },
                                 ]
                                                                                        
                         },                        
                        
-                        {
-                            text: "Que por medio del oficio " +
+                        {                            
+                            text:[{
+                                text:[{ text: "Que por medio del oficio " +
                                 self.num_oficio +
                                 " de fecha " +
                                 self.format_date_letter_mongo(self.f_oficio) +
@@ -1219,15 +1218,15 @@ angular
                                 ", a partir día " +
                                 self.format_date_letter_mongo(self.f_cesion) +
                                 ", a favor de " +
-                                self.cesionario_obj.nombre +
-                                {text: " (CESIONARIO)", bold: true} +
-                                self.cesionario_obj.apellidos +
-                                ".\n\n",
+                                self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos},
+                                {text: " (CESIONARIO).\n\n", bold: true}]                                 
+                                
+                            }],
                         },
                         ],
                    
                     {
-                        style: ["general_font"],
+                        
                         text: [
                             [{
                                 text: "Por lo anterior las partes acuerdan las siguientes ",
@@ -1237,28 +1236,15 @@ angular
                                 bold: true,
                             },
                             ],
-                            [{
-                                text: "CLÁUSULA PRIMERA: CESIÓN. ",
-                                bold: true,
-                            },
-                            {
-                                text: "El señor (a) " +
-                                    self.contrato_obj.contratista_nombre + {text: " (CEDENTE)", bold: true} +
-                                    " cede el " +
-                                    self.contrato_obj.tipo_contrato +
-                                    " No." +
-                                    self.contrato_obj.numero_contrato +
-                                    ", suscrito el día " +
-                                    self.format_date_letter_mongo(self.f_oficio) +
-                                    ", a " +
-                                    self.cesionario_obj.nombre +
-                                    " " +
-                                    self.cesionario_obj.apellidos + {text: "(CESIONARIO)", bold: true} +
-                                    ", en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día " +
+                            [{text: "CLÁUSULA PRIMERA: CESIÓN. ", bold: true,},
+                             {text: "El señor (a) " + self.contrato_obj.contratista_nombre}, {text: " (CEDENTE)", bold: true},
+                             {text: " cede el " + self.contrato_obj.tipo_contrato + " No." + self.contrato_obj.numero_contrato + ", suscrito el día " +
+                                    self.format_date_letter_mongo(self.f_oficio) + ", a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos}, 
+                             {text: " (CESIONARIO)", bold: true}, 
+                             {text: ", en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día " +
                                     self.format_date_letter_mongo(self.f_cesion) +
                                     ".\n\n",
-                            },
-                            ],
+                            }],
                             [{
                                 text: "CLAUSULA SEGUNDA: GARANTÍA. EL CESIONARIO ",
                                 bold: true,
@@ -1282,7 +1268,7 @@ angular
                             },
                             ],
                             {
-                                text: "En constancia de lo consignado en el presente documento, se firma, en Bogotá, D.C., a los \n\n________________________________________.\n\n\n\n",
+                                text: "En constancia de lo consignado en el presente documento, se firma, en Bogotá, D.C., a los ________________________________________.\n\n\n\n",
                             },
                         ],
                     },

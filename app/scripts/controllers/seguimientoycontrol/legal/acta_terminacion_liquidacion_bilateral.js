@@ -222,7 +222,7 @@ angular.module('contractualClienteApp')
             } else if (self.a_favor_de == "Contratista") {
                 self.a_favor.entidad = "el Contratista.";
                 self.a_favor.valor = self.terminacion_nov.saldo_contratista;
-                self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(self.terminacion_nov.saldo_contratista + '');
+                self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(String(self.terminacion_nov.saldo_contratista) + '');
             }
         }
 
@@ -246,6 +246,9 @@ angular.module('contractualClienteApp')
 
             if ($scope.formTerminacion.$valid) {
                 novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
+                    console.log("la respuesta es: ",nc_response);
+                    console.log("la respuesta es: ",nc_response[0]);
+                    console.log("estado cuentas:", self.numero_oficio_estado_cuentas);        
                     self.terminacion_nov = {};
                     self.terminacion_nov.contrato = self.contrato_obj.id;
                     self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
@@ -763,7 +766,7 @@ angular.module('contractualClienteApp')
                             ],
                             [
                                 { text: 'VALOR', bold: true, style: 'topHeader' },
-                                { text: NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + ")", style: 'topHeader' }
+                                { text: NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(String(self.contrato_obj.valor) + ""), style: 'topHeader' }
                             ],
                             [
                                 { text: 'FECHA DE INCIO', bold: true, style: 'topHeader' },
@@ -808,15 +811,15 @@ angular.module('contractualClienteApp')
 
                         'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' + self.contrato_obj.plazo + '(contados a partir del perfeccionamiento de la Orden y/o contrato), es decir del '+ self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
                         
-                        'Que el valor de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó en la suma total de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + '),\n\n',
+                        'Que el valor de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó en la suma total de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(String(self.contrato_obj.valor)+ "") + '),\n\n',
 
                         'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) +', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' al como Supervisor del mismo.\n\n',
 
-                        'Que según certificación de fecha ' + self.format_date_letter_mongo(self.contrato_obj.cdp_fecha) + ', expedida por Jefe de Sección de Presupuesto, presenta un saldo a la fecha de  '+ NumeroALetras(self.a_favor.valor )+'($' + numberFormat(self.a_favor.valor )+').\n\n',
+                        'Que según certificación de fecha ' + self.format_date_letter_mongo(self.contrato_obj.cdp_fecha) + ', expedida por Jefe de Sección de Presupuesto, presenta un saldo a la fecha de  '+ NumeroALetras(self.a_favor.valor )+'($' + numberFormat(String(self.a_favor.valor)+'')+').\n\n',
 
-                        'Que mediante oficio No ' + numberFormat(self.terminacion_nov.numerooficioestadocuentas) +  ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' el Supervisor del CPS No.'+self.contrato_id +' de '+self.contrato_vigencia+', le comunico al señor (a) '+self.contrato_obj.ordenadorGasto_nombre+' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del '+ self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
+                        'Que mediante oficio No ' + numberFormat(String(self.terminacion_nov.numerooficioestadocuentas) + '') +  ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' el Supervisor del CPS No.'+self.contrato_id +' de '+self.contrato_vigencia+', le comunico al señor (a) '+self.contrato_obj.ordenadorGasto_nombre+' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del '+ self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
 
-                        'Que por medio del oficio '+ numberFormat(self.terminacion_nov.numerooficioestadocuentas) + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' recibido por la Oficina Asesora Jurídica, el señor (a) '+self.contrato_obj.ordenadorGasto_nombre+', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.contrato_obj.FechaInicio + '.\n\n',
+                        'Que por medio del oficio '+ numberFormat(String(self.terminacion_nov.numerooficioestadocuentas)+ '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' recibido por la Oficina Asesora Jurídica, el señor (a) '+self.contrato_obj.ordenadorGasto_nombre+', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.contrato_obj.FechaInicio + '.\n\n',
 
 
                         // 'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', en calidad de contratista, mediante oficio de fecha del día ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) +
@@ -851,19 +854,19 @@ angular.module('contractualClienteApp')
                         body: [
                             [
                                 { text: 'Valor del contrato', bold: true, style: 'topHeader' },
-                                { text: '$' + numberFormat(self.contrato_obj.valor), style: 'topHeader' }
+                                { text: '$' + numberFormat(String(self.contrato_obj.valor)), style: 'topHeader' }
                             ],
                             [
                                 { text: 'Valor desembolsado', bold: true, style: 'topHeader' },
-                                { text: '$' + numberFormat(self.terminacion_nov.valor_desembolsado + ''), style: 'topHeader' }
+                                { text: '$' + numberFormat(String(self.terminacion_nov.valor_desembolsado) + ''), style: 'topHeader' }
                             ],
                             [
                                 { text: 'Saldo a favor del contratista', bold: true, style: 'topHeader' },
-                                { text: '$' + numberFormat(self.terminacion_nov.saldo_contratista + ''), style: 'topHeader' }
+                                { text: '$' + numberFormat(String(self.terminacion_nov.saldo_contratista) + ''), style: 'topHeader' }
                             ],
                             [
                                 { text: 'Saldo a favor de la Universidad', bold: true, style: 'topHeader' },
-                                { text: '$' + numberFormat(self.terminacion_nov.saldo_universidad + '') + '\n\n', style: 'topHeader' }
+                                { text: '$' + numberFormat(String(self.terminacion_nov.saldo_universidad) + '') + '\n\n', style: 'topHeader' }
                             ],
                         ]
                     },
@@ -909,43 +912,106 @@ angular.module('contractualClienteApp')
                     style: ['general_font'],
                     text: [{
                         text: [
-                            { text: 'Dado en Bogotá, D.C. a los __________________________________\n\n\n\n\n\n\n' }
+                            { text: 'Dado en Bogotá, D.C. a los __________________________________\n\n\n\n\n\n\n\n\n\n\n\n' }
                         ]
                     }]
                 },
+                // {
+                //     style: ['table2'],
+                //     table: {
+                //         widths: [270, 270],
+                //         body: [
+                //             [
+                //                 { text: '______________________________________', bold: false, style: 'topHeader' },
+                //                 { text: '______________________________________', bold: false, style: 'topHeader' }
+                //             ],
+                //             [
+                //                 { text: '' + self.contrato_obj.contratista_nombre, bold: false, style: 'topHeader' },
+                //                 { text: '' + self.contrato_obj.ordenadorGasto_nombre, bold: false, style: 'topHeader' }
+
+                //             ],
+                //             [
+                //                 { text: 'CC. ' + self.contrato_obj.contratista_documento, bold: false, style: 'topHeader' },
+                //                 { text: 'CC. ' + self.contrato_obj.ordenador_gasto_documento, bold: false, style: 'topHeader' }
+                //             ],
+                //             [
+                //                 { text: 'Contratista', bold: true, style: 'topHeader' },
+                //                 { text: self.contrato_obj.ordenadorGasto_rol, bold: false, style: 'topHeader' }
+                //             ],
+                //             [
+                //                 { text: '', bold: false, style: 'topHeader' },
+                //                 { text: 'Ordenador del Gasto', bold: false, style: 'topHeader' }
+                //             ],
+                //             [
+                //                 { text: '', bold: true, style: 'topHeader' },
+                //                 { text: 'Universidad', bold: true, style: 'topHeader' }
+                //             ],
+                //         ]
+                //     },
+                //     layout: 'noBorders',
+                // },
                 {
-                    style: ['table2'],
+                    style: ["table2"],
                     table: {
                         widths: [270, 270],
                         body: [
-                            [
-                                { text: '______________________________________', bold: false, style: 'topHeader' },
-                                { text: '______________________________________', bold: false, style: 'topHeader' }
+                            [{
+                                text: "______________________________________",
+                                bold: false,
+                                style: "topHeader",
+                            },
+                            {
+                                text: "______________________________________",
+                                bold: false,
+                                style: "topHeader",
+                            },
                             ],
-                            [
-                                { text: '' + self.contrato_obj.contratista_nombre, bold: false, style: 'topHeader' },
-                                { text: '' + self.contrato_obj.ordenadorGasto_nombre, bold: false, style: 'topHeader' }
-
+                            [{
+                                text: self.contrato_obj.ordenadorGasto_nombre,
+                                bold: false,
+                                style: "topHeader",
+                            },
+                            {
+                                text: self.contrato_obj.supervisor_nombre_completo, 
+                                bold: false,
+                                style: "topHeader",
+                            },
                             ],
-                            [
-                                { text: 'CC. ' + self.contrato_obj.contratista_documento, bold: false, style: 'topHeader' },
-                                { text: 'CC. ' + self.contrato_obj.ordenador_gasto_documento, bold: false, style: 'topHeader' }
+                            
+                            [{
+                                text: "Ordenador de Gasto",
+                                bold: false,
+                                style: "topHeader",
+                            },
+                            { text: "Supervisor", bold: false, style: "topHeader" },
+                            
+                            ],                                                      
+                                               
+                                                           
+                                                    
+                                                         
+                            [{
+                                text: "\n\n\n______________________________________",
+                                bold: false,
+                                style: "topHeader",
+                            },
+                            { text: "", bold: false, style: "topHeader" },
                             ],
+                            [{
+                                text: self.contrato_obj.contratista_nombre,
+                                bold: false,
+                                style: "topHeader",
+                            },
+                            { text: "", bold: false, style: "topHeader" },
+                            ],                                
                             [
-                                { text: 'Contratista', bold: true, style: 'topHeader' },
-                                { text: self.contrato_obj.ordenadorGasto_rol, bold: false, style: 'topHeader' }
+                                { text: "Contratista\n\n", bold: false, style: "topHeader" },
+                                { text: "", style: "topHeader" },
                             ],
-                            [
-                                { text: '', bold: false, style: 'topHeader' },
-                                { text: 'Ordenador del Gasto', bold: false, style: 'topHeader' }
-                            ],
-                            [
-                                { text: '', bold: true, style: 'topHeader' },
-                                { text: 'Universidad', bold: true, style: 'topHeader' }
-                            ],
-                        ]
+                            
+                        ],
                     },
-                    layout: 'noBorders',
+                    layout: "noBorders",
                 },
                 {
 
