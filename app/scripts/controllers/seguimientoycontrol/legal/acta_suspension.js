@@ -35,6 +35,7 @@ angular
             self.diff_dias = null;
             self.estado_suspendido = "{}";
             self.n_solicitud = null;
+            self.numero_oficio_estado_cuentas = null;
 
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
@@ -45,6 +46,12 @@ angular
 
             const solic_input = document.getElementById("n_solicitud");
             solic_input.addEventListener("input", function(){
+                if (this.value.length > 7) {
+                    this.value = this.value.slice(0,7);
+                }
+            });
+            const oficio_input = document.getElementById("numero_oficio_estado_cuentas");
+            oficio_input.addEventListener("input", function(){
                 if (this.value.length > 7) {
                     this.value = this.value.slice(0,7);
                 }
@@ -311,6 +318,8 @@ angular
                     novedadesRequest
                         .get("tipo_novedad", "query=Nombre:Suspensión")
                         .then(function (nc_response) {
+                            console.log("la respuesta es: ",nc_response);
+                            
                             self.suspension_nov = {};
                             self.suspension_nov.tiponovedad =
                                 nc_response.data[0].CodigoAbreviacion;
@@ -324,6 +333,7 @@ angular
                             self.suspension_nov.fechasuspension = self.f_inicio;
                             self.suspension_nov.fechareinicio = self.f_reinicio;
                             self.suspension_nov.fechafinsuspension = self.f_fin;
+                            self.suspension_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
                             self.suspension_nov.cesionario = parseInt(
                                 self.contrato_obj.contratista
                             );
@@ -335,6 +345,15 @@ angular
                             self.contrato_estado.Estado = self.estado_suspendido;
                             self.contrato_estado.Usuario = "usuario_prueba";
                         });
+                        // amazonAdministrativaRequest
+                        //                 .get(
+                        //                     "informacion_proveedor?query=NumDocumento:" +
+                        //                     self.contrato_obj.contratista_documento
+                        //                 )
+                        //                 .then(function (response) {
+                        //                     self.cesion_nov.numerooficioestadocuentas =
+                        //                         self.num_oficio;
+                        //                 },
                     //primero obtenemos el estado actual - en esta caso es 'En ejecucion'
                     //Se guarda en la posicion [0] del arreglo estados el estado actual
                     //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a suspension - devuelve si es true o false
@@ -932,7 +951,7 @@ angular
                                     {
                                         text: NumeroALetras(self.contrato_obj.valor) +
                                             "($" +
-                                            numberFormat(self.contrato_obj.valor) +
+                                            numberFormat(String(self.contrato_obj.valor)+"") +
                                             ")",
                                         style: "topHeader",
                                     },
@@ -1037,32 +1056,42 @@ angular
                         ],
                     },
                     {
-                        style: ['general_list'],
+                        style: ['general_font'],
                     ol: [
-                        'Que entre la Universidad Distrital Francisco José de Caldas y el señor (a) '+self.contrato_obj.contratista_nombre+' se suscribió el CPS No.' +self.contrato_id +' de '+self.contrato_vigencia +' cuyo objeto es“'+self.contrato_obj.objeto+'.”',
+                        'Que entre la Universidad Distrital Francisco José de Caldas y el señor (a) '+self.contrato_obj.contratista_nombre+' se suscribió el CPS No.' +self.contrato_id +' de '+self.contrato_vigencia +' cuyo objeto es “'+self.contrato_obj.objeto+'.”',
 
-                        'Que la cláusula del CPS No.'+self.contrato_id +' de '+self.contrato_vigencia+', establece que ',{text: '“Las partes contratantes podrán suspender la ejecución del contrato, mediante la suscripción de un acta en donde conste tal evento, cuando medie alguna de las siguientes causales: 1) Por circunstancias de fuerza mayor o caso fortuito, debidamente comprobadas, que imposibiliten su ejecución. 2) Por solicitud, debidamente sustentada, elevada por una de las partes. El término de suspensión no será computable para efecto del plazo de ejecución del contrato,ni dará derecho a exigir indemnización, sobrecostos o reajustes, ni a reclamar gastos diferentes a los pactados en el contrato.”.\n\n',italic:true,},
+                        {
+                            style:['general_font'],
+                            text: [
+                                {text: 'Que la cláusula del CPS No.'+self.contrato_id +' de '+self.contrato_vigencia+', establece que ' }, 
+                                {text: '“Las partes contratantes podrán suspender la ejecución del contrato, mediante la suscripción de un acta en donde conste tal evento, cuando medie alguna de las siguientes causales: 1) Por circunstancias de fuerza mayor o caso fortuito, debidamente comprobadas, que imposibiliten su ejecución. 2) Por solicitud, debidamente sustentada, elevada por una de las partes. El término de suspensión no será computable para efecto del plazo de ejecución del contrato,ni dará derecho a exigir indemnización, sobrecostos o reajustes, ni a reclamar gastos diferentes a los pactados en el contrato.”.\n\n',italics:true,}
+                            ]
+                        },
 
-                        'Que mediante escrito de fecha '+self.suspension_nov.fechasolicitud+' , el Contratista '+self.contrato_obj.contratista_nombre+', solicita a quien cumple la función supervisor, la autorización para realizar la Suspensión del Contrato de Prestación de Servicios durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +'y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',
+                        'Que mediante escrito de fecha '+self.format_date_letter_mongo(self.suspension_nov.fechasolicitud) +' , el Contratista '+self.contrato_obj.contratista_nombre+', solicita a quien cumple la función supervisor, la autorización para realizar la Suspensión del Contrato de Prestación de Servicios durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +' y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',
 
-                        'Que mediante oficio No ' + numberFormat(self.suspension_nov.numerooficioestadocuentas) +  ' de fecha ' +self.format_date_letter_mongo(self.suspension_nov.fechasolicitud)+' el Supervisor del CPS No.'+self.contrato_id +' de '+self.contrato_vigencia+', comunico al señor (a) '+self.contrato_obj.ordenadorGasto_nombre+' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +'y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',
+                        'Que mediante oficio No ' +self.suspension_nov.numerooficioestadocuentas+  ' de fecha ' +self.format_date_letter_mongo(self.suspension_nov.fechasolicitud)+' el Supervisor del CPS No.'+self.contrato_id +' de '+self.contrato_vigencia+', comunico al señor (a) '+self.contrato_obj.ordenadorGasto_nombre+' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +' y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',
 
-                        'Que por medio del oficio '+ numberFormat(self.suspension_nov.numerooficioestadocuentas) + ' de fecha ' +self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud)+' recibido por la Oficina Asesora Jurídica, el señor (a) '+self.contrato_obj.ordenadorGasto_nombre+', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del Contrato de Prestación de Servicios  No.'+self.contrato_id +' de '+self.contrato_vigencia+' durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +'y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',
+                        'Que por medio del oficio '+self.suspension_nov.numerooficioestadocuentas+ ' de fecha ' +self.format_date_letter_mongo(self.suspension_nov.fechasolicitud)+' recibido por la Oficina Asesora Jurídica, el señor (a) '+self.contrato_obj.ordenadorGasto_nombre+', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del Contrato de Prestación de Servicios  No.'+self.contrato_id +' de '+self.contrato_vigencia+' durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +' y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',
                     ]
                     },
                     {   
-                        text:"Por lo anterior las partes acuerdan las siguientes "+
-                        {
-                            text:"CLÁUSULAS:", bold:true,
-                        }
-
+                        style: ['general_font'],
+                        text: [{
+                            text: [
+                                { text: "Por lo anterior las partes acuerdan las siguientes ", bold: false},
+                                { text: "CLÁUSULAS:", bold: true }
+                            ]
+    
+    
+                        }]                        
                     },
                     {
                         style: ['general_font'],
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA PRIMERA: SUSPENDER ', bold: true },
-                                { text: 'el contrato de prestación de servicios No. ' + self.contrato_id + ', durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +'y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',}
+                                { text: 'el contrato de prestación de servicios No. ' + self.contrato_id + ', durante el período comprendido entre el día '+  self.format_date_letter_mongo(self.suspension_nov.fechasuspension) +' y ' +self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) +'.\n\n',}
                             ]
     
     
@@ -1073,7 +1102,7 @@ angular
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA SEGUNDA: PUBLICACIÓN ', bold: true },
-                                { text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de suspensión en elSECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente.\n\n' }
+                                { text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de suspensión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente.\n\n\n' }
                             ]
     
     
@@ -1096,9 +1125,19 @@ angular
                                     bold: false,
                                     style: "topHeader",
                                 },
+                                {
+                                    text: "______________________________________",
+                                    bold: false,
+                                    style: "topHeader",
+                                },
                                 ],
                                 [{
                                     text: self.contrato_obj.ordenadorGasto_nombre,
+                                    bold: false,
+                                    style: "topHeader",
+                                },
+                                {
+                                    text: self.contrato_obj.supervisor_nombre_completo, 
                                     bold: false,
                                     style: "topHeader",
                                 },
@@ -1109,31 +1148,15 @@ angular
                                     bold: false,
                                     style: "topHeader",
                                 },
+                                { text: "Supervisor", bold: false, style: "topHeader" },
                                 
-                                ],
-                                [
-                                    {
-                                        text: "\n\n______________________________________",
-                                        bold: false,
-                                        style: "topHeader",
-                                    },
-                                ],
-                                [
-                                    {
-                                        text: self.contrato_obj.supervisor_nombre_completo, 
-                                        bold: false,
-                                        style: "topHeader",
-                                    },
-                                ],                       
-                                [
-                                    { text: "Supervisor", bold: false, style: "topHeader" },
-                                ],                            
-                                                       
-                                                                
-                                                          
+                                ],                                                      
+                                                   
+                                                               
+                                                        
                                                              
                                 [{
-                                    text: "\n\n______________________________________",
+                                    text: "\n\n\n______________________________________",
                                     bold: false,
                                     style: "topHeader",
                                 },
