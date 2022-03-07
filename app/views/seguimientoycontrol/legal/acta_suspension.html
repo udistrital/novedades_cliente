@@ -78,6 +78,19 @@
                                 </md-input-container>
                             </div>
                             <div class="form-group col-md-6">
+                                <label style="width:100%;">
+                {{'NUMERO_OFICIO_ESTADO_CUENTAS' | translate}} *:
+              </label>
+                                <md-input-container style="margin:0;">
+                                    <input type="number" name="numero_oficio_estado_cuentas" ng-model="sLactaSuspension.numero_oficio_estado_cuentas" 
+                                    id="numero_oficio_estado_cuentas" min="0" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
+                                    <div ng-messages="formTerminacion.numero_oficio_estado_cuentas.$error">
+                                        <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                        </div>
+                            <div class="form-group col-md-6">
                                 <p>
                                     <b>{{'PERIODO_SUSPENSION' | translate}} *:</b>
                                 </p>

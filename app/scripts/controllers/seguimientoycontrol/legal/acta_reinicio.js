@@ -673,7 +673,7 @@ angular
                             adminMidRequest
                                 .post("validarCambioEstado", self.estados)
                                 .then(function (vc_response) {
-                                    self.validacion = vc_response.data.Body;
+                                    self.validacion = vc_response.data;
                                     if (self.validacion == "true") {
                                         novedadesMidRequest
                                             .post("novedad", self.reinicio_nov)
