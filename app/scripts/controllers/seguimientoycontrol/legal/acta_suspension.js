@@ -381,10 +381,12 @@ angular
                                         };
                                         self.estados[0] = estado_temp_from;
                                         console.log(self.estados);
-                                        adminMidRequest
+                                        novedadesMidRequest
                                             .post("validarCambioEstado", self.estados)
                                             .then(function (vc_response) {
-                                                self.validacion = vc_response.data;
+                                                console.log("cambio response",vc_response);
+                                                self.validacion = vc_response.data.Body;
+                                                console.log("cambio validación",self.validacion);
                                                 if (self.validacion == "true") {
                                                     //self.formato_generacion_pdf();
                                                     novedadesMidRequest
