@@ -279,7 +279,7 @@ angular.module('contractualClienteApp')
                                 "NombreEstado": "ejecucion"
                             }
                             self.estados[0] = estado_temp_from;
-                            adminMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
+                            novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                                 if (vc_response.data == "true") {
                                     novedadesMidRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
                                         if (response_nosql.status == 200 || response.statusText == "Ok") {
