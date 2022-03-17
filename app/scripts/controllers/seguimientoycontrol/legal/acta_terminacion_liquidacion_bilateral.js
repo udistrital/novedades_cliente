@@ -19,7 +19,8 @@ angular.module('contractualClienteApp')
         agoraRequest, 
         coreAmazonRequest, 
         novedadesMidRequest, 
-        novedadesRequest, 
+        novedadesRequest,
+        cumplidosMidRequest, 
         pdfMakerService
         ) 
         {
@@ -165,13 +166,17 @@ angular.module('contractualClienteApp')
                                 });
                             });
                             //consulta el CDP y RP
-                            adminMidRequest.get('aprobacion_pago/contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
-                                agoraRequest.get('contrato_disponibilidad?query=NumeroCdp:' + response.data[0].NumeroCdp + '&VigenciaCdp:' + response.data[0].VigenciaCdp).then(function (response) {
+                            cumplidosMidRequest.get('contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
+                                // console.log("respuesta", response);
+                                // console.log("data", response.data.Data[0]);
+                                agoraRequest.get('contrato_disponibilidad?query=NumeroCdp:' + response.data.Data[0].NumeroCdp + '&VigenciaCdp:' + response.data.Data[0].VigenciaCdp).then(function (response) {
+                                    //console.log("respuesta", response);
                                     self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
                                     self.contrato_obj.cdp_fecha = response.data[0].FechaRegistro;
                                 });
-                                self.contrato_obj.rp_numero = response.data[0].NumeroRp;
-                                self.contrato_obj.rp_fecha = response.data[0].VigenciaRp;
+                                self.contrato_obj.rp_numero = response.data.Data[0].NumeroRp;
+                                self.contrato_obj.rp_fecha = response.data.Data[0].VigenciaRp;
+                                //console.log("RP", response.data.Data[0].NumeroRp);
                             }).catch(function (error) {
                                 swal(
                                     $translate.instant('INFORMACION'),
@@ -193,13 +198,13 @@ angular.module('contractualClienteApp')
                                 });
                             });
                             //consulta el CDP y RP
-                            adminMidRequest.get('aprobacion_pago/contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
-                                agoraRequest.get('contrato_disponibilidad?query=NumeroCdp:' + response.data[0].NumeroCdp + '&VigenciaCdp:' + response.data[0].VigenciaCdp).then(function (response) {
+                            cumplidosMidRequest.get('contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {                                    
+                                    agoraRequest.get('contrato_disponibilidad?query=NumeroCdp:' + response.data.Data[0].NumeroCdp + '&VigenciaCdp:' + response.data.Data[0].VigenciaCdp).then(function (response) {
                                     self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
                                     self.contrato_obj.cdp_fecha = response.data[0].FechaRegistro;
                                 });
-                                self.contrato_obj.rp_numero = response.data[0].NumeroRp;
-                                self.contrato_obj.rp_fecha = response.data[0].VigenciaRp;
+                                self.contrato_obj.rp_numero = response.data.Data[0].NumeroRp;
+                                self.contrato_obj.rp_fecha = response.data.Data[0].VigenciaRp;                                
                             }).catch(function (error) {
                                 swal(
                                     $translate.instant('INFORMACION'),
@@ -280,7 +285,7 @@ angular.module('contractualClienteApp')
                             }
                             self.estados[0] = estado_temp_from;
                             novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
-                                if (vc_response.data == "true") {
+                                if (vc_response.data.Body == "true") {
                                     novedadesMidRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
                                         if (response_nosql.status == 200 || response.statusText == "Ok") {
                                             agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
@@ -805,11 +810,21 @@ angular.module('contractualClienteApp')
                         'Que entre la Universidad Distrital Francisco José de Caldas y el señor ' + self.contrato_obj.contratista_nombre + ', se suscribió el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', cuyo objeto es: "' + self.contrato_obj.objeto + '".\n\n',
 
                         //'Que el valor del  ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó por la suma de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + "), y un plazo de " + self.contrato_obj.plazo + ' meses, contados partir del acta de inicio, lo cual tuvo lugar el día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
-                        'Que la cláusula ______________ del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', establece que ' + {text: '"Terminación. ', bold: true} + {text: 'Serán causales de terminación del contrato el común acuerdo de las partes al respecto, la ocurrencia de cualquier circunstancia de fuerza mayor o caso fortuito que impida la ejecución del contrato, así como el cumplimiento del plazo pactado para su ejecución. Adicionalmente, dará lugar a la terminación anticipada del contrato el incumplimiento de sus obligaciones, por parte de EL CONTRATISTA, debidamente comprobado, que impida continuar con su ejecución”.', italics: true } + '\n\n',
+                        {
+                            style:['general_font'],
+                            text:[{
+                                text:[
+                                    {text:'Que la cláusula ______________ del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', establece que '},
+                                    {text: '"Terminación. ', bold: true},
+                                    {text: 'Serán causales de terminación del contrato el común acuerdo de las partes al respecto, la ocurrencia de cualquier circunstancia de fuerza mayor o caso fortuito que impida la ejecución del contrato, así como el cumplimiento del plazo pactado para su ejecución. Adicionalmente, dará lugar a la terminación anticipada del contrato el incumplimiento de sus obligaciones, por parte de EL CONTRATISTA, debidamente comprobado, que impida continuar con su ejecución”.\n\n', italics: true },
+
+                                ]
+                            }]
+                        },
 
                         'Que el contrato se perfeccionó y ejecutó mediante Registro Presupuestal No. ' + self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n',
 
-                        'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' + self.contrato_obj.plazo + '(contados a partir del perfeccionamiento de la Orden y/o contrato), es decir del '+ self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
+                        'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' + self.contrato_obj.plazo + ' (contados a partir del perfeccionamiento de la Orden y/o contrato), es decir del '+ self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
                         
                         'Que el valor de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó en la suma total de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(String(self.contrato_obj.valor)+ "") + '),\n\n',
 
@@ -819,7 +834,7 @@ angular.module('contractualClienteApp')
 
                         'Que mediante oficio No ' + numberFormat(String(self.terminacion_nov.numerooficioestadocuentas) + '') +  ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' el Supervisor del CPS No.'+self.contrato_id +' de '+self.contrato_vigencia+', le comunico al señor (a) '+self.contrato_obj.ordenadorGasto_nombre+' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del '+ self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
 
-                        'Que por medio del oficio '+ numberFormat(String(self.terminacion_nov.numerooficioestadocuentas)+ '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' recibido por la Oficina Asesora Jurídica, el señor (a) '+self.contrato_obj.ordenadorGasto_nombre+', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.contrato_obj.FechaInicio + '.\n\n',
+                        'Que por medio del oficio '+ numberFormat(String(self.terminacion_nov.numerooficioestadocuentas)+ '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' recibido por la Oficina Asesora Jurídica, el señor (a) '+self.contrato_obj.ordenadorGasto_nombre+', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
 
 
                         // 'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', en calidad de contratista, mediante oficio de fecha del día ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) +
@@ -831,8 +846,15 @@ angular.module('contractualClienteApp')
 
                     ]
                 },
-                {
-                    text: 'Por lo anterior las partes acuerdan las siguientes '+{text:'CLÁUSULAS', bold:true}+': \n\n',
+                {   
+                    style: ['general_font'],
+                    text:[{
+                        text:[
+                            {text: 'Por lo anterior las partes acuerdan las siguientes '},
+                            {text:'CLÁUSULAS:\n\n', bold:true},
+                        ]
+                    }]
+                    
                 },
                 {
                     style: ['general_font'],
@@ -866,7 +888,7 @@ angular.module('contractualClienteApp')
                             ],
                             [
                                 { text: 'Saldo a favor de la Universidad', bold: true, style: 'topHeader' },
-                                { text: '$' + numberFormat(String(self.terminacion_nov.saldo_universidad) + '') + '\n\n', style: 'topHeader' }
+                                { text: '$' + numberFormat(String(self.terminacion_nov.saldo_universidad) + '') + '\n\n\n', style: 'topHeader' }
                             ],
                         ]
                     },
@@ -877,7 +899,7 @@ angular.module('contractualClienteApp')
                     text: [{
                         text: [
                             { text: ' CLÁUSULA SEGUNDA : ', bold: true },
-                            { text: ' Teniendo en cuenta que el Contratista ' + self.contrato_obj.contratista_nombre + ', ejecutó los servicios hasta el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', del año en curso y ' + self.a_favor.existe + '.\n\n' }
+                            { text: ' Teniendo en cuenta que el Contratista ' + self.contrato_obj.contratista_nombre + ', ejecutó los servicios hasta el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', del año en curso y ' + self.a_favor.existe + '.\n\n\n' }
                         ]
                     }]
                 },

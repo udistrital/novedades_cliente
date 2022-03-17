@@ -67,6 +67,7 @@ angular
         "implicitToken",
         "novedadesService",
         "novedadesMidService",
+        "cumplidosMidService",
         "documentosCrudService",
         "core",
         "autenticacionMidService",

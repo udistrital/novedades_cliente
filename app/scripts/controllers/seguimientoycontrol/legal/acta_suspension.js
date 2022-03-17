@@ -1082,7 +1082,7 @@ angular
                         text: [{
                             text: [
                                 { text: "Por lo anterior las partes acuerdan las siguientes ", bold: false},
-                                { text: "CLÁUSULAS:", bold: true }
+                                { text: "CLÁUSULAS:\n\n", bold: true }
                             ]
     
     

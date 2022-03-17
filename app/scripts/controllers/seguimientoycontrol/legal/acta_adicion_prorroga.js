@@ -21,6 +21,7 @@ angular
             $translate,
             novedadesRequest,
             novedadesMidRequest,
+            cumplidosMidRequest,
             pdfMakerService
         ) {
             this.awesomeThings = ["HTML5 Boilerplate", "AngularJS", "Karma"];
@@ -252,16 +253,16 @@ angular
                                                         });
                                                 });
                                             //Consulta el CDP
-                                            adminMidRequest
+                                            cumplidosMidRequest
                                                 .get(
-                                                    "aprobacion_pago/contratos_contratista/" +
+                                                    "contratos_contratista/" +
                                                     self.contrato_obj.contratista_documento
                                                 )
                                                 .then(function (response) {
                                                     self.contrato_obj.cdp_numero =
-                                                        response.data[0].NumeroCdp;
+                                                        response.data.Data[0].NumeroCdp;
                                                     self.contrato_obj.cdp_anno =
-                                                        response.data[0].VigenciaCdp;
+                                                        response.data.Data[0].VigenciaCdp;
                                                 })
                                                 .catch(function (error) {
                                                     swal(
@@ -306,16 +307,16 @@ angular
                                                         });
                                                 });
                                             //Consulta el CDP
-                                            adminMidRequest
+                                            cumplidosMidRequest
                                                 .get(
-                                                    "aprobacion_pago/contratos_contratista/" +
+                                                    "contratos_contratista/" +
                                                     self.contrato_obj.contratista_documento
                                                 )
                                                 .then(function (response) {
                                                     self.contrato_obj.cdp_numero =
-                                                        response.data[0].NumeroCdp;
+                                                        response.data.Data[0].NumeroCdp;
                                                     self.contrato_obj.cdp_anno =
-                                                        response.data[0].VigenciaCdp;
+                                                        response.data.Data[0].VigenciaCdp;
                                                 })
                                                 .catch(function (error) {
                                                     swal(
