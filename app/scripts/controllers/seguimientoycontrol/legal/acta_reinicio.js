@@ -670,7 +670,7 @@ angular
                             }
 
                             self.estados[0] = estado_temp_from;
-                            adminMidRequest
+                            novedadesMidRequest
                                 .post("validarCambioEstado", self.estados)
                                 .then(function (vc_response) {
                                     self.validacion = vc_response.data;
