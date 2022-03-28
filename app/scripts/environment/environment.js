@@ -14,8 +14,6 @@ angular.module("contractualClienteApp").constant("CONF", {
     APP: "argo", // Nombre de la app, esto cargará el logo.
     APP_MENU: "Novedades", // Ingrese valor de la aplicación asociado al menú registrado en wso2
     GENERAL: {
-        NOTIFICACION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/notificacion_mid/v1/",
-        ARM_AWS_NOTIFICACIONES:"arn:aws:sns:us-east-1:699001025740:test-Polux",
         //ADMINISTRATIVA_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_mid_api/v1/",
         ADMINISTRATIVA_MID_SERVICE:"http://pruebasapi.intranetoas.udistrital.edu.co:8091/v1/",
         ADMINISTRATIVA_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_crud_api/v1/",
@@ -40,6 +38,8 @@ angular.module("contractualClienteApp").constant("CONF", {
         DOCUMENTOS_CRUD: "https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2/",
         //DOCUMENTOS_CRUD: "http://pruebasapi.intranetoas.udistrital.edu.co:8094/v1/",
         NOTIFICACION_WS: "wss://pruebasapi.portaloas.udistrital.edu.co:8116/ws/join",
+        NOTIFICACION_MID_SERVICE: "http://pruebasapi.intranetoas.udistrital.edu.co:8527/v1/",
+        ARM_AWS_NOTIFICACIONES:"arn:aws:sns:us-east-1:699001025740:test-Novedades",
         AUTENTICATION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/autenticacion_mid/v1/",
         TOKEN: {
             AUTORIZATION_URL: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
