@@ -37,6 +37,7 @@ angular.module("contractualClienteApp").constant("CONF", {
         //NOVEDADES_SERVICE: "http://localhost:8014/v1/",
         NOVEDADES_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_mid/v1/",
         //NOVEDADES_MID_SERVICE: "http://127.0.0.1:8502/v1/",
+        //NOVEDADES_MID_SERVICE: "http://pruebasapi.intranetoas.udistrital.edu.co:8502/v1/",
         //CUMPLIDOS_MID_SERVICE: "http://pruebasapi2.intranetoas.udistrital.edu.co:8513/v1/",
         CUMPLIDOS_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/cumplidos_mid/v1/",
         DOCUMENTOS_CRUD: "https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2/",
