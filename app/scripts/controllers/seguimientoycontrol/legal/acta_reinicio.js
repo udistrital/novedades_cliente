@@ -670,12 +670,14 @@ angular
                             }
 
                             self.estados[0] = estado_temp_from;
-                            novedadesMidRequest
+                            adminMidRequest
                                 .post("validarCambioEstado", self.estados)
                                 .then(function (vc_response) {
+
                                     self.validacion = vc_response.data;
                                     console.log(self.validacion.Body)
                                     if (self.validacion.Body == "true") {
+
                                         novedadesMidRequest
                                             .post("novedad", self.reinicio_nov)
                                             .then(function (response_nosql) {
@@ -818,7 +820,7 @@ angular
                                             alignment: "center",
                                             fontSize: 9,
                                         },
-                                        { text: "Versión: 04", margin: [0, 2], fontSize: 9 },
+                                        { text: "Versión: 02", margin: [0, 2], fontSize: 9 },
                                         " ",
                                     ],
                                     [
@@ -828,7 +830,7 @@ angular
                                             alignment: "center",
                                             fontSize: 9,
                                         },
-                                        { text: "Fecha de Aprobación: 30/07/2019", fontSize: 9 },
+                                        { text: "Fecha de Aprobación: 12/10/2017", fontSize: 9 },
                                         " ",
                                     ],
                                 ],
@@ -896,16 +898,6 @@ angular
                                         style: "topHeader",
                                     },
                                 ],
-                                [{
-                                    text: "PLAZO",
-                                    bold: true,
-                                    style: "topHeader",
-                                },
-                                {
-                                    text: self.reinicio_nov.periodosuspension,
-                                    style: "topHeader",
-                                },
-                                ],
                                 [
                                     { text: "FECHA DE INICIO", bold: true, style: "topHeader" },
                                     {
@@ -915,9 +907,18 @@ angular
                                         style: "topHeader",
                                     },
                                 ],
-                                
                                 [{
-                                    text: "FECHA DE SUSPENSIÓN",
+                                    text: "DÍAS DE SUSPENSIÓN",
+                                    bold: true,
+                                    style: "topHeader",
+                                },
+                                {
+                                    text: self.reinicio_nov.periodosuspension,
+                                    style: "topHeader",
+                                },
+                                ],
+                                [{
+                                    text: "PERIODO SUSPENSIÓN",
                                     bold: true,
                                     style: "topHeader",
                                 },
@@ -955,108 +956,45 @@ angular
                             "\n\n",
                             "Entre los suscritos, a saber " +
                             self.contrato_obj.supervisor_nombre_completo +
-                            " identificado con " +
+                            " identificado con  " +
                             self.contrato_obj.supervisor_tipo_documento +
-                            " " +
+                            " No. " +
                             self.contrato_obj.supervisor_cedula +
                             " de " +
                             self.contrato_obj.supervisor_ciudad_documento +
-                            " en su calidad de interventor y/o supervisor y " +
+                            " en su calidad de supervisor y " +
                             self.contrato_obj.contratista_nombre +
                             " identificado con " +
                             self.contrato_obj.contratista_tipo_documento +
-                            " " +
+                            " No. " +
                             self.contrato_obj.contratista_documento +
                             " de " +
                             self.contrato_obj.contratista_ciudad_documento +
                             " en su calidad de contratista, se ha determinado REINICIAR el contrato de " +
                             self.contrato_obj.tipo_contrato +
-                            " No." +
+                            " No. " +
                             self.contrato_id +
-                            ", " +
-                            "previas las siguientes consideraciones: \n\n" +
-                            "1. Que entre la Universidad Distrital Francisco José de Caldas y el señor " +
-                            self.contrato_obj.contratista_nombre +
-                            "se  suscribió el CPS No." + 
-                            self.contrato_id +
-                            " de " + self.contrato_vigencia + ", " +
-                            "cuyo objeto es " + self.contrato_obj.objeto + ".\n" +
-                            "2. Que mediante acta de fecha " + self.f_suspension +
-                            " se suspendió el Contrato No." + self.contrato_id +
-
-                            ", durante el periodo comprendido entre el día " +
+                            " de " +
+                            self.contrato_vigencia +
+                            ", suspendido durante el periodo comprendido entre el día " +
                             self.format_date_letter_mongo(
                                 self.reinicio_nov.fechasuspension
                             ) +
-                            " y el día " +
+                            " y " +
                             self.format_date_letter_mongo(self.f_finsuspension),
-                            ".\n\n" +
-                            "3. Que de conformidad con el parágrafo de la cláusula _________ del CPS No." +
-                            self.contrato_id + 
-                            ", \n\n" +
-                            "3. Que de conformidad con el parágrafo de la cláusula ____ del CPS No." + self.contrato_id +
-                            "la cual establece que: ",
-                            {
-                                text: "" + {
-                                            text: "“PARÁGRAFO.",
-                                            bold: true, 
-                                        } + " En caso de operar la suspensión del contrato, " + 
-                                        {
-                                            text: "EL CONTRATISTA ",
-                                            bold: true,
-                                        } +
-                                        "se compromete a presentar certificado de modificación de la garantía única, ampliando su vigencia por el término que dure la suspensión”, ",
-                                italic: true,   
-                                underline: true,     
-                            },
-                            "se hace necesario que el contratista amplíe las garantías requeridas con la suscripción del contrato por el término de duración de la suspensión. \n\n" +
-                            "Por lo anterior las partes acuerdan las siguientes ",
-                            {
-                                text: "CLÁUSULAS",
-                                bold: true,
-                            },
-                            ":\n\n",
-                            {
-                                text: "CLÁUSULA PRIMERA: REINICIAR.",
-                                bold: true,
-                            },
-                            " El contrato No." + self.contrato_id + "suscrito con el señor " + self.contrato_obj.contratista_nombre +
-                            ", a partir del día " + self.reinicio_nov.fechareinicio + ".\n\n",
-                            {
-                                text: "CLAUSULA SEGUNDA: GARANTÍA.  EL CONTRATISTA",
-                                bold: true,
-                            },
-                            " se compromete a modificar la Póliza de Cumplimiento expedida en virtud del Contrato de Prestación de Servicios No. " +
-                            self.contrato_id + " de " + self.contrato_vigencia + 
-                            " de conformidad con la suscripción del presente documento.",
-                            {
-                                text: "CLAUSULA TERCERA: PUBLICACIÓN.",
-                                bold: true,
-                            },
-
-                            "- En virtud de lo dispuesto en el Estatuto de Contratación" +
-                            " - Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se  procederá a la publicación del presente documento de reinicio en el SECOP II que administra la Agencia Nacional de Contratación Pública"
-                            + " - Colombia Compra Eficiente.\n\n\n",
-                            {
-                                style: ["general_font"],
-                                text: [
-                                    // "MOTIVO DE LA SUSPENSIÓN: " +
-                                    // self.reinicio_nov.motivo +
-                                    // ".\n\n" +
-                                    "Para constancia, firman las partes a los _____ dias del mes de ______________ del año ________.",
-                                    "\n\n\n",
-                                ],
-                            },
-                            //"Para constancia, firman las partes a los _____ días del mes __________ de	del año _____________.\n\n",
-                            // {
-                            //     text: "Firma: _________________\n" + "Nombre: _________________\n" + "Interventor y/o Supervisor\n\n\n" + 
-                            //           "Firma: _________________\n" + "Nombre: _________________\n" + "Contratista\n\n\n"
-                            // }
-
-            
+                            ".\n\n",
                         ],
                     },
-                    
+                    {
+                        style: ["general_font"],
+                        text: [
+                            "MOTIVO DE LA SUSPENSIÓN: " +
+                            self.reinicio_nov.motivo +
+                            ".\n\n" +
+                            "Para constancia, firman las partes a los _____ dias del mes de ______________ del año ________.",
+                            "\n\n\n\n",
+                        ],
+                    },
 
                     {
                         style: ["table2"],
@@ -1064,9 +1002,10 @@ angular
                             widths: [270, 270],
                             body: [
                                 [{
-                                    text: "Firma:______________________________________",
-                                    bold: true,
+                                    text: "______________________________________",
+                                    bold: false,
                                     style: "topHeader",
+
                                 },                                
                                 ],
                                 [
@@ -1083,68 +1022,38 @@ angular
                                         style: "topHeader",
                                     },
                                 ],                                
-                                [{
-                                    text: "Firma:______________________________________",
-                                    bold: true,
-                                    style: "topHeader",
-                                },
-                                ],
+
                                 [{
                                     text: "" + self.contrato_obj.contratista_nombre,
-                                    bold: true,
+                                    bold: false,
                                     style: "topHeader",
                                 },
-                                
+                                {
+                                    text: "" + self.contrato_obj.supervisor_nombre_completo,
+                                    bold: false,
+                                    style: "topHeader",
+                                },
                                 ],
-                                // [{
-                                //     text: "CC. " + self.contrato_obj.contratista_documento,
-                                //     bold: false,
-                                //     style: "topHeader",
-                                // },
-                                // {
-                                //     text: "CC. " + self.contrato_obj.supervisor_cedula,
-                                //     bold: false,
-                                //     style: "topHeader",
-                                // },
-                                // ],
+                                [{
+                                    text: "CC. " + self.contrato_obj.contratista_documento,
+                                    bold: false,
+                                    style: "topHeader",
+                                },
+                                {
+                                    text: "CC. " + self.contrato_obj.supervisor_cedula,
+                                    bold: false,
+                                    style: "topHeader",
+                                },
+                                ],
                                 [
-                                    { text: "Contratista\n\n", bold: true, style: "topHeader" },
-                                    
+
+                                    { text: "Contratista\n\n", bold: true, style: "topHeader" },                                    
+
                                 ],
-                                // [
-                                //     { text: "", bold: true, style: "topHeader" },
-                                //     { text: "Supervisor\n\n", bold: true, style: "topHeader" },
-                                // ],
                             ],
                         },
                         layout: "noBorders",
                     },
-                    // {
-                    //     style: "table3",
-                    //     table: {
-                    //         widths: [65, 130, 130, "*"],
-                    //         body: [
-                    //             [
-                    //                 "",
-                    //                 { text: "Nombre", bold: true },
-                    //                 { text: "Cargo", bold: true },
-                    //                 { text: "Firma", bold: true },
-                    //             ],
-                    //             [
-                    //                 { text: "Elaboró", bold: true },
-                    //                 "" + self.elaboro,
-                    //                 "Abogado Oficina Asesora Jurídica",
-                    //                 "",
-                    //             ],
-                    //             [
-                    //                 { text: "Revisó y Aprobó", bold: true },
-                    //                 "DIANA MIREYA PARRA CARDONA",
-                    //                 "Jefe Oficina Asesora Jurídica",
-                    //                 "",
-                    //             ],
-                    //         ],
-                    //     },
-                    // },
                     {
                         style: "table3",
                         table: {
@@ -1157,20 +1066,14 @@ angular
                                     { text: "Firma", bold: true },
                                 ],
                                 [
-                                    { text: "Proyectó", bold: false },
-                                    "",
-                                    "",
-                                    "",
-                                ],
-                                [
-                                    { text: "Revisó", bold: false },
-                                    "",
-                                    "",
+                                    { text: "Elaboró", bold: true },
+                                    "" + self.elaboro,
+                                    "Abogado Oficina Asesora Jurídica",
                                     "",
                                 ],
                                 [
-                                    { text: "Aprobó", bold: false },
-                                    "",
+                                    { text: "Revisó y Aprobó", bold: true },
+                                    "DIANA MIREYA PARRA CARDONA",
                                     "Jefe Oficina Asesora Jurídica",
                                     "",
                                 ],
