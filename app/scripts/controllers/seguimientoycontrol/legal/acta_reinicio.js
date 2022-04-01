@@ -673,8 +673,11 @@ angular
                             adminMidRequest
                                 .post("validarCambioEstado", self.estados)
                                 .then(function (vc_response) {
-                                    self.validacion = vc_response.data.Body;
-                                    if (self.validacion == "true") {
+
+                                    self.validacion = vc_response.data;
+                                    console.log(self.validacion.Body)
+                                    if (self.validacion.Body == "true") {
+
                                         novedadesMidRequest
                                             .post("novedad", self.reinicio_nov)
                                             .then(function (response_nosql) {
@@ -738,8 +741,13 @@ angular
                     new Date().getHours() +
                     "" +
                     new Date().getMinutes();
-
                 var docDefinition = self.get_pdf();
+                console.log(docDefinition)
+                console.log("acta_reinicio_contrato_" +
+                self.contrato_id +
+                "_" +
+                dateTime +
+                ".pdf")
                 pdfMake
                     .createPdf(docDefinition)
                     .download(
@@ -997,13 +1005,24 @@ angular
                                     text: "______________________________________",
                                     bold: false,
                                     style: "topHeader",
-                                },
-                                {
-                                    text: "______________________________________",
-                                    bold: false,
-                                    style: "topHeader",
-                                },
+
+                                },                                
                                 ],
+                                [
+                                    {
+                                        text: "" + self.contrato_obj.supervisor_nombre_completo,
+                                        bold: true,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: self.contrato_obj.supervisor_rol+"\n\n\n",
+                                        bold: true,
+                                        style: "topHeader",
+                                    },
+                                ],                                
+
                                 [{
                                     text: "" + self.contrato_obj.contratista_nombre,
                                     bold: false,
@@ -1027,16 +1046,9 @@ angular
                                 },
                                 ],
                                 [
-                                    { text: "Contratista", bold: true, style: "topHeader" },
-                                    {
-                                        text: self.contrato_obj.supervisor_rol,
-                                        bold: true,
-                                        style: "topHeader",
-                                    },
-                                ],
-                                [
-                                    { text: "", bold: true, style: "topHeader" },
-                                    { text: "Supervisor\n\n", bold: true, style: "topHeader" },
+
+                                    { text: "Contratista\n\n", bold: true, style: "topHeader" },                                    
+
                                 ],
                             ],
                         },
@@ -1048,7 +1060,7 @@ angular
                             widths: [65, 130, 130, "*"],
                             body: [
                                 [
-                                    "",
+                                    { text: "Funcionario", bold: true },
                                     { text: "Nombre", bold: true },
                                     { text: "Cargo", bold: true },
                                     { text: "Firma", bold: true },
