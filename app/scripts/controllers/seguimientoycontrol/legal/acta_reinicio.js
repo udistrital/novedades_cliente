@@ -181,9 +181,10 @@ angular
                             )
                             .then(function (response) {
                                 var elementos_cesion = response.data.Body;
+                                console.log("databody", response.data.Body);
                                 if (elementos_cesion.length != "0") {
                                     var last_cesion =
-                                        elementos_cesion[elementos_cesion.length - 1];
+                                        elementos_cesion[0];
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                     //Consulta datos del contratista
                                     agoraRequest
@@ -217,18 +218,24 @@ angular
                                                 });
                                         });
                                     //Trae los datos de la ultima novedad de suspensión para cargar datos.
-                                    for (var i = 0; i < elementos_cesion.length; i++) {
-                                        self.auxiliar = elementos_cesion[i].id;
-                                        self.novedad_suspension =
-                                            elementos_cesion[i].fechasuspension;
-                                        self.novedad_reinicio = elementos_cesion[i].fechareinicio;
-                                        self.novedad_motivo = elementos_cesion[i].motivo;
-                                        self.novedad_finsuspension =
-                                            elementos_cesion[i].fechafinsuspension;
+                                    //for (var i = 0; i < elementos_cesion.length; i++) {
+                                        // self.auxiliar = elementos_cesion[i].id;
+                                        // self.novedad_suspension =
+                                        //     elementos_cesion[i].fechasuspension;
+                                        // self.novedad_reinicio = elementos_cesion[i].fechareinicio;
+                                        // self.novedad_motivo = elementos_cesion[i].motivo;
+                                        // self.novedad_finsuspension =
+                                        //     elementos_cesion[i].fechafinsuspension;
+                                    console.log("objeto", elementos_cesion[0]);
+                                    self.auxiliar = elementos_cesion[0].id;
+                                    self.novedad_suspension = elementos_cesion[0].fechasuspension;
+                                    self.novedad_reinicio = elementos_cesion[0].fechareinicio;
+                                    self.novedad_motivo = elementos_cesion[0].motivo;
+                                    self.novedad_finsuspension = elementos_cesion[0].fechafinsuspension;
                                         novedadesRequest
                                             .get(
                                                 "tipo_novedad",
-                                                "query=Id:" + elementos_cesion[i].tiponovedad
+                                                "query=Id:" + elementos_cesion[0].tiponovedad
                                             )
                                             .then(function (nr_response) {
                                                 if (nr_response.data[0].CodigoAbreviacion == "NP_SUS") {
@@ -257,7 +264,7 @@ angular
                                                     self.motivo_suspension = self.novedad_motivo;
                                                 }
                                             });
-                                    }
+                                    //}
                                 }
                             });
                     }
@@ -669,15 +676,14 @@ angular
                                 };
                             }
 
-                            self.estados[0] = estado_temp_from;
-                            adminMidRequest
-                                .post("validarCambioEstado", self.estados)
-                                .then(function (vc_response) {
-
-                                    self.validacion = vc_response.data;
-                                    console.log(self.validacion.Body)
-                                    if (self.validacion.Body == "true") {
-
+                        self.estados[0] = estado_temp_from;
+                        novedadesMidRequest
+                                    .post("validarCambioEstado", self.estados)
+                                    .then(function (vc_response) {
+                                        console.log("cambio response",vc_response);
+                                        self.validacion = vc_response.data.Body;
+                                        console.log("cambio validación",self.validacion);
+                                        if (self.validacion == "true") {
                                         novedadesMidRequest
                                             .post("novedad", self.reinicio_nov)
                                             .then(function (response_nosql) {
