@@ -437,11 +437,35 @@ angular
                                                 10,
                                                 "T"
                                             );
-
+                                            //Recolección datos objeto POST Argo
+                                            self.contrato_obj_argo = {};
+                                            self.contrato_obj_argo.NumeroContrato = self.contrato_id; //Revisar si toca parsearlo
+                                            self.contrato_obj_argo.Vigencia = parseInt(self.contrato_vigencia);
+                                            self.contrato_obj_argo.FechaRegistro = self.f_hoy;
+                                            self.contrato_obj_argo.Contratista = parseFloat(self.cesion_nov.cesionario, 64);
+                                            self.contrato_obj_argo.PlazoEjecucion = self.contrato_obj.plazo;
+                                            self.contrato_obj_argo.FechaInicio = self.cesion_nov.fechacesion;
+                                            self.contrato_obj_argo.FechaFin = self.f_terminacion; 
+                                            //Tratamiento de datos para objeto payload POST Argo
+                                            if(self.cesion_nov.tiponovedad === "NP_CES"){
+                                            self.contrato_obj_argo.TipoNovedad = parseFloat(112);
+                                            }   
+                                            amazonAdministrativaRequest
+                                                .post("novedad_postcontractual", self.contrato_obj_argo)
+                                                .then(function (request_argo){
+                                                    console.log("Respuesta Argo", request_argo);
+                                                    if (
+                                                        request_argo.status == 200 ||
+                                                        request_argo.statusText == "Ok"
+                                                        ) {
+                                                            console.log("POST Argo respuesta positiva");
+                                                        }; 
+                                                }); 
                                             novedadesMidRequest
                                                 .post("novedad", self.cesion_nov)
                                                 .then(function (request_novedades) {
-                                                    //console.log("Prueba pop-up 0");
+                                                    console.log("OBJ POST", self.cesion_nov);
+                                                    console.log("respuesta", request_novedades);
                                                     if (
                                                         request_novedades.status == 200 ||
                                                         request_novedades.statusText == "OK"
@@ -1112,7 +1136,7 @@ angular
                             },
                         [{text:[
                             {
-                            text: "Que la cláusula ______________ del " +
+                            text: "Que la cláusula 15 - Cesión. Del " +
                                 self.contrato_obj.tipo_contrato +
                                 " No. " +
                                 self.contrato_obj.numero_contrato +

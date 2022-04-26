@@ -18,6 +18,7 @@ angular
             $routeParams,
             $translate,
             coreAmazonRequest,
+            amazonAdministrativaRequest,
             novedadesMidRequest,
             adminMidRequest,
             novedadesRequest,
@@ -40,6 +41,11 @@ angular
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
+            self.contrato_obj_argo = {};
+            self.contrato_obj_argo.NumeroCdp = null;
+            self.contrato_obj_argo.VigenciaCdp = null;
+            self.contrato_obj_argo.UnidadEjecucion = null;
+            self.contrato_obj_argo.ValorNovedad = null;
             self.elaboro = "";
             self.estados = [];
             self.elaboro_cedula = token_service.getPayload().documento;
@@ -103,6 +109,17 @@ angular
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
                         self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
 
+                        //Obtención de datos para alimentar objeto que será el payload del POST a Agóra 
+                        //self.contrato_obj_argo.Id = parseInt(self.contrato_obj.numero_contrato); //preguntar a que hace referencia éste dato en argo
+                        self.contrato_obj_argo.NumeroContrato = self.contrato_id; //Revisar si toca parsearlo
+                        self.contrato_obj_argo.Vigencia = parseInt(self.contrato_vigencia);
+                        self.contrato_obj_argo.FechaRegistro = self.contrato_obj.fecha_registro;
+                        self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                        self.contrato_obj_argo.PlazoEjecucion = agora_response.data[0].PlazoEjecucion;
+                        self.contrato_obj_argo.FechaInicio = self.f_inicio;
+                        self.contrato_obj_argo.FechaFin = self.f_fin;
+
+
                         //Obtención de datos del ordenador del gasto
                         agoraRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
                             self.contrato_obj.ordenadorGasto_nombre = og_response.data[0].NombreOrdenador;
@@ -123,8 +140,11 @@ angular
                             .then(function (acta_response) {
                                 self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
+                                // Tratamiento de datos para objeto Payload para POST a Argo
+                                //self.contrato_obj_argo.FechaInicio = self.contrato_obj.Inicio;
+                                //self.contrato_obj_argo.FechaFin = self.contrato_obj.Fin;
                             });
-
+                            
                         //Obtencion de datos del supervisor.
                         agoraRequest
                             .get(
@@ -285,8 +305,9 @@ angular
                 var timeDiff = 0;
 
                 if (dt2 != null) {
-                    timeDiff = Math.abs(dt2.getTime() - dt1.getTime());
-                }
+                    timeDiff = (dt2.getTime() - dt1.getTime());                                      
+                };         
+                               
                 var last_time = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if (last_time == 0) {
                     self.diff_dias = null;
@@ -344,6 +365,10 @@ angular
                             self.contrato_estado.FechaRegistro = new Date();
                             self.contrato_estado.Estado = self.estado_suspendido;
                             self.contrato_estado.Usuario = "usuario_prueba";
+                            //Tratamiento de datos para objeto payload POST Argo
+                            if(self.suspension_nov.tiponovedad === "NP_SUS"){
+                                self.contrato_obj_argo.TipoNovedad = parseFloat(216);
+                            }
                         });
                         // amazonAdministrativaRequest
                         //                 .get(
@@ -389,13 +414,28 @@ angular
                                                 console.log("cambio validación",self.validacion);
                                                 if (self.validacion == "true") {
                                                     //self.formato_generacion_pdf();
+                                                    console.log("obj argo", self.contrato_obj_argo);
+                                                    amazonAdministrativaRequest
+                                                        .post("novedad_postcontractual", self.contrato_obj_argo)
+                                                        .then(function (request_argo){
+                                                            console.log("Respuesta Argo", request_argo);
+                                                            if (
+                                                                request_argo.status == 200 ||
+                                                                request_argo.statusText == "Ok"
+                                                            ) {
+                                                                console.log("POST Argo respuesta positiva");
+                                                            }; 
+                                                        }); 
                                                     novedadesMidRequest
                                                         .post("novedad", self.suspension_nov)
                                                         .then(function (request_novedades) {
+                                                            console.log("OBJ POST", self.suspension_nov);
+                                                            console.log("respuesta", request_novedades);
                                                             if (
                                                                 request_novedades.status == 200 ||
                                                                 response.statusText == "Ok"
                                                             ) {
+                                                                console.log("segundo post", nuevoEstado);
                                                                 agoraRequest
                                                                     .post("contrato_estado", nuevoEstado)
                                                                     .then(function (response) {
@@ -441,7 +481,7 @@ angular
                                                                                 allowOutsideClick: false,
                                                                             }).then(function () { });
                                                                         }
-                                                                    });
+                                                                    });                                                                   
                                                             }
                                                         })
                                                         .catch(function (error) {
