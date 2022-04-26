@@ -18,7 +18,8 @@ angular.module('contractualClienteApp')
         $translate, 
         agoraRequest, 
         coreAmazonRequest, 
-        novedadesMidRequest, 
+        novedadesMidRequest,
+        amazonAdministrativaRequest, 
         novedadesRequest,
         cumplidosMidRequest, 
         pdfMakerService
@@ -39,6 +40,7 @@ angular.module('contractualClienteApp')
         self.contrato_id = $routeParams.contrato_id;
         self.contrato_vigencia = $routeParams.contrato_vigencia;
         self.contrato_obj = {};
+        self.contrato_obj_argo = {};
         self.a_favor = {};
         self.numero_solicitud = null;
         self.numero_oficio_estado_cuentas = null;
@@ -267,6 +269,22 @@ angular.module('contractualClienteApp')
                     self.terminacion_nov.saldo_contratista = self.saldo_contratista;
                     self.terminacion_nov.saldo_universidad = self.saldo_universidad;
                     self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;
+                    //recolección POST Argo
+                    self.contrato_obj_argo.NumeroContrato = self.contrato_obj.numero_contrato; //Revisar si toca parsearlo
+                    self.contrato_obj_argo.Vigencia = parseInt(self.contrato_obj.vigencia);
+                    self.contrato_obj_argo.FechaRegistro = new Date();
+                    self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                    self.contrato_obj_argo.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
+                    self.contrato_obj_argo.FechaInicio = null;
+                    self.contrato_obj_argo.FechaFin = self.terminacion_nov.fecha_terminacion_anticipada; 
+                    self.contrato_obj_argo.NumeroCdp = parseInt(self.contrato_obj.cdp_numero);
+                    self.contrato_obj_argo.VigenciaCdp = parseInt(self.contrato_obj.cdp_fecha);
+                    self.contrato_obj_argo.ValorNovedad = parseFloat(self.terminacion_nov.valor_desembolsado);
+                    //Tratamiento de datos para objeto payload POST Argo
+                    if(self.terminacion_nov.tiponovedad === "NP_TER"){
+                    self.contrato_obj_argo.TipoNovedad = parseFloat(259);
+                    };
+                    //Recolección POST Contrato Estado 
                     self.contrato_estado = {};
                     self.contrato_estado.NumeroContrato = self.contrato_obj.id;
                     self.contrato_estado.Vigencia = self.contrato_obj.vigencia;
@@ -286,6 +304,18 @@ angular.module('contractualClienteApp')
                             self.estados[0] = estado_temp_from;
                             novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                                 if (vc_response.data.Body == "true") {
+                                    console.log("datos obj argo", self.contrato_obj_argo);
+                                    amazonAdministrativaRequest
+                                    .post("novedad_postcontractual", self.contrato_obj_argo)
+                                    .then(function (request_argo){
+                                        console.log("Respuesta Argo", request_argo);
+                                        if (
+                                        request_argo.status == 200 ||
+                                        request_argo.statusText == "Ok"
+                                        ) {
+                                        console.log("POST Argo respuesta positiva");
+                                        }; 
+                                    }); 
                                     novedadesMidRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
                                         if (response_nosql.status == 200 || response.statusText == "Ok") {
                                             agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
