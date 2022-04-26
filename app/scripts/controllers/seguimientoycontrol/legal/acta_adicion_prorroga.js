@@ -18,6 +18,7 @@ angular
             adminMidRequest,
             token_service,
             coreAmazonRequest,
+            amazonAdministrativaRequest,
             $translate,
             novedadesRequest,
             novedadesMidRequest,
@@ -30,7 +31,9 @@ angular
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
+            self.contrato_obj_argo = {};
             self.fecha = {};
+            self.f_hoy = new Date();
             var meses = new Array(
                 "Enero",
                 "Febrero",
@@ -45,6 +48,7 @@ angular
                 "Noviembre",
                 "Diciembre"
             );
+            var inicioOtroSi = new Date();
             var f = new Date();
             self.fecha.dia_mes = f.getDate();
             self.fecha.mes = meses[f.getMonth()];
@@ -118,11 +122,10 @@ angular
                         );
                         self.contrato_obj.vigencia = self.contrato_vigencia;
                         var fecha_reg = self.contrato_obj.fecha_registro;
-                        var res = fecha_reg.split("-");
+                        var res = fecha_reg.split("-");                        
                         self.fecha_reg_dia = res[2].substring(0, 2);
                         self.fecha_reg_mes = meses[parseInt(res[1] - 1)];
-                        self.fecha_reg_ano = res[0];
-
+                        self.fecha_reg_ano = res[0];                       
                         //Se obtiene los datos de Acta de Inicio.
                         agoraRequest
                             .get(
@@ -143,8 +146,37 @@ angular
                                         self.contrato_obj.inicio =
                                             acta_response.data[0].FechaInicio;
                                         self.contrato_obj.fin = acta_response.data[0].FechaFin;
+                                        
+                                        //console.log(inicioOtroSi);
+                                        // var inicioOtro= new Date(self.contrato_obj.fin);
+                                        // console.log("inicioOtro", inicioOtro);
+                                        // $scope.inicioOtroSi = inicioOtro.setDate(inicioOtro.getDate() + 1);
+                                        // console.log("Fecha inicio", $scope.inicioOtroSi);
+                                        // console.log("Fecha fin", self.contrato_obj.fin);
                                     });
                             });
+                            
+                            
+                        // Función que suma o resta días a la fecha indicada
+                        //  var fecha = self.contrato_obj.fin;
+                        //  $scope.nuevaFechaInicio = function(d, fecha)
+                        // {
+                        //     var Fecha = new Date();
+                        //     var sFecha = fecha || (Fecha.getDate() + "/" + (Fecha.getMonth() +1) + "/" + Fecha.getFullYear());
+                        //     var sep = sFecha.indexOf('/') != -1 ? '/' : '-';
+                        //     var aFecha = sFecha.split(sep);
+                        //     var fecha = aFecha[2]+'/'+aFecha[1]+'/'+aFecha[0];
+                        //     fecha= new Date(fecha);
+                        //     fecha.setDate(fecha.getDate()+parseInt(d));
+                        //     var anno=fecha.getFullYear();
+                        //     var mes= fecha.getMonth()+1;
+                        //     var dia= fecha.getDate();
+                        //     mes = (mes < 10) ? ("0" + mes) : mes;
+                        //     dia = (dia < 10) ? ("0" + dia) : dia;
+                        //     var fechaFinal = dia+sep+mes+sep+anno;
+                        //     return (fechaFinal);
+                        // };
+                        
                         //Se obtienen datos relacionados al supervisor.
                         agoraRequest
                             .get(
@@ -587,6 +619,14 @@ angular
              */
             self.generarActa = function () {                
                 generateTipoNovedad(function (tiponovedad) {
+                    //se obtiene la nueva fecha de finalización del contrato
+                    // var fechaFin = self.contrato_obj.fin;                    
+                    // fechaFin.setDate(fechaFin.getDate() + dias);
+                    // console.log("Fecha fin", fechaFin);
+                    
+
+                    //self.contrato_obj.inicioOtroSi = sumarDias(fechaFin, 1);
+                    //self.contrato_obj.finOtroSi = self.contrato_obj.inicioOtroSi.setDate(self.contrato_obj.inicioOtroSi.getDate() + $scope.tiempo_prorroga);
                     self.data_acta_adicion_prorroga = {
                         contrato: self.contrato_obj.numero_contrato,
                         numerosolicitud: $scope.numero_solicitud,
@@ -621,9 +661,44 @@ angular
                         });
                         $scope.valor_adicion = numberFormat("0");
                     }
+                     //Recolección datos objeto POST Argo            F         
+                     self.contrato_obj_argo.NumeroContrato = self.contrato_obj.numero_contrato; //Revisar si toca parsearlo
+                     self.contrato_obj_argo.Vigencia = parseInt(self.contrato_obj.vigencia);
+                     self.contrato_obj_argo.FechaRegistro = self.f_hoy;
+                     self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                     self.contrato_obj_argo.PlazoEjecucion = parseInt($scope.valor_prorroga_final);
+                     self.contrato_obj_argo.FechaInicio = self.contrato_obj.inicio;                  
+                     self.contrato_obj_argo.FechaFin = self.contrato_obj.fin; 
+                     self.contrato_obj_argo.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
+                     self.contrato_obj_argo.VigenciaCdp = parseInt(self.contrato_obj.cdp_anno);
+                     self.contrato_obj_argo.ValorNovedad = parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, ""));
+                     //Tratamiento de datos para objeto payload POST Argo
+                     if(self.data_acta_adicion_prorroga.tiponovedad === "NP_ADI"){
+                     self.contrato_obj_argo.TipoNovedad = parseFloat(248);
+                     };
+                     if(self.data_acta_adicion_prorroga.tiponovedad === "NP_PRO"){
+                     self.contrato_obj_argo.TipoNovedad = parseFloat(249);    
+                     };
+                     if(self.data_acta_adicion_prorroga.tiponovedad === "NP_ADPRO"){
+                        self.contrato_obj_argo.TipoNovedad = parseFloat(220);    
+                     };
+                    console.log("datos obj argo", self.contrato_obj_argo);
+                    amazonAdministrativaRequest
+                        .post("novedad_postcontractual", self.contrato_obj_argo)
+                        .then(function (request_argo){
+                            console.log("Respuesta Argo", request_argo);
+                            if (
+                                request_argo.status == 200 ||
+                                request_argo.statusText == "Ok"
+                                ) {
+                                    console.log("POST Argo respuesta positiva");
+                                }; 
+                         }); 
                     novedadesMidRequest
                         .post("novedad", self.data_acta_adicion_prorroga)
-                        .then(function (request) {                            
+                        .then(function (request) {   
+                            console.log("OBJ POST", self.data_acta_adicion_prorroga);
+                            console.log("Respuesta", request)                        
                             if (request.status == 200) {
                                 self.formato_generacion_pdf();
                                 swal({

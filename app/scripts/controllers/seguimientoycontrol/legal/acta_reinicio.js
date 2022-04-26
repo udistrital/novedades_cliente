@@ -656,6 +656,21 @@ angular
                                 self.contrato_obj.fecha_registro;
                             self.contrato_estado.Estado = self.estado_ejecucion;
                             self.contrato_estado.Usuario = "up";
+                            //recolección POST Argo
+                            self.contrato_obj_argo.NumeroContrato = self.contrato_obj.numero_contrato; //Revisar si toca parsearlo
+                            self.contrato_obj_argo.Vigencia = parseInt(self.contrato_obj.vigencia);
+                            self.contrato_obj_argo.FechaRegistro = new Date();
+                            self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                            self.contrato_obj_argo.PlazoEjecucion = null;
+                            self.contrato_obj_argo.FechaInicio = self.f_suspension;
+                            self.contrato_obj_argo.FechaFin = self.f_reinicio; 
+                            self.contrato_obj_argo.NumeroCdp = null;
+                            self.contrato_obj_argo.VigenciaCdp = null;
+                            self.contrato_obj_argo.ValorNovedad = null;
+                            //Tratamiento de datos para objeto payload POST Argo
+                            if(self.terminacion_nov.tiponovedad === "NP_REI"){
+                            self.contrato_obj_argo.TipoNovedad = parseFloat(217);
+                            };
                         });
 
                     agoraRequest
@@ -687,6 +702,8 @@ angular
                                         novedadesMidRequest
                                             .post("novedad", self.reinicio_nov)
                                             .then(function (response_nosql) {
+                                                console.log("OBJ POST",self.reinicio_nov);
+                                                console.log("respuesta", self.reinicio_nov);
                                                 if (
                                                     response_nosql.status == 200 ||
                                                     response_nosql.statusText == "OK"
