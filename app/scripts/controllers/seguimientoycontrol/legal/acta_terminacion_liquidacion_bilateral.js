@@ -844,7 +844,7 @@ angular.module('contractualClienteApp')
                             style:['general_font'],
                             text:[{
                                 text:[
-                                    {text:'Que la cláusula ______________ del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', establece que '},
+                                    {text:'Que la cláusula 17 - Terminación. Del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', establece que '},
                                     {text: '"Terminación. ', bold: true},
                                     {text: 'Serán causales de terminación del contrato el común acuerdo de las partes al respecto, la ocurrencia de cualquier circunstancia de fuerza mayor o caso fortuito que impida la ejecución del contrato, así como el cumplimiento del plazo pactado para su ejecución. Adicionalmente, dará lugar a la terminación anticipada del contrato el incumplimiento de sus obligaciones, por parte de EL CONTRATISTA, debidamente comprobado, que impida continuar con su ejecución”.\n\n', italics: true },
 
