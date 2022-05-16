@@ -48,7 +48,7 @@ angular
                 "Noviembre",
                 "Diciembre"
             );
-            var inicioOtroSi = new Date();
+            var inicioOtroSi = "";
             var f = new Date();
             self.fecha.dia_mes = f.getDate();
             self.fecha.mes = meses[f.getMonth()];
@@ -147,12 +147,15 @@ angular
                                             acta_response.data[0].FechaInicio;
                                         self.contrato_obj.fin = acta_response.data[0].FechaFin;
                                         
-                                        //console.log(inicioOtroSi);
+                                        // console.log(inicioOtroSi);
                                         // var inicioOtro= new Date(self.contrato_obj.fin);
                                         // console.log("inicioOtro", inicioOtro);
                                         // $scope.inicioOtroSi = inicioOtro.setDate(inicioOtro.getDate() + 1);
                                         // console.log("Fecha inicio", $scope.inicioOtroSi);
                                         // console.log("Fecha fin", self.contrato_obj.fin);
+
+                                       
+                                            
                                     });
                             });
                             
@@ -619,14 +622,42 @@ angular
              */
             self.generarActa = function () {                
                 generateTipoNovedad(function (tiponovedad) {
-                    //se obtiene la nueva fecha de finalización del contrato
-                    // var fechaFin = self.contrato_obj.fin;                    
-                    // fechaFin.setDate(fechaFin.getDate() + dias);
-                    // console.log("Fecha fin", fechaFin);
+                    //la fecha
+                    var FechadeFin = new Date(self.contrato_obj.fin);
+                    console.log("Fecha Fin", FechadeFin);
+                    //dias a sumar
+                    //var dias = 1;
                     
+                    //nueva fecha sumada
+                    FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    if(FechadeFin.getDate == 31){
+                        FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    }
+                    //formato de salida para la fecha
+                    self.contrato_obj.inicioOSi = FechadeFin.getFullYear() + '-' +
+                      FechadeFin.getMonth() + '-' + FechadeFin.getDate();
+                    console.log("prueba 1", self.contrato_obj.inicioOSi); 
+                    //Nueva fecha fin sumada
+                    // var nuevaFechaInicio = new Date(self.contrato_obj.inicioOSi);
+                    // nuevaFechaInicio.setDate(nuevaFechaInicio.getDate() + $scope.tiempo_prorroga);
+                    //Formato salida nueva fecha fin
 
-                    //self.contrato_obj.inicioOtroSi = sumarDias(fechaFin, 1);
-                    //self.contrato_obj.finOtroSi = self.contrato_obj.inicioOtroSi.setDate(self.contrato_obj.inicioOtroSi.getDate() + $scope.tiempo_prorroga);
+                    
+                    var dias = $scope.tiempo_prorroga;
+                    var meses = dias / 30;
+                    var mesEntero = parseInt(meses);
+                    var decimal = meses - mesEntero;
+                    var numero_dias = decimal * 30;
+                    FechadeFin.setMonth(FechadeFin.getMonth() + mesEntero);
+                    FechadeFin.setDate(FechadeFin.getDate() + numero_dias);
+                    if(FechadeFin.getDate == 31){
+                        FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    }
+                    self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
+                    FechadeFin.getMonth() + '-' + FechadeFin.getDate();
+                    
+                    console.log("nueva Fecha Fin", self.contrato_obj.nuevaFechaFin);
+                    //objeto acta adición_prórroga
                     self.data_acta_adicion_prorroga = {
                         contrato: self.contrato_obj.numero_contrato,
                         numerosolicitud: $scope.numero_solicitud,
@@ -667,11 +698,12 @@ angular
                      self.contrato_obj_argo.FechaRegistro = self.f_hoy;
                      self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                      self.contrato_obj_argo.PlazoEjecucion = parseInt($scope.valor_prorroga_final);
-                     self.contrato_obj_argo.FechaInicio = self.contrato_obj.inicio;                  
-                     self.contrato_obj_argo.FechaFin = self.contrato_obj.fin; 
+                     self.contrato_obj_argo.FechaInicio = self.contrato_obj.inicioOSi;                  
+                     self.contrato_obj_argo.FechaFin = self.contrato_obj.nuevaFechaFin; 
                      self.contrato_obj_argo.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
                      self.contrato_obj_argo.VigenciaCdp = parseInt(self.contrato_obj.cdp_anno);
                      self.contrato_obj_argo.ValorNovedad = parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, ""));
+                     self.contrato_obj_argo.UnidadEjecucion = 205;
                      //Tratamiento de datos para objeto payload POST Argo
                      if(self.data_acta_adicion_prorroga.tiponovedad === "NP_ADI"){
                      self.contrato_obj_argo.TipoNovedad = parseFloat(248);

@@ -68,6 +68,7 @@ angular
         "novedadesService",
         "novedadesMidService",
         "cumplidosMidService",
+        "titanMidService",
         "documentosCrudService",
         "core",
         "autenticacionMidService",
