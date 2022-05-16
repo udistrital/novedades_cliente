@@ -282,7 +282,7 @@ angular.module('contractualClienteApp')
                     self.contrato_obj_argo.ValorNovedad = parseFloat(self.terminacion_nov.valor_desembolsado);
                     //Tratamiento de datos para objeto payload POST Argo
                     if(self.terminacion_nov.tiponovedad === "NP_TER"){
-                    self.contrato_obj_argo.TipoNovedad = parseFloat(259);
+                    self.contrato_obj_argo.TipoNovedad = parseFloat(218);
                     };
                     //Recolección POST Contrato Estado 
                     self.contrato_estado = {};

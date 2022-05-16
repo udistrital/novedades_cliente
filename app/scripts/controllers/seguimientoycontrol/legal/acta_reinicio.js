@@ -21,6 +21,7 @@ angular
             contratoRequest,
             agoraRequest,
             coreAmazonRequest,
+            amazonAdministrativaRequest,
             novedadesMidRequest,
             novedadesRequest,
             pdfMakerService
@@ -35,6 +36,7 @@ angular
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
+            self.suspension_obj = {};
             self.estado_ejecucion = {};
             self.n_solicitud = null;
             self.auxiliar = null;
@@ -45,7 +47,7 @@ angular
             self.auxiliar = null;
             self.elaboro = "";
             self.estados = [];
-            self.elaboro_cedula = token_service.getPayload().documento;
+            self.elaboro_cedula = token_service.getPayload().documento;            
 
             //Obtiene los datos de quien elaboró la Novedad
             agoraRequest
@@ -172,6 +174,16 @@ angular
                                             ispn_response.data[0].SegundoApellido;
                                     });
                             });
+                        //Obtiene datos de la novedad de suspensión
+
+                        amazonAdministrativaRequest
+                            .get("novedad_postcontractual?query=numero_contrato:" + self.contrato_obj.numero_contrato + ",vigencia:" + self.contrato_obj.vigencia + ",TipoNovedad:216&limit=0&sortby=FechaRegistro&order=desc")
+                            .then(function(sus_response){  
+                                console.log("obj sus", sus_response);                              
+                                self.suspension_obj.id = sus_response.data[0].Id;
+                            });
+                            
+                            console.log("dato id suspensión", self.suspension_obj.id)
                         novedadesMidRequest
                             .get(
                                 "novedad",
@@ -693,21 +705,32 @@ angular
 
                         self.estados[0] = estado_temp_from;
                         novedadesMidRequest
-                                    .post("validarCambioEstado", self.estados)
-                                    .then(function (vc_response) {
-                                        console.log("cambio response",vc_response);
-                                        self.validacion = vc_response.data.Body;
-                                        console.log("cambio validación",self.validacion);
-                                        if (self.validacion == "true") {
-                                        novedadesMidRequest
-                                            .post("novedad", self.reinicio_nov)
-                                            .then(function (response_nosql) {
-                                                console.log("OBJ POST",self.reinicio_nov);
-                                                console.log("respuesta", self.reinicio_nov);
-                                                if (
-                                                    response_nosql.status == 200 ||
-                                                    response_nosql.statusText == "OK"
-                                                ) {
+                            .post("validarCambioEstado", self.estados)
+                            .then(function (vc_response) {
+                                console.log("cambio response",vc_response);
+                                self.validacion = vc_response.data.Body;
+                                console.log("cambio validación",self.validacion);
+                                if (self.validacion == "true") {
+                                    amazonAdministrativaRequest
+                                        .put("novedad_postcontractual/" + self.suspension_obj.id)
+                                        .then(function (request_argo){
+                                        console.log("Respuesta Argo", request_argo);
+                                        if (
+                                            request_argo.status == 200 ||
+                                            request_argo.statusText == "Ok"
+                                        ) {
+                                            console.log("POST Argo respuesta positiva");
+                                        }; 
+                                    }); 
+                                    novedadesMidRequest
+                                        .post("novedad", self.reinicio_nov)
+                                        .then(function (response_nosql) {
+                                            console.log("OBJ POST",self.reinicio_nov);
+                                            console.log("respuesta", self.reinicio_nov);
+                                            if (
+                                                response_nosql.status == 200 ||
+                                                response_nosql.statusText == "OK"
+                                            ) {
                                                     agoraRequest
                                                         .post("contrato_estado", nuevoEstado)
                                                         .then(function (response) {

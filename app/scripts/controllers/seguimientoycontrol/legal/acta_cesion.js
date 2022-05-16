@@ -22,6 +22,7 @@ angular
             amazonAdministrativaRequest,
             contratoRequest,
             novedadesMidRequest,
+            titanMidRequest,
             novedadesRequest,
             pdfMakerService
         ) {
@@ -375,6 +376,12 @@ angular
                 self.contrato_obj.plazo_cesionario =
                     f_terminacion_contrato.diff(f_inicio_contrato, "days") -
                     f_cesion.diff(f_inicio_contrato, "days");
+                //Se obtiene el dato de Fecha Final Efectiva.
+                // amazonAdministrativaRequest
+                // .get("contrato_persona/" + self.contrato_obj.id)
+                // .then(function (acta_response) {                    
+                //     self.contrato_obj.Fin = acta_response.data[0].FechaFin;
+                // });
                 if ($scope.formCesion.$valid) {
                     amazonAdministrativaRequest
                         .get(
@@ -446,10 +453,31 @@ angular
                                             self.contrato_obj_argo.PlazoEjecucion = self.contrato_obj.plazo;
                                             self.contrato_obj_argo.FechaInicio = self.cesion_nov.fechacesion;
                                             self.contrato_obj_argo.FechaFin = self.f_terminacion; 
+                                            self.contrato_obj_argo.UnidadEjecucion = 205;
                                             //Tratamiento de datos para objeto payload POST Argo
                                             if(self.cesion_nov.tiponovedad === "NP_CES"){
-                                            self.contrato_obj_argo.TipoNovedad = parseFloat(112);
-                                            }   
+                                            self.contrato_obj_argo.TipoNovedad = parseFloat(219);
+                                            //Replica Titán
+                                            // self.contrato_obj_titan = {};
+                                            // self.contrato_obj_titan.DocumentoActual = self.contrato_obj.contratista_documento;
+                                            // self.contrato_obj_titan.DocumentoNuevo = self.cesionario_obj.identificacion;
+                                            // self.contrato_obj_titan.FechaInicio = toString(self.contrato_obj_argo.FechaInicio);
+                                            // self.contrato_obj_titan.NombreCompleto = self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos;
+                                            // self.contrato_obj_titan.NumeroContrato = self.contrato_id;
+                                            // self.contrato_obj_titan.Vigencia = parseInt(self.contrato_vigencia);
+                                            }  
+                                            
+                                            // titanMidRequest
+                                            //     .post("novedad/ceder_contrato", self.contrato_obj_titan)
+                                            //     .then(function (request_titan){
+                                            //         if (
+                                            //             request_titan.status == 200 ||
+                                            //             request_titan.statusText == "Ok"
+                                            //             ) {
+                                            //                 console.log("POST Titán respuesta positiva");
+                                            //             }; 
+                                            //     });
+
                                             amazonAdministrativaRequest
                                                 .post("novedad_postcontractual", self.contrato_obj_argo)
                                                 .then(function (request_argo){
