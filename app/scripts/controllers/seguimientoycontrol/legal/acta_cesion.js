@@ -92,6 +92,7 @@ angular
                     self.contrato_vigencia
                 )
                 .then(function (agora_response) {
+                    console.log("respuesta agora", agora_response);
                     if (agora_response.data.length > 0) {
                         self.contrato_obj.numero_contrato = self.contrato_id;
                         self.contrato_obj.id =
@@ -123,8 +124,7 @@ angular
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                             });
 
-                        //Obtiene datos del supervisor del contrato.
-                        amazonAdministrativaRequest
+                            amazonAdministrativaRequest
                             .get(
                                 "informacion_persona_natural?query=Id:" +
                                 self.contrato_obj.supervisor_cedula
@@ -140,6 +140,32 @@ angular
                                     ispn_response.data[0].PrimerApellido +
                                     " " +
                                     ispn_response.data[0].SegundoApellido;
+                        
+                        // amazonAdministrativaRequest
+                        //     .get(
+                        //         "supervisor_contrato?query=Documento:" +
+                        //         self.contrato_obj.supervisor_cedula
+                        //     )
+                        //     .then(function (ispn_response) {
+                        //         console.log("supervisor", ispn_response)
+                        //         // self.contrato_obj.supervisor_tipo_documento =
+                        //         //     ispn_response.data[0].TipoDocumento.ValorParametro;
+                        //         if(ispn_response.data[0].Tipo == 1){
+                        //             amazonAdministrativaRequest
+                        //             .get("informacion_persona_natural?query=Id:" + self.contrato_obj.supervisor_cedula)
+                        //             .then()
+                        //             self.contrato_obj.supervisor_tipo_documento = "Cédula de ciudadanía";
+                        //         };
+                        //         self.contrato_obj.supervisor_nombre = ispn_response.data[0].Nombre;
+                        //         // self.contrato_obj.supervisor_nombre =
+                        //         //     ispn_response.data[0].PrimerNombre +
+                        //         //     " " +
+                        //         //     ispn_response.data[0].SegundoNombre +
+                        //         //     " " +
+                        //         //     ispn_response.data[0].PrimerApellido +
+                        //         //     " " +
+                        //         //     ispn_response.data[0].SegundoApellido;
+                        //             console.log("supervisor", self.contrato_obj.supervisor_nombre);
                                 coreAmazonRequest
                                     .get(
                                         "ciudad",
@@ -319,7 +345,7 @@ angular
              * despliega en la interfaz la lista de personas naturales cuya cedula correspona
              * @param {integer} id_persona
              */
-            self.cargar_persona_natural = function (id_persona) {
+            self.cargar_persona_natural = function (id_persona) {                
                 self.persona_natural_grep = jQuery.grep(
                     self.persona_natural_items,
                     function (value, index) {
@@ -433,6 +459,7 @@ angular
                                             self.cesion_nov.tiempoprorroga = 0;
                                             self.cesion_nov.tiponovedad =
                                                 nc_response.data[0].CodigoAbreviacion;
+                                                console.log("tiponovedad", )
                                             self.cesion_nov.valoradicion = 0;
                                             self.cesion_nov.valorfinalcontrato = 0;
                                             self.cesion_nov.vigencia = String(
@@ -454,9 +481,11 @@ angular
                                             self.contrato_obj_argo.FechaInicio = self.cesion_nov.fechacesion;
                                             self.contrato_obj_argo.FechaFin = self.f_terminacion; 
                                             self.contrato_obj_argo.UnidadEjecucion = 205;
+                                            console.log("UnidadEjecucion", self.contrato_obj_argo.UnidadEjecucion);
                                             //Tratamiento de datos para objeto payload POST Argo
                                             if(self.cesion_nov.tiponovedad === "NP_CES"){
                                             self.contrato_obj_argo.TipoNovedad = parseFloat(219);
+                                            console.log("Tipo Novedad", self.contrato_obj_argo.TipoNovedad);
                                             //Replica Titán
                                             // self.contrato_obj_titan = {};
                                             // self.contrato_obj_titan.DocumentoActual = self.contrato_obj.contratista_documento;

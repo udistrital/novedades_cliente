@@ -273,13 +273,13 @@ angular.module('contractualClienteApp')
                     self.contrato_obj_argo.NumeroContrato = self.contrato_obj.numero_contrato; //Revisar si toca parsearlo
                     self.contrato_obj_argo.Vigencia = parseInt(self.contrato_obj.vigencia);
                     self.contrato_obj_argo.FechaRegistro = new Date();
-                    self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
-                    self.contrato_obj_argo.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
-                    self.contrato_obj_argo.FechaInicio = null;
+                    //self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                    //self.contrato_obj_argo.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
+                    //self.contrato_obj_argo.FechaInicio = null;
                     self.contrato_obj_argo.FechaFin = self.terminacion_nov.fecha_terminacion_anticipada; 
-                    self.contrato_obj_argo.NumeroCdp = parseInt(self.contrato_obj.cdp_numero);
-                    self.contrato_obj_argo.VigenciaCdp = parseInt(self.contrato_obj.cdp_fecha);
-                    self.contrato_obj_argo.ValorNovedad = parseFloat(self.terminacion_nov.valor_desembolsado);
+                    //self.contrato_obj_argo.NumeroCdp = parseInt(self.contrato_obj.cdp_numero);
+                    //self.contrato_obj_argo.VigenciaCdp = parseInt(self.contrato_obj.cdp_fecha);
+                    //self.contrato_obj_argo.ValorNovedad = parseFloat(self.terminacion_nov.valor_desembolsado);
                     //Tratamiento de datos para objeto payload POST Argo
                     if(self.terminacion_nov.tiponovedad === "NP_TER"){
                     self.contrato_obj_argo.TipoNovedad = parseFloat(218);

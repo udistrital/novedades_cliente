@@ -194,6 +194,7 @@ angular
                                         ipn_response.data[0].IdCiudadExpedicionDocumento
                                     )
                                     .then(function (c_response) {
+                                        console.log("supervisor", c_response);
                                         self.contrato_obj.supervisor_tipo_Documento =
                                             ipn_response.data[0].TipoDocumento.ValorParametro;
                                         self.contrato_obj.supervisor_ciudad_cedula =
