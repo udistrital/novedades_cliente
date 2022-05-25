@@ -36,7 +36,7 @@ angular
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
-            self.suspension_obj = {};
+            self.suspension_obj = {};            
             self.estado_ejecucion = {};
             self.n_solicitud = null;
             self.auxiliar = null;
@@ -181,9 +181,16 @@ angular
                             .then(function(sus_response){  
                                 console.log("obj sus", sus_response);                              
                                 self.suspension_obj.id = sus_response.data[0].Id;
+                                self.suspension_obj.FechaInicio = sus_response.data[0].FechaInicio;
+                                self.suspension_obj.FechaRegistro = sus_response.data[0].FechaRegistro;
+                                self.suspension_obj.Vigencia = sus_response.data[0].Vigencia;
+                                self.suspension_obj.UnidadEjecucion = sus_response.data[0].UnidadEjecucion;
+                                self.suspension_obj.PlazoEjecucion = sus_response.data[0].PlazoEjecucion;
+                                self.suspension_obj.NumeroContrato = sus_response.data[0].NumeroContrato;
+                                console.log("dato id suspensión", self.suspension_obj.id);
                             });
                             
-                            console.log("dato id suspensión", self.suspension_obj.id)
+                            
                         novedadesMidRequest
                             .get(
                                 "novedad",
@@ -668,21 +675,23 @@ angular
                                 self.contrato_obj.fecha_registro;
                             self.contrato_estado.Estado = self.estado_ejecucion;
                             self.contrato_estado.Usuario = "up";
-                            //recolección POST Argo
-                            self.contrato_obj_argo.NumeroContrato = self.contrato_obj.numero_contrato; //Revisar si toca parsearlo
-                            self.contrato_obj_argo.Vigencia = parseInt(self.contrato_obj.vigencia);
-                            self.contrato_obj_argo.FechaRegistro = new Date();
-                            self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
-                            self.contrato_obj_argo.PlazoEjecucion = null;
-                            self.contrato_obj_argo.FechaInicio = self.f_suspension;
-                            self.contrato_obj_argo.FechaFin = self.f_reinicio; 
-                            self.contrato_obj_argo.NumeroCdp = null;
-                            self.contrato_obj_argo.VigenciaCdp = null;
-                            self.contrato_obj_argo.ValorNovedad = null;
+                            //recolección POST Argo                      
+                                                                                        
+                            self.contrato_obj_argo = {};
+                            self.contrato_obj_argo.NumeroContrato = self.suspension_obj.NumeroContrato; //Revisar si toca parsearlo
+                            self.contrato_obj_argo.Vigencia = self.suspension_obj.Vigencia; //parseInt(self.contrato_obj.vigencia);
+                            self.contrato_obj_argo.FechaRegistro = self.suspension_obj.FechaRegistro;
+                            // self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                            self.contrato_obj_argo.PlazoEjecucion = self.suspension_obj.PlazoEjecucion;
+                            self.contrato_obj_argo.FechaInicio = self.suspension_obj.FechaInicio;
+                            self.contrato_obj_argo.FechaFin = new Date();                            
+                            self.contrato_obj_argo.UnidadEjecucion = self.suspension_obj.UnidadEjecucion;
+                            //self.contrato_obj_argo.VigenciaCdp = 2021;
+                            // self.contrato_obj_argo.ValorNovedad = null;
                             //Tratamiento de datos para objeto payload POST Argo
-                            if(self.terminacion_nov.tiponovedad === "NP_REI"){
-                            self.contrato_obj_argo.TipoNovedad = parseFloat(217);
-                            };
+                            // if(self.terminacion_nov.tiponovedad === "NP_REI"){
+                            // self.contrato_obj_argo.TipoNovedad = parseFloat(217);
+                            // };
                         });
 
                     agoraRequest
@@ -710,9 +719,12 @@ angular
                                 console.log("cambio response",vc_response);
                                 self.validacion = vc_response.data.Body;
                                 console.log("cambio validación",self.validacion);
+                                console.log("obj put", self.contrato_obj_argo);
                                 if (self.validacion == "true") {
+                                    console.log("obj put", self.contrato_obj_argo);
+                                    console.log("obj id", self.suspension_obj.id);
                                     amazonAdministrativaRequest
-                                        .put("novedad_postcontractual/" + self.suspension_obj.id)
+                                        .put("novedad_postcontractual", self.suspension_obj.id, self.contrato_obj_argo)
                                         .then(function (request_argo){
                                         console.log("Respuesta Argo", request_argo);
                                         if (

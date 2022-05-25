@@ -40,16 +40,11 @@ angular
 
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
-            self.contrato_obj = {};
-            self.contrato_obj_argo = {};
-            self.contrato_obj_argo.NumeroCdp = null;
-            self.contrato_obj_argo.VigenciaCdp = null;
-            self.contrato_obj_argo.UnidadEjecucion = null;
-            self.contrato_obj_argo.ValorNovedad = null;
+            self.contrato_obj = {};                 
             self.elaboro = "";
             self.estados = [];
-            self.elaboro_cedula = token_service.getPayload().documento;
-
+            self.elaboro_cedula = token_service.getPayload().documento;    
+                 
             const solic_input = document.getElementById("n_solicitud");
             solic_input.addEventListener("input", function(){
                 if (this.value.length > 7) {
@@ -107,17 +102,7 @@ angular
                         self.contrato_obj.tipo_contrato =
                             agora_response.data[0].TipoContrato.TipoContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
-                        self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
-
-                        //Obtención de datos para alimentar objeto que será el payload del POST a Agóra 
-                        //self.contrato_obj_argo.Id = parseInt(self.contrato_obj.numero_contrato); //preguntar a que hace referencia éste dato en argo
-                        self.contrato_obj_argo.NumeroContrato = self.contrato_id; //Revisar si toca parsearlo
-                        self.contrato_obj_argo.Vigencia = parseInt(self.contrato_vigencia);
-                        self.contrato_obj_argo.FechaRegistro = self.contrato_obj.fecha_registro;
-                        self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
-                        self.contrato_obj_argo.PlazoEjecucion = agora_response.data[0].PlazoEjecucion;
-                        self.contrato_obj_argo.FechaInicio = self.f_inicio;
-                        self.contrato_obj_argo.FechaFin = self.f_fin;
+                        self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;                      
 
 
                         //Obtención de datos del ordenador del gasto
@@ -139,10 +124,7 @@ angular
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
                             .then(function (acta_response) {
                                 self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
-                                self.contrato_obj.Fin = acta_response.data[0].FechaFin;
-                                // Tratamiento de datos para objeto Payload para POST a Argo
-                                //self.contrato_obj_argo.FechaInicio = self.contrato_obj.Inicio;
-                                //self.contrato_obj_argo.FechaFin = self.contrato_obj.Fin;
+                                self.contrato_obj.Fin = acta_response.data[0].FechaFin;                                
                             });
                             
                         //Obtencion de datos del supervisor.
@@ -365,10 +347,20 @@ angular
                             self.contrato_estado.FechaRegistro = new Date();
                             self.contrato_estado.Estado = self.estado_suspendido;
                             self.contrato_estado.Usuario = "usuario_prueba";
-                            //Tratamiento de datos para objeto payload POST Argo
+                            //Obtención de datos para alimentar objeto que será el payload del POST a Agóra 
+                            self.contrato_obj_argo = {};
+                            self.contrato_obj_argo.NumeroContrato = self.contrato_id; //Revisar si toca parsearlo
+                            self.contrato_obj_argo.Vigencia = parseInt(self.contrato_vigencia);
+                            self.contrato_obj_argo.FechaRegistro = new Date();                            
+                            self.contrato_obj_argo.PlazoEjecucion = self.contrato_obj.plazo;
+                            self.contrato_obj_argo.FechaInicio = self.suspension_nov.fechasuspension;
+                            self.contrato_obj_argo.FechaFin = self.suspension_nov.fechafinsuspension;
+                            console.log("fechas suspensión", self.contrato_obj_argo.FechaInicio, self.contrato_obj_argo.FechaInicio);
+                            self.contrato_obj_argo.UnidadEjecucion = 205;
+                            
                             if(self.suspension_nov.tiponovedad === "NP_SUS"){
                                 self.contrato_obj_argo.TipoNovedad = parseFloat(216);
-                            }
+                            };
                         });
                         // amazonAdministrativaRequest
                         //                 .get(
@@ -416,7 +408,7 @@ angular
                                                     //self.formato_generacion_pdf();
                                                     console.log("obj argo", self.contrato_obj_argo);
                                                     amazonAdministrativaRequest
-                                                        .post("novedad_postcontractual", self.contrato_obj_argo)
+                                                        .post("novedad_postcontractual/", self.contrato_obj_argo)
                                                         .then(function (request_argo){
                                                             console.log("Respuesta Argo", request_argo);
                                                             if (
