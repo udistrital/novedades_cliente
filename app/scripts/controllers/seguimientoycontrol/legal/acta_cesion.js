@@ -103,15 +103,14 @@ angular
                             agora_response.data[0].FechaRegistro;
                         self.contrato_obj.ordenadorGasto_id =
                             agora_response.data[0].OrdenadorGasto;
-                        self.contrato_obj.vigencia = self.contrato_vigencia;
-                        self.contrato_obj.supervisor_cedula =
-                            agora_response.data[0].Supervisor.Documento;
+                        self.contrato_obj.vigencia = self.contrato_vigencia;                        
                         self.contrato_obj.supervisor_rol =
                             agora_response.data[0].Supervisor.Cargo;
                         self.contrato_obj.contratista = agora_response.data[0].Contratista;
                         self.contrato_obj.fecha_suscripcion = String(
-                            agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion
+                            agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion                        
                         );
+                        self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
                         self.contrato_obj.tipo_contrato =
                             agora_response.data[0].TipoContrato.TipoContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
@@ -123,7 +122,15 @@ angular
                                 self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                             });
-
+                            amazonAdministrativaRequest
+                            .get(
+                                "supervisor_contrato?query=DependenciaSupervisor:" + 
+                                self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
+                            .then(function(scd_response){
+                                console.log("super", scd_response);
+                                self.contrato_obj.supervisor_cedula =
+                                    scd_response.data[0].Documento;
+                            });
                             amazonAdministrativaRequest
                             .get(
                                 "informacion_persona_natural?query=Id:" +
@@ -458,8 +465,7 @@ angular
                                             self.cesion_nov.poliza = "";
                                             self.cesion_nov.tiempoprorroga = 0;
                                             self.cesion_nov.tiponovedad =
-                                                nc_response.data[0].CodigoAbreviacion;
-                                                console.log("tiponovedad", )
+                                                nc_response.data[0].CodigoAbreviacion;                                                
                                             self.cesion_nov.valoradicion = 0;
                                             self.cesion_nov.valorfinalcontrato = 0;
                                             self.cesion_nov.vigencia = String(
