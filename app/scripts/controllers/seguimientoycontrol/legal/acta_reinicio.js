@@ -727,7 +727,7 @@ angular
                             // self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                             self.contrato_obj_argo.PlazoEjecucion = self.suspension_obj.PlazoEjecucion;
                             self.contrato_obj_argo.FechaInicio = self.suspension_obj.FechaInicio;
-                            self.contrato_obj_argo.FechaFin = new Date();                            
+                            self.contrato_obj_argo.FechaFin = self.reinicio_nov.fechareinicio//new Date(self.f_finsuspension);                            
                             self.contrato_obj_argo.UnidadEjecucion = self.suspension_obj.UnidadEjecucion;
                             self.contrato_obj_argo.TipoNovedad = parseFloat(217);
                             //self.contrato_obj_argo.VigenciaCdp = 2021;
