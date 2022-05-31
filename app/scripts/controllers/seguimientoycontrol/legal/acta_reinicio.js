@@ -100,6 +100,7 @@ angular
                         );
                         self.contrato_obj.tipo_contrato =
                             agora_response.data[0].TipoContrato.TipoContrato;
+                            self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;    
 
                         //Se obtiene los datos de Acta de Inicio.
                         agoraRequest
@@ -147,33 +148,75 @@ angular
                             });
 
                         //Obtención de datos del supervisor
-                        agoraRequest
+                        amazonAdministrativaRequest
+                        .get(
+                            "supervisor_contrato?query=DependenciaSupervisor:" + 
+                            self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
+                        .then(function(scd_response){                                 
+                            console.log("super", scd_response);
+                            self.contrato_obj.supervisor_cedula =
+                                            scd_response.data[0].Documento;
+                            console.log("cedula super", self.contrato_obj.supervisor_cedula);
+                              
+                            amazonAdministrativaRequest
                             .get(
                                 "informacion_persona_natural?query=Id:" +
                                 self.contrato_obj.supervisor_cedula
                             )
-                            .then(function (ispn_response) {
-                                coreAmazonRequest
-                                    .get(
-                                        "ciudad",
-                                        "query=Id:" +
-                                        ispn_response.data[0].IdCiudadExpedicionDocumento
-                                    )
-                                    .then(function (sc_response) {
-                                        self.contrato_obj.supervisor_ciudad_documento =
-                                            sc_response.data[0].Nombre;
-                                        self.contrato_obj.supervisor_tipo_documento =
-                                            ispn_response.data[0].TipoDocumento.ValorParametro;
-                                        self.contrato_obj.supervisor_nombre_completo =
-                                            ispn_response.data[0].PrimerNombre +
-                                            " " +
-                                            ispn_response.data[0].SegundoNombre +
-                                            " " +
-                                            ispn_response.data[0].PrimerApellido +
-                                            " " +
-                                            ispn_response.data[0].SegundoApellido;
-                                    });
+                            .then(function (ispn_response) {                              
+                        
+                            coreAmazonRequest
+                                .get(
+                                    "ciudad",
+                                    "query=Id:" +
+                                    ispn_response.data[0].IdCiudadExpedicionDocumento
+                                )
+                                .then(function (sc_response) {
+                                    self.contrato_obj.supervisor_ciudad_documento =
+                                        sc_response.data[0].Nombre;
+                                        
+                                    self.contrato_obj.supervisor_tipo_documento =
+                                        ispn_response.data[0].TipoDocumento.ValorParametro;
+                                    self.contrato_obj.supervisor_nombre =
+                                        ispn_response.data[0].PrimerNombre +
+                                        " " +
+                                        ispn_response.data[0].SegundoNombre +
+                                        " " +
+                                        ispn_response.data[0].PrimerApellido +
+                                        " " +
+                                        ispn_response.data[0].SegundoApellido;  
+                                        console.log("datos super", self.contrato_obj.supervisor_nombre, self.contrato_obj.supervisor_tipo_documento, self.contrato_obj.supervisor_cedula, self.contrato_obj.supervisor_ciudad_documento);
+   
+                                });
                             });
+                        });
+                        // agoraRequest
+                        //     .get(
+                        //         "informacion_persona_natural?query=Id:" +
+                        //         self.contrato_obj.supervisor_cedula
+                        //     )
+                        //     .then(function (ispn_response) {
+                        //         coreAmazonRequest
+                        //             .get(
+                        //                 "ciudad",
+                        //                 "query=Id:" +
+                        //                 ispn_response.data[0].IdCiudadExpedicionDocumento
+                        //             )
+                        //             .then(function (sc_response) {
+                        //                 self.contrato_obj.supervisor_ciudad_documento =
+                        //                     sc_response.data[0].Nombre;
+                        //                 self.contrato_obj.supervisor_tipo_documento =
+                        //                     ispn_response.data[0].TipoDocumento.ValorParametro;
+                        //                 self.contrato_obj.supervisor_nombre_completo =
+                        //                     ispn_response.data[0].PrimerNombre +
+                        //                     " " +
+                        //                     ispn_response.data[0].SegundoNombre +
+                        //                     " " +
+                        //                     ispn_response.data[0].PrimerApellido +
+                        //                     " " +
+                        //                     ispn_response.data[0].SegundoApellido;
+                        //             });
+                        //     });
                         //Obtiene datos de la novedad de suspensión
 
                         amazonAdministrativaRequest
@@ -680,12 +723,13 @@ angular
                             self.contrato_obj_argo = {};
                             self.contrato_obj_argo.NumeroContrato = self.suspension_obj.NumeroContrato; //Revisar si toca parsearlo
                             self.contrato_obj_argo.Vigencia = self.suspension_obj.Vigencia; //parseInt(self.contrato_obj.vigencia);
-                            self.contrato_obj_argo.FechaRegistro = self.suspension_obj.FechaRegistro;
+                            self.contrato_obj_argo.FechaRegistro = new Date();//self.suspension_obj.FechaRegistro;
                             // self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                             self.contrato_obj_argo.PlazoEjecucion = self.suspension_obj.PlazoEjecucion;
                             self.contrato_obj_argo.FechaInicio = self.suspension_obj.FechaInicio;
                             self.contrato_obj_argo.FechaFin = new Date();                            
                             self.contrato_obj_argo.UnidadEjecucion = self.suspension_obj.UnidadEjecucion;
+                            self.contrato_obj_argo.TipoNovedad = parseFloat(217);
                             //self.contrato_obj_argo.VigenciaCdp = 2021;
                             // self.contrato_obj_argo.ValorNovedad = null;
                             //Tratamiento de datos para objeto payload POST Argo

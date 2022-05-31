@@ -111,8 +111,8 @@ angular
                         self.contrato_obj.objeto = agora_response.data[0].ObjetoContrato;
                         self.contrato_obj.valor = agora_response.data[0].ValorContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
-                        self.contrato_obj.supervisor_cedula =
-                            agora_response.data[0].Supervisor.Documento;
+                        // self.contrato_obj.supervisor_cedula =
+                        //     agora_response.data[0].Supervisor.Documento;
                         self.contrato_obj.supervisor_rol =
                             agora_response.data[0].Supervisor.Cargo;
                         self.contrato_obj.fecha_registro =
@@ -120,6 +120,7 @@ angular
                         self.contrato_obj.fecha_suscripcion = String(
                             agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion
                         );
+                        self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
                         self.contrato_obj.vigencia = self.contrato_vigencia;
                         var fecha_reg = self.contrato_obj.fecha_registro;
                         var res = fecha_reg.split("-");                        
@@ -181,34 +182,76 @@ angular
                         // };
                         
                         //Se obtienen datos relacionados al supervisor.
-                        agoraRequest
+                        amazonAdministrativaRequest
+                        .get(
+                            "supervisor_contrato?query=DependenciaSupervisor:" + 
+                            self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
+                        .then(function(scd_response){                                 
+                            console.log("super", scd_response);
+                            self.contrato_obj.supervisor_cedula =
+                                            scd_response.data[0].Documento;
+                            console.log("cedula super", self.contrato_obj.supervisor_cedula);
+                              
+                            amazonAdministrativaRequest
                             .get(
                                 "informacion_persona_natural?query=Id:" +
                                 self.contrato_obj.supervisor_cedula
                             )
-                            .then(function (ipn_response) {
-                                coreAmazonRequest
-                                    .get(
-                                        "ciudad",
-                                        "query=Id:" +
-                                        ipn_response.data[0].IdCiudadExpedicionDocumento
-                                    )
-                                    .then(function (c_response) {
-                                        console.log("supervisor", c_response);
-                                        self.contrato_obj.supervisor_tipo_Documento =
-                                            ipn_response.data[0].TipoDocumento.ValorParametro;
-                                        self.contrato_obj.supervisor_ciudad_cedula =
-                                            c_response.data[0].Nombre;
-                                        self.contrato_obj.supervisor_nombre =
-                                            ipn_response.data[0].PrimerNombre +
-                                            " " +
-                                            ipn_response.data[0].SegundoNombre +
-                                            " " +
-                                            ipn_response.data[0].PrimerApellido +
-                                            " " +
-                                            ipn_response.data[0].SegundoApellido;
-                                    });
+                            .then(function (ispn_response) {                              
+                        
+                            coreAmazonRequest
+                                .get(
+                                    "ciudad",
+                                    "query=Id:" +
+                                    ispn_response.data[0].IdCiudadExpedicionDocumento
+                                )
+                                .then(function (sc_response) {
+                                    self.contrato_obj.supervisor_ciudad_documento =
+                                        sc_response.data[0].Nombre;
+                                        
+                                    self.contrato_obj.supervisor_tipo_documento =
+                                        ispn_response.data[0].TipoDocumento.ValorParametro;
+                                    self.contrato_obj.supervisor_nombre =
+                                        ispn_response.data[0].PrimerNombre +
+                                        " " +
+                                        ispn_response.data[0].SegundoNombre +
+                                        " " +
+                                        ispn_response.data[0].PrimerApellido +
+                                        " " +
+                                        ispn_response.data[0].SegundoApellido;  
+                                        console.log("datos super", self.contrato_obj.supervisor_nombre, self.contrato_obj.supervisor_tipo_documento, self.contrato_obj.supervisor_cedula, self.contrato_obj.supervisor_ciudad_documento);
+   
+                                });
                             });
+                        });
+                        // agoraRequest
+                        //     .get(
+                        //         "informacion_persona_natural?query=Id:" +
+                        //         self.contrato_obj.supervisor_cedula
+                        //     )
+                        //     .then(function (ipn_response) {
+                        //         coreAmazonRequest
+                        //             .get(
+                        //                 "ciudad",
+                        //                 "query=Id:" +
+                        //                 ipn_response.data[0].IdCiudadExpedicionDocumento
+                        //             )
+                        //             .then(function (c_response) {
+                        //                 console.log("supervisor", c_response);
+                        //                 self.contrato_obj.supervisor_tipo_Documento =
+                        //                     ipn_response.data[0].TipoDocumento.ValorParametro;
+                        //                 self.contrato_obj.supervisor_ciudad_cedula =
+                        //                     c_response.data[0].Nombre;
+                        //                 self.contrato_obj.supervisor_nombre =
+                        //                     ipn_response.data[0].PrimerNombre +
+                        //                     " " +
+                        //                     ipn_response.data[0].SegundoNombre +
+                        //                     " " +
+                        //                     ipn_response.data[0].PrimerApellido +
+                        //                     " " +
+                        //                     ipn_response.data[0].SegundoApellido;
+                        //             });
+                        //     });
 
                         //Obtención de datos del ordenador del gasto
                         agoraRequest
@@ -588,6 +631,8 @@ angular
                             $scope.nuevo_plazo_contrato = self.contrato_obj.plazo + " meses";
                             callback(self.tiponovedad);
                         });
+                    self.contrato_obj.inicioOSi = self.contrato_obj.inicio;
+                    self.contrato_obj.nuevaFechaFin = self.contrato_obj.fin;
                 }
                 if ($scope.adicion != true && $scope.prorroga == true) {
                     $scope.estado_novedad = "Prórroga";
@@ -600,29 +645,6 @@ angular
                             callback(self.tiponovedad);
                         });
                     $scope.valor_adicion = "0";
-                }
-                if ($scope.adicion == true && $scope.prorroga == true) {
-                    $scope.estado_novedad = "Adición y Prorroga";
-                    adicionProrroga = "prorrogar el plazo y adicionar  el valor";
-                    $scope.alert = "DESCRIPCION_ADICION_PRORROGA";
-                    novedadesRequest
-                        .get("tipo_novedad", "query=Nombre:Adición/Prórroga")
-                        .then(function (nc_response) {                            
-                            self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
-                            callback(self.tiponovedad);
-                        });
-                }
-            }
-
-            /**
-             * @ngdoc method
-             * @name generarActa
-             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaAdicionProrrogaCtrl
-             * @description
-             * funcion que valida la data de la novedad
-             */
-            self.generarActa = function () {                
-                generateTipoNovedad(function (tiponovedad) {
                     //la fecha
                     var FechadeFin = new Date(self.contrato_obj.fin);
                     console.log("Fecha Fin", FechadeFin);
@@ -638,12 +660,6 @@ angular
                     self.contrato_obj.inicioOSi = FechadeFin.getFullYear() + '-' +
                       FechadeFin.getMonth() + '-' + FechadeFin.getDate();
                     console.log("prueba 1", self.contrato_obj.inicioOSi); 
-                    //Nueva fecha fin sumada
-                    // var nuevaFechaInicio = new Date(self.contrato_obj.inicioOSi);
-                    // nuevaFechaInicio.setDate(nuevaFechaInicio.getDate() + $scope.tiempo_prorroga);
-                    //Formato salida nueva fecha fin
-
-                    
                     var dias = $scope.tiempo_prorroga;
                     var meses = dias / 30;
                     var mesEntero = parseInt(meses);
@@ -658,6 +674,93 @@ angular
                     FechadeFin.getMonth() + '-' + FechadeFin.getDate();
                     
                     console.log("nueva Fecha Fin", self.contrato_obj.nuevaFechaFin);
+                }
+                if ($scope.adicion == true && $scope.prorroga == true) {
+                    $scope.estado_novedad = "Adición y Prorroga";
+                    adicionProrroga = "prorrogar el plazo y adicionar  el valor";
+                    $scope.alert = "DESCRIPCION_ADICION_PRORROGA";
+                    novedadesRequest
+                        .get("tipo_novedad", "query=Nombre:Adición/Prórroga")
+                        .then(function (nc_response) {                            
+                            self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+                            callback(self.tiponovedad);
+                        });
+                    //la fecha
+                    var FechadeFin = new Date(self.contrato_obj.fin);
+                    console.log("Fecha Fin", FechadeFin);
+                    //dias a sumar
+                    //var dias = 1;
+                    
+                    //nueva fecha sumada
+                    FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    if(FechadeFin.getDate == 31){
+                        FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    }
+                    //formato de salida para la fecha
+                    self.contrato_obj.inicioOSi = FechadeFin.getFullYear() + '-' +
+                      FechadeFin.getMonth() + '-' + FechadeFin.getDate();
+                    console.log("prueba 1", self.contrato_obj.inicioOSi);
+                    var dias = $scope.tiempo_prorroga;
+                    var meses = dias / 30;
+                    var mesEntero = parseInt(meses);
+                    var decimal = meses - mesEntero;
+                    var numero_dias = decimal * 30;
+                    FechadeFin.setMonth(FechadeFin.getMonth() + mesEntero);
+                    FechadeFin.setDate(FechadeFin.getDate() + numero_dias);
+                    if(FechadeFin.getDate == 31){
+                        FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    }
+                    self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
+                    FechadeFin.getMonth() + '-' + FechadeFin.getDate();
+                    
+                    console.log("nueva Fecha Fin", self.contrato_obj.nuevaFechaFin); 
+                }
+            }
+
+            /**
+             * @ngdoc method
+             * @name generarActa
+             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaAdicionProrrogaCtrl
+             * @description
+             * funcion que valida la data de la novedad
+             */
+            self.generarActa = function () {                
+                generateTipoNovedad(function (tiponovedad) {
+                    // //la fecha
+                    // var FechadeFin = new Date(self.contrato_obj.fin);
+                    // console.log("Fecha Fin", FechadeFin);
+                    // //dias a sumar
+                    // //var dias = 1;
+                    
+                    // //nueva fecha sumada
+                    // FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    // if(FechadeFin.getDate == 31){
+                    //     FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    // }
+                    // //formato de salida para la fecha
+                    // self.contrato_obj.inicioOSi = FechadeFin.getFullYear() + '-' +
+                    //   FechadeFin.getMonth() + '-' + FechadeFin.getDate();
+                    // console.log("prueba 1", self.contrato_obj.inicioOSi); 
+                    //Nueva fecha fin sumada
+                    // var nuevaFechaInicio = new Date(self.contrato_obj.inicioOSi);
+                    // nuevaFechaInicio.setDate(nuevaFechaInicio.getDate() + $scope.tiempo_prorroga);
+                    //Formato salida nueva fecha fin
+
+                    
+                    // var dias = $scope.tiempo_prorroga;
+                    // var meses = dias / 30;
+                    // var mesEntero = parseInt(meses);
+                    // var decimal = meses - mesEntero;
+                    // var numero_dias = decimal * 30;
+                    // FechadeFin.setMonth(FechadeFin.getMonth() + mesEntero);
+                    // FechadeFin.setDate(FechadeFin.getDate() + numero_dias);
+                    // if(FechadeFin.getDate == 31){
+                    //     FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    // }
+                    // self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
+                    // FechadeFin.getMonth() + '-' + FechadeFin.getDate();
+                    
+                    // console.log("nueva Fecha Fin", self.contrato_obj.nuevaFechaFin);
                     //objeto acta adición_prórroga
                     self.data_acta_adicion_prorroga = {
                         contrato: self.contrato_obj.numero_contrato,
@@ -699,8 +802,8 @@ angular
                      self.contrato_obj_argo.FechaRegistro = self.f_hoy;
                      self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                      self.contrato_obj_argo.PlazoEjecucion = parseInt($scope.valor_prorroga_final);
-                     self.contrato_obj_argo.FechaInicio = self.contrato_obj.inicioOSi;                  
-                     self.contrato_obj_argo.FechaFin = self.contrato_obj.nuevaFechaFin; 
+                     self.contrato_obj_argo.FechaInicio = new Date(self.contrato_obj.inicioOSi);                  
+                     self.contrato_obj_argo.FechaFin = new Date(self.contrato_obj.nuevaFechaFin); 
                      self.contrato_obj_argo.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
                      self.contrato_obj_argo.VigenciaCdp = parseInt(self.contrato_obj.cdp_anno);
                      self.contrato_obj_argo.ValorNovedad = parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, ""));

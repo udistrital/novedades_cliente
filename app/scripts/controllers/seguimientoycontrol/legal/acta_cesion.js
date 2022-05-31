@@ -103,7 +103,9 @@ angular
                             agora_response.data[0].FechaRegistro;
                         self.contrato_obj.ordenadorGasto_id =
                             agora_response.data[0].OrdenadorGasto;
-                        self.contrato_obj.vigencia = self.contrato_vigencia;                        
+                        self.contrato_obj.vigencia = self.contrato_vigencia; 
+                        //self.contrato_obj.supervisor_cedula =
+                            //agora_response.data[0].Supervisor.Documento;                       
                         self.contrato_obj.supervisor_rol =
                             agora_response.data[0].Supervisor.Cargo;
                         self.contrato_obj.contratista = agora_response.data[0].Contratista;
@@ -122,68 +124,77 @@ angular
                                 self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                             });
-                            amazonAdministrativaRequest
-                            .get(
-                                "supervisor_contrato?query=DependenciaSupervisor:" + 
-                                self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
-                            .then(function(scd_response){
-                                console.log("super", scd_response);
-                                self.contrato_obj.supervisor_cedula =
-                                    scd_response.data[0].Documento;
-                            });
+                        //Se obtiene información del supervisor
+                        // amazonAdministrativaRequest
+                        //     .get(
+                        //         "informacion_persona_natural?query=Id:" +
+                        //         self.contrato_obj.supervisor_cedula
+                        //     )
+                        //     .then(function (ispn_response) {
+                        //         self.contrato_obj.supervisor_tipo_documento =
+                        //             ispn_response.data[0].TipoDocumento.ValorParametro;
+                        //         self.contrato_obj.supervisor_nombre =
+                        //             ispn_response.data[0].PrimerNombre +
+                        //             " " +
+                        //             ispn_response.data[0].SegundoNombre +
+                        //             " " +
+                        //             ispn_response.data[0].PrimerApellido +
+                        //             " " +
+                        //             ispn_response.data[0].SegundoApellido;
+                        //         coreAmazonRequest
+                        //             .get(
+                        //                 "ciudad",
+                        //                 "query=Id:" +
+                        //                 ispn_response.data[0].IdCiudadExpedicionDocumento
+                        //             )
+                        //             .then(function (sc_response) {
+                        //                 self.contrato_obj.supervisor_ciudad_documento =
+                        //                     sc_response.data[0].Nombre;
+                        //             });
+                        //     });
+
+                        amazonAdministrativaRequest
+                        .get(
+                            "supervisor_contrato?query=DependenciaSupervisor:" + 
+                            self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
+                        .then(function(scd_response){                                 
+                            console.log("super", scd_response);
+                            self.contrato_obj.supervisor_cedula =
+                                            scd_response.data[0].Documento;
+                            console.log("cedula super", self.contrato_obj.supervisor_cedula);
+                              
                             amazonAdministrativaRequest
                             .get(
                                 "informacion_persona_natural?query=Id:" +
                                 self.contrato_obj.supervisor_cedula
                             )
-                            .then(function (ispn_response) {
-                                self.contrato_obj.supervisor_tipo_documento =
-                                    ispn_response.data[0].TipoDocumento.ValorParametro;
-                                self.contrato_obj.supervisor_nombre =
-                                    ispn_response.data[0].PrimerNombre +
-                                    " " +
-                                    ispn_response.data[0].SegundoNombre +
-                                    " " +
-                                    ispn_response.data[0].PrimerApellido +
-                                    " " +
-                                    ispn_response.data[0].SegundoApellido;
+                            .then(function (ispn_response) {                              
                         
-                        // amazonAdministrativaRequest
-                        //     .get(
-                        //         "supervisor_contrato?query=Documento:" +
-                        //         self.contrato_obj.supervisor_cedula
-                        //     )
-                        //     .then(function (ispn_response) {
-                        //         console.log("supervisor", ispn_response)
-                        //         // self.contrato_obj.supervisor_tipo_documento =
-                        //         //     ispn_response.data[0].TipoDocumento.ValorParametro;
-                        //         if(ispn_response.data[0].Tipo == 1){
-                        //             amazonAdministrativaRequest
-                        //             .get("informacion_persona_natural?query=Id:" + self.contrato_obj.supervisor_cedula)
-                        //             .then()
-                        //             self.contrato_obj.supervisor_tipo_documento = "Cédula de ciudadanía";
-                        //         };
-                        //         self.contrato_obj.supervisor_nombre = ispn_response.data[0].Nombre;
-                        //         // self.contrato_obj.supervisor_nombre =
-                        //         //     ispn_response.data[0].PrimerNombre +
-                        //         //     " " +
-                        //         //     ispn_response.data[0].SegundoNombre +
-                        //         //     " " +
-                        //         //     ispn_response.data[0].PrimerApellido +
-                        //         //     " " +
-                        //         //     ispn_response.data[0].SegundoApellido;
-                        //             console.log("supervisor", self.contrato_obj.supervisor_nombre);
-                                coreAmazonRequest
-                                    .get(
-                                        "ciudad",
-                                        "query=Id:" +
-                                        ispn_response.data[0].IdCiudadExpedicionDocumento
-                                    )
-                                    .then(function (sc_response) {
-                                        self.contrato_obj.supervisor_ciudad_documento =
-                                            sc_response.data[0].Nombre;
-                                    });
+                            coreAmazonRequest
+                                .get(
+                                    "ciudad",
+                                    "query=Id:" +
+                                    ispn_response.data[0].IdCiudadExpedicionDocumento
+                                )
+                                .then(function (sc_response) {
+                                    self.contrato_obj.supervisor_ciudad_documento =
+                                        sc_response.data[0].Nombre;
+                                        
+                                    self.contrato_obj.supervisor_tipo_documento =
+                                        ispn_response.data[0].TipoDocumento.ValorParametro;
+                                    self.contrato_obj.supervisor_nombre =
+                                        ispn_response.data[0].PrimerNombre +
+                                        " " +
+                                        ispn_response.data[0].SegundoNombre +
+                                        " " +
+                                        ispn_response.data[0].PrimerApellido +
+                                        " " +
+                                        ispn_response.data[0].SegundoApellido;  
+                                        console.log("datos super", self.contrato_obj.supervisor_nombre, self.contrato_obj.supervisor_tipo_documento, self.contrato_obj.supervisor_cedula, self.contrato_obj.supervisor_ciudad_documento);
+   
+                                });
                             });
+                        });
 
                         //Obtención de datos del ordenador del gasto
                         amazonAdministrativaRequest
@@ -527,8 +538,8 @@ angular
                                             novedadesMidRequest
                                                 .post("novedad", self.cesion_nov)
                                                 .then(function (request_novedades) {
-                                                    console.log("OBJ POST", self.cesion_nov);
-                                                    console.log("respuesta", request_novedades);
+                                                    //console.log("OBJ POST", self.cesion_nov);
+                                                    //console.log("respuesta", request_novedades);
                                                     if (
                                                         request_novedades.status == 200 ||
                                                         request_novedades.statusText == "OK"
@@ -1425,7 +1436,7 @@ angular
                                                                
 
                                 [{
-                                    text: "\n\n______________________________________",
+                                    text: "\n\n\n\n______________________________________",
                                     bold: false,
                                     style: "topHeader",
                                 },
