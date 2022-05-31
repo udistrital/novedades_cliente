@@ -111,6 +111,7 @@ angular.module('contractualClienteApp')
                 self.contrato_obj.contratista = agora_response.data[0].Contratista;
                 self.contrato_obj.fecha_suscripcion = String(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
                 self.contrato_obj.tipo_contrato = agora_response.data[0].TipoContrato.TipoContrato;
+                self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
 
                 //Se obtiene los datos de Acta de Inicio.
                 agoraRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.id).then(function (acta_response) {
@@ -133,13 +134,96 @@ angular.module('contractualClienteApp')
                 });
 
                 //Obtención de datos del supervisor.
-                agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ispn_response) {
-                    coreAmazonRequest.get('ciudad', 'query=Id:' + ispn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
-                        self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
-                        self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
-                        self.contrato_obj.supervisor_nombre_completo = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " + ispn_response.data[0].SegundoApellido;
-                    });
-                });
+                amazonAdministrativaRequest
+                        .get(
+                            "supervisor_contrato?query=DependenciaSupervisor:" + 
+                            self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
+                        .then(function(scd_response){                                 
+                            console.log("super", scd_response);
+                            self.contrato_obj.supervisor_cedula =
+                                            scd_response.data[0].Documento;
+                            console.log("cedula super", self.contrato_obj.supervisor_cedula);
+                              
+                            amazonAdministrativaRequest
+                            .get(
+                                "informacion_persona_natural?query=Id:" +
+                                self.contrato_obj.supervisor_cedula
+                            )
+                            .then(function (ispn_response) {                              
+                                coreAmazonRequest
+                                .get(
+                                    "ciudad",
+                                    "query=Id:" +
+                                    ispn_response.data[0].IdCiudadExpedicionDocumento
+                                )
+                                .then(function (sc_response) {
+                                    self.contrato_obj.supervisor_ciudad_documento =
+                                        sc_response.data[0].Nombre;
+                                    self.contrato_obj.supervisor_tipo_documento =
+                                        ispn_response.data[0].TipoDocumento.ValorParametro;
+                                    self.contrato_obj.supervisor_nombre_completo =
+                                        ispn_response.data[0].PrimerNombre +
+                                        " " +
+                                        ispn_response.data[0].SegundoNombre +
+                                        " " +
+                                        ispn_response.data[0].PrimerApellido +
+                                        " " +
+                                        ispn_response.data[0].SegundoApellido;
+                                });
+                            });
+                            
+                        });
+                        
+                // amazonAdministrativaRequest
+                // .get(
+                //     "supervisor_contrato?query=DependenciaSupervisor:" + 
+                //     self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
+                // .then(function(scd_response){                                 
+                //     console.log("super", scd_response);
+                //     self.contrato_obj.supervisor_cedula =
+                //                     scd_response.data[0].Documento;
+                //     console.log("cedula super", self.contrato_obj.supervisor_cedula);
+                      
+                //     amazonAdministrativaRequest
+                //     .get(
+                //         "informacion_persona_natural?query=Id:" +
+                //         self.contrato_obj.supervisor_cedula
+                //     )
+                //     .then(function (ispn_response) {                              
+                
+                //     coreAmazonRequest
+                //         .get(
+                //             "ciudad",
+                //             "query=Id:" +
+                //             ispn_response.data[0].IdCiudadExpedicionDocumento
+                //         )
+                //         .then(function (sc_response) {
+                //             self.contrato_obj.supervisor_ciudad_documento =
+                //                 sc_response.data[0].Nombre;
+                                
+                //             self.contrato_obj.supervisor_tipo_documento =
+                //                 ispn_response.data[0].TipoDocumento.ValorParametro;
+                //             self.contrato_obj.supervisor_nombre =
+                //                 ispn_response.data[0].PrimerNombre +
+                //                 " " +
+                //                 ispn_response.data[0].SegundoNombre +
+                //                 " " +
+                //                 ispn_response.data[0].PrimerApellido +
+                //                 " " +
+                //                 ispn_response.data[0].SegundoApellido;  
+                //                 console.log("datos super", self.contrato_obj.supervisor_nombre, self.contrato_obj.supervisor_tipo_documento, self.contrato_obj.supervisor_cedula, self.contrato_obj.supervisor_ciudad_documento);
+
+                //         });
+                //     });
+                // });
+
+                // agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ispn_response) {
+                //     coreAmazonRequest.get('ciudad', 'query=Id:' + ispn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
+                //         self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
+                //         self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
+                //         self.contrato_obj.supervisor_nombre_completo = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " + ispn_response.data[0].SegundoApellido;
+                //     });
+                // });
 
                 //Obtención de datos del jefe de juridica
                 agoraRequest.get('supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
@@ -276,7 +360,7 @@ angular.module('contractualClienteApp')
                     //self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                     //self.contrato_obj_argo.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
                     //self.contrato_obj_argo.FechaInicio = null;
-                    self.contrato_obj_argo.FechaFin = self.terminacion_nov.fecha_terminacion_anticipada; 
+                    self.contrato_obj_argo.FechaFin = new Date(self.terminacion_nov.fecha_terminacion_anticipada); 
                     //self.contrato_obj_argo.NumeroCdp = parseInt(self.contrato_obj.cdp_numero);
                     //self.contrato_obj_argo.VigenciaCdp = parseInt(self.contrato_obj.cdp_fecha);
                     //self.contrato_obj_argo.ValorNovedad = parseFloat(self.terminacion_nov.valor_desembolsado);
