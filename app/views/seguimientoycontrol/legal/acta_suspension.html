@@ -103,7 +103,7 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="fechainicio">{{'FECHA_SUSPENSION_INICIO' | translate}}:</label> <br>
-                                <md-datepicker ng-model="sLactaSuspension.f_inicio"></md-datepicker>
+                                <md-datepicker ng-model="sLactaSuspension.f_inicio" md-max-date="sLactaSuspension.f_hoy"></md-datepicker>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="fechafin">{{'FECHA_SUSPENSION_FIN' | translate}}:</label> <br>
@@ -113,7 +113,7 @@
                             <div class="form-group col-md-12">
                                 <br>
                                 <p><b>{{'FECHA_REINICIO' | translate}}:</b></p>
-                                <md-datepicker ng-model="sLactaSuspension.f_reinicio" md-min-date="sLactaSuspension.f_fin">
+                                <md-datepicker ng-model="sLactaSuspension.f_reinicio" md-min-date="sLactaSuspension.f_fin" ng-disabled="true">
                                 </md-datepicker>
                             </div>
                             <div class="form-group col-md-12">
