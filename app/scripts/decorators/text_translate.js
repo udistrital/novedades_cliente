@@ -431,6 +431,7 @@ var text_es = {
     DESCRIPCION_ACTA_CESION: "Ingresar póliza para habilitar creación de novedades sobre el contrato",
     DESCRIPCION_TERMINACION: "Se registro exitosamente la novedad de terminacion anticipada<br>al contrato # ",
     DESCRIPCION_ERROR_TERMINACION: "No se pudo registrar la novedad de terminacion anticipada<br>al contrato # ",
+    DESCRIPCION_ERROR_FECHA_31: "No se puede registrar novedades con fechas en los días 31 del mes",
     //CONTRATO_DETALLE
     INFORMACION_CONTRATO: "Información Vinculación",
     FORMA_PAGO: "Forma de pago",

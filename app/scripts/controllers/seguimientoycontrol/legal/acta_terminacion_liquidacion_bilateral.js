@@ -32,6 +32,7 @@ angular.module('contractualClienteApp')
         ];
 
         var self = this;
+        self.f_hoy = new Date();
         self.n_solicitud = null;
         self.fecha_inicio = "";
         self.motivo = "";
@@ -305,6 +306,65 @@ angular.module('contractualClienteApp')
             }
         });
 
+       /**
+            * @ngdoc method
+            * @name calculoTiempo
+            * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl
+            * @description
+            * Funcion que observa y controla el cambio de fechas
+            * @param {date} Fecha de terminación anticipada
+            */            
+        $scope.$watch("sLactaTerminacionAnticipada.fecha_solicitud", function () {              
+            if(self.fecha_solicitud.getDate() == 31){
+                //respuesta incorrecta, ej: 400/500
+                self.fecha_solicitud = new Date();
+                $scope.alert =
+                    "DESCRIPCION_ERROR_FECHA_31";
+                swal({
+                    title: $translate.instant(
+                        "TITULO_ERROR_ACTA"
+                    ),
+                    type: "error",
+                    html: $translate.instant($scope.alert) +                            
+                        ".",
+                    showCloseButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                    allowOutsideClick: false,
+                }).then(function () { });
+            };
+        });
+
+        $scope.$watch("sLactaTerminacionAnticipada.fecha_terminacion_anticipada", function () {              
+            if(self.fecha_terminacion_anticipada.getDate() == 31){
+                //respuesta incorrecta, ej: 400/500
+                self.fecha_solicitud = new Date();
+                self.fecha_terminacion_anticipada = new Date();
+                $scope.alert =
+                    "DESCRIPCION_ERROR_FECHA_31";
+                swal({
+                    title: $translate.instant(
+                        "TITULO_ERROR_ACTA"
+                    ),
+                    type: "error",
+                    html: $translate.instant($scope.alert) +                            
+                        ".",
+                    showCloseButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                    allowOutsideClick: false,
+                }).then(function () { });
+            }                 
+            // self.f_terminacion = new Date(self.f_cesion);
+            // self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
+            // if(self.f_terminacion.getDate == 31){
+            //     console.log("entró");
+            //     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
+            // };             
+                       
+        }); 
+
+        //seleccionador de beneficiario de saldo
         self.selecionarSaldo = function () {
             if (self.a_favor_de == "Universidad") {
                 self.a_favor.entidad = "la Universidad Distrital.";

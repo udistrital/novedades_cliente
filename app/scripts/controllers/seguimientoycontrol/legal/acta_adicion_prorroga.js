@@ -22,6 +22,7 @@ angular
             $translate,
             novedadesRequest,
             novedadesMidRequest,
+            titanMidRequest,
             cumplidosMidRequest,
             pdfMakerService
         ) {
@@ -61,6 +62,7 @@ angular
             self.pocentaje_ejecutado = "";
             self.elaboro = "";
             self.tiponovedad = "";
+            self.f_hoy = new Date();
             self.elaboro_cedula = token_service.getPayload().documento;
             var adicionProrroga = "";
 
@@ -414,8 +416,109 @@ angular
                                 }
                             });
                     }
-                });
+                });  
+           
+           /**
+            * @ngdoc method
+            * @name calculoTiempo
+            * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaAdicionProrrogaCtrl
+            * @description
+            * Funcion que observa y controla el cambio de fechas
+            * @param {date} Fecha de Adición y Prórroga
+            */            
+            $scope.$watch("sLactaAdicionProrroga.fecha_inicio", function () {              
+                if(self.fecha_inicio.getDate() == 31){
+                    //respuesta incorrecta, ej: 400/500
+                    self.fecha_inicio = new Date();
+                    $scope.alert =
+                        "DESCRIPCION_ERROR_FECHA_31";
+                    swal({
+                        title: $translate.instant(
+                            "TITULO_ERROR_ACTA"
+                        ),
+                        type: "error",
+                        html: $translate.instant($scope.alert) +                            
+                            ".",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    }).then(function () { });
+                };
+            });
 
+            $scope.$watch("sLactaAdicionProrroga.fecha_oficio", function () {              
+                if(self.fecha_oficio.getDate() == 31){
+                    //respuesta incorrecta, ej: 400/500
+                    self.fecha_inicio = new Date();
+                    self.fecha_oficio = new Date();
+                    $scope.alert =
+                        "DESCRIPCION_ERROR_FECHA_31";
+                    swal({
+                        title: $translate.instant(
+                            "TITULO_ERROR_ACTA"
+                        ),
+                        type: "error",
+                        html: $translate.instant($scope.alert) +                            
+                            ".",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    }).then(function () { });
+                }                 
+                // self.f_terminacion = new Date(self.f_cesion);
+                // self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
+                // if(self.f_terminacion.getDate == 31){
+                //     console.log("entró");
+                //     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
+                // };             
+                           
+            });
+
+            $scope.$watch("sLactaAdicionProrroga.fecha_adicion", function () {              
+                if(self.fecha_adicion.getDate() == 31){
+                    //respuesta incorrecta, ej: 400/500
+                    self.fecha_adicion = new Date();
+                    $scope.alert =
+                        "DESCRIPCION_ERROR_FECHA_31";
+                    swal({
+                        title: $translate.instant(
+                            "TITULO_ERROR_ACTA"
+                        ),
+                        type: "error",
+                        html: $translate.instant($scope.alert) +                            
+                            ".",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    }).then(function () { });
+                };
+            });
+
+            $scope.$watch("sLactaAdicionProrroga.fecha_prorroga", function () {              
+                if(self.fecha_prorroga.getDate() == 31){
+                    //respuesta incorrecta, ej: 400/500
+                    self.fecha_prorroga = new Date();
+                    $scope.alert =
+                        "DESCRIPCION_ERROR_FECHA_31";
+                    swal({
+                        title: $translate.instant(
+                            "TITULO_ERROR_ACTA"
+                        ),
+                        type: "error",
+                        html: $translate.instant($scope.alert) +                            
+                            ".",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    }).then(function () { });
+                };
+            });
+            
+              
             /**
              * @ngdoc method
              * @name total_valor_contrato
@@ -512,7 +615,7 @@ angular
                     );
                 }
             };
-
+            
             /**
              * @ngdoc method
              * @name click_check_adicion
@@ -586,7 +689,7 @@ angular
                         if ($scope.valor_prorroga_final == undefined) {
                             $scope.valor_prorroga_final = 0;
                         }
-                    }
+                    }                    
                 } else {
                     $scope.estado_novedad = false;
                 }
@@ -620,7 +723,7 @@ angular
             };
 
             function generateTipoNovedad(callback) {
-                if ($scope.adicion == true && $scope.prorroga != true) {
+                if ($scope.adicion == true && $scope.prorroga != true) {                    
                     $scope.estado_novedad = "Adición";
                     adicionProrroga = "adicionar  el valor";
                     $scope.alert = "DESCRIPCION_ADICION";
@@ -724,43 +827,28 @@ angular
              * @description
              * funcion que valida la data de la novedad
              */
-            self.generarActa = function () {                
-                generateTipoNovedad(function (tiponovedad) {
-                    // //la fecha
-                    // var FechadeFin = new Date(self.contrato_obj.fin);
-                    // console.log("Fecha Fin", FechadeFin);
-                    // //dias a sumar
-                    // //var dias = 1;
-                    
-                    // //nueva fecha sumada
-                    // FechadeFin.setDate(FechadeFin.getDate() + 1);
-                    // if(FechadeFin.getDate == 31){
-                    //     FechadeFin.setDate(FechadeFin.getDate() + 1);
-                    // }
-                    // //formato de salida para la fecha
-                    // self.contrato_obj.inicioOSi = FechadeFin.getFullYear() + '-' +
-                    //   FechadeFin.getMonth() + '-' + FechadeFin.getDate();
-                    // console.log("prueba 1", self.contrato_obj.inicioOSi); 
-                    //Nueva fecha fin sumada
-                    // var nuevaFechaInicio = new Date(self.contrato_obj.inicioOSi);
-                    // nuevaFechaInicio.setDate(nuevaFechaInicio.getDate() + $scope.tiempo_prorroga);
-                    //Formato salida nueva fecha fin
-
-                    
-                    // var dias = $scope.tiempo_prorroga;
-                    // var meses = dias / 30;
-                    // var mesEntero = parseInt(meses);
-                    // var decimal = meses - mesEntero;
-                    // var numero_dias = decimal * 30;
-                    // FechadeFin.setMonth(FechadeFin.getMonth() + mesEntero);
-                    // FechadeFin.setDate(FechadeFin.getDate() + numero_dias);
-                    // if(FechadeFin.getDate == 31){
-                    //     FechadeFin.setDate(FechadeFin.getDate() + 1);
-                    // }
-                    // self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
-                    // FechadeFin.getMonth() + '-' + FechadeFin.getDate();
-                    
-                    // console.log("nueva Fecha Fin", self.contrato_obj.nuevaFechaFin);
+            self.generarActa = function () {    
+                // //control de fechas
+                // //$scope.$watch("sLactaAdicionProrroga.fecha_adicion", function () {              
+                //     if($scope.fecha_adicion.getDate() == 31 || self.fecha_oficio.getDate() == 31 || self.fecha_inicio.getDate() == 31){
+                //     //respuesta incorrecta, ej: 400/500
+                //         $scope.alert =
+                //             "DESCRIPCION_ERROR_FECHA_31";
+                //         swal({
+                //             title: $translate.instant(
+                //                 "TITULO_ERROR_ACTA"
+                //             ),
+                //             type: "error",
+                //             html: $translate.instant($scope.alert) +                            
+                //                 ".",
+                //             showCloseButton: true,
+                //             showCancelButton: false,
+                //             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                //             allowOutsideClick: false,
+                //         }).then(function () { });
+                //     };
+                                 
+                generateTipoNovedad(function (tiponovedad) {                  
                     //objeto acta adición_prórroga
                     self.data_acta_adicion_prorroga = {
                         contrato: self.contrato_obj.numero_contrato,
@@ -819,6 +907,25 @@ angular
                         self.contrato_obj_argo.TipoNovedad = parseFloat(220);    
                      };
                     console.log("datos obj argo", self.contrato_obj_argo);
+
+                    //Replica Titán
+                    self.contrato_obj_titan = {};
+                    self.contrato_obj_titan.Documento = self.contrato_obj.contratista_documento;                  
+                    self.contrato_obj_titan.FechaFechaFin = new Date(self.contrato_obj.nuevaFechaFin);                    
+                    self.contrato_obj_titan.NumeroContrato = self.contrato_id;
+                    self.contrato_obj_titan.Vigencia = parseInt(self.contrato_obj.vigencia);
+                                            
+                    // titanMidRequest
+                    //    .post("novedad/otrosi_contrato", self.contrato_obj_titan)
+                    //    .then(function (request_titan){
+                    //        if (
+                    //            request_titan.status == 200 ||
+                    //            request_titan.statusText == "Ok"
+                    //            ) {
+                    //                console.log("POST Titán respuesta positiva");
+                    //            }; 
+                    //    });
+
                     amazonAdministrativaRequest
                         .post("novedad_postcontractual", self.contrato_obj_argo)
                         .then(function (request_argo){
