@@ -909,11 +909,11 @@ angular
                     console.log("datos obj argo", self.contrato_obj_argo);
 
                     //Replica Titán
-                    self.contrato_obj_titan = {};
-                    self.contrato_obj_titan.Documento = self.contrato_obj.contratista_documento;                  
-                    self.contrato_obj_titan.FechaFechaFin = new Date(self.contrato_obj.nuevaFechaFin);                    
-                    self.contrato_obj_titan.NumeroContrato = self.contrato_id;
-                    self.contrato_obj_titan.Vigencia = parseInt(self.contrato_obj.vigencia);
+                    // self.contrato_obj_titan = {};
+                    // self.contrato_obj_titan.Documento = self.contrato_obj.contratista_documento;                  
+                    // self.contrato_obj_titan.FechaFechaFin = new Date(self.contrato_obj.nuevaFechaFin);                    
+                    // self.contrato_obj_titan.NumeroContrato = self.contrato_id;
+                    // self.contrato_obj_titan.Vigencia = parseInt(self.contrato_obj.vigencia);
                                             
                     // titanMidRequest
                     //    .post("novedad/otrosi_contrato", self.contrato_obj_titan)
