@@ -345,7 +345,89 @@ angular
                             });
                     }
                 });
+            
+           /**
+            * @ngdoc method
+            * @name calculoTiempo
+            * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
+            * @description
+            * Funcion que observa y controla el cambio de fechas
+            * @param {date} Fecha de cesion
+            */            
+            $scope.$watch("sLactaCesion.f_oficio", function () {              
+                if(self.f_oficio.getDate() == 31){
+                    //respuesta incorrecta, ej: 400/500
+                    self.f_oficio = new Date();
+                    $scope.alert =
+                        "DESCRIPCION_ERROR_FECHA_31";
+                    swal({
+                        title: $translate.instant(
+                            "TITULO_ERROR_ACTA"
+                        ),
+                        type: "error",
+                        html: $translate.instant($scope.alert) +                            
+                            ".",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    }).then(function () { });
+                };
+            });
 
+            $scope.$watch("sLactaCesion.f_cesion", function () {              
+                if(self.f_cesion.getDate() == 31){
+                    //respuesta incorrecta, ej: 400/500
+                    self.f_oficio = new Date();
+                    self.f_cesion = new Date();
+                    $scope.alert =
+                        "DESCRIPCION_ERROR_FECHA_31";
+                    swal({
+                        title: $translate.instant(
+                            "TITULO_ERROR_ACTA"
+                        ),
+                        type: "error",
+                        html: $translate.instant($scope.alert) +                            
+                            ".",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    }).then(function () { });
+                }                 
+                self.f_terminacion = new Date(self.f_cesion);
+                self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
+                if(self.f_terminacion.getDate == 31){
+                    console.log("entró");
+                    self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
+                };             
+                           
+            });
+
+            // $scope.$watch("sLactaCesion.f_terminacion", function () {              
+            //     if(self.f_oficio.getDate() == 31){
+            //         //respuesta incorrecta, ej: 400/500
+            //         self.f_oficio = new Date();
+            //         self.f_cesion = new Date();
+            //         self.f_terminacion = new Date();
+            //         $scope.alert =
+            //             "DESCRIPCION_ERROR_FECHA_31";
+            //         swal({
+            //             title: $translate.instant(
+            //                 "TITULO_ERROR_ACTA"
+            //             ),
+            //             type: "error",
+            //             html: $translate.instant($scope.alert) +                            
+            //                 ".",
+            //             showCloseButton: true,
+            //             showCancelButton: false,
+            //             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+            //             allowOutsideClick: false,
+            //         }).then(function () { });
+            //     };                         
+            // });
+            
+            //consulta cesionario
             amazonAdministrativaRequest
                 .get(
                     "informacion_persona_natural?fields=Id,PrimerNombre,SegundoNombre,PrimerApellido,SegundoApellido,FechaExpedicionDocumento,TipoDocumento,IdCiudadExpedicionDocumento&limit=0"
@@ -502,7 +584,8 @@ angular
                                             //Tratamiento de datos para objeto payload POST Argo
                                             if(self.cesion_nov.tiponovedad === "NP_CES"){
                                             self.contrato_obj_argo.TipoNovedad = parseFloat(219);
-                                            console.log("Tipo Novedad", self.contrato_obj_argo.TipoNovedad);
+                                            console.log("Tipo Novedad", self.contrato_obj_argo.TipoNovedad);                                            
+                                            } 
                                             //Replica Titán
                                             // self.contrato_obj_titan = {};
                                             // self.contrato_obj_titan.DocumentoActual = self.contrato_obj.contratista_documento;
@@ -510,8 +593,7 @@ angular
                                             // self.contrato_obj_titan.FechaInicio = toString(self.contrato_obj_argo.FechaInicio);
                                             // self.contrato_obj_titan.NombreCompleto = self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos;
                                             // self.contrato_obj_titan.NumeroContrato = self.contrato_id;
-                                            // self.contrato_obj_titan.Vigencia = parseInt(self.contrato_vigencia);
-                                            }  
+                                            // self.contrato_obj_titan.Vigencia = parseInt(self.contrato_vigencia); 
                                             
                                             // titanMidRequest
                                             //     .post("novedad/ceder_contrato", self.contrato_obj_titan)

@@ -21,6 +21,7 @@ angular
             amazonAdministrativaRequest,
             novedadesMidRequest,
             adminMidRequest,
+            titanMidRequest,
             novedadesRequest,
             agoraRequest,
             pdfMakerService
@@ -28,6 +29,7 @@ angular
             this.awesomeThings = ["HTML5 Boilerplate", "AngularJS", "Karma"];
 
             var self = this;
+            self.f_hoy = new Date();
             self.f_registro = new Date();
             self.f_inicio = new Date();
             self.f_fin = new Date();
@@ -297,7 +299,49 @@ angular
              * Funcion que observa el cambio de fechas y calcula el periodo de suspension
              * @param {date} Fecha de reinicio
              */
-            $scope.$watch("sLactaSuspension.f_fin", function () {
+             $scope.$watch("sLactaSuspension.f_inicio", function () {              
+                if(self.f_inicio.getDate() == 31){
+                    //respuesta incorrecta, ej: 400/500
+                    self.f_inicio = new Date();
+                    $scope.alert =
+                        "DESCRIPCION_ERROR_FECHA_31";
+                    swal({
+                        title: $translate.instant(
+                            "TITULO_ERROR_ACTA"
+                        ),
+                        type: "error",
+                        html: $translate.instant($scope.alert) +                            
+                            ".",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    }).then(function () { });
+                }
+                if(self.f_fin < self.f_inicio){
+                    self.f_fin = new Date(self.f_inicio);
+                };
+             });
+            $scope.$watch("sLactaSuspension.f_fin", function () {              
+                if(self.f_fin.getDate() == 31){
+                    //respuesta incorrecta, ej: 400/500
+                    self.f_inicio = new Date();
+                    self.f_fin = new Date();
+                    $scope.alert =
+                        "DESCRIPCION_ERROR_FECHA_31";
+                    swal({
+                        title: $translate.instant(
+                            "TITULO_ERROR_ACTA"
+                        ),
+                        type: "error",
+                        html: $translate.instant($scope.alert) +                            
+                            ".",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    }).then(function () { });
+                }
                 var dt1 = self.f_inicio;
                 var dt2 = self.f_fin;
                 var timeDiff = 0;
@@ -312,6 +356,11 @@ angular
                 } else {
                     self.diff_dias = last_time;
                 }
+                self.f_reinicio = new Date(self.f_fin);
+                self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
+                if(self.f_reinicio.getDate == 31){
+                    self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
+                }                
             });
 
             /**
@@ -373,11 +422,23 @@ angular
                             self.contrato_obj_argo.FechaFin = self.suspension_nov.fechafinsuspension;
                             console.log("fechas suspensión", self.contrato_obj_argo.FechaInicio, self.contrato_obj_argo.FechaInicio);
                             self.contrato_obj_argo.UnidadEjecucion = 205;
-                            
-                            if(self.suspension_nov.tiponovedad === "NP_SUS"){
-                                self.contrato_obj_argo.TipoNovedad = parseFloat(216);
-                            };
+                            self.contrato_obj_argo.TipoNovedad = parseFloat(216);                            
+                            // if(self.suspension_nov.tiponovedad === "NP_SUS"){
+                            //     self.contrato_obj_argo.TipoNovedad = parseFloat(216);
+                            // };
+
+                            //Replica Titán
+                            self.contrato_obj_titan = {};
+                            self.contrato_obj_titan.Documento = String(self.contrato_obj.contratista_documento);
+                            self.contrato_obj_titan.FechaInicio = String(self.contrato_obj_argo.FechaInicio);                  
+                            self.contrato_obj_titan.FechaFin = String(self.suspension_nov.fechafinsuspension);                    
+                            self.contrato_obj_titan.NumeroContrato = String(self.contrato_id);
+                            self.contrato_obj_titan.Vigencia = parseInt(self.contrato_obj.vigencia);     
                         });
+
+                                                            
+                       
+
                         // amazonAdministrativaRequest
                         //                 .get(
                         //                     "informacion_proveedor?query=NumDocumento:" +
@@ -423,6 +484,16 @@ angular
                                                 if (self.validacion == "true") {
                                                     //self.formato_generacion_pdf();
                                                     console.log("obj argo", self.contrato_obj_argo);
+                                                    // titanMidRequest
+                                                    // .post("novedad/suspender_contrato", self.contrato_obj_titan)
+                                                    // .then(function (request_titan){
+                                                    //     if (
+                                                    //         request_titan.status == 200 ||
+                                                    //         request_titan.statusText == "Ok"
+                                                    //         ) {
+                                                    //            console.log("POST Titán respuesta positiva");
+                                                    //         }; 
+                                                    // });
                                                     amazonAdministrativaRequest
                                                         .post("novedad_postcontractual/", self.contrato_obj_argo)
                                                         .then(function (request_argo){

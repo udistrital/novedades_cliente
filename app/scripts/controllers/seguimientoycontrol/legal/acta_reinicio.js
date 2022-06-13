@@ -29,6 +29,7 @@ angular
             this.awesomeThings = ["HTML5 Boilerplate", "AngularJS", "Karma"];
 
             var self = this;
+            self.f_hoy= new Date();
             self.f_suspension = new Date();
             self.f_finsuspension = new Date();
             self.f_reinicio = new Date();
@@ -177,7 +178,7 @@ angular
                                         
                                     self.contrato_obj.supervisor_tipo_documento =
                                         ispn_response.data[0].TipoDocumento.ValorParametro;
-                                    self.contrato_obj.supervisor_nombre =
+                                    self.contrato_obj.supervisor_nombre_completo =
                                         ispn_response.data[0].PrimerNombre +
                                         " " +
                                         ispn_response.data[0].SegundoNombre +
@@ -341,6 +342,23 @@ angular
              * @param {date} f_reinicio
              */
             $scope.$watch("sLactaReinicio.f_finsuspension", function () {
+                if(self.f_suspension.getDate() == 31 || self.f_finsuspension.getDate() == 31 || self.f_reinicio == 31){
+                    //respuesta incorrecta, ej: 400/500
+                    $scope.alert =
+                        "DESCRIPCION_ERROR_FECHA_31";
+                    swal({
+                        title: $translate.instant(
+                            "TITULO_ERROR_ACTA"
+                        ),
+                        type: "error",
+                        html: $translate.instant($scope.alert) +                            
+                            ".",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    }).then(function () { });
+                }
                 var dt1 = self.f_suspension;
                 var dt2 = self.f_finsuspension;
                 var timeDiff = 0;
@@ -727,9 +745,9 @@ angular
                             // self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                             self.contrato_obj_argo.PlazoEjecucion = self.suspension_obj.PlazoEjecucion;
                             self.contrato_obj_argo.FechaInicio = self.suspension_obj.FechaInicio;
-                            self.contrato_obj_argo.FechaFin = self.reinicio_nov.fechareinicio//new Date(self.f_finsuspension);                            
+                            self.contrato_obj_argo.FechaFin = self.f_finsuspension //new Date(self.f_finsuspension);                            
                             self.contrato_obj_argo.UnidadEjecucion = self.suspension_obj.UnidadEjecucion;
-                            self.contrato_obj_argo.TipoNovedad = parseFloat(217);
+                            self.contrato_obj_argo.TipoNovedad = parseFloat(216);
                             //self.contrato_obj_argo.VigenciaCdp = 2021;
                             // self.contrato_obj_argo.ValorNovedad = null;
                             //Tratamiento de datos para objeto payload POST Argo
@@ -767,8 +785,8 @@ angular
                                 if (self.validacion == "true") {
                                     console.log("obj put", self.contrato_obj_argo);
                                     console.log("obj id", self.suspension_obj.id);
-                                    amazonAdministrativaRequest
-                                        .put("novedad_postcontractual", self.suspension_obj.id, self.contrato_obj_argo)
+                                    novedadesMidRequest
+                                        .put("novedad", self.suspension_obj.id, self.contrato_obj_argo)
                                         .then(function (request_argo){
                                         console.log("Respuesta Argo", request_argo);
                                         if (
