@@ -587,13 +587,13 @@ angular
                                             console.log("Tipo Novedad", self.contrato_obj_argo.TipoNovedad);                                            
                                             } 
                                             //Replica Titán
-                                            self.contrato_obj_titan = {};
-                                            self.contrato_obj_titan.DocumentoActual = self.contrato_obj.contratista_documento;
-                                            self.contrato_obj_titan.DocumentoNuevo = self.cesionario_obj.identificacion;
-                                            self.contrato_obj_titan.FechaInicio = toString(self.contrato_obj_argo.FechaInicio);
-                                            self.contrato_obj_titan.NombreCompleto = self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos;
-                                            self.contrato_obj_titan.NumeroContrato = self.contrato_id;
-                                            self.contrato_obj_titan.Vigencia = parseInt(self.contrato_vigencia); 
+                                            // self.contrato_obj_titan = {};
+                                            // self.contrato_obj_titan.DocumentoActual = self.contrato_obj.contratista_documento;
+                                            // self.contrato_obj_titan.DocumentoNuevo = self.cesionario_obj.identificacion;
+                                            // self.contrato_obj_titan.FechaInicio = toString(self.contrato_obj_argo.FechaInicio);
+                                            // self.contrato_obj_titan.NombreCompleto = self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos;
+                                            // self.contrato_obj_titan.NumeroContrato = self.contrato_id;
+                                            // self.contrato_obj_titan.Vigencia = parseInt(self.contrato_vigencia); 
                                             
                                             // titanMidRequest
                                             //     .post("novedad/ceder_contrato", self.contrato_obj_titan)
