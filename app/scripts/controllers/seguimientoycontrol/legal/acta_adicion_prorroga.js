@@ -827,27 +827,8 @@ angular
              * @description
              * funcion que valida la data de la novedad
              */
-            self.generarActa = function () {    
-                // //control de fechas
-                // //$scope.$watch("sLactaAdicionProrroga.fecha_adicion", function () {              
-                //     if($scope.fecha_adicion.getDate() == 31 || self.fecha_oficio.getDate() == 31 || self.fecha_inicio.getDate() == 31){
-                //     //respuesta incorrecta, ej: 400/500
-                //         $scope.alert =
-                //             "DESCRIPCION_ERROR_FECHA_31";
-                //         swal({
-                //             title: $translate.instant(
-                //                 "TITULO_ERROR_ACTA"
-                //             ),
-                //             type: "error",
-                //             html: $translate.instant($scope.alert) +                            
-                //                 ".",
-                //             showCloseButton: true,
-                //             showCancelButton: false,
-                //             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                //             allowOutsideClick: false,
-                //         }).then(function () { });
-                //     };
-                                 
+            self.generarActa = function () {  
+                                             
                 generateTipoNovedad(function (tiponovedad) {                  
                     //objeto acta adición_prórroga
                     self.data_acta_adicion_prorroga = {
@@ -1159,7 +1140,7 @@ angular
                             },
                             { text: "LA UNIVERSIDAD, ", bold: true 
                             },
-                            { text: "con"
+                            { text: "con "
                             }, 
                             { text: "NIT 899.999.230-7", bold:true
                             },  
@@ -1383,7 +1364,7 @@ angular
 
                         { text: "CLÁUSULA SEGUNDA.-", bold: true },
                         { text: " Como consecuencia de lo anterior, " },
-                        { text: "MODIFICAR la CLAUSULA TERCERA", bold: true },
+                        { text: "MODIFICAR LA CLAUSULA TERCERA", bold: true },
                         {
                             text: "  del citado contrato, la cual quedará así: \n",                              
                                 
