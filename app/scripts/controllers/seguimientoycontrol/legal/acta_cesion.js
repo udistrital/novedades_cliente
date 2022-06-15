@@ -375,8 +375,8 @@ angular
                 };
             });
 
-            $scope.$watch("sLactaCesion.f_cesion", function () {              
-                if(self.f_cesion.getDate() == 31){
+            $scope.$watch("sLactaCesion.f_cesion", function () {             
+                if(self.f_cesion == 31){          
                     //respuesta incorrecta, ej: 400/500
                     self.f_oficio = new Date();
                     self.f_cesion = new Date();
@@ -394,13 +394,20 @@ angular
                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                         allowOutsideClick: false,
                     }).then(function () { });
-                }                 
+                }
                 self.f_terminacion = new Date(self.f_cesion);
                 self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
                 if(self.f_terminacion.getDate == 31){
                     console.log("entró");
                     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
-                };             
+                };   
+                               
+                // self.f_terminacion = new Date(self.f_cesion);
+                // self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
+                // if(self.f_terminacion.getDate == 31){
+                //     console.log("entró");
+                //     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
+                // };             
                            
             });
 
@@ -1333,7 +1340,7 @@ angular
                                 self.contrato_obj.numero_contrato +
                                 " de " +
                                 self.contrato_obj.vigencia +
-                                ", le comunicó al señor (a) " +
+                                ", le comunicó al señor(a) " +
                                 self.contrato_obj.ordenadorGasto_nombre +
                                 " en calidad de Ordenador el Gasto del citado contrato, la autorización para ceder el mismo, a partir del día " +
                                 self.format_date_letter_mongo(self.f_cesion) +
@@ -1342,7 +1349,7 @@ angular
                         {
                             ul: [
                                     [{
-                                        text:"Por los servicios prestados por el señor (a) " +
+                                        text:"Por los servicios prestados por el señor(a) " +
                                         self.contrato_obj.contratista_nombre}, {text:" CONTRATISTA CEDENTE,", bold: true},{text: " hasta el día " +
                                         self.format_date_letter_mongo(self.f_terminacion) +
                                         " se reconoció un valor total de " +
@@ -1367,7 +1374,7 @@ angular
                                         
                                     },
                                     {   text:[                                
-                                        {text: "La suma a ceder al señor (a) " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos }, {text: " (CESIONARIO)", bold: true }, {text: " es de " +
+                                        {text: "La suma a ceder al señor(a) " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos }, {text: " (CESIONARIO)", bold: true }, {text: " es de " +
                                                 NumeroALetras(self.valor_contrato_cesionario() + "") +
                                                 "($" +
                                                 numberFormat(String(self.valor_contrato_cesionario()) + "") +
@@ -1387,7 +1394,7 @@ angular
                                 self.num_oficio +
                                 " de fecha " +
                                 self.format_date_letter_mongo(self.f_oficio) +
-                                ", recibido por la Oficina Asesora Jurídica, el señor (a) " +
+                                ", recibido por la Oficina Asesora Jurídica, el señor(a) " +
                                 self.contrato_obj.ordenadorGasto_nombre +
                                 ", como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de cesión del " +
                                 self.contrato_obj.tipo_contrato +
@@ -1417,7 +1424,7 @@ angular
                             },
                             ],
                             [{text: "CLÁUSULA PRIMERA: CESIÓN. ", bold: true,},
-                             {text: "El señor (a) " + self.contrato_obj.contratista_nombre}, {text: " (CEDENTE)", bold: true},
+                             {text: "El señor(a) " + self.contrato_obj.contratista_nombre}, {text: " (CEDENTE)", bold: true},
                              {text: " cede el " + self.contrato_obj.tipo_contrato + " No." + self.contrato_obj.numero_contrato + ", suscrito el día " +
                                     self.format_date_letter_mongo(self.f_oficio) + ", a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos}, 
                              {text: " (CESIONARIO)", bold: true}, 
@@ -1448,7 +1455,7 @@ angular
                             },
                             ],
                             {
-                                text: "En constancia de lo consignado en el presente documento, se firma, en Bogotá, D.C., a los ________________________________________.\n\n\n\n",
+                                text: "En constancia de lo consignado en el presente documento, se firma, \n\nen Bogotá, D.C., a los ________________________________________.\n\n\n",
                             },
                         ],
                     },
@@ -1464,9 +1471,19 @@ angular
                                     bold: false,
                                     style: "topHeader",
                                 },
+                                {
+                                    text: "______________________________________",
+                                    bold: false,
+                                    style: "topHeader",
+                                },
                                 ],
                                 [{
                                     text: self.contrato_obj.ordenadorGasto_nombre,
+                                    bold: false,
+                                    style: "topHeader",
+                                },
+                                {
+                                    text: self.contrato_obj.contratista_nombre,
                                     bold: false,
                                     style: "topHeader",
                                 },
@@ -1483,21 +1500,14 @@ angular
                                     style: "topHeader",
                                 },
                                 //{ text: "", bold: true, style: "topHeader" },
+                                { text: "Cedente", bold: false, style: "topHeader" },
                                 ],
-                                [
-                                    {
-                                        text: "\n\n______________________________________",
-                                        bold: false,
-                                        style: "topHeader",
-                                    },
-                                ],
-                                [
-                                    {
-                                        text: self.contrato_obj.contratista_nombre,
-                                        bold: false,
-                                        style: "topHeader",
-                                    },
-                                ],                              
+                                // [
+                                    
+                                // ],
+                                // [
+                                    
+                                // ],                              
                                                             
                                                                
                                 // [{
@@ -1512,9 +1522,9 @@ angular
                                 // },
                                 // ],
                                 
-                                [
-                                    { text: "Cedente", bold: false, style: "topHeader" },
-                                ],                              
+                                // [
+                                   
+                                // ],                              
                                                                
 
                                 [{
