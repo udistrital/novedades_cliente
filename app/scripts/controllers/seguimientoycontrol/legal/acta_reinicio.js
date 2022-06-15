@@ -37,7 +37,7 @@ angular
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
-            self.suspension_obj = {};            
+            self.suspension_obj = {};
             self.estado_ejecucion = {};
             self.n_solicitud = null;
             self.auxiliar = null;
@@ -48,7 +48,7 @@ angular
             self.auxiliar = null;
             self.elaboro = "";
             self.estados = [];
-            self.elaboro_cedula = token_service.getPayload().documento;            
+            self.elaboro_cedula = token_service.getPayload().documento;
 
             //Obtiene los datos de quien elaboró la Novedad
             agoraRequest
@@ -101,7 +101,7 @@ angular
                         );
                         self.contrato_obj.tipo_contrato =
                             agora_response.data[0].TipoContrato.TipoContrato;
-                            self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;    
+                            self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
 
                         //Se obtiene los datos de Acta de Inicio.
                         agoraRequest
@@ -151,21 +151,21 @@ angular
                         //Obtención de datos del supervisor
                         amazonAdministrativaRequest
                         .get(
-                            "supervisor_contrato?query=DependenciaSupervisor:" + 
+                            "supervisor_contrato?query=DependenciaSupervisor:" +
                             self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
-                        .then(function(scd_response){                                 
+                        .then(function(scd_response){
                             console.log("super", scd_response);
                             self.contrato_obj.supervisor_cedula =
                                             scd_response.data[0].Documento;
                             console.log("cedula super", self.contrato_obj.supervisor_cedula);
-                              
+
                             amazonAdministrativaRequest
                             .get(
                                 "informacion_persona_natural?query=Id:" +
                                 self.contrato_obj.supervisor_cedula
                             )
-                            .then(function (ispn_response) {                              
-                        
+                            .then(function (ispn_response) {
+
                             coreAmazonRequest
                                 .get(
                                     "ciudad",
@@ -175,7 +175,7 @@ angular
                                 .then(function (sc_response) {
                                     self.contrato_obj.supervisor_ciudad_documento =
                                         sc_response.data[0].Nombre;
-                                        
+
                                     self.contrato_obj.supervisor_tipo_documento =
                                         ispn_response.data[0].TipoDocumento.ValorParametro;
                                     self.contrato_obj.supervisor_nombre_completo =
@@ -185,9 +185,9 @@ angular
                                         " " +
                                         ispn_response.data[0].PrimerApellido +
                                         " " +
-                                        ispn_response.data[0].SegundoApellido;  
+                                        ispn_response.data[0].SegundoApellido;
                                         console.log("datos super", self.contrato_obj.supervisor_nombre, self.contrato_obj.supervisor_tipo_documento, self.contrato_obj.supervisor_cedula, self.contrato_obj.supervisor_ciudad_documento);
-   
+
                                 });
                             });
                         });
@@ -222,8 +222,8 @@ angular
 
                         amazonAdministrativaRequest
                             .get("novedad_postcontractual?query=numero_contrato:" + self.contrato_obj.numero_contrato + ",vigencia:" + self.contrato_obj.vigencia + ",TipoNovedad:216&limit=0&sortby=FechaRegistro&order=desc")
-                            .then(function(sus_response){  
-                                console.log("obj sus", sus_response);                              
+                            .then(function(sus_response){
+                                console.log("obj sus", sus_response);
                                 self.suspension_obj.id = sus_response.data[0].Id;
                                 self.suspension_obj.FechaInicio = sus_response.data[0].FechaInicio;
                                 self.suspension_obj.FechaRegistro = sus_response.data[0].FechaRegistro;
@@ -233,8 +233,8 @@ angular
                                 self.suspension_obj.NumeroContrato = sus_response.data[0].NumeroContrato;
                                 console.log("dato id suspensión", self.suspension_obj.id);
                             });
-                            
-                            
+
+
                         novedadesMidRequest
                             .get(
                                 "novedad",
@@ -340,10 +340,16 @@ angular
              * @description
              * Funcion que observa el cambio de fecha de reinicio y calcula el periodo de suspension
              * @param {date} f_reinicio
-             */
+             */            
             $scope.$watch("sLactaReinicio.f_finsuspension", function () {
-                if(self.f_suspension.getDate() == 31 || self.f_finsuspension.getDate() == 31 || self.f_reinicio == 31){
+                self.f_reinicio = new Date(self.f_finsuspension);
+                self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
+                if(self.f_reinicio.getDate == 31){
+                  self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
+                }                
+                if(self.f_finsuspension.getDate() == 31){
                     //respuesta incorrecta, ej: 400/500
+                    self.f_finsuspension = new Date();
                     $scope.alert =
                         "DESCRIPCION_ERROR_FECHA_31";
                     swal({
@@ -351,7 +357,7 @@ angular
                             "TITULO_ERROR_ACTA"
                         ),
                         type: "error",
-                        html: $translate.instant($scope.alert) +                            
+                        html: $translate.instant($scope.alert) +
                             ".",
                         showCloseButton: true,
                         showCancelButton: false,
@@ -736,8 +742,8 @@ angular
                                 self.contrato_obj.fecha_registro;
                             self.contrato_estado.Estado = self.estado_ejecucion;
                             self.contrato_estado.Usuario = "up";
-                            //recolección POST Argo                      
-                                                                                        
+                            //recolección POST Argo
+
                             self.contrato_obj_argo = {};
                             self.contrato_obj_argo.NumeroContrato = self.suspension_obj.NumeroContrato; //Revisar si toca parsearlo
                             self.contrato_obj_argo.Vigencia = self.suspension_obj.Vigencia; //parseInt(self.contrato_obj.vigencia);
@@ -745,7 +751,7 @@ angular
                             // self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                             self.contrato_obj_argo.PlazoEjecucion = self.suspension_obj.PlazoEjecucion;
                             self.contrato_obj_argo.FechaInicio = self.suspension_obj.FechaInicio;
-                            self.contrato_obj_argo.FechaFin = self.f_finsuspension //new Date(self.f_finsuspension);                            
+                            self.contrato_obj_argo.FechaFin = self.f_finsuspension //new Date(self.f_finsuspension);
                             self.contrato_obj_argo.UnidadEjecucion = self.suspension_obj.UnidadEjecucion;
                             self.contrato_obj_argo.TipoNovedad = parseFloat(216);
                             //self.contrato_obj_argo.VigenciaCdp = 2021;
@@ -794,8 +800,8 @@ angular
                                             request_argo.statusText == "Ok"
                                         ) {
                                             console.log("POST Argo respuesta positiva");
-                                        }; 
-                                    }); 
+                                        };
+                                    });
                                     novedadesMidRequest
                                         .post("novedad", self.reinicio_nov)
                                         .then(function (response_nosql) {
@@ -1112,7 +1118,7 @@ angular
                             self.reinicio_nov.motivo +
                             ".\n\n" +
                             "Para constancia, firman las partes a los _____ dias del mes de ______________ del año ________.",
-                            "\n\n\n\n",
+                            "\n\n\n\n\n",
                         ],
                     },
 
@@ -1126,7 +1132,12 @@ angular
                                     bold: false,
                                     style: "topHeader",
 
-                                },                                
+                                },
+                                {
+                                    text: "______________________________________",
+                                    bold: false,
+                                    style: "topHeader", 
+                                }
                                 ],
                                 [
                                     {
@@ -1134,25 +1145,11 @@ angular
                                         bold: true,
                                         style: "topHeader",
                                     },
-                                ],
-                                [
                                     {
-                                        text: self.contrato_obj.supervisor_rol+"\n\n\n",
-                                        bold: true,
+                                        text: "" + self.contrato_obj.contratista_nombre,
+                                        bold: false,
                                         style: "topHeader",
                                     },
-                                ],                                
-
-                                [{
-                                    text: "" + self.contrato_obj.contratista_nombre,
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                {
-                                    text: "" + self.contrato_obj.supervisor_nombre_completo,
-                                    bold: false,
-                                    style: "topHeader",
-                                },
                                 ],
                                 [{
                                     text: "CC. " + self.contrato_obj.contratista_documento,
@@ -1166,10 +1163,27 @@ angular
                                 },
                                 ],
                                 [
-
-                                    { text: "Contratista\n\n", bold: true, style: "topHeader" },                                    
-
+                                    {
+                                        text: self.contrato_obj.supervisor_rol+"\n\n\n",
+                                        bold: true,
+                                        style: "topHeader",
+                                    },
+                                    { text: "Contratista\n\n", bold: true, style: "topHeader" },
                                 ],
+
+                                // [
+                                // {
+                                //     text: "" + self.contrato_obj.supervisor_nombre_completo,
+                                //     bold: false,
+                                //     style: "topHeader",
+                                // },
+                                // ],
+                                
+                                // [
+
+                                   
+
+                                // ],
                             ],
                         },
                         layout: "noBorders",
