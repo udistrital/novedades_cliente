@@ -83,7 +83,7 @@ angular
                             self.contrato_obj.contratista =
                                 agora_response.data[0].Contratista;
                             self.contrato_obj.cesion = 0;
-
+                            console.log("proveedor", self.contrato_obj.contratista);
                             //Obtiene el estado del contrato.
                             agoraRequest
                                 .get(
@@ -183,10 +183,11 @@ angular
                                                                 last_newness.cesionario;
                                                         }
                                                         //Obtiene los datos aosicados al proveedor de un contrato que ha tenido una novedad
+                                                        console.log("proveedor", agora_response.data[0].Contratista);
                                                         agoraRequest
                                                             .get(
                                                                 "informacion_proveedor?query=Id:" +
-                                                                self.contrato_obj.contratista
+                                                                agora_response.data[0].Contratista
                                                             )
                                                             .then(function (ip_response) {
                                                                 self.contrato_obj.contratista_documento =
@@ -201,7 +202,7 @@ angular
                                                 agoraRequest
                                                     .get(
                                                         "informacion_proveedor?query=Id:" +
-                                                        self.contrato_obj.contratista
+                                                        agora_response.data[0].Contratista
                                                     )
                                                     .then(function (ip_response) {
                                                         self.contrato_obj.contratista_documento =
