@@ -130,7 +130,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="panel panel-default panel_adicion" style="display: visible;">
+                    <div class="panel panel-default panel_adicion" style="display: none;">
                         <div class="panel-heading">
                             <center>
                                 <h4><b>{{'INFORMACION_NOVEDAD_ADICION' | translate}}</b></h4>
@@ -188,7 +188,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="panel panel-default panel_prorroga" style="display: visible;">
+                    <div class="panel panel-default panel_prorroga" style="display: none;">
                         <div class="panel-heading">
                             <center>
                                 <h4><b>{{'INFORMACION_NOVEDAD_PRORROGA' | translate}}</b></h4>
@@ -233,6 +233,8 @@
                 </div>
             </div>
         </div>
+        <div data-ng-init="click_check_adicion()"></div>
+        <div data-ng-init="click_check_prorroga()"></div>
         <br>
         <br>
         <br>
