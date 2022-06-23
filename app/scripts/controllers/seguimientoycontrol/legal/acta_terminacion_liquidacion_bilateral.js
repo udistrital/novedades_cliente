@@ -140,11 +140,8 @@ angular.module('contractualClienteApp')
                             "supervisor_contrato?query=DependenciaSupervisor:" + 
                             self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
                         .then(function(scd_response){                                 
-                            console.log("super", scd_response);
                             self.contrato_obj.supervisor_cedula =
                                             scd_response.data[0].Documento;
-                            console.log("cedula super", self.contrato_obj.supervisor_cedula);
-                              
                             amazonAdministrativaRequest
                             .get(
                                 "informacion_persona_natural?query=Id:" +
@@ -239,9 +236,9 @@ angular.module('contractualClienteApp')
                 });
 
                 novedadesMidRequest.get('novedad', self.contrato_obj.numero_contrato + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
-                    var elementos_cesion = response_sql.data.Body;
+                    var elementos_cesion = response_sql.data.Body;                                         
                     if (elementos_cesion.length != '0') {
-                        var last_cesion = elementos_cesion[elementos_cesion.length - 1];
+                        var last_cesion = elementos_cesion[elementos_cesion.length - 1]; 
                         self.contrato_obj.contratista = last_cesion.cesionario;
                         agoraRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
                             self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
@@ -254,16 +251,12 @@ angular.module('contractualClienteApp')
                             });
                             //consulta el CDP y RP
                             cumplidosMidRequest.get('contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
-                                // console.log("respuesta", response);
-                                // console.log("data", response.data.Data[0]);
                                 agoraRequest.get('contrato_disponibilidad?query=NumeroCdp:' + response.data.Data[0].NumeroCdp + '&VigenciaCdp:' + response.data.Data[0].VigenciaCdp).then(function (response) {
-                                    //console.log("respuesta", response);
                                     self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
                                     self.contrato_obj.cdp_fecha = response.data[0].FechaRegistro;
                                 });
                                 self.contrato_obj.rp_numero = response.data.Data[0].NumeroRp;
                                 self.contrato_obj.rp_fecha = response.data.Data[0].VigenciaRp;
-                                //console.log("RP", response.data.Data[0].NumeroRp);
                             }).catch(function (error) {
                                 swal(
                                     $translate.instant('INFORMACION'),
@@ -397,9 +390,6 @@ angular.module('contractualClienteApp')
 
             if ($scope.formTerminacion.$valid) {
                 novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
-                    console.log("la respuesta es: ",nc_response);
-                    console.log("la respuesta es: ",nc_response[0]);
-                    console.log("estado cuentas:", self.numero_oficio_estado_cuentas);        
                     self.terminacion_nov = {};
                     self.terminacion_nov.contrato = self.contrato_obj.id;
                     self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
@@ -448,38 +438,65 @@ angular.module('contractualClienteApp')
                             self.estados[0] = estado_temp_from;
                             novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                                 if (vc_response.data.Body == "true") {
-                                    console.log("datos obj argo", self.contrato_obj_argo);
                                     amazonAdministrativaRequest
                                     .post("novedad_postcontractual", self.contrato_obj_argo)
                                     .then(function (request_argo){
-                                        console.log("Respuesta Argo", request_argo);
                                         if (
-                                        request_argo.status == 200 ||
-                                        request_argo.statusText == "Ok"
+                                        request_argo.status == 201 ||
+                                        request_argo.statusText == "Created"
                                         ) {
-                                        console.log("POST Argo respuesta positiva");
-                                        }; 
-                                    }); 
-                                    novedadesMidRequest.post('novedad', self.terminacion_nov).then(function (response_nosql) {
-                                        if (response_nosql.status == 200 || response.statusText == "Ok") {
-                                            agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
-                                                if (response.status == 201 || Object.keys(response.data) > 0) {
-                                                    self.formato_generacion_pdf();
-                                                    $scope.alert = 'DESCRIPCION_TERMINACION'
+                                            novedadesMidRequest
+                                            .post('novedad', self.terminacion_nov)
+                                            .then(function (response_nosql) {
+                                                if (response_nosql.status == 200 || response.statusText == "Ok") {
+                                                    agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
+                                                        if (response.status == 201 || Object.keys(response.data) > 0) {
+                                                            self.formato_generacion_pdf();
+                                                            $scope.alert = 'DESCRIPCION_TERMINACION'
+                                                            swal({
+                                                                title: $translate.instant('TITULO_BUEN_TRABAJO'),
+                                                                type: 'success',
+                                                                html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                                showCloseButton: false,
+                                                                showCancelButton: false,
+                                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                allowOutsideClick: false
+                                                            }).then(function () {
+                                                                window.location.href = "#/seguimientoycontrol/legal";
+                                                            });
+                                                        }
+                                                    });
+                                                } else {
+                                                    //respuesta incorrecta, ej: 400/500
+                                                    $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
                                                     swal({
-                                                        title: $translate.instant('TITULO_BUEN_TRABAJO'),
-                                                        type: 'success',
-                                                        html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
-                                                        showCloseButton: false,
+                                                        title: $translate.instant('TITULO_ERROR_ACTA'),
+                                                        type: 'error',
+                                                        html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
+                                                            $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                        showCloseButton: true,
                                                         showCancelButton: false,
                                                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                         allowOutsideClick: false
                                                     }).then(function () {
-                                                        window.location.href = "#/seguimientoycontrol/legal";
+
                                                     });
                                                 }
+                                            }).catch(function (error) {
+                                                //Servidor no disponible
+                                                $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                                swal({
+                                                    title: $translate.instant('TITULO_ERROR_ACTA'),
+                                                    type: 'error',
+                                                    html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
+                                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                    showCloseButton: true,
+                                                    showCancelButton: false,
+                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                    allowOutsideClick: false
+                                                }).then(function () {});
                                             });
-                                        } else {
+                                        }else {
                                             //respuesta incorrecta, ej: 400/500
                                             $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
                                             swal({
@@ -495,7 +512,8 @@ angular.module('contractualClienteApp')
 
                                             });
                                         }
-                                    }).catch(function (error) {
+                                    })
+                                    .catch(function (error) {
                                         //Servidor no disponible
                                         $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
                                         swal({
@@ -507,20 +525,18 @@ angular.module('contractualClienteApp')
                                             showCancelButton: false,
                                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                             allowOutsideClick: false
-                                        }).then(function () {
-
-                                        });
+                                        }).then(function () {});
                                     });
-                                }
-                            });
-                        } else {
-                            swal(
-                                $translate.instant('INFORMACION'),
-                                $translate.instant('El contrato no se encuentra en ejecución debido a esto no se puede suspender.'),
-                                'info'
-                            ).then(function () {
-                                window.location.href = "#/seguimientoycontrol/legal";
-                            });
+                                        }
+                                    });
+                                } else {
+                                    swal(
+                                        $translate.instant('INFORMACION'),
+                                        $translate.instant('El contrato no se encuentra en ejecución debido a esto no se puede suspender.'),
+                                        'info'
+                                    ).then(function () {
+                                        window.location.href = "#/seguimientoycontrol/legal";
+                                    });
                         }
                     });
                 });
