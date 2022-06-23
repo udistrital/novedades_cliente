@@ -154,11 +154,8 @@ angular
                             "supervisor_contrato?query=DependenciaSupervisor:" +
                             self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
                         .then(function(scd_response){
-                            console.log("super", scd_response);
                             self.contrato_obj.supervisor_cedula =
                                             scd_response.data[0].Documento;
-                            console.log("cedula super", self.contrato_obj.supervisor_cedula);
-
                             amazonAdministrativaRequest
                             .get(
                                 "informacion_persona_natural?query=Id:" +
@@ -186,8 +183,6 @@ angular
                                         ispn_response.data[0].PrimerApellido +
                                         " " +
                                         ispn_response.data[0].SegundoApellido;
-                                        console.log("datos super", self.contrato_obj.supervisor_nombre, self.contrato_obj.supervisor_tipo_documento, self.contrato_obj.supervisor_cedula, self.contrato_obj.supervisor_ciudad_documento);
-
                                 });
                             });
                         });
@@ -223,7 +218,6 @@ angular
                         amazonAdministrativaRequest
                             .get("novedad_postcontractual?query=numero_contrato:" + self.contrato_obj.numero_contrato + ",vigencia:" + self.contrato_obj.vigencia + ",TipoNovedad:216&limit=0&sortby=FechaRegistro&order=desc")
                             .then(function(sus_response){
-                                console.log("obj sus", sus_response);
                                 self.suspension_obj.id = sus_response.data[0].Id;
                                 self.suspension_obj.FechaInicio = sus_response.data[0].FechaInicio;
                                 self.suspension_obj.FechaRegistro = sus_response.data[0].FechaRegistro;
@@ -231,7 +225,6 @@ angular
                                 self.suspension_obj.UnidadEjecucion = sus_response.data[0].UnidadEjecucion;
                                 self.suspension_obj.PlazoEjecucion = sus_response.data[0].PlazoEjecucion;
                                 self.suspension_obj.NumeroContrato = sus_response.data[0].NumeroContrato;
-                                console.log("dato id suspensión", self.suspension_obj.id);
                             });
 
 
@@ -243,11 +236,10 @@ angular
                                 self.contrato_obj.vigencia
                             )
                             .then(function (response) {
-                                var elementos_cesion = response.data.Body;
-                                console.log("databody", response.data.Body);
+                                var elementos_cesion = response.data.Body;                                                                  
                                 if (elementos_cesion.length != "0") {
                                     var last_cesion =
-                                        elementos_cesion[0];
+                                        elementos_cesion[elementos_cesion.length - 1];
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                     //Consulta datos del contratista
                                     agoraRequest
@@ -289,7 +281,6 @@ angular
                                         // self.novedad_motivo = elementos_cesion[i].motivo;
                                         // self.novedad_finsuspension =
                                         //     elementos_cesion[i].fechafinsuspension;
-                                    console.log("objeto", elementos_cesion[0]);
                                     self.auxiliar = elementos_cesion[0].id;
                                     self.novedad_suspension = elementos_cesion[0].fechasuspension;
                                     self.novedad_reinicio = elementos_cesion[0].fechareinicio;
@@ -784,60 +775,53 @@ angular
                         novedadesMidRequest
                             .post("validarCambioEstado", self.estados)
                             .then(function (vc_response) {
-                                console.log("cambio response",vc_response);
                                 self.validacion = vc_response.data.Body;
-                                console.log("cambio validación",self.validacion);
-                                console.log("obj put", self.contrato_obj_argo);
                                 if (self.validacion == "true") {
-                                    console.log("obj put", self.contrato_obj_argo);
-                                    console.log("obj id", self.suspension_obj.id);
                                     novedadesMidRequest
                                         .put("novedad", self.suspension_obj.id, self.contrato_obj_argo)
-                                        .then(function (request_argo){
-                                        console.log("Respuesta Argo", request_argo);
+                                        .then(function (request_argo){                                         
                                         if (
                                             request_argo.status == 200 ||
                                             request_argo.statusText == "Ok"
                                         ) {
                                             console.log("POST Argo respuesta positiva");
-                                        };
+                                       
+                                        novedadesMidRequest
+                                            .post("novedad", self.reinicio_nov)
+                                            .then(function (response_nosql) {
+                                                if (
+                                                    response_nosql.status == 200 ||
+                                                    response_nosql.statusText == "OK"
+                                                ) {
+                                                        agoraRequest
+                                                            .post("contrato_estado", nuevoEstado)
+                                                            .then(function (response) {
+                                                                if (
+                                                                    response.status == 201 ||
+                                                                    Object.keys(response.data) > 0
+                                                                ) {
+                                                                    self.formato_generacion_pdf();
+                                                                    swal(
+                                                                        $translate.instant("TITULO_BUEN_TRABAJO"),
+                                                                        $translate.instant("DESCRIPCION_REINICIO") +
+                                                                        self.contrato_obj.numero_contrato +
+                                                                        " " +
+                                                                        $translate.instant("ANIO") +
+                                                                        ": " +
+                                                                        self.contrato_obj.vigencia,
+                                                                        "success"
+                                                                    ).then(function () {
+                                                                        window.location.href =
+                                                                            "#/seguimientoycontrol/legal";
+                                                                    });
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                };
+                                            }); 
+                                        }
                                     });
-                                    novedadesMidRequest
-                                        .post("novedad", self.reinicio_nov)
-                                        .then(function (response_nosql) {
-                                            console.log("OBJ POST",self.reinicio_nov);
-                                            console.log("respuesta", self.reinicio_nov);
-                                            if (
-                                                response_nosql.status == 200 ||
-                                                response_nosql.statusText == "OK"
-                                            ) {
-                                                    agoraRequest
-                                                        .post("contrato_estado", nuevoEstado)
-                                                        .then(function (response) {
-                                                            if (
-                                                                response.status == 201 ||
-                                                                Object.keys(response.data) > 0
-                                                            ) {
-                                                                self.formato_generacion_pdf();
-                                                                swal(
-                                                                    $translate.instant("TITULO_BUEN_TRABAJO"),
-                                                                    $translate.instant("DESCRIPCION_REINICIO") +
-                                                                    self.contrato_obj.numero_contrato +
-                                                                    " " +
-                                                                    $translate.instant("ANIO") +
-                                                                    ": " +
-                                                                    self.contrato_obj.vigencia,
-                                                                    "success"
-                                                                ).then(function () {
-                                                                    window.location.href =
-                                                                        "#/seguimientoycontrol/legal";
-                                                                });
-                                                            }
-                                                        });
-                                                }
-                                            });
-                                    }
-                                });
                         });
                 } else {
                     swal(
@@ -868,12 +852,12 @@ angular
                     "" +
                     new Date().getMinutes();
                 var docDefinition = self.get_pdf();
-                console.log(docDefinition)
-                console.log("acta_reinicio_contrato_" +
-                self.contrato_id +
-                "_" +
-                dateTime +
-                ".pdf")
+                // console.log(docDefinition)
+                // console.log("acta_reinicio_contrato_" +
+                // self.contrato_id +
+                // "_" +
+                // dateTime +
+                // ".pdf")
                 pdfMake
                     .createPdf(docDefinition)
                     .download(

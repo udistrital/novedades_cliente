@@ -83,7 +83,7 @@ angular
                             self.contrato_obj.contratista =
                                 agora_response.data[0].Contratista;
                             self.contrato_obj.cesion = 0;
-                            console.log("proveedor", self.contrato_obj.contratista);
+                            
                             //Obtiene el estado del contrato.
                             agoraRequest
                                 .get(
@@ -94,10 +94,8 @@ angular
                                     "&sortby=Id&order=desc&limit=1"                                    
                                 )
                                 .then(function (ce_response) {
-                                    console.log("datos peticion");
                                     self.estado_contrato_obj.estado =
                                         ce_response.data[ce_response.data.length - 1].Estado.Id;
-                                        console.log(self.estado_contrato_obj.estado);
                                     if (self.estado_contrato_obj.estado == 7) {
                                         swal($translate.instant("CONTRATO_CANCELADO"), "", "info");
                                     }
@@ -151,6 +149,8 @@ angular
                                         .then(function (response_sql) {
                                             var elementos_cesion = response_sql.data.Body;
                                             if (elementos_cesion != undefined && elementos_cesion.length != "0") {
+                                                console.log("entró");
+                                                console.log("numero novedad", elementos_cesion.length - 1)
                                                 var last_newness =
                                                     elementos_cesion[elementos_cesion.length - 1];
                                                 novedadesRequest
@@ -164,6 +164,7 @@ angular
                                                         if (self.contrato_obj.tipo_novedad == "NP_CES") {
                                                             self.contrato_obj.contratista =
                                                                 last_newness.cesionario;
+                                                                console.log("cesionario", self.contrato_obj.contratista);
                                                             if (last_newness.poliza === "") {
                                                                 self.estado_contrato_obj.estado = 10;
                                                                 swal(
@@ -183,11 +184,10 @@ angular
                                                                 last_newness.cesionario;
                                                         }
                                                         //Obtiene los datos aosicados al proveedor de un contrato que ha tenido una novedad
-                                                        console.log("proveedor", agora_response.data[0].Contratista);
                                                         agoraRequest
                                                             .get(
                                                                 "informacion_proveedor?query=Id:" +
-                                                                agora_response.data[0].Contratista
+                                                                self.contrato_obj.contratista
                                                             )
                                                             .then(function (ip_response) {
                                                                 self.contrato_obj.contratista_documento =
@@ -202,7 +202,7 @@ angular
                                                 agoraRequest
                                                     .get(
                                                         "informacion_proveedor?query=Id:" +
-                                                        agora_response.data[0].Contratista
+                                                        self.contrato_obj.contratista
                                                     )
                                                     .then(function (ip_response) {
                                                         self.contrato_obj.contratista_documento =

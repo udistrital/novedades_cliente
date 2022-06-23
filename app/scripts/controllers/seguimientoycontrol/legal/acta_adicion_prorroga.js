@@ -189,11 +189,8 @@ angular
                             "supervisor_contrato?query=DependenciaSupervisor:" + 
                             self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
                         .then(function(scd_response){                                 
-                            console.log("super", scd_response);
                             self.contrato_obj.supervisor_cedula =
                                             scd_response.data[0].Documento;
-                            console.log("cedula super", self.contrato_obj.supervisor_cedula);
-                              
                             amazonAdministrativaRequest
                             .get(
                                 "informacion_persona_natural?query=Id:" +
@@ -221,8 +218,6 @@ angular
                                         ispn_response.data[0].PrimerApellido +
                                         " " +
                                         ispn_response.data[0].SegundoApellido;  
-                                        console.log("datos super", self.contrato_obj.supervisor_nombre, self.contrato_obj.supervisor_tipo_documento, self.contrato_obj.supervisor_cedula, self.contrato_obj.supervisor_ciudad_documento);
-   
                                 });
                             });
                         });
@@ -299,10 +294,10 @@ angular
                                 self.contrato_obj.vigencia
                             )
                             .then(function (response) {                                
-                                var elementos_cesion = response.data.Body;
+                                var elementos_cesion = response.data.Body;                                                                        
                                 if (elementos_cesion.length != '0') {
                                     var last_cesion =
-                                        elementos_cesion[0];                                        
+                                        elementos_cesion[elementos_cesion.length - 1];
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                     agoraRequest
                                         .get(
@@ -340,7 +335,6 @@ angular
                                                     self.contrato_obj.contratista_documento
                                                 )
                                                 .then(function (response) {
-                                                    console.log("cdp", response);
                                                     self.contrato_obj.cdp_numero =
                                                         response.data.Data[0].NumeroCdp;
                                                     self.contrato_obj.cdp_anno =
@@ -397,7 +391,6 @@ angular
                                                     self.contrato_obj.contratista_documento
                                                 )
                                                 .then(function (response) {
-                                                    console.log("CDPR",response);
                                                     self.contrato_obj.cdp_numero =
                                                         response.data.Data[0].NumeroCdp;
                                                     self.contrato_obj.cdp_anno =
@@ -416,8 +409,9 @@ angular
                                 }
                             });
                     }
-                });  
-           
+                });
+                  
+            
            /**
             * @ngdoc method
             * @name calculoTiempo
@@ -750,7 +744,6 @@ angular
                     $scope.valor_adicion = "0";
                     //la fecha
                     var FechadeFin = new Date(self.contrato_obj.fin);
-                    console.log("Fecha Fin", FechadeFin);
                     //dias a sumar
                     //var dias = 1;
                     
@@ -762,7 +755,6 @@ angular
                     //formato de salida para la fecha
                     self.contrato_obj.inicioOSi = FechadeFin.getFullYear() + '-' +
                       FechadeFin.getMonth() + '-' + FechadeFin.getDate();
-                    console.log("prueba 1", self.contrato_obj.inicioOSi); 
                     var dias = $scope.tiempo_prorroga;
                     var meses = dias / 30;
                     var mesEntero = parseInt(meses);
@@ -775,8 +767,7 @@ angular
                     }
                     self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
                     FechadeFin.getMonth() + '-' + FechadeFin.getDate();
-                    
-                    console.log("nueva Fecha Fin", self.contrato_obj.nuevaFechaFin);
+                   
                 }
                 if ($scope.adicion == true && $scope.prorroga == true) {
                     $scope.estado_novedad = "Adición y Prorroga";
@@ -790,7 +781,6 @@ angular
                         });
                     //la fecha
                     var FechadeFin = new Date(self.contrato_obj.fin);
-                    console.log("Fecha Fin", FechadeFin);
                     //dias a sumar
                     //var dias = 1;
                     
@@ -802,7 +792,6 @@ angular
                     //formato de salida para la fecha
                     self.contrato_obj.inicioOSi = FechadeFin.getFullYear() + '-' +
                       FechadeFin.getMonth() + '-' + FechadeFin.getDate();
-                    console.log("prueba 1", self.contrato_obj.inicioOSi);
                     var dias = $scope.tiempo_prorroga;
                     var meses = dias / 30;
                     var mesEntero = parseInt(meses);
@@ -816,7 +805,6 @@ angular
                     self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
                     FechadeFin.getMonth() + '-' + FechadeFin.getDate();
                     
-                    console.log("nueva Fecha Fin", self.contrato_obj.nuevaFechaFin); 
                 }
             }
 
@@ -887,8 +875,7 @@ angular
                      if(self.data_acta_adicion_prorroga.tiponovedad === "NP_ADPRO"){
                         self.contrato_obj_argo.TipoNovedad = parseFloat(220);    
                      };
-                    console.log("datos obj argo", self.contrato_obj_argo);
-
+                    
                     //Replica Titán
                     // self.contrato_obj_titan = {};
                     // self.contrato_obj_titan.Documento = self.contrato_obj.contratista_documento;                  
@@ -910,72 +897,86 @@ angular
                     amazonAdministrativaRequest
                         .post("novedad_postcontractual", self.contrato_obj_argo)
                         .then(function (request_argo){
-                            console.log("Respuesta Argo", request_argo);
                             if (
-                                request_argo.status == 200 ||
-                                request_argo.statusText == "Ok"
+                                request_argo.status == 201 ||
+                                request_argo.statusText == "Created"
                                 ) {
-                                    console.log("POST Argo respuesta positiva");
-                                }; 
-                         }); 
-                    novedadesMidRequest
-                        .post("novedad", self.data_acta_adicion_prorroga)
-                        .then(function (request) {   
-                            console.log("OBJ POST", self.data_acta_adicion_prorroga);
-                            console.log("Respuesta", request)                        
-                            if (request.status == 200) {
-                                self.formato_generacion_pdf();
-                                swal({
-                                    title: $translate.instant("TITULO_BUEN_TRABAJO"),
-                                    type: "success",
-                                    html: $translate.instant($scope.alert) +
-                                        self.contrato_obj.numero_contrato +
-                                        $translate.instant("ANIO") +
-                                        self.contrato_obj.vigencia +
-                                        ".",
-                                    showCloseButton: false,
-                                    showCancelButton: false,
-                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                    allowOutsideClick: false,
-                                }).then(function () {
-                                    window.location.href = "#/seguimientoycontrol/legal";
+                                    novedadesMidRequest
+                                        .post("novedad", self.data_acta_adicion_prorroga)
+                                        .then(function (request) {   
+                                            if (request.status == 200) {
+                                                self.formato_generacion_pdf();
+                                                swal({
+                                                    title: $translate.instant("TITULO_BUEN_TRABAJO"),
+                                                    type: "success",
+                                                    html: $translate.instant($scope.alert) +
+                                                        self.contrato_obj.numero_contrato +
+                                                        $translate.instant("ANIO") +
+                                                        self.contrato_obj.vigencia +
+                                                        ".",
+                                                    showCloseButton: false,
+                                                    showCancelButton: false,
+                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                    allowOutsideClick: false,
+                                                }).then(function () {
+                                                    window.location.href = "#/seguimientoycontrol/legal";
+                                                });
+                                                $scope.estado_novedad = undefined;
+                                            } else {
+                                                //respuesta incorrecta, ej: 400/500
+                                                $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
+                                                swal({
+                                                    title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                    type: "error",
+                                                    html: $translate.instant($scope.alert) +
+                                                        self.contrato_obj.numero_contrato +
+                                                        $translate.instant("ANIO") +
+                                                        self.contrato_obj.vigencia +
+                                                        ".",
+                                                    showCloseButton: true,
+                                                    showCancelButton: false,
+                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                    allowOutsideClick: false,
+                                                }).then(function () { });
+                                            }
+                                        })
+                                        .catch(function (error) {
+                                            //Servidor no disponible
+                                            $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
+                                            swal({
+                                                title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                type: "error",
+                                                html: $translate.instant($scope.alert) +
+                                                    self.contrato_obj.numero_contrato +
+                                                    $translate.instant("ANIO") +
+                                                    self.contrato_obj.vigencia +
+                                                    ".",
+                                                showCloseButton: true,
+                                                showCancelButton: false,
+                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                allowOutsideClick: false,
+                                            }).then(function () { });
+                                        })
+                                        .catch(function (error) {
+                                            //Servidor no disponible
+                                            $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
+                                            swal({
+                                                title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                type: "error",
+                                                html: $translate.instant($scope.alert) +
+                                                    self.contrato_obj.numero_contrato +
+                                                    $translate.instant("ANIO") +
+                                                    self.contrato_obj.vigencia +
+                                                    ".",
+                                                showCloseButton: true,
+                                                showCancelButton: false,
+                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                allowOutsideClick: false,
+                                            }).then(function () { });
+                                        }); 
+                                    }; 
                                 });
-                                $scope.estado_novedad = undefined;
-                            } else {
-                                //respuesta incorrecta, ej: 400/500
-                                $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
-                                swal({
-                                    title: $translate.instant("TITULO_ERROR_ACTA"),
-                                    type: "error",
-                                    html: $translate.instant($scope.alert) +
-                                        self.contrato_obj.numero_contrato +
-                                        $translate.instant("ANIO") +
-                                        self.contrato_obj.vigencia +
-                                        ".",
-                                    showCloseButton: true,
-                                    showCancelButton: false,
-                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                    allowOutsideClick: false,
-                                }).then(function () { });
-                            }
-                        })
-                        .catch(function (error) {
-                            //Servidor no disponible
-                            $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
-                            swal({
-                                title: $translate.instant("TITULO_ERROR_ACTA"),
-                                type: "error",
-                                html: $translate.instant($scope.alert) +
-                                    self.contrato_obj.numero_contrato +
-                                    $translate.instant("ANIO") +
-                                    self.contrato_obj.vigencia +
-                                    ".",
-                                showCloseButton: true,
-                                showCancelButton: false,
-                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                allowOutsideClick: false,
-                            }).then(function () { });
-                        });
+
                 });
             };
 
