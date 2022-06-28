@@ -784,9 +784,7 @@ angular
                                             request_argo.status == 200 ||
                                             request_argo.statusText == "Ok"
                                         ) {
-                                            console.log("POST Argo respuesta positiva");
-                                       
-                                        novedadesMidRequest
+                                            novedadesMidRequest
                                             .post("novedad", self.reinicio_nov)
                                             .then(function (response_nosql) {
                                                 if (

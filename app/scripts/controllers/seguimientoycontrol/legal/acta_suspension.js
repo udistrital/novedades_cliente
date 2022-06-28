@@ -488,13 +488,10 @@ angular
                                                         amazonAdministrativaRequest
                                                             .post("novedad_postcontractual", self.contrato_obj_argo)
                                                             .then(function (request_argo){
-                                                                console.log("respuesta argo", request_argo);
                                                                 if (
                                                                     request_argo.status == 201 ||request_argo.status == 200 ||
                                                                     request_argo.statusText == "Created" || request_argo.statusText == "OK"
                                                                 )   { 
-                                                                        console.log("POST Argo respuesta positiva");
-                                                                          
                                                                         novedadesMidRequest
                                                                             .post("novedad", self.suspension_nov)
                                                                             .then(function (request_novedades) {
