@@ -610,7 +610,6 @@ angular
                                             amazonAdministrativaRequest
                                                 .post("novedad_postcontractual", self.contrato_obj_argo)
                                                 .then(function (request_argo){
-                                                    console.log("response", request_argo);
                                                     if (
                                                         request_argo.status == 201 || request_argo.status == 200 ||
                                                         request_argo.statusText == "Created" || request_argo.statusText == "OK"
@@ -1092,17 +1091,7 @@ angular
              * @description
              * funcion que retorna la plantilla en formato json
              */
-            self.get_plantilla = function () {
-                // console.log("1:", self.contrato_obj);
-                // console.log("2:", self.contrato_id);
-                // console.log("3", self.cesionario_obj);
-                // console.log("4", self.num_oficio);
-                // console.log("5", self.format_date_letter_mongo(self.f_oficio));
-                // console.log("6",  self.format_date_letter_mongo(self.f_cesion));
-                // console.log("7",  NumeroALetras(self.valor_desembolsado));
-                // console.log("8",  NumeroALetras(self.valor_contrato_cesionario()));
-                // console.log("9", numberFormat(String(self.valor_contrato_cesionario())));
-
+            self.get_plantilla = function () {              
                 return {
                     pageSize: "LETTER",
                     pageMargins: [50, 110, 50, 45],

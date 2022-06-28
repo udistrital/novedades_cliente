@@ -149,8 +149,6 @@ angular
                                         .then(function (response_sql) {
                                             var elementos_cesion = response_sql.data.Body;
                                             if (elementos_cesion != undefined && elementos_cesion.length != "0") {
-                                                console.log("entró");
-                                                console.log("numero novedad", elementos_cesion.length - 1)
                                                 var last_newness =
                                                     elementos_cesion[elementos_cesion.length - 1];
                                                 novedadesRequest
@@ -164,7 +162,6 @@ angular
                                                         if (self.contrato_obj.tipo_novedad == "NP_CES") {
                                                             self.contrato_obj.contratista =
                                                                 last_newness.cesionario;
-                                                                console.log("cesionario", self.contrato_obj.contratista);
                                                             if (last_newness.poliza === "") {
                                                                 self.estado_contrato_obj.estado = 10;
                                                                 swal(
@@ -364,18 +361,18 @@ angular
                     } else return false;
                 };
                 $scope.nextPage = function () {
-                    console.log("next pages");
+                    //console.log("next pages");
                     $scope.currentPage++;
                     $scope.start = $scope.start + $scope.numLimit;
-                    console.log($scope.start);
+                    //console.log($scope.start);
                 };
                 $scope.PrevPage = function () {
                     if ($scope.currentPage > 1) {
                         $scope.currentPage--;
                     }
-                    console.log("next pages");
+                    //console.log("next pages");
                     $scope.start = $scope.start - $scope.numLimit;
-                    console.log($scope.start);
+                    //console.log($scope.start);
                 };
             }
         }
