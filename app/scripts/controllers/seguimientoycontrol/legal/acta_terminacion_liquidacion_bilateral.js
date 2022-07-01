@@ -355,8 +355,7 @@ angular.module('contractualClienteApp')
             //     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
             // };             
                        
-        }); 
-
+        });        
         //seleccionador de beneficiario de saldo
         self.selecionarSaldo = function () {
             if (self.a_favor_de == "Universidad") {
@@ -402,7 +401,7 @@ angular.module('contractualClienteApp')
                     self.terminacion_nov.valor_desembolsado = self.valor_desembolsado;
                     self.terminacion_nov.saldo_contratista = self.saldo_contratista;
                     self.terminacion_nov.saldo_universidad = self.saldo_universidad;
-                    self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;
+                    self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;                    
                     //recolección POST Argo
                     self.contrato_obj_argo.NumeroContrato = self.contrato_obj.numero_contrato; //Revisar si toca parsearlo
                     self.contrato_obj_argo.Vigencia = parseInt(self.contrato_obj.vigencia);

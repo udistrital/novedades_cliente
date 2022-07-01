@@ -236,6 +236,7 @@ angular
                                 self.contrato_obj.vigencia
                             )
                             .then(function (response) {
+                                console.log("respuesta", response);
                                 var elementos_cesion = response.data.Body;                                                                  
                                 if (elementos_cesion.length != "0") {
                                     var last_cesion =
@@ -281,15 +282,17 @@ angular
                                         // self.novedad_motivo = elementos_cesion[i].motivo;
                                         // self.novedad_finsuspension =
                                         //     elementos_cesion[i].fechafinsuspension;
-                                    self.auxiliar = elementos_cesion[0].id;
-                                    self.novedad_suspension = elementos_cesion[0].fechasuspension;
-                                    self.novedad_reinicio = elementos_cesion[0].fechareinicio;
-                                    self.novedad_motivo = elementos_cesion[0].motivo;
-                                    self.novedad_finsuspension = elementos_cesion[0].fechafinsuspension;
+                                        console.log("Elementos Cesión", elementos_cesion[0]);
+                                    self.auxiliar = last_cesion.id;
+                                    self.novedad_suspension = last_cesion.fechasuspension;
+                                    self.novedad_reinicio = last_cesion.fechareinicio;
+                                    self.novedad_motivo = last_cesion.motivo;
+                                    self.novedad_finsuspension = last_cesion.fechafinsuspension;
+                                    console.log("Elementos Cesión", self.novedad_motivo);
                                         novedadesRequest
                                             .get(
                                                 "tipo_novedad",
-                                                "query=Id:" + elementos_cesion[0].tiponovedad
+                                                "query=Id:" + last_cesion.tiponovedad
                                             )
                                             .then(function (nr_response) {
                                                 if (nr_response.data[0].CodigoAbreviacion == "NP_SUS") {
@@ -1097,7 +1100,7 @@ angular
                         style: ["general_font"],
                         text: [
                             "MOTIVO DE LA SUSPENSIÓN: " +
-                            self.reinicio_nov.motivo +
+                            self.novedad_motivo +
                             ".\n\n" +
                             "Para constancia, firman las partes a los _____ dias del mes de ______________ del año ________.",
                             "\n\n\n\n\n",
@@ -1129,17 +1132,17 @@ angular
                                     },
                                     {
                                         text: "" + self.contrato_obj.contratista_nombre,
-                                        bold: false,
+                                        bold: true,
                                         style: "topHeader",
                                     },
                                 ],
                                 [{
-                                    text: "CC. " + self.contrato_obj.contratista_documento,
+                                    text: "CC. " + self.contrato_obj.supervisor_cedula,
                                     bold: false,
                                     style: "topHeader",
                                 },
                                 {
-                                    text: "CC. " + self.contrato_obj.supervisor_cedula,
+                                    text: "CC. " + self.contrato_obj.contratista_documento,
                                     bold: false,
                                     style: "topHeader",
                                 },
@@ -1189,7 +1192,7 @@ angular
                                 ],
                                 [
                                     { text: "Revisó y Aprobó", bold: true },
-                                    "DIANA MIREYA PARRA CARDONA",
+                                    self.contrato_obj.jefe_juridica_nombre_completo,
                                     "Jefe Oficina Asesora Jurídica",
                                     "",
                                 ],
