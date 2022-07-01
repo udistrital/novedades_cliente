@@ -1298,7 +1298,7 @@ angular
                                 bold: true,
                             },
                             {
-                                text: ", cuya justificación se encuentra descrita en la Solicitud de Necesidad No. " +
+                                text: "cuya justificación se encuentra descrita en la Solicitud de Necesidad No. " +
                                     $scope.numero_solicitud +
                                     " del día " +
                                     self.format_date_letter_mongo(self.fecha_oficio) +
@@ -1481,7 +1481,7 @@ angular
                     {
                         style: "table3",
                         table: {
-                            widths: [65, 130, 130, "*"],
+                            widths: [65, 130, 130, 130],
                             body: [
                                 [
                                     "",
