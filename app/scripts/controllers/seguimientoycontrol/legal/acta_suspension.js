@@ -424,8 +424,8 @@ angular
                             //Replica Titán
                             self.contrato_obj_titan = {};
                             self.contrato_obj_titan.Documento = String(self.contrato_obj.contratista_documento);
-                            self.contrato_obj_titan.FechaInicio = String(self.contrato_obj_argo.FechaInicio);                  
-                            self.contrato_obj_titan.FechaFin = String(self.suspension_nov.fechafinsuspension);                    
+                            self.contrato_obj_titan.FechaInicio = self.suspension_nov.fechasuspension;                 
+                            self.contrato_obj_titan.FechaFin = self.suspension_nov.fechafinsuspension;                    
                             self.contrato_obj_titan.NumeroContrato = String(self.contrato_id);
                             self.contrato_obj_titan.Vigencia = parseInt(self.contrato_obj.vigencia);     
                         });
@@ -479,13 +479,11 @@ angular
                                                     // .post("novedad/suspender_contrato", self.contrato_obj_titan)
                                                     // .then(function (request_titan){
                                                     //     if (
-                                                    //         request_titan.status == 200 ||
-                                                    //         request_titan.statusText == "Ok"
+                                                    //         request_titan.status == 200 || request_titan.status == 201 ||
+                                                    //         request_titan.statusText == "Ok" || request_titan.statusText == "Created"
                                                     //         ) {
-                                                    //            console.log("POST Titán respuesta positiva");
-                                                    //         }; 
-                                                    // });
-                                                        amazonAdministrativaRequest
+                                                               
+                                                            amazonAdministrativaRequest
                                                             .post("novedad_postcontractual", self.contrato_obj_argo)
                                                             .then(function (request_argo){
                                                                 if (
@@ -564,26 +562,47 @@ angular
                                                                                     allowOutsideClick: false,
                                                                                 }).then(function () { });
                                                                             })
-                                                                            .catch(function (error) {
-                                                                                //Servidor no disponible
-                                                                                $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
-                                                                                swal({
-                                                                                    title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                                                    type: "error",
-                                                                                    html: $translate.instant($scope.alert) +
-                                                                                        self.contrato_obj.numero_contrato +
-                                                                                        $translate.instant("ANIO") +
-                                                                                        self.contrato_obj.vigencia +
-                                                                                        ".",
-                                                                                    showCloseButton: true,
-                                                                                    showCancelButton: false,
-                                                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                                    allowOutsideClick: false,
-                                                                                }).then(function () { });
-                                                                            })
+                                                                            
                                                                         
                                                                         }; 
-                                                                    });    
+                                                                    })
+                                                                    .catch(function (error) {
+                                                                        //Servidor no disponible
+                                                                        $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
+                                                                        swal({
+                                                                            title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                                            type: "error",
+                                                                            html: $translate.instant($scope.alert) +
+                                                                                self.contrato_obj.numero_contrato +
+                                                                                $translate.instant("ANIO") +
+                                                                                self.contrato_obj.vigencia +
+                                                                                ".",
+                                                                            showCloseButton: true,
+                                                                            showCancelButton: false,
+                                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                            allowOutsideClick: false,
+                                                                        }).then(function () { });
+                                                                    })
+                                                                // };//else
+                                                                // })
+                                                                // .catch(function (error) {
+                                                                //     //Servidor no disponible
+                                                                //     $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
+                                                                //     swal({
+                                                                //         title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                                //         type: "error",
+                                                                //         html: $translate.instant($scope.alert) +
+                                                                //             self.contrato_obj.numero_contrato +
+                                                                //             $translate.instant("ANIO") +
+                                                                //             self.contrato_obj.vigencia +
+                                                                //             ".",
+                                                                //         showCloseButton: true,
+                                                                //         showCancelButton: false,
+                                                                //         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                //         allowOutsideClick: false,
+                                                                //     }).then(function () { });
+                                                                // })
+                                                                    
                                                                     
                                                             }
                                                         });

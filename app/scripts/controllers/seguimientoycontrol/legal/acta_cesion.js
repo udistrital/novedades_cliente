@@ -36,7 +36,7 @@ angular
             self.num_oficio = null;
             self.valor_desembolsado = null;
             self.valor_a_favor = "";
-            self.f_oficio = new Date();
+            //self.f_oficio = new Date();
             self.f_cesion = new Date();
             self.f_terminacion = new Date();
             self.f_hoy = new Date();
@@ -588,24 +588,23 @@ angular
                                             }                                         
                                              
                                             //Replica Titán
-                                            // self.contrato_obj_titan = {};
-                                            // self.contrato_obj_titan.DocumentoActual = self.contrato_obj.contratista_documento;
-                                            // self.contrato_obj_titan.DocumentoNuevo = self.cesionario_obj.identificacion;
-                                            // self.contrato_obj_titan.FechaInicio = toString(self.contrato_obj_argo.FechaInicio);
-                                            // self.contrato_obj_titan.NombreCompleto = self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos;
-                                            // self.contrato_obj_titan.NumeroContrato = self.contrato_id;
-                                            // self.contrato_obj_titan.Vigencia = parseInt(self.contrato_vigencia); 
+                                            self.contrato_obj_titan = {};
+                                            self.contrato_obj_titan.DocumentoActual = self.contrato_obj.contratista_documento;
+                                            self.contrato_obj_titan.DocumentoNuevo = self.cesionario_obj.identificacion;
+                                            self.contrato_obj_titan.FechaInicio = self.cesion_nov.fechacesion;
+                                            self.contrato_obj_titan.NombreCompleto = self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos;
+                                            self.contrato_obj_titan.NumeroContrato = self.contrato_id;
+                                            self.contrato_obj_titan.Vigencia = parseInt(self.contrato_vigencia); 
                                             
                                             // titanMidRequest
                                             //     .post("novedad/ceder_contrato", self.contrato_obj_titan)
                                             //     .then(function (request_titan){
                                             //         if (
-                                            //             request_titan.status == 200 ||
-                                            //             request_titan.statusText == "Ok"
+                                            //             request_titan.status == 201 ||request_titan.status == 200 ||
+                                            //             request_titan.statusText == "Created" || request_titan.statusText == "OK"
                                             //             ) {
                                             //                 console.log("POST Titán respuesta positiva");
-                                            //             }; 
-                                            //     });
+                                                
 
                                             amazonAdministrativaRequest
                                                 .post("novedad_postcontractual", self.contrato_obj_argo)
@@ -672,26 +671,45 @@ angular
                                                                     }).then(function () { });
                                                                 })
                                                                 
-                                                            }   
-                                                        })
-                                                        .catch(function (error) {
-                                                            //Servidor no disponible
-                                                            $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
-                                                            swal({
-                                                                title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                                type: "error",
-                                                                html: $translate.instant($scope.alert) +
-                                                                    self.contrato_obj.numero_contrato +
-                                                                    $translate.instant("ANIO") +
-                                                                    self.contrato_obj.vigencia +
-                                                                    ".",
-                                                                showCloseButton: true,
-                                                                showCancelButton: false,
-                                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                allowOutsideClick: false,
-                                                            }).then(function () { });
-                                                        })
-                                                });
+                                                        //     }   
+                                                        // })
+                                                        // .catch(function (error) {
+                                                        //     //Servidor no disponible
+                                                        //     $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
+                                                        //     swal({
+                                                        //         title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                        //         type: "error",
+                                                        //         html: $translate.instant($scope.alert) +
+                                                        //             self.contrato_obj.numero_contrato +
+                                                        //             $translate.instant("ANIO") +
+                                                        //             self.contrato_obj.vigencia +
+                                                        //             ".",
+                                                        //         showCloseButton: true,
+                                                        //         showCancelButton: false,
+                                                        //         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                        //         allowOutsideClick: false,
+                                                        //     }).then(function () { });
+                                                        // })
+                                                    }
+                                                })
+                                                .catch(function (error) {
+                                                    //Servidor no disponible
+                                                    $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
+                                                    swal({
+                                                        title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                        type: "error",
+                                                        html: $translate.instant($scope.alert) +
+                                                            self.contrato_obj.numero_contrato +
+                                                            $translate.instant("ANIO") +
+                                                            self.contrato_obj.vigencia +
+                                                            ".",
+                                                        showCloseButton: true,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                        allowOutsideClick: false,
+                                                    }).then(function () { });
+                                                })
+                                            });
                         });
                     })
                 } else {
