@@ -24,6 +24,7 @@ angular.module("contractualClienteApp").constant("CONF", {
         CORE_AMAZON_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/core_amazon_crud/v1/",
         FINANCIERA_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/financiera_mid_api/v1/",
         FINANCIERA_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/financiera_crud_api/v1/",
+        FINANCIERA_JBPM_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/financiera_jbpm/v1/",
         MODELS_SERVICE: "scripts/models/",
         OIKOS_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/oikos_crud_api/v1/",
         ARGO_NOSQL_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",

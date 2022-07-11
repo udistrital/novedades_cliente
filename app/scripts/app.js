@@ -52,6 +52,7 @@ angular
         "oikosService",
         "oikosAmazonService",
         "financieraMidService",
+        "financieraJbpmService",
         "adminMidService",
         "sicapitalService",
         "titan_service",
