@@ -35,6 +35,7 @@ angular
             self.contrato_obj_argo = {};
             self.fecha = {};
             self.f_hoy = new Date();
+            self.cdprp = [];
             var meses = new Array(
                 "Enero",
                 "Febrero",
@@ -48,7 +49,7 @@ angular
                 "Octubre",
                 "Noviembre",
                 "Diciembre"
-            );
+            );            
             var inicioOtroSi = "";
             var f = new Date();
             self.fecha.dia_mes = f.getDate();

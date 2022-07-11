@@ -139,13 +139,39 @@
                         <div class="panel-body">
                             <div class="row" style="border: 0px solid;">
                                 <div class="col-xs-12 col-md-6">
-                                    <label>{{'NUMERO_CDP' | translate}}</label>
+                                    <p style="margin:0; display:inline-block; width:100%;">
+                                        <b>{{'CDP - VIGENCIA' | translate}} *:</b>
+                                    </p>
+                                    <select ng-model="sLactaAdicionProrroga.cdprp" style="margin:0; display:inline-block; width:60%;">
+                                        <!-- <option value="">Seleccionar CDP</option> -->
+                                        <option  ng-repeat="cdp in sLactaAdicionProrroga.cdprp">{{cdp.cdp | translate}}     -     {{cdp.vigencia | translate}}</option>
+                                    </select>                                    
+                                    <!-- <div class="form-group col-md-12">
+                                        <p style="margin:0; display:inline; width:40%;">
+                                            <b>{{'CDP - VIGENCIA' | translate}} *:</b>
+                                        </p>
+                                        <select class="form-control" ng-model="sLegal.contrato_vigencia"
+                                            style="margin:0; display:inline-block; width:100%;">
+                                            <option ng-repeat="vigencia in vigencias">{{vigencia}}</option>
+                                        </select>
+                                    </div>                                    -->
+                                    <!-- <select  ng-model="personas.InformacionRp" >
+                                        <option ng-repeat="rp in resolucionCancelacion.rps[$index]" value="{{rp}}">RP:{{rp.rp}}-Vigencia:{{rp.vigencia}}</option>
+                                    </select>  -->
+                                    <!-- <label>{{'NUMERO_CDP' | translate}}</label>
                                     <md-input-container style="margin:0;">
                                         <input type="number" id="numero_cdp" name="numero_cdp"
                                             ng-model="sLactaAdicionProrroga.contrato_obj.NumeroCdp" min="0" readonly>
-                                    </md-input-container>
+                                    </md-input-container> -->
                                 </div>
                                 <div class="col-xs-12 col-md-6">
+                                    <p style="margin:0; display:inline-block; width:100%;">
+                                        <b>{{'RP - VIGENCIA' | translate}} *:</b>
+                                    </p>
+                                    <select ng-model="sLactaAdicionProrroga.cdprp" style="margin:0; display:inline-block; width:60%;">
+                                        <!-- <option value="">Seleccionar CDP</option> -->
+                                        <option  ng-repeat="cdp in sLactaAdicionProrroga.cdprp">{{cdp.rp | translate}}     -     {{cdp.vigencia | translate}}</option>
+                                    </select>
                                     <label for="fecha-adicion">{{'FECHA_ADICION' | translate}}</label>
                                     <md-datepicker ng-model="sLactaAdicionProrroga.fecha_adicion"
                                          >

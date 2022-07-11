@@ -583,7 +583,7 @@ angular
                                                                             allowOutsideClick: false,
                                                                         }).then(function () { });
                                                                     })
-                                                                // };//else
+                                                                // };//else, titan
                                                                 // })
                                                                 // .catch(function (error) {
                                                                 //     //Servidor no disponible
@@ -601,7 +601,7 @@ angular
                                                                 //         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                                 //         allowOutsideClick: false,
                                                                 //     }).then(function () { });
-                                                                // })
+                                                                // })//titan
                                                                     
                                                                     
                                                             }
