@@ -37,6 +37,7 @@ angular
             self.fecha = {};
             self.f_hoy = new Date();
             self.cdprp = [];
+            self.selected = "";
             var meses = new Array(
                 "Enero",
                 "Febrero",
@@ -337,9 +338,29 @@ angular
                                                 )
                                                 .then(function (financiera_response) {
                                                     // console.log("Data", financiera_response);
-                                                    self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                                    // self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                                    self.cdprp = [
+                                                        {
+                                                            cdp: "1234",
+                                                            rp: "1222",
+                                                            vigencia: "2022"
+                                                        },
+                                                        {
+                                                            cdp: "4321",
+                                                            rp: "3214",
+                                                            vigencia: "2021"
+                                                        }
+                                                    ]
                                                 });
                                             //Consulta el CDP
+
+                                            $scope.update = function (cdp) {
+                                                var cod = JSON.parse(document.getElementById("rp").value);
+                                                console.log("Si", cod);
+                                                var cadena = cod.rp + " - " + cod.vigencia;
+                                                self.selected = cadena;
+                                            }
+
                                             cumplidosMidRequest
                                                 .get(
                                                     "contratos_contratista/" +
