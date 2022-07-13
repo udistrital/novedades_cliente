@@ -359,28 +359,34 @@ angular
                                                 console.log("Si", cod);
                                                 var cadena = cod.rp + " - " + cod.vigencia;
                                                 self.selected = cadena;
+                                                self.contrato_obj.cdp_numero =
+                                                        cod.cdp;
+                                                self.contrato_obj.cdp_anno =
+                                                        cod.vigencia;
+                                                self.contrato_obj.rp_numero =
+                                                        cod.rp;
                                             }
 
-                                            cumplidosMidRequest
-                                                .get(
-                                                    "contratos_contratista/" +
-                                                    self.contrato_obj.contratista_documento
-                                                )
-                                                .then(function (response) {
-                                                    self.contrato_obj.cdp_numero =
-                                                        response.data.Data[0].NumeroCdp;
-                                                    self.contrato_obj.cdp_anno =
-                                                        response.data.Data[0].VigenciaCdp;
-                                                })
-                                                .catch(function (error) {
-                                                    swal(
-                                                        $translate.instant("INFORMACION"),
-                                                        $translate.instant(
-                                                            "No se pudo obtener datos del CDP"
-                                                        ),
-                                                        "info"
-                                                    );
-                                                });
+                                        //     cumplidosMidRequest
+                                        //         .get(
+                                        //             "contratos_contratista/" +
+                                        //             self.contrato_obj.contratista_documento
+                                        //         )
+                                        //         .then(function (response) {
+                                        //             self.contrato_obj.cdp_numero =
+                                        //                 response.data.Data[0].NumeroCdp;
+                                        //             self.contrato_obj.cdp_anno =
+                                        //                 response.data.Data[0].VigenciaCdp;
+                                        //         })
+                                        //         .catch(function (error) {
+                                        //             swal(
+                                        //                 $translate.instant("INFORMACION"),
+                                        //                 $translate.instant(
+                                        //                     "No se pudo obtener datos del CDP"
+                                        //                 ),
+                                        //                 "info"
+                                        //             );
+                                        //         });
                                         });
                                 } else {
                                     //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
@@ -426,26 +432,26 @@ angular
                                                     //console.log("Data", financiera_response);
                                                     self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
                                                 });
-                                            cumplidosMidRequest
-                                                .get(
-                                                    "contratos_contratista/" +
-                                                    self.contrato_obj.contratista_documento
-                                                )
-                                                .then(function (response) {
-                                                    self.contrato_obj.cdp_numero =
-                                                        response.data.Data[0].NumeroCdp;
-                                                    self.contrato_obj.cdp_anno =
-                                                        response.data.Data[0].VigenciaCdp;
-                                                })
-                                                .catch(function (error) {
-                                                    swal(
-                                                        $translate.instant("INFORMACION"),
-                                                        $translate.instant(
-                                                            "No se pudo obtener datos del CDP"
-                                                        ),
-                                                        "info"
-                                                    );
-                                                });
+                                            // cumplidosMidRequest
+                                            //     .get(
+                                            //         "contratos_contratista/" +
+                                            //         self.contrato_obj.contratista_documento
+                                            //     )
+                                            //     .then(function (response) {
+                                            //         self.contrato_obj.cdp_numero =
+                                            //             response.data.Data[0].NumeroCdp;
+                                            //         self.contrato_obj.cdp_anno =
+                                            //             response.data.Data[0].VigenciaCdp;
+                                            //     })
+                                            //     .catch(function (error) {
+                                            //         swal(
+                                            //             $translate.instant("INFORMACION"),
+                                            //             $translate.instant(
+                                            //                 "No se pudo obtener datos del CDP"
+                                            //             ),
+                                            //             "info"
+                                            //         );
+                                            //     });
                                         });
                                 }
                             });
@@ -862,7 +868,7 @@ angular
                         contrato: self.contrato_obj.numero_contrato,
                         numerosolicitud: $scope.numero_solicitud,
                         fechasolicitud: self.fecha_inicio,
-                        numerocdp: String(self.contrato_obj.NumeroCdp),
+                        numerocdp: String(self.contrato_obj.cdp_numero),
                         valoradicion: parseFloat($scope.valor_adicion.replace(/\,/g, "")),
                         fechaadicion: $scope.fecha_adicion,
                         tiempoprorroga: $scope.tiempo_prorroga,
