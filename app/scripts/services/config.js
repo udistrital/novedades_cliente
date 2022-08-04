@@ -21,6 +21,7 @@ var conf_cloud = {
     CORE_AMAZON_SERVICE: "https://tuleap.udistrital.edu.co/go_api/core_amazon_crud/v1/",
     FINANCIERA_MID_SERVICE: "https://tuleap.udistrital.edu.co/go_api/financiera_mid_api/v1/",
     FINANCIERA_SERVICE: "https://tuleap.udistrital.edu.co/go_api/financiera_api/v1/",
+    FINANCIERA_JBPM_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/financiera_jbpm/v1/",
     MODELS_SERVICE: "scripts/models/",
     OIKOS_SERVICE: "https://tuleap.udistrital.edu.co/go_api/oikos_api/v1/",
     OIKOS_AMAZON_SERVICE: "https://tuleap.udistrital.edu.co/go_api/oikos_amazon_api/v1",
