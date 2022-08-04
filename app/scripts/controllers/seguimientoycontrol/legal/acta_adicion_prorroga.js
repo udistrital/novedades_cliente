@@ -337,56 +337,22 @@ angular
                                                     self.contrato_obj.contratista_documento
                                                 )
                                                 .then(function (financiera_response) {
-                                                    // console.log("Data", financiera_response);
-                                                    // self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                                                    self.cdprp = [
-                                                        {
-                                                            cdp: "1234",
-                                                            rp: "1222",
-                                                            vigencia: "2022"
-                                                        },
-                                                        {
-                                                            cdp: "4321",
-                                                            rp: "3214",
-                                                            vigencia: "2021"
-                                                        }
-                                                    ]
+                                                    self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
                                                 });
                                             //Consulta el CDP
 
-                                            $scope.update = function (cdp) {
+                                            $scope.update = function () {
                                                 var cod = JSON.parse(document.getElementById("rp").value);
-                                                console.log("Si", cod);
+                                                // console.log("Si", cod);
                                                 var cadena = cod.rp + " - " + cod.vigencia;
                                                 self.selected = cadena;
                                                 self.contrato_obj.cdp_numero =
-                                                        cod.cdp;
+                                                    cod.cdp;
                                                 self.contrato_obj.cdp_anno =
-                                                        cod.vigencia;
+                                                    cod.vigencia;
                                                 self.contrato_obj.rp_numero =
-                                                        cod.rp;
+                                                    cod.rp;
                                             }
-
-                                        //     cumplidosMidRequest
-                                        //         .get(
-                                        //             "contratos_contratista/" +
-                                        //             self.contrato_obj.contratista_documento
-                                        //         )
-                                        //         .then(function (response) {
-                                        //             self.contrato_obj.cdp_numero =
-                                        //                 response.data.Data[0].NumeroCdp;
-                                        //             self.contrato_obj.cdp_anno =
-                                        //                 response.data.Data[0].VigenciaCdp;
-                                        //         })
-                                        //         .catch(function (error) {
-                                        //             swal(
-                                        //                 $translate.instant("INFORMACION"),
-                                        //                 $translate.instant(
-                                        //                     "No se pudo obtener datos del CDP"
-                                        //                 ),
-                                        //                 "info"
-                                        //             );
-                                        //         });
                                         });
                                 } else {
                                     //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
@@ -429,9 +395,21 @@ angular
                                                     self.contrato_obj.contratista_documento
                                                 )
                                                 .then(function (financiera_response) {
-                                                    //console.log("Data", financiera_response);
                                                     self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
                                                 });
+
+                                            $scope.update = function () {
+                                                var cod = JSON.parse(document.getElementById("rp").value);
+                                                console.log("Si", cod);
+                                                var cadena = cod.rp + " - " + cod.vigencia;
+                                                self.selected = cadena;
+                                                self.contrato_obj.cdp_numero =
+                                                    cod.cdp;
+                                                self.contrato_obj.cdp_anno =
+                                                    cod.vigencia;
+                                                self.contrato_obj.rp_numero =
+                                                    cod.rp;
+                                            }
                                             // cumplidosMidRequest
                                             //     .get(
                                             //         "contratos_contratista/" +
@@ -869,7 +847,7 @@ angular
                         numerosolicitud: $scope.numero_solicitud,
                         fechasolicitud: self.fecha_inicio,
                         numerocdp: String(self.contrato_obj.cdp_numero),
-                        vigenciacdp:  String(self.contrato_obj.cdp_anno),
+                        vigenciacdp: String(self.contrato_obj.cdp_anno),
                         numerorp: String(self.contrato_obj.rp_numero),
                         vigenciarp: String(self.contrato_obj.cdp_anno),
                         valoradicion: parseFloat($scope.valor_adicion.replace(/\,/g, "")),
