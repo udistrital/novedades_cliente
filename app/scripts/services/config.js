@@ -10,7 +10,8 @@
 var conf_cloud = {
     WSO2_SERVICE: "http://jbpm.udistritaloas.edu.co:8280/services",
     ACADEMICA_WSO_SERVICE: "https://autenticacion.udistrital.edu.co:8244/academica_jbpm/v1/",
-    ADMINISTRATIVA_MID_SERVICE: "https:/c/tuleap.udistrital.edu.co/go_api/administrativa_mid_api/v1/",
+    //ADMINISTRATIVA_MID_SERVICE: "https:/c/tuleap.udistrital.edu.co/go_api/administrativa_mid_api/v1/",
+    ADMINISTRATIVA_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_mid_api/v1",
     ADMINISTRATIVA_SERVICE: "https://tuleap.udistrital.edu.co/go_api/administrativa_api/v1/",
     ADMINISTRATIVA_PRUEBAS_SERVICE: "https://tuleap.udistrital.edu.co/go_api/administrativa_amazon_api/v1/",
     RESOLUCION_SERVICE: "https://tuleap.udistrital.edu.co/go_api/resoluciones_crud/v1/",
@@ -20,6 +21,7 @@ var conf_cloud = {
     CORE_AMAZON_SERVICE: "https://tuleap.udistrital.edu.co/go_api/core_amazon_crud/v1/",
     FINANCIERA_MID_SERVICE: "https://tuleap.udistrital.edu.co/go_api/financiera_mid_api/v1/",
     FINANCIERA_SERVICE: "https://tuleap.udistrital.edu.co/go_api/financiera_api/v1/",
+    FINANCIERA_JBPM_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/financiera_jbpm/v1/",
     MODELS_SERVICE: "scripts/models/",
     OIKOS_SERVICE: "https://tuleap.udistrital.edu.co/go_api/oikos_api/v1/",
     OIKOS_AMAZON_SERVICE: "https://tuleap.udistrital.edu.co/go_api/oikos_amazon_api/v1",
@@ -28,6 +30,8 @@ var conf_cloud = {
     CONTRATO_SERVICE: "https://autenticacion.udistrital.edu.co:8244/administrativa_jbpm/v1/",
     NUXEO_SERVICE: "https://documental.portaoas.udistrital.edu.co/nuxeo/",
     HOMOLOGACION_SERVICE: "https://autenticacion.udistrital.edu.co:8244/dependencias_api/v1/",
+    //CUMPLIDOS_MID_SERVICE: "http://pruebasapi2.intranetoas.udistrital.edu.co:8513/v1/",
+    CUMPLIDOS_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/cumplidos_mid/v1/",
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.udistrital.edu.co/oauth2/userinfo",
@@ -64,6 +68,8 @@ var conf_test = {
     NOVEDADES_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",
     NOVEDADES_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_mid/v1/",
     DOCUMENTOS_CRUD: "https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2",
+    //CUMPLIDOS_MID_SERVICE: "http://pruebasapi2.intranetoas.udistrital.edu.co:8513/v1/",
+    CUMPLIDOS_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/cumplidos_mid/v1/",
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/userinfo",
@@ -98,7 +104,10 @@ var conf_local = {
     HOMOLOGACION_SERVICE: "https://autenticacion.udistrital.edu.co:8244/dependencias_api/v1/",
     NOVEDADES_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",
     NOVEDADES_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_mid/v1/",
+    //NOVEDADES_MID_SERVICE: "localhost:8502/v1/",
     DOCUMENTOS_CRUD: "https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2",
+    //CUMPLIDOS_MID_SERVICE: "http://pruebasapi2.intranetoas.udistrital.edu.co:8513/v1/",
+    CUMPLIDOS_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/cumplidos_mid/v1/",
     TOKEN: {
         AUTORIZATION_URL: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
         URL_USER_INFO: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/userinfo",

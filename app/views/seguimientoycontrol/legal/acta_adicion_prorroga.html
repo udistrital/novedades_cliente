@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="col-xs-12 col-md-6">
                                     <label>{{'FECHA_SOLICITUD' | translate}}</label>
-                                    <md-datepicker ng-model="sLactaAdicionProrroga.fecha_inicio"></md-datepicker>
+                                    <md-datepicker ng-model="sLactaAdicionProrroga.fecha_inicio" md-max-date="sLactaAdicionProrroga.f_hoy"></md-datepicker>
                                 </div>
                             </div>
                             <div class="row" style="border: 0px solid;"></div>
@@ -119,7 +119,7 @@
                             </div>
                             <div class="col-xs-12 col-md-6">
                                 <label>{{'FECHA_OFICIO' | translate}}</label>
-                                <md-datepicker ng-model="sLactaAdicionProrroga.fecha_oficio"></md-datepicker>
+                                <md-datepicker ng-model="sLactaAdicionProrroga.fecha_oficio" md-max-date="sLactaAdicionProrroga.f_hoy"></md-datepicker>
                             </div>
 
                             <div class="col-xs-12 col-md-12">
@@ -139,16 +139,40 @@
                         <div class="panel-body">
                             <div class="row" style="border: 0px solid;">
                                 <div class="col-xs-12 col-md-6">
-                                    <label>{{'NUMERO_CDP' | translate}}</label>
+                                    <label>{{'CDP - VIGENCIA' | translate}}</label>
+                                    <p></p>
+                                    <select ng-model="sLactaAdicionProrroga.cdprp" style="margin:0; display:inline-block; width:60%;" ng-change="update()" id="rp">
+                                        <option ng-repeat="cdp in sLactaAdicionProrroga.cdprp" value="{{cdp}}">{{cdp.cdp | translate}}     -     {{cdp.vigencia | translate}}</option>
+                                    </select>                
+                                    <!-- <div class="form-group col-md-12">
+                                        <p style="margin:0; display:inline; width:40%;">
+                                            <b>{{'CDP - VIGENCIA' | translate}} *:</b>
+                                        </p>
+                                        <select class="form-control" ng-model="sLegal.contrato_vigencia"
+                                            style="margin:0; display:inline-block; width:100%;">
+                                            <option ng-repeat="vigencia in vigencias">{{vigencia}}</option>
+                                        </select>
+                                    </div>                                    -->
+                                    <!-- <select  ng-model="personas.InformacionRp" >
+                                        <option ng-repeat="rp in resolucionCancelacion.rps[$index]" value="{{rp}}">RP:{{rp.rp}}-Vigencia:{{rp.vigencia}}</option>
+                                    </select>  -->
+                                    <!-- <label>{{'NUMERO_CDP' | translate}}</label>
                                     <md-input-container style="margin:0;">
                                         <input type="number" id="numero_cdp" name="numero_cdp"
                                             ng-model="sLactaAdicionProrroga.contrato_obj.NumeroCdp" min="0" readonly>
-                                    </md-input-container>
+                                    </md-input-container> -->
                                 </div>
                                 <div class="col-xs-12 col-md-6">
+                                    <label>{{'RP - VIGENCIA' | translate}}</label>
+                                    <md-input-container style="margin:0; display:inline-block; width:60%;">
+                                        <input type="text" id="numero_cdp" name="numero_cdp"
+                                            ng-model="sLactaAdicionProrroga.selected" readonly>
+                                    </md-input-container>
+                                    <p style="margin:0; display:inline-block; width:100%;">
+                                        <b></b>
+                                    </p>
                                     <label for="fecha-adicion">{{'FECHA_ADICION' | translate}}</label>
-                                    <md-datepicker ng-model="fecha_adicion"
-                                        md-min-date="sLactaAdicionProrroga.fecha_inicio">
+                                    <md-datepicker ng-model="sLactaAdicionProrroga.fecha_adicion">
                                     </md-datepicker>
                                 </div>
                                 <div class="col-xs-12 col-md-12">
@@ -209,7 +233,7 @@
                                 </div>
                                 <div class="col-xs-12 col-md-6">
                                     <label>{{'FECHA_PRORROGA' | translate}}</label>
-                                    <md-datepicker ng-model="fecha_prorroga"
+                                    <md-datepicker ng-model="sLactaAdicionProrroga.fecha_prorroga"
                                         md-min-date="sLactaAdicionProrroga.fecha_inicio">
                                     </md-datepicker>
                                 </div>
@@ -232,7 +256,7 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div>                        
         <br>
         <br>
         <br>

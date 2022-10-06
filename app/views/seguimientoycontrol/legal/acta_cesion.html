@@ -129,16 +129,16 @@
 
                             <div class="col-md-6">
                                 <label for="fechaoficio form-group">{{'FECHA_OFICIO' | translate}}</label> <br>
-                                <md-datepicker ng-model="sLactaCesion.f_oficio" md-placeholder="Ingrese fecha"></md-datepicker>
+                                <md-datepicker ng-model="sLactaCesion.f_oficio" md-max-date="sLactaCesion.f_hoy" md-placeholder="Ingrese fecha"></md-datepicker>
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label for="fechacesion">{{'FECHA_CESION' | translate}}</label><br>
-                                <md-datepicker ng-model="sLactaCesion.f_cesion" md-min-date="sLactaCesion.f_hoy" md-placeholder="Ingrese fecha"></md-datepicker>
+                                <md-datepicker ng-model="sLactaCesion.f_cesion" md-max-date="sLactaCesion.f_hoy" md-placeholder="Ingrese fecha"></md-datepicker>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="fechaterminacion">{{'FECHA_TERMINACION_CEDENTE' | translate}}</label><br>
-                                <md-datepicker ng-model="sLactaCesion.f_terminacion" md-min-date="sLactaCesion.f_hoy" md-placeholder="Ingrese fecha"></md-datepicker>
+                                <md-datepicker ng-model="sLactaCesion.f_terminacion" md-max-date="sLactaCesion.f_cesion" md-placeholder="Ingrese fecha" ng-disabled="true"></md-datepicker>
                             </div>
                             <div class="col-md-12">
                                 <hr>
@@ -204,4 +204,8 @@
     <div class="panel-footer">
         <center><button class="btn btn-primary btn-lg" ng-click="sLactaCesion.generarActa()">{{'CREAR_NOVEDAD_CESION' | translate}}</button></center>
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
 </div>

@@ -36,6 +36,7 @@ angular
             // $scope.documentos = [];
 
             $scope.status = "  ";
+            
 
             /**
              * @ngdoc method
@@ -82,7 +83,7 @@ angular
                             self.contrato_obj.contratista =
                                 agora_response.data[0].Contratista;
                             self.contrato_obj.cesion = 0;
-
+                            
                             //Obtiene el estado del contrato.
                             agoraRequest
                                 .get(
@@ -90,7 +91,7 @@ angular
                                     self.contrato_obj.id +
                                     ",Vigencia:" +
                                     self.contrato_obj.vigencia +
-                                    "&sortby=Id&order=desc&limit=1"
+                                    "&sortby=Id&order=desc&limit=1"                                    
                                 )
                                 .then(function (ce_response) {
                                     self.estado_contrato_obj.estado =
@@ -359,19 +360,12 @@ angular
                     } else return false;
                 };
                 $scope.nextPage = function () {
-                    console.log("next pages");
                     $scope.currentPage++;
-                    $scope.start = $scope.start + $scope.numLimit;
-                    console.log($scope.start);
-                };
+                    $scope.start = $scope.start + $scope.numLimit;                };
                 $scope.PrevPage = function () {
                     if ($scope.currentPage > 1) {
                         $scope.currentPage--;
-                    }
-                    console.log("next pages");
-                    $scope.start = $scope.start - $scope.numLimit;
-                    console.log($scope.start);
-                };
+                    }                    $scope.start = $scope.start - $scope.numLimit;                };
             }
         }
     );
