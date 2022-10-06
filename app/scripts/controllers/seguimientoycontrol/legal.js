@@ -318,7 +318,6 @@ angular
                 $scope.verDocumento = function (enlace) {
                     novedadesMidRequest
                         .get("gestor_documental", enlace)
-                        //.get("http://localhost:8502/v1/novedad/221/2021", enlace)
                         .then(function (response) {
                             var elementos = response.data.Body;
                             var docB64 = elementos.file.split("'");
@@ -361,19 +360,12 @@ angular
                     } else return false;
                 };
                 $scope.nextPage = function () {
-                    //console.log("next pages");
                     $scope.currentPage++;
-                    $scope.start = $scope.start + $scope.numLimit;
-                    //console.log($scope.start);
-                };
+                    $scope.start = $scope.start + $scope.numLimit;                };
                 $scope.PrevPage = function () {
                     if ($scope.currentPage > 1) {
                         $scope.currentPage--;
-                    }
-                    //console.log("next pages");
-                    $scope.start = $scope.start - $scope.numLimit;
-                    //console.log($scope.start);
-                };
+                    }                    $scope.start = $scope.start - $scope.numLimit;                };
             }
         }
     );
