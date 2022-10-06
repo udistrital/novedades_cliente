@@ -1073,7 +1073,7 @@ angular
                             self.contrato_obj.supervisor_cedula +
                             " de " +
                             self.contrato_obj.supervisor_ciudad_documento +
-                            " en su calidad de supervisor y " +
+                            " en su calidad de interventor y/o supervisor y " +
                             self.contrato_obj.contratista_nombre +
                             " identificado con " +
                             self.contrato_obj.contratista_tipo_documento +
