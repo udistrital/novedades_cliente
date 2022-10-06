@@ -71,8 +71,8 @@ angular
 
             const input = document.getElementById("solicitud");
             input.addEventListener("input", function () {
-                if (this.value.length > 11) {
-                    this.value = this.value.slice(0, 11);
+                if (this.value.length > 7) {
+                    this.value = this.value.slice(0, 7);
                 }
             })
 
