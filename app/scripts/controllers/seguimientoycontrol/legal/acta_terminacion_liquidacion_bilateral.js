@@ -171,57 +171,6 @@ angular.module('contractualClienteApp')
                             });
                             
                         });
-                        
-                // amazonAdministrativaRequest
-                // .get(
-                //     "supervisor_contrato?query=DependenciaSupervisor:" + 
-                //     self.contrato_obj.DependenciaSupervisor+ "&sortby=FechaInicio&order=desc&limit=1")
-                // .then(function(scd_response){                                 
-                //     console.log("super", scd_response);
-                //     self.contrato_obj.supervisor_cedula =
-                //                     scd_response.data[0].Documento;
-                //     console.log("cedula super", self.contrato_obj.supervisor_cedula);
-                      
-                //     amazonAdministrativaRequest
-                //     .get(
-                //         "informacion_persona_natural?query=Id:" +
-                //         self.contrato_obj.supervisor_cedula
-                //     )
-                //     .then(function (ispn_response) {                              
-                
-                //     coreAmazonRequest
-                //         .get(
-                //             "ciudad",
-                //             "query=Id:" +
-                //             ispn_response.data[0].IdCiudadExpedicionDocumento
-                //         )
-                //         .then(function (sc_response) {
-                //             self.contrato_obj.supervisor_ciudad_documento =
-                //                 sc_response.data[0].Nombre;
-                                
-                //             self.contrato_obj.supervisor_tipo_documento =
-                //                 ispn_response.data[0].TipoDocumento.ValorParametro;
-                //             self.contrato_obj.supervisor_nombre =
-                //                 ispn_response.data[0].PrimerNombre +
-                //                 " " +
-                //                 ispn_response.data[0].SegundoNombre +
-                //                 " " +
-                //                 ispn_response.data[0].PrimerApellido +
-                //                 " " +
-                //                 ispn_response.data[0].SegundoApellido;  
-                //                 console.log("datos super", self.contrato_obj.supervisor_nombre, self.contrato_obj.supervisor_tipo_documento, self.contrato_obj.supervisor_cedula, self.contrato_obj.supervisor_ciudad_documento);
-
-                //         });
-                //     });
-                // });
-
-                // agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.supervisor_cedula).then(function (ispn_response) {
-                //     coreAmazonRequest.get('ciudad', 'query=Id:' + ispn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
-                //         self.contrato_obj.supervisor_ciudad_documento = sc_response.data[0].Nombre;
-                //         self.contrato_obj.supervisor_tipo_documento = ispn_response.data[0].TipoDocumento.ValorParametro;
-                //         self.contrato_obj.supervisor_nombre_completo = ispn_response.data[0].PrimerNombre + " " + ispn_response.data[0].SegundoNombre + " " + ispn_response.data[0].PrimerApellido + " " + ispn_response.data[0].SegundoApellido;
-                //     });
-                // });
 
                 //Obtención de datos del jefe de juridica
                 agoraRequest.get('supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
@@ -1025,14 +974,6 @@ angular.module('contractualClienteApp')
 
                         'Que por medio del oficio '+ numberFormat(String(self.terminacion_nov.numerooficioestadocuentas)+ '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' recibido por la Oficina Asesora Jurídica, el señor(a) '+self.contrato_obj.ordenadorGasto_nombre+', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
 
-
-                        // 'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', en calidad de contratista, mediante oficio de fecha del día ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) +
-                        // ', le solicitó la aceptación de la Terminación anticipada del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' al ' + self.contrato_obj.supervisor_rol + ', como Supervisor del citado contrato.\n\n',
-
-                        // 'Que mediante oficio ' + numberFormat(self.terminacion_nov.numerooficioestadocuentas + '') + ' el Supervisor y/o el Ordenador del Gasto del ' + self.contrato_obj.tipo_contrato + ', solicita al Jefe de la Sección de Presupuesto de la Universidad Distrital, la elaboración del estado de cuenta del referido contrato.\n\n',
-
-                        // 'Que según certificación de fecha ' + self.format_date_letter_mongo(self.contrato_obj.cdp_fecha) + ', expedida por Jefe de Sección de Presupuesto, el ' + self.contrato_obj.tipo_contrato + ' No.' + self.contrato_id + ' presenta un saldo a la fecha por valor de  $' + numberFormat(self.a_favor.valor + '') + ' a favor de ' + self.a_favor.entidad + '\n\n',
-
                     ]
                 },
                 {   
@@ -1050,9 +991,7 @@ angular.module('contractualClienteApp')
                     text: [{
                         text: [
                             { text: ' CLÁUSULA PRIMERA: TERMINAR Y LIQUIDAR DE MANERA ANTICIPADA Y DE MUTUO ACUERDO el contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +', ', bold: true },
-                            { text:  'a partir del '+self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud)+' de la siguiente manera:\n\n' } 
-                            // { text: ' CLÁUSULA PRIMERA : ', bold: true },
-                            // { text: 'Las partes proceden a liquidar el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', de la siguiente manera:\n\n' }
+                            { text:  'a partir del '+self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud)+' de la siguiente manera:\n\n' }
                         ]
 
 
@@ -1127,40 +1066,6 @@ angular.module('contractualClienteApp')
                         ]
                     }]
                 },
-                // {
-                //     style: ['table2'],
-                //     table: {
-                //         widths: [270, 270],
-                //         body: [
-                //             [
-                //                 { text: '______________________________________', bold: false, style: 'topHeader' },
-                //                 { text: '______________________________________', bold: false, style: 'topHeader' }
-                //             ],
-                //             [
-                //                 { text: '' + self.contrato_obj.contratista_nombre, bold: false, style: 'topHeader' },
-                //                 { text: '' + self.contrato_obj.ordenadorGasto_nombre, bold: false, style: 'topHeader' }
-
-                //             ],
-                //             [
-                //                 { text: 'CC. ' + self.contrato_obj.contratista_documento, bold: false, style: 'topHeader' },
-                //                 { text: 'CC. ' + self.contrato_obj.ordenador_gasto_documento, bold: false, style: 'topHeader' }
-                //             ],
-                //             [
-                //                 { text: 'Contratista', bold: true, style: 'topHeader' },
-                //                 { text: self.contrato_obj.ordenadorGasto_rol, bold: false, style: 'topHeader' }
-                //             ],
-                //             [
-                //                 { text: '', bold: false, style: 'topHeader' },
-                //                 { text: 'Ordenador del Gasto', bold: false, style: 'topHeader' }
-                //             ],
-                //             [
-                //                 { text: '', bold: true, style: 'topHeader' },
-                //                 { text: 'Universidad', bold: true, style: 'topHeader' }
-                //             ],
-                //         ]
-                //     },
-                //     layout: 'noBorders',
-                // },
                 {
                     style: ["table2"],
                     table: {
@@ -1245,19 +1150,19 @@ angular.module('contractualClienteApp')
                             ],
                             [
                                 { text: 'Proyectó', bold: true },
-                                '', //+ self.elaboro,
-                                '', //'Abogado Oficina Asesora Jurídica',
+                                '',
+                                '',
                                 ''
                             ],
                             [
                                 { text: 'Revisó', bold: true },
-                                '', //'DIANA MIREYA PARRA CARDONA',
+                                '',
                                 'Jefe Oficina Asesora Jurídica',
                                 ''
                             ],
                             [
                                 { text: 'Aprobó', bold: true },
-                                '', //'DIANA MIREYA PARRA CARDONA',
+                                '',
                                 'Jefe Oficina Asesora Jurídica',
                                 ''
                             ],

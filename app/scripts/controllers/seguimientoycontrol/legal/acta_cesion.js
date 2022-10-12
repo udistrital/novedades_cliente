@@ -48,9 +48,10 @@ angular
             self.novedadCesion = false;
 
             const solic_input = document.getElementById("n_solicitud");
-            solic_input.addEventListener("input", function () {
-                if (this.value.length > 11) {
-                    this.value = this.value.slice(0, 11);
+
+            solic_input.addEventListener("input", function(){
+                if (this.value.length > 7) {
+                    this.value = this.value.slice(0,7);
                 }
             });
             const oficio_input = document.getElementById("oficio");
