@@ -69,6 +69,8 @@ angular
             self.elaboro_cedula = token_service.getPayload().documento;
             var adicionProrroga = "";
 
+            self.novedadOtrosi = false;
+
             const input = document.getElementById("solicitud");
             input.addEventListener("input", function () {
                 if (this.value.length > 7) {
@@ -297,6 +299,11 @@ angular
                                 self.contrato_obj.vigencia
                             )
                             .then(function (response) {
+                                for (let novedad of response.data.Body) {
+                                    if (novedad.tiponovedad == 8) {
+                                        self.novedadOtrosi = true;
+                                    }
+                                }
                                 var elementos_cesion = response.data.Body;
                                 if (elementos_cesion.length != '0') {
                                     var last_cesion =
@@ -692,51 +699,70 @@ angular
              * funcion para validar si se selecciono la novedad de adicion - prorroga
              */
             self.comprobar_seleccion_novedad = function () {
-                if ($scope.adicion == true || $scope.prorroga == true) {
-                    $scope.estado_novedad = true;
-                    if ($scope.adicion == true) {
-                        $("#valor_adicion").prop("required", true);
-                    } else {
-                        $("#valor_adicion").prop("required", false);
-                    }
-                    if ($scope.prorroga == true) {
-                        $("#tiempo_prorroga").prop("required", true);
-                    } else {
-                        $("#tiempo_prorroga").prop("required", false);
-                        if ($scope.valor_prorroga_final == undefined) {
-                            $scope.valor_prorroga_final = 0;
+
+                if (novedadOtrosi == false) {
+                    if ($scope.adicion == true || $scope.prorroga == true) {
+                        $scope.estado_novedad = true;
+                        if ($scope.adicion == true) {
+                            $("#valor_adicion").prop("required", true);
+                        } else {
+                            $("#valor_adicion").prop("required", false);
                         }
+                        if ($scope.prorroga == true) {
+                            $("#tiempo_prorroga").prop("required", true);
+                        } else {
+                            $("#tiempo_prorroga").prop("required", false);
+                            if ($scope.valor_prorroga_final == undefined) {
+                                $scope.valor_prorroga_final = 0;
+                            }
+                        }
+                    } else {
+                        $scope.estado_novedad = false;
                     }
-                } else {
-                    $scope.estado_novedad = false;
-                }
-                if ($scope.estado_novedad == false) {
-                    swal(
-                        $translate.instant("TITULO_ADVERTENCIA"),
-                        $translate.instant("DESCRIPCION_ADVERTENCIA"),
-                        "info"
+                    if ($scope.estado_novedad == false) {
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            $translate.instant("DESCRIPCION_ADVERTENCIA"),
+                            "info"
+                        );
+                    }
+                    var valor_contrato_inicial = self.contrato_obj.valor;
+                    $scope.valor_contrato_letras = numeroALetras(valor_contrato_inicial, {
+                        plural: $translate.instant("PESOS"),
+                        singular: $translate.instant("PESO"),
+                        centPlural: $translate.instant("CENTAVOS"),
+                        centSingular: $translate.instant("CENTAVO"),
+                    });
+                    $scope.cantidad_salarios_minimos = (
+                        valor_contrato_inicial / 737717
+                    ).toFixed(2);
+                    $scope.contrato_plazo_letras = numeroALetras(self.contrato_obj.plazo, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    $scope.contrato_prorroga_letras = numeroALetras(
+                        $scope.valor_prorroga_final, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    }
                     );
+                } else {
+                    //respuesta incorrecta, ej: 400/500
+                    $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
+                    swal({
+                        title: $translate.instant("TITULO_ERROR_ACTA"),
+                        type: "error",
+                        html: $translate.instant($scope.alert) +
+                            self.contrato_obj.numero_contrato +
+                            $translate.instant("ANIO") +
+                            self.contrato_obj.vigencia +
+                            ".",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    }).then(function () { });
                 }
-                var valor_contrato_inicial = self.contrato_obj.valor;
-                $scope.valor_contrato_letras = numeroALetras(valor_contrato_inicial, {
-                    plural: $translate.instant("PESOS"),
-                    singular: $translate.instant("PESO"),
-                    centPlural: $translate.instant("CENTAVOS"),
-                    centSingular: $translate.instant("CENTAVO"),
-                });
-                $scope.cantidad_salarios_minimos = (
-                    valor_contrato_inicial / 737717
-                ).toFixed(2);
-                $scope.contrato_plazo_letras = numeroALetras(self.contrato_obj.plazo, {
-                    plural: $translate.instant("("),
-                    singular: $translate.instant("("),
-                });
-                $scope.contrato_prorroga_letras = numeroALetras(
-                    $scope.valor_prorroga_final, {
-                    plural: $translate.instant("("),
-                    singular: $translate.instant("("),
-                }
-                );
             };
 
             function generateTipoNovedad(callback) {
