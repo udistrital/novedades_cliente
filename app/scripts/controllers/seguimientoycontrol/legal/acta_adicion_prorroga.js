@@ -300,10 +300,8 @@ angular
                             )
                             .then(function (response) {
                                 var elementos_cesion = response.data.Body;
-                                console.log("Data: ", elementos_cesion)
                                 for (var i = 0; i < elementos_cesion.length; i++) {
                                     if (elementos_cesion[i].tiponovedad == 8) {
-                                        console.log("Entra")
                                         self.novedadOtrosi = true;
                                     }
                                 }
@@ -409,7 +407,6 @@ angular
 
                                             $scope.update = function () {
                                                 var cod = JSON.parse(document.getElementById("rp").value);
-                                                console.log("Si", cod);
                                                 var cadena = cod.rp + " - " + cod.vigencia;
                                                 self.selected = cadena;
                                                 self.contrato_obj.cdp_numero =
@@ -701,9 +698,7 @@ angular
              * funcion para validar si se selecciono la novedad de adicion - prorroga
              */
             self.comprobar_seleccion_novedad = function () {
-                console.log("Funcion 1");
                 if (self.novedadOtrosi == false) {
-                    console.log("Funcion 2")
                     if ($scope.adicion == true || $scope.prorroga == true) {
                         $scope.estado_novedad = true;
                         if ($scope.adicion == true) {
