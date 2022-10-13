@@ -236,12 +236,12 @@ angular
                                 self.contrato_obj.vigencia
                             )
                             .then(function (response_sql) {
-                                for (let index of response_sql.data.Body) {
-                                    if (index.tiponovedad == 2) {
+                                var elementos_cesion = response_sql.data.Body;
+                                for (var i=0; i<elementos_cesion.length; i++) {
+                                    if (elementos_cesion[i].tiponovedad == 2) {
                                         self.novedadCesion = true;
                                     }
                                 }
-                                var elementos_cesion = response_sql.data.Body;
                                 if (elementos_cesion.length != "0") {
                                     var last_cesion =
                                         elementos_cesion[elementos_cesion.length - 1];
@@ -647,7 +647,7 @@ angular
                                                                         });
                                                                     } else {
                                                                         //respuesta incorrecta, ej: 400/500
-                                                                        $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
+                                                                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
                                                                         swal({
                                                                             title: $translate.instant("TITULO_ERROR_ACTA"),
                                                                             type: "error",
@@ -665,7 +665,7 @@ angular
                                                                 })
                                                                 .catch(function (error) {
                                                                     //Servidor no disponible
-                                                                    $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
+                                                                    $scope.alert = "DESCRIPCION_ERROR_CESION2";
                                                                     swal({
                                                                         title: $translate.instant("TITULO_ERROR_ACTA"),
                                                                         type: "error",
@@ -704,7 +704,7 @@ angular
                                                     })
                                                     .catch(function (error) {
                                                         //Servidor no disponible
-                                                        $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
+                                                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
                                                         swal({
                                                             title: $translate.instant("TITULO_ERROR_ACTA"),
                                                             type: "error",
@@ -724,7 +724,7 @@ angular
                             })
                     } else {
                         //respuesta incorrecta, ej: 400/500
-                        $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
+                        $scope.alert = "DESCRIPCION_ERROR_CESION";
                         swal({
                             title: $translate.instant("TITULO_ERROR_ACTA"),
                             type: "error",
