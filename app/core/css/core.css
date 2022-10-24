@@ -175,6 +175,10 @@ textarea {
   border-color: var(--color5);
 }
 
+.md-icon-button {
+  color: var(--color5);
+}
+
 .row {
   margin: 2px;
 }
