@@ -30,6 +30,7 @@ angular
             self.contrato_obj = {};
             self.estado_resultado_response = false;
             self.estado_contrato_obj.estado = 0;
+            // self.editButton = false;
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
                 $scope.vigencias = response.data;
             });
@@ -319,6 +320,10 @@ angular
                 return dateOut;
             }
 
+            $scope.currentPage = 1;
+            $scope.numLimit = 5;
+            $scope.start = 0;
+
             $scope.verDocumento = function (enlace) {
                 novedadesMidRequest
                     .get("gestor_documental", enlace)
@@ -333,6 +338,10 @@ angular
                             "'></iframe>"
                         );
                     });
+            }
+
+            $scope.editarNovedad = function (novedad) {
+                
             }
 
             $scope.$watch("documentos", function (newVal) {
