@@ -36,7 +36,7 @@ angular
             // $scope.documentos = [];
 
             $scope.status = "  ";
-            
+
 
             /**
              * @ngdoc method
@@ -83,7 +83,7 @@ angular
                             self.contrato_obj.contratista =
                                 agora_response.data[0].Contratista;
                             self.contrato_obj.cesion = 0;
-                            
+
                             //Obtiene el estado del contrato.
                             agoraRequest
                                 .get(
@@ -91,7 +91,7 @@ angular
                                     self.contrato_obj.id +
                                     ",Vigencia:" +
                                     self.contrato_obj.vigencia +
-                                    "&sortby=Id&order=desc&limit=1"                                    
+                                    "&sortby=Id&order=desc&limit=1"
                                 )
                                 .then(function (ce_response) {
                                     self.estado_contrato_obj.estado =
@@ -304,6 +304,67 @@ angular
                     );
             };
 
+            $scope.hide = function () {
+                $mdDialog.hide();
+            };
+            $scope.cancel = function () {
+                $mdDialog.cancel();
+            };
+            $scope.answer = function (answer) {
+                $mdDialog.hide(answer);
+            };
+
+            $scope.formatDate = function (date) {
+                var dateOut = new Date(date);
+                return dateOut;
+            }
+
+            $scope.verDocumento = function (enlace) {
+                novedadesMidRequest
+                    .get("gestor_documental", enlace)
+                    .then(function (response) {
+                        var elementos = response.data.Body;
+                        var docB64 = elementos.file.split("'");
+                        var file = docB64.length > 1 ? docB64[1] : docB64[0];
+                        var pdfWindow = window.open("");
+                        pdfWindow.document.write(
+                            "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
+                            file +
+                            "'></iframe>"
+                        );
+                    });
+            }
+
+            $scope.$watch("documentos", function (newVal) {
+                if (newVal) {
+                    $scope.pages = Math.ceil(
+                        $scope.documentos.length / $scope.numLimit
+                    );
+                }
+            });
+            $scope.hideNext = function () {
+                if (
+                    $scope.start + $scope.numLimit <
+                    $scope.documentos.length
+                ) {
+                    return false;
+                } else return true;
+            };
+            $scope.hidePrev = function () {
+                if ($scope.start === 0) {
+                    return true;
+                } else return false;
+            };
+            $scope.nextPage = function () {
+                $scope.currentPage++;
+                $scope.start = $scope.start + $scope.numLimit;
+            };
+            $scope.PrevPage = function () {
+                if ($scope.currentPage > 1) {
+                    $scope.currentPage--;
+                } $scope.start = $scope.start - $scope.numLimit;
+            };
+
             function DialogController($scope, $mdDialog, documentos) {
                 $scope.documentos = documentos;
                 $scope.hide = function () {
@@ -361,11 +422,13 @@ angular
                 };
                 $scope.nextPage = function () {
                     $scope.currentPage++;
-                    $scope.start = $scope.start + $scope.numLimit;                };
+                    $scope.start = $scope.start + $scope.numLimit;
+                };
                 $scope.PrevPage = function () {
                     if ($scope.currentPage > 1) {
                         $scope.currentPage--;
-                    }                    $scope.start = $scope.start - $scope.numLimit;                };
+                    } $scope.start = $scope.start - $scope.numLimit;
+                };
             }
         }
     );
