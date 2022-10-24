@@ -93,18 +93,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div>
-
-                                <div ng-if="sLegal.estado_resultado_response == true"
-                                    ng-controller="SeguimientoycontrolLegalCtrl" class="md-padding" id="popupContainer"
-                                    ng-cloak>
-                                    <md-button class="btn btn-primary dropdown-toggle" ng-click="showTabDialog($event)">
-                                        Ver novedades
-                                    </md-button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="col-sm-12 col-md-7">
                         <div class=" panel panel-default">
@@ -218,8 +206,9 @@
                                                     <span class="glyphicon glyphicon-eye-open"></span>
                                                 </md-button>
                                                 <md-button class="md-icon-button"
-                                                    ng-click="verDocumento(documento.enlace)">
-                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                    ng-click="verDocumento(documento.enlace)"
+                                                    ng-if="self.estado_contrato_obj.estado != 6 && self.estado_contrato_obj.estado != 8" disabled="true">
+                                                    <span class="glyphicon glyphicon-edit"></span>
                                                 </md-button>
                                             </center>
                                         </td>
