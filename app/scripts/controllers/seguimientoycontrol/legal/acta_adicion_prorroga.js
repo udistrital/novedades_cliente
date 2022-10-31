@@ -32,6 +32,7 @@ angular
             var self = this;
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
+            self.editBool = $routeParams.edit;
             self.contrato_obj = {};
             self.contrato_obj_argo = {};
             self.fecha = {};
@@ -68,6 +69,8 @@ angular
             self.f_hoy = new Date();
             self.elaboro_cedula = token_service.getPayload().documento;
             var adicionProrroga = "";
+
+            console.log(self.editBool);
 
             self.novedadOtrosi = false;
 
@@ -299,15 +302,32 @@ angular
                                 self.contrato_obj.vigencia
                             )
                             .then(function (response) {
-                                for (let novedad of response.data.Body) {
+                                var elementos_cesion = response.data.Body;
+                                for (let novedad of elementos_cesion) {
                                     if (novedad.tiponovedad == 8) {
                                         self.novedadOtrosi = true;
                                     }
                                 }
-                                var elementos_cesion = response.data.Body;
                                 if (elementos_cesion.length != '0') {
                                     var last_cesion =
                                         elementos_cesion[elementos_cesion.length - 1];
+                                    if ($routeParams.edit != false) {
+                                        if (last_cesion.tiponovedad == 6) {
+                                            $scope.adicion = true;
+                                            $scope.prorroga = false;
+                                        } else if (last_cesion.tiponovedad == 7) {
+                                            $scope.adicion = false;
+                                            $scope.prorroga = true;
+                                        } else {
+                                            $scope.adicion = true;
+                                            $scope.prorroga = true;
+                                        }
+                                        $scope.numero_solicitud = parseInt(last_cesion.numerosolicitud);
+                                        $scope.motivo = last_cesion.motivo;
+                                        $scope.valor_adicion = parseInt(last_cesion.valoradicion);
+                                        $scope.tiempo_prorroga = parseInt(last_cesion.tiempoprorroga);
+
+                                    }
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                     agoraRequest
                                         .get(
