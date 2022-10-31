@@ -1026,12 +1026,12 @@ angular
                                     },
                                 ],
                                 [{
-                                    text: "DÍAS DE SUSPENSIÓN",
+                                    text: "PLAZO DE EJECUCIÓN",
                                     bold: true,
                                     style: "topHeader",
                                 },
                                 {
-                                    text: self.reinicio_nov.periodosuspension,
+                                    text: self.suspension_obj.PlazoEjecucion,
                                     style: "topHeader",
                                 },
                                 ],
