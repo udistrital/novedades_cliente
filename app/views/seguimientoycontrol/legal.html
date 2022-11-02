@@ -93,18 +93,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div>
-
-                                <div ng-if="sLegal.estado_resultado_response == true"
-                                    ng-controller="SeguimientoycontrolLegalCtrl" class="md-padding" id="popupContainer"
-                                    ng-cloak>
-                                    <md-button class="btn btn-primary dropdown-toggle" ng-click="showTabDialog($event)">
-                                        Ver novedades
-                                    </md-button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="col-sm-12 col-md-7">
                         <div class=" panel panel-default">
@@ -176,6 +164,72 @@
                     </div>
                 </div>
             </div>
+            <center>
+                <div class="row" style="border:0px solid; width:60%;" ng-if="sLegal.estado_resultado_response == true">
+                    <div class="col-sm-12 col-md-12">
+                        <div class=" panel panel-default">
+                            <div class="panel-heading">
+                                <center>
+                                    <h4>
+                                        <b>NOVEDADES</b>
+                                    </h4>
+                                </center>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <center>Nombre</center>
+                                        </th>
+                                        <th>
+                                            <center>Enlace</center>
+                                        </th>
+                                        <th>
+                                            <center>Fecha creacion</center>
+                                        </th>
+                                        <th>
+                                            <center>Ver documento</center>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="documento in documentos | limitTo:numLimit:start">
+                                        <td>{{ documento.label }}</td>
+                                        <td>{{ documento.enlace }}</td>
+                                        <td
+                                            ng-bind="formatDate(documento.fechaCreacion) |  date:'yyyy-MM-dd H:mm:ss' : 'UTC'">
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <md-button class="md-icon-button"
+                                                    ng-click="verDocumento(documento.enlace)">
+                                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                                </md-button>
+                                                <md-button class="md-icon-button"
+                                                    ng-click="verDocumento(documento.enlace)"
+                                                    ng-if="self.estado_contrato_obj.estado != 6 && self.estado_contrato_obj.estado != 8" disabled="true">
+                                                    <span class="glyphicon glyphicon-edit"></span>
+                                                </md-button>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5"><span style="padding:5px">{{numLimit}} registros por
+                                                pagina</span> <span style='text-align: center'>Pagina# {{currentPage}}
+                                                de {{pages}}</span>
+                                            <span style="float:right;padding:5px"><a ng-hide="hidePrev()" href=""
+                                                    ng-click="PrevPage()">Prev</a></span>
+
+                                            <span style="float:right;padding:5px"><a ng-hide="hideNext()" href=""
+                                                    ng-click="nextPage()">Next</a></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </center>
         </div>
     </div>
 </div>
