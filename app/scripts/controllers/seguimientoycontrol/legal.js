@@ -341,7 +341,7 @@ angular
             }
 
             $scope.editarNovedad = function (novedad) {
-                
+
             }
 
             $scope.$watch("documentos", function (newVal) {
