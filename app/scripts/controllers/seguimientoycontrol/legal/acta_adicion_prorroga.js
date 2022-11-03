@@ -864,7 +864,7 @@ angular
              */
             self.generarActa = function () {
 
-                if (self.novedadOtrosi = false) {
+                if (self.novedadOtrosi == false) {
                     generateTipoNovedad(function (tiponovedad) {
                         //objeto acta adición_prórroga
                         self.data_acta_adicion_prorroga = {

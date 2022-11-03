@@ -49,9 +49,9 @@ angular
 
             const solic_input = document.getElementById("n_solicitud");
 
-            solic_input.addEventListener("input", function(){
+            solic_input.addEventListener("input", function () {
                 if (this.value.length > 7) {
-                    this.value = this.value.slice(0,7);
+                    this.value = this.value.slice(0, 7);
                 }
             });
             const oficio_input = document.getElementById("oficio");
@@ -237,7 +237,7 @@ angular
                             )
                             .then(function (response_sql) {
                                 var elementos_cesion = response_sql.data.Body;
-                                for (var i=0; i<elementos_cesion.length; i++) {
+                                for (var i = 0; i < elementos_cesion.length; i++) {
                                     if (elementos_cesion[i].tiponovedad == 2) {
                                         self.novedadCesion = true;
                                     }
