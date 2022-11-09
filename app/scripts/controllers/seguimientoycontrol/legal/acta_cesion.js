@@ -506,6 +506,7 @@ angular
              * actualizacion de los datos del contrato y reporte de la novedad
              */
             self.generarActa = function () {
+
                 var f_inicio_contrato = moment(self.contrato_obj.Inicio);
                 var f_cesion = moment(self.f_terminacion);
                 var f_terminacion_contrato = moment(self.contrato_obj.Fin);
@@ -576,6 +577,7 @@ angular
                                                 self.cesion_nov.vigencia = String(
                                                     self.contrato_obj.vigencia
                                                 );
+                                                self.cesion_nov.vigenciacdp = "";
                                                 self.cesion_nov.fechaoficio = new Date(self.f_oficio);
                                                 self.cesion_nov.fecharegistro = self.replaceAt(
                                                     self.contrato_obj.fecha_registro,
@@ -606,15 +608,16 @@ angular
                                                 self.contrato_obj_titan.NumeroContrato = self.contrato_id;
                                                 self.contrato_obj_titan.Vigencia = parseInt(self.contrato_vigencia);
 
-                                                // titanMidRequest
-                                                //     .post("novedad/ceder_contrato", self.contrato_obj_titan)
-                                                //     .then(function (request_titan){
-                                                //         if (
-                                                //             request_titan.status == 201 ||request_titan.status == 200 ||
-                                                //             request_titan.statusText == "Created" || request_titan.statusText == "OK"
-                                                //             ) {
-                                                //                 console.log("POST Titán respuesta positiva");
-
+                                                titanMidRequest
+                                                    .post("novedadCPS/ceder_contrato", self.contrato_obj_titan)
+                                                    .then(function (request_titan) {
+                                                        if (
+                                                            request_titan.status == 201 || request_titan.status == 200 ||
+                                                            request_titan.statusText == "Created" || request_titan.statusText == "OK"
+                                                        ) {
+                                                            console.log("POST Titán respuesta positiva");
+                                                        }
+                                                    });
 
                                                 amazonAdministrativaRequest
                                                     .post("novedad_postcontractual", self.contrato_obj_argo)
