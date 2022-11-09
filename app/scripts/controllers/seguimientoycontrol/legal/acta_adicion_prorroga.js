@@ -927,23 +927,23 @@ angular
                             self.contrato_obj_argo.TipoNovedad = parseFloat(220);
                         };
 
-                        //Replica Titán
-                        // self.contrato_obj_titan = {};
-                        // self.contrato_obj_titan.Documento = self.contrato_obj.contratista_documento;                  
-                        // self.contrato_obj_titan.FechaFechaFin = new Date(self.contrato_obj.nuevaFechaFin);                    
-                        // self.contrato_obj_titan.NumeroContrato = self.contrato_id;
-                        // self.contrato_obj_titan.Vigencia = parseInt(self.contrato_obj.vigencia);
+                        // Replica Titán
+                        self.contrato_obj_titan = {};
+                        self.contrato_obj_titan.Documento = self.contrato_obj.contratista_documento;
+                        self.contrato_obj_titan.FechaFechaFin = new Date(self.contrato_obj.nuevaFechaFin);
+                        self.contrato_obj_titan.NumeroContrato = self.contrato_id;
+                        self.contrato_obj_titan.Vigencia = parseInt(self.contrato_obj.vigencia);
 
-                        // titanMidRequest
-                        //    .post("novedad/otrosi_contrato", self.contrato_obj_titan)
-                        //    .then(function (request_titan){
-                        //        if (
-                        //            request_titan.status == 200 ||
-                        //            request_titan.statusText == "Ok"
-                        //            ) {
-                        //                console.log("POST Titán respuesta positiva");
-                        //            }; 
-                        //    });
+                        titanMidRequest
+                            .post("novedadCPS/otrosi_contrato", self.contrato_obj_titan)
+                            .then(function (request_titan) {
+                                if (
+                                    request_titan.status == 200 ||
+                                    request_titan.statusText == "Ok"
+                                ) {
+                                    console.log("POST Titán respuesta positiva");
+                                };
+                            });
 
                         amazonAdministrativaRequest
                             .post("novedad_postcontractual", self.contrato_obj_argo)
