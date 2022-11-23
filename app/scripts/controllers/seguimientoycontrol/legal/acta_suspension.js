@@ -474,32 +474,32 @@ angular
                                                 self.validacion = vc_response.data.Body;
                                                 if (self.validacion == "true") {
 
-                                                    titanMidRequest
-                                                        .post("novedadCPS/otrosi_contrato", self.contrato_obj_titan)
-                                                        .then(function (request_titan) {
-                                                            if (
-                                                                request_titan.status == 200 ||
-                                                                request_titan.statusText == "Ok"
-                                                            ) {
-                                                                console.log("POST Titán respuesta positiva");
-                                                            };
-                                                        }).catch(function (error) {
-                                                            //Servidor no disponible
-                                                            $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
-                                                            swal({
-                                                                title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                                type: "error",
-                                                                html: $translate.instant($scope.alert) +
-                                                                    self.contrato_obj.numero_contrato +
-                                                                    $translate.instant("ANIO") +
-                                                                    self.contrato_obj.vigencia +
-                                                                    ".",
-                                                                showCloseButton: true,
-                                                                showCancelButton: false,
-                                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                allowOutsideClick: false,
-                                                            }).then(function () { });
-                                                        });
+                                                    // titanMidRequest
+                                                    //     .post("novedadCPS/otrosi_contrato", self.contrato_obj_titan)
+                                                    //     .then(function (request_titan) {
+                                                    //         if (
+                                                    //             request_titan.status == 200 ||
+                                                    //             request_titan.statusText == "Ok"
+                                                    //         ) {
+                                                    //             console.log("POST Titán respuesta positiva");
+                                                    //         };
+                                                    //     }).catch(function (error) {
+                                                    //         //Servidor no disponible
+                                                    //         $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
+                                                    //         swal({
+                                                    //             title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                    //             type: "error",
+                                                    //             html: $translate.instant($scope.alert) +
+                                                    //                 self.contrato_obj.numero_contrato +
+                                                    //                 $translate.instant("ANIO") +
+                                                    //                 self.contrato_obj.vigencia +
+                                                    //                 ".",
+                                                    //             showCloseButton: true,
+                                                    //             showCancelButton: false,
+                                                    //             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                    //             allowOutsideClick: false,
+                                                    //         }).then(function () { });
+                                                    //     });
 
                                                     amazonAdministrativaRequest
                                                         .post("novedad_postcontractual", self.contrato_obj_argo)
