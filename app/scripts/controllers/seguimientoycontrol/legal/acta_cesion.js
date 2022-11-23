@@ -619,13 +619,13 @@ angular
                                                 //         }
                                                 //     });
 
-                                                amazonAdministrativaRequest
-                                                    .post("novedad_postcontractual", self.contrato_obj_argo)
-                                                    .then(function (request_argo) {
-                                                        if (
-                                                            request_argo.status == 201 || request_argo.status == 200 ||
-                                                            request_argo.statusText == "Created" || request_argo.statusText == "OK"
-                                                        ) {
+                                                // amazonAdministrativaRequest
+                                                //     .post("novedad_postcontractual", self.contrato_obj_argo)
+                                                //     .then(function (request_argo) {
+                                                //         if (
+                                                //             request_argo.status == 201 || request_argo.status == 200 ||
+                                                //             request_argo.statusText == "Created" || request_argo.statusText == "OK"
+                                                //         ) {
                                                             novedadesMidRequest
                                                                 .post("novedad", self.cesion_nov)
                                                                 .then(function (request_novedades) {
@@ -664,25 +664,25 @@ angular
                                                                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                                             allowOutsideClick: false,
                                                                         }).then(function () { });
-                                                                    }
-                                                                })
-                                                                .catch(function (error) {
-                                                                    //Servidor no disponible
-                                                                    $scope.alert = "DESCRIPCION_ERROR_CESION2";
-                                                                    swal({
-                                                                        title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                                        type: "error",
-                                                                        html: $translate.instant($scope.alert) +
-                                                                            self.contrato_obj.numero_contrato +
-                                                                            $translate.instant("ANIO") +
-                                                                            self.contrato_obj.vigencia +
-                                                                            ".",
-                                                                        showCloseButton: true,
-                                                                        showCancelButton: false,
-                                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                        allowOutsideClick: false,
-                                                                    }).then(function () { });
-                                                                })
+                                                                //     }
+                                                                // })
+                                                                // .catch(function (error) {
+                                                                //     //Servidor no disponible
+                                                                //     $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                                                                //     swal({
+                                                                //         title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                                //         type: "error",
+                                                                //         html: $translate.instant($scope.alert) +
+                                                                //             self.contrato_obj.numero_contrato +
+                                                                //             $translate.instant("ANIO") +
+                                                                //             self.contrato_obj.vigencia +
+                                                                //             ".",
+                                                                //         showCloseButton: true,
+                                                                //         showCancelButton: false,
+                                                                //         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                //         allowOutsideClick: false,
+                                                                //     }).then(function () { });
+                                                                // })
 
                                                             //     }   
                                                             // })

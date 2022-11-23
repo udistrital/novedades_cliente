@@ -298,48 +298,13 @@ angular
              * @param {date} Fecha de reinicio
              */
             $scope.$watch("sLactaSuspension.f_inicio", function () {
-                if (self.f_inicio.getDate() == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.f_inicio = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
-                }
+
                 if (self.f_fin < self.f_inicio) {
                     self.f_fin = new Date(self.f_inicio);
                 };
             });
             $scope.$watch("sLactaSuspension.f_fin", function () {
-                if (self.f_fin.getDate() == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.f_inicio = new Date();
-                    self.f_fin = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
-                }
+
                 var dt1 = self.f_inicio;
                 var dt2 = self.f_fin;
                 var timeDiff = 0;
@@ -379,8 +344,44 @@ angular
                     Vigencia: parseInt(self.contrato_vigencia),
                     FechaRegistro: new Date(),
                 };
-
+                if (self.f_inicio.getDate() == 31) {
+                    //respuesta incorrecta, ej: 400/500
+                    self.f_inicio = new Date();
+                    $scope.alert =
+                        "DESCRIPCION_ERROR_FECHA_31";
+                    swal({
+                        title: $translate.instant(
+                            "TITULO_ERROR_ACTA"
+                        ),
+                        type: "error",
+                        html: $translate.instant($scope.alert) +
+                            ".",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    }).then(function () { });
+                }
                 if ($scope.formSuspension.$valid) {
+                    if (self.f_fin.getDate() == 31) {
+                        //respuesta incorrecta, ej: 400/500
+                        self.f_inicio = new Date();
+                        self.f_fin = new Date();
+                        $scope.alert =
+                            "DESCRIPCION_ERROR_FECHA_31";
+                        swal({
+                            title: $translate.instant(
+                                "TITULO_ERROR_ACTA"
+                            ),
+                            type: "error",
+                            html: $translate.instant($scope.alert) +
+                                ".",
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false,
+                        }).then(function () { });
+                    }
                     novedadesRequest
                         .get("tipo_novedad", "query=Nombre:Suspensión")
                         .then(function (nc_response) {
