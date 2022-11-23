@@ -449,97 +449,6 @@ angular
              * Funcion que observa y controla el cambio de fechas
              * @param {date} Fecha de Adición y Prórroga
              */
-            $scope.$watch("sLactaAdicionProrroga.fecha_inicio", function () {
-                if (self.fecha_inicio.getDate() == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.fecha_inicio = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
-                };
-            });
-
-            $scope.$watch("sLactaAdicionProrroga.fecha_oficio", function () {
-                if (self.fecha_oficio.getDate() == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.fecha_inicio = new Date();
-                    self.fecha_oficio = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
-                }
-                // self.f_terminacion = new Date(self.f_cesion);
-                // self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
-                // if(self.f_terminacion.getDate == 31){
-                //     console.log("entró");
-                //     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
-                // };             
-
-            });
-
-            $scope.$watch("sLactaAdicionProrroga.fecha_adicion", function () {
-                if (self.fecha_adicion.getDate() == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.fecha_adicion = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
-                };
-            });
-
-            $scope.$watch("sLactaAdicionProrroga.fecha_prorroga", function () {
-                if (self.fecha_prorroga.getDate() == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.fecha_prorroga = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
-                };
-            });
 
 
             /**
@@ -724,6 +633,80 @@ angular
                             "info"
                         );
                     }
+                    if (self.fecha_inicio.getDate() == 31) {
+                        //respuesta incorrecta, ej: 400/500
+                        self.fecha_inicio = new Date();
+                        $scope.alert =
+                            "DESCRIPCION_ERROR_FECHA_31";
+                        swal({
+                            title: $translate.instant(
+                                "TITULO_ERROR_ACTA"
+                            ),
+                            type: "error",
+                            html: $translate.instant($scope.alert) +
+                                ".",
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false,
+                        }).then(function () { });
+                    };
+                    if (self.fecha_oficio.getDate() == 31) {
+                        //respuesta incorrecta, ej: 400/500
+                        self.fecha_inicio = new Date();
+                        self.fecha_oficio = new Date();
+                        $scope.alert =
+                            "DESCRIPCION_ERROR_FECHA_31";
+                        swal({
+                            title: $translate.instant(
+                                "TITULO_ERROR_ACTA"
+                            ),
+                            type: "error",
+                            html: $translate.instant($scope.alert) +
+                                ".",
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false,
+                        }).then(function () { });
+                    }
+                    if (self.fecha_adicion.getDate() == 31) {
+                        //respuesta incorrecta, ej: 400/500
+                        self.fecha_adicion = new Date();
+                        $scope.alert =
+                            "DESCRIPCION_ERROR_FECHA_31";
+                        swal({
+                            title: $translate.instant(
+                                "TITULO_ERROR_ACTA"
+                            ),
+                            type: "error",
+                            html: $translate.instant($scope.alert) +
+                                ".",
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false,
+                        }).then(function () { });
+                    };
+                    if (self.fecha_prorroga.getDate() == 31) {
+                        //respuesta incorrecta, ej: 400/500
+                        self.fecha_prorroga = new Date();
+                        $scope.alert =
+                            "DESCRIPCION_ERROR_FECHA_31";
+                        swal({
+                            title: $translate.instant(
+                                "TITULO_ERROR_ACTA"
+                            ),
+                            type: "error",
+                            html: $translate.instant($scope.alert) +
+                                ".",
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false,
+                        }).then(function () { });
+                    };
+
                     var valor_contrato_inicial = self.contrato_obj.valor;
                     $scope.valor_contrato_letras = numeroALetras(valor_contrato_inicial, {
                         plural: $translate.instant("PESOS"),
@@ -928,105 +911,105 @@ angular
                         };
 
                         // Replica Titán
-                        self.contrato_obj_titan = {};
-                        self.contrato_obj_titan.Documento = self.contrato_obj.contratista_documento;
-                        self.contrato_obj_titan.FechaFechaFin = new Date(self.contrato_obj.nuevaFechaFin);
-                        self.contrato_obj_titan.NumeroContrato = self.contrato_id;
-                        self.contrato_obj_titan.Vigencia = parseInt(self.contrato_obj.vigencia);
+                        // self.contrato_obj_titan = {};
+                        // self.contrato_obj_titan.Documento = self.contrato_obj.contratista_documento;
+                        // self.contrato_obj_titan.FechaFin = new Date(self.contrato_obj.nuevaFechaFin);
+                        // self.contrato_obj_titan.NumeroContrato = self.contrato_id;
+                        // self.contrato_obj_titan.Vigencia = parseInt(self.contrato_obj.vigencia);
 
-                        titanMidRequest
-                            .post("novedadCPS/otrosi_contrato", self.contrato_obj_titan)
-                            .then(function (request_titan) {
-                                if (
-                                    request_titan.status == 200 ||
-                                    request_titan.statusText == "Ok"
-                                ) {
-                                    console.log("POST Titán respuesta positiva");
-                                };
-                            });
+                        // titanMidRequest
+                        //     .post("novedadCPS/otrosi_contrato", self.contrato_obj_titan)
+                        //     .then(function (request_titan) {
+                        //         if (
+                        //             request_titan.status == 200 ||
+                        //             request_titan.statusText == "Ok"
+                        //         ) {
+                        //             console.log("POST Titán respuesta positiva");
+                        //         };
+                        //     });
 
-                        amazonAdministrativaRequest
-                            .post("novedad_postcontractual", self.contrato_obj_argo)
-                            .then(function (request_argo) {
-                                if (
-                                    request_argo.status == 201 ||
-                                    request_argo.statusText == "Created"
-                                ) {
-                                    novedadesMidRequest
-                                        .post("novedad", self.data_acta_adicion_prorroga)
-                                        .then(function (request) {
-                                            if (request.status == 200) {
-                                                self.formato_generacion_pdf();
-                                                swal({
-                                                    title: $translate.instant("TITULO_BUEN_TRABAJO"),
-                                                    type: "success",
-                                                    html: $translate.instant($scope.alert) +
-                                                        self.contrato_obj.numero_contrato +
-                                                        $translate.instant("ANIO") +
-                                                        self.contrato_obj.vigencia +
-                                                        ".",
-                                                    showCloseButton: false,
-                                                    showCancelButton: false,
-                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                    allowOutsideClick: false,
-                                                }).then(function () {
-                                                    window.location.href = "#/seguimientoycontrol/legal";
-                                                });
-                                                $scope.estado_novedad = undefined;
-                                            } else {
-                                                //respuesta incorrecta, ej: 400/500
-                                                $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
-                                                swal({
-                                                    title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                    type: "error",
-                                                    html: $translate.instant($scope.alert) +
-                                                        self.contrato_obj.numero_contrato +
-                                                        $translate.instant("ANIO") +
-                                                        self.contrato_obj.vigencia +
-                                                        ".",
-                                                    showCloseButton: true,
-                                                    showCancelButton: false,
-                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                    allowOutsideClick: false,
-                                                }).then(function () { });
-                                            }
-                                        })
-                                        .catch(function (error) {
-                                            //Servidor no disponible
-                                            $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
-                                            swal({
-                                                title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                type: "error",
-                                                html: $translate.instant($scope.alert) +
-                                                    self.contrato_obj.numero_contrato +
-                                                    $translate.instant("ANIO") +
-                                                    self.contrato_obj.vigencia +
-                                                    ".",
-                                                showCloseButton: true,
-                                                showCancelButton: false,
-                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                allowOutsideClick: false,
-                                            }).then(function () { });
-                                        })
-                                        .catch(function (error) {
-                                            //Servidor no disponible
-                                            $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
-                                            swal({
-                                                title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                type: "error",
-                                                html: $translate.instant($scope.alert) +
-                                                    self.contrato_obj.numero_contrato +
-                                                    $translate.instant("ANIO") +
-                                                    self.contrato_obj.vigencia +
-                                                    ".",
-                                                showCloseButton: true,
-                                                showCancelButton: false,
-                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                allowOutsideClick: false,
-                                            }).then(function () { });
-                                        });
-                                };
+                        // amazonAdministrativaRequest
+                        //     .post("novedad_postcontractual", self.contrato_obj_argo)
+                        //     .then(function (request_argo) {
+                        //         if (
+                        //             request_argo.status == 201 ||
+                        //             request_argo.statusText == "Created"
+                        //         ) {
+                        novedadesMidRequest
+                            .post("novedad", self.data_acta_adicion_prorroga)
+                            .then(function (request) {
+                                if (request.status == 200) {
+                                    self.formato_generacion_pdf();
+                                    swal({
+                                        title: $translate.instant("TITULO_BUEN_TRABAJO"),
+                                        type: "success",
+                                        html: $translate.instant($scope.alert) +
+                                            self.contrato_obj.numero_contrato +
+                                            $translate.instant("ANIO") +
+                                            self.contrato_obj.vigencia +
+                                            ".",
+                                        showCloseButton: false,
+                                        showCancelButton: false,
+                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                        allowOutsideClick: false,
+                                    }).then(function () {
+                                        window.location.href = "#/seguimientoycontrol/legal";
+                                    });
+                                    $scope.estado_novedad = undefined;
+                                } else {
+                                    //respuesta incorrecta, ej: 400/500
+                                    $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
+                                    swal({
+                                        title: $translate.instant("TITULO_ERROR_ACTA"),
+                                        type: "error",
+                                        html: $translate.instant($scope.alert) +
+                                            self.contrato_obj.numero_contrato +
+                                            $translate.instant("ANIO") +
+                                            self.contrato_obj.vigencia +
+                                            ".",
+                                        showCloseButton: true,
+                                        showCancelButton: false,
+                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                        allowOutsideClick: false,
+                                    }).then(function () { });
+                                }
+                            })
+                            .catch(function (error) {
+                                //Servidor no disponible
+                                $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
+                                swal({
+                                    title: $translate.instant("TITULO_ERROR_ACTA"),
+                                    type: "error",
+                                    html: $translate.instant($scope.alert) +
+                                        self.contrato_obj.numero_contrato +
+                                        $translate.instant("ANIO") +
+                                        self.contrato_obj.vigencia +
+                                        ".",
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            })
+                            .catch(function (error) {
+                                //Servidor no disponible
+                                $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
+                                swal({
+                                    title: $translate.instant("TITULO_ERROR_ACTA"),
+                                    type: "error",
+                                    html: $translate.instant($scope.alert) +
+                                        self.contrato_obj.numero_contrato +
+                                        $translate.instant("ANIO") +
+                                        self.contrato_obj.vigencia +
+                                        ".",
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
                             });
+                        //     };
+                        // });
 
                     });
                 } else {
