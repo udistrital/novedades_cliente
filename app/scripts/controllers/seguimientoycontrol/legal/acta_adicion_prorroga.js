@@ -887,54 +887,74 @@ angular
                             });
                             $scope.valor_adicion = numberFormat("0");
                         }
-                        //Recolección datos objeto POST Argo            F         
-                        self.contrato_obj_argo.NumeroContrato = self.contrato_obj.numero_contrato; //Revisar si toca parsearlo
-                        self.contrato_obj_argo.Vigencia = parseInt(self.contrato_obj.vigencia);
-                        self.contrato_obj_argo.FechaRegistro = self.f_hoy;
-                        self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
-                        self.contrato_obj_argo.PlazoEjecucion = parseInt($scope.valor_prorroga_final);
-                        self.contrato_obj_argo.FechaInicio = new Date(self.contrato_obj.inicioOSi);
-                        self.contrato_obj_argo.FechaFin = new Date(self.contrato_obj.nuevaFechaFin);
-                        self.contrato_obj_argo.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
-                        self.contrato_obj_argo.VigenciaCdp = parseInt(self.contrato_obj.cdp_anno);
-                        self.contrato_obj_argo.ValorNovedad = parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, ""));
-                        self.contrato_obj_argo.UnidadEjecucion = 205;
-                        //Tratamiento de datos para objeto payload POST Argo
-                        if (self.data_acta_adicion_prorroga.tiponovedad === "NP_ADI") {
-                            self.contrato_obj_argo.TipoNovedad = parseFloat(248);
-                        };
-                        if (self.data_acta_adicion_prorroga.tiponovedad === "NP_PRO") {
-                            self.contrato_obj_argo.TipoNovedad = parseFloat(249);
-                        };
-                        if (self.data_acta_adicion_prorroga.tiponovedad === "NP_ADPRO") {
-                            self.contrato_obj_argo.TipoNovedad = parseFloat(220);
-                        };
 
-                        // Replica Titán
-                        // self.contrato_obj_titan = {};
-                        // self.contrato_obj_titan.Documento = self.contrato_obj.contratista_documento;
-                        // self.contrato_obj_titan.FechaFin = new Date(self.contrato_obj.nuevaFechaFin);
-                        // self.contrato_obj_titan.NumeroContrato = self.contrato_id;
-                        // self.contrato_obj_titan.Vigencia = parseInt(self.contrato_obj.vigencia);
+                        self.contrato_obj_replica.NumeroCdp = "";
+                        self.contrato_obj_replica.VigenciaCdp = "";
+                        var fechaNovedad = new Date();
+                        if ($scope.adicion == true && $scope.prorroga == true) {
+                            self.contrato_obj_replica.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
+                            self.contrato_obj_replica.VigenciaCdp = parseInt(self.contrato_obj.cdp_anno);
+                            fechaNovedad = self.fecha_prorroga;
+                        } else if ($scope.adicion == true && $scope.prorroga == false) {
+                            self.contrato_obj_replica.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
+                            self.contrato_obj_replica.VigenciaCdp = parseInt(self.contrato_obj.cdp_anno);
+                            fechaNovedad = self.fecha_adicion;
+                        } else {
+                            fechaNovedad = self.fecha_prorroga;
+                        }
 
-                        // titanMidRequest
-                        //     .post("novedadCPS/otrosi_contrato", self.contrato_obj_titan)
-                        //     .then(function (request_titan) {
-                        //         if (
-                        //             request_titan.status == 200 ||
-                        //             request_titan.statusText == "Ok"
-                        //         ) {
-                        //             console.log("POST Titán respuesta positiva");
-                        //         };
-                        //     });
+                        //Recolección datos objeto POST Replica
+                        self.contrato_obj_replica = {};
+                        self.contrato_obj_replica.esFechaActual = false;
+                        self.contrato_obj_replica.NumeroContrato = parseInt(self.contrato_obj.numero_contrato); //Revisar si toca parsearlo
+                        self.contrato_obj_replica.Vigencia = parseInt(self.contrato_obj.vigencia);
+                        self.contrato_obj_replica.FechaRegistro = self.f_hoy;
+                        self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                        self.contrato_obj_replica.Documento = self.contrato_obj.contratista_documento;
+                        self.contrato_obj_replica.PlazoEjecucion = parseInt($scope.valor_prorroga_final);
+                        self.contrato_obj_replica.FechaInicio = fechaNovedad;
+                        self.contrato_obj_replica.FechaFin = new Date(self.contrato_obj.nuevaFechaFin);
+                        self.contrato_obj_replica.ValorNovedad = parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, ""));
+                        self.contrato_obj_replica.UnidadEjecucion = 205;
+                        if (self.data_acta_adicion_prorroga.tiponovedad === "NP_CES") {
+                            self.contrato_obj_replica.TipoNovedad = parseFloat(219);
+                        }
 
-                        // amazonAdministrativaRequest
-                        //     .post("novedad_postcontractual", self.contrato_obj_argo)
-                        //     .then(function (request_argo) {
-                        //         if (
-                        //             request_argo.status == 201 ||
-                        //             request_argo.statusText == "Created"
-                        //         ) {
+                        var fechaActual = new Date();
+                        if (
+                            (fechaActual.getDate() == self.contrato_obj_replica.FechaInicio.getDate()
+                                && fechaActual.getMonth() == self.contrato_obj_replica.FechaInicio.getMonth()
+                                && fechaActual.getFullYear() == self.contrato_obj_replica.FechaInicio.getFullYear())
+                            || fechaActual > self.contrato_obj_replica.FechaInicio
+                        ) {
+                            self.contrato_obj_replica.esFechaActual = true;
+                            novedadesMidRequest
+                                .post("replica", self.contrato_obj_replica)
+                                .then(function (request_novedades) {
+                                    if (
+                                        request_novedades.status == 200 ||
+                                        request_novedades.statusText == "OK"
+                                    ) {
+                                        console.log("Replica correcta");
+                                    }
+                                }).catch(function (error) {
+                                    //Error en la replica
+                                    $scope.alert = "TITULO_ERROR_REPLICA";
+                                    swal({
+                                        title: $translate.instant("TITULO_ERROR_ACTA"),
+                                        type: "error",
+                                        html: $translate.instant($scope.alert) +
+                                            self.contrato_obj.numero_contrato +
+                                            $translate.instant("ANIO") +
+                                            self.contrato_obj.vigencia +
+                                            ".",
+                                        showCloseButton: true,
+                                        showCancelButton: false,
+                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                        allowOutsideClick: false,
+                                    }).then(function () { });
+                                })
+                        }
                         novedadesMidRequest
                             .post("novedad", self.data_acta_adicion_prorroga)
                             .then(function (request) {

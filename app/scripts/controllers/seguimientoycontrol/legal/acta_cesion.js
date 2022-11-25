@@ -56,8 +56,8 @@ angular
             });
             const oficio_input = document.getElementById("oficio");
             oficio_input.addEventListener("input", function () {
-                if (this.value.length > 11) {
-                    this.value = this.value.slice(0, 11);
+                if (this.value.length > 7) {
+                    this.value = this.value.slice(0, 7);
                 }
             });
             const valordes_input = document.getElementById("valor_desembolsado");
@@ -584,125 +584,98 @@ angular
                                                     10,
                                                     "T"
                                                 );
-                                                //Recolección datos objeto POST Argo
-                                                self.contrato_obj_argo = {};
-                                                self.contrato_obj_argo.NumeroContrato = self.contrato_id; //Revisar si toca parsearlo
-                                                self.contrato_obj_argo.Vigencia = parseInt(self.contrato_vigencia);
-                                                self.contrato_obj_argo.FechaRegistro = self.f_hoy;
-                                                self.contrato_obj_argo.Contratista = parseFloat(self.cesion_nov.cesionario, 64);
-                                                self.contrato_obj_argo.PlazoEjecucion = self.contrato_obj.plazo;
-                                                self.contrato_obj_argo.FechaInicio = self.cesion_nov.fechacesion;
-                                                self.contrato_obj_argo.FechaFin = self.f_terminacion;
-                                                self.contrato_obj_argo.UnidadEjecucion = 205;
-                                                //Tratamiento de datos para objeto payload POST Argo
+
+                                                //Recolección datos objeto POST Replica
+                                                self.contrato_obj_replica = {};
+                                                self.contrato_obj_replica.esFechaActual = false;
+                                                self.contrato_obj_replica.NumeroContrato = parseInt(self.contrato_id); //Revisar si toca parsearlo
+                                                self.contrato_obj_replica.Vigencia = parseInt(self.contrato_vigencia);
+                                                self.contrato_obj_replica.Contratista = parseFloat(self.cesion_nov.cesionario, 64);
+                                                self.contrato_obj_replica.DocumentoActual = self.contrato_obj.contratista_documento;
+                                                self.contrato_obj_replica.DocumentoNuevo = self.cesionario_obj.identificacion;
+                                                self.contrato_obj_replica.NombreCompleto = self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos;
+                                                self.contrato_obj_replica.FechaRegistro = self.f_hoy;
+                                                self.contrato_obj_replica.PlazoEjecucion = self.contrato_obj.plazo;
+                                                self.contrato_obj_replica.FechaInicio = self.cesion_nov.fechacesion;
+                                                self.contrato_obj_replica.FechaFin = self.f_terminacion;
+                                                self.contrato_obj_replica.UnidadEjecucion = 205;
                                                 if (self.cesion_nov.tiponovedad === "NP_CES") {
-                                                    self.contrato_obj_argo.TipoNovedad = parseFloat(219);
+                                                    self.contrato_obj_replica.TipoNovedad = parseFloat(219);
                                                 }
 
-                                                //Replica Titán
-                                                self.contrato_obj_titan = {};
-                                                self.contrato_obj_titan.DocumentoActual = self.contrato_obj.contratista_documento;
-                                                self.contrato_obj_titan.DocumentoNuevo = self.cesionario_obj.identificacion;
-                                                self.contrato_obj_titan.FechaInicio = self.cesion_nov.fechacesion;
-                                                self.contrato_obj_titan.NombreCompleto = self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos;
-                                                self.contrato_obj_titan.NumeroContrato = self.contrato_id;
-                                                self.contrato_obj_titan.Vigencia = parseInt(self.contrato_vigencia);
-
-                                                // titanMidRequest
-                                                //     .post("novedadCPS/ceder_contrato", self.contrato_obj_titan)
-                                                //     .then(function (request_titan) {
-                                                //         if (
-                                                //             request_titan.status == 201 || request_titan.status == 200 ||
-                                                //             request_titan.statusText == "Created" || request_titan.statusText == "OK"
-                                                //         ) {
-                                                //             console.log("POST Titán respuesta positiva");
-                                                //         }
-                                                //     });
-
-                                                // amazonAdministrativaRequest
-                                                //     .post("novedad_postcontractual", self.contrato_obj_argo)
-                                                //     .then(function (request_argo) {
-                                                //         if (
-                                                //             request_argo.status == 201 || request_argo.status == 200 ||
-                                                //             request_argo.statusText == "Created" || request_argo.statusText == "OK"
-                                                //         ) {
-                                                            novedadesMidRequest
-                                                                .post("novedad", self.cesion_nov)
-                                                                .then(function (request_novedades) {
-                                                                    if (
-                                                                        request_novedades.status == 200 ||
-                                                                        request_novedades.statusText == "OK"
-                                                                    ) {
-                                                                        self.formato_generacion_pdf();
-
-                                                                        swal(
-                                                                            $translate.instant("TITULO_BUEN_TRABAJO"),
-                                                                            $translate.instant("DESCRIPCION_CESION") +
-                                                                            self.contrato_obj.numero_contrato +
-                                                                            " " +
-                                                                            $translate.instant("ANIO") +
-                                                                            ": " +
-                                                                            self.contrato_obj.vigencia,
-                                                                            "success"
-                                                                        ).then(function () {
-                                                                            window.location.href =
-                                                                                "#/seguimientoycontrol/legal";
-                                                                        });
-                                                                    } else {
-                                                                        //respuesta incorrecta, ej: 400/500
-                                                                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
-                                                                        swal({
-                                                                            title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                                            type: "error",
-                                                                            html: $translate.instant($scope.alert) +
-                                                                                self.contrato_obj.numero_contrato +
-                                                                                $translate.instant("ANIO") +
-                                                                                self.contrato_obj.vigencia +
-                                                                                ".",
-                                                                            showCloseButton: true,
-                                                                            showCancelButton: false,
-                                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                            allowOutsideClick: false,
-                                                                        }).then(function () { });
-                                                                //     }
-                                                                // })
-                                                                // .catch(function (error) {
-                                                                //     //Servidor no disponible
-                                                                //     $scope.alert = "DESCRIPCION_ERROR_CESION2";
-                                                                //     swal({
-                                                                //         title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                                //         type: "error",
-                                                                //         html: $translate.instant($scope.alert) +
-                                                                //             self.contrato_obj.numero_contrato +
-                                                                //             $translate.instant("ANIO") +
-                                                                //             self.contrato_obj.vigencia +
-                                                                //             ".",
-                                                                //         showCloseButton: true,
-                                                                //         showCancelButton: false,
-                                                                //         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                //         allowOutsideClick: false,
-                                                                //     }).then(function () { });
-                                                                // })
-
-                                                            //     }   
-                                                            // })
-                                                            // .catch(function (error) {
-                                                            //     //Servidor no disponible
-                                                            //     $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
-                                                            //     swal({
-                                                            //         title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                            //         type: "error",
-                                                            //         html: $translate.instant($scope.alert) +
-                                                            //             self.contrato_obj.numero_contrato +
-                                                            //             $translate.instant("ANIO") +
-                                                            //             self.contrato_obj.vigencia +
-                                                            //             ".",
-                                                            //         showCloseButton: true,
-                                                            //         showCancelButton: false,
-                                                            //         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                            //         allowOutsideClick: false,
-                                                            //     }).then(function () { });
-                                                            // })
+                                                var fechaActual = new Date();
+                                                if (
+                                                    (fechaActual.getDate() == self.f_cesion.getDate()
+                                                        && fechaActual.getMonth() == self.f_cesion.getMonth()
+                                                        && fechaActual.getFullYear() == self.f_cesion.getFullYear())
+                                                    || fechaActual > self.f_cesion
+                                                ) {
+                                                    self.contrato_obj_replica.esFechaActual = true;
+                                                    novedadesMidRequest
+                                                        .post("replica", self.contrato_obj_replica)
+                                                        .then(function (request_novedades) {
+                                                            console.log("Obj:", self.contrato_obj_replica);
+                                                            if (
+                                                                request_novedades.status == 200 ||
+                                                                request_novedades.statusText == "OK"
+                                                            ) {
+                                                                console.log("Replica correcta");
+                                                            }
+                                                        }).catch(function (error) {
+                                                            //Error en la replica
+                                                            $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                                                            swal({
+                                                                title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                                type: "error",
+                                                                html: $translate.instant($scope.alert) +
+                                                                    self.contrato_obj.numero_contrato +
+                                                                    $translate.instant("ANIO") +
+                                                                    self.contrato_obj.vigencia +
+                                                                    ".",
+                                                                showCloseButton: true,
+                                                                showCancelButton: false,
+                                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                allowOutsideClick: false,
+                                                            }).then(function () { });
+                                                        })
+                                                }
+                                                novedadesMidRequest
+                                                    .post("novedad", self.cesion_nov)
+                                                    .then(function (request_novedades) {
+                                                        if (
+                                                            request_novedades.status == 200 ||
+                                                            request_novedades.statusText == "OK"
+                                                        ) {
+                                                            self.formato_generacion_pdf();
+                                                            swal(
+                                                                $translate.instant("TITULO_BUEN_TRABAJO"),
+                                                                $translate.instant("DESCRIPCION_CESION") +
+                                                                self.contrato_obj.numero_contrato +
+                                                                " " +
+                                                                $translate.instant("ANIO") +
+                                                                ": " +
+                                                                self.contrato_obj.vigencia,
+                                                                "success"
+                                                            ).then(function () {
+                                                                window.location.href =
+                                                                    "#/seguimientoycontrol/legal";
+                                                            });
+                                                        } else {
+                                                            //respuesta incorrecta, ej: 400/500
+                                                            $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                                                            swal({
+                                                                title: $translate.instant("TITULO_ERROR_REPLICA"),
+                                                                type: "error",
+                                                                html: $translate.instant($scope.alert) +
+                                                                    self.contrato_obj.numero_contrato +
+                                                                    $translate.instant("ANIO") +
+                                                                    self.contrato_obj.vigencia +
+                                                                    ".",
+                                                                showCloseButton: true,
+                                                                showCancelButton: false,
+                                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                allowOutsideClick: false,
+                                                            }).then(function () { });
                                                         }
                                                     })
                                                     .catch(function (error) {
@@ -722,6 +695,7 @@ angular
                                                             allowOutsideClick: false,
                                                         }).then(function () { });
                                                     })
+
                                             });
                                     });
                             })
