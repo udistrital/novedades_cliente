@@ -410,6 +410,7 @@ var text_es = {
     //ALERTAS
     TITULO_ERROR: "Errores en el formulario",
     TITULO_ERROR_ACTA: "Error al generar el acta",
+    TITULO_ERROR_REPLICA: "Error al realizar la réplica de la novedad",
     TITULO_BUEN_TRABAJO: "¡Buen trabajo!",
     TITULO_ADVERTENCIA: "Advertencia",
     DESCRIPCION_ADVERTENCIA: "Primero debe seleccionar un tipo de novedad!",
