@@ -887,7 +887,7 @@ angular
                             });
                             $scope.valor_adicion = numberFormat("0");
                         }
-
+                        self.contrato_obj_replica = {};
                         self.contrato_obj_replica.NumeroCdp = "";
                         self.contrato_obj_replica.VigenciaCdp = "";
                         var fechaNovedad = new Date();
@@ -904,7 +904,6 @@ angular
                         }
 
                         //Recolección datos objeto POST Replica
-                        self.contrato_obj_replica = {};
                         self.contrato_obj_replica.esFechaActual = false;
                         self.contrato_obj_replica.NumeroContrato = parseInt(self.contrato_obj.numero_contrato); //Revisar si toca parsearlo
                         self.contrato_obj_replica.Vigencia = parseInt(self.contrato_obj.vigencia);
