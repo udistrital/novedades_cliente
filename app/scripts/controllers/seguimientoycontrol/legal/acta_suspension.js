@@ -411,11 +411,13 @@ angular
                             self.contrato_estado.Estado = self.estado_suspendido;
                             self.contrato_estado.Usuario = "usuario_prueba";
 
+
                             //Obtención de datos para alimentar objeto que será el payload del POST a Agóra 
                             self.contrato_obj_replica = {};
-                            self.contrato_obj_replica.NumeroContrato = parseInt(self.contrato_id); //Revisar si toca parsearlo
+                            self.contrato_obj_replica.NumeroContrato = self.contrato_id //Revisar si toca parsearlo
                             self.contrato_obj_replica.Vigencia = parseInt(self.contrato_vigencia);
                             self.contrato_obj_replica.Documento = String(self.contrato_obj.contratista_documento);
+                            self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                             self.contrato_obj_replica.FechaRegistro = new Date();
                             self.contrato_obj_replica.PlazoEjecucion = self.contrato_obj.plazo;
                             self.contrato_obj_replica.FechaInicio = self.suspension_nov.fechasuspension;
@@ -473,7 +475,7 @@ angular
                                                     if (
                                                         (fechaActual.getDate() == self.suspension_nov.fechasuspension.getDate()
                                                             && fechaActual.getMonth() == self.suspension_nov.fechasuspension.getMonth()
-                                                            && fechaActual.getFullYear() == sself.suspension_nov.fechasuspension.getFullYear())
+                                                            && fechaActual.getFullYear() == self.suspension_nov.fechasuspension.getFullYear())
                                                         || fechaActual > self.suspension_nov.fechasuspension
                                                     ) {
                                                         self.contrato_obj_replica.esFechaActual = true;

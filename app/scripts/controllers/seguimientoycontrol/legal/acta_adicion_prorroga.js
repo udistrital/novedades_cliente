@@ -905,7 +905,7 @@ angular
 
                         //Recolección datos objeto POST Replica
                         self.contrato_obj_replica.esFechaActual = false;
-                        self.contrato_obj_replica.NumeroContrato = parseInt(self.contrato_obj.numero_contrato); //Revisar si toca parsearlo
+                        self.contrato_obj_replica.NumeroContrato = self.contrato_obj.numero_contrato //Revisar si toca parsearlo
                         self.contrato_obj_replica.Vigencia = parseInt(self.contrato_obj.vigencia);
                         self.contrato_obj_replica.FechaRegistro = self.f_hoy;
                         self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
@@ -915,9 +915,7 @@ angular
                         self.contrato_obj_replica.FechaFin = new Date(self.contrato_obj.nuevaFechaFin);
                         self.contrato_obj_replica.ValorNovedad = parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, ""));
                         self.contrato_obj_replica.UnidadEjecucion = 205;
-                        if (self.data_acta_adicion_prorroga.tiponovedad === "NP_CES") {
-                            self.contrato_obj_replica.TipoNovedad = parseFloat(219);
-                        }
+                        self.contrato_obj_replica.TipoNovedad = parseFloat(220);
 
                         var fechaActual = new Date();
                         if (
