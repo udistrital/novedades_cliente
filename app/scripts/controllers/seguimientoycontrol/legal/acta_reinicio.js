@@ -243,7 +243,6 @@ angular
                                 self.contrato_obj.vigencia
                             )
                             .then(function (response) {
-                                console.log("respuesta", response);
                                 var elementos_cesion = response.data.Body;
                                 if (elementos_cesion.length != "0") {
                                     var last_cesion =
@@ -289,13 +288,11 @@ angular
                                     // self.novedad_motivo = elementos_cesion[i].motivo;
                                     // self.novedad_finsuspension =
                                     //     elementos_cesion[i].fechafinsuspension;
-                                    console.log("Elementos Cesión", elementos_cesion[0]);
                                     self.auxiliar = last_cesion.id;
                                     self.novedad_suspension = last_cesion.fechasuspension;
                                     self.novedad_reinicio = last_cesion.fechareinicio;
                                     self.novedad_motivo = last_cesion.motivo;
                                     self.novedad_finsuspension = last_cesion.fechafinsuspension;
-                                    console.log("Elementos Cesión", self.novedad_motivo);
                                     novedadesRequest
                                         .get(
                                             "tipo_novedad",
@@ -749,7 +746,7 @@ angular
                             self.contrato_obj_replica.NumeroContrato = self.suspension_obj.NumeroContrato; //Revisar si toca parsearlo
                             self.contrato_obj_replica.Vigencia = self.suspension_obj.Vigencia; //parseInt(self.contrato_obj.vigencia);
                             self.contrato_obj_replica.FechaRegistro = new Date();//self.suspension_obj.FechaRegistro;
-                            // self.contrato_obj_argo.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                            self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                             self.contrato_obj_replica.PlazoEjecucion = self.suspension_obj.PlazoEjecucion;
                             self.contrato_obj_replica.FechaInicio = self.suspension_obj.FechaInicio;
                             self.contrato_obj_replica.FechaFin = self.f_finsuspension //new Date(self.f_finsuspension);
@@ -762,7 +759,6 @@ angular
                             // self.contrato_obj_argo.TipoNovedad = parseFloat(217);
                             // };
                         });
-
                     agoraRequest
                         .get(
                             "contrato_estado?query=NumeroContrato:" +

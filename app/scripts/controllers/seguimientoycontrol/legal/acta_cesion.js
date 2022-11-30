@@ -588,7 +588,7 @@ angular
                                                 //Recolección datos objeto POST Replica
                                                 self.contrato_obj_replica = {};
                                                 self.contrato_obj_replica.esFechaActual = false;
-                                                self.contrato_obj_replica.NumeroContrato = parseInt(self.contrato_id); //Revisar si toca parsearlo
+                                                self.contrato_obj_replica.NumeroContrato = self.contrato_id //Revisar si toca parsearlo
                                                 self.contrato_obj_replica.Vigencia = parseInt(self.contrato_vigencia);
                                                 self.contrato_obj_replica.Contratista = parseFloat(self.cesion_nov.cesionario, 64);
                                                 self.contrato_obj_replica.DocumentoActual = self.contrato_obj.contratista_documento;
@@ -613,11 +613,10 @@ angular
                                                     self.contrato_obj_replica.esFechaActual = true;
                                                     novedadesMidRequest
                                                         .post("replica", self.contrato_obj_replica)
-                                                        .then(function (request_novedades) {
-                                                            console.log("Obj:", self.contrato_obj_replica);
+                                                        .then(function (request_replica) {
                                                             if (
-                                                                request_novedades.status == 200 ||
-                                                                request_novedades.statusText == "OK"
+                                                                request_replica.status == 200 ||
+                                                                request_replica.statusText == "OK"
                                                             ) {
                                                                 console.log("Replica correcta");
                                                             }
