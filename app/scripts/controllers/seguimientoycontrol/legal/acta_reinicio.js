@@ -32,6 +32,7 @@ angular
             self.f_hoy = new Date();
             self.f_suspension = new Date();
             self.f_finsuspension = new Date();
+            self.fechaLimite = new Date();
             self.f_reinicio = new Date();
             self.diff_dias = null;
             self.contrato_id = $routeParams.contrato_id;
@@ -319,6 +320,7 @@ angular
                                                     self.f_finsuspension = new Date(
                                                         self.novedad_finsuspension.substr(0, 16)
                                                     );
+                                                    self.fechaLimite = self.f_finsuspension;
                                                 } catch (error) {
                                                     console.info("No hay fecha fin de suspensión");
                                                 }
