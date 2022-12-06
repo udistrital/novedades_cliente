@@ -413,6 +413,7 @@ var text_es = {
     TITULO_ERROR_REPLICA: "Error al realizar la réplica de la novedad",
     TITULO_BUEN_TRABAJO: "¡Buen trabajo!",
     TITULO_ADVERTENCIA: "Advertencia",
+    TITULO_NOVEDAD_EN_CURSO: "Ya hay una solicitud de novedad en curso para el contrato # ",
     DESCRIPCION_ADVERTENCIA: "Primero debe seleccionar un tipo de novedad!",
     DESCRIPCION_ADVERTENCIA_ADICION: "El valor de la adición no puede ser superior al 50% del valor del contrato.",
     DESCRIPCION_ADVERTENCIA_PRORROGA: "El valor de la prórroga no puede ser superior al 50% del tiempo de ejecución del contrato.",
