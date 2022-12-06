@@ -408,6 +408,7 @@ var text_es = {
     MOTIVO_SUSPENSION: "Motivo de suspensión",
     CAMPO_REQUERIDO: "Este campo es obligatorio",
     //ALERTAS
+    TITULO_ERROR_LEGAL: "Error al consultar datos del contrato",
     TITULO_ERROR: "Errores en el formulario",
     TITULO_ERROR_ACTA: "Error al generar el acta",
     TITULO_ERROR_REPLICA: "Error al realizar la réplica de la novedad",
@@ -421,6 +422,7 @@ var text_es = {
     DESCRIPCION_INICIO: "Se registro exitosamente la novedad de 'Acta de inicio'<br>al contrato # ",
     DESCRIPCION_INICIO_1: "El estado del presente contrato se actualizo a 'Ejecución'.",
     DESCRIPCION_ERROR_LEGAL: "Contrato no encontrado",
+    DESCRIPCION_ERROR_LEGAL_PROV: "No se ha encontrado inforamción del proveedor del contrato # ",
     DESCRIPCION_ADICION: "Se registro exitosamente la novedad de 'Adición'<br>al contrato # ",
     DESCRIPCION_PRORROGA: "Se registro exitosamente la novedad de 'Prorroga'<br>al contrato # ",
     DESCRIPCION_ADICION_PRORROGA: "Se registro exitosamente la novedad de 'Adición y Prorroga'<br>al contrato # ",

@@ -222,6 +222,22 @@ angular
                                                                 self.contrato_obj.contratista_nombre =
                                                                     ip_response.data[0].NomProveedor;
                                                                 self.estado_resultado_response = true;
+                                                            })
+                                                            .catch(function (error) {
+                                                                $scope.alert = "INFORMACION";
+                                                                swal({
+                                                                    title: $translate.instant("DESCRIPCION_ERROR_LEGAL_PROV"),
+                                                                    type: "error",
+                                                                    html: $translate.instant($scope.alert) +
+                                                                        self.contrato_obj.numero_contrato +
+                                                                        $translate.instant("ANIO") +
+                                                                        self.contrato_obj.vigencia +
+                                                                        ".",
+                                                                    showCloseButton: true,
+                                                                    showCancelButton: false,
+                                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                    allowOutsideClick: false,
+                                                                }).then(function () { });
                                                             });
                                                     });
                                             } else {
@@ -237,6 +253,22 @@ angular
                                                         self.contrato_obj.contratista_nombre =
                                                             ip_response.data[0].NomProveedor;
                                                         self.estado_resultado_response = true;
+                                                    })
+                                                    .catch(function (error) {
+                                                        $scope.alert = "DESCRIPCION_ERROR_LEGAL_PROV";
+                                                        swal({
+                                                            title: $translate.instant("TITULO_ERROR_LEGAL"),
+                                                            type: "error",
+                                                            html: $translate.instant($scope.alert) +
+                                                                self.contrato_obj.numero_contrato +
+                                                                $translate.instant("ANIO") +
+                                                                self.contrato_obj.vigencia +
+                                                                ".",
+                                                            showCloseButton: true,
+                                                            showCancelButton: false,
+                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                            allowOutsideClick: false,
+                                                        }).then(function () { });
                                                     });
                                             }
                                         });
@@ -370,7 +402,7 @@ angular
             }
 
             $scope.editarNovedad = function (novedad) {
-                
+
             }
 
             $scope.$watch("documentos", function (newVal) {
