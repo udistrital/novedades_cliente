@@ -344,7 +344,7 @@ angular
             $scope.$watch("sLactaReinicio.f_finsuspension", function () {
                 self.f_reinicio = new Date(self.f_finsuspension);
                 self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
-                if (self.f_reinicio.getDate == 31) {
+                if (self.f_reinicio.getDate() == 31) {
                     self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
                 }
                 if (self.f_finsuspension.getDate() == 31) {

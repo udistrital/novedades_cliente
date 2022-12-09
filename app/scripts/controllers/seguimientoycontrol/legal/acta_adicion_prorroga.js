@@ -779,7 +779,7 @@ angular
 
                     //nueva fecha sumada
                     FechadeFin.setDate(FechadeFin.getDate() + 1);
-                    if (FechadeFin.getDate == 31) {
+                    if (FechadeFin.getDate() == 31) {
                         FechadeFin.setDate(FechadeFin.getDate() + 1);
                     }
                     //formato de salida para la fecha
@@ -792,7 +792,7 @@ angular
                     var numero_dias = decimal * 30;
                     FechadeFin.setMonth(FechadeFin.getMonth() + mesEntero);
                     FechadeFin.setDate(FechadeFin.getDate() + numero_dias);
-                    if (FechadeFin.getDate == 31) {
+                    if (FechadeFin.getDate() == 31) {
                         FechadeFin.setDate(FechadeFin.getDate() + 1);
                     }
                     self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
@@ -816,7 +816,7 @@ angular
 
                     //nueva fecha sumada
                     FechadeFin.setDate(FechadeFin.getDate() + 1);
-                    if (FechadeFin.getDate == 31) {
+                    if (FechadeFin.getDate() == 31) {
                         FechadeFin.setDate(FechadeFin.getDate() + 1);
                     }
                     //formato de salida para la fecha
@@ -829,7 +829,7 @@ angular
                     var numero_dias = decimal * 30;
                     FechadeFin.setMonth(FechadeFin.getMonth() + mesEntero);
                     FechadeFin.setDate(FechadeFin.getDate() + numero_dias);
-                    if (FechadeFin.getDate == 31) {
+                    if (FechadeFin.getDate() == 31) {
                         FechadeFin.setDate(FechadeFin.getDate() + 1);
                     }
                     self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +

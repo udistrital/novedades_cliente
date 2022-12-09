@@ -401,7 +401,7 @@ angular
                 }
                 self.f_terminacion = new Date(self.f_cesion);
                 self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
-                if (self.f_terminacion.getDate == 31) {
+                if (self.f_terminacion.getDate() == 31) {
                     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
                 };
 
