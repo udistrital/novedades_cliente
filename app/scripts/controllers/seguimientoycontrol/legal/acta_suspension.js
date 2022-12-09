@@ -321,7 +321,7 @@ angular
                 }
                 self.f_reinicio = new Date(self.f_fin);
                 self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
-                if (self.f_reinicio.getDate == 31) {
+                if (self.f_reinicio.getDate() == 31) {
                     self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
                 }
             });
