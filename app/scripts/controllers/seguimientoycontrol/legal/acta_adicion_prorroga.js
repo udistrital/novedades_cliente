@@ -798,6 +798,8 @@ angular
                     self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
                         FechadeFin.getMonth() + '-' + FechadeFin.getDate();
 
+                    self.calcularFechaFin();
+
                 }
                 if ($scope.adicion == true && $scope.prorroga == true) {
                     $scope.estado_novedad = "Adición y Prorroga";
@@ -834,6 +836,8 @@ angular
                     }
                     self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
                         FechadeFin.getMonth() + '-' + FechadeFin.getDate();
+
+                    self.calcularFechaFin();
 
                 }
             }
@@ -1047,6 +1051,36 @@ angular
                 }
 
             };
+
+            self.calcularFechaFin = function () {
+                var plazoNovedad = $scope.tiempo_prorroga;
+                var fechaInicioNovedad = new Date(self.fecha_prorroga);
+                var fechaFinEfectiva = new Date(fechaInicioNovedad);
+                var fechaAux = new Date(fechaInicioNovedad);
+                var dd = fechaInicioNovedad.getDate();
+                console.log("FechaInicioNovedad: ", fechaInicioNovedad);
+                // console.log("Días: ", plazoNovedad % 30);
+                fechaAux.setMonth(fechaAux.getMonth() + (plazoNovedad / 30) + 1);
+                fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
+                // console.log("fechaAux: ", fechaAux);
+                fechaFinEfectiva.setMonth(fechaInicioNovedad.getMonth() + (plazoNovedad / 30));
+                if (fechaAux.getDate() == 31) {
+                    // console.log("Yes");
+                    if (dd + (plazoNovedad % 30) > 30) {
+                        if ((dd + (plazoNovedad % 30)) == 31) {
+                            fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30) + 1);
+                        } else {
+                            fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30));
+                        }
+                    } else {
+                        fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30) - 1);
+                    }
+                } else if (fechaFinEfectiva.getDate() < 31) {
+                    fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30) - 1);
+                }
+                console.log("FechaFinEfectiva: ", fechaFinEfectiva);
+                // return fechaFinEfectiva;
+            }
 
             /**
              * @ngdoc method

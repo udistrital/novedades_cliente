@@ -299,31 +299,44 @@ angular
              */
             $scope.$watch("sLactaSuspension.f_inicio", function () {
 
+                if (self.f_inicio.getDate() == 31) {
+                    var fechaInicio = new Date(self.f_inicio);
+                    fechaInicio.setDate(self.f_inicio.getDate() + 1);
+                    self.f_inicio = fechaInicio;
+                }
                 if (self.f_fin < self.f_inicio) {
                     self.f_fin = new Date(self.f_inicio);
                 };
+                self.diff_dias = self.calcularDiasNovedad();
             });
+            
             $scope.$watch("sLactaSuspension.f_fin", function () {
 
-                var dt1 = self.f_inicio;
-                var dt2 = self.f_fin;
-                var timeDiff = 0;
-
-                if (dt2 != null) {
-                    timeDiff = (dt2.getTime() - dt1.getTime());
-                };
-
-                var last_time = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                if (last_time == 0) {
-                    self.diff_dias = null;
-                } else {
-                    self.diff_dias = last_time;
+                if (self.f_fin.getDate() == 31) {
+                    var fechaFin = new Date(self.f_fin);
+                    fechaFin.setDate(self.f_fin.getDate() + 1);
+                    self.f_fin = fechaFin;
                 }
+                // var dt1 = self.f_inicio;
+                // var dt2 = self.f_fin;
+                // var timeDiff = 0;
+
+                // if (dt2 != null) {
+                //     timeDiff = (dt2.getTime() - dt1.getTime());
+                // };
+
+                // var last_time = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                // if (last_time == 0) {
+                //     self.diff_dias = null;
+                // } else {
+                //     self.diff_dias = last_time;
+                // }
                 self.f_reinicio = new Date(self.f_fin);
                 self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
                 if (self.f_reinicio.getDate() == 31) {
                     self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
                 }
+                self.diff_dias = self.calcularDiasNovedad();
             });
 
             /**
@@ -424,6 +437,7 @@ angular
                             self.contrato_obj_replica.FechaFin = self.suspension_nov.fechafinsuspension;
                             self.contrato_obj_replica.UnidadEjecucion = 205;
                             self.contrato_obj_replica.TipoNovedad = parseFloat(216);
+                            // console.log("ReplicaObject", self.contrato_obj_replica);
 
                         });
 
@@ -470,7 +484,7 @@ angular
                                             .then(function (vc_response) {
                                                 self.validacion = vc_response.data.Body;
                                                 if (self.validacion == "true") {
-
+                                                    var replicaCorrecta = false;
                                                     var fechaActual = new Date();
                                                     if (
                                                         (fechaActual.getDate() == self.suspension_nov.fechasuspension.getDate()
@@ -486,6 +500,7 @@ angular
                                                                     request_novedades.status == 200 ||
                                                                     request_novedades.statusText == "OK"
                                                                 ) {
+                                                                    replicaCorrecta = true;
                                                                     console.log("Replica correcta");
                                                                 }
                                                             }).catch(function (error) {
@@ -506,78 +521,96 @@ angular
                                                                 }).then(function () { });
                                                             })
                                                     }
-                                                    novedadesMidRequest
-                                                        .post("novedad", self.suspension_nov)
-                                                        .then(function (request_novedades) {
-                                                            if (
-                                                                request_novedades.status == 200 ||
-                                                                response.statusText == "Ok"
-                                                            ) {
-                                                                agoraRequest
-                                                                    .post("contrato_estado", nuevoEstado)
-                                                                    .then(function (response) {
-                                                                        if (
-                                                                            response.status == 201 ||
-                                                                            Object.keys(response.data) > 0
-                                                                        ) {
-                                                                            self.formato_generacion_pdf();
-                                                                            swal(
-                                                                                $translate.instant(
-                                                                                    "TITULO_BUEN_TRABAJO"
-                                                                                ),
-                                                                                $translate.instant(
-                                                                                    "DESCRIPCION_SUSPENSION"
-                                                                                ) +
-                                                                                self.contrato_obj.numero_contrato +
-                                                                                " " +
-                                                                                $translate.instant("ANIO") +
-                                                                                ": " +
-                                                                                self.contrato_obj.vigencia,
-                                                                                "success"
-                                                                            ).then(function () {
-                                                                                window.location.href =
-                                                                                    "#/seguimientoycontrol/legal";
-                                                                            });
-                                                                        } else {
-                                                                            //respuesta incorrecta, ej: 400/500
-                                                                            $scope.alert =
-                                                                                "DESCRIPCION_ERROR_SUSPENSION";
-                                                                            swal({
-                                                                                title: $translate.instant(
-                                                                                    "TITULO_ERROR_ACTA"
-                                                                                ),
-                                                                                type: "error",
-                                                                                html: $translate.instant($scope.alert) +
+                                                    if (replicaCorrecta == true) {
+                                                        novedadesMidRequest
+                                                            .post("novedad", self.suspension_nov)
+                                                            .then(function (request_novedades) {
+                                                                if (
+                                                                    request_novedades.status == 200 ||
+                                                                    response.statusText == "Ok"
+                                                                ) {
+                                                                    agoraRequest
+                                                                        .post("contrato_estado", nuevoEstado)
+                                                                        .then(function (response) {
+                                                                            if (
+                                                                                response.status == 201 ||
+                                                                                Object.keys(response.data) > 0
+                                                                            ) {
+                                                                                self.formato_generacion_pdf();
+                                                                                swal(
+                                                                                    $translate.instant(
+                                                                                        "TITULO_BUEN_TRABAJO"
+                                                                                    ),
+                                                                                    $translate.instant(
+                                                                                        "DESCRIPCION_SUSPENSION"
+                                                                                    ) +
                                                                                     self.contrato_obj.numero_contrato +
+                                                                                    " " +
                                                                                     $translate.instant("ANIO") +
-                                                                                    self.contrato_obj.vigencia +
-                                                                                    ".",
-                                                                                showCloseButton: true,
-                                                                                showCancelButton: false,
-                                                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                                allowOutsideClick: false,
-                                                                            }).then(function () { });
-                                                                        }
-                                                                    });
-                                                            }
-                                                        })
-                                                        .catch(function (error) {
-                                                            //Servidor no disponible
-                                                            $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
-                                                            swal({
-                                                                title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                                type: "error",
-                                                                html: $translate.instant($scope.alert) +
-                                                                    self.contrato_obj.numero_contrato +
-                                                                    $translate.instant("ANIO") +
-                                                                    self.contrato_obj.vigencia +
-                                                                    ".",
-                                                                showCloseButton: true,
-                                                                showCancelButton: false,
-                                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                allowOutsideClick: false,
-                                                            }).then(function () { });
-                                                        })
+                                                                                    ": " +
+                                                                                    self.contrato_obj.vigencia,
+                                                                                    "success"
+                                                                                ).then(function () {
+                                                                                    window.location.href =
+                                                                                        "#/seguimientoycontrol/legal";
+                                                                                });
+                                                                            } else {
+                                                                                //respuesta incorrecta, ej: 400/500
+                                                                                $scope.alert =
+                                                                                    "DESCRIPCION_ERROR_SUSPENSION";
+                                                                                swal({
+                                                                                    title: $translate.instant(
+                                                                                        "TITULO_ERROR_ACTA"
+                                                                                    ),
+                                                                                    type: "error",
+                                                                                    html: $translate.instant($scope.alert) +
+                                                                                        self.contrato_obj.numero_contrato +
+                                                                                        $translate.instant("ANIO") +
+                                                                                        self.contrato_obj.vigencia +
+                                                                                        ".",
+                                                                                    showCloseButton: true,
+                                                                                    showCancelButton: false,
+                                                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                                    allowOutsideClick: false,
+                                                                                }).then(function () { });
+                                                                            }
+                                                                        });
+                                                                }
+                                                            })
+                                                            .catch(function (error) {
+                                                                //Servidor no disponible
+                                                                $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
+                                                                swal({
+                                                                    title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                                    type: "error",
+                                                                    html: $translate.instant($scope.alert) +
+                                                                        self.contrato_obj.numero_contrato +
+                                                                        $translate.instant("ANIO") +
+                                                                        self.contrato_obj.vigencia +
+                                                                        ".",
+                                                                    showCloseButton: true,
+                                                                    showCancelButton: false,
+                                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                    allowOutsideClick: false,
+                                                                }).then(function () { });
+                                                            })
+                                                    } else {
+                                                        //Fallo en la replica
+                                                        $scope.alert = "DESCRIPCION_ERROR_REPLICA";
+                                                        swal({
+                                                            title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                            type: "error",
+                                                            html: $translate.instant($scope.alert) +
+                                                                self.contrato_obj.numero_contrato +
+                                                                $translate.instant("ANIO") +
+                                                                self.contrato_obj.vigencia +
+                                                                ".",
+                                                            showCloseButton: true,
+                                                            showCancelButton: false,
+                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                            allowOutsideClick: false,
+                                                        }).then(function () { });
+                                                    }
                                                 }
                                             });
                                     } else {
@@ -601,6 +634,57 @@ angular
                     );
                 }
             };
+
+            self.calcularFechaFin = function () {
+                // var plazoNovedad = 73;
+                var fechaInicioNovedad = new Date();
+                var fechaFinEfectiva = new Date(fechaInicioNovedad);
+                var fechaAux = new Date(fechaInicioNovedad);
+                var dd = fechaInicioNovedad.getDate();
+                console.log("FechaInicioNovedad: ", fechaInicioNovedad);
+                // console.log("Días: ", plazoNovedad % 30);
+                fechaAux.setMonth(fechaAux.getMonth() + (plazoNovedad / 30) + 1);
+                fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
+                // console.log("fechaAux: ", fechaAux);
+                fechaFinEfectiva.setMonth(fechaInicioNovedad.getMonth() + (plazoNovedad / 30));
+                if (fechaAux.getDate() == 31) {
+                    // console.log("Yes");
+                    if (dd + (plazoNovedad % 30) > 30) {
+                        if ((dd + (plazoNovedad % 30)) == 31) {
+                            fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30) + 1);
+                        } else {
+                            fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30));
+                        }
+                    } else {
+                        fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30) - 1);
+                    }
+                } else if (fechaFinEfectiva.getDate() < 31) {
+                    fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30) - 1);
+                }
+                console.log("FechaFinEfectiva: ", fechaFinEfectiva);
+                return fechaFinEfectiva;
+            }
+
+            self.calcularDiasNovedad = function () {
+                var months;
+                var days = 0;
+                // months = (self.f_fin.getFullYear() - self.f_inicio.getFullYear()) * 12;
+                // months -= self.f_inicio.getMonth();
+                // months += self.f_fin.getMonth();
+                months = self.f_fin.getMonth() - self.f_inicio.getMonth() + (12 * (self.f_fin.getFullYear() - self.f_inicio.getFullYear()));
+                if (months != 0) {
+                    if (self.f_inicio.getDate() < self.f_fin.getDate()) {
+                        days += self.f_fin.getDate() - self.f_inicio.getDate();
+                    } else {
+                        months -= 1;
+                        days += (30 - self.f_inicio.getDate()) + (self.f_fin.getDate());
+                    }
+                } else {
+                    days += self.f_fin.getDate() - self.f_inicio.getDate();
+                }
+                days += (months * 30) + 1;
+                return days;
+            }
 
             /**
              * @ngdoc method
