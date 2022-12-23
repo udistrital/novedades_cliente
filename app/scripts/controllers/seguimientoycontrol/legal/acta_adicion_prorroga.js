@@ -301,7 +301,11 @@ angular
                             .then(function (response) {
                                 var elementos_cesion = response.data.Body;
                                 for (var i = 0; i < elementos_cesion.length; i++) {
-                                    if (elementos_cesion[i].tiponovedad == 8) {
+                                    if (
+                                        elementos_cesion[i].tiponovedad == 6 ||
+                                        elementos_cesion[i].tiponovedad == 7 ||
+                                        elementos_cesion[i].tiponovedad == 8
+                                    ) {
                                         self.novedadOtrosi = true;
                                     }
                                 }
@@ -759,7 +763,6 @@ angular
                             callback(self.tiponovedad);
                         });
                     self.contrato_obj.inicioOSi = self.contrato_obj.inicio;
-                    self.contrato_obj.nuevaFechaFin = self.contrato_obj.fin;
                 }
                 if ($scope.adicion != true && $scope.prorroga == true) {
                     $scope.estado_novedad = "Prórroga";
@@ -777,26 +780,26 @@ angular
                     //dias a sumar
                     //var dias = 1;
 
-                    //nueva fecha sumada
-                    FechadeFin.setDate(FechadeFin.getDate() + 1);
-                    if (FechadeFin.getDate() == 31) {
-                        FechadeFin.setDate(FechadeFin.getDate() + 1);
-                    }
-                    //formato de salida para la fecha
-                    self.contrato_obj.inicioOSi = FechadeFin.getFullYear() + '-' +
-                        FechadeFin.getMonth() + '-' + FechadeFin.getDate();
-                    var dias = $scope.tiempo_prorroga;
-                    var meses = dias / 30;
-                    var mesEntero = parseInt(meses);
-                    var decimal = meses - mesEntero;
-                    var numero_dias = decimal * 30;
-                    FechadeFin.setMonth(FechadeFin.getMonth() + mesEntero);
-                    FechadeFin.setDate(FechadeFin.getDate() + numero_dias);
-                    if (FechadeFin.getDate() == 31) {
-                        FechadeFin.setDate(FechadeFin.getDate() + 1);
-                    }
-                    self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
-                        FechadeFin.getMonth() + '-' + FechadeFin.getDate();
+                    // //nueva fecha sumada
+                    // FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    // if (FechadeFin.getDate() == 31) {
+                    //     FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    // }
+                    // //formato de salida para la fecha
+                    // self.contrato_obj.inicioOSi = FechadeFin.getFullYear() + '-' +
+                    //     FechadeFin.getMonth() + '-' + FechadeFin.getDate();
+                    // var dias = $scope.tiempo_prorroga;
+                    // var meses = dias / 30;
+                    // var mesEntero = parseInt(meses);
+                    // var decimal = meses - mesEntero;
+                    // var numero_dias = decimal * 30;
+                    // FechadeFin.setMonth(FechadeFin.getMonth() + mesEntero);
+                    // FechadeFin.setDate(FechadeFin.getDate() + numero_dias);
+                    // if (FechadeFin.getDate() == 31) {
+                    //     FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    // }
+                    // self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
+                    //     FechadeFin.getMonth() + '-' + FechadeFin.getDate();
 
                 }
                 if ($scope.adicion == true && $scope.prorroga == true) {
@@ -815,27 +818,28 @@ angular
                     //var dias = 1;
 
                     //nueva fecha sumada
-                    FechadeFin.setDate(FechadeFin.getDate() + 1);
-                    if (FechadeFin.getDate() == 31) {
-                        FechadeFin.setDate(FechadeFin.getDate() + 1);
-                    }
-                    //formato de salida para la fecha
-                    self.contrato_obj.inicioOSi = FechadeFin.getFullYear() + '-' +
-                        FechadeFin.getMonth() + '-' + FechadeFin.getDate();
-                    var dias = $scope.tiempo_prorroga;
-                    var meses = dias / 30;
-                    var mesEntero = parseInt(meses);
-                    var decimal = meses - mesEntero;
-                    var numero_dias = decimal * 30;
-                    FechadeFin.setMonth(FechadeFin.getMonth() + mesEntero);
-                    FechadeFin.setDate(FechadeFin.getDate() + numero_dias);
-                    if (FechadeFin.getDate() == 31) {
-                        FechadeFin.setDate(FechadeFin.getDate() + 1);
-                    }
-                    self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
-                        FechadeFin.getMonth() + '-' + FechadeFin.getDate();
+                    // FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    // if (FechadeFin.getDate() == 31) {
+                    //     FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    // }
+                    // //formato de salida para la fecha
+                    // self.contrato_obj.inicioOSi = FechadeFin.getFullYear() + '-' +
+                    //     FechadeFin.getMonth() + '-' + FechadeFin.getDate();
+                    // var dias = $scope.tiempo_prorroga;
+                    // var meses = dias / 30;
+                    // var mesEntero = parseInt(meses);
+                    // var decimal = meses - mesEntero;
+                    // var numero_dias = decimal * 30;
+                    // FechadeFin.setMonth(FechadeFin.getMonth() + mesEntero);
+                    // FechadeFin.setDate(FechadeFin.getDate() + numero_dias);
+                    // if (FechadeFin.getDate() == 31) {
+                    //     FechadeFin.setDate(FechadeFin.getDate() + 1);
+                    // }
+                    // self.contrato_obj.nuevaFechaFin = FechadeFin.getFullYear() + '-' +
+                    //     FechadeFin.getMonth() + '-' + FechadeFin.getDate();
 
                 }
+                self.contrato_obj.nuevaFechaFin = self.calcularFechaFin();
             }
 
             /**
@@ -888,19 +892,17 @@ angular
                             $scope.valor_adicion = numberFormat("0");
                         }
                         self.contrato_obj_replica = {};
-                        self.contrato_obj_replica.NumeroCdp = "";
-                        self.contrato_obj_replica.VigenciaCdp = "";
                         var fechaNovedad = new Date();
+                        fechaNovedad = self.fecha_prorroga;
                         if ($scope.adicion == true && $scope.prorroga == true) {
                             self.contrato_obj_replica.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
                             self.contrato_obj_replica.VigenciaCdp = parseInt(self.contrato_obj.cdp_anno);
-                            fechaNovedad = self.fecha_prorroga;
                         } else if ($scope.adicion == true && $scope.prorroga == false) {
                             self.contrato_obj_replica.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
                             self.contrato_obj_replica.VigenciaCdp = parseInt(self.contrato_obj.cdp_anno);
-                            fechaNovedad = self.fecha_adicion;
                         } else {
-                            fechaNovedad = self.fecha_prorroga;
+                            self.contrato_obj_replica.NumeroCdp = 0;
+                            self.contrato_obj_replica.VigenciaCdp = 0;
                         }
 
                         //Recolección datos objeto POST Replica
@@ -916,6 +918,8 @@ angular
                         self.contrato_obj_replica.ValorNovedad = parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, ""));
                         self.contrato_obj_replica.UnidadEjecucion = 205;
                         self.contrato_obj_replica.TipoNovedad = parseFloat(220);
+
+                        console.log("ObjReplica: ", self.contrato_obj_replica);
 
                         var fechaActual = new Date();
                         if (
@@ -1046,7 +1050,38 @@ angular
                     }).then(function () { });
                 }
 
-            };
+            }
+
+            self.calcularFechaFin = function () {
+                console.log("FechaNovedad: ", $scope.tiempo_prorroga);
+                var plazoNovedad = $scope.tiempo_prorroga;
+                var fechaInicioNovedad = new Date(self.fecha_prorroga);
+                var fechaFinEfectiva = new Date(fechaInicioNovedad);
+                var fechaAux = new Date(fechaInicioNovedad);
+                var dd = fechaInicioNovedad.getDate();
+                console.log("FechaInicioNovedad: ", fechaInicioNovedad);
+                // console.log("Días: ", plazoNovedad % 30);
+                fechaAux.setMonth(fechaAux.getMonth() + (plazoNovedad / 30) + 1);
+                fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
+                // console.log("fechaAux: ", fechaAux);
+                fechaFinEfectiva.setMonth(fechaInicioNovedad.getMonth() + (plazoNovedad / 30));
+                if (fechaAux.getDate() == 31) {
+                    // console.log("Yes");
+                    if (dd + (plazoNovedad % 30) > 30) {
+                        if ((dd + (plazoNovedad % 30)) == 31) {
+                            fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30) + 1);
+                        } else {
+                            fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30));
+                        }
+                    } else {
+                        fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30) - 1);
+                    }
+                } else if (fechaFinEfectiva.getDate() < 31) {
+                    fechaFinEfectiva.setDate(fechaInicioNovedad.getDate() + (plazoNovedad % 30) - 1);
+                }
+                console.log("FechaFinEfectiva: ", fechaFinEfectiva);
+                return fechaFinEfectiva;
+            }
 
             /**
              * @ngdoc method

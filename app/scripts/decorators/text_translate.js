@@ -439,6 +439,7 @@ var text_es = {
     DESCRIPCION_TERMINACION: "Se registro exitosamente la novedad de terminacion anticipada<br>al contrato # ",
     DESCRIPCION_ERROR_TERMINACION: "No se pudo registrar la novedad de terminacion anticipada<br>al contrato # ",
     DESCRIPCION_ERROR_FECHA_31: "No se puede registrar novedades con fechas en los días 31 del mes",
+    DESCRIPCION_ERROR_REPLICA: "No se realizó la réplica correctamente para el contrato # ",
     //CONTRATO_DETALLE
     INFORMACION_CONTRATO: "Información Vinculación",
     FORMA_PAGO: "Forma de pago",

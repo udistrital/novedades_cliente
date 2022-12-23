@@ -753,7 +753,7 @@ angular
                             self.contrato_obj_replica.FechaInicio = self.suspension_obj.FechaInicio;
                             self.contrato_obj_replica.FechaFin = self.f_finsuspension //new Date(self.f_finsuspension);
                             self.contrato_obj_replica.UnidadEjecucion = self.suspension_obj.UnidadEjecucion;
-                            self.contrato_obj_replica.TipoNovedad = parseFloat(216);
+                            self.contrato_obj_replica.TipoNovedad = parseFloat(21);
                             //self.contrato_obj_argo.VigenciaCdp = 2021;
                             // self.contrato_obj_argo.ValorNovedad = null;
                             //Tratamiento de datos para objeto payload POST Argo
