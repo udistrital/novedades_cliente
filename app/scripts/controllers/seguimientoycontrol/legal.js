@@ -48,6 +48,7 @@ angular
              * funcion para obtener la totalidad de los contratos por vigencia seleccionada
              */
             self.buscar_contrato = function () {
+                self.novedadEnCurso = false;
                 $scope.documentos = [];
                 self.estado_resultado_response = false;
                 self.documentoSelect = null;
@@ -159,27 +160,47 @@ angular
                                                 var fechaProrroga = new Date(last_newness.fechaprorroga);
                                                 var fechaReinicio = new Date(last_newness.fechareinicio);
                                                 var fechaSuspension = new Date(last_newness.fechasuspension);
-                                                if (
-                                                    fechaAdicion > fechaActual ||
-                                                    fechaCesion > fechaActual ||
-                                                    fechaProrroga > fechaActual ||
-                                                    fechaReinicio > fechaActual ||
-                                                    fechaSuspension > fechaActual
-                                                ) {
-                                                    self.novedadEnCurso = true;
-                                                    swal({
-                                                        title: $translate.instant("INFORMACION"),
-                                                        type: "info",
-                                                        html: $translate.instant("TITULO_NOVEDAD_EN_CURSO") +
-                                                            self.contrato_obj.numero_contrato +
-                                                            $translate.instant("ANIO") +
-                                                            self.contrato_obj.vigencia +
-                                                            ".",
-                                                        showCloseButton: false,
-                                                        showCancelButton: false,
-                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                        allowOutsideClick: false,
-                                                    })
+                                                if (last_newness.tiponovedad != 3) {
+                                                    if (
+                                                        fechaAdicion > fechaActual ||
+                                                        fechaCesion > fechaActual ||
+                                                        fechaProrroga > fechaActual ||
+                                                        fechaSuspension > fechaActual
+                                                    ) {
+                                                        self.novedadEnCurso = true;
+                                                        swal({
+                                                            title: $translate.instant("INFORMACION"),
+                                                            type: "info",
+                                                            html: $translate.instant("TITULO_NOVEDAD_EN_CURSO") +
+                                                                self.contrato_obj.numero_contrato +
+                                                                $translate.instant("ANIO") +
+                                                                self.contrato_obj.vigencia +
+                                                                ".",
+                                                            showCloseButton: false,
+                                                            showCancelButton: false,
+                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                            allowOutsideClick: false,
+                                                        })
+                                                    }
+                                                } else {
+                                                    if (
+                                                        fechaReinicio > fechaActual
+                                                    ) {
+                                                        self.novedadEnCurso = true;
+                                                        swal({
+                                                            title: $translate.instant("INFORMACION"),
+                                                            type: "info",
+                                                            html: $translate.instant("TITULO_NOVEDAD_EN_CURSO") +
+                                                                self.contrato_obj.numero_contrato +
+                                                                $translate.instant("ANIO") +
+                                                                self.contrato_obj.vigencia +
+                                                                ".",
+                                                            showCloseButton: false,
+                                                            showCancelButton: false,
+                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                            allowOutsideClick: false,
+                                                        })
+                                                    }
                                                 }
                                                 novedadesRequest
                                                     .get(
@@ -224,9 +245,9 @@ angular
                                                                 self.estado_resultado_response = true;
                                                             })
                                                             .catch(function (error) {
-                                                                $scope.alert = "INFORMACION";
+                                                                $scope.alert = "DESCRIPCION_ERROR_LEGAL_PROV";
                                                                 swal({
-                                                                    title: $translate.instant("DESCRIPCION_ERROR_LEGAL_PROV"),
+                                                                    title: $translate.instant("TITULO_ERROR_LEGAL"),
                                                                     type: "error",
                                                                     html: $translate.instant($scope.alert) +
                                                                         self.contrato_obj.numero_contrato +
