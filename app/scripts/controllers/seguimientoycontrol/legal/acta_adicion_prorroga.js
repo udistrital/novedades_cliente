@@ -349,6 +349,8 @@ angular
                                                 )
                                                 .then(function (financiera_response) {
                                                     self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                                    self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
+                                                    self.contrato_obj.cdp_anno = self.cdprp[self.cdprp.length - 1].vigencia;
                                                 });
                                             //Consulta el CDP
 
@@ -407,6 +409,8 @@ angular
                                                 )
                                                 .then(function (financiera_response) {
                                                     self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                                    self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
+                                                    self.contrato_obj.cdp_anno = self.cdprp[self.cdprp.length - 1].vigencia;
                                                 });
 
                                             $scope.update = function () {
@@ -674,42 +678,42 @@ angular
                             allowOutsideClick: false,
                         }).then(function () { });
                     }
-                    if (self.fecha_adicion.getDate() == 31) {
-                        //respuesta incorrecta, ej: 400/500
-                        self.fecha_adicion = new Date();
-                        $scope.alert =
-                            "DESCRIPCION_ERROR_FECHA_31";
-                        swal({
-                            title: $translate.instant(
-                                "TITULO_ERROR_ACTA"
-                            ),
-                            type: "error",
-                            html: $translate.instant($scope.alert) +
-                                ".",
-                            showCloseButton: true,
-                            showCancelButton: false,
-                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                            allowOutsideClick: false,
-                        }).then(function () { });
-                    };
-                    if (self.fecha_prorroga.getDate() == 31) {
-                        //respuesta incorrecta, ej: 400/500
-                        self.fecha_prorroga = new Date();
-                        $scope.alert =
-                            "DESCRIPCION_ERROR_FECHA_31";
-                        swal({
-                            title: $translate.instant(
-                                "TITULO_ERROR_ACTA"
-                            ),
-                            type: "error",
-                            html: $translate.instant($scope.alert) +
-                                ".",
-                            showCloseButton: true,
-                            showCancelButton: false,
-                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                            allowOutsideClick: false,
-                        }).then(function () { });
-                    };
+                    // if (self.fecha_adicion.getDate() == 31) {
+                    //     //respuesta incorrecta, ej: 400/500
+                    //     self.fecha_adicion = new Date();
+                    //     $scope.alert =
+                    //         "DESCRIPCION_ERROR_FECHA_31";
+                    //     swal({
+                    //         title: $translate.instant(
+                    //             "TITULO_ERROR_ACTA"
+                    //         ),
+                    //         type: "error",
+                    //         html: $translate.instant($scope.alert) +
+                    //             ".",
+                    //         showCloseButton: true,
+                    //         showCancelButton: false,
+                    //         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                    //         allowOutsideClick: false,
+                    //     }).then(function () { });
+                    // };
+                    // if (self.fecha_prorroga.getDate() == 31) {
+                    //     //respuesta incorrecta, ej: 400/500
+                    //     self.fecha_prorroga = new Date();
+                    //     $scope.alert =
+                    //         "DESCRIPCION_ERROR_FECHA_31";
+                    //     swal({
+                    //         title: $translate.instant(
+                    //             "TITULO_ERROR_ACTA"
+                    //         ),
+                    //         type: "error",
+                    //         html: $translate.instant($scope.alert) +
+                    //             ".",
+                    //         showCloseButton: true,
+                    //         showCancelButton: false,
+                    //         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                    //         allowOutsideClick: false,
+                    //     }).then(function () { });
+                    // };
 
                     var valor_contrato_inicial = self.contrato_obj.valor;
                     $scope.valor_contrato_letras = numeroALetras(valor_contrato_inicial, {
@@ -913,7 +917,7 @@ angular
                         self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                         self.contrato_obj_replica.Documento = self.contrato_obj.contratista_documento;
                         self.contrato_obj_replica.PlazoEjecucion = parseInt($scope.valor_prorroga_final);
-                        self.contrato_obj_replica.FechaInicio = fechaNovedad;
+                        self.contrato_obj_replica.FechaInicio = $scope.fecha_prorroga;
                         self.contrato_obj_replica.FechaFin = new Date(self.contrato_obj.nuevaFechaFin);
                         self.contrato_obj_replica.ValorNovedad = parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, ""));
                         self.contrato_obj_replica.UnidadEjecucion = 205;
