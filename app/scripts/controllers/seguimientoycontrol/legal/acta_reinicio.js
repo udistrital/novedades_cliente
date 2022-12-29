@@ -38,6 +38,7 @@ angular
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
+            self.contrato_obj_replica = {};
             self.suspension_obj = {};
             self.estado_ejecucion = {};
             self.n_solicitud = null;
@@ -744,14 +745,15 @@ angular
                             self.contrato_estado.Usuario = "up";
                             //recolección POST Argo
 
-                            self.contrato_obj_replica = {};
                             self.contrato_obj_replica.NumeroContrato = self.suspension_obj.NumeroContrato; //Revisar si toca parsearlo
                             self.contrato_obj_replica.Vigencia = self.suspension_obj.Vigencia; //parseInt(self.contrato_obj.vigencia);
                             self.contrato_obj_replica.FechaRegistro = new Date();//self.suspension_obj.FechaRegistro;
                             self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                            self.contrato_obj_replica.Documento = String(self.contrato_obj.contratista_documento);
                             self.contrato_obj_replica.PlazoEjecucion = self.suspension_obj.PlazoEjecucion;
                             self.contrato_obj_replica.FechaInicio = self.suspension_obj.FechaInicio;
                             self.contrato_obj_replica.FechaFin = self.f_finsuspension //new Date(self.f_finsuspension);
+                            self.contrato_obj_replica.FechaReinicio = self.f_reinicio;
                             self.contrato_obj_replica.UnidadEjecucion = self.suspension_obj.UnidadEjecucion;
                             self.contrato_obj_replica.TipoNovedad = parseFloat(21);
                             //self.contrato_obj_argo.VigenciaCdp = 2021;
