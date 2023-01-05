@@ -450,50 +450,49 @@ angular.module('contractualClienteApp')
                                     "NombreEstado": "ejecucion"
                                 }
                                 self.estados[0] = estado_temp_from;
-                                console.log(self.contrato_obj_replica);
-                                // novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
-                                //     if (vc_response.data.Body == "true") {
-                                //         var fechaActual = new Date();
-                                //         if (
-                                //             (fechaActual.getDate() == self.contrato_obj_replica.FechaFin.getDate()
-                                //                 && fechaActual.getMonth() == self.contrato_obj_replica.FechaFin.getMonth()
-                                //                 && fechaActual.getFullYear() == self.contrato_obj_replica.FechaFin.getFullYear())
-                                //             || fechaActual > self.contrato_obj_replica.FechaFin
-                                //         ) {
-                                //             self.contrato_obj_replica.esFechaActual = true;
-                                //             novedadesMidRequest
-                                //                 .post("replica", self.contrato_obj_replica)
-                                //                 .then(function (request_novedades) {
-                                //                     if (
-                                //                         request_novedades.status == 200 ||
-                                //                         request_novedades.statusText == "OK"
-                                //                     ) {
-                                //                         console.log("Replica correcta");
-                                //                         // self.postNovedad(nuevoEstado);
-                                //                     }
-                                //                 }).catch(function (error) {
-                                //                     //Error en la replica
-                                //                     $scope.alert = "TITULO_ERROR_REPLICA";
-                                //                     swal({
-                                //                         title: $translate.instant("TITULO_ERROR_ACTA"),
-                                //                         type: "error",
-                                //                         html: $translate.instant($scope.alert) +
-                                //                             self.contrato_obj.numero_contrato +
-                                //                             $translate.instant("ANIO") +
-                                //                             self.contrato_obj.vigencia +
-                                //                             ".",
-                                //                         showCloseButton: true,
-                                //                         showCancelButton: false,
-                                //                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                //                         allowOutsideClick: false,
-                                //                     }).then(function () { });
-                                //                 })
-                                //         } else {
-                                //             // self.postNovedad(nuevoEstado);
-                                //             console.log("Falló la réplica");
-                                //         }
-                                //     }
-                                // });
+                                novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
+                                    if (vc_response.data.Body == "true") {
+                                        var fechaActual = new Date();
+                                        if (
+                                            (fechaActual.getDate() == self.contrato_obj_replica.FechaFin.getDate()
+                                                && fechaActual.getMonth() == self.contrato_obj_replica.FechaFin.getMonth()
+                                                && fechaActual.getFullYear() == self.contrato_obj_replica.FechaFin.getFullYear())
+                                            || fechaActual > self.contrato_obj_replica.FechaFin
+                                        ) {
+                                            self.contrato_obj_replica.esFechaActual = true;
+                                            novedadesMidRequest
+                                                .post("replica", self.contrato_obj_replica)
+                                                .then(function (request_novedades) {
+                                                    if (
+                                                        request_novedades.status == 200 ||
+                                                        request_novedades.statusText == "OK"
+                                                    ) {
+                                                        console.log("Replica correcta");
+                                                        // self.postNovedad(nuevoEstado);
+                                                    }
+                                                }).catch(function (error) {
+                                                    //Error en la replica
+                                                    $scope.alert = "TITULO_ERROR_REPLICA";
+                                                    swal({
+                                                        title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                        type: "error",
+                                                        html: $translate.instant($scope.alert) +
+                                                            self.contrato_obj.numero_contrato +
+                                                            $translate.instant("ANIO") +
+                                                            self.contrato_obj.vigencia +
+                                                            ".",
+                                                        showCloseButton: true,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                        allowOutsideClick: false,
+                                                    }).then(function () { });
+                                                })
+                                        } else {
+                                            // self.postNovedad(nuevoEstado);
+                                            console.log("Falló la réplica");
+                                        }
+                                    }
+                                });
                             } else {
                                 swal(
                                     $translate.instant('INFORMACION'),
