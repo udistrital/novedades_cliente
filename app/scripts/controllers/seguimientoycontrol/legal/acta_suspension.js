@@ -40,6 +40,7 @@ angular
             self.n_solicitud = null;
             self.numero_oficio_estado_cuentas = null;
 
+            self.novedades = [];
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
@@ -127,6 +128,7 @@ angular
                             .then(function (acta_response) {
                                 self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
+                                self.calcularFechaFin(0);
                             });
 
                         //Obtencion de datos del supervisor.
@@ -645,6 +647,75 @@ angular
                     );
                 }
             };
+
+            self.calcularFechaFin = function (novedades) {
+
+                var fechaFin;
+                if (diasNovedad == undefined) {
+                    diasNovedad = 0;
+                }
+                if (self.novedades.length == 0) {
+                    fechaFin = self.contrato_obj.Fin;
+                } else {
+                    fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                }
+                // console.log(diasNovedad);
+
+                // var suspensiones = 0;
+                // var reinicios = 0;
+                // for (var i = 0; i < novedades.length; i++) {
+                //     if (novedades[i].tiponovedad == 1) {
+                //         suspensiones += 1;
+                //     } else if (novedades[i].tiponovedad == 3) {
+                //         reinicios += 1;
+                //         diasNovedad = diasNovedad + novedades[i].periodosuspension;
+                //     } else if (
+                //         novedades[i].tiponovedad == 7 ||
+                //         novedades[i].tiponovedad == 8
+                //     ) {
+                //         diasNovedad = diasNovedad + novedades[i].tiempoprorroga;
+                //     }
+                // }
+                // if (reinicios < suspensiones) {
+                //     for (var i = novedades.length - 1; i > 0; i--) {
+                //         if (novedades[i].tiponovedad == 1) {
+                //             diasNovedad = diasNovedad + novedades[i].periodosuspension;
+                //             break;
+                //         }
+                //     }
+                // }
+                console.log("diasNovedad", diasNovedad);
+
+                console.log("FechaFin: ", fechaFin);
+
+                var fechaFinEfectiva = new Date(fechaFin);
+                fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                var nuevaFechaFin = new Date(fechaFinEfectiva);
+                console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+
+                if (diasNovedad != 0) {
+                    var fechaAux = new Date(fechaFinEfectiva);
+                    var dd = fechaFinEfectiva.getDate();
+                    fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
+                    fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
+                    nuevaFechaFin.setMonth(fechaFinEfectiva.getMonth() + (diasNovedad / 30));
+                    if (fechaAux.getDate() == 31) {
+                        if (dd + (diasNovedad % 30) > 30) {
+                            if ((dd + (diasNovedad % 30)) == 31) {
+                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) + 1);
+                            } else {
+                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
+                            }
+                        } else {
+                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                        }
+                    } else if (nuevaFechaFin.getDate() < 31) {
+                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                    }
+                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                }
+                return nuevaFechaFin;
+            }
 
 
             /**
@@ -1420,20 +1491,20 @@ angular
                                     { text: "Firma", bold: true },
                                 ],
                                 [
-                                    { text: "Elaboró", bold: true },
-                                    "", // + self.elaboro,
-                                    "", //Abogado Oficina Asesora Jurídica",
+                                    { text: "Proyectó", bold: true },
+                                    "" + self.elaboro,
+                                    "Abogado Oficina Asesora Jurídica",
                                     "",
                                 ],
                                 [
                                     { text: "Revisó", bold: true },
-                                    "", //"DIANA MIREYA PARRA CARDONA",
-                                    "", //"Jefe Oficina Asesora Jurídica",
+                                    self.contrato_obj.jefe_juridica_nombre_completo,
+                                    "Jefe Oficina Asesora Jurídica",
                                     "",
                                 ],
                                 [
                                     { text: "Aprobó", bold: true },
-                                    "", //"DIANA MIREYA PARRA CARDONA",
+                                    self.contrato_obj.jefe_juridica_nombre_completo,
                                     "Jefe Oficina Asesora Jurídica",
                                     "",
                                 ],

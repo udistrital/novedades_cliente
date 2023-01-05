@@ -43,6 +43,7 @@ angular
             self.estado_ejecucion = {};
             self.n_solicitud = null;
             self.auxiliar = null;
+            self.novedades = [];
             self.novedad_suspension = "";
             self.novedad_reinicio = "";
             self.novedad_motivo = "";
@@ -118,6 +119,7 @@ angular
                             .then(function (acta_response) {
                                 self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
+                                self.calcularFechaFin(self.novedades);
                             });
 
                         //Obtención de datos del jefe de juridica
@@ -245,10 +247,10 @@ angular
                                 self.contrato_obj.vigencia
                             )
                             .then(function (response) {
-                                var elementos_cesion = response.data.Body;
-                                if (elementos_cesion.length != "0") {
+                                self.novedades = response.data.Body;
+                                if (self.novedades.length != "0") {
                                     var last_cesion =
-                                        elementos_cesion[elementos_cesion.length - 1];
+                                        self.novedades[self.novedades.length - 1];
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                     //Consulta datos del contratista
                                     agoraRequest
@@ -839,6 +841,52 @@ angular
                     );
                 }
             };
+
+            self.calcularFechaFin = function (diasNovedad) {
+
+                var fechaFin;
+                if (diasNovedad == undefined) {
+                    diasNovedad = 0;
+                }
+                if (self.novedades.length == 0) {
+                    fechaFin = self.contrato_obj.Fin;
+                } else {
+                    fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                }
+
+                console.log("diasNovedad", diasNovedad);
+
+                console.log("FechaFin: ", fechaFin);
+
+                var fechaFinEfectiva = new Date(fechaFin);
+                fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                var nuevaFechaFin = new Date(fechaFinEfectiva);
+                console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+
+                if (diasNovedad != 0) {
+                    var fechaAux = new Date(fechaFinEfectiva);
+                    var dd = fechaFinEfectiva.getDate();
+                    fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
+                    fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
+                    nuevaFechaFin.setMonth(fechaFinEfectiva.getMonth() + (diasNovedad / 30));
+                    if (fechaAux.getDate() == 31) {
+                        if (dd + (diasNovedad % 30) > 30) {
+                            if ((dd + (diasNovedad % 30)) == 31) {
+                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) + 1);
+                            } else {
+                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
+                            }
+                        } else {
+                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                        }
+                    } else if (nuevaFechaFin.getDate() < 31) {
+                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                    }
+                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                }
+                return nuevaFechaFin;
+
+            }
 
             /**
              * @ngdoc method

@@ -421,6 +421,9 @@ angular.module('contractualClienteApp')
                         self.contrato_obj_replica.FechaRegistro = new Date();
                         self.contrato_obj_replica.FechaInicio = new Date(self.contrato_obj.FechaInicio);
                         self.contrato_obj_replica.FechaInicio.setDate(self.contrato_obj_replica.FechaInicio.getDate() + 1);
+                        if (self.contrato_obj_replica.FechaInicio.getDate() == 31) {
+                            self.contrato_obj_replica.FechaInicio.setDate(self.contrato_obj_replica.FechaInicio.getDate() + 1);
+                        }
                         self.contrato_obj_replica.FechaFin = new Date(self.terminacion_nov.fecha_terminacion_anticipada);
                         // self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                         // self.contrato_obj_replica.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
@@ -510,6 +513,51 @@ angular.module('contractualClienteApp')
                     );
                 }
             };
+
+            self.calcularFechaFin = function (diasNovedad) {
+
+                var fechaFin;
+                if (diasNovedad == undefined) {
+                    diasNovedad = 0;
+                }
+                if (self.novedades.length == 0) {
+                    fechaFin = self.contrato_obj.FechaFin;
+                } else {
+                    fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                }
+
+                console.log("diasNovedad", diasNovedad);
+
+                console.log("FechaFin: ", fechaFin);
+
+                var fechaFinEfectiva = new Date(fechaFin);
+                fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                var nuevaFechaFin = new Date(fechaFinEfectiva);
+                console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+
+                if (diasNovedad != 0) {
+                    var fechaAux = new Date(fechaFinEfectiva);
+                    var dd = fechaFinEfectiva.getDate();
+                    fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
+                    fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
+                    nuevaFechaFin.setMonth(fechaFinEfectiva.getMonth() + (diasNovedad / 30));
+                    if (fechaAux.getDate() == 31) {
+                        if (dd + (diasNovedad % 30) > 30) {
+                            if ((dd + (diasNovedad % 30)) == 31) {
+                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) + 1);
+                            } else {
+                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
+                            }
+                        } else {
+                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                        }
+                    } else if (nuevaFechaFin.getDate() < 31) {
+                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                    }
+                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                }
+                return nuevaFechaFin;
+            }
 
             /**
              * @ngdoc method
@@ -1164,8 +1212,9 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'Proyectó', bold: true },
-                                    '',
-                                    '',
+                                    "" + self.elaboro,
+                                    "Abogado Oficina Asesora Jurídica",
+                                    "",
                                     ''
                                 ],
                                 [
