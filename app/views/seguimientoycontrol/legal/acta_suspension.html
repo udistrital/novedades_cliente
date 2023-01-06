@@ -31,8 +31,8 @@
                                 <p>
                                     {{sLactaSuspension.contrato_obj.contratista_nombre}} <br>
                                     <span style="color:#555; font-size:14px;">
-                    {{sLactaSuspension.contrato_obj.contratista_documento}}
-                  </span>
+                                        {{sLactaSuspension.contrato_obj.contratista_documento}}
+                                    </span>
                                 </p>
                             </div>
                             <div class="col-md-8" ng-if="sLactaSuspension.contrato_obj.contratista_documento == null">
@@ -71,7 +71,8 @@
                                     <b>{{'NUMERO_SOLICITUD' | translate}} *:</b>
                                 </p>
                                 <md-input-container style="margin:0;">
-                                    <input type="number" id="n_solicitud" name="n_solicitud" required ng-model="sLactaSuspension.n_solicitud" ng-disabled="false" min="0">
+                                    <input type="number" id="n_solicitud" name="n_solicitud" required
+                                        ng-model="sLactaSuspension.n_solicitud" ng-disabled="false" min="0">
                                     <div ng-messages="formSuspension.n_solicitud.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>
@@ -79,58 +80,65 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label style="width:100%;">
-                {{'NUMERO_OFICIO_ESTADO_CUENTAS' | translate}} *:
-              </label>
+                                    {{'NUMERO_OFICIO_ESTADO_CUENTAS' | translate}} *:
+                                </label>
                                 <md-input-container style="margin:0;">
-                                    <input type="number" name="numero_oficio_estado_cuentas" ng-model="sLactaSuspension.numero_oficio_estado_cuentas" 
-                                    id="numero_oficio_estado_cuentas" min="0" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
+                                    <input type="number" name="numero_oficio_estado_cuentas"
+                                        ng-model="sLactaSuspension.numero_oficio_estado_cuentas"
+                                        id="numero_oficio_estado_cuentas" min="0"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
                                     <div ng-messages="formTerminacion.numero_oficio_estado_cuentas.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>
                                 </md-input-container>
                             </div>
-                        </div>
-                            <div class="form-group col-md-6">
-                                <p>
-                                    <b>{{'PERIODO_SUSPENSION' | translate}} *:</b>
-                                </p>
-                                <md-input-container style="margin:0;">
-                                    <input type="number" name="diff_dias" id="periodo" required ng-model="sLactaSuspension.diff_dias" ng-disabled="true" min="0">
-                                    <div ng-messages="formSuspension.diff_dias.$error">
-                                        <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                                    </div>
-                                </md-input-container>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="fechainicio">{{'FECHA_SUSPENSION_INICIO' | translate}}:</label> <br>
-                                <md-datepicker ng-model="sLactaSuspension.f_inicio"></md-datepicker>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="fechafin">{{'FECHA_SUSPENSION_FIN' | translate}}:</label> <br>
-                                <md-datepicker ng-model="sLactaSuspension.f_fin" md-min-date="sLactaSuspension.f_inicio"></md-datepicker>
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                <br>
-                                <p><b>{{'FECHA_REINICIO' | translate}}:</b></p>
-                                <md-datepicker ng-model="sLactaSuspension.f_reinicio" md-min-date="sLactaSuspension.f_fin" ng-disabled="true">
-                                </md-datepicker>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label>{{'MOTIVO_SUSPENSION' | translate}} *:</label>
-                                <textarea class="form-control" name="motivo" style="border-radius:0;" id="motivo" ng-model="sLactaSuspension.motivo" rows="5" maxlength="249" required></textarea>
-                            </div>
-                        </form>
                     </div>
+                    <div class="form-group col-md-6">
+                        <p>
+                            <b>{{'PERIODO_SUSPENSION' | translate}} *:</b>
+                        </p>
+                        <md-input-container style="margin:0;">
+                            <input type="number" name="diff_dias" id="periodo" required
+                                ng-model="sLactaSuspension.diff_dias" ng-disabled="true" min="0">
+                            <div ng-messages="formSuspension.diff_dias.$error">
+                                <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="fechainicio">{{'FECHA_SUSPENSION_INICIO' | translate}}:</label> <br>
+                        <md-datepicker ng-model="sLactaSuspension.f_inicio"></md-datepicker>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="fechafin">{{'FECHA_SUSPENSION_FIN' | translate}}:</label> <br>
+                        <md-datepicker ng-model="sLactaSuspension.f_fin"
+                            md-min-date="sLactaSuspension.f_inicio"></md-datepicker>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <br>
+                        <p><b>{{'FECHA_REINICIO' | translate}}:</b></p>
+                        <md-datepicker ng-model="sLactaSuspension.f_reinicio" md-min-date="sLactaSuspension.f_fin"
+                            ng-disabled="true">
+                        </md-datepicker>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>{{'MOTIVO_SUSPENSION' | translate}} *:</label>
+                        <textarea class="form-control" name="motivo" style="border-radius:0;" id="motivo"
+                            ng-model="sLactaSuspension.motivo" rows="5" maxlength="249" required></textarea>
+                    </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 
-    </div>
-    <div class="panel-footer">
-        <center><button class="btn btn-primary btn-lg" ng-click="sLactaSuspension.generarActa()">{{'CREAR_NOVEDAD_SUSPENSION' | translate}}</button></center>
-    </div>
-    <br>
-    <br>
-    <br>
+</div>
+<div class="panel-footer">
+    <center><button class="btn btn-primary btn-lg"
+            ng-click="sLactaSuspension.generarActa()">{{'CREAR_NOVEDAD_SUSPENSION' | translate}}</button></center>
+</div>
+<br>
+<br>
+<br>
 </div>

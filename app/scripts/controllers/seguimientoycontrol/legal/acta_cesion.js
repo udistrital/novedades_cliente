@@ -31,12 +31,13 @@ angular
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
+            self.novedades = [];
             self.texto_busqueda = "";
             self.persona_sel = "";
             self.num_oficio = null;
             self.valor_desembolsado = null;
             self.valor_a_favor = "";
-            //self.f_oficio = new Date();
+            self.f_oficio = new Date();
             self.f_cesion = new Date();
             self.f_terminacion = new Date();
             self.f_hoy = new Date();
@@ -125,7 +126,7 @@ angular
                             .then(function (acta_response) {
                                 self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
-                                self.calcularFechaFin(0);
+                                self.calcularFechaFin();
                             });
                         //Se obtiene información del supervisor
                         // amazonAdministrativaRequest
@@ -237,15 +238,15 @@ angular
                                 self.contrato_obj.vigencia
                             )
                             .then(function (response_sql) {
-                                var elementos_cesion = response_sql.data.Body;
-                                for (var i = 0; i < elementos_cesion.length; i++) {
-                                    if (elementos_cesion[i].tiponovedad == 2) {
+                                self.novedades = response_sql.data.Body;
+                                for (var i = 0; i < self.novedades.length; i++) {
+                                    if (self.novedades[i].tiponovedad == 2) {
                                         self.novedadCesion = true;
                                     }
                                 }
-                                if (elementos_cesion.length != "0") {
+                                if (self.novedades.length != "0") {
                                     var last_cesion =
-                                        elementos_cesion[elementos_cesion.length - 1];
+                                        self.novedades[self.novedades.length - 1];
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                     //Obtencion de datos del contratista
                                     amazonAdministrativaRequest
@@ -361,44 +362,27 @@ angular
              */
             $scope.$watch("sLactaCesion.f_oficio", function () {
                 if (self.f_oficio.getDate() == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.f_oficio = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
-                };
+                    swal(
+                        $translate.instant("TITULO_ADVERTENCIA"),
+                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+                        "error"
+                    );
+                    var fecha = new Date(self.f_oficio);
+                    fecha.setDate(self.f_oficio.getDate() + 1);
+                    self.f_oficio = fecha;
+                }
             });
 
             $scope.$watch("sLactaCesion.f_cesion", function () {
-                if (self.f_cesion == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.f_oficio = new Date();
-                    self.f_cesion = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
+                if (self.f_cesion.getDate() == 31) {
+                    swal(
+                        $translate.instant("TITULO_ADVERTENCIA"),
+                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+                        "error"
+                    );
+                    var fecha = new Date(self.f_cesion);
+                    fecha.setDate(self.f_cesion.getDate() + 1);
+                    self.f_cesion = fecha;
                 }
                 self.f_terminacion = new Date(self.f_cesion);
                 self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
@@ -406,37 +390,7 @@ angular
                     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
                 };
 
-                // self.f_terminacion = new Date(self.f_cesion);
-                // self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
-                // if(self.f_terminacion.getDate == 31){
-                //     console.log("entró");
-                //     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
-                // };             
-
             });
-
-            // $scope.$watch("sLactaCesion.f_terminacion", function () {              
-            //     if(self.f_oficio.getDate() == 31){
-            //         //respuesta incorrecta, ej: 400/500
-            //         self.f_oficio = new Date();
-            //         self.f_cesion = new Date();
-            //         self.f_terminacion = new Date();
-            //         $scope.alert =
-            //             "DESCRIPCION_ERROR_FECHA_31";
-            //         swal({
-            //             title: $translate.instant(
-            //                 "TITULO_ERROR_ACTA"
-            //             ),
-            //             type: "error",
-            //             html: $translate.instant($scope.alert) +                            
-            //                 ".",
-            //             showCloseButton: true,
-            //             showCancelButton: false,
-            //             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-            //             allowOutsideClick: false,
-            //         }).then(function () { });
-            //     };                         
-            // });
 
             //consulta cesionario
             amazonAdministrativaRequest
@@ -500,6 +454,73 @@ angular
 
             /**
              * @ngdoc method
+             * @name PostNovedad
+             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
+             * @description
+             * funcion que realiza la inserción de los datos de la novedad
+             * enviando la petición POST al MID de Novedades
+             */
+            self.PostNovedad = function () {
+                novedadesMidRequest
+                    .post("novedad", self.cesion_nov)
+                    .then(function (request_novedades) {
+                        if (
+                            request_novedades.status == 200 ||
+                            request_novedades.statusText == "OK"
+                        ) {
+                            self.formato_generacion_pdf();
+                            swal(
+                                $translate.instant("TITULO_BUEN_TRABAJO"),
+                                $translate.instant("DESCRIPCION_CESION") +
+                                self.contrato_obj.numero_contrato +
+                                " " +
+                                $translate.instant("ANIO") +
+                                ": " +
+                                self.contrato_obj.vigencia,
+                                "success"
+                            ).then(function () {
+                                window.location.href =
+                                    "#/seguimientoycontrol/legal";
+                            });
+                        } else {
+                            //respuesta incorrecta, ej: 400/500
+                            $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                            swal({
+                                title: $translate.instant("TITULO_ERROR_REPLICA"),
+                                type: "error",
+                                html: $translate.instant($scope.alert) +
+                                    self.contrato_obj.numero_contrato +
+                                    $translate.instant("ANIO") +
+                                    self.contrato_obj.vigencia +
+                                    ".",
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        }
+                    })
+                    .catch(function (error) {
+                        //Servidor no disponible
+                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                        swal({
+                            title: $translate.instant("TITULO_ERROR_ACTA"),
+                            type: "error",
+                            html: $translate.instant($scope.alert) +
+                                self.contrato_obj.numero_contrato +
+                                $translate.instant("ANIO") +
+                                self.contrato_obj.vigencia +
+                                ".",
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false,
+                        }).then(function () { });
+                    })
+            }
+
+            /**
+             * @ngdoc method
              * @name generarActa
              * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
              * @description
@@ -553,6 +574,7 @@ angular
                                                     self.contrato_obj.numero_contrato;
                                                 self.cesion_nov.fechaadicion = "0001-01-01T00:00:00Z";
                                                 self.cesion_nov.fechacesion = new Date(self.f_cesion);
+                                                self.cesion_nov.fechafinefectiva = self.calcularFechaFin();
                                                 self.cesion_nov.fechaliquidacion = "0001-01-01T00:00:00Z";
                                                 self.cesion_nov.fechaprorroga = "0001-01-01T00:00:00Z";
                                                 self.cesion_nov.fechareinicio = "0001-01-01T00:00:00Z";
@@ -620,6 +642,7 @@ angular
                                                                 request_replica.statusText == "OK"
                                                             ) {
                                                                 console.log("Replica correcta");
+                                                                self.PostNovedad();
                                                             }
                                                         }).catch(function (error) {
                                                             //Error en la replica
@@ -638,64 +661,9 @@ angular
                                                                 allowOutsideClick: false,
                                                             }).then(function () { });
                                                         })
+                                                } else {
+                                                    self.PostNovedad();
                                                 }
-                                                novedadesMidRequest
-                                                    .post("novedad", self.cesion_nov)
-                                                    .then(function (request_novedades) {
-                                                        if (
-                                                            request_novedades.status == 200 ||
-                                                            request_novedades.statusText == "OK"
-                                                        ) {
-                                                            self.formato_generacion_pdf();
-                                                            swal(
-                                                                $translate.instant("TITULO_BUEN_TRABAJO"),
-                                                                $translate.instant("DESCRIPCION_CESION") +
-                                                                self.contrato_obj.numero_contrato +
-                                                                " " +
-                                                                $translate.instant("ANIO") +
-                                                                ": " +
-                                                                self.contrato_obj.vigencia,
-                                                                "success"
-                                                            ).then(function () {
-                                                                window.location.href =
-                                                                    "#/seguimientoycontrol/legal";
-                                                            });
-                                                        } else {
-                                                            //respuesta incorrecta, ej: 400/500
-                                                            $scope.alert = "DESCRIPCION_ERROR_CESION2";
-                                                            swal({
-                                                                title: $translate.instant("TITULO_ERROR_REPLICA"),
-                                                                type: "error",
-                                                                html: $translate.instant($scope.alert) +
-                                                                    self.contrato_obj.numero_contrato +
-                                                                    $translate.instant("ANIO") +
-                                                                    self.contrato_obj.vigencia +
-                                                                    ".",
-                                                                showCloseButton: true,
-                                                                showCancelButton: false,
-                                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                allowOutsideClick: false,
-                                                            }).then(function () { });
-                                                        }
-                                                    })
-                                                    .catch(function (error) {
-                                                        //Servidor no disponible
-                                                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
-                                                        swal({
-                                                            title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                            type: "error",
-                                                            html: $translate.instant($scope.alert) +
-                                                                self.contrato_obj.numero_contrato +
-                                                                $translate.instant("ANIO") +
-                                                                self.contrato_obj.vigencia +
-                                                                ".",
-                                                            showCloseButton: true,
-                                                            showCancelButton: false,
-                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                            allowOutsideClick: false,
-                                                        }).then(function () { });
-                                                    })
-
                                             });
                                     });
                             })
@@ -725,47 +693,24 @@ angular
                 }
             };
 
-            self.calcularFechaFin = function (diasNovedad) {
+            self.calcularFechaFin = function () {
 
                 var fechaFin;
-                if (diasNovedad == undefined) {
-                    diasNovedad = 0;
-                }
-                if (self.novedades.length == 0) {
-                    fechaFin = self.contrato_obj.fin;
-                } else {
+                var fechaFinEfectiva;
+                if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
-                }
-                console.log("diasNovedad", diasNovedad);
-
-                console.log("FechaFin: ", fechaFin);
-
-                var fechaFinEfectiva = new Date(fechaFin);
-                fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                var nuevaFechaFin = new Date(fechaFinEfectiva);
-                console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
-
-                if (diasNovedad != 0) {
-                    var fechaAux = new Date(fechaFinEfectiva);
-                    var dd = fechaFinEfectiva.getDate();
-                    fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
-                    fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
-                    nuevaFechaFin.setMonth(fechaFinEfectiva.getMonth() + (diasNovedad / 30));
-                    if (fechaAux.getDate() == 31) {
-                        if (dd + (diasNovedad % 30) > 30) {
-                            if ((dd + (diasNovedad % 30)) == 31) {
-                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) + 1);
-                            } else {
-                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
-                            }
-                        } else {
-                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
-                        }
-                    } else if (nuevaFechaFin.getDate() < 31) {
-                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                    fechaFinEfectiva = new Date(fechaFin);
+                } else {
+                    fechaFin = self.contrato_obj.Fin;
+                    fechaFinEfectiva = new Date(fechaFin);
+                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    if (fechaFinEfectiva.getDate() == 31) {
+                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
                     }
-                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
+                var nuevaFechaFin = new Date(fechaFinEfectiva);
+
+                console.log("FechaFin: ", nuevaFechaFin);
                 return nuevaFechaFin;
             }
 

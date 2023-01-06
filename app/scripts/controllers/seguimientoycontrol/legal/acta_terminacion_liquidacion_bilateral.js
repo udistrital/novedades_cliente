@@ -258,52 +258,28 @@ angular.module('contractualClienteApp')
                  */
             $scope.$watch("sLactaTerminacionAnticipada.fecha_solicitud", function () {
                 if (self.fecha_solicitud.getDate() == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.fecha_solicitud = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
-                };
+                    swal(
+                        $translate.instant("TITULO_ADVERTENCIA"),
+                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+                        "error"
+                    );
+                    var fecha = new Date(self.fecha_solicitud);
+                    fecha.setDate(self.fecha_solicitud.getDate() + 1);
+                    self.fecha_solicitud = fecha;
+                }
             });
 
             $scope.$watch("sLactaTerminacionAnticipada.fecha_terminacion_anticipada", function () {
                 if (self.fecha_terminacion_anticipada.getDate() == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.fecha_solicitud = new Date();
-                    self.fecha_terminacion_anticipada = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
+                    swal(
+                        $translate.instant("TITULO_ADVERTENCIA"),
+                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+                        "error"
+                    );
+                    var fecha = new Date(self.fecha_terminacion_anticipada);
+                    fecha.setDate(self.fecha_terminacion_anticipada.getDate() + 1);
+                    self.fecha_terminacion_anticipada = fecha;
                 }
-                // self.f_terminacion = new Date(self.f_cesion);
-                // self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
-                // if(self.f_terminacion.getDate == 31){
-                //     console.log("entró");
-                //     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
-                // };             
-
             });
             //seleccionador de beneficiario de saldo
             self.selecionarSaldo = function () {
@@ -324,7 +300,7 @@ angular.module('contractualClienteApp')
              * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaSuspensionCtrl
              * @description
              * funcion que realiza la inserción de los datos de la novedad
-             * eviando la petición POST al MID de Novedades
+             * enviando la petición POST al MID de Novedades
              */
             self.postNovedad = function (nuevoEstado) {
                 novedadesMidRequest
@@ -414,6 +390,7 @@ angular.module('contractualClienteApp')
                         self.terminacion_nov.saldo_contratista = self.saldo_contratista;
                         self.terminacion_nov.saldo_universidad = self.saldo_universidad;
                         self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;
+                        self.terminacion_nov.fechafinefectiva = self.fecha_terminacion_anticipada;
 
                         // Recolección datos objeto POST Replica
                         self.contrato_obj_replica.NumeroContrato = self.contrato_obj.numero_contrato;
@@ -468,7 +445,7 @@ angular.module('contractualClienteApp')
                                                         request_novedades.statusText == "OK"
                                                     ) {
                                                         console.log("Replica correcta");
-                                                        // self.postNovedad(nuevoEstado);
+                                                        self.postNovedad(nuevoEstado);
                                                     }
                                                 }).catch(function (error) {
                                                     //Error en la replica
@@ -488,7 +465,7 @@ angular.module('contractualClienteApp')
                                                     }).then(function () { });
                                                 })
                                         } else {
-                                            // self.postNovedad(nuevoEstado);
+                                            self.postNovedad(nuevoEstado);
                                             console.log("Falló la réplica");
                                         }
                                     }
@@ -512,51 +489,6 @@ angular.module('contractualClienteApp')
                     );
                 }
             };
-
-            self.calcularFechaFin = function (diasNovedad) {
-
-                var fechaFin;
-                if (diasNovedad == undefined) {
-                    diasNovedad = 0;
-                }
-                if (self.novedades.length == 0) {
-                    fechaFin = self.contrato_obj.FechaFin;
-                } else {
-                    fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
-                }
-
-                console.log("diasNovedad", diasNovedad);
-
-                console.log("FechaFin: ", fechaFin);
-
-                var fechaFinEfectiva = new Date(fechaFin);
-                fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                var nuevaFechaFin = new Date(fechaFinEfectiva);
-                console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
-
-                if (diasNovedad != 0) {
-                    var fechaAux = new Date(fechaFinEfectiva);
-                    var dd = fechaFinEfectiva.getDate();
-                    fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
-                    fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
-                    nuevaFechaFin.setMonth(fechaFinEfectiva.getMonth() + (diasNovedad / 30));
-                    if (fechaAux.getDate() == 31) {
-                        if (dd + (diasNovedad % 30) > 30) {
-                            if ((dd + (diasNovedad % 30)) == 31) {
-                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) + 1);
-                            } else {
-                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
-                            }
-                        } else {
-                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
-                        }
-                    } else if (nuevaFechaFin.getDate() < 31) {
-                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
-                    }
-                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
-                }
-                return nuevaFechaFin;
-            }
 
             /**
              * @ngdoc method

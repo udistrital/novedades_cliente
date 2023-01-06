@@ -31,8 +31,8 @@
                                 <p>
                                     {{sLactaReinicio.contrato_obj.contratista_nombre}} <br>
                                     <span style="color:#555; font-size:14px;">
-                    {{sLactaReinicio.contrato_obj.contratista_documento}}
-                  </span>
+                                        {{sLactaReinicio.contrato_obj.contratista_documento}}
+                                    </span>
                                 </p>
                             </div>
                             <div class="col-md-8" ng-if="sLactaReinicio.contrato_obj.contratista_documento == null">
@@ -41,10 +41,12 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4"><b>{{'SUPERVISOR' | translate}}</b></div>
-                            <div class="col-md-8" ng-if="sLactaReinicio.contrato_obj.supervisor_nombre_completo != null">
+                            <div class="col-md-8"
+                                ng-if="sLactaReinicio.contrato_obj.supervisor_nombre_completo != null">
                                 <p>{{sLactaReinicio.contrato_obj.supervisor_nombre_completo}}</p>
                             </div>
-                            <div class="col-md-8" ng-if="sLactaReinicio.contrato_obj.supervisor_nombre_completo == null">
+                            <div class="col-md-8"
+                                ng-if="sLactaReinicio.contrato_obj.supervisor_nombre_completo == null">
                                 <p>No registra</p>
                             </div>
                         </div>
@@ -75,10 +77,11 @@
                         <form name="formReinicio">
                             <div class="col-md-6">
                                 <label>
-                  {{'NUMERO_SOLICITUD' | translate}} *:
-                </label> <br>
+                                    {{'NUMERO_SOLICITUD' | translate}} *:
+                                </label> <br>
                                 <md-input-container style="margin:0;">
-                                    <input type="number" id="n_solicitud" name="n_solicitud" required ng-model="sLactaReinicio.n_solicitud" ng-disabled="false" min="0">
+                                    <input type="number" id="n_solicitud" name="n_solicitud" required
+                                        ng-model="sLactaReinicio.n_solicitud" ng-disabled="false" min="0">
                                     <div ng-messages="formReinicio.n_solicitud.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>
@@ -88,7 +91,8 @@
                             <div class="col-md-6">
                                 <label for="perido">{{'PERIODO_SUSPENSION' | translate}} *:</label><br>
                                 <md-input-container style="margin:0;">
-                                    <input type="number" name="diff_dias" ng-model="sLactaReinicio.diff_dias" required id="periodo" ng-disabled="true" min="0">
+                                    <input type="number" name="diff_dias" ng-model="sLactaReinicio.diff_dias"
+                                        id="periodo" ng-disabled="true" min="0">
                                     <div ng-messages="formReinicio.diff_dias.$error">
                                         <div ng-message="required">
                                             {{'CAMPO_REQUERIDO' | translate}}
@@ -99,17 +103,20 @@
 
                             <div class="form-group col-md-6">
                                 <label for="fechainicio">{{'FECHA_SUSPENSION_INICIO' | translate}}</label> <br>
-                                <md-datepicker ng-model="sLactaReinicio.f_suspension" ng-disabled="true"></md-datepicker>
+                                <md-datepicker ng-model="sLactaReinicio.f_suspension"
+                                    ng-disabled="true"></md-datepicker>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="fechainicio">{{'FECHA_SUSPENSION_FIN' | translate}}</label> <br>
-                                <md-datepicker ng-model="sLactaReinicio.f_finsuspension" md-min-date="sLactaReinicio.f_suspension" md-max-date="sLactaReinicio.fechaLimite" ng-disabled="false"></md-datepicker>
+                                <md-datepicker ng-model="sLactaReinicio.f_finsuspension"
+                                    md-min-date="sLactaReinicio.f_suspension" md-max-date="sLactaReinicio.fechaLimite"
+                                    ng-disabled="false"></md-datepicker>
                             </div>
 
 
                             <div class="form-group col-md-6">
                                 <label for="fechareinicio">{{'FECHA_REINICIO' | translate}}</label> <br>
-                                <md-datepicker ng-model="sLactaReinicio.f_reinicio" md-min-date="sLactaReinicio.f_finsuspension" ng-disabled="true" >
+                                <md-datepicker ng-model="sLactaReinicio.f_reinicio" ng-disabled="true">
                                 </md-datepicker>
                             </div>
                         </form>
@@ -122,7 +129,8 @@
 
     </div>
     <div class="panel-footer">
-        <center> <button class="btn btn-primary btn-lg" ng-click="sLactaReinicio.generarActa()">{{'CREAR_NOVEDAD_REINICIO' | translate}}</button> </center>
+        <center> <button class="btn btn-primary btn-lg"
+                ng-click="sLactaReinicio.generarActa()">{{'CREAR_NOVEDAD_REINICIO' | translate}}</button> </center>
     </div>
     <br>
     <br>
