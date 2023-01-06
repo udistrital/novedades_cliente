@@ -119,7 +119,7 @@ angular
                             .then(function (acta_response) {
                                 self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
-                                self.calcularFechaFin(self.novedades);
+                                self.calcularFechaFin(0);
                             });
 
                         //Obtención de datos del jefe de juridica
@@ -342,39 +342,19 @@ angular
              * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaReinicioCtrl
              * @description
              * Funcion que observa el cambio de fecha de reinicio y calcula el periodo de suspension
-             * @param {date} f_reinicio
              */
             $scope.$watch("sLactaReinicio.f_finsuspension", function () {
-                self.f_reinicio = new Date(self.f_finsuspension);
-                self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
-                if (self.f_reinicio.getDate() == 31) {
-                    self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
-                }
                 if (self.f_finsuspension.getDate() == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.f_finsuspension = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
+                    swal(
+                        $translate.instant("TITULO_ADVERTENCIA"),
+                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+                        "error"
+                    );
+                    var fechaInicio = new Date(self.f_finsuspension);
+                    fechaInicio.setDate(self.f_finsuspension.getDate() + 1);
+                    self.f_finsuspension = fechaInicio;
                 }
-                var dt1 = self.f_suspension;
-                var dt2 = self.f_finsuspension;
-                var timeDiff = 0;
-                if (dt2 != null) {
-                    timeDiff = Math.abs(dt2.getTime() - dt1.getTime());
-                }
-                self.diff_dias = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                self.diff_dias = self.calcularDiasNovedad();
             });
 
             /**
@@ -733,6 +713,7 @@ angular
                             self.reinicio_nov.periodosuspension = self.diff_dias;
                             self.reinicio_nov.fechasuspension = self.f_suspension;
                             self.reinicio_nov.fechareinicio = self.f_reinicio;
+                            self.reinicio_nov.fechafinefectiva = self.calcularFechaFin(self.diff_dias);
                             self.reinicio_nov.observacion = "";
                             self.reinicio_nov.cesionario = parseInt(
                                 self.contrato_obj.contratista
@@ -757,13 +738,7 @@ angular
                             self.contrato_obj_replica.FechaFin = self.f_finsuspension //new Date(self.f_finsuspension);
                             self.contrato_obj_replica.FechaReinicio = self.f_reinicio;
                             self.contrato_obj_replica.UnidadEjecucion = self.suspension_obj.UnidadEjecucion;
-                            self.contrato_obj_replica.TipoNovedad = parseFloat(21);
-                            //self.contrato_obj_argo.VigenciaCdp = 2021;
-                            // self.contrato_obj_argo.ValorNovedad = null;
-                            //Tratamiento de datos para objeto payload POST Argo
-                            // if(self.terminacion_nov.tiponovedad === "NP_REI"){
-                            // self.contrato_obj_argo.TipoNovedad = parseFloat(217);
-                            // };
+                            self.contrato_obj_replica.TipoNovedad = parseFloat(216);
                         });
                     agoraRequest
                         .get(
@@ -834,6 +809,7 @@ angular
                                 });
                         });
                 } else {
+                    console.log("Error", $scope.formReinicio);
                     swal(
                         $translate.instant("TITULO_ERROR"),
                         $translate.instant("DESCRIPCION_ERROR"),
@@ -845,25 +821,26 @@ angular
             self.calcularFechaFin = function (diasNovedad) {
 
                 var fechaFin;
-                if (diasNovedad == undefined) {
-                    diasNovedad = 0;
-                }
-                if (self.novedades.length == 0) {
-                    fechaFin = self.contrato_obj.Fin;
-                } else {
+                var fechaFinEfectiva;
+                if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                    fechaFinEfectiva = new Date(fechaFin);
+                } else {
+                    fechaFin = self.contrato_obj.Fin;
+                    fechaFinEfectiva = new Date(fechaFin);
+                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    if (fechaFinEfectiva.getDate() == 31) {
+                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    }
                 }
+                var nuevaFechaFin = new Date(fechaFinEfectiva);
 
                 console.log("diasNovedad", diasNovedad);
 
-                console.log("FechaFin: ", fechaFin);
-
-                var fechaFinEfectiva = new Date(fechaFin);
-                fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                var nuevaFechaFin = new Date(fechaFinEfectiva);
-                console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                console.log("FechaFin: ", nuevaFechaFin);
 
                 if (diasNovedad != 0) {
+                    diasNovedad = parseInt(diasNovedad) + 1;
                     var fechaAux = new Date(fechaFinEfectiva);
                     var dd = fechaFinEfectiva.getDate();
                     fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
@@ -886,6 +863,32 @@ angular
                 }
                 return nuevaFechaFin;
 
+            }
+
+            /**
+             * @ngdoc method
+             * @name calcularDiasNovedad
+             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaReinicioCtrl
+             * @description
+             * funcion que calcula el tiempo de la suspensión, teniendo las fechas
+             * de inicio y fin de la misma
+             */
+            self.calcularDiasNovedad = function () {
+                var months;
+                var days = 0;
+                months = self.f_finsuspension.getMonth() - self.f_suspension.getMonth() + (12 * (self.f_finsuspension.getFullYear() - self.f_suspension.getFullYear()));
+                if (months != 0) {
+                    if (self.f_suspension.getDate() < self.f_finsuspension.getDate()) {
+                        days += self.f_finsuspension.getDate() - self.f_suspension.getDate();
+                    } else {
+                        months -= 1;
+                        days += (30 - self.f_suspension.getDate()) + (self.f_finsuspension.getDate());
+                    }
+                } else {
+                    days += self.f_finsuspension.getDate() - self.f_suspension.getDate();
+                }
+                days += (months * 30) + 1;
+                return days;
             }
 
             /**

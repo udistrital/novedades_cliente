@@ -34,6 +34,7 @@ angular
             self.f_inicio = new Date();
             self.f_fin = new Date();
             self.f_reinicio = new Date();
+            self.fecha_limite = new Date();
             self.motivo = "";
             self.diff_dias = null;
             self.estado_suspendido = "{}";
@@ -302,6 +303,11 @@ angular
             $scope.$watch("sLactaSuspension.f_inicio", function () {
 
                 if (self.f_inicio.getDate() == 31) {
+                    swal(
+                        $translate.instant("TITULO_ADVERTENCIA"),
+                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+                        "error"
+                    );
                     var fechaInicio = new Date(self.f_inicio);
                     fechaInicio.setDate(self.f_inicio.getDate() + 1);
                     self.f_inicio = fechaInicio;
@@ -315,24 +321,15 @@ angular
             $scope.$watch("sLactaSuspension.f_fin", function () {
 
                 if (self.f_fin.getDate() == 31) {
+                    swal(
+                        $translate.instant("TITULO_ADVERTENCIA"),
+                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+                        "error"
+                    );
                     var fechaFin = new Date(self.f_fin);
                     fechaFin.setDate(self.f_fin.getDate() + 1);
                     self.f_fin = fechaFin;
                 }
-                // var dt1 = self.f_inicio;
-                // var dt2 = self.f_fin;
-                // var timeDiff = 0;
-
-                // if (dt2 != null) {
-                //     timeDiff = (dt2.getTime() - dt1.getTime());
-                // };
-
-                // var last_time = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                // if (last_time == 0) {
-                //     self.diff_dias = null;
-                // } else {
-                //     self.diff_dias = last_time;
-                // }
                 self.f_reinicio = new Date(self.f_fin);
                 self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
                 if (self.f_reinicio.getDate() == 31) {
@@ -498,6 +495,7 @@ angular
                             self.suspension_nov.fechasuspension = self.f_inicio;
                             self.suspension_nov.fechareinicio = self.f_reinicio;
                             self.suspension_nov.fechafinsuspension = self.f_fin;
+                            self.suspension_nov.fechafinefectiva = self.calcularFechaFin(self.diff_dias);
                             self.suspension_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
                             self.suspension_nov.cesionario = parseInt(
                                 self.contrato_obj.contratista
@@ -523,22 +521,9 @@ angular
                             self.contrato_obj_replica.FechaFin = self.suspension_nov.fechafinsuspension;
                             self.contrato_obj_replica.UnidadEjecucion = 205;
                             self.contrato_obj_replica.TipoNovedad = parseFloat(216);
-                            // console.log("ReplicaObject", self.contrato_obj_replica);
 
                         });
 
-
-
-
-                    // amazonAdministrativaRequest
-                    //                 .get(
-                    //                     "informacion_proveedor?query=NumDocumento:" +
-                    //                     self.contrato_obj.contratista_documento
-                    //                 )
-                    //                 .then(function (response) {
-                    //                     self.cesion_nov.numerooficioestadocuentas =
-                    //                         self.num_oficio;
-                    //                 },
                     //primero obtenemos el estado actual - en esta caso es 'En ejecucion'
                     //Se guarda en la posicion [0] del arreglo estados el estado actual
                     //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a suspension - devuelve si es true o false
@@ -648,52 +633,29 @@ angular
                 }
             };
 
-            self.calcularFechaFin = function (novedades) {
+            self.calcularFechaFin = function (diasNovedad) {
 
                 var fechaFin;
-                if (diasNovedad == undefined) {
-                    diasNovedad = 0;
-                }
-                if (self.novedades.length == 0) {
-                    fechaFin = self.contrato_obj.Fin;
-                } else {
+                var fechaFinEfectiva;
+                if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                    fechaFinEfectiva = new Date(fechaFin);
+                } else {
+                    fechaFin = self.contrato_obj.Fin;
+                    fechaFinEfectiva = new Date(fechaFin);
+                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    if (fechaFinEfectiva.getDate() == 31) {
+                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    }
                 }
-                // console.log(diasNovedad);
+                var nuevaFechaFin = new Date(fechaFinEfectiva);
 
-                // var suspensiones = 0;
-                // var reinicios = 0;
-                // for (var i = 0; i < novedades.length; i++) {
-                //     if (novedades[i].tiponovedad == 1) {
-                //         suspensiones += 1;
-                //     } else if (novedades[i].tiponovedad == 3) {
-                //         reinicios += 1;
-                //         diasNovedad = diasNovedad + novedades[i].periodosuspension;
-                //     } else if (
-                //         novedades[i].tiponovedad == 7 ||
-                //         novedades[i].tiponovedad == 8
-                //     ) {
-                //         diasNovedad = diasNovedad + novedades[i].tiempoprorroga;
-                //     }
-                // }
-                // if (reinicios < suspensiones) {
-                //     for (var i = novedades.length - 1; i > 0; i--) {
-                //         if (novedades[i].tiponovedad == 1) {
-                //             diasNovedad = diasNovedad + novedades[i].periodosuspension;
-                //             break;
-                //         }
-                //     }
-                // }
                 console.log("diasNovedad", diasNovedad);
 
-                console.log("FechaFin: ", fechaFin);
-
-                var fechaFinEfectiva = new Date(fechaFin);
-                fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                var nuevaFechaFin = new Date(fechaFinEfectiva);
-                console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                console.log("FechaFin: ", nuevaFechaFin);
 
                 if (diasNovedad != 0) {
+                    diasNovedad = parseInt(diasNovedad) + 1;
                     var fechaAux = new Date(fechaFinEfectiva);
                     var dd = fechaFinEfectiva.getDate();
                     fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
@@ -729,9 +691,6 @@ angular
             self.calcularDiasNovedad = function () {
                 var months;
                 var days = 0;
-                // months = (self.f_fin.getFullYear() - self.f_inicio.getFullYear()) * 12;
-                // months -= self.f_inicio.getMonth();
-                // months += self.f_fin.getMonth();
                 months = self.f_fin.getMonth() - self.f_inicio.getMonth() + (12 * (self.f_fin.getFullYear() - self.f_inicio.getFullYear()));
                 if (months != 0) {
                     if (self.f_inicio.getDate() < self.f_fin.getDate()) {
