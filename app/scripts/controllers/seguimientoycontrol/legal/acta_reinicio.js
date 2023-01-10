@@ -354,6 +354,11 @@ angular
                     fechaInicio.setDate(self.f_finsuspension.getDate() + 1);
                     self.f_finsuspension = fechaInicio;
                 }
+                self.f_reinicio = new Date(self.f_finsuspension);
+                self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
+                if (self.f_reinicio.getDate() == 31) {
+                    self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
+                }
                 self.diff_dias = self.calcularDiasNovedad();
             });
 
@@ -736,7 +741,7 @@ angular
                             self.contrato_obj_replica.PlazoEjecucion = self.suspension_obj.PlazoEjecucion;
                             self.contrato_obj_replica.FechaInicio = self.suspension_obj.FechaInicio;
                             self.contrato_obj_replica.FechaFin = self.f_finsuspension //new Date(self.f_finsuspension);
-                            self.contrato_obj_replica.FechaReinicio = self.f_reinicio;
+                            self.contrato_obj_replica.FechaReinicio = new Date(self.f_reinicio);
                             self.contrato_obj_replica.UnidadEjecucion = self.suspension_obj.UnidadEjecucion;
                             self.contrato_obj_replica.TipoNovedad = parseFloat(216);
                         });

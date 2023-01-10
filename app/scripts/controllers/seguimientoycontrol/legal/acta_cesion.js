@@ -1393,21 +1393,44 @@ angular
                         },
                         {
                             ul: [
-                                [{
-                                    text: "Por los servicios prestados por el señor(a) " +
-                                        self.contrato_obj.contratista_nombre
-                                }, { text: " CONTRATISTA CEDENTE,", bold: true }, {
-                                    text: " hasta el día " +
-                                        self.format_date_letter_mongo(self.f_terminacion) +
-                                        " se reconoció un valor total de " +
-                                        NumeroALetras(self.valor_desembolsado + "") +
-                                        "($" +
-                                        numberFormat(String(self.valor_desembolsado) + "") +
-                                        "), y ejecutor del contrato un plazo de " +
-                                        self.contrato_obj.plazo +
-                                        " meses.\n\n"
+                                // [{
+                                //     text: "Por los servicios prestados por el señor(a) " +
+                                //         self.contrato_obj.contratista_nombre
+                                // }, { text: " CONTRATISTA CEDENTE,", bold: true }, {
+                                //     text: " hasta el día " +
+                                //         self.format_date_letter_mongo(self.f_terminacion) +
+                                //         " se reconoció un valor total de " +
+                                //         NumeroALetras(self.valor_desembolsado + "") +
+                                //         "($" +
+                                //         numberFormat(String(self.valor_desembolsado) + "") +
+                                //         "), y ejecutor del contrato un plazo de " +
+                                //         self.contrato_obj.plazo +
+                                //         " meses.\n\n"
+                                // },
+                                // ],
+                                {
+                                    text: [
+                                        {
+                                            text: "Por los servicios prestados por el señor(a) " +
+                                                self.contrato_obj.contratista_nombre
+                                        },
+                                        {
+                                            text: " CONTRATISTA CEDENTE,", bold: true
+                                        },
+                                        {
+                                            text: " hasta el día " +
+                                                self.format_date_letter_mongo(self.f_terminacion) +
+                                                " se reconoció un valor total de " +
+                                                NumeroALetras(self.valor_desembolsado + "") +
+                                                "($" +
+                                                numberFormat(String(self.valor_desembolsado) + "") +
+                                                "), y ejecutor del contrato un plazo de " +
+                                                self.contrato_obj.plazo +
+                                                " meses.\n\n"
+                                        }
+                                    ],
+
                                 },
-                                ],
                                 {
                                     text: [
                                         { text: "Existe un valor pendiente por cancelar al señor " + self.contrato_obj.contratista_nombre }, { text: "(CEDENTE), ", bold: true }, {
