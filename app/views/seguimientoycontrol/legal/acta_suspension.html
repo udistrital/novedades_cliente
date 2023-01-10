@@ -87,7 +87,7 @@
                                         ng-model="sLactaSuspension.numero_oficio_estado_cuentas"
                                         id="numero_oficio_estado_cuentas" min="0"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
-                                    <div ng-messages="formTerminacion.numero_oficio_estado_cuentas.$error">
+                                    <div ng-messages="formSuspension.numero_oficio_estado_cuentas.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>
                                 </md-input-container>
@@ -107,7 +107,8 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="fechainicio">{{'FECHA_SUSPENSION_INICIO' | translate}}:</label> <br>
-                        <md-datepicker ng-model="sLactaSuspension.f_inicio"></md-datepicker>
+                        <md-datepicker ng-model="sLactaSuspension.f_inicio" md-min-date="sLactaSuspension.fecha_lim_inf"
+                            md-max-date="sLactaSuspension.fecha_lim_sup"></md-datepicker>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="fechafin">{{'FECHA_SUSPENSION_FIN' | translate}}:</label> <br>

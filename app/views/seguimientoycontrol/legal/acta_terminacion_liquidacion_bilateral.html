@@ -108,7 +108,8 @@
                                     <label for="fechaterminacion">{{'FECHA_TERMINACION_ANTICIPADA' |
                                         translate}}:</label> <br>
                                     <md-datepicker ng-model="sLactaTerminacionAnticipada.fecha_terminacion_anticipada"
-                                        md-max-date="sLactaTerminacionAnticipada.fechaLimite">
+                                        md-min-date="sLactaTerminacionAnticipada.fecha_lim_inf"
+                                        md-max-date="sLactaTerminacionAnticipada.fecha_lim_sup">
                                     </md-datepicker>
                                 </div>
                             </div>

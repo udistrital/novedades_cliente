@@ -31,6 +31,7 @@ angular.module('contractualClienteApp')
             ];
 
             var self = this;
+            self.novedades = [];
             self.f_hoy = new Date();
             self.n_solicitud = null;
             self.fecha_inicio = "";
@@ -117,7 +118,12 @@ angular.module('contractualClienteApp')
                     agoraRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.id).then(function (acta_response) {
                         self.contrato_obj.FechaInicio = acta_response.data[0].FechaInicio;
                         self.contrato_obj.FechaFin = acta_response.data[0].FechaFin;
-                        self.fechaLimite = new Date(acta_response.data[0].FechaFin);
+
+                        self.fecha_terminacion_anticipada = new Date(self.contrato_obj.FechaFin);
+                        self.fecha_terminacion_anticipada.setDate(self.fecha_terminacion_anticipada.getDate() + 1);
+                        self.fecha_lim_inf = new Date(self.contrato_obj.FechaInicio);
+                        self.fecha_lim_inf.setDate(self.fecha_lim_inf.getDate() + 1);
+                        self.fecha_lim_sup = self.calcularFechaFin();
                     });
 
                     //Obtención de datos del ordenador del gasto
@@ -185,9 +191,9 @@ angular.module('contractualClienteApp')
                     });
 
                     novedadesMidRequest.get('novedad', self.contrato_obj.numero_contrato + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
-                        var elementos_cesion = response_sql.data.Body;
-                        if (elementos_cesion.length != '0') {
-                            var last_cesion = elementos_cesion[elementos_cesion.length - 1];
+                        self.novedades = response_sql.data.Body;
+                        if (self.novedades.length != '0') {
+                            var last_cesion = self.novedades[self.novedades.length - 1];
                             self.contrato_obj.contratista = last_cesion.cesionario;
                             agoraRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
                                 self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
@@ -489,6 +495,27 @@ angular.module('contractualClienteApp')
                     );
                 }
             };
+
+            self.calcularFechaFin = function () {
+
+                var fechaFin;
+                var fechaFinEfectiva;
+                if (self.novedades.length != 0) {
+                    fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                    fechaFinEfectiva = new Date(fechaFin);
+                } else {
+                    fechaFin = self.contrato_obj.FechaFin;
+                    fechaFinEfectiva = new Date(fechaFin);
+                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    if (fechaFinEfectiva.getDate() == 31) {
+                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    }
+                }
+                var nuevaFechaFin = new Date(fechaFinEfectiva);
+
+                console.log("FechaFin: ", nuevaFechaFin);
+                return nuevaFechaFin;
+            }
 
             /**
              * @ngdoc method

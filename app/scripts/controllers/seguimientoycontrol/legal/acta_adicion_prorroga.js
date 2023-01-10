@@ -423,11 +423,6 @@ angular
              */
             $scope.$watch("sLactaAdicionProrroga.fecha_prorroga", function () {
                 if (self.fecha_prorroga.getDate() == 31) {
-                    swal(
-                        $translate.instant("TITULO_ADVERTENCIA"),
-                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
-                        "error"
-                    );
                     var fecha = new Date(self.fecha_prorroga);
                     fecha.setDate(self.fecha_prorroga.getDate() + 1);
                     self.fecha_prorroga = fecha;
@@ -884,7 +879,7 @@ angular
                             vigenciarp: String(self.contrato_obj.cdp_anno),
                             valoradicion: parseFloat($scope.valor_adicion.replace(/\,/g, "")),
                             fechaadicion: self.fecha_prorroga,
-                            tiempoprorroga: $scope.tiempo_prorroga,
+                            tiempoprorroga: parseInt($scope.tiempo_prorroga),
                             fechaprorroga: self.fecha_prorroga,
                             vigencia: String(self.contrato_obj.vigencia),
                             motivo: $scope.motivo,

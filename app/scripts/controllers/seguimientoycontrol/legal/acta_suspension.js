@@ -34,7 +34,8 @@ angular
             self.f_inicio = new Date();
             self.f_fin = new Date();
             self.f_reinicio = new Date();
-            self.fecha_limite = new Date();
+            self.fecha_lim_inf = new Date();
+            self.fecha_lim_sup = new Date();
             self.motivo = "";
             self.diff_dias = null;
             self.estado_suspendido = "{}";
@@ -129,7 +130,11 @@ angular
                             .then(function (acta_response) {
                                 self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
-                                self.calcularFechaFin(0);
+                                self.f_inicio = new Date(self.contrato_obj.Inicio);
+                                self.f_inicio.setDate(self.f_inicio.getDate() + 1);
+                                self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
+                                self.fecha_lim_inf.setDate(self.fecha_lim_inf.getDate() + 1);
+                                self.fecha_lim_sup = self.calcularFechaFin(0);
                             });
 
                         //Obtencion de datos del supervisor.
