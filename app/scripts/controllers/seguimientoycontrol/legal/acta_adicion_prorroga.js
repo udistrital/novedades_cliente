@@ -33,7 +33,6 @@ angular
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
-            self.contrato_obj_argo = {};
             self.fecha = {};
             self.f_hoy = new Date();
             self.cdprp = [];
@@ -693,8 +692,7 @@ angular
                             $scope.nuevo_plazo_contrato = self.contrato_obj.plazo + " meses";
                             callback(self.tiponovedad);
                         });
-                    self.contrato_obj.inicioOSi = self.contrato_obj.inicio;
-                    self.contrato_obj.nuevaFechaFin = self.calcularFechaFin(0, false);
+                    self.contrato_obj.nuevaFechaFin = self.calcularFechaFin(1, false);
                 }
                 if ($scope.adicion != true && $scope.prorroga == true) {
                     $scope.estado_novedad = "Prórroga";
@@ -936,7 +934,7 @@ angular
                         self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                         self.contrato_obj_replica.Documento = self.contrato_obj.contratista_documento;
                         self.contrato_obj_replica.PlazoEjecucion = parseInt($scope.valor_prorroga_final);
-                        self.contrato_obj_replica.FechaInicio = $scope.fecha_prorroga;
+                        self.contrato_obj_replica.FechaInicio = self.fecha_prorroga;
                         self.contrato_obj_replica.FechaFin = new Date(self.contrato_obj.nuevaFechaFin);
                         self.contrato_obj_replica.ValorNovedad = parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, ""));
                         self.contrato_obj_replica.UnidadEjecucion = 205;

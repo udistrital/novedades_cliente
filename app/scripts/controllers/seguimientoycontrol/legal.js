@@ -214,12 +214,14 @@ angular
                                                             self.contrato_obj.contratista =
                                                                 last_newness.cesionario;
                                                             if (last_newness.poliza === "") {
-                                                                self.estado_contrato_obj.estado = 10;
-                                                                swal(
-                                                                    $translate.instant("INFORMACION"),
-                                                                    $translate.instant("DESCRIPCION_ACTA_CESION"),
-                                                                    "info"
-                                                                );
+                                                                if (self.novedadEnCurso == false) {
+                                                                    self.estado_contrato_obj.estado = 10;
+                                                                    swal(
+                                                                        $translate.instant("INFORMACION"),
+                                                                        $translate.instant("DESCRIPCION_ACTA_CESION"),
+                                                                        "info"
+                                                                    );
+                                                                }
                                                             }
                                                         } else if (
                                                             self.contrato_obj.tipo_novedad == "NP_SUS" ||
