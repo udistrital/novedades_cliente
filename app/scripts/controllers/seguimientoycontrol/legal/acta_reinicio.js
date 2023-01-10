@@ -764,66 +764,54 @@ angular
                             }
 
                             self.estados[0] = estado_temp_from;
-                            var fecha = self.contrato_obj_replica.FechaReinicio;
-                            console.log(fecha)
                             novedadesMidRequest
-                                .put("novedad", self.suspension_obj.id, self.contrato_obj_replica)
-                                .then(function (request_argo) {
-                                    if (
-                                        request_argo.status == 200 ||
-                                        request_argo.statusText == "Ok"
-                                    ) {
-                                        console.log("1");
-                                    };
+                                .post("validarCambioEstado", self.estados)
+                                .then(function (vc_response) {
+                                    self.validacion = vc_response.data.Body;
+                                    if (self.validacion == "true") {
+                                        novedadesMidRequest
+                                            .put("novedad", self.suspension_obj.id, self.contrato_obj_replica)
+                                            .then(function (request_argo) {
+                                                if (
+                                                    request_argo.status == 200 ||
+                                                    request_argo.statusText == "Ok"
+                                                ) {
+                                                    novedadesMidRequest
+                                                        .post("novedad", self.reinicio_nov)
+                                                        .then(function (response_nosql) {
+                                                            if (
+                                                                response_nosql.status == 200 ||
+                                                                response_nosql.statusText == "OK"
+                                                            ) {
+                                                                agoraRequest
+                                                                    .post("contrato_estado", nuevoEstado)
+                                                                    .then(function (response) {
+                                                                        if (
+                                                                            response.status == 201 ||
+                                                                            Object.keys(response.data) > 0
+                                                                        ) {
+                                                                            self.formato_generacion_pdf();
+                                                                            swal(
+                                                                                $translate.instant("TITULO_BUEN_TRABAJO"),
+                                                                                $translate.instant("DESCRIPCION_REINICIO") +
+                                                                                self.contrato_obj.numero_contrato +
+                                                                                " " +
+                                                                                $translate.instant("ANIO") +
+                                                                                ": " +
+                                                                                self.contrato_obj.vigencia,
+                                                                                "success"
+                                                                            ).then(function () {
+                                                                                window.location.href =
+                                                                                    "#/seguimientoycontrol/legal";
+                                                                            });
+                                                                        }
+                                                                    });
+                                                            }
+                                                        });
+                                                };
+                                            });
+                                    }
                                 });
-                            // novedadesMidRequest
-                            //     .post("validarCambioEstado", self.estados)
-                            //     .then(function (vc_response) {
-                            //         self.validacion = vc_response.data.Body;
-                            //         if (self.validacion == "true") {
-                            //             novedadesMidRequest
-                            //                 .put("novedad", self.suspension_obj.id, self.contrato_obj_replica)
-                            //                 .then(function (request_argo) {
-                            //                     if (
-                            //                         request_argo.status == 200 ||
-                            //                         request_argo.statusText == "Ok"
-                            //                     ) {
-                            //                         novedadesMidRequest
-                            //                             .post("novedad", self.reinicio_nov)
-                            //                             .then(function (response_nosql) {
-                            //                                 if (
-                            //                                     response_nosql.status == 200 ||
-                            //                                     response_nosql.statusText == "OK"
-                            //                                 ) {
-                            //                                     agoraRequest
-                            //                                         .post("contrato_estado", nuevoEstado)
-                            //                                         .then(function (response) {
-                            //                                             if (
-                            //                                                 response.status == 201 ||
-                            //                                                 Object.keys(response.data) > 0
-                            //                                             ) {
-                            //                                                 self.formato_generacion_pdf();
-                            //                                                 swal(
-                            //                                                     $translate.instant("TITULO_BUEN_TRABAJO"),
-                            //                                                     $translate.instant("DESCRIPCION_REINICIO") +
-                            //                                                     self.contrato_obj.numero_contrato +
-                            //                                                     " " +
-                            //                                                     $translate.instant("ANIO") +
-                            //                                                     ": " +
-                            //                                                     self.contrato_obj.vigencia,
-                            //                                                     "success"
-                            //                                                 ).then(function () {
-                            //                                                     window.location.href =
-                            //                                                         "#/seguimientoycontrol/legal";
-                            //                                                 });
-                            //                                             }
-                            //                                         });
-                            //                                 }
-                            //                             });
-                            //                     };
-                            //                 });
-                            //         }
-                            //     });
                         });
                 } else {
                     console.log("Error", $scope.formReinicio);
