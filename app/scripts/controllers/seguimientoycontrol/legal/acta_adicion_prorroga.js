@@ -333,6 +333,7 @@ angular
                                                         self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
                                                         self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
                                                         self.contrato_obj.cdp_anno = self.cdprp[self.cdprp.length - 1].vigencia;
+                                                        self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
                                                     }
                                                 });
                                             //Consulta el CDP
@@ -394,6 +395,7 @@ angular
                                                         self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
                                                         self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
                                                         self.contrato_obj.cdp_anno = self.cdprp[self.cdprp.length - 1].vigencia;
+                                                        self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
                                                     }
                                                 });
 
@@ -564,22 +566,24 @@ angular
             $scope.click_check_adicion = function () {
                 if ($(".panel_adicion").is(":visible")) {
                     $(".panel_adicion").hide("fast");
-                    self.contrato_obj.NumeroCdp = "";
                     $scope.valor_adicion = "";
                     $scope.nuevo_valor_contrato = "";
+                    $scope.nuevo_valor_contrato_letras = "";
+                    financieraJbpmRequest
+                        .get(
+                            "cdprptercero/" +
+                            self.contrato_obj.contratista_documento
+                        )
+                        .then(function (financiera_response) {
+                            if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
+                                self.contrato_obj.cdp_anno = self.cdprp[self.cdprp.length - 1].vigencia;
+                                self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
+                            }
+                        });
                 } else {
                     $(".panel_adicion").show("fast");
-                    //TO DO: Revisar bien esta petición.
-                    agoraRequest
-                        .get(
-                            "contrato_disponibilidad?query=NumeroContrato:" +
-                            self.contrato_id +
-                            "&Vigencia:" +
-                            self.contrato_vigencia
-                        )
-                        .then(function (response) {
-                            self.contrato_obj.NumeroCdp = response.data[0].NumeroCdp;
-                        });
                 }
             };
 
@@ -701,6 +705,24 @@ angular
                         });
                     $scope.valor_adicion = "0";
                     self.contrato_obj.nuevaFechaFin = self.calcularFechaFin($scope.tiempo_prorroga, false);
+                    $scope.nuevo_valor_contrato = numberFormat(
+                        String(self.contrato_obj.valor)
+                    );
+                    $scope.nuevo_valor_contrato_letras = numeroALetras(
+                        String(self.contrato_obj.valor), {
+                        plural: $translate.instant("PESOS"),
+                        singular: $translate.instant("PESO"),
+                        centPlural: $translate.instant("CENTAVOS"),
+                        centSingular: $translate.instant("CENTAVO"),
+                    }
+                    );
+                    $scope.valor_adicion_letras = numeroALetras("0", {
+                        plural: $translate.instant("PESOS"),
+                        singular: $translate.instant("PESO"),
+                        centPlural: $translate.instant("CENTAVOS"),
+                        centSingular: $translate.instant("CENTAVO"),
+                    });
+                    $scope.valor_adicion = numberFormat("0");
                 }
                 if ($scope.adicion == true && $scope.prorroga == true) {
                     $scope.estado_novedad = "Adición y Prorroga";
@@ -887,28 +909,6 @@ angular
                             cesionario: parseInt(self.contrato_obj.contratista),
                             fechafinefectiva: self.contrato_obj.nuevaFechaFin,
                         };
-                        if ($scope.nuevo_valor_contrato == undefined) {
-                            $scope.nuevo_valor_contrato = numberFormat(
-                                String(self.contrato_obj.valor)
-                            );
-                            $scope.nuevo_valor_contrato_letras = numeroALetras(
-                                String(self.contrato_obj.valor), {
-                                plural: $translate.instant("PESOS"),
-                                singular: $translate.instant("PESO"),
-                                centPlural: $translate.instant("CENTAVOS"),
-                                centSingular: $translate.instant("CENTAVO"),
-                            }
-                            );
-                            $scope.valor_adicion_letras = numeroALetras("0", {
-                                plural: $translate.instant("PESOS"),
-                                singular: $translate.instant("PESO"),
-                                centPlural: $translate.instant("CENTAVOS"),
-                                centSingular: $translate.instant("CENTAVO"),
-                            });
-                            $scope.valor_adicion = numberFormat("0");
-                        }
-                        var fechaNovedad = new Date();
-                        fechaNovedad = self.fecha_prorroga;
                         if ($scope.adicion == true && $scope.prorroga == true) {
                             self.contrato_obj_replica.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
                             self.contrato_obj_replica.VigenciaCdp = parseInt(self.contrato_obj.cdp_anno);
