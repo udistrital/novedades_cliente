@@ -1239,7 +1239,7 @@ angular
                     {
                         style: "table3",
                         table: {
-                            widths: [65, 130, 130, "*"],
+                            widths: [65, 130, 130, 150],
                             body: [
                                 [
                                     { text: "Funcionario", bold: true },
@@ -1249,7 +1249,7 @@ angular
                                 ],
                                 [
                                     { text: "Elaboró", bold: true },
-                                    "" + self.elaboro,
+                                    self.elaboro,
                                     "Abogado Oficina Asesora Jurídica",
                                     "",
                                 ],
