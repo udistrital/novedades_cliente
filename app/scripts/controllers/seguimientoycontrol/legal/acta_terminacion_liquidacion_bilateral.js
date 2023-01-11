@@ -20,6 +20,7 @@ angular.module('contractualClienteApp')
             coreAmazonRequest,
             novedadesMidRequest,
             amazonAdministrativaRequest,
+            financieraJbpmRequest,
             novedadesRequest,
             cumplidosMidRequest,
             pdfMakerService
@@ -205,20 +206,18 @@ angular.module('contractualClienteApp')
                                     });
                                 });
                                 //consulta el CDP y RP
-                                cumplidosMidRequest.get('contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
-                                    agoraRequest.get('contrato_disponibilidad?query=NumeroCdp:' + response.data.Data[0].NumeroCdp + '&VigenciaCdp:' + response.data.Data[0].VigenciaCdp).then(function (response) {
-                                        self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
-                                        self.contrato_obj.cdp_fecha = response.data[0].FechaRegistro;
-                                    });
-                                    self.contrato_obj.rp_numero = response.data.Data[0].NumeroRp;
-                                    self.contrato_obj.rp_fecha = response.data.Data[0].VigenciaRp;
-                                }).catch(function (error) {
-                                    swal(
-                                        $translate.instant('INFORMACION'),
-                                        $translate.instant('No se pudo obtener datos del CDP y del RP'),
-                                        'info'
+                                financieraJbpmRequest
+                                    .get(
+                                        "cdprptercero/" +
+                                        self.contrato_obj.contratista_documento
                                     )
-                                });
+                                    .then(function (financiera_response) {
+                                        if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                            var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                            self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
+                                            self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                                        }
+                                    });
                             });
                         } else {
                             //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
@@ -233,20 +232,18 @@ angular.module('contractualClienteApp')
                                     });
                                 });
                                 //consulta el CDP y RP
-                                cumplidosMidRequest.get('contratos_contratista/' + self.contrato_obj.contratista_documento).then(function (response) {
-                                    agoraRequest.get('contrato_disponibilidad?query=NumeroCdp:' + response.data.Data[0].NumeroCdp + '&VigenciaCdp:' + response.data.Data[0].VigenciaCdp).then(function (response) {
-                                        self.contrato_obj.cdp_numero = response.data[0].NumeroCdp;
-                                        self.contrato_obj.cdp_fecha = response.data[0].FechaRegistro;
-                                    });
-                                    self.contrato_obj.rp_numero = response.data.Data[0].NumeroRp;
-                                    self.contrato_obj.rp_fecha = response.data.Data[0].VigenciaRp;
-                                }).catch(function (error) {
-                                    swal(
-                                        $translate.instant('INFORMACION'),
-                                        $translate.instant('No se pudo obtener datos del CDP y del RP'),
-                                        'info'
+                                financieraJbpmRequest
+                                    .get(
+                                        "cdprptercero/" +
+                                        self.contrato_obj.contratista_documento
                                     )
-                                });
+                                    .then(function (financiera_response) {
+                                        if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                            var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                            self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
+                                            self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                                        }
+                                    });
                             });
                         }
                     });
@@ -426,7 +423,7 @@ angular.module('contractualClienteApp')
                         //Se guarda en la posicion [0] del arreglo estados el estado actual
                         //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a terminacion anticipada - devuelve si es true o false
                         //si es true guardamos la novedad - y enviamos el cambio de estado del contrato
-                        self.selecionarSaldo()
+                        self.selecionarSaldo();
                         agoraRequest.get('contrato_estado?query=NumeroContrato:' + self.contrato_obj.id + ',Vigencia:' + self.contrato_obj.vigencia + '&sortby=Id&order=desc&limit=1').then(function (ce_response) {
                             if (ce_response.data[ce_response.data.length - 1].Estado.NombreEstado == "En ejecucion") {
                                 var estado_temp_from = {
@@ -1161,7 +1158,7 @@ angular.module('contractualClienteApp')
                     {
                         style: 'table3',
                         table: {
-                            widths: [65, 130, 100, '*'],
+                            widths: [65, 130, 130, 150],
                             body: [
                                 [{ text: 'Funcionario', bold: true },
                                 { text: 'Nombre', bold: true },
@@ -1170,20 +1167,19 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'Proyectó', bold: true },
-                                    "" + self.elaboro,
+                                    self.elaboro,
                                     "Abogado Oficina Asesora Jurídica",
-                                    "",
-                                    ''
+                                    ""
                                 ],
                                 [
                                     { text: 'Revisó', bold: true },
-                                    '',
+                                    self.contrato_obj.jefe_juridica_nombre_completo,
                                     'Jefe Oficina Asesora Jurídica',
                                     ''
                                 ],
                                 [
                                     { text: 'Aprobó', bold: true },
-                                    '',
+                                    self.contrato_obj.jefe_juridica_nombre_completo,
                                     'Jefe Oficina Asesora Jurídica',
                                     ''
                                 ],

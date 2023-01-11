@@ -1645,7 +1645,7 @@ angular
                     {
                         style: ["table3"],
                         table: {
-                            widths: [65, 130, 130, "*"],
+                            widths: [65, 130, 130, 150],
                             body: [
                                 [
 
@@ -1656,20 +1656,19 @@ angular
                                 ],
                                 [
                                     { text: "Proyectó", bold: false },
-                                    "" + self.elaboro,
-                                    //"Abogado Oficina Asesora Jurídica",
-                                    "",
+                                    self.elaboro,
+                                    "Abogado Oficina Asesora Jurídica",
                                     "",
                                 ],
                                 [
                                     { text: "Revisó", bold: false },
-                                    "",
-                                    "",
+                                    self.contrato_obj.jefe_juridica_nombre_completo,
+                                    "Jefe Oficina Asesora Jurídica",
                                     "",
                                 ],
                                 [
                                     { text: "Aprobó", bold: false },
-                                    "",
+                                    self.contrato_obj.jefe_juridica_nombre_completo,
                                     "Jefe Oficina Asesora Jurídica",
                                     "",
                                 ]
