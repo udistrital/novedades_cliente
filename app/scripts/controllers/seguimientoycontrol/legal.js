@@ -426,6 +426,17 @@ angular
 
             $scope.editarNovedad = function (novedad) {
 
+                swal(
+                    $translate.instant("INFORMACION"),
+                    $translate.instant(
+                        "Por el momento esta funcionalidad no se encuentra disponible"
+                    ),
+                    "info"
+                );
+            }
+
+            $scope.redirectToSite = function (site) {
+                // console.log("Entra: ", site)
             }
 
             $scope.$watch("documentos", function (newVal) {

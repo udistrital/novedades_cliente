@@ -51,32 +51,38 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
                                             <a
-                                                href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_ADICION_PRORROGA'
+                                                href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}/false">{{'CREAR_NOVEDAD_ADICION_PRORROGA'
                                                 | translate}}</a>
                                         </li>
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 10 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 10 && sLegal.novedadEnCurso == false">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_inicio/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'AGREGAR_POLIZA'
                                                 | translate}}</a>
                                         </li>
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_suspension/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_SUSPENSION'
                                                 | translate}}</a>
                                         </li>
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 2 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 2 && sLegal.novedadEnCurso == false">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_reinicio/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_REINICIO'
                                                 | translate}}</a>
                                         </li>
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_cesion/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_CESION'
                                                 | translate}}</a>
                                         </li>
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_terminacion_liquidacion_bilateral/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_TERMINACION_BILATERAL'
                                                 | translate}}</a>
@@ -208,7 +214,8 @@
                                                 <md-button class="md-icon-button"
                                                     ng-click="verDocumento(documento.enlace)"
                                                     ng-if="self.estado_contrato_obj.estado != 6 && self.estado_contrato_obj.estado != 8"
-                                                    disabled="true">
+                                                    disabled="true"
+                                                    href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}/true">
                                                     <span class="glyphicon glyphicon-edit"></span>
                                                 </md-button>
                                             </center>
