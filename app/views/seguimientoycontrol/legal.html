@@ -12,33 +12,53 @@
             <div style="float:left;margin-bottom:2%;width:100%">
                 <div class="row" style="border:0px solid;">
                     <div class="col-sm-12 col-md-5">
-                        <div class="form-group col-md-12">
-                            <p style="margin:0; display:inline-block; width:40%;">
-                                <b>{{'NUMERO_CONTRATO' | translate}} *:</b>
-                            </p>
-                            <md-input-container style="margin:0; display:inline-block; width:40%;">
-                                <input type="number" id="contrato_id" name="contrato_id" required
-                                    ng-model="sLegal.contrato_id" ng-disabled="false" min="0">
-                                <div ng-messages="formLegal.contrato_id.$error">
-                                    <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                                </div>
-                            </md-input-container>
+                        <div class="row" ng-if="sLegal.contratistaBool">
+                            <div class="form-group col-md-12">
+                                <p style="margin:0; display:inline-block; width:35%;">
+                                    <b>{{'NUMERO_CONTRATO' | translate}}:</b>
+                                </p>
+                                <md-input-container style="margin:0; display:inline-block; width:25%;">
+                                    <input type="text" ng-model="sLegal.contrato_id" ng-disabled="true">
+                                </md-input-container>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <p style="margin:0; display:inline-block; width:35%;">
+                                    <b>{{'VIGENCIA_CONTRATO' | translate}}:</b>
+                                </p>
+                                <md-input-container style="margin:0; display:inline-block; width:25%;">
+                                    <input type="text" ng-model="sLegal.contrato_vigencia" ng-disabled="true">
+                                </md-input-container>
+                            </div>
                         </div>
-                        <div class="form-group col-md-12">
-                            <p style="margin:0; display:inline-block; width:40%;">
-                                <b>{{'VIGENCIA_CONTRATO' | translate}} *:</b>
-                            </p>
-                            <select class="form-control" ng-model="sLegal.contrato_vigencia"
-                                style="margin:0; display:inline-block; width:40%;">
-                                <option ng-repeat="vigencia in vigencias">{{vigencia}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <button class="btn btn-primary dropdown-toggle" ng-click="sLegal.buscar_contrato()">
-                                {{'BTN.BUSCAR' | translate}}
-                                {{'NUMERO_CONTRATO' | translate}}
-                            </button>
-                            <hr style="border-bottom:1px solid #cecdcc;">
+                        <div class="row" ng-if="sLegal.contratistaBool==false">
+                            <div class="form-group col-md-12">
+                                <p style="margin:0; display:inline-block; width:40%;">
+                                    <b>{{'NUMERO_CONTRATO' | translate}} *:</b>
+                                </p>
+                                <md-input-container style="margin:0; display:inline-block; width:40%;">
+                                    <input type="number" id="contrato_id" name="contrato_id" required
+                                        ng-model="sLegal.contrato_id" ng-disabled="false" min="0">
+                                    <div ng-messages="formLegal.contrato_id.$error">
+                                        <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <p style="margin:0; display:inline-block; width:40%;">
+                                    <b>{{'VIGENCIA_CONTRATO' | translate}} *:</b>
+                                </p>
+                                <select class="form-control" ng-model="sLegal.contrato_vigencia"
+                                    style="margin:0; display:inline-block; width:40%;">
+                                    <option ng-repeat="vigencia in vigencias">{{vigencia}}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <button class="btn btn-primary dropdown-toggle" ng-click="sLegal.buscar_contrato()">
+                                    {{'BTN.BUSCAR' | translate}}
+                                    {{'NUMERO_CONTRATO' | translate}}
+                                </button>
+                                <hr style="border-bottom:1px solid #cecdcc;">
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12" style="padding-left:25px;">
@@ -46,7 +66,7 @@
                                 <br>
                                 <div class="btn-group" ng-if="sLegal.estado_resultado_response == true">
                                     <button type="button" id="boton_novedad" class="btn btn-primary dropdown-toggle"
-                                        data-toggle="dropdown">
+                                        data-toggle="dropdown" disabled="sLegal.contratistaBool">
                                         {{'NOVEDADES' | translate}}
                                         <span class="caret"></span>
                                     </button>

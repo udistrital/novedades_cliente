@@ -14,6 +14,7 @@ angular
         function (
             $scope,
             $translate,
+            token_service,
             novedadesMidRequest,
             novedadesRequest,
             agoraRequest,
@@ -31,13 +32,23 @@ angular
             self.estado_resultado_response = false;
             self.estado_contrato_obj.estado = 0;
             self.novedadEnCurso = false;
-            // self.editButton = false;
+            self.contratistaBool = false;
+            self.usuarioJuridica = false;
+            self.rolesUsuario = token_service.getPayload().role;
+            $scope.status = "";
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
                 $scope.vigencias = response.data;
             });
-            // $scope.documentos = [];
-
-            $scope.status = "  ";
+            for (const rol of self.rolesUsuario) {
+                console.log(rol)
+                // if (rol == "ASISTENTE_JURIDICA") {
+                //     self.usuarioJuridica = true;
+                //     self.contratistaBool = false;
+                // }
+                if (rol == "CONTRATISTA" && self.usuarioJuridica == false) {
+                    self.contratistaBool = true;
+                }
+            }
 
 
             /**
@@ -323,6 +334,21 @@ angular
                         );
                     });
             };
+
+            if (self.contratistaBool) {
+                agoraRequest.get(
+                    "informacion_proveedor?query=NumDocumento:" + token_service.getPayload().documento
+                ).then(function (responeIp) {
+                    console.log(responeIp);
+                    agoraRequest.get(
+                        "contrato_general?query=Contratista:" + responeIp.data[0].Id
+                    ).then(function (responseCg) {
+                        self.contrato_id = responseCg.data[0].ContratoSuscrito[0].NumeroContratoSuscrito;
+                        self.contrato_vigencia = responseCg.data[0].ContratoSuscrito[0].Vigencia;
+                        self.buscar_contrato();
+                    });
+                });
+            }
 
             /**
              * @ngdoc method
