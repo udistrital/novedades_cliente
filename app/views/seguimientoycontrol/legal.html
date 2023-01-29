@@ -12,7 +12,7 @@
             <div style="float:left;margin-bottom:2%;width:100%">
                 <div class="row" style="border:0px solid;">
                     <div class="col-sm-12 col-md-5">
-                        <div class="row" ng-if="sLegal.contratistaBool">
+                        <div class="row" ng-if="sLegal.rolActual == 'CONTRATISTA'">
                             <div class="form-group col-md-12">
                                 <p style="margin:0; display:inline-block; width:35%;">
                                     <b>{{'NUMERO_CONTRATO' | translate}}:</b>
@@ -30,7 +30,7 @@
                                 </md-input-container>
                             </div>
                         </div>
-                        <div class="row" ng-if="sLegal.contratistaBool==false">
+                        <div class="row" ng-if="sLegal.rolActual != 'CONTRATISTA'">
                             <div class="form-group col-md-12">
                                 <p style="margin:0; display:inline-block; width:40%;">
                                     <b>{{'NUMERO_CONTRATO' | translate}} *:</b>
@@ -66,7 +66,7 @@
                                 <br>
                                 <div class="btn-group" ng-if="sLegal.estado_resultado_response == true">
                                     <button type="button" id="boton_novedad" class="btn btn-primary dropdown-toggle"
-                                        data-toggle="dropdown" disabled="sLegal.contratistaBool">
+                                        data-toggle="dropdown" ng-disabled="sLegal.rolActual != 'SUPERVISOR'">
                                         {{'NOVEDADES' | translate}}
                                         <span class="caret"></span>
                                     </button>

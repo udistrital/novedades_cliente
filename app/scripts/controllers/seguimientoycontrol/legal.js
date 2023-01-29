@@ -35,18 +35,29 @@ angular
             self.contratistaBool = false;
             self.usuarioJuridica = false;
             self.rolesUsuario = token_service.getPayload().role;
+            self.rolActual = "";
             $scope.status = "";
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
                 $scope.vigencias = response.data;
             });
+
+            // Asignación del rol del usuario
             for (const rol of self.rolesUsuario) {
-                console.log(rol)
-                // if (rol == "ASISTENTE_JURIDICA") {
-                //     self.usuarioJuridica = true;
-                //     self.contratistaBool = false;
-                // }
-                if (rol == "CONTRATISTA" && self.usuarioJuridica == false) {
-                    self.contratistaBool = true;
+                if (rol === 'ORDENADOR_DEL_GASTO') {
+                    self.rolActual = rol;
+                    break;
+                }
+            }
+            if (self.rolActual != 'ORDENADOR_DEL_GASTO') {
+                for (const rol of self.rolesUsuario) {
+                    if (
+                        rol === 'SUPERVISOR' ||
+                        rol === 'ASISTENTE_JURIDICA' ||
+                        rol === 'CONTRATISTA'
+                    ) {
+                        self.rolActual = rol;
+                        break;
+                    }
                 }
             }
 
@@ -144,6 +155,7 @@ angular
                                                             idDocumento: doc_response.data[i].Id,
                                                             enlace: doc_response.data[i].Enlace,
                                                             label: doc_response.data[i].Nombre,
+                                                            // estado: doc_response.data[i].Estado,
                                                             fechaCreacion: doc_response.data[i]
                                                                 .FechaCreacion,
                                                         });
@@ -335,7 +347,7 @@ angular
                     });
             };
 
-            if (self.contratistaBool) {
+            if (self.rolActual == 'CONTRATISTA') {
                 agoraRequest.get(
                     "informacion_proveedor?query=NumDocumento:" + token_service.getPayload().documento
                 ).then(function (responeIp) {
