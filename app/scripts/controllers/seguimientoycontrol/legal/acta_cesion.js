@@ -392,6 +392,34 @@ angular
 
             });
 
+            $scope.validarValorDesembolsado = function (evento) {
+                console.log(typeof self.contrato_obj.valor);
+                console.log(evento.target.value);
+                var valor_cesion = evento.target.value;
+                if (valor_cesion > self.contrato_obj.valor) {
+                    self.valor_desembolsado = undefined;
+                    swal(
+                        $translate.instant("TITULO_ADVERTENCIA"),
+                        "El valor desembolsado debe ser menor al valor del contrato",
+                        "info"
+                    );
+                }
+            }
+
+            $scope.validarValorCedente = function (evento) {
+                console.log(typeof self.contrato_obj.valor);
+                console.log(evento.target.value);
+                var valor_cesion = evento.target.value;
+                if (valor_cesion > self.contrato_obj.valor) {
+                    self.valor_a_favor = undefined;
+                    swal(
+                        $translate.instant("TITULO_ADVERTENCIA"),
+                        "El valor a favor del cedente debe ser menor al valor del contrato",
+                        "info"
+                    );
+                }
+            }
+
             //consulta cesionario
             amazonAdministrativaRequest
                 .get(

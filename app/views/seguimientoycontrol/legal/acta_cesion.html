@@ -148,7 +148,7 @@
                   </label>
                                     <md-input-container style="margin:0;">
                                         <input type="number" name="valor_desembolsado" ng-model="sLactaCesion.valor_desembolsado" required id="valor_desembolsado"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" ng-keyup="validarValorDesembolsado($event)">
                                         <div ng-messages="formCesion.valor_desembolsado.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>
@@ -160,7 +160,7 @@
                   </label>
                                     <md-input-container style="margin:0;">
                                         <input type="number" name="valor_a_favor" ng-model="sLactaCesion.valor_a_favor" required id="valor_a_favor"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" ng-keyup="validarValorCedente($event)">
                                         <div ng-messages="formCesion.valor_a_favor.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>
