@@ -35,7 +35,8 @@ angular
             self.contratistaBool = false;
             self.usuarioJuridica = false;
             self.rolesUsuario = token_service.getPayload().role;
-            self.rolActual = "";
+            self.rolActual = "SUPERVISOR";
+            self.createBool = true;
             $scope.status = "";
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
                 $scope.vigencias = response.data;
@@ -132,6 +133,26 @@ angular
                                     }
                                     if (self.estado_contrato_obj.estado == 3) {
                                         swal($translate.instant("CONTRATO_INICIO"), "", "info");
+                                    }
+                                    if (self.rolActual == "SUPERVISOR") {
+                                        if (agora_response.data[0].Supervisor.Documento.toString() == token_service.getPayload().documento) {
+                                            self.createBool = false;
+                                        } else {
+                                            swal({
+                                                title: $translate.instant("INFORMACION"),
+                                                type: "info",
+                                                html: "El contrato # " +
+                                                    self.contrato_obj.numero_contrato +
+                                                    $translate.instant("ANIO") +
+                                                    self.contrato_obj.vigencia +
+                                                    " No pertenece a la dependencia del supervisor.",
+                                                showCloseButton: false,
+                                                showCancelButton: false,
+                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                allowOutsideClick: false,
+                                            });
+                                            self.createBool = true;
+                                        }
                                     }
                                     //obtener los documentos y soportes por contrato
                                     documentosCrudRequest
@@ -351,7 +372,6 @@ angular
                 agoraRequest.get(
                     "informacion_proveedor?query=NumDocumento:" + token_service.getPayload().documento
                 ).then(function (responeIp) {
-                    console.log(responeIp);
                     agoraRequest.get(
                         "contrato_general?query=Contratista:" + responeIp.data[0].Id
                     ).then(function (responseCg) {
