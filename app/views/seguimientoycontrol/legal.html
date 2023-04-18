@@ -197,7 +197,7 @@
                                             <center>Estado</center>
                                         </th>
                                         <th>
-                                            <center>Ver documento</center>
+                                            <center>Acciones</center>
                                         </th>
                                     </tr>
                                 </thead>
@@ -227,6 +227,10 @@
                                                     ng-if="self.estado_contrato_obj.estado != 6 && self.estado_contrato_obj.estado != 8"
                                                     disabled="true">
                                                     <span class="glyphicon glyphicon-edit"></span>
+                                                </md-button>
+                                                <md-button class="md-icon-button"
+                                                    ng-click="eliminarNovedad('TERMINAD')">
+                                                    <span class="glyphicon glyphicon-trash"></span>
                                                 </md-button>
                                             </center>
                                         </td>

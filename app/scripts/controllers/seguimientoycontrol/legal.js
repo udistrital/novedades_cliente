@@ -428,6 +428,39 @@ angular
 
             }
 
+            $scope.eliminarNovedad = function (estado) {
+                console.log(estado);
+                if (estado != 'TERMINADA') {
+                    swal({
+                        title: $translate.instant("TITULO_BUEN_TRABAJO"),
+                        type: "success",
+                        html: "La novedad para el contrato " +
+                            self.contrato_obj.numero_contrato +
+                            $translate.instant("ANIO") +
+                            self.contrato_obj.vigencia +
+                            " se eliminó correctamente.",
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    })
+                } else {
+                    swal({
+                        title: "Error al eliminar la novedad",
+                        type: "error",
+                        html: "La novedad para el contrato " +
+                            self.contrato_obj.numero_contrato +
+                            $translate.instant("ANIO") +
+                            self.contrato_obj.vigencia +
+                            " se encuentra en estado TERMINADA.",
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    })
+                }
+            }
+
             $scope.$watch("documentos", function (newVal) {
                 if (newVal) {
                     $scope.pages = Math.ceil(

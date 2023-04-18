@@ -29,7 +29,6 @@ angular
             this.awesomeThings = ["HTML5 Boilerplate", "AngularJS", "Karma"];
 
             var self = this;
-            self.f_hoy = new Date();
             self.f_suspension = new Date();
             self.f_finsuspension = new Date();
             self.fechaLimite = new Date();
@@ -40,15 +39,14 @@ angular
             self.contrato_obj = {};
             self.contrato_obj_replica = {};
             self.suspension_obj = {};
-            self.estado_ejecucion = {};
             self.n_solicitud = null;
             self.auxiliar = null;
             self.novedades = [];
+            self.estadoNovedad = "";
             self.novedad_suspension = "";
             self.novedad_reinicio = "";
             self.novedad_motivo = "";
             self.novedad_finsuspension = "";
-            self.auxiliar = null;
             self.elaboro = "";
             self.estados = [];
             self.elaboro_cedula = token_service.getPayload().documento;
@@ -717,22 +715,16 @@ angular
                                 "0001-01-01T00:00:00Z";
                             self.reinicio_nov.periodosuspension = self.diff_dias;
                             self.reinicio_nov.fechasuspension = self.f_suspension;
+                            self.reinicio_nov.fechafinsuspension = self.f_finsuspension;
                             self.reinicio_nov.fechareinicio = self.f_reinicio;
                             self.reinicio_nov.fechafinefectiva = self.calcularFechaFin(self.diff_dias);
                             self.reinicio_nov.observacion = "";
                             self.reinicio_nov.cesionario = parseInt(
                                 self.contrato_obj.contratista
                             );
-                            self.contrato_estado = {};
-                            self.contrato_estado.NumeroContrato =
-                                self.contrato_obj.numero_contrato;
-                            self.contrato_estado.Vigencia = self.contrato_obj.vigencia;
-                            self.contrato_estado.FechaRegistro =
-                                self.contrato_obj.fecha_registro;
-                            self.contrato_estado.Estado = self.estado_ejecucion;
-                            self.contrato_estado.Usuario = "up";
-                            //recolección POST Argo
+                            self.reinicio_nov.estado = "EN_TRAMITE";
 
+                            //recolección POST Argo
                             self.contrato_obj_replica.NumeroContrato = self.suspension_obj.NumeroContrato; //Revisar si toca parsearlo
                             self.contrato_obj_replica.Vigencia = self.suspension_obj.Vigencia; //parseInt(self.contrato_obj.vigencia);
                             self.contrato_obj_replica.FechaRegistro = new Date();//self.suspension_obj.FechaRegistro;
@@ -769,47 +761,73 @@ angular
                                 .then(function (vc_response) {
                                     self.validacion = vc_response.data.Body;
                                     if (self.validacion == "true") {
-                                        novedadesMidRequest
-                                            .put("novedad", self.suspension_obj.id, self.contrato_obj_replica)
-                                            .then(function (request_argo) {
-                                                if (
-                                                    request_argo.status == 200 ||
-                                                    request_argo.statusText == "Ok"
-                                                ) {
-                                                    novedadesMidRequest
-                                                        .post("novedad", self.reinicio_nov)
-                                                        .then(function (response_nosql) {
-                                                            if (
-                                                                response_nosql.status == 200 ||
-                                                                response_nosql.statusText == "OK"
-                                                            ) {
-                                                                agoraRequest
-                                                                    .post("contrato_estado", nuevoEstado)
-                                                                    .then(function (response) {
-                                                                        if (
-                                                                            response.status == 201 ||
-                                                                            Object.keys(response.data) > 0
-                                                                        ) {
-                                                                            self.formato_generacion_pdf();
-                                                                            swal(
-                                                                                $translate.instant("TITULO_BUEN_TRABAJO"),
-                                                                                $translate.instant("DESCRIPCION_REINICIO") +
-                                                                                self.contrato_obj.numero_contrato +
-                                                                                " " +
-                                                                                $translate.instant("ANIO") +
-                                                                                ": " +
-                                                                                self.contrato_obj.vigencia,
-                                                                                "success"
-                                                                            ).then(function () {
-                                                                                window.location.href =
-                                                                                    "#/seguimientoycontrol/legal";
-                                                                            });
-                                                                        }
-                                                                    });
-                                                            }
+                                        if (self.estadoNovedad == "EN_TRAMITE") {
+                                            novedadesMidRequest
+                                                .post("novedad", self.reinicio_nov)
+                                                .then(function (response_nosql) {
+                                                    if (
+                                                        response_nosql.status == 200 ||
+                                                        response_nosql.statusText == "OK"
+                                                    ) {
+                                                        self.formato_generacion_pdf();
+                                                        swal(
+                                                            $translate.instant("TITULO_BUEN_TRABAJO"),
+                                                            $translate.instant("DESCRIPCION_REINICIO") +
+                                                            self.contrato_obj.numero_contrato +
+                                                            " " +
+                                                            $translate.instant("ANIO") +
+                                                            ": " +
+                                                            self.contrato_obj.vigencia,
+                                                            "success"
+                                                        ).then(function () {
+                                                            window.location.href =
+                                                                "#/seguimientoycontrol/legal";
                                                         });
-                                                };
-                                            });
+                                                    }
+                                                });
+                                        } else {
+                                            novedadesMidRequest
+                                                .put("novedad", self.suspension_obj.id, self.contrato_obj_replica)
+                                                .then(function (request_argo) {
+                                                    if (
+                                                        request_argo.status == 200 ||
+                                                        request_argo.statusText == "Ok"
+                                                    ) {
+                                                        novedadesMidRequest
+                                                            .post("novedad", self.reinicio_nov)
+                                                            .then(function (response_nosql) {
+                                                                if (
+                                                                    response_nosql.status == 200 ||
+                                                                    response_nosql.statusText == "OK"
+                                                                ) {
+                                                                    agoraRequest
+                                                                        .post("contrato_estado", nuevoEstado)
+                                                                        .then(function (response) {
+                                                                            if (
+                                                                                response.status == 201 ||
+                                                                                Object.keys(response.data) > 0
+                                                                            ) {
+                                                                                self.formato_generacion_pdf();
+                                                                                swal(
+                                                                                    $translate.instant("TITULO_BUEN_TRABAJO"),
+                                                                                    $translate.instant("DESCRIPCION_REINICIO") +
+                                                                                    self.contrato_obj.numero_contrato +
+                                                                                    " " +
+                                                                                    $translate.instant("ANIO") +
+                                                                                    ": " +
+                                                                                    self.contrato_obj.vigencia,
+                                                                                    "success"
+                                                                                ).then(function () {
+                                                                                    window.location.href =
+                                                                                        "#/seguimientoycontrol/legal";
+                                                                                });
+                                                                            }
+                                                                        });
+                                                                }
+                                                            });
+                                                    };
+                                                });
+                                        }
                                     }
                                 });
                         });
