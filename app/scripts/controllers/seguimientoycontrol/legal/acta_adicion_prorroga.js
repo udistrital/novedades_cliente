@@ -71,6 +71,7 @@ angular
 
             self.novedades = [];
             self.estadoNovedad = "";
+            self.idRegistroNov = "";
             self.novedadOtrosi = false;
 
             const input = document.getElementById("solicitud");
@@ -811,12 +812,14 @@ angular
              * funcion que realiza la inserción de los datos de la novedad
              * eviando la petición POST al MID de Novedades
              */
-            self.PostNovedad = function (dataNovedadPost) {
+            self.PostNovedad = function (enlaceDoc) {
+
+                self.data_acta_adicion_prorroga.enlace = enlaceDoc;
                 novedadesMidRequest
                     .post("novedad", dataNovedadPost)
                     .then(function (request) {
                         if (request.status == 200) {
-                            self.formato_generacion_pdf();
+                            self.idRegistro = request.data.Body.NovedadPoscontractual.Id;
                             swal({
                                 title: $translate.instant("TITULO_BUEN_TRABAJO"),
                                 type: "success",
@@ -881,6 +884,17 @@ angular
 
                 if (self.novedadOtrosi == false) {
                     generateTipoNovedad(function (tiponovedad) {
+                        var fechaActual = self.f_hoy;
+                        if (
+                            (fechaActual.getDate() == self.fecha_prorroga.getDate()
+                                && fechaActual.getMonth() == self.fecha_prorroga.getMonth()
+                                && fechaActual.getFullYear() == self.fecha_prorroga.getFullYear())
+                            || fechaActual > self.fecha_prorroga
+                        ) {
+                            self.estadoNovedad = "4519";
+                        } else {
+                            self.estadoNovedad = "4518";
+                        }
                         //objeto acta adición_prórroga
                         self.data_acta_adicion_prorroga = {
                             contrato: self.contrato_obj.numero_contrato,
@@ -899,7 +913,7 @@ angular
                             tiponovedad: tiponovedad,
                             cesionario: parseInt(self.contrato_obj.contratista),
                             fechafinefectiva: self.contrato_obj.nuevaFechaFin,
-                            estado: "EN_TRAMITE",
+                            estado: self.estadoNovedad,
                         };
                         if ($scope.adicion == true && $scope.prorroga == true) {
                             self.contrato_obj_replica.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
@@ -928,9 +942,8 @@ angular
                             TipoNovedad: parseFloat(220),
                             esFechaActual: false,
                         };
-
-                        if (self.data_acta_adicion_prorroga.estado == "EN_TRAMITE") {
-                            self.PostNovedad(self.data_acta_adicion_prorroga);
+                        if (self.estadoNovedad == "4519") {
+                            self.formato_generacion_pdf();
                         } else {
                             self.contrato_obj_replica.esFechaActual = true;
                             novedadesMidRequest
@@ -1002,13 +1015,12 @@ angular
                     new Date().getMinutes();
                 var docDefinition = self.formato_pdf();
                 pdfMake
-                    .createPdf(docDefinition)
-                    .download(
-                        "acta_adicion_prorroga_contrato_" + self.contrato_id + "_" + dateTime + ".pdf"
-                    );
+                    .createPdf(docDefinition);
+                // .download(
+                //     "acta_adicion_prorroga_contrato_" + self.contrato_id + "_" + dateTime + ".pdf"
+                // );
 
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-
                 pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(
                         data,
@@ -1017,10 +1029,11 @@ angular
                         "_" +
                         dateTime +
                         ".pdf",
-                        self
-                    );
+                        self, function (enlace) {
+                            self.PostNovedad(enlace);
+                        });
                 });
-            };
+            }
 
             /**
              * @ngdoc method

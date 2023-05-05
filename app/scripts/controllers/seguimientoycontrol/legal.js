@@ -129,12 +129,14 @@ angular
                                                         doc_response.data[i].Id !=
                                                         undefined
                                                     ) {
+                                                        var metadatos = JSON.parse(doc_response.data[i].Metadatos)
                                                         $scope.documentos.push({
                                                             idDocumento: doc_response.data[i].Id,
                                                             enlace: doc_response.data[i].Enlace,
                                                             label: doc_response.data[i].Nombre,
                                                             fechaCreacion: doc_response.data[i]
                                                                 .FechaCreacion,
+                                                            estado: metadatos.estado,
                                                         });
                                                     }
                                                 }
@@ -424,40 +426,33 @@ angular
                     });
             }
 
-            $scope.editarNovedad = function (novedad) {
+            $scope.editarNovedad = function (idRegNov) {
 
             }
 
-            $scope.eliminarNovedad = function (estado) {
-                console.log(estado);
-                if (estado != 'TERMINADA') {
-                    swal({
-                        title: $translate.instant("TITULO_BUEN_TRABAJO"),
-                        type: "success",
-                        html: "La novedad para el contrato " +
-                            self.contrato_obj.numero_contrato +
-                            $translate.instant("ANIO") +
-                            self.contrato_obj.vigencia +
-                            " se eliminó correctamente.",
-                        showCloseButton: false,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    })
-                } else {
-                    swal({
-                        title: "Error al eliminar la novedad",
-                        type: "error",
-                        html: "La novedad para el contrato " +
-                            self.contrato_obj.numero_contrato +
-                            $translate.instant("ANIO") +
-                            self.contrato_obj.vigencia +
-                            " se encuentra en estado TERMINADA.",
-                        showCloseButton: false,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    })
+            $scope.eliminarNovedad = function (idRegNov) {
+                if (estado == "EN_TRAMITE") {
+                    estructura = {
+                        "Id": 9530,
+                        "NumeroSolicitud": "7617171",
+                        "ContratoId": 3007,
+                        "NumeroCdpId": 0,
+                        "Motivo": "prueba",
+                        "Aclaracion": "",
+                        "Observacion": "",
+                        "Vigencia": 2023,
+                        "VigenciaCdp": 0,
+                        "FechaCreacion": "2023-02-20 09:03:11.521786 +0000 +0000",
+                        "FechaModificacion": "2023-02-20 09:03:11.521786 +0000 +0000",
+                        "Activo": true,
+                        "TipoNovedad": 3,
+                        "Estado": "TERMINADA"
+                    };
+                    novedadesMidRequest
+                        .put("novedad", idRegNov, estructura)
+                        .then(function (response) {
+                            console.log("Res: ", response)
+                        });
                 }
             }
 

@@ -53,6 +53,8 @@ angular.module('contractualClienteApp')
             self.fecha_solicitud = new Date();
             self.fecha_terminacion_anticipada = new Date();
             self.estados = [];
+            self.estadoNovedad = "";
+            self.idRegistro = "";
             self.elaboro = '';
             self.elaboro_cedula = token_service.getPayload().documento;
 
@@ -313,6 +315,7 @@ angular.module('contractualClienteApp')
                         if (response_nosql.status == 200 || response.statusText == "Ok") {
                             agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
                                 if (response.status == 201 || Object.keys(response.data) > 0) {
+                                    self.idRegistro = response_nosql.data.Body.NovedadPoscontractual.Id;
                                     self.formato_generacion_pdf();
                                     $scope.alert = 'DESCRIPCION_TERMINACION'
                                     swal({
@@ -378,6 +381,17 @@ angular.module('contractualClienteApp')
                     "Vigencia": parseInt(self.contrato_vigencia),
                     "FechaRegistro": new Date()
                 };
+                var fechaActual = new Date();
+                if (
+                    (fechaActual.getDate() == self.fecha_terminacion_anticipada.getDate()
+                        && fechaActual.getMonth() == self.fecha_terminacion_anticipada.getMonth()
+                        && fechaActual.getFullYear() == self.fecha_terminacion_anticipada.getFullYear())
+                    || fechaActual > self.fecha_terminacion_anticipada
+                ) {
+                    self.estadoNovedad = "4519";
+                } else {
+                    self.estadoNovedad = "4518";
+                }
 
                 if ($scope.formTerminacion.$valid) {
                     novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
@@ -396,7 +410,7 @@ angular.module('contractualClienteApp')
                         self.terminacion_nov.saldo_universidad = self.saldo_universidad;
                         self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;
                         self.terminacion_nov.fechafinefectiva = self.fecha_terminacion_anticipada;
-                        self.terminacion_nov.estado = "EN_TRAMITE";
+                        self.terminacion_nov.estado = self.estadoNovedad;
 
                         // Recolección datos objeto POST Replica
                         self.contrato_obj_replica.NumeroContrato = self.contrato_obj.numero_contrato;
@@ -429,7 +443,7 @@ angular.module('contractualClienteApp')
                                 novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                                     if (vc_response.data.Body == "true") {
                                         console.log(self.terminacion_nov)
-                                        if (self.terminacion_nov.estado == "EN_TRAMITE") {
+                                        if (self.terminacion_nov.estado == "4518") {
                                             novedadesMidRequest
                                                 .post('novedad', self.terminacion_nov)
                                                 .then(function (response_nosql) {

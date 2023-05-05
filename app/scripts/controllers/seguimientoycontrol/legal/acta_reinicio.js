@@ -43,6 +43,7 @@ angular
             self.auxiliar = null;
             self.novedades = [];
             self.estadoNovedad = "";
+            self.idRegistroNov = "";
             self.novedad_suspension = "";
             self.novedad_reinicio = "";
             self.novedad_motivo = "";
@@ -694,6 +695,17 @@ angular
                     Vigencia: parseInt(self.contrato_vigencia),
                     FechaRegistro: new Date(),
                 };
+                var fechaActual = new Date();
+                if (
+                    (fechaActual.getDate() == self.f_reinicio.getDate()
+                        && fechaActual.getMonth() == self.f_reinicio.getMonth()
+                        && fechaActual.getFullYear() == self.f_reinicio.getFullYear())
+                    || fechaActual > self.f_reinicio
+                ) {
+                    self.estadoNovedad = "4519";
+                } else {
+                    self.estadoNovedad = "4518";
+                }
                 if ($scope.formReinicio.$valid) {
                     novedadesRequest
                         .get("tipo_novedad", "query=Nombre:Reinicio")
@@ -722,7 +734,7 @@ angular
                             self.reinicio_nov.cesionario = parseInt(
                                 self.contrato_obj.contratista
                             );
-                            self.reinicio_nov.estado = "EN_TRAMITE";
+                            self.reinicio_nov.estado = self.estadoNovedad;
 
                             //recolección POST Argo
                             self.contrato_obj_replica.NumeroContrato = self.suspension_obj.NumeroContrato; //Revisar si toca parsearlo
@@ -761,7 +773,7 @@ angular
                                 .then(function (vc_response) {
                                     self.validacion = vc_response.data.Body;
                                     if (self.validacion == "true") {
-                                        if (self.estadoNovedad == "EN_TRAMITE") {
+                                        if (self.estadoNovedad == "4518") {
                                             novedadesMidRequest
                                                 .post("novedad", self.reinicio_nov)
                                                 .then(function (response_nosql) {
@@ -769,6 +781,7 @@ angular
                                                         response_nosql.status == 200 ||
                                                         response_nosql.statusText == "OK"
                                                     ) {
+                                                        self.idRegistro = response_nosql.data.Body.NovedadPoscontractual.Id;
                                                         self.formato_generacion_pdf();
                                                         swal(
                                                             $translate.instant("TITULO_BUEN_TRABAJO"),
@@ -787,7 +800,7 @@ angular
                                                 });
                                         } else {
                                             novedadesMidRequest
-                                                .put("novedad", self.suspension_obj.id, self.contrato_obj_replica)
+                                                .put("replica", self.suspension_obj.id, self.contrato_obj_replica)
                                                 .then(function (request_argo) {
                                                     if (
                                                         request_argo.status == 200 ||

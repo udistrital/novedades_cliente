@@ -48,9 +48,9 @@ angular
             self.contrato_obj = {};
             self.elaboro = "";
             self.estados = [];
+            self.estadoNovedad = "";
+            self.idRegistro = "";
             self.elaboro_cedula = token_service.getPayload().documento;
-
-            self.estadoNovedad = "EN_TRAMITE";
 
             const solic_input = document.getElementById("n_solicitud");
             solic_input.addEventListener("input", function () {
@@ -369,6 +369,7 @@ angular
                                         response.status == 201 ||
                                         Object.keys(response.data) > 0
                                     ) {
+                                        self.idRegistro = request_novedades.data.Body.NovedadPoscontractual.Id;
                                         self.formato_generacion_pdf();
                                         swal(
                                             $translate.instant(
@@ -447,6 +448,17 @@ angular
                     Vigencia: parseInt(self.contrato_vigencia),
                     FechaRegistro: new Date(),
                 };
+                var fechaActual = new Date();
+                if (
+                    (fechaActual.getDate() == self.f_inicio.getDate()
+                        && fechaActual.getMonth() == self.f_inicio.getMonth()
+                        && fechaActual.getFullYear() == self.f_inicio.getFullYear())
+                    || fechaActual > self.f_inicio
+                ) {
+                    self.estadoNovedad = "4519";
+                } else {
+                    self.estadoNovedad = "4518";
+                }
                 if (self.f_inicio.getDate() == 31) {
                     //respuesta incorrecta, ej: 400/500
                     self.f_inicio = new Date();
@@ -505,7 +517,8 @@ angular
                             self.suspension_nov.fechafinefectiva = self.calcularFechaFin(self.diff_dias);
                             self.suspension_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
                             self.suspension_nov.cesionario = parseInt(
-                                self.contrato_obj.contratista
+                                self.contrato_obj.contratista,
+                            self.suspension_nov.estado = self.estadoNovedad
                             );
                             self.suspension_nov.estado = self.estadoNovedad;
                             self.contrato_estado = {};
@@ -550,7 +563,7 @@ angular
                     //si es true guardamos la novedad - y enviamos el cambio de estado del contrato
                     //Obtiene el estado del contrato.
 
-                    if (self.estadoNovedad == "EN_TRAMITE") {
+                    if (self.estadoNovedad == "4518") {
                         self.postNovedad(nuevoEstado);
                     } else {
                         agoraRequest

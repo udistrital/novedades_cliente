@@ -213,13 +213,12 @@
                                             ng-bind="formatDate(documento.fechaCreacion) |  date:'yyyy-MM-dd H:mm:ss' : 'UTC'">
                                         </td>
                                         <td>
-                                            <center><!-- {{ documento.estado }} --> TERMINADA</center>
+                                            <center>{{ documento.estado }}</center>
                                         </td>
                                         <td>
                                             <center>
                                                 <md-button class="md-icon-button"
-                                                    ng-click="verDocumento(documento.enlace)"
-                                                    >
+                                                    ng-click="verDocumento(documento.enlace)">
                                                     <span class="glyphicon glyphicon-eye-open"></span>
                                                 </md-button>
                                                 <md-button class="md-icon-button"
@@ -229,7 +228,8 @@
                                                     <span class="glyphicon glyphicon-edit"></span>
                                                 </md-button>
                                                 <md-button class="md-icon-button"
-                                                    ng-click="eliminarNovedad('TERMINAD')">
+                                                    ng-click="eliminarNovedad(documento.idRegistro, documento.estado)"
+                                                    disabled="true">
                                                     <span class="glyphicon glyphicon-trash"></span>
                                                 </md-button>
                                             </center>
