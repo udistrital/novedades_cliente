@@ -4,7 +4,7 @@ angular
     .module("contractualClienteApp")
     .factory(
         "pdfMakerService",
-        function ($http, $translate, novedadesMidRequest, novedadesRequest) {
+        function ($http, $translate, novedadesMidRequest, novedadesRequest, $q) {
             var self = {};
             self.imagen = { imagen: "" };
             //TODO: una imagen en base64 en un archivo JSON? por qué no directo
@@ -749,7 +749,7 @@ angular
             };
 
             self.saveDocGestorDoc = function (dataToPDF, nombre, self) {
-                return new Promise((resolve) => {
+                return $q(function (resolve) {
                     var post = [{}];
                     // post[0].IdDocumento = 38;
                     post[0].IdTipoDocumento = 38;
