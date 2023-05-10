@@ -51,7 +51,6 @@ angular
                 "Noviembre",
                 "Diciembre"
             );
-            var inicioOtroSi = "";
             var f = new Date();
             self.fecha.dia_mes = f.getDate();
             self.fecha.mes = meses[f.getMonth()];
@@ -71,6 +70,7 @@ angular
             var adicionProrroga = "";
 
             self.novedades = [];
+            self.estadoNovedad = "";
             self.novedadOtrosi = false;
 
             const input = document.getElementById("solicitud");
@@ -82,8 +82,8 @@ angular
 
             const oficio_input = document.getElementById("oficio");
             oficio_input.addEventListener("input", function () {
-                if (this.value.length > 11) {
-                    this.value = this.value.slice(0, 11);
+                if (this.value.length > 7) {
+                    this.value = this.value.slice(0, 7);
                 }
             })
 
@@ -614,6 +614,7 @@ angular
              * funcion para validar si se selecciono la novedad de adicion - prorroga
              */
             self.comprobar_seleccion_novedad = function () {
+                self.novedadOtrosi = false;
                 if (self.novedadOtrosi == false) {
                     if ($scope.adicion == true || $scope.prorroga == true) {
                         $scope.estado_novedad = true;
@@ -753,9 +754,15 @@ angular
                 if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
                     fechaFinEfectiva = new Date(fechaFin);
+                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    if (fechaFinEfectiva.getDate() == 31) {
+                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    }
                 } else {
                     fechaFin = self.contrato_obj.fin;
+                    // console.log(fechaFin);
                     fechaFinEfectiva = new Date(fechaFin);
+                    // console.log(fechaFinEfectiva);
                     fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
                     if (fechaFinEfectiva.getDate() == 31) {
                         fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
@@ -763,13 +770,14 @@ angular
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
-                console.log("diasNovedad", diasNovedad);
+                // console.log("diasNovedad", diasNovedad);
 
-                console.log("FechaFin: ", nuevaFechaFin);
+                // console.log("FechaFin: ", nuevaFechaFin);
 
                 if (setDate) {
                     self.fecha_prorroga = nuevaFechaFin;
                     self.fecha_prorroga.setDate(self.fecha_prorroga.getDate() + 1);
+                    // console.log(self.fecha_prorroga);
                 } else if (diasNovedad != 0) {
                     diasNovedad = parseInt(diasNovedad) + 1;
                     var fechaAux = new Date(fechaFinEfectiva);
@@ -790,7 +798,7 @@ angular
                     } else if (nuevaFechaFin.getDate() < 31) {
                         nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
                     }
-                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                    // console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
                 return nuevaFechaFin;
             }
@@ -803,12 +811,18 @@ angular
              * funcion que realiza la inserción de los datos de la novedad
              * eviando la petición POST al MID de Novedades
              */
-            self.PostNovedad = function (dataNovedadPost) {
+            self.PostNovedad = function (dataNovedadPost, dateTime, docDefinition, enlaceDoc) {
+                dataNovedadPost.enlace = enlaceDoc;
                 novedadesMidRequest
                     .post("novedad", dataNovedadPost)
                     .then(function (request) {
                         if (request.status == 200) {
-                            self.formato_generacion_pdf();
+                            pdfMake.createPdf(docDefinition).
+                                download(
+                                    "acta_adicion_prorroga_contrato_" +
+                                    self.contrato_id + "_" + dateTime +
+                                    ".pdf"
+                                );
                             swal({
                                 title: $translate.instant("TITULO_BUEN_TRABAJO"),
                                 type: "success",
@@ -859,23 +873,6 @@ angular
                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                             allowOutsideClick: false,
                         }).then(function () { });
-                    })
-                    .catch(function (error) {
-                        //Servidor no disponible
-                        $scope.alert = "DESCRIPCION_ERROR_SUSPENSION";
-                        swal({
-                            title: $translate.instant("TITULO_ERROR_ACTA"),
-                            type: "error",
-                            html: $translate.instant($scope.alert) +
-                                self.contrato_obj.numero_contrato +
-                                $translate.instant("ANIO") +
-                                self.contrato_obj.vigencia +
-                                ".",
-                            showCloseButton: true,
-                            showCancelButton: false,
-                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                            allowOutsideClick: false,
-                        }).then(function () { });
                     });
             }
 
@@ -890,6 +887,17 @@ angular
 
                 if (self.novedadOtrosi == false) {
                     generateTipoNovedad(function (tiponovedad) {
+                        var fechaActual = self.f_hoy;
+                        if (
+                            (fechaActual.getDate() == self.fecha_prorroga.getDate()
+                                && fechaActual.getMonth() == self.fecha_prorroga.getMonth()
+                                && fechaActual.getFullYear() == self.fecha_prorroga.getFullYear())
+                            || fechaActual > self.fecha_prorroga
+                        ) {
+                            self.estadoNovedad = "4519";
+                        } else {
+                            self.estadoNovedad = "4518";
+                        }
                         //objeto acta adición_prórroga
                         self.data_acta_adicion_prorroga = {
                             contrato: self.contrato_obj.numero_contrato,
@@ -908,6 +916,7 @@ angular
                             tiponovedad: tiponovedad,
                             cesionario: parseInt(self.contrato_obj.contratista),
                             fechafinefectiva: self.contrato_obj.nuevaFechaFin,
+                            estado: self.estadoNovedad,
                         };
                         if ($scope.adicion == true && $scope.prorroga == true) {
                             self.contrato_obj_replica.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
@@ -922,25 +931,23 @@ angular
                         }
 
                         //Recolección datos objeto POST Replica
-                        self.contrato_obj_replica.esFechaActual = false;
-                        self.contrato_obj_replica.NumeroContrato = self.contrato_obj.numero_contrato //Revisar si toca parsearlo
-                        self.contrato_obj_replica.Vigencia = parseInt(self.contrato_obj.vigencia);
-                        self.contrato_obj_replica.FechaRegistro = self.f_hoy;
-                        self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
-                        self.contrato_obj_replica.Documento = self.contrato_obj.contratista_documento;
-                        self.contrato_obj_replica.PlazoEjecucion = parseInt($scope.valor_prorroga_final);
-                        self.contrato_obj_replica.FechaInicio = self.fecha_prorroga;
-                        self.contrato_obj_replica.FechaFin = new Date(self.contrato_obj.nuevaFechaFin);
-                        self.contrato_obj_replica.ValorNovedad = parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, ""));
-                        self.contrato_obj_replica.UnidadEjecucion = 205;
-                        self.contrato_obj_replica.TipoNovedad = parseFloat(220);
-                        var fechaActual = new Date();
-                        if (
-                            (fechaActual.getDate() == self.contrato_obj_replica.FechaInicio.getDate()
-                                && fechaActual.getMonth() == self.contrato_obj_replica.FechaInicio.getMonth()
-                                && fechaActual.getFullYear() == self.contrato_obj_replica.FechaInicio.getFullYear())
-                            || fechaActual > self.contrato_obj_replica.FechaInicio
-                        ) {
+                        self.contrato_obj_replica = {
+                            NumeroContrato: self.contrato_obj.numero_contrato,
+                            Vigencia: parseInt(self.contrato_obj.vigencia),
+                            FechaRegistro: self.f_hoy,
+                            Contratista: parseFloat(self.contrato_obj.contratista, 64),
+                            Documento: self.contrato_obj.contratista_documento,
+                            PlazoEjecucion: parseInt($scope.tiempo_prorroga),
+                            FechaInicio: self.fecha_prorroga,
+                            FechaFin: new Date(self.contrato_obj.nuevaFechaFin),
+                            ValorNovedad: parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, "")),
+                            UnidadEjecucion: 205,
+                            TipoNovedad: parseFloat(220),
+                            esFechaActual: false,
+                        };
+                        if (self.estadoNovedad == "4518") {
+                            self.formato_generacion_pdf(self.data_acta_adicion_prorroga);
+                        } else {
                             self.contrato_obj_replica.esFechaActual = true;
                             novedadesMidRequest
                                 .post("replica", self.contrato_obj_replica)
@@ -949,7 +956,7 @@ angular
                                         request_novedades.status == 200 ||
                                         request_novedades.statusText == "OK"
                                     ) {
-                                        self.PostNovedad(self.data_acta_adicion_prorroga);
+                                        self.formato_generacion_pdf(self.data_acta_adicion_prorroga);
                                         console.log("Replica correcta");
                                     }
                                 }).catch(function (error) {
@@ -968,9 +975,7 @@ angular
                                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                         allowOutsideClick: false,
                                     }).then(function () { });
-                                })
-                        } else {
-                            self.PostNovedad(self.data_acta_adicion_prorroga);
+                                });
                         }
                     });
                 } else {
@@ -999,7 +1004,7 @@ angular
              * @description
              * funcion que permite generar el PDF del acta
              */
-            self.formato_generacion_pdf = function () {
+            self.formato_generacion_pdf = async function (dataNovedad) {
 
                 var dateTime =
                     new Date().getFullYear() +
@@ -1011,17 +1016,11 @@ angular
                     new Date().getHours() +
                     "" +
                     new Date().getMinutes();
+
                 var docDefinition = self.formato_pdf();
-                pdfMake
-                    .createPdf(docDefinition)
-                    .download(
-                        "acta_adicion_prorroga_contrato_" + self.contrato_id + "_" + dateTime + ".pdf"
-                    );
-
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-
-                pdfDocGenerator.getBase64(function (data) {
-                    pdfMakerService.saveDocGestorDoc(
+                await pdfDocGenerator.getBase64(async function (data) {
+                    var enlace = await pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_adicion_prorroga_contrato_" +
                         self.contrato_id +
@@ -1030,8 +1029,9 @@ angular
                         ".pdf",
                         self
                     );
+                    self.PostNovedad(dataNovedad, dateTime, docDefinition, enlace);
                 });
-            };
+            }
 
             /**
              * @ngdoc method
