@@ -394,8 +394,8 @@ angular
             });
 
             $scope.validarValorDesembolsado = function (evento) {
-                console.log(typeof self.contrato_obj.valor);
-                console.log(evento.target.value);
+                // console.log(typeof self.contrato_obj.valor);
+                // console.log(evento.target.value);
                 var valor_cesion = evento.target.value;
                 if (valor_cesion > self.contrato_obj.valor) {
                     self.valor_desembolsado = undefined;
@@ -408,8 +408,8 @@ angular
             }
 
             $scope.validarValorCedente = function (evento) {
-                console.log(typeof self.contrato_obj.valor);
-                console.log(evento.target.value);
+                // console.log(typeof self.contrato_obj.valor);
+                // console.log(evento.target.value);
                 var valor_cesion = evento.target.value;
                 if (valor_cesion > self.contrato_obj.valor) {
                     self.valor_a_favor = undefined;
@@ -489,7 +489,8 @@ angular
              * funcion que realiza la inserción de los datos de la novedad
              * enviando la petición POST al MID de Novedades
              */
-            self.postNovedad = function () {
+            self.postNovedad = function (output, dateTime, enlaceDoc) {
+                self.cesion_nov.enlace = enlaceDoc;
                 novedadesMidRequest
                     .post("novedad", self.cesion_nov)
                     .then(function (request_novedades) {
@@ -497,8 +498,15 @@ angular
                             request_novedades.status == 200 ||
                             request_novedades.statusText == "OK"
                         ) {
-                            self.idRegistro = request_novedades.data.Body.NovedadPoscontractual.Id;
-                            self.formato_generacion_pdf();
+                            pdfMake
+                                .createPdf(output)
+                                .download(
+                                    "acta_cesion_contrato_" +
+                                    self.contrato_id +
+                                    "_" +
+                                    dateTime +
+                                    ".pdf"
+                                );
                             swal(
                                 $translate.instant("TITULO_BUEN_TRABAJO"),
                                 $translate.instant("DESCRIPCION_CESION") +
@@ -668,7 +676,7 @@ angular
                                                     self.contrato_obj_replica.TipoNovedad = parseFloat(219);
                                                 }
 
-                                                if (self.estadoNovedad == "4518") {
+                                                if (self.estadoNovedad == "4519") {
                                                     self.contrato_obj_replica.esFechaActual = true;
                                                     novedadesMidRequest
                                                         .post("replica", self.contrato_obj_replica)
@@ -678,7 +686,7 @@ angular
                                                                 request_replica.statusText == "OK"
                                                             ) {
                                                                 console.log("Replica correcta");
-                                                                self.PostNovedad();
+                                                                self.formato_generacion_pdf();
                                                             }
                                                         }).catch(function (error) {
                                                             //Error en la replica
@@ -698,7 +706,7 @@ angular
                                                             }).then(function () { });
                                                         })
                                                 } else {
-                                                    self.PostNovedad();
+                                                    self.formato_generacion_pdf();
                                                 }
                                             });
                                     });
@@ -750,7 +758,7 @@ angular
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
-                console.log("FechaFin: ", nuevaFechaFin);
+                // console.log("FechaFin: ", nuevaFechaFin);
                 return nuevaFechaFin;
             }
 
@@ -1042,7 +1050,7 @@ angular
              * @description
              * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
              */
-            self.formato_generacion_pdf = function () {
+            self.formato_generacion_pdf = async function () {
                 var dateTime =
                     new Date().getFullYear() +
                     "" +
@@ -1056,21 +1064,13 @@ angular
                 //console.log("acá se ve la fecha", dateTime);
                 var output = self.get_plantilla();
                 //console.log("acá se ve el output",output);
-                pdfMake
-                    .createPdf(output)
-                    .download(
-                        "acta_cesion_contrato_" +
-                        self.contrato_id +
-                        "_" +
-                        dateTime +
-                        ".pdf"
-                    );
+
                 //console.log("antes del Generator");
                 const pdfDocGenerator = pdfMake.createPdf(output);
                 //console.log("acá se ve la el pdf", pdfDocGenerator);
-                pdfDocGenerator.getBase64(function (data) {
+                await pdfDocGenerator.getBase64(async function (data) {
                     //console.log("acá se ve la data", data);
-                    pdfMakerService.saveDocGestorDoc(
+                    var enlace = await pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_cesion_contrato_" +
                         self.contrato_id +
@@ -1079,6 +1079,7 @@ angular
                         ".pdf",
                         self
                     );
+                    self.postNovedad(output, dateTime, enlace);
                 });
             };
 

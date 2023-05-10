@@ -185,7 +185,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <center>Nombre</center>
+                                            <center>Tipo Novedad</center>
                                         </th>
                                         <th>
                                             <center>Enlace</center>
@@ -202,33 +202,34 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="documento in documentos | limitTo:numLimit:start">
+                                    <tr ng-repeat="novedad in novedadesTabla | limitTo:numLimit:start">
                                         <td>
-                                            {{ documento.label }}
+                                            <center>{{ novedad.tipoNovedad }}</center>
                                         </td>
                                         <td>
-                                            <center>{{ documento.enlace }}</center>
+                                            <center>{{ novedad.enlace }}</center>
                                         </td>
                                         <td class="text-center"
-                                            ng-bind="formatDate(documento.fechaCreacion) |  date:'yyyy-MM-dd H:mm:ss' : 'UTC'">
+                                            ng-bind="formatDate(novedad.fecha) |  date:'yyyy-MM-dd H:mm:ss' : 'UTC'">
                                         </td>
                                         <td>
-                                            <center>{{ documento.estado }}</center>
+                                            <center>{{ novedad.estado }}</center>
                                         </td>
                                         <td>
                                             <center>
                                                 <md-button class="md-icon-button"
-                                                    ng-click="verDocumento(documento.enlace)">
+                                                    ng-click="verDocumento(novedad.enlace)"
+                                                    ng-disabled="novedad.enlace == ''">
                                                     <span class="glyphicon glyphicon-eye-open"></span>
                                                 </md-button>
                                                 <md-button class="md-icon-button"
-                                                    ng-click="verDocumento(documento.enlace)"
+                                                    ng-click="verDocumento(novedad.enlace)"
                                                     ng-if="self.estado_contrato_obj.estado != 6 && self.estado_contrato_obj.estado != 8"
                                                     disabled="true">
                                                     <span class="glyphicon glyphicon-edit"></span>
                                                 </md-button>
                                                 <md-button class="md-icon-button"
-                                                    ng-click="eliminarNovedad(documento.idRegistro, documento.estado)"
+                                                    ng-click="eliminarNovedad(novedad.id)"
                                                     disabled="true">
                                                     <span class="glyphicon glyphicon-trash"></span>
                                                 </md-button>

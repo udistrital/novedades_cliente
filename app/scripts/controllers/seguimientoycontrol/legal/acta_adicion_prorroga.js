@@ -71,7 +71,6 @@ angular
 
             self.novedades = [];
             self.estadoNovedad = "";
-            self.idRegistroNov = "";
             self.novedadOtrosi = false;
 
             const input = document.getElementById("solicitud");
@@ -761,9 +760,9 @@ angular
                     }
                 } else {
                     fechaFin = self.contrato_obj.fin;
-                    console.log(fechaFin);
+                    // console.log(fechaFin);
                     fechaFinEfectiva = new Date(fechaFin);
-                    console.log(fechaFinEfectiva);
+                    // console.log(fechaFinEfectiva);
                     fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
                     if (fechaFinEfectiva.getDate() == 31) {
                         fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
@@ -771,14 +770,14 @@ angular
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
-                console.log("diasNovedad", diasNovedad);
+                // console.log("diasNovedad", diasNovedad);
 
-                console.log("FechaFin: ", nuevaFechaFin);
+                // console.log("FechaFin: ", nuevaFechaFin);
 
                 if (setDate) {
                     self.fecha_prorroga = nuevaFechaFin;
                     self.fecha_prorroga.setDate(self.fecha_prorroga.getDate() + 1);
-                    console.log(self.fecha_prorroga);
+                    // console.log(self.fecha_prorroga);
                 } else if (diasNovedad != 0) {
                     diasNovedad = parseInt(diasNovedad) + 1;
                     var fechaAux = new Date(fechaFinEfectiva);
@@ -799,7 +798,7 @@ angular
                     } else if (nuevaFechaFin.getDate() < 31) {
                         nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
                     }
-                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                    // console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
                 return nuevaFechaFin;
             }
@@ -812,14 +811,18 @@ angular
              * funcion que realiza la inserción de los datos de la novedad
              * eviando la petición POST al MID de Novedades
              */
-            self.PostNovedad = function (enlaceDoc) {
-
-                self.data_acta_adicion_prorroga.enlace = enlaceDoc;
+            self.PostNovedad = function (dataNovedadPost, dateTime, docDefinition, enlaceDoc) {
+                dataNovedadPost.enlace = enlaceDoc;
                 novedadesMidRequest
                     .post("novedad", dataNovedadPost)
                     .then(function (request) {
                         if (request.status == 200) {
-                            self.idRegistro = request.data.Body.NovedadPoscontractual.Id;
+                            pdfMake.createPdf(docDefinition).
+                                download(
+                                    "acta_adicion_prorroga_contrato_" +
+                                    self.contrato_id + "_" + dateTime +
+                                    ".pdf"
+                                );
                             swal({
                                 title: $translate.instant("TITULO_BUEN_TRABAJO"),
                                 type: "success",
@@ -942,8 +945,8 @@ angular
                             TipoNovedad: parseFloat(220),
                             esFechaActual: false,
                         };
-                        if (self.estadoNovedad == "4519") {
-                            self.formato_generacion_pdf();
+                        if (self.estadoNovedad == "4518") {
+                            self.formato_generacion_pdf(self.data_acta_adicion_prorroga);
                         } else {
                             self.contrato_obj_replica.esFechaActual = true;
                             novedadesMidRequest
@@ -953,7 +956,7 @@ angular
                                         request_novedades.status == 200 ||
                                         request_novedades.statusText == "OK"
                                     ) {
-                                        self.PostNovedad(self.data_acta_adicion_prorroga);
+                                        self.formato_generacion_pdf(self.data_acta_adicion_prorroga);
                                         console.log("Replica correcta");
                                     }
                                 }).catch(function (error) {
@@ -1001,7 +1004,7 @@ angular
              * @description
              * funcion que permite generar el PDF del acta
              */
-            self.formato_generacion_pdf = function () {
+            self.formato_generacion_pdf = async function (dataNovedad) {
 
                 var dateTime =
                     new Date().getFullYear() +
@@ -1013,25 +1016,20 @@ angular
                     new Date().getHours() +
                     "" +
                     new Date().getMinutes();
-                var docDefinition = self.formato_pdf();
-                pdfMake
-                    .createPdf(docDefinition);
-                // .download(
-                //     "acta_adicion_prorroga_contrato_" + self.contrato_id + "_" + dateTime + ".pdf"
-                // );
 
+                var docDefinition = self.formato_pdf();
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-                pdfDocGenerator.getBase64(function (data) {
-                    pdfMakerService.saveDocGestorDoc(
+                await pdfDocGenerator.getBase64(async function (data) {
+                    var enlace = await pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_adicion_prorroga_contrato_" +
                         self.contrato_id +
                         "_" +
                         dateTime +
                         ".pdf",
-                        self, function (enlace) {
-                            self.PostNovedad(enlace);
-                        });
+                        self
+                    );
+                    self.PostNovedad(dataNovedad, dateTime, docDefinition, enlace);
                 });
             }
 

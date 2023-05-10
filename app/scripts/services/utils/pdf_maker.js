@@ -748,7 +748,7 @@ angular
                 return amount_parts.join(".");
             };
 
-            self.saveDocGestorDoc = function (dataToPDF, nombre, self, callback) {
+            self.saveDocGestorDoc = async function (dataToPDF, nombre, self) {
                 var post = [{}];
                 // post[0].IdDocumento = 38;
                 post[0].IdTipoDocumento = 38;
@@ -761,14 +761,15 @@ angular
                     estado: self.estadoNovedad,
                     idNovedad: self.idRegistro,
                 };
-                novedadesMidRequest
-                    .post("gestor_documental", post)
-                    .then(function (response) {
-                        if (response.status == 200) {
-                            var enlace = response.data.Body.Enlace;
-                            callback(enlace);
-                        }
-                    });
+                var enlaceResponse = await novedadesMidRequest.post("gestor_documental", post);
+                return enlaceResponse.data.Body.Enlace;
+                // novedadesMidRequest
+                //     .post("gestor_documental", post)
+                //     .then(async function (response) {
+                //         if (response.status == 200) {
+                //             var enlace = await response.data.Body.Enlace;
+                //         }
+                //     });
             };
 
             return self;
