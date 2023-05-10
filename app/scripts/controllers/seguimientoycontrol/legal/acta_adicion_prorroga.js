@@ -569,6 +569,8 @@ angular
                     $scope.valor_adicion = "";
                     $scope.nuevo_valor_contrato = "";
                     $scope.nuevo_valor_contrato_letras = "";
+                } else {
+                    $(".panel_adicion").show("fast");
                     financieraJbpmRequest
                         .get(
                             "cdprptercero/" +
@@ -582,8 +584,6 @@ angular
                                 self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
                             }
                         });
-                } else {
-                    $(".panel_adicion").show("fast");
                 }
             };
 
