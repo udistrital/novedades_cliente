@@ -811,10 +811,10 @@ angular
              * funcion que realiza la inserción de los datos de la novedad
              * eviando la petición POST al MID de Novedades
              */
-            self.PostNovedad = function (dataNovedadPost, dateTime, docDefinition, enlaceDoc) {
+            self.PostNovedad = function (dateTime, docDefinition, enlaceDoc) {
                 self.data_acta_adicion_prorroga.enlace = enlaceDoc;
                 novedadesMidRequest
-                    .post("novedad", dataNovedadPost)
+                    .post("novedad", self.data_acta_adicion_prorroga)
                     .then(function (request) {
                         if (request.status == 200) {
                             pdfMake.createPdf(docDefinition).
@@ -930,55 +930,53 @@ angular
                             self.contrato_obj_replica.VigenciaCdp = 0;
                         }
 
-                        formato_generacion_pdf(self.data_acta_adicion_prorroga);
-
-                        // //Recolección datos objeto POST Replica
-                        // self.contrato_obj_replica = {
-                        //     NumeroContrato: self.contrato_obj.numero_contrato,
-                        //     Vigencia: parseInt(self.contrato_obj.vigencia),
-                        //     FechaRegistro: self.f_hoy,
-                        //     Contratista: parseFloat(self.contrato_obj.contratista, 64),
-                        //     Documento: self.contrato_obj.contratista_documento,
-                        //     PlazoEjecucion: parseInt($scope.tiempo_prorroga),
-                        //     FechaInicio: self.fecha_prorroga,
-                        //     FechaFin: new Date(self.contrato_obj.nuevaFechaFin),
-                        //     ValorNovedad: parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, "")),
-                        //     UnidadEjecucion: 205,
-                        //     TipoNovedad: parseFloat(220),
-                        //     esFechaActual: false,
-                        // };
-                        // if (self.estadoNovedad == "4518") {
-                        //     self.formato_generacion_pdf(self.data_acta_adicion_prorroga);
-                        // } else {
-                        //     self.contrato_obj_replica.esFechaActual = true;
-                        //     novedadesMidRequest
-                        //         .post("replica", self.contrato_obj_replica)
-                        //         .then(function (request_novedades) {
-                        //             if (
-                        //                 request_novedades.status == 200 ||
-                        //                 request_novedades.statusText == "OK"
-                        //             ) {
-                        //                 formato_generacion_pdf(self.data_acta_adicion_prorroga);
-                        //                 console.log("Replica correcta");
-                        //             }
-                        //         }).catch(function (error) {
-                        //             //Error en la replica
-                        //             $scope.alert = "TITULO_ERROR_REPLICA";
-                        //             swal({
-                        //                 title: $translate.instant("TITULO_ERROR_ACTA"),
-                        //                 type: "error",
-                        //                 html: $translate.instant($scope.alert) +
-                        //                     self.contrato_obj.numero_contrato +
-                        //                     $translate.instant("ANIO") +
-                        //                     self.contrato_obj.vigencia +
-                        //                     ".",
-                        //                 showCloseButton: true,
-                        //                 showCancelButton: false,
-                        //                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        //                 allowOutsideClick: false,
-                        //             }).then(function () { });
-                        //         });
-                        // }
+                        //Recolección datos objeto POST Replica
+                        self.contrato_obj_replica = {
+                            NumeroContrato: self.contrato_obj.numero_contrato,
+                            Vigencia: parseInt(self.contrato_obj.vigencia),
+                            FechaRegistro: self.f_hoy,
+                            Contratista: parseFloat(self.contrato_obj.contratista, 64),
+                            Documento: self.contrato_obj.contratista_documento,
+                            PlazoEjecucion: parseInt($scope.tiempo_prorroga),
+                            FechaInicio: self.fecha_prorroga,
+                            FechaFin: new Date(self.contrato_obj.nuevaFechaFin),
+                            ValorNovedad: parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, "")),
+                            UnidadEjecucion: 205,
+                            TipoNovedad: parseFloat(220),
+                            esFechaActual: false,
+                        };
+                        if (self.estadoNovedad == "4518") {
+                            self.formato_generacion_pdf();
+                        } else {
+                            self.contrato_obj_replica.esFechaActual = true;
+                            novedadesMidRequest
+                                .post("replica", self.contrato_obj_replica)
+                                .then(function (request_novedades) {
+                                    if (
+                                        request_novedades.status == 200 ||
+                                        request_novedades.statusText == "OK"
+                                    ) {
+                                        formato_generacion_pdf();
+                                        console.log("Replica correcta");
+                                    }
+                                }).catch(function (error) {
+                                    //Error en la replica
+                                    $scope.alert = "TITULO_ERROR_REPLICA";
+                                    swal({
+                                        title: $translate.instant("TITULO_ERROR_ACTA"),
+                                        type: "error",
+                                        html: $translate.instant($scope.alert) +
+                                            self.contrato_obj.numero_contrato +
+                                            $translate.instant("ANIO") +
+                                            self.contrato_obj.vigencia +
+                                            ".",
+                                        showCloseButton: true,
+                                        showCancelButton: false,
+                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                        allowOutsideClick: false,
+                                    }).then(function () { });
+                                });
+                        }
                     });
                 } else {
                     $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA2";
@@ -1006,7 +1004,7 @@ angular
              * @description
              * funcion que permite generar el PDF del acta
              */
-            async function formato_generacion_pdf(dataNovedad) {
+            async function formato_generacion_pdf() {
 
                 var dateTime =
                     new Date().getFullYear() +
@@ -1029,7 +1027,7 @@ angular
                         dateTime +
                         ".pdf",
                         self).then(function (enlace) {
-                            self.PostNovedad(dataNovedad, dateTime, docDefinition, enlace);
+                            self.PostNovedad(dateTime, docDefinition, enlace);
                         });
                 });
             }
