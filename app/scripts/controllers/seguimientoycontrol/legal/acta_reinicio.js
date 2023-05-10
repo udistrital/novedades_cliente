@@ -981,7 +981,7 @@ angular
                 // "_" +
                 // dateTime +
                 // ".pdf")
-                $location.path("/seguimientoycontrol/legal");
+                // $location.path("/seguimientoycontrol/legal");
 
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
                 await pdfDocGenerator.getBase64(async function (data) {
