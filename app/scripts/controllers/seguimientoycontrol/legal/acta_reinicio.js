@@ -863,13 +863,14 @@ angular
                                     ) {
                                         var estado_temp_from = {
                                             NombreEstado: "suspendido",
-                                        };
-                                    }
+                                        };                                    }
+
 
                                     self.estados[0] = estado_temp_from;
                                     self.formato_generacion_pdf(nuevoEstado);
 
                                 });
+
                         });
                 } else {
                     console.log("Error", $scope.formReinicio);
