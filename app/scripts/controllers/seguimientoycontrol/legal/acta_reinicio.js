@@ -867,7 +867,7 @@ angular
                                     }
 
                                     self.estados[0] = estado_temp_from;
-                                    self.formato_generacion_pdf(nuevoEstado);
+                                    formato_generacion_pdf(nuevoEstado);
 
                                 });
                         });
@@ -961,7 +961,7 @@ angular
              * @description
              * Funcion para la obtencion de la plantilla para la generacion del pdf del acta
              */
-            self.formato_generacion_pdf = async function (nuevoEstado) {
+            async function formato_generacion_pdf(nuevoEstado) {
 
                 var dateTime =
                     new Date().getFullYear() +
@@ -983,8 +983,8 @@ angular
                 // $location.path("/seguimientoycontrol/legal");
 
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-                await pdfDocGenerator.getBase64(async function (data) {
-                    var enlace = await pdfMakerService.saveDocGestorDoc(
+                await pdfDocGenerator.getBase64(function (data) {
+                    pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_reinicio_contrato_" +
                         self.contrato_id +
@@ -992,8 +992,10 @@ angular
                         dateTime +
                         ".pdf",
                         self
-                    );
-                    self.postNovedad(nuevoEstado, docDefinition, dateTime, enlace);
+                    ).then(function (enlace) {
+                        self.postNovedad(nuevoEstado, docDefinition, dateTime, enlace);
+                    });
+
                 });
             };
 
