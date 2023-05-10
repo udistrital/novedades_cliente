@@ -51,32 +51,38 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_ADICION_PRORROGA'
                                                 | translate}}</a>
                                         </li>
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 10 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 10 && sLegal.novedadEnCurso == false">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_inicio/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'AGREGAR_POLIZA'
                                                 | translate}}</a>
                                         </li>
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_suspension/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_SUSPENSION'
                                                 | translate}}</a>
                                         </li>
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 2 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 2 && sLegal.novedadEnCurso == false">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_reinicio/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_REINICIO'
                                                 | translate}}</a>
                                         </li>
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_cesion/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_CESION'
                                                 | translate}}</a>
                                         </li>
-                                        <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_terminacion_liquidacion_bilateral/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_TERMINACION_BILATERAL'
                                                 | translate}}</a>
@@ -165,7 +171,7 @@
                 </div>
             </div>
             <center>
-                <div class="row" style="border:0px solid; width:60%;" ng-if="sLegal.estado_resultado_response == true">
+                <div class="row" style="border:0px solid; width:70%;" ng-if="sLegal.estado_resultado_response == true">
                     <div class="col-sm-12 col-md-12">
                         <div class=" panel panel-default">
                             <div class="panel-heading">
@@ -179,7 +185,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <center>Nombre</center>
+                                            <center>Tipo Novedad</center>
                                         </th>
                                         <th>
                                             <center>Enlace</center>
@@ -188,28 +194,44 @@
                                             <center>Fecha creacion</center>
                                         </th>
                                         <th>
-                                            <center>Ver documento</center>
+                                            <center>Estado</center>
+                                        </th>
+                                        <th>
+                                            <center>Acciones</center>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="documento in documentos | limitTo:numLimit:start">
-                                        <td>{{ documento.label }}</td>
-                                        <td>{{ documento.enlace }}</td>
-                                        <td
-                                            ng-bind="formatDate(documento.fechaCreacion) |  date:'yyyy-MM-dd H:mm:ss' : 'UTC'">
+                                    <tr ng-repeat="novedad in novedadesTabla | limitTo:numLimit:start">
+                                        <td>
+                                            <center>{{ novedad.tipoNovedad }}</center>
+                                        </td>
+                                        <td>
+                                            <center>{{ novedad.enlace }}</center>
+                                        </td>
+                                        <td class="text-center"
+                                            ng-bind="formatDate(novedad.fecha) |  date:'yyyy-MM-dd H:mm:ss' : 'UTC'">
+                                        </td>
+                                        <td>
+                                            <center>{{ novedad.estado }}</center>
                                         </td>
                                         <td>
                                             <center>
                                                 <md-button class="md-icon-button"
-                                                    ng-click="verDocumento(documento.enlace)">
+                                                    ng-click="verDocumento(novedad.enlace)"
+                                                    ng-disabled="novedad.enlace == ''">
                                                     <span class="glyphicon glyphicon-eye-open"></span>
                                                 </md-button>
                                                 <md-button class="md-icon-button"
-                                                    ng-click="verDocumento(documento.enlace)"
+                                                    ng-click="verDocumento(novedad.enlace)"
                                                     ng-if="self.estado_contrato_obj.estado != 6 && self.estado_contrato_obj.estado != 8"
                                                     disabled="true">
                                                     <span class="glyphicon glyphicon-edit"></span>
+                                                </md-button>
+                                                <md-button class="md-icon-button"
+                                                    ng-click="eliminarNovedad(novedad.id)"
+                                                    disabled="true">
+                                                    <span class="glyphicon glyphicon-trash"></span>
                                                 </md-button>
                                             </center>
                                         </td>
