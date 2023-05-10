@@ -25,7 +25,8 @@ angular
             financieraJbpmRequest,
             titanMidRequest,
             cumplidosMidRequest,
-            pdfMakerService
+            pdfMakerService,
+            $q
         ) {
             this.awesomeThings = ["HTML5 Boilerplate", "AngularJS", "Karma"];
             var valor_adicion = 0;
@@ -946,7 +947,7 @@ angular
                             esFechaActual: false,
                         };
                         if (self.estadoNovedad == "4518") {
-                            formato_generacion_pdf();
+                            self.formato_generacion_pdf();
                         } else {
                             self.contrato_obj_replica.esFechaActual = true;
                             novedadesMidRequest
@@ -956,7 +957,7 @@ angular
                                         request_novedades.status == 200 ||
                                         request_novedades.statusText == "OK"
                                     ) {
-                                        formato_generacion_pdf();
+                                        self.formato_generacion_pdf();
                                         console.log("Replica correcta");
                                     }
                                 }).catch(function (error) {
@@ -1004,8 +1005,7 @@ angular
              * @description
              * funcion que permite generar el PDF del acta
              */
-            async function formato_generacion_pdf() {
-
+            self.formato_generacion_pdf = function () {
                 var dateTime =
                     new Date().getFullYear() +
                     "" +
@@ -1019,7 +1019,7 @@ angular
 
                 var docDefinition = self.formato_pdf();
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-                await pdfDocGenerator.getBase64(function (data) {
+                pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(data,
                         "acta_adicion_prorroga_contrato_" +
                         self.contrato_id +
