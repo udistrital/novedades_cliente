@@ -308,7 +308,7 @@ angular.module('contractualClienteApp')
              * funcion que realiza la inserción de los datos de la novedad
              * enviando la petición POST al MID de Novedades
              */
-            self.postNovedad = function (nuevoEstado, enlaceDoc) {
+            self.postNovedad = function (nuevoEstado, output, dateTime, enlaceDoc) {
                 self.terminacion_nov.enlace = enlaceDoc;
                 novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                     if (vc_response.data.Body == "true") {
@@ -318,7 +318,15 @@ angular.module('contractualClienteApp')
                                 .post('novedad', self.terminacion_nov)
                                 .then(function (response_nosql) {
                                     if (response_nosql.status == 200 || response.statusText == "Ok") {
-
+                                        pdfMake
+                                            .createPdf(output)
+                                            .download(
+                                                "acta_terminacion_anticipada_" +
+                                                self.contrato_id +
+                                                "_" +
+                                                dateTime +
+                                                ".pdf"
+                                            );
                                         $scope.alert = 'DESCRIPCION_TERMINACION'
                                         swal({
                                             title: $translate.instant('TITULO_BUEN_TRABAJO'),
@@ -364,7 +372,15 @@ angular.module('contractualClienteApp')
                                                 if (response_nosql.status == 200 || response_nosql.statusText == "Ok") {
                                                     agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
                                                         if (response.status == 201 || Object.keys(response.data) > 0) {
-
+                                                            pdfMake
+                                                                .createPdf(output)
+                                                                .download(
+                                                                    "acta_terminacion_anticipada_" +
+                                                                    self.contrato_id +
+                                                                    "_" +
+                                                                    dateTime +
+                                                                    ".pdf"
+                                                                );
                                                             $scope.alert = 'DESCRIPCION_TERMINACION'
                                                             swal({
                                                                 title: $translate.instant('TITULO_BUEN_TRABAJO'),
@@ -571,15 +587,6 @@ angular.module('contractualClienteApp')
                     new Date().getMinutes();
 
                 var output = self.get_plantilla();
-                pdfMake
-                    .createPdf(output)
-                    .download(
-                        "acta_terminacion_anticipada_" +
-                        self.contrato_id +
-                        "_" +
-                        dateTime +
-                        ".pdf"
-                    );
 
                 const pdfDocGenerator = pdfMake.createPdf(output);
                 await pdfDocGenerator.getBase64(async function (data) {
@@ -592,7 +599,7 @@ angular.module('contractualClienteApp')
                         ".pdf",
                         self
                     );
-                    self.postNovedad(nuevoEstado, enlace);
+                    self.postNovedad(nuevoEstado, output, dateTime, enlace);
                 });
             }
 
