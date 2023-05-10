@@ -946,7 +946,7 @@ angular
                             esFechaActual: false,
                         };
                         if (self.estadoNovedad == "4518") {
-                            self.formato_generacion_pdf();
+                            formato_generacion_pdf();
                         } else {
                             self.contrato_obj_replica.esFechaActual = true;
                             novedadesMidRequest
