@@ -525,7 +525,7 @@ angular.module('contractualClienteApp')
                                     "NombreEstado": "ejecucion"
                                 }
                                 self.estados[0] = estado_temp_from;
-                                self.formato_generacion_pdf(nuevoEstado);
+                                formato_generacion_pdf(nuevoEstado);
                             } else {
                                 swal(
                                     $translate.instant('INFORMACION'),
@@ -574,7 +574,7 @@ angular.module('contractualClienteApp')
              * @description
              * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
              */
-            self.formato_generacion_pdf = async function (nuevoEstado) {
+            async function formato_generacion_pdf(nuevoEstado) {
                 var dateTime =
                     new Date().getFullYear() +
                     "" +
@@ -589,8 +589,8 @@ angular.module('contractualClienteApp')
                 var output = self.get_plantilla();
 
                 const pdfDocGenerator = pdfMake.createPdf(output);
-                await pdfDocGenerator.getBase64(async function (data) {
-                    var enlace = await pdfMakerService.saveDocGestorDoc(
+                await pdfDocGenerator.getBase64(function (data) {
+                    pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_terminacion_anticipada_" +
                         self.contrato_id +
@@ -598,8 +598,9 @@ angular.module('contractualClienteApp')
                         dateTime +
                         ".pdf",
                         self
-                    );
-                    self.postNovedad(nuevoEstado, output, dateTime, enlace);
+                    ).then(function (enlace) {
+                        self.postNovedad(nuevoEstado, output, dateTime, enlace);
+                    });
                 });
             }
 

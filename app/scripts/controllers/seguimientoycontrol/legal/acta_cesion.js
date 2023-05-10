@@ -686,7 +686,7 @@ angular
                                                                 request_replica.statusText == "OK"
                                                             ) {
                                                                 console.log("Replica correcta");
-                                                                self.formato_generacion_pdf();
+                                                                formato_generacion_pdf();
                                                             }
                                                         }).catch(function (error) {
                                                             //Error en la replica
@@ -706,7 +706,7 @@ angular
                                                             }).then(function () { });
                                                         })
                                                 } else {
-                                                    self.formato_generacion_pdf();
+                                                    formato_generacion_pdf();
                                                 }
                                             });
                                     });
@@ -1050,7 +1050,7 @@ angular
              * @description
              * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
              */
-            self.formato_generacion_pdf = async function () {
+            async function formato_generacion_pdf() {
                 var dateTime =
                     new Date().getFullYear() +
                     "" +
@@ -1068,9 +1068,9 @@ angular
                 //console.log("antes del Generator");
                 const pdfDocGenerator = pdfMake.createPdf(output);
                 //console.log("acá se ve la el pdf", pdfDocGenerator);
-                await pdfDocGenerator.getBase64(async function (data) {
+                await pdfDocGenerator.getBase64(function (data) {
                     //console.log("acá se ve la data", data);
-                    var enlace = await pdfMakerService.saveDocGestorDoc(
+                    pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_cesion_contrato_" +
                         self.contrato_id +
@@ -1078,8 +1078,9 @@ angular
                         dateTime +
                         ".pdf",
                         self
-                    );
-                    self.postNovedad(output, dateTime, enlace);
+                    ).then(function (enlace) {
+                        self.postNovedad(output, dateTime, enlace);
+                    });
                 });
             };
 
