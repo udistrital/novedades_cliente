@@ -353,7 +353,7 @@ angular
              * funcion que realiza la inserción de los datos de la novedad
              * eviando la petición POST al MID de Novedades
              */
-            self.postNovedad = function (nuevoEstado, enlaceDoc) {
+            self.postNovedad = function (nuevoEstado, docDefinition, dateTime, enlaceDoc) {
                 self.suspension_nov.enlace = enlaceDoc;
                 novedadesMidRequest
                     .post("validarCambioEstado", self.estados)
@@ -384,6 +384,15 @@ angular
                                                                     response.status == 201 ||
                                                                     Object.keys(response.data) > 0
                                                                 ) {
+                                                                    pdfMake
+                                                                        .createPdf(docDefinition)
+                                                                        .download(
+                                                                            "acta_suspension_contrato_" +
+                                                                            self.contrato_id +
+                                                                            "_" +
+                                                                            dateTime +
+                                                                            ".pdf"
+                                                                        );
                                                                     swal(
                                                                         $translate.instant(
                                                                             "TITULO_BUEN_TRABAJO"
@@ -467,6 +476,15 @@ angular
                                             request_novedades.status == 200 ||
                                             response.statusText == "Ok"
                                         ) {
+                                            pdfMake
+                                                .createPdf(docDefinition)
+                                                .download(
+                                                    "acta_suspension_contrato_" +
+                                                    self.contrato_id +
+                                                    "_" +
+                                                    dateTime +
+                                                    ".pdf"
+                                                );
                                             swal(
                                                 $translate.instant(
                                                     "TITULO_BUEN_TRABAJO"
@@ -595,8 +613,7 @@ angular
                             self.suspension_nov.fechafinefectiva = self.calcularFechaFin(self.diff_dias);
                             self.suspension_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
                             self.suspension_nov.cesionario = parseInt(
-                                self.contrato_obj.contratista,
-                                self.suspension_nov.estado = self.estadoNovedad
+                                self.contrato_obj.contratista
                             );
                             self.suspension_nov.estado = self.estadoNovedad;
                             self.contrato_estado = {};
@@ -640,7 +657,6 @@ angular
                     //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a suspension - devuelve si es true o false
                     //si es true guardamos la novedad - y enviamos el cambio de estado del contrato
                     //Obtiene el estado del contrato.
-
                     agoraRequest
                         .get("estado_contrato?query=NombreEstado:Suspendido")
                         .then(function (ec_response) {
@@ -997,15 +1013,6 @@ angular
                     new Date().getMinutes();
 
                 var docDefinition = self.get_pdf();
-                pdfMake
-                    .createPdf(docDefinition)
-                    .download(
-                        "acta_suspension_contrato_" +
-                        self.contrato_id +
-                        "_" +
-                        dateTime +
-                        ".pdf"
-                    );
 
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
                 await pdfDocGenerator.getBase64(async function (data) {
@@ -1018,7 +1025,7 @@ angular
                         ".pdf",
                         self
                     );
-                    self.postNovedad(nuevoEstado, enlace);
+                    self.postNovedad(nuevoEstado, docDefinition, dateTime, enlace);
                 });
             };
 

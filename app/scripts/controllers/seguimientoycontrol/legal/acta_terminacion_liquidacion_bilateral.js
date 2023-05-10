@@ -308,7 +308,7 @@ angular.module('contractualClienteApp')
              * funcion que realiza la inserción de los datos de la novedad
              * enviando la petición POST al MID de Novedades
              */
-            self.postNovedad = function (enlaceDoc) {
+            self.postNovedad = function (nuevoEstado, enlaceDoc) {
                 self.terminacion_nov.enlace = enlaceDoc;
                 novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                     if (vc_response.data.Body == "true") {
@@ -361,7 +361,7 @@ angular.module('contractualClienteApp')
                                         novedadesMidRequest
                                             .post('novedad', self.terminacion_nov)
                                             .then(function (response_nosql) {
-                                                if (response_nosql.status == 200 || response.statusText == "Ok") {
+                                                if (response_nosql.status == 200 || response_nosql.statusText == "Ok") {
                                                     agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
                                                         if (response.status == 201 || Object.keys(response.data) > 0) {
 
@@ -402,7 +402,7 @@ angular.module('contractualClienteApp')
                                                     title: $translate.instant('TITULO_ERROR_ACTA'),
                                                     type: 'error',
                                                     html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
-                                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
                                                     showCloseButton: true,
                                                     showCancelButton: false,
                                                     confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
@@ -509,7 +509,7 @@ angular.module('contractualClienteApp')
                                     "NombreEstado": "ejecucion"
                                 }
                                 self.estados[0] = estado_temp_from;
-                                self.formato_generacion_pdf();
+                                self.formato_generacion_pdf(nuevoEstado);
                             } else {
                                 swal(
                                     $translate.instant('INFORMACION'),
@@ -558,7 +558,7 @@ angular.module('contractualClienteApp')
              * @description
              * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
              */
-            self.formato_generacion_pdf = async function () {
+            self.formato_generacion_pdf = async function (nuevoEstado) {
                 var dateTime =
                     new Date().getFullYear() +
                     "" +
@@ -592,7 +592,7 @@ angular.module('contractualClienteApp')
                         ".pdf",
                         self
                     );
-                    self.postNovedad(enlace);
+                    self.postNovedad(nuevoEstado, enlace);
                 });
             }
 
