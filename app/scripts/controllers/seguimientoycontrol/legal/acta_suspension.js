@@ -678,7 +678,7 @@ angular
                                             NombreEstado: "ejecucion",
                                         };
                                         self.estados[0] = estado_temp_from;
-                                        self.formato_generacion_pdf(nuevoEstado);
+                                        formato_generacion_pdf(nuevoEstado);
 
                                     } else {
                                         swal(
@@ -1000,7 +1000,7 @@ angular
              * @description
              * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
              */
-            self.formato_generacion_pdf = async function (nuevoEstado) {
+            async function formato_generacion_pdf(nuevoEstado) {
                 var dateTime =
                     new Date().getFullYear() +
                     "" +
@@ -1016,7 +1016,7 @@ angular
 
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
                 await pdfDocGenerator.getBase64(async function (data) {
-                    var enlace = await pdfMakerService.saveDocGestorDoc(
+                    pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_suspension_contrato_" +
                         self.contrato_id +
@@ -1024,8 +1024,9 @@ angular
                         dateTime +
                         ".pdf",
                         self
-                    );
-                    self.postNovedad(nuevoEstado, docDefinition, dateTime, enlace);
+                    ).then(function (enlace) {
+                        self.postNovedad(nuevoEstado, docDefinition, dateTime, enlace);
+                    });
                 });
             };
 

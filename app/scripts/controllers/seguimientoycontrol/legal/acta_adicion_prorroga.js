@@ -811,10 +811,10 @@ angular
              * funcion que realiza la inserción de los datos de la novedad
              * eviando la petición POST al MID de Novedades
              */
-            self.PostNovedad = function (dataNovedadPost, dateTime, docDefinition, enlaceDoc) {
-                dataNovedadPost.enlace = enlaceDoc;
+            self.PostNovedad = function (dateTime, docDefinition, enlaceDoc) {
+                self.data_acta_adicion_prorroga.enlace = enlaceDoc;
                 novedadesMidRequest
-                    .post("novedad", dataNovedadPost)
+                    .post("novedad", self.data_acta_adicion_prorroga)
                     .then(function (request) {
                         if (request.status == 200) {
                             pdfMake.createPdf(docDefinition).
@@ -946,7 +946,7 @@ angular
                             esFechaActual: false,
                         };
                         if (self.estadoNovedad == "4518") {
-                            self.formato_generacion_pdf(self.data_acta_adicion_prorroga);
+                            self.formato_generacion_pdf();
                         } else {
                             self.contrato_obj_replica.esFechaActual = true;
                             novedadesMidRequest
@@ -956,7 +956,7 @@ angular
                                         request_novedades.status == 200 ||
                                         request_novedades.statusText == "OK"
                                     ) {
-                                        self.formato_generacion_pdf(self.data_acta_adicion_prorroga);
+                                        formato_generacion_pdf();
                                         console.log("Replica correcta");
                                     }
                                 }).catch(function (error) {
@@ -1004,7 +1004,7 @@ angular
              * @description
              * funcion que permite generar el PDF del acta
              */
-            self.formato_generacion_pdf = async function (dataNovedad) {
+            async function formato_generacion_pdf() {
 
                 var dateTime =
                     new Date().getFullYear() +
@@ -1019,17 +1019,16 @@ angular
 
                 var docDefinition = self.formato_pdf();
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-                await pdfDocGenerator.getBase64(async function (data) {
-                    var enlace = await pdfMakerService.saveDocGestorDoc(
-                        data,
+                await pdfDocGenerator.getBase64(function (data) {
+                    pdfMakerService.saveDocGestorDoc(data,
                         "acta_adicion_prorroga_contrato_" +
                         self.contrato_id +
                         "_" +
                         dateTime +
                         ".pdf",
-                        self
-                    );
-                    self.PostNovedad(dataNovedad, dateTime, docDefinition, enlace);
+                        self).then(function (enlace) {
+                            self.PostNovedad(dateTime, docDefinition, enlace);
+                        });
                 });
             }
 

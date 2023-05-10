@@ -748,29 +748,25 @@ angular
                 return amount_parts.join(".");
             };
 
-            self.saveDocGestorDoc = async function (dataToPDF, nombre, self) {
-                var post = [{}];
-                // post[0].IdDocumento = 38;
-                post[0].IdTipoDocumento = 38;
-                post[0].nombre = nombre;
-                post[0].file = String(dataToPDF);
-                post[0].descripcion = self.contrato_id + "" + self.contrato_vigencia;
-                post[0].metadatos = {
-                    contrato: parseInt(self.contrato_id),
-                    vigencia: parseInt(self.contrato_vigencia),
-                    estado: self.estadoNovedad,
-                    idNovedad: self.idRegistro,
-                };
-                var enlaceResponse = await novedadesMidRequest.post("gestor_documental", post);
-                return enlaceResponse.data.Body.Enlace;
-                // novedadesMidRequest
-                //     .post("gestor_documental", post)
-                //     .then(async function (response) {
-                //         if (response.status == 200) {
-                //             var enlace = await response.data.Body.Enlace;
-                //         }
-                //     });
-            };
+            self.saveDocGestorDoc = function (dataToPDF, nombre, self) {
+                return new Promise((resolve) => {
+                    var post = [{}];
+                    // post[0].IdDocumento = 38;
+                    post[0].IdTipoDocumento = 38;
+                    post[0].nombre = nombre;
+                    post[0].file = String(dataToPDF);
+                    post[0].descripcion = self.contrato_id + "" + self.contrato_vigencia;
+                    post[0].metadatos = {
+                        contrato: parseInt(self.contrato_id),
+                        vigencia: parseInt(self.contrato_vigencia),
+                        estado: self.estadoNovedad,
+                        idNovedad: self.idRegistro,
+                    };
+                    novedadesMidRequest.post("gestor_documental", post).then(function (responseDoc) {
+                        resolve(responseDoc.data.Body.Enlace);
+                    });
+                })
+            }
 
             return self;
         }
