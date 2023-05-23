@@ -211,8 +211,9 @@ angular.module('contractualClienteApp')
                                 //consulta el CDP y RP
                                 financieraJbpmRequest
                                     .get(
-                                        "cdprptercero/" +
-                                        self.contrato_obj.contratista_documento
+                                        "cdprptercerocontrato/" +
+                                        self.contrato_obj.vigencia + "/" +
+                                        self.contrato_obj.numero_contrato
                                     )
                                     .then(function (financiera_response) {
                                         if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
@@ -237,8 +238,9 @@ angular.module('contractualClienteApp')
                                 //consulta el CDP y RP
                                 financieraJbpmRequest
                                     .get(
-                                        "cdprptercero/" +
-                                        self.contrato_obj.contratista_documento
+                                        "cdprptercerocontrato/" +
+                                        self.contrato_obj.vigencia + "/" +
+                                        self.contrato_obj.numero_contrato
                                     )
                                     .then(function (financiera_response) {
                                         if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {

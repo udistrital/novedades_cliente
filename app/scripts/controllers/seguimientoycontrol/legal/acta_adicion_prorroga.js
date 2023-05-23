@@ -282,15 +282,6 @@ angular
                             )
                             .then(function (response) {
                                 self.novedades = response.data.Body;
-                                for (var i = 0; i < self.novedades.length; i++) {
-                                    if (
-                                        self.novedades[i].tiponovedad == 6 ||
-                                        self.novedades[i].tiponovedad == 7 ||
-                                        self.novedades[i].tiponovedad == 8
-                                    ) {
-                                        self.novedadOtrosi = true;
-                                    }
-                                }
                                 if (self.novedades.length != '0') {
                                     var last_cesion =
                                         self.novedades[self.novedades.length - 1];
@@ -326,21 +317,20 @@ angular
                                                 });
                                             financieraJbpmRequest
                                                 .get(
-                                                    "cdprptercero/" +
-                                                    self.contrato_obj.contratista_documento
+                                                    "cdprptercerocontrato/" +
+                                                    self.contrato_obj.vigencia + "/" +
+                                                    self.contrato_obj.numero_contrato
                                                 )
                                                 .then(function (financiera_response) {
                                                     if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
                                                         self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                                                        self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
-                                                        self.contrato_obj.cdp_anno = self.cdprp[self.cdprp.length - 1].vigencia;
-                                                        self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
                                                     }
                                                 });
                                             //Consulta el CDP
 
                                             $scope.update = function () {
                                                 var cod = JSON.parse(document.getElementById("rp").value);
+                                                console.log(cod);
                                                 var cadena = cod.rp + " - " + cod.vigencia;
                                                 self.selected = cadena;
                                                 self.contrato_obj.cdp_numero =
@@ -388,19 +378,18 @@ angular
                                             //Consulta el CDP
                                             financieraJbpmRequest
                                                 .get(
-                                                    "cdprptercero/" +
-                                                    self.contrato_obj.contratista_documento
+                                                    "cdprptercerocontrato/" +
+                                                    self.contrato_obj.vigencia + "/" +
+                                                    self.contrato_obj.numero_contrato
                                                 )
                                                 .then(function (financiera_response) {
                                                     if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
                                                         self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                                                        self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
-                                                        self.contrato_obj.cdp_anno = self.cdprp[self.cdprp.length - 1].vigencia;
-                                                        self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
                                                     }
                                                 });
 
                                             $scope.update = function () {
+                                                console.log(JSON.parse(document.getElementById("rp").value));
                                                 var cod = JSON.parse(document.getElementById("rp").value);
                                                 var cadena = cod.rp + " - " + cod.vigencia;
                                                 self.selected = cadena;
@@ -570,19 +559,19 @@ angular
                     $scope.valor_adicion = "";
                     $scope.nuevo_valor_contrato = "";
                     $scope.nuevo_valor_contrato_letras = "";
+                    self.contrato_obj.cdp_numero = undefined;
+                    self.selected = "";
                 } else {
                     $(".panel_adicion").show("fast");
                     financieraJbpmRequest
                         .get(
-                            "cdprptercero/" +
-                            self.contrato_obj.contratista_documento
+                            "cdprptercerocontrato/" +
+                            self.contrato_obj.vigencia + "/" +
+                            self.contrato_obj.numero_contrato
                         )
                         .then(function (financiera_response) {
                             if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
                                 self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                                self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
-                                self.contrato_obj.cdp_anno = self.cdprp[self.cdprp.length - 1].vigencia;
-                                self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
                             }
                         });
                 }
@@ -615,9 +604,9 @@ angular
              * funcion para validar si se selecciono la novedad de adicion - prorroga
              */
             self.comprobar_seleccion_novedad = function () {
-                self.novedadOtrosi = false;
-                if (self.novedadOtrosi == false) {
+                try {
                     if ($scope.adicion == true || $scope.prorroga == true) {
+
                         $scope.estado_novedad = true;
                         if ($scope.adicion == true) {
                             $("#valor_adicion").prop("required", true);
@@ -635,50 +624,44 @@ angular
                     } else {
                         $scope.estado_novedad = false;
                     }
+                    var cod = JSON.parse(document.getElementById("rp").value);
+                } catch (error) {
                     if ($scope.estado_novedad == false) {
                         swal(
                             $translate.instant("TITULO_ADVERTENCIA"),
                             $translate.instant("DESCRIPCION_ADVERTENCIA"),
                             "info"
                         );
+                    } else if (cod == undefined) {
+                        self.novedadOtrosi = true;
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            "Debe seleccionar un CDP para crear la novedad!",
+                            "info"
+                        );
                     }
-                    var valor_contrato_inicial = self.contrato_obj.valor;
-                    $scope.valor_contrato_letras = numeroALetras(valor_contrato_inicial, {
-                        plural: $translate.instant("PESOS"),
-                        singular: $translate.instant("PESO"),
-                        centPlural: $translate.instant("CENTAVOS"),
-                        centSingular: $translate.instant("CENTAVO"),
-                    });
-                    $scope.cantidad_salarios_minimos = (
-                        valor_contrato_inicial / 737717
-                    ).toFixed(2);
-                    $scope.contrato_plazo_letras = numeroALetras(self.contrato_obj.plazo, {
-                        plural: $translate.instant("("),
-                        singular: $translate.instant("("),
-                    });
-                    $scope.contrato_prorroga_letras = numeroALetras(
-                        $scope.valor_prorroga_final, {
-                        plural: $translate.instant("("),
-                        singular: $translate.instant("("),
-                    }
-                    );
-                } else {
-                    //respuesta incorrecta, ej: 400/500
-                    $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
-                    swal({
-                        title: $translate.instant("TITULO_ERROR_ACTA"),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            self.contrato_obj.numero_contrato +
-                            $translate.instant("ANIO") +
-                            self.contrato_obj.vigencia +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
+
                 }
+                var valor_contrato_inicial = self.contrato_obj.valor;
+                $scope.valor_contrato_letras = numeroALetras(valor_contrato_inicial, {
+                    plural: $translate.instant("PESOS"),
+                    singular: $translate.instant("PESO"),
+                    centPlural: $translate.instant("CENTAVOS"),
+                    centSingular: $translate.instant("CENTAVO"),
+                });
+                $scope.cantidad_salarios_minimos = (
+                    valor_contrato_inicial / 737717
+                ).toFixed(2);
+                $scope.contrato_plazo_letras = numeroALetras(self.contrato_obj.plazo, {
+                    plural: $translate.instant("("),
+                    singular: $translate.instant("("),
+                });
+                $scope.contrato_prorroga_letras = numeroALetras(
+                    $scope.valor_prorroga_final, {
+                    plural: $translate.instant("("),
+                    singular: $translate.instant("("),
+                }
+                );
             };
 
             function generateTipoNovedad(callback) {
@@ -895,9 +878,9 @@ angular
                                 && fechaActual.getFullYear() == self.fecha_prorroga.getFullYear())
                             || fechaActual > self.fecha_prorroga
                         ) {
-                            self.estadoNovedad = "4519";
-                        } else {
                             self.estadoNovedad = "4518";
+                        } else {
+                            self.estadoNovedad = "4519";
                         }
                         //objeto acta adición_prórroga
                         self.data_acta_adicion_prorroga = {
@@ -979,23 +962,19 @@ angular
                                 });
                         }
                     });
-                } else {
-                    $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA2";
-                    swal({
-                        title: $translate.instant("TITULO_ERROR_ACTA"),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            self.contrato_obj.numero_contrato +
-                            $translate.instant("ANIO") +
-                            self.contrato_obj.vigencia +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
                 }
-
+                // else {
+                //     $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA2";
+                //     swal({
+                //         title: $translate.instant("TITULO_ERROR_ACTA"),
+                //         type: "error",
+                //         html: $translate.instant($scope.alert),
+                //         showCloseButton: true,
+                //         showCancelButton: false,
+                //         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                //         allowOutsideClick: false,
+                //     }).then(function () { });
+                // }
             }
 
             /**
