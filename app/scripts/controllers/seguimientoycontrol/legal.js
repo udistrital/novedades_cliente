@@ -168,20 +168,8 @@ angular
                                             if (elementos_cesion != undefined && elementos_cesion.length != "0") {
                                                 var last_newness =
                                                     elementos_cesion[elementos_cesion.length - 1];
-                                                var fechaActual = new Date();
-                                                var fechaAdicion = new Date(last_newness.fechaadicion);
-                                                var fechaCesion = new Date(last_newness.fechacesion);
-                                                var fechaProrroga = new Date(last_newness.fechaprorroga);
-                                                var fechaReinicio = new Date(last_newness.fechareinicio);
-                                                var fechaSuspension = new Date(last_newness.fechasuspension);
-                                                if (last_newness.tiponovedad != 3) {
-                                                    if (
-                                                        fechaAdicion > fechaActual ||
-                                                        fechaCesion > fechaActual ||
-                                                        fechaProrroga > fechaActual ||
-                                                        fechaSuspension > fechaActual
-                                                    ) {
-                                                        self.novedadEnCurso = true;
+                                                if (last_newness.estado == "EN_TRAMITE") {
+                                                    self.novedadEnCurso = true;
                                                         swal({
                                                             title: $translate.instant("INFORMACION"),
                                                             type: "info",
@@ -195,26 +183,6 @@ angular
                                                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                             allowOutsideClick: false,
                                                         })
-                                                    }
-                                                } else {
-                                                    if (
-                                                        fechaReinicio > fechaActual
-                                                    ) {
-                                                        self.novedadEnCurso = true;
-                                                        swal({
-                                                            title: $translate.instant("INFORMACION"),
-                                                            type: "info",
-                                                            html: $translate.instant("TITULO_NOVEDAD_EN_CURSO") +
-                                                                self.contrato_obj.numero_contrato +
-                                                                $translate.instant("ANIO") +
-                                                                self.contrato_obj.vigencia +
-                                                                ".",
-                                                            showCloseButton: false,
-                                                            showCancelButton: false,
-                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                            allowOutsideClick: false,
-                                                        })
-                                                    }
                                                 }
                                                 novedadesRequest
                                                     .get(
