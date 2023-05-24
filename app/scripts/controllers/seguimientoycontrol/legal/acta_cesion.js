@@ -132,6 +132,7 @@ angular
                                 self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
                                 self.fecha_lim_inf.setDate(self.fecha_lim_inf.getDate() + 1);
                                 self.fecha_lim_sup = self.calcularFechaFin();
+                                self.f_cesion = "";
                             });
                         //Se obtiene información del supervisor
                         // amazonAdministrativaRequest
@@ -578,9 +579,9 @@ angular
                         && fechaActual.getFullYear() == self.f_cesion.getFullYear())
                     || fechaActual > self.f_cesion
                 ) {
-                    self.estadoNovedad = "4518";
-                } else {
                     self.estadoNovedad = "4519";
+                } else {
+                    self.estadoNovedad = "4518";
                 }
                 var f_inicio_contrato = moment(self.contrato_obj.Inicio);
                 var f_cesion = moment(self.f_terminacion);
@@ -680,38 +681,39 @@ angular
                                                 self.contrato_obj_replica.TipoNovedad = parseFloat(219);
                                             }
 
-                                            if (self.estadoNovedad == "4519") {
-                                                self.contrato_obj_replica.esFechaActual = true;
-                                                novedadesMidRequest
-                                                    .post("replica", self.contrato_obj_replica)
-                                                    .then(function (request_replica) {
-                                                        if (
-                                                            request_replica.status == 200 ||
-                                                            request_replica.statusText == "OK"
-                                                        ) {
-                                                            console.log("Replica correcta");
-                                                            self.formato_generacion_pdf();
-                                                        }
-                                                    }).catch(function (error) {
-                                                        //Error en la replica
-                                                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
-                                                        swal({
-                                                            title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                            type: "error",
-                                                            html: $translate.instant($scope.alert) +
-                                                                self.contrato_obj.numero_contrato +
-                                                                $translate.instant("ANIO") +
-                                                                self.contrato_obj.vigencia +
-                                                                ".",
-                                                            showCloseButton: true,
-                                                            showCancelButton: false,
-                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                            allowOutsideClick: false,
-                                                        }).then(function () { });
-                                                    })
-                                            } else {
-                                                self.formato_generacion_pdf();
-                                            }
+                                            console.log(self.estadoNovedad);
+                                            // if (self.estadoNovedad == "4519") {
+                                            //     self.contrato_obj_replica.esFechaActual = true;
+                                            //     novedadesMidRequest
+                                            //         .post("replica", self.contrato_obj_replica)
+                                            //         .then(function (request_replica) {
+                                            //             if (
+                                            //                 request_replica.status == 200 ||
+                                            //                 request_replica.statusText == "OK"
+                                            //             ) {
+                                            //                 console.log("Replica correcta");
+                                            //                 self.formato_generacion_pdf();
+                                            //             }
+                                            //         }).catch(function (error) {
+                                            //             //Error en la replica
+                                            //             $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                                            //             swal({
+                                            //                 title: $translate.instant("TITULO_ERROR_ACTA"),
+                                            //                 type: "error",
+                                            //                 html: $translate.instant($scope.alert) +
+                                            //                     self.contrato_obj.numero_contrato +
+                                            //                     $translate.instant("ANIO") +
+                                            //                     self.contrato_obj.vigencia +
+                                            //                     ".",
+                                            //                 showCloseButton: true,
+                                            //                 showCancelButton: false,
+                                            //                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            //                 allowOutsideClick: false,
+                                            //             }).then(function () { });
+                                            //         })
+                                            // } else {
+                                            //     self.formato_generacion_pdf();
+                                            // }
                                         });
                                 });
                         })

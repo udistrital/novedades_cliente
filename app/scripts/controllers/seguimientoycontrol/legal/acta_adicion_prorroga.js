@@ -878,9 +878,9 @@ angular
                                 && fechaActual.getFullYear() == self.fecha_prorroga.getFullYear())
                             || fechaActual > self.fecha_prorroga
                         ) {
-                            self.estadoNovedad = "4518";
-                        } else {
                             self.estadoNovedad = "4519";
+                        } else {
+                            self.estadoNovedad = "4518";
                         }
                         //objeto acta adición_prórroga
                         self.data_acta_adicion_prorroga = {
