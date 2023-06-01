@@ -100,22 +100,28 @@
                     <div class="panel-body">
                         <form name="formCesion">
 
-                            <div class="col-md-6">
-                                <label>
-                                    {{'NUMERO_SOLICITUD' | translate}} *:
-                                </label>
-                                <br>
-                                <md-input-container style="margin:0;">
-                                    <input type="number" id="n_solicitud" name="n_solicitud" required
-                                        ng-model="sLactaCesion.n_solicitud" ng-disabled="false"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" min="0">
-                                    <div ng-messages="formCesion.n_solicitud.$error">
-                                        <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                                    </div>
-                                </md-input-container>
+                            <div class="row" style="border: 0px solid;">
+                                <div class="col-xs-12 col-md-6">
+                                    <label>{{'NUMERO_SOLICITUD' | translate}}*</label>
+                                    <md-input-container style="margin:0;">
+                                        <input type="number" id="n_solicitud" name="n_solicitud" required
+                                            ng-model="sLactaCesion.n_solicitud" ng-disabled="false"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" min="0">
+                                        <div ng-messages="formCesion.n_solicitud.$error">
+                                            <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div class="col-xs-12 col-md-6">
+                                    <label for="fechacesion">{{'FECHA_SOLICITUD' | translate}}</label><br>
+                                    <md-datepicker ng-model="sLactaCesion.f_cesion"
+                                        md-min-date="sLactaCesion.fecha_lim_inf"
+                                        md-max-date="sLactaCesion.fecha_lim_sup"
+                                        md-placeholder="Ingrese fecha"></md-datepicker>
+                                </div>
                             </div>
-
-                            <div class="col-md-6">
+                            <div class="row" style="border: 0px solid;"></div>
+                            <div class="col-xs-12 col-md-6">
                                 <label style="width:100%;">
                                     {{'NUMERO_OFICIO' | translate}} *:
                                 </label>
@@ -128,20 +134,18 @@
                                     </div>
                                 </md-input-container>
                             </div>
-
-                            <div class="col-md-6">
+                            <div class="col-xs-12 col-md-6">
                                 <label for="fechaoficio form-group">{{'FECHA_OFICIO' | translate}}</label> <br>
                                 <md-datepicker ng-model="sLactaCesion.f_oficio"
                                     md-placeholder="Ingrese fecha"></md-datepicker>
                             </div>
-
-                            <div class="form-group col-md-6">
+                            <div class="col-xs-12 col-md-6">
                                 <label for="fechacesion">{{'FECHA_CESION' | translate}}</label><br>
                                 <md-datepicker ng-model="sLactaCesion.f_cesion" md-min-date="sLactaCesion.fecha_lim_inf"
                                     md-max-date="sLactaCesion.fecha_lim_sup"
                                     md-placeholder="Ingrese fecha"></md-datepicker>
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="col-xs-12 col-md-6">
                                 <label for="fechaterminacion">{{'FECHA_TERMINACION_CEDENTE' | translate}}</label><br>
                                 <md-datepicker ng-model="sLactaCesion.f_terminacion" md-max-date="sLactaCesion.f_cesion"
                                     md-placeholder="Ingrese fecha" ng-disabled="true"></md-datepicker>
