@@ -47,6 +47,7 @@ angular.module('contractualClienteApp')
             self.a_favor = {};
             self.numero_solicitud = null;
             self.numero_oficio_estado_cuentas = null;
+            self.fecha_oficio = new Date();
             self.valor_desembolsado = '';
             self.saldo_contratista = '';
             self.saldo_universidad = null;
@@ -290,17 +291,17 @@ angular.module('contractualClienteApp')
                 }
             });
             //seleccionador de beneficiario de saldo
-            self.selecionarSaldo = function () {
-                if (self.a_favor_de == "Universidad") {
-                    self.a_favor.entidad = "la Universidad Distrital.";
-                    self.a_favor.valor = self.terminacion_nov.saldo_universidad;
-                    self.a_favor.existe = "no existe un saldo a favor de este.";
-                } else if (self.a_favor_de == "Contratista") {
-                    self.a_favor.entidad = "el Contratista.";
-                    self.a_favor.valor = self.terminacion_nov.saldo_contratista;
-                    self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(String(self.terminacion_nov.saldo_contratista) + '');
-                }
-            }
+            // self.selecionarSaldo = function () {
+            //     if (self.a_favor_de == "Universidad") {
+            //         self.a_favor.entidad = "la Universidad Distrital.";
+            //         self.a_favor.valor = self.terminacion_nov.saldo_universidad;
+            //         self.a_favor.existe = "no existe un saldo a favor de este.";
+            //     } else if (self.a_favor_de == "Contratista") {
+            //         self.a_favor.entidad = "el Contratista.";
+            //         self.a_favor.valor = self.terminacion_nov.saldo_contratista;
+            //         self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(String(self.terminacion_nov.saldo_contratista) + '');
+            //     }
+            // }
 
             /**
              * @ngdoc method
@@ -490,6 +491,7 @@ angular.module('contractualClienteApp')
                         self.terminacion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
                         self.terminacion_nov.fecharegistro = new Date();
                         self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
+                        self.terminacion_nov.fechaoficio = self.fecha_oficio;
                         self.terminacion_nov.numerosolicitud = self.numero_solicitud;
                         self.terminacion_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
                         self.terminacion_nov.valor_desembolsado = self.valor_desembolsado;
@@ -1031,7 +1033,7 @@ angular.module('contractualClienteApp')
 
                             'Que el valor de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó en la suma total de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(String(self.contrato_obj.valor) + "") + '),\n\n',
 
-                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' como Supervisor del mismo.\n\n',
+                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficio) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' como Supervisor del mismo.\n\n',
 
                             'Que según certificación de fecha ' + self.format_date_letter_mongo(self.contrato_obj.cdp_fecha) + ', expedida por Jefe de Sección de Presupuesto, presenta un saldo a la fecha de  ' + NumeroALetras(self.a_favor.valor) + '($' + numberFormat(String(self.a_favor.valor) + '') + ').\n\n',
 

@@ -68,42 +68,42 @@
                     </div>
                     <div class="panel-body">
                         <form name="formTerminacion" action="" class="col-md-12">
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <p>
-                                        <b>{{'NUMERO_SOLICITUD' | translate}} *:</b>
-                                    </p>
+                            <div class="row" style="border: 0px solid;">
+                                <div class="col-xs-12 col-md-6">
+                                    <label>{{'NUMERO_SOLICITUD' | translate}}*</label>
                                     <md-input-container style="margin:0;">
                                         <input type="number" id="numero_solicitud" name="numero_solicitud"
-                                            ng-model="sLactaTerminacionAnticipada.numero_solicitud" ng-disabled="false"
-                                            min="0" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                                            required>
+                                            ng-model="sLactaTerminacionAnticipada.numero_solicitud" min="0"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
                                         <div ng-messages="formTerminacion.numero_solicitud.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>
                                     </md-input-container>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label style="width:100%;">
-                                        {{'NUMERO_OFICIO_ESTADO_CUENTAS' | translate}} *:
-                                    </label>
-                                    <md-input-container style="margin:0;">
-                                        <input type="number" name="numero_oficio_estado_cuentas"
-                                            ng-model="sLactaTerminacionAnticipada.numero_oficio_estado_cuentas"
-                                            id="numero_oficio_estado_cuentas" min="0"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
-                                        <div ng-messages="formTerminacion.numero_oficio_estado_cuentas.$error">
-                                            <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                                        </div>
-                                    </md-input-container>
+                                <div class="col-xs-12 col-md-6">
+                                    <label>{{'FECHA_SOLICITUD' | translate}}</label>
+                                    <md-datepicker ng-model="sLactaTerminacionAnticipada.fecha_solicitud"></md-datepicker>
                                 </div>
                             </div>
+                            <!--  -->
+                            <div class="row" style="border: 0px solid;"></div>
+                            <div class="col-xs-12 col-md-6">
+                                <label>{{'NUMERO_OFICIO_ESTADO_CUENTAS' | translate}}*</label>
+                                <md-input-container style="margin:0;">
+                                    <input type="number" id="numero_oficio_estado_cuentas"
+                                        name="numero_oficio_estado_cuentas"
+                                        ng-model="sLactaTerminacionAnticipada.numero_oficio_estado_cuentas" min="0"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
+                                    <div ng-messages="formSuspension.numero_oficio_estado_cuentas.$error">
+                                        <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <label>{{'FECHA_OFICIO' | translate}}</label>
+                                <md-datepicker ng-model="sLactaTerminacionAnticipada.fecha_oficio"></md-datepicker>
+                            </div>
                             <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="fechasolicitud">{{'FECHA_SOLICITUD' | translate}}:</label> <br>
-                                    <md-datepicker ng-model="sLactaTerminacionAnticipada.fecha_solicitud"
-                                        md-max-date="sLactaTerminacionAnticipada.f_hoy"> </md-datepicker>
-                                </div>
                                 <div class="form-group col-md-6">
                                     <label for="fechaterminacion">{{'FECHA_TERMINACION_ANTICIPADA' |
                                         translate}}:</label> <br>
@@ -159,7 +159,7 @@
                                         </div>
                                     </md-input-container>
                                 </div>
-                                <div class="form-group col-md-6">
+                                <!-- <div class="form-group col-md-6">
                                     <label style="width:100%;">
                                         {{'SALDO_A_FAVOR' | translate}} *:
                                     </label>
@@ -174,7 +174,7 @@
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>
                                     </md-input-container>
-                                </div>
+                                </div> -->
                             </div>
                         </form>
                     </div>

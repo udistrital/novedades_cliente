@@ -40,6 +40,7 @@ angular
             self.contrato_obj_replica = {};
             self.suspension_obj = {};
             self.n_solicitud = null;
+            self.fecha_solicitud = new Date();
             self.auxiliar = null;
             self.novedades = [];
             self.estadoNovedad = "";
@@ -52,8 +53,15 @@ angular
             self.estados = [];
             self.elaboro_cedula = token_service.getPayload().documento;
 
-            const input = document.getElementById("n_solicitud");
-            input.addEventListener("input", function () {
+            const solic_input = document.getElementById("n_solicitud");
+            solic_input.addEventListener("input", function () {
+                if (this.value.length > 7) {
+                    this.value = this.value.slice(0, 7);
+                }
+            })
+
+            const oficio_input = document.getElementById("oficio");
+            oficio_input.addEventListener("input", function () {
                 if (this.value.length > 7) {
                     this.value = this.value.slice(0, 7);
                 }
@@ -816,7 +824,7 @@ angular
                             self.reinicio_nov.tiponovedad =
                                 nc_response.data[0].CodigoAbreviacion;
                             self.reinicio_nov.fecharegistro = new Date();
-                            self.reinicio_nov.fechasolicitud = new Date();
+                            self.reinicio_nov.fechasolicitud = self.fecha_solicitud;
                             self.reinicio_nov.numerosolicitud = self.n_solicitud;
                             self.reinicio_nov.numerooficioestadocuentas = 0;
                             self.reinicio_nov.valor_desembolsado = 0;
