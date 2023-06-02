@@ -4,15 +4,15 @@ angular
     .module("contractualClienteApp")
     .factory(
         "pdfMakerService",
-        function($http, $translate, novedadesMidRequest, novedadesRequest) {
+        function ($http, $translate, novedadesMidRequest, novedadesRequest, $q) {
             var self = {};
             self.imagen = { imagen: "" };
             //TODO: una imagen en base64 en un archivo JSON? por qué no directo
-            $http.get("scripts/models/imagen.json").then(function(response) {
+            $http.get("scripts/models/imagen.json").then(function (response) {
                 self.imagen = response.data;
             });
             //Función para obtener el contenido de las tablas por proyecto currícular de los docentes asociados a la resolución
-            self.pdfMakerService = function(
+            self.pdfMakerService = function (
                 idProyecto,
                 nivelAcademico,
                 datos,
@@ -172,7 +172,7 @@ angular
 
                 cuerpo.push(encabezado);
                 if (datos) {
-                    datos.forEach(function(fila) {
+                    datos.forEach(function (fila) {
                         //Se veriica que el docente este asociado al proyecto curricular actual
                         if (fila.IdProyectoCurricular === idProyecto) {
                             //Si la resolución es de cancelación, adición o reducción la tabla es diferente
@@ -199,7 +199,7 @@ angular
                                 }
                             } else {
                                 var datoFila = [];
-                                columnas.forEach(function(columna) {
+                                columnas.forEach(function (columna) {
                                     //Cada dato es almacenado como un String dentro de la matriz de la tabla
                                     datoFila.push(
                                         fila[columna] != undefined ? fila[columna].toString() : ""
@@ -214,7 +214,7 @@ angular
                 return cuerpo;
             };
 
-            self.tablaModificacionHoras = function(
+            self.tablaModificacionHoras = function (
                 columnas,
                 fila,
                 segundaFila,
@@ -240,12 +240,12 @@ angular
                         });
                         segunda[i] =
                             fila[segundaFila[j]] != undefined ?
-                            fila[segundaFila[j]].toString() :
-                            "";
+                                fila[segundaFila[j]].toString() :
+                                "";
                         tercera[i] =
                             fila[terceraFila[j]] != undefined ?
-                            fila[terceraFila[j]].toString() :
-                            "";
+                                fila[terceraFila[j]].toString() :
+                                "";
                         tercera[i] = i == 6 ? "Total " + tercera[i] : tercera[i];
                         j++;
                     }
@@ -253,7 +253,7 @@ angular
                 return [datoFila, segunda, tercera];
             };
 
-            self.tablaCancelacion = function(
+            self.tablaCancelacion = function (
                 columnas,
                 fila,
                 segundaFila,
@@ -277,7 +277,7 @@ angular
             };
 
             //Función que devuelve en contenido de la resolución en un arreglo de estructuras
-            self.getContenido = function(
+            self.getContenido = function (
                 contenidoResolucion,
                 resolucion,
                 contratados,
@@ -337,13 +337,13 @@ angular
                 //Se agregan artículos al documento
                 if (contenidoResolucion.Articulos) {
                     var index = 1;
-                    contenidoResolucion.Articulos.forEach(function(articulo) {
+                    contenidoResolucion.Articulos.forEach(function (articulo) {
                         contenido.push(self.getArticuloTexto(articulo, numero));
                         if (index === 1) {
-                            proyectos.forEach(function(proyecto) {
+                            proyectos.forEach(function (proyecto) {
                                 var proyectoVisible = false;
                                 if (contratados) {
-                                    contratados.forEach(function(fila) {
+                                    contratados.forEach(function (fila) {
                                         if (fila.IdProyectoCurricular === proyecto.Id) {
                                             proyectoVisible = true;
                                         }
@@ -390,7 +390,7 @@ angular
             };
 
             //Devuelve el contenido del documento en una estrutura formato "JSON"
-            self.getDocumento = function(
+            self.getDocumento = function (
                 contenidoResolucion,
                 resolucion,
                 contratados,
@@ -414,17 +414,17 @@ angular
                                     width: 120,
                                     image: self.imagen.imagen,
                                     alignment: "center",
-                                }, ],
+                                },],
                                 [{
                                     text: resolucion.FacultadFirmaNombre,
                                     font: "Calibri",
                                     fontSize: 8,
                                     bold: true,
-                                }, ],
+                                },],
                             ],
                         },
                         layout: "noBorders",
-                    }, ],
+                    },],
                     content: self.getContenido(
                         contenidoResolucion,
                         resolucion,
@@ -504,7 +504,7 @@ angular
                         },
                     },
                     //Pie de página de la resolución
-                    footer: function(page, pages) {
+                    footer: function (page, pages) {
                         return {
                             columns: [
                                 "",
@@ -527,7 +527,7 @@ angular
             };
 
             //Función para obtener la estructura de la tabla de contratados
-            self.getTabla = function(
+            self.getTabla = function (
                 idProyecto,
                 nivelAcademico,
                 datos,
@@ -548,7 +548,7 @@ angular
             };
 
             //Obtener tabla del final
-            self.getTablaRevision = function() {
+            self.getTablaRevision = function () {
                 return {
                     style: "tabla_revision",
                     table: {
@@ -568,33 +568,33 @@ angular
                                 { text: $translate.instant("FIRMA"), style: "tabla_revision" },
                             ],
                             [{
-                                    text: $translate.instant("ELABORO"),
-                                    style: "tabla_revision",
-                                },
-                                { text: "Edilberto Fernández Santos", style: "tabla_revision" },
-                                {
-                                    text: "Auxiliar administrativo DRH",
-                                    style: "tabla_revision",
-                                },
+                                text: $translate.instant("ELABORO"),
+                                style: "tabla_revision",
+                            },
+                            { text: "Edilberto Fernández Santos", style: "tabla_revision" },
+                            {
+                                text: "Auxiliar administrativo DRH",
+                                style: "tabla_revision",
+                            },
                                 "",
                             ],
                             [{
-                                    text: $translate.instant("REVISO_APROBO"),
-                                    style: "tabla_revision",
-                                },
-                                { text: "Diana Mireya Parra Cardona", style: "tabla_revision" },
-                                {
-                                    text: "Jefe Oficina Asesora Jurídica",
-                                    style: "tabla_revision",
-                                },
+                                text: $translate.instant("REVISO_APROBO"),
+                                style: "tabla_revision",
+                            },
+                            { text: "Diana Mireya Parra Cardona", style: "tabla_revision" },
+                            {
+                                text: "Jefe Oficina Asesora Jurídica",
+                                style: "tabla_revision",
+                            },
                                 "",
                             ],
                             [{
-                                    text: $translate.instant("REVISO_APROBO"),
-                                    style: "tabla_revision",
-                                },
-                                { text: "Camilo Andrés Bustos Parra", style: "tabla_revision" },
-                                { text: "Secretario general", style: "tabla_revision" },
+                                text: $translate.instant("REVISO_APROBO"),
+                                style: "tabla_revision",
+                            },
+                            { text: "Camilo Andrés Bustos Parra", style: "tabla_revision" },
+                            { text: "Secretario general", style: "tabla_revision" },
                                 "",
                             ],
                         ],
@@ -603,7 +603,7 @@ angular
             };
 
             //Función para obtener el texto del preámbulo dentro de una estructura
-            self.getPreambuloTexto = function(preambulo) {
+            self.getPreambuloTexto = function (preambulo) {
                 return {
                     text: preambulo,
                     style: "texto",
@@ -611,7 +611,7 @@ angular
             };
 
             //Función para obtener el texto de la consideración dentro de una estructura
-            self.getConsideracionTexto = function(consideracion) {
+            self.getConsideracionTexto = function (consideracion) {
                 return {
                     text: consideracion,
                     style: "texto",
@@ -619,12 +619,12 @@ angular
             };
 
             //Funcion para obtener el texto de los artiulos consu paragrafos dentro de una estructura
-            self.getArticuloTexto = function(articulo, numero) {
+            self.getArticuloTexto = function (articulo, numero) {
                 var aux = [{
-                        text: $translate.instant("ARTICULO") + " " + (numero + 1) + "º. ",
-                        style: "texto_numeracion",
-                    },
-                    articulo.Texto,
+                    text: $translate.instant("ARTICULO") + " " + (numero + 1) + "º. ",
+                    style: "texto_numeracion",
+                },
+                articulo.Texto,
                 ];
                 if (articulo.Paragrafos !== null) {
                     // Solo se enumeran si hay más de uno
@@ -637,7 +637,7 @@ angular
                     } else {
                         var numeroParagrafo = 1;
                         //Cada paragrafo se inserta dentro del texto del articulo
-                        articulo.Paragrafos.forEach(function(paragrafo) {
+                        articulo.Paragrafos.forEach(function (paragrafo) {
                             aux.push({
                                 text: " " +
                                     $translate.instant("PARAGRAFO") +
@@ -663,7 +663,7 @@ angular
              */
 
             //Función que retorna las unidades del número en texto
-            self.getUnidades = function(num) {
+            self.getUnidades = function (num) {
                 switch (num) {
                     case 1:
                         return "PRIMERO";
@@ -688,7 +688,7 @@ angular
             };
 
             //Función que retorna las decenas del número en texto
-            self.getDecenas = function(numero) {
+            self.getDecenas = function (numero) {
                 var decena = Math.floor(numero / 10);
                 var unidad = numero - decena * 10;
                 switch (decena) {
@@ -717,7 +717,7 @@ angular
             };
 
             //Función que retorna los números de entrada en texto formato orden
-            self.numeroALetras = function(numero) {
+            self.numeroALetras = function (numero) {
                 if (numero === 0) {
                     return "CERO ";
                 } else {
@@ -726,7 +726,7 @@ angular
             };
 
             //Función que retorna un número en formato monetario "99.999.999"
-            self.FormatoNumero = function(amount, decimals) {
+            self.FormatoNumero = function (amount, decimals) {
                 amount += "";
                 amount = parseFloat(amount.replace(/[^0-9\.]/g, ""));
 
@@ -748,54 +748,26 @@ angular
                 return amount_parts.join(".");
             };
 
-            self.saveDocGestorDoc = function(dataToPDF, nombre, self) {
-                var post = [{}];
-                // post[0].IdDocumento = 38;
-                post[0].IdTipoDocumento = 38;
-                post[0].nombre = nombre;
-                post[0].file = String(dataToPDF);
-                post[0].descripcion = self.contrato_id + "" + self.contrato_vigencia;
-                post[0].metadatos = {
-                    contrato: parseInt(self.contrato_id),
-                    vigencia: parseInt(self.contrato_vigencia),
-                };
+            self.saveDocGestorDoc = function (dataToPDF, nombre, self) {
 
-                novedadesMidRequest
-                    .post("gestor_documental", post)
-                    .then(function(response) {
-                        if (response.status == 200) {
-                            // var docResponse = JSON.parse(atob(response.data.Body));
-                            // novedadesRequest
-                            //     .get(
-                            //         "novedades_poscontractuales",
-                            //         "query=ContratoId:" +
-                            //         self.contrato_id +
-                            //         "&limit=1&sortby=Id&order=desc"
-                            //     )
-                            //     .then(function(novedades) {
-                            //         if (novedades.status == 200) {
-                            //             var post = {};
-                            //             post.IdNovedadesPoscontractuales = {
-                            //                 Id: novedades.data[0].Id,
-                            //             };
-                            //             post.Enlace = docResponse.Enlace;
-                            //             post.FechaRegistro = new Date();
-                            //             post.IdDocumento = docResponse.Id;
-                            //             post.NombreDocumento = docResponse.Nombre;
-                            //             post.NumeroContrato = parseInt(self.contrato_id);
-                            //             post.Vigencia = parseInt(self.contrato_vigencia);
-                            //             novedadesRequest
-                            //                 .post("documentos_contrato", post)
-                            //                 .then(function(doc_response) {
-                            //                     if (doc_response.status == 200) {
-                            //                         //agregar mensaje
-                            //                     }
-                            //                 });
-                            //         }
-                            //     });
-                        }
+                return $q(function (resolve) {
+                    var post = [{}];
+                    // post[0].IdDocumento = 38;
+                    post[0].IdTipoDocumento = 38;
+                    post[0].nombre = nombre;
+                    post[0].file = String(dataToPDF);
+                    post[0].descripcion = self.contrato_id + "" + self.contrato_vigencia;
+                    post[0].metadatos = {
+                        contrato: parseInt(self.contrato_id),
+                        vigencia: parseInt(self.contrato_vigencia),
+                        estado: self.estadoNovedad,
+                        idNovedad: self.idRegistro,
+                    };
+                    novedadesMidRequest.post("gestor_documental", post).then(function (responseDoc) {
+                        resolve(responseDoc.data.Body.Enlace);
                     });
-            };
+                })
+            }
 
             return self;
         }

@@ -31,8 +31,8 @@
                                 <p>
                                     {{sLactaCesion.contrato_obj.contratista_nombre}} <br>
                                     <span style="color:#555; font-size:14px;">
-                    {{sLactaCesion.contrato_obj.contratista_documento}}
-                  </span>
+                                        {{sLactaCesion.contrato_obj.contratista_documento}}
+                                    </span>
                                 </p>
                             </div>
                             <div class="col-md-8" ng-if="sLactaCesion.contrato_obj.contratista_documento == null">
@@ -100,55 +100,67 @@
                     <div class="panel-body">
                         <form name="formCesion">
 
-                            <div class="col-md-6">
-                                <label>
-                  {{'NUMERO_SOLICITUD' | translate}} *:
-                </label>
-                                <br>
-                                <md-input-container style="margin:0;">
-                                    <input type="number" id="n_solicitud" name="n_solicitud" required ng-model="sLactaCesion.n_solicitud" ng-disabled="false" 
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" min="0">
-                                    <div ng-messages="formCesion.n_solicitud.$error">
-                                        <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                                    </div>
-                                </md-input-container>
+                            <div class="row" style="border: 0px solid;">
+                                <div class="col-xs-12 col-md-6">
+                                    <label>{{'NUMERO_SOLICITUD' | translate}}*</label>
+                                    <md-input-container style="margin:0;">
+                                        <input type="number" id="n_solicitud" name="n_solicitud" required
+                                            ng-model="sLactaCesion.n_solicitud" ng-disabled="false"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" min="0">
+                                        <div ng-messages="formCesion.n_solicitud.$error">
+                                            <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div class="col-xs-12 col-md-6">
+                                    <label for="fechacesion">{{'FECHA_SOLICITUD' | translate}}</label><br>
+                                    <md-datepicker ng-model="sLactaCesion.f_cesion"
+                                        md-min-date="sLactaCesion.fecha_lim_inf"
+                                        md-max-date="sLactaCesion.fecha_lim_sup"
+                                        md-placeholder="Ingrese fecha"></md-datepicker>
+                                </div>
                             </div>
-
-                            <div class="col-md-6">
+                            <div class="row" style="border: 0px solid;"></div>
+                            <div class="col-xs-12 col-md-6">
                                 <label style="width:100%;">
-                  {{'NUMERO_OFICIO' | translate}} *:
-                </label>
+                                    {{'NUMERO_OFICIO' | translate}} *:
+                                </label>
                                 <md-input-container style="margin:0;">
-                                    <input type="number" name="num_oficio" ng-model="sLactaCesion.num_oficio" required id="oficio" 
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" min="0">
+                                    <input type="number" name="num_oficio" ng-model="sLactaCesion.num_oficio" required
+                                        id="oficio" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        min="0">
                                     <div ng-messages="formCesion.num_oficio.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>
                                 </md-input-container>
                             </div>
-
-                            <div class="col-md-6">
+                            <div class="col-xs-12 col-md-6">
                                 <label for="fechaoficio form-group">{{'FECHA_OFICIO' | translate}}</label> <br>
-                                <md-datepicker ng-model="sLactaCesion.f_oficio" md-placeholder="Ingrese fecha"></md-datepicker>
+                                <md-datepicker ng-model="sLactaCesion.f_oficio"
+                                    md-placeholder="Ingrese fecha"></md-datepicker>
                             </div>
-
-                            <div class="form-group col-md-6">
+                            <div class="col-xs-12 col-md-6">
                                 <label for="fechacesion">{{'FECHA_CESION' | translate}}</label><br>
-                                <md-datepicker ng-model="sLactaCesion.f_cesion" md-placeholder="Ingrese fecha"></md-datepicker>
+                                <md-datepicker ng-model="sLactaCesion.f_cesion" md-min-date="sLactaCesion.fecha_lim_inf"
+                                    md-max-date="sLactaCesion.fecha_lim_sup"
+                                    md-placeholder="Ingrese fecha"></md-datepicker>
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="col-xs-12 col-md-6">
                                 <label for="fechaterminacion">{{'FECHA_TERMINACION_CEDENTE' | translate}}</label><br>
-                                <md-datepicker ng-model="sLactaCesion.f_terminacion" md-max-date="sLactaCesion.f_cesion" md-placeholder="Ingrese fecha" ng-disabled="true"></md-datepicker>
+                                <md-datepicker ng-model="sLactaCesion.f_terminacion" md-max-date="sLactaCesion.f_cesion"
+                                    md-placeholder="Ingrese fecha" ng-disabled="true"></md-datepicker>
                             </div>
                             <div class="col-md-12">
                                 <hr>
                                 <div class="col-md-6">
                                     <label style="width:100%;">
-                    {{'VALOR_DESEMBOLSADO' | translate}} *:
-                  </label>
+                                        {{'VALOR_DESEMBOLSADO' | translate}} *:
+                                    </label>
                                     <md-input-container style="margin:0;">
-                                        <input type="number" name="valor_desembolsado" ng-model="sLactaCesion.valor_desembolsado" required id="valor_desembolsado"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        <input type="number" name="valor_desembolsado"
+                                            ng-model="sLactaCesion.valor_desembolsado" required id="valor_desembolsado"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            ng-keyup="validarValorDesembolsado($event)">
                                         <div ng-messages="formCesion.valor_desembolsado.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>
@@ -156,11 +168,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label style="width:100%;">
-                    {{'VALOR_A_FAVOR' | translate}} *:
-                  </label>
+                                        {{'VALOR_A_FAVOR' | translate}} *:
+                                    </label>
                                     <md-input-container style="margin:0;">
-                                        <input type="number" name="valor_a_favor" ng-model="sLactaCesion.valor_a_favor" required id="valor_a_favor"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        <input type="number" name="valor_a_favor" ng-model="sLactaCesion.valor_a_favor"
+                                            required id="valor_a_favor"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            ng-keyup="validarValorCedente($event)">
                                         <div ng-messages="formCesion.valor_a_favor.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>
@@ -172,13 +186,18 @@
                             <div class="col-md-12 form-group">
                                 <br>
                                 <label>{{'CEDULA_CESIONARIO' | translate}}</label>
-                                <md-autocomplete style="position:relative; top:-10px; max-height:45px;" md-floating-label=" " md-search-text="sLactaCesion.texto_busqueda" md-items="item in sLactaCesion.persona_natural_grep" md-item-text="item.Id+''" md-selected-item="sLactaCesion.persona_sel"
-                                    md-selected-item-change="sLactaCesion.persona_sel_change(item)" md-search-text-change="sLactaCesion.cargar_persona_natural(sLactaCesion.texto_busqueda)">
+                                <md-autocomplete style="position:relative; top:-10px; max-height:45px;"
+                                    md-floating-label=" " md-search-text="sLactaCesion.texto_busqueda"
+                                    md-items="item in sLactaCesion.persona_natural_grep" md-item-text="item.Id+''"
+                                    md-selected-item="sLactaCesion.persona_sel"
+                                    md-selected-item-change="sLactaCesion.persona_sel_change(item)"
+                                    md-search-text-change="sLactaCesion.cargar_persona_natural(sLactaCesion.texto_busqueda)">
                                     <md-item-template class="md-block">
-                                        <span style="display:block; line-height: normal;vertical-align: top; padding-top: 7px;">{{item.Id}}</span>
+                                        <span
+                                            style="display:block; line-height: normal;vertical-align: top; padding-top: 7px;">{{item.Id}}</span>
                                         <span style="display:block; color:#888; line-height:normal; font-size:12px; ">
-                      {{item.PrimerNombre}} {{item.PrimerApellido}}
-                    </span>
+                                            {{item.PrimerNombre}} {{item.PrimerApellido}}
+                                        </span>
                                     </md-item-template>
                                     <md-not-found>
                                         No match found.
@@ -188,7 +207,12 @@
 
                             <div class="form-group col-md-12">
                                 <label for="consideraciones">{{'OTRAS_OBSERVACIONES' | translate}} *:</label>
-                                <textarea class="form-control" required name="observaciones" style="border-radius:0;" maxlength="249" ng-model="sLactaCesion.observaciones" id="observaciones" rows="3"></textarea>
+                                <textarea class="form-control" required name="observaciones" style="border-radius:0;"
+                                    maxlength="249" ng-model="sLactaCesion.observaciones" id="observaciones"
+                                    rows="3"></textarea>
+                                <div ng-messages="formCesion.valor_a_favor.$error">
+                                    <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -202,7 +226,8 @@
     <br>
     <br>
     <div class="panel-footer">
-        <center><button class="btn btn-primary btn-lg" ng-click="sLactaCesion.generarActa()">{{'CREAR_NOVEDAD_CESION' | translate}}</button></center>
+        <center><button class="btn btn-primary btn-lg" ng-click="sLactaCesion.generarActa()">{{'CREAR_NOVEDAD_CESION' |
+                translate}}</button></center>
     </div>
     <br>
     <br>

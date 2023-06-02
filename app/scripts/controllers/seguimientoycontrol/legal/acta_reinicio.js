@@ -29,7 +29,6 @@ angular
             this.awesomeThings = ["HTML5 Boilerplate", "AngularJS", "Karma"];
 
             var self = this;
-            self.f_hoy = new Date();
             self.f_suspension = new Date();
             self.f_finsuspension = new Date();
             self.fechaLimite = new Date();
@@ -40,21 +39,29 @@ angular
             self.contrato_obj = {};
             self.contrato_obj_replica = {};
             self.suspension_obj = {};
-            self.estado_ejecucion = {};
             self.n_solicitud = null;
+            self.fecha_solicitud = new Date();
             self.auxiliar = null;
             self.novedades = [];
+            self.estadoNovedad = "";
+            self.idRegistroNov = "";
             self.novedad_suspension = "";
             self.novedad_reinicio = "";
             self.novedad_motivo = "";
             self.novedad_finsuspension = "";
-            self.auxiliar = null;
             self.elaboro = "";
             self.estados = [];
             self.elaboro_cedula = token_service.getPayload().documento;
 
-            const input = document.getElementById("n_solicitud");
-            input.addEventListener("input", function () {
+            const solic_input = document.getElementById("n_solicitud");
+            solic_input.addEventListener("input", function () {
+                if (this.value.length > 7) {
+                    this.value = this.value.slice(0, 7);
+                }
+            })
+
+            const oficio_input = document.getElementById("oficio");
+            oficio_input.addEventListener("input", function () {
                 if (this.value.length > 7) {
                     this.value = this.value.slice(0, 7);
                 }
@@ -679,6 +686,105 @@ angular
             }
 
             /**
+            * @ngdoc method
+            * @name postNovedad
+            * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaReinicioCtrl
+            * @description
+            * funcion que realiza la inserción de los datos de la novedad
+            * enviando la petición POST al MID de Novedades
+             */
+            self.postNovedad = function (nuevoEstado, docDefinition, dateTime, enlaceDoc) {
+                self.reinicio_nov.enlace = enlaceDoc;
+                novedadesMidRequest
+                    .post("validarCambioEstado", self.estados)
+                    .then(function (vc_response) {
+                        self.validacion = vc_response.data.Body;
+                        if (self.validacion == "true") {
+                            if (self.estadoNovedad == "4518") {
+                                novedadesMidRequest
+                                    .post("novedad", self.reinicio_nov)
+                                    .then(function (response_nosql) {
+                                        if (
+                                            response_nosql.status == 200 ||
+                                            response_nosql.statusText == "OK"
+                                        ) {
+                                            pdfMake
+                                                .createPdf(docDefinition)
+                                                .download(
+                                                    "acta_reinicio_contrato_" +
+                                                    self.contrato_id + "_" +
+                                                    dateTime + ".pdf"
+                                                );
+                                            swal(
+                                                $translate.instant("TITULO_BUEN_TRABAJO"),
+                                                $translate.instant("DESCRIPCION_REINICIO") +
+                                                self.contrato_obj.numero_contrato +
+                                                " " +
+                                                $translate.instant("ANIO") +
+                                                ": " +
+                                                self.contrato_obj.vigencia,
+                                                "success"
+                                            ).then(function () {
+                                                window.location.href =
+                                                    "#/seguimientoycontrol/legal";
+                                            });
+                                        }
+                                    });
+                            } else {
+                                novedadesMidRequest
+                                    .put("replica", self.suspension_obj.id, self.contrato_obj_replica)
+                                    .then(function (request_argo) {
+                                        if (
+                                            request_argo.status == 200 ||
+                                            request_argo.statusText == "Ok"
+                                        ) {
+                                            novedadesMidRequest
+                                                .post("novedad", self.reinicio_nov)
+                                                .then(function (response_nosql) {
+                                                    if (
+                                                        response_nosql.status == 200 ||
+                                                        response_nosql.statusText == "OK"
+                                                    ) {
+                                                        agoraRequest
+                                                            .post("contrato_estado", nuevoEstado)
+                                                            .then(function (response) {
+                                                                if (
+                                                                    response.status == 201 ||
+                                                                    Object.keys(response.data) > 0
+                                                                ) {
+                                                                    pdfMake
+                                                                        .createPdf(docDefinition)
+                                                                        .download(
+                                                                            "acta_reinicio_contrato_" +
+                                                                            self.contrato_id + "_" +
+                                                                            dateTime + ".pdf"
+                                                                        );
+                                                                    swal(
+                                                                        $translate.instant("TITULO_BUEN_TRABAJO"),
+                                                                        $translate.instant("DESCRIPCION_REINICIO") +
+                                                                        self.contrato_obj.numero_contrato +
+                                                                        " " +
+                                                                        $translate.instant("ANIO") +
+                                                                        ": " +
+                                                                        self.contrato_obj.vigencia,
+                                                                        "success"
+                                                                    ).then(function () {
+                                                                        window.location.href =
+                                                                            "#/seguimientoycontrol/legal";
+                                                                    });
+                                                                }
+                                                            });
+                                                    }
+                                                });
+                                        };
+                                    });
+                            }
+                        }
+                    });
+
+            }
+
+            /**
              * @ngdoc method
              * @name generarActa
              * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaReinicioCtrl
@@ -696,6 +802,17 @@ angular
                     Vigencia: parseInt(self.contrato_vigencia),
                     FechaRegistro: new Date(),
                 };
+                var fechaActual = new Date();
+                if (
+                    (fechaActual.getDate() == self.f_reinicio.getDate()
+                        && fechaActual.getMonth() == self.f_reinicio.getMonth()
+                        && fechaActual.getFullYear() == self.f_reinicio.getFullYear())
+                    || fechaActual > self.f_reinicio
+                ) {
+                    self.estadoNovedad = "4519";
+                } else {
+                    self.estadoNovedad = "4518";
+                }
                 if ($scope.formReinicio.$valid) {
                     novedadesRequest
                         .get("tipo_novedad", "query=Nombre:Reinicio")
@@ -707,7 +824,7 @@ angular
                             self.reinicio_nov.tiponovedad =
                                 nc_response.data[0].CodigoAbreviacion;
                             self.reinicio_nov.fecharegistro = new Date();
-                            self.reinicio_nov.fechasolicitud = new Date();
+                            self.reinicio_nov.fechasolicitud = self.fecha_solicitud;
                             self.reinicio_nov.numerosolicitud = self.n_solicitud;
                             self.reinicio_nov.numerooficioestadocuentas = 0;
                             self.reinicio_nov.valor_desembolsado = 0;
@@ -717,22 +834,16 @@ angular
                                 "0001-01-01T00:00:00Z";
                             self.reinicio_nov.periodosuspension = self.diff_dias;
                             self.reinicio_nov.fechasuspension = self.f_suspension;
+                            self.reinicio_nov.fechafinsuspension = self.f_finsuspension;
                             self.reinicio_nov.fechareinicio = self.f_reinicio;
                             self.reinicio_nov.fechafinefectiva = self.calcularFechaFin(self.diff_dias);
                             self.reinicio_nov.observacion = "";
                             self.reinicio_nov.cesionario = parseInt(
                                 self.contrato_obj.contratista
                             );
-                            self.contrato_estado = {};
-                            self.contrato_estado.NumeroContrato =
-                                self.contrato_obj.numero_contrato;
-                            self.contrato_estado.Vigencia = self.contrato_obj.vigencia;
-                            self.contrato_estado.FechaRegistro =
-                                self.contrato_obj.fecha_registro;
-                            self.contrato_estado.Estado = self.estado_ejecucion;
-                            self.contrato_estado.Usuario = "up";
-                            //recolección POST Argo
+                            self.reinicio_nov.estado = self.estadoNovedad;
 
+                            //recolección POST Argo
                             self.contrato_obj_replica.NumeroContrato = self.suspension_obj.NumeroContrato; //Revisar si toca parsearlo
                             self.contrato_obj_replica.Vigencia = self.suspension_obj.Vigencia; //parseInt(self.contrato_obj.vigencia);
                             self.contrato_obj_replica.FechaRegistro = new Date();//self.suspension_obj.FechaRegistro;
@@ -744,73 +855,28 @@ angular
                             self.contrato_obj_replica.FechaReinicio = new Date(self.f_reinicio);
                             self.contrato_obj_replica.UnidadEjecucion = self.suspension_obj.UnidadEjecucion;
                             self.contrato_obj_replica.TipoNovedad = parseFloat(216);
-                        });
-                    agoraRequest
-                        .get(
-                            "contrato_estado?query=NumeroContrato:" +
-                            self.contrato_obj.id +
-                            ",Vigencia:" +
-                            self.contrato_obj.vigencia +
-                            "&sortby=Id&order=desc&limit=1"
-                        )
-                        .then(function (ce_response) {
-                            if (
-                                ce_response.data[ce_response.data.length - 1].Estado
-                                    .NombreEstado == "Suspendido"
-                            ) {
-                                var estado_temp_from = {
-                                    NombreEstado: "suspendido",
-                                };
-                            }
 
-                            self.estados[0] = estado_temp_from;
-                            novedadesMidRequest
-                                .post("validarCambioEstado", self.estados)
-                                .then(function (vc_response) {
-                                    self.validacion = vc_response.data.Body;
-                                    if (self.validacion == "true") {
-                                        novedadesMidRequest
-                                            .put("novedad", self.suspension_obj.id, self.contrato_obj_replica)
-                                            .then(function (request_argo) {
-                                                if (
-                                                    request_argo.status == 200 ||
-                                                    request_argo.statusText == "Ok"
-                                                ) {
-                                                    novedadesMidRequest
-                                                        .post("novedad", self.reinicio_nov)
-                                                        .then(function (response_nosql) {
-                                                            if (
-                                                                response_nosql.status == 200 ||
-                                                                response_nosql.statusText == "OK"
-                                                            ) {
-                                                                agoraRequest
-                                                                    .post("contrato_estado", nuevoEstado)
-                                                                    .then(function (response) {
-                                                                        if (
-                                                                            response.status == 201 ||
-                                                                            Object.keys(response.data) > 0
-                                                                        ) {
-                                                                            self.formato_generacion_pdf();
-                                                                            swal(
-                                                                                $translate.instant("TITULO_BUEN_TRABAJO"),
-                                                                                $translate.instant("DESCRIPCION_REINICIO") +
-                                                                                self.contrato_obj.numero_contrato +
-                                                                                " " +
-                                                                                $translate.instant("ANIO") +
-                                                                                ": " +
-                                                                                self.contrato_obj.vigencia,
-                                                                                "success"
-                                                                            ).then(function () {
-                                                                                window.location.href =
-                                                                                    "#/seguimientoycontrol/legal";
-                                                                            });
-                                                                        }
-                                                                    });
-                                                            }
-                                                        });
-                                                };
-                                            });
+                            agoraRequest
+                                .get(
+                                    "contrato_estado?query=NumeroContrato:" +
+                                    self.contrato_obj.id +
+                                    ",Vigencia:" +
+                                    self.contrato_obj.vigencia +
+                                    "&sortby=Id&order=desc&limit=1"
+                                )
+                                .then(function (ce_response) {
+                                    if (
+                                        ce_response.data[ce_response.data.length - 1].Estado
+                                            .NombreEstado == "Suspendido"
+                                    ) {
+                                        var estado_temp_from = {
+                                            NombreEstado: "suspendido",
+                                        };
                                     }
+
+                                    self.estados[0] = estado_temp_from;
+                                    self.formato_generacion_pdf(nuevoEstado);
+
                                 });
                         });
                 } else {
@@ -903,7 +969,7 @@ angular
              * @description
              * Funcion para la obtencion de la plantilla para la generacion del pdf del acta
              */
-            self.formato_generacion_pdf = function () {
+            self.formato_generacion_pdf = function (nuevoEstado) {
 
                 var dateTime =
                     new Date().getFullYear() +
@@ -922,16 +988,7 @@ angular
                 // "_" +
                 // dateTime +
                 // ".pdf")
-                pdfMake
-                    .createPdf(docDefinition)
-                    .download(
-                        "acta_reinicio_contrato_" +
-                        self.contrato_id +
-                        "_" +
-                        dateTime +
-                        ".pdf"
-                    );
-                $location.path("/seguimientoycontrol/legal");
+                // $location.path("/seguimientoycontrol/legal");
 
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
                 pdfDocGenerator.getBase64(function (data) {
@@ -943,7 +1000,10 @@ angular
                         dateTime +
                         ".pdf",
                         self
-                    );
+                    ).then(function (enlace) {
+                        self.postNovedad(nuevoEstado, docDefinition, dateTime, enlace);
+                    });
+
                 });
             };
 

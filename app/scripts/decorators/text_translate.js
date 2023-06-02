@@ -429,7 +429,7 @@ var text_es = {
     DESCRIPCION_PRORROGA: "Se registro exitosamente la novedad de 'Prorroga'<br>al contrato # ",
     DESCRIPCION_ADICION_PRORROGA: "Se registro exitosamente la novedad de 'Adición y Prorroga'<br>al contrato # ",
     DESCRIPCION_ERROR_ADICION_PRORROGA: "No se pudo registrar la novedad de 'Adición y/o Prorroga'<br>al contrato # ",
-    DESCRIPCION_ERROR_ADICION_PRORROGA2: "Ya existe una novedad de 'Adición y/o Prórroga'<br>para el contrato # ",
+    DESCRIPCION_ERROR_ADICION_PRORROGA2: "Debe seleccionar un CDP para crear la novedad!",
     DESCRIPCION_INICIO_ERROR_FECHA: "La fecha fin debe ser mayor a la fecha inicio!",
     DESCRIPCION_CESION: "Se registro exitosamente la novedad de cesión al contrato # ",
     DESCRIPCION_ERROR_CESION: "Ya existe una novedad de cesión <br>para el contrato # ",

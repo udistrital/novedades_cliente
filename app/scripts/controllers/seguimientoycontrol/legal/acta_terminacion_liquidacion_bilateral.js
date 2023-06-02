@@ -33,6 +33,7 @@ angular.module('contractualClienteApp')
 
             var self = this;
             self.novedades = [];
+            self.estadoNovedad = "";
             self.f_hoy = new Date();
             self.n_solicitud = null;
             self.fecha_inicio = "";
@@ -46,12 +47,15 @@ angular.module('contractualClienteApp')
             self.a_favor = {};
             self.numero_solicitud = null;
             self.numero_oficio_estado_cuentas = null;
+            self.fecha_oficio = new Date();
             self.valor_desembolsado = '';
             self.saldo_contratista = '';
             self.saldo_universidad = null;
             self.fecha_solicitud = new Date();
             self.fecha_terminacion_anticipada = new Date();
             self.estados = [];
+            self.estadoNovedad = "";
+            self.idRegistro = "";
             self.elaboro = '';
             self.elaboro_cedula = token_service.getPayload().documento;
 
@@ -208,8 +212,9 @@ angular.module('contractualClienteApp')
                                 //consulta el CDP y RP
                                 financieraJbpmRequest
                                     .get(
-                                        "cdprptercero/" +
-                                        self.contrato_obj.contratista_documento
+                                        "cdprptercerocontrato/" +
+                                        self.contrato_obj.vigencia + "/" +
+                                        self.contrato_obj.numero_contrato
                                     )
                                     .then(function (financiera_response) {
                                         if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
@@ -234,8 +239,9 @@ angular.module('contractualClienteApp')
                                 //consulta el CDP y RP
                                 financieraJbpmRequest
                                     .get(
-                                        "cdprptercero/" +
-                                        self.contrato_obj.contratista_documento
+                                        "cdprptercerocontrato/" +
+                                        self.contrato_obj.vigencia + "/" +
+                                        self.contrato_obj.numero_contrato
                                     )
                                     .then(function (financiera_response) {
                                         if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
@@ -285,17 +291,17 @@ angular.module('contractualClienteApp')
                 }
             });
             //seleccionador de beneficiario de saldo
-            self.selecionarSaldo = function () {
-                if (self.a_favor_de == "Universidad") {
-                    self.a_favor.entidad = "la Universidad Distrital.";
-                    self.a_favor.valor = self.terminacion_nov.saldo_universidad;
-                    self.a_favor.existe = "no existe un saldo a favor de este.";
-                } else if (self.a_favor_de == "Contratista") {
-                    self.a_favor.entidad = "el Contratista.";
-                    self.a_favor.valor = self.terminacion_nov.saldo_contratista;
-                    self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(String(self.terminacion_nov.saldo_contratista) + '');
-                }
-            }
+            // self.selecionarSaldo = function () {
+            //     if (self.a_favor_de == "Universidad") {
+            //         self.a_favor.entidad = "la Universidad Distrital.";
+            //         self.a_favor.valor = self.terminacion_nov.saldo_universidad;
+            //         self.a_favor.existe = "no existe un saldo a favor de este.";
+            //     } else if (self.a_favor_de == "Contratista") {
+            //         self.a_favor.entidad = "el Contratista.";
+            //         self.a_favor.valor = self.terminacion_nov.saldo_contratista;
+            //         self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(String(self.terminacion_nov.saldo_contratista) + '');
+            //     }
+            // }
 
             /**
              * @ngdoc method
@@ -305,58 +311,144 @@ angular.module('contractualClienteApp')
              * funcion que realiza la inserción de los datos de la novedad
              * enviando la petición POST al MID de Novedades
              */
-            self.postNovedad = function (nuevoEstado) {
-                novedadesMidRequest
-                    .post('novedad', self.terminacion_nov)
-                    .then(function (response_nosql) {
-                        if (response_nosql.status == 200 || response.statusText == "Ok") {
-                            agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
-                                if (response.status == 201 || Object.keys(response.data) > 0) {
-                                    self.formato_generacion_pdf();
-                                    $scope.alert = 'DESCRIPCION_TERMINACION'
+            self.postNovedad = function (nuevoEstado, output, dateTime, enlaceDoc) {
+                self.terminacion_nov.enlace = enlaceDoc;
+                novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
+                    if (vc_response.data.Body == "true") {
+                        console.log(self.terminacion_nov)
+                        if (self.terminacion_nov.estado == "4518") {
+                            novedadesMidRequest
+                                .post('novedad', self.terminacion_nov)
+                                .then(function (response_nosql) {
+                                    if (response_nosql.status == 200 || response.statusText == "Ok") {
+                                        pdfMake
+                                            .createPdf(output)
+                                            .download(
+                                                "acta_terminacion_anticipada_" +
+                                                self.contrato_id +
+                                                "_" +
+                                                dateTime +
+                                                ".pdf"
+                                            );
+                                        $scope.alert = 'DESCRIPCION_TERMINACION'
+                                        swal({
+                                            title: $translate.instant('TITULO_BUEN_TRABAJO'),
+                                            type: 'success',
+                                            html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                            showCloseButton: false,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false
+                                        }).then(function () {
+                                            window.location.href = "#/seguimientoycontrol/legal";
+                                        });
+                                    } else {
+                                        //respuesta incorrecta, ej: 400/500
+                                        $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                        swal({
+                                            title: $translate.instant('TITULO_ERROR_ACTA'),
+                                            type: 'error',
+                                            html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
+                                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false
+                                        }).then(function () {
+
+                                        });
+                                    }
+                                });
+                        } else {
+                            self.contrato_obj_replica.esFechaActual = true;
+                            novedadesMidRequest
+                                .post("replica", self.contrato_obj_replica)
+                                .then(function (request_novedades) {
+                                    if (
+                                        request_novedades.status == 200 ||
+                                        request_novedades.statusText == "OK"
+                                    ) {
+                                        console.log("Replica correcta");
+                                        novedadesMidRequest
+                                            .post('novedad', self.terminacion_nov)
+                                            .then(function (response_nosql) {
+                                                if (response_nosql.status == 200 || response_nosql.statusText == "Ok") {
+                                                    agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
+                                                        if (response.status == 201 || Object.keys(response.data) > 0) {
+                                                            pdfMake
+                                                                .createPdf(output)
+                                                                .download(
+                                                                    "acta_terminacion_anticipada_" +
+                                                                    self.contrato_id +
+                                                                    "_" +
+                                                                    dateTime +
+                                                                    ".pdf"
+                                                                );
+                                                            $scope.alert = 'DESCRIPCION_TERMINACION'
+                                                            swal({
+                                                                title: $translate.instant('TITULO_BUEN_TRABAJO'),
+                                                                type: 'success',
+                                                                html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                                showCloseButton: false,
+                                                                showCancelButton: false,
+                                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                allowOutsideClick: false
+                                                            }).then(function () {
+                                                                window.location.href = "#/seguimientoycontrol/legal";
+                                                            });
+                                                        }
+                                                    });
+                                                } else {
+                                                    //respuesta incorrecta, ej: 400/500
+                                                    $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                                    swal({
+                                                        title: $translate.instant('TITULO_ERROR_ACTA'),
+                                                        type: 'error',
+                                                        html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
+                                                            $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                        showCloseButton: true,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                        allowOutsideClick: false
+                                                    }).then(function () {
+
+                                                    });
+                                                }
+                                            }).catch(function (error) {
+                                                //Servidor no disponible
+                                                $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                                swal({
+                                                    title: $translate.instant('TITULO_ERROR_ACTA'),
+                                                    type: 'error',
+                                                    html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
+                                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                                    showCloseButton: true,
+                                                    showCancelButton: false,
+                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                    allowOutsideClick: false
+                                                }).then(function () { });
+                                            });
+                                    }
+                                }).catch(function (error) {
+                                    //Error en la replica
+                                    $scope.alert = "TITULO_ERROR_REPLICA";
                                     swal({
-                                        title: $translate.instant('TITULO_BUEN_TRABAJO'),
-                                        type: 'success',
-                                        html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
-                                        showCloseButton: false,
+                                        title: $translate.instant("TITULO_ERROR_ACTA"),
+                                        type: "error",
+                                        html: $translate.instant($scope.alert) +
+                                            self.contrato_obj.numero_contrato +
+                                            $translate.instant("ANIO") +
+                                            self.contrato_obj.vigencia +
+                                            ".",
+                                        showCloseButton: true,
                                         showCancelButton: false,
                                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                        allowOutsideClick: false
-                                    }).then(function () {
-                                        window.location.href = "#/seguimientoycontrol/legal";
-                                    });
-                                }
-                            });
-                        } else {
-                            //respuesta incorrecta, ej: 400/500
-                            $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
-                            swal({
-                                title: $translate.instant('TITULO_ERROR_ACTA'),
-                                type: 'error',
-                                html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
-                                    $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
-                                showCloseButton: true,
-                                showCancelButton: false,
-                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                allowOutsideClick: false
-                            }).then(function () {
-
-                            });
+                                        allowOutsideClick: false,
+                                    }).then(function () { });
+                                })
                         }
-                    }).catch(function (error) {
-                        //Servidor no disponible
-                        $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
-                        swal({
-                            title: $translate.instant('TITULO_ERROR_ACTA'),
-                            type: 'error',
-                            html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
-                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
-                            showCloseButton: true,
-                            showCancelButton: false,
-                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                            allowOutsideClick: false
-                        }).then(function () { });
-                    });
+                    }
+                });
             }
 
 
@@ -377,16 +469,29 @@ angular.module('contractualClienteApp')
                     "Vigencia": parseInt(self.contrato_vigencia),
                     "FechaRegistro": new Date()
                 };
+                var fechaActual = new Date();
+                if (
+                    (fechaActual.getDate() == self.fecha_terminacion_anticipada.getDate()
+                        && fechaActual.getMonth() == self.fecha_terminacion_anticipada.getMonth()
+                        && fechaActual.getFullYear() == self.fecha_terminacion_anticipada.getFullYear())
+                    || fechaActual > self.fecha_terminacion_anticipada
+                ) {
+                    self.estadoNovedad = "4519";
+                } else {
+                    self.estadoNovedad = "4518";
+                }
 
                 if ($scope.formTerminacion.$valid) {
                     novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
                         self.terminacion_nov = {};
-                        self.terminacion_nov.contrato = self.contrato_obj.id;
+                        self.terminacion_nov.contrato = self.contrato_obj.numero_contrato;
                         self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
+                        self.terminacion_nov.cesionario = parseInt(self.contrato_obj.contratista);
                         self.terminacion_nov.motivo = self.motivo;
                         self.terminacion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
                         self.terminacion_nov.fecharegistro = new Date();
                         self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
+                        self.terminacion_nov.fechaoficio = self.fecha_oficio;
                         self.terminacion_nov.numerosolicitud = self.numero_solicitud;
                         self.terminacion_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
                         self.terminacion_nov.valor_desembolsado = self.valor_desembolsado;
@@ -394,6 +499,7 @@ angular.module('contractualClienteApp')
                         self.terminacion_nov.saldo_universidad = self.saldo_universidad;
                         self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;
                         self.terminacion_nov.fechafinefectiva = self.fecha_terminacion_anticipada;
+                        self.terminacion_nov.estado = self.estadoNovedad;
 
                         // Recolección datos objeto POST Replica
                         self.contrato_obj_replica.NumeroContrato = self.contrato_obj.numero_contrato;
@@ -412,13 +518,6 @@ angular.module('contractualClienteApp')
                         if (self.terminacion_nov.tiponovedad === "NP_TER") {
                             self.contrato_obj_replica.TipoNovedad = parseFloat(218);
                         };
-                        //Recolección POST Contrato Estado 
-                        self.contrato_estado = {};
-                        self.contrato_estado.NumeroContrato = self.contrato_obj.id;
-                        self.contrato_estado.Vigencia = self.contrato_obj.vigencia;
-                        self.contrato_estado.FechaRegistro = new Date();
-                        self.contrato_estado.Estado = self.estado_suspendido;
-                        self.contrato_estado.Usuario = "usuario_prueba";
                         //primero obtenemos el estado actual - en esta caso es 'En ejecucion'
                         //Se guarda en la posicion [0] del arreglo estados el estado actual
                         //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a terminacion anticipada - devuelve si es true o false
@@ -430,49 +529,7 @@ angular.module('contractualClienteApp')
                                     "NombreEstado": "ejecucion"
                                 }
                                 self.estados[0] = estado_temp_from;
-                                novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
-                                    if (vc_response.data.Body == "true") {
-                                        var fechaActual = new Date();
-                                        if (
-                                            (fechaActual.getDate() == self.contrato_obj_replica.FechaFin.getDate()
-                                                && fechaActual.getMonth() == self.contrato_obj_replica.FechaFin.getMonth()
-                                                && fechaActual.getFullYear() == self.contrato_obj_replica.FechaFin.getFullYear())
-                                            || fechaActual > self.contrato_obj_replica.FechaFin
-                                        ) {
-                                            self.contrato_obj_replica.esFechaActual = true;
-                                            novedadesMidRequest
-                                                .post("replica", self.contrato_obj_replica)
-                                                .then(function (request_novedades) {
-                                                    if (
-                                                        request_novedades.status == 200 ||
-                                                        request_novedades.statusText == "OK"
-                                                    ) {
-                                                        console.log("Replica correcta");
-                                                        self.postNovedad(nuevoEstado);
-                                                    }
-                                                }).catch(function (error) {
-                                                    //Error en la replica
-                                                    $scope.alert = "TITULO_ERROR_REPLICA";
-                                                    swal({
-                                                        title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                        type: "error",
-                                                        html: $translate.instant($scope.alert) +
-                                                            self.contrato_obj.numero_contrato +
-                                                            $translate.instant("ANIO") +
-                                                            self.contrato_obj.vigencia +
-                                                            ".",
-                                                        showCloseButton: true,
-                                                        showCancelButton: false,
-                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                        allowOutsideClick: false,
-                                                    }).then(function () { });
-                                                })
-                                        } else {
-                                            self.postNovedad(nuevoEstado);
-                                            console.log("Falló la réplica");
-                                        }
-                                    }
-                                });
+                                self.formato_generacion_pdf(nuevoEstado);
                             } else {
                                 swal(
                                     $translate.instant('INFORMACION'),
@@ -521,7 +578,7 @@ angular.module('contractualClienteApp')
              * @description
              * funcion para la generacion del PDF del acta correspondiente, basado en json (pdfmake)
              */
-            self.formato_generacion_pdf = function () {
+            self.formato_generacion_pdf = function (nuevoEstado) {
                 var dateTime =
                     new Date().getFullYear() +
                     "" +
@@ -534,15 +591,6 @@ angular.module('contractualClienteApp')
                     new Date().getMinutes();
 
                 var output = self.get_plantilla();
-                pdfMake
-                    .createPdf(output)
-                    .download(
-                        "acta_terminacion_anticipada_" +
-                        self.contrato_id +
-                        "_" +
-                        dateTime +
-                        ".pdf"
-                    );
 
                 const pdfDocGenerator = pdfMake.createPdf(output);
                 pdfDocGenerator.getBase64(function (data) {
@@ -554,7 +602,9 @@ angular.module('contractualClienteApp')
                         dateTime +
                         ".pdf",
                         self
-                    );
+                    ).then(function (enlace) {
+                        self.postNovedad(nuevoEstado, output, dateTime, enlace);
+                    });
                 });
             }
 
@@ -983,7 +1033,7 @@ angular.module('contractualClienteApp')
 
                             'Que el valor de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó en la suma total de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(String(self.contrato_obj.valor) + "") + '),\n\n',
 
-                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' como Supervisor del mismo.\n\n',
+                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficio) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' como Supervisor del mismo.\n\n',
 
                             'Que según certificación de fecha ' + self.format_date_letter_mongo(self.contrato_obj.cdp_fecha) + ', expedida por Jefe de Sección de Presupuesto, presenta un saldo a la fecha de  ' + NumeroALetras(self.a_favor.valor) + '($' + numberFormat(String(self.a_favor.valor) + '') + ').\n\n',
 
