@@ -14,6 +14,7 @@ angular
         function (
             $scope,
             $translate,
+            token_service,
             novedadesMidRequest,
             novedadesRequest,
             agoraRequest,
@@ -31,12 +32,35 @@ angular
             self.estado_resultado_response = false;
             self.estado_contrato_obj.estado = 0;
             self.novedadEnCurso = false;
-            // self.editButton = false;
+            self.contratistaBool = false;
+            self.usuarioJuridica = false;
+            self.rolesUsuario = token_service.getPayload().role;
+            self.rolActual = "SUPERVISOR";
+            self.createBool = true;
+            $scope.status = "";
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
                 $scope.vigencias = response.data;
             });
 
-            $scope.status = "  ";
+            // Asignación del rol del usuario
+            for (const rol of self.rolesUsuario) {
+                if (rol === 'ORDENADOR_DEL_GASTO') {
+                    self.rolActual = rol;
+                    break;
+                }
+            }
+            if (self.rolActual != 'ORDENADOR_DEL_GASTO') {
+                for (const rol of self.rolesUsuario) {
+                    if (
+                        rol === 'SUPERVISOR' ||
+                        rol === 'ASISTENTE_JURIDICA' ||
+                        rol === 'CONTRATISTA'
+                    ) {
+                        self.rolActual = rol;
+                        break;
+                    }
+                }
+            }
 
 
             /**
@@ -110,6 +134,26 @@ angular
                                     if (self.estado_contrato_obj.estado == 3) {
                                         swal($translate.instant("CONTRATO_INICIO"), "", "info");
                                     }
+                                    if (self.rolActual == "SUPERVISOR") {
+                                        if (agora_response.data[0].Supervisor.Documento.toString() == token_service.getPayload().documento) {
+                                            self.createBool = false;
+                                        } else {
+                                            swal({
+                                                title: $translate.instant("INFORMACION"),
+                                                type: "info",
+                                                html: "El contrato # " +
+                                                    self.contrato_obj.numero_contrato +
+                                                    $translate.instant("ANIO") +
+                                                    self.contrato_obj.vigencia +
+                                                    " No pertenece a la dependencia del supervisor.",
+                                                showCloseButton: false,
+                                                showCancelButton: false,
+                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                allowOutsideClick: false,
+                                            });
+                                            self.createBool = true;
+                                        }
+                                    }
                                     //obtener los documentos y soportes por contrato
                                     // documentosCrudRequest
                                     //     .get(
@@ -140,6 +184,7 @@ angular
                                     //             }
                                     //         }
                                     //     });
+
 
                                     //Obtiene el tipo de contrato y el tipo de la ultima novedad hecha para saber si el contrato fue cedido.
                                     novedadesMidRequest
@@ -306,6 +351,20 @@ angular
                     });
             };
 
+            if (self.rolActual == 'CONTRATISTA') {
+                agoraRequest.get(
+                    "informacion_proveedor?query=NumDocumento:" + token_service.getPayload().documento
+                ).then(function (responeIp) {
+                    agoraRequest.get(
+                        "contrato_general?query=Contratista:" + responeIp.data[0].Id
+                    ).then(function (responseCg) {
+                        self.contrato_id = responseCg.data[0].ContratoSuscrito[0].NumeroContratoSuscrito;
+                        self.contrato_vigencia = responseCg.data[0].ContratoSuscrito[0].Vigencia;
+                        self.buscar_contrato();
+                    });
+                });
+            }
+
             /**
              * @ngdoc method
              * @name gridOptions
@@ -409,7 +468,6 @@ angular
             $scope.editarNovedad = function (idRegNov) {
 
             }
-
             $scope.eliminarNovedad = function (idRegNov) {
                 if (estado == "EN_TRAMITE") {
                     estructura = {
@@ -434,6 +492,7 @@ angular
                             console.log("Res: ", response)
                         });
                 }
+
             }
 
             $scope.$watch("documentos", function (newVal) {
