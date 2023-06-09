@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc function
- * @name contractualClienteApp.controller:SeguimientoycontrolLegalCtrl
+ * @name contractualClienteApp.controller:SeguimientoycontrolAprobacionCtrl
  * @description
  * # SeguimientoycontrolLegalCtrl
  * Controller of the contractualClienteApp
@@ -10,7 +10,7 @@
 angular
     .module("contractualClienteApp")
     .controller(
-        "SeguimientoycontrolLegalCtrl",
+        "SeguimientoycontrolAprobacionCtrl",
         function (
             $scope,
             $translate,
@@ -35,7 +35,7 @@ angular
             self.contratistaBool = false;
             self.usuarioJuridica = false;
             self.rolesUsuario = token_service.getPayload().role;
-            self.rolActual = "";
+            self.rolActual = "SUPERVISOR";
             self.createBool = true;
             $scope.status = "";
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
@@ -53,7 +53,7 @@ angular
                 for (const rol of self.rolesUsuario) {
                     if (
                         rol === 'SUPERVISOR' ||
-                        // rol === 'ASISTENTE_JURIDICA' ||
+                        rol === 'ASISTENTE_JURIDICA' ||
                         rol === 'CONTRATISTA'
                     ) {
                         self.rolActual = rol;
@@ -63,12 +63,12 @@ angular
             }
 
             /**
-             * @ngdoc method
-             * @name get_contratos_vigencia
-             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegal
-             * @description
-             * funcion para obtener la totalidad de los contratos por vigencia seleccionada
-             */
+                         * @ngdoc method
+                         * @name get_contratos_vigencia
+                         * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegal
+                         * @description
+                         * funcion para obtener la totalidad de los contratos por vigencia seleccionada
+                         */
             self.buscar_contrato = function () {
                 self.novedadEnCurso = false;
                 $scope.novedadesTabla = [];
@@ -153,36 +153,6 @@ angular
                                             self.createBool = true;
                                         }
                                     }
-                                    //obtener los documentos y soportes por contrato
-                                    // documentosCrudRequest
-                                    //     .get(
-                                    //         "documento",
-                                    //         "query=Descripcion:" +
-                                    //         self.contrato_obj.numero_contrato +
-                                    //         "" +
-                                    //         parseInt(self.contrato_obj.vigencia) +
-                                    //         "&limit=0"
-                                    //     )
-                                    //     .then(function (doc_response) {
-                                    //         if (doc_response.data != null) {
-                                    //             for (var i = 0; i < doc_response.data.length; i++) {
-                                    //                 if (
-                                    //                     doc_response.data[i].Id !=
-                                    //                     undefined
-                                    //                 ) {
-                                    //                     var metadatos = JSON.parse(doc_response.data[i].Metadatos)
-                                    //                     $scope.novedadesTabla.push({
-                                    //                         idDocumento: doc_response.data[i].Id,
-                                    //                         enlace: doc_response.data[i].Enlace,
-                                    //                         label: doc_response.data[i].Nombre,
-                                    //                         fechaCreacion: doc_response.data[i]
-                                    //                             .FechaCreacion,
-                                    //                         estado: metadatos.estado,
-                                    //                     });
-                                    //                 }
-                                    //             }
-                                    //         }
-                                    //     });
 
 
                                     //Obtiene el tipo de contrato y el tipo de la ultima novedad hecha para saber si el contrato fue cedido.
@@ -350,276 +320,9 @@ angular
                     });
             };
 
-            if (self.rolActual == 'CONTRATISTA') {
-                agoraRequest.get(
-                    "informacion_proveedor?query=NumDocumento:" + token_service.getPayload().documento
-                ).then(function (responeIp) {
-                    agoraRequest.get(
-                        "contrato_general?query=Contratista:" + responeIp.data[0].Id
-                    ).then(function (responseCg) {
-                        if (responseCg.dat !== undefined) {
-                            self.contrato_id = responseCg.data[responeIp.data.length - 1].ContratoSuscrito[0].NumeroContratoSuscrito;
-                            self.contrato_vigencia = responseCg.data[responeIp.data.length - 1].ContratoSuscrito[0].Vigencia;
-                            self.buscar_contrato();
-                        } else {
-                            swal(
-                                $translate.instant("El usuario no tiene un contrato activo!"),
-                                $translate.instant(""),
-                                "error"
-                            );
-                            window.location.href = "#/";
-                        }
-                    });
-                });
-            }
 
-            /**
-             * @ngdoc method
-             * @name crearSolicitud
-             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegal
-             * @description
-             * Realiza el registro de la solicutud de la novedad
-             */
-            self.crearSolicitud = function () {
-                swal({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then(function () {
 
-                    console.log("Aqui se ejecuta");
 
-                }).catch(swal.noop);
-            }
 
-            /**
-             * @ngdoc method
-             * @name gridOptions
-             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegal
-             * @description
-             * Establece los contratos consultados en la tabla del cliente para seleccion
-             */
-            self.gridOptions = {
-                enableFiltering: true,
-                enableSorting: true,
-                enableRowSelection: false,
-                multiSelect: false,
-                enableSelectAll: false,
-                columnDefs: [{
-                    field: "contrato.numero_contrato_suscrito",
-                    displayName: $translate.instant("CONTRATO"),
-                    width: 150,
-                },
-                {
-                    field: "contrato.vigencia",
-                    displayName: $translate.instant("VIGENCIA_CONTRATO"),
-                    width: 160,
-                },
-                {
-                    field: "informacion_proveedor.NumDocumento",
-                    displayName: $translate.instant("DOCUMENTO_CONTRATISTA"),
-                    width: 200,
-                },
-                {
-                    field: "informacion_proveedor.NomProveedor",
-                    displayName: $translate.instant("NOMBRE_CONTRATISTA"),
-                    width: 390,
-                },
-                {
-                    field: "contrato.valor_contrato",
-                    displayName: $translate.instant("VALOR"),
-                    cellFilter: "currency",
-                    width: 180,
-                },
-                ],
-            };
 
-            $scope.showTabDialog = function (ev) {
-                $mdDialog
-                    .show({
-                        templateUrl: "views/seguimientoycontrol/novedad-tabla.html",
-                        locals: { documentos: $scope.novedadesTabla },
-                        parent: angular.element(document.body),
-                        targetEvent: ev,
-                        clickOutsideToClose: true,
-                        restrict: "E",
-                        replace: true,
-                        controller: DialogController,
-                    })
-                    .then(
-                        function (answer) {
-                            $scope.status =
-                                'You said the information was "' + answer + '".';
-                        },
-                        function () {
-                            $scope.status = "You cancelled the dialog.";
-                        }
-                    );
-            };
-
-            $scope.hide = function () {
-                $mdDialog.hide();
-            };
-            $scope.cancel = function () {
-                $mdDialog.cancel();
-            };
-            $scope.answer = function (answer) {
-                $mdDialog.hide(answer);
-            };
-
-            $scope.formatDate = function (date) {
-                var dateOut = new Date(date);
-                return dateOut;
-            }
-
-            $scope.currentPage = 1;
-            $scope.numLimit = 5;
-            $scope.start = 0;
-
-            $scope.verDocumento = function (enlace) {
-                novedadesMidRequest
-                    .get("gestor_documental", enlace)
-                    .then(function (response) {
-                        var elementos = response.data.Body;
-                        var docB64 = elementos.file.split("'");
-                        var file = docB64.length > 1 ? docB64[1] : docB64[0];
-                        var pdfWindow = window.open("");
-                        pdfWindow.document.write(
-                            "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
-                            file +
-                            "'></iframe>"
-                        );
-                    });
-            }
-
-            $scope.editarNovedad = function (idRegNov) {
-
-            }
-            $scope.eliminarNovedad = function (idRegNov) {
-                if (estado == "EN_TRAMITE") {
-                    estructura = {
-                        "Id": 9530,
-                        "NumeroSolicitud": "7617171",
-                        "ContratoId": 3007,
-                        "NumeroCdpId": 0,
-                        "Motivo": "prueba",
-                        "Aclaracion": "",
-                        "Observacion": "",
-                        "Vigencia": 2023,
-                        "VigenciaCdp": 0,
-                        "FechaCreacion": "2023-02-20 09:03:11.521786 +0000 +0000",
-                        "FechaModificacion": "2023-02-20 09:03:11.521786 +0000 +0000",
-                        "Activo": true,
-                        "TipoNovedad": 3,
-                        "Estado": "TERMINADA"
-                    };
-                    novedadesMidRequest
-                        .put("novedad", idRegNov, estructura)
-                        .then(function (response) {
-                            console.log("Res: ", response)
-                        });
-                }
-
-            }
-
-            $scope.$watch("documentos", function (newVal) {
-                if (newVal) {
-                    $scope.pages = Math.ceil(
-                        $scope.novedadesTabla.length / $scope.numLimit
-                    );
-                }
-            });
-            $scope.hideNext = function () {
-                if (
-                    $scope.start + $scope.numLimit <
-                    $scope.novedadesTabla.length
-                ) {
-                    return false;
-                } else return true;
-            };
-            $scope.hidePrev = function () {
-                if ($scope.start === 0) {
-                    return true;
-                } else return false;
-            };
-            $scope.nextPage = function () {
-                $scope.currentPage++;
-                $scope.start = $scope.start + $scope.numLimit;
-            };
-            $scope.PrevPage = function () {
-                if ($scope.currentPage > 1) {
-                    $scope.currentPage--;
-                } $scope.start = $scope.start - $scope.numLimit;
-            };
-
-            function DialogController($scope, $mdDialog, documentos) {
-                $scope.novedadesTabla = documentos;
-                $scope.hide = function () {
-                    $mdDialog.hide();
-                };
-                $scope.cancel = function () {
-                    $mdDialog.cancel();
-                };
-                $scope.answer = function (answer) {
-                    $mdDialog.hide(answer);
-                };
-                $scope.verDocumento = function (enlace) {
-                    novedadesMidRequest
-                        .get("gestor_documental", enlace)
-                        .then(function (response) {
-                            var elementos = response.data.Body;
-                            var docB64 = elementos.file.split("'");
-                            var file = docB64.length > 1 ? docB64[1] : docB64[0];
-                            var pdfWindow = window.open("");
-                            pdfWindow.document.write(
-                                "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
-                                file +
-                                "'></iframe>"
-                            );
-                        });
-                };
-                $scope.formatDate = function (date) {
-                    var dateOut = new Date(date);
-                    return dateOut;
-                };
-
-                $scope.currentPage = 1;
-                $scope.numLimit = 5;
-                $scope.start = 0;
-
-                $scope.$watch("documentos", function (newVal) {
-                    if (newVal) {
-                        $scope.pages = Math.ceil(
-                            $scope.novedadesTabla.length / $scope.numLimit
-                        );
-                    }
-                });
-                $scope.hideNext = function () {
-                    if (
-                        $scope.start + $scope.numLimit <
-                        $scope.novedadesTabla.length
-                    ) {
-                        return false;
-                    } else return true;
-                };
-                $scope.hidePrev = function () {
-                    if ($scope.start === 0) {
-                        return true;
-                    } else return false;
-                };
-                $scope.nextPage = function () {
-                    $scope.currentPage++;
-                    $scope.start = $scope.start + $scope.numLimit;
-                };
-                $scope.PrevPage = function () {
-                    if ($scope.currentPage > 1) {
-                        $scope.currentPage--;
-                    } $scope.start = $scope.start - $scope.numLimit;
-                };
-            }
-        }
-    );
+        });
