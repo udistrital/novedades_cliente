@@ -53,7 +53,7 @@ angular
                 for (const rol of self.rolesUsuario) {
                     if (
                         rol === 'SUPERVISOR' ||
-                        rol === 'ASISTENTE_JURIDICA' ||
+                        // rol === 'ASISTENTE_JURIDICA' ||
                         rol === 'CONTRATISTA'
                     ) {
                         self.rolActual = rol;
@@ -195,6 +195,7 @@ angular
                                             self.contrato_obj.vigencia
                                         )
                                         .then(function (response_sql) {
+                                            console.log(response_sql);
                                             for (var i = 0; i < response_sql.data.Body.length; i++) {
                                                 if (
                                                     response_sql.data.Body[i].id !=
@@ -209,6 +210,7 @@ angular
                                                     });
                                                 }
                                             }
+                                            console.log($scope.novedadesTabla);
                                             var elementos_cesion = response_sql.data.Body;
                                             if (elementos_cesion != undefined && elementos_cesion.length != "0") {
                                                 var last_newness =

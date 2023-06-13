@@ -86,6 +86,12 @@
                             <thead>
                                 <tr>
                                     <th>
+                                        <center>Numero contrato</center>
+                                    </th>
+                                    <th>
+                                        <center>Vigencia</center>
+                                    </th>
+                                    <th>
                                         <center>Tipo Novedad</center>
                                     </th>
                                     <th>
@@ -102,24 +108,31 @@
                             <tbody>
                                 <tr ng-repeat="novedad in novedadesTabla | limitTo:numLimit:start">
                                     <td>
-                                        <center>{{ novedad.tipoNovedad }}</center>
-                                    </td>
-                                    <td class="text-center"
-                                        ng-bind="formatDate(novedad.fecha) |  date:'yyyy-MM-dd H:mm:ss' : 'UTC'">
+                                        <center>{{novedad.numero}}</center>
                                     </td>
                                     <td>
-                                        <center>{{ novedad.estado }}</center>
+                                        <center>{{novedad.vigencia}}</center>
+                                    </td>
+                                    <td>
+                                        <center>{{ novedad.tipoNovedad }}</center>
+                                    </td>
+                                    <td>
+                                        <center>{{novedad.fecha}}</center>
                                     </td>
                                     <td>
                                         <center>{{ documento.estado }}</center>
                                     </td>
                                     <td>
-                                        <!-- <center>
+                                        <center>
+                                            <md-button class="md-icon-button" ng-click="verDocumento(novedad.enlace)"
+                                                ng-disabled="novedad.enlace == ''">
+                                                <span class="glyphicon glyphicon-ok"></span>
+                                            </md-button>
                                             <md-button class="md-icon-button" ng-click="verDocumento(novedad.enlace)"
                                                 ng-disabled="novedad.enlace == ''">
                                                 <span class="glyphicon glyphicon-eye-open"></span>
                                             </md-button>
-                                        </center> -->
+                                        </center>
                                     </td>
                                 </tr>
                                 <!-- <tr>
