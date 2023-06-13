@@ -24,7 +24,7 @@ angular
             this.awesomeThings = ["HTML5 Boilerplate", "AngularJS", "Karma"];
             var self = this;
             self.estado_contrato_obj = {};
-            self.estado_resultado_response = 0;
+            self.estado_resultado_response = true;
             self.contratos = [{}];
             self.vigencias = [];
             self.vigencia_seleccionada = self.vigencias[0];
@@ -38,6 +38,13 @@ angular
             self.rolActual = "SUPERVISOR";
             self.createBool = true;
             $scope.status = "";
+            self.contrato_id = "";
+            self.contrato_vigencia = "";
+
+            $scope.novedadesTabla = [];
+            self.estado_resultado_response = true;
+
+
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
                 $scope.vigencias = response.data;
             });
@@ -53,9 +60,10 @@ angular
                 for (const rol of self.rolesUsuario) {
                     if (
                         rol === 'SUPERVISOR' ||
-                        rol === 'ASISTENTE_JURIDICA' ||
+                        // rol === 'ASISTENTE_JURIDICA' ||
                         rol === 'CONTRATISTA'
                     ) {
+                        console.log(rol);
                         self.rolActual = rol;
                         break;
                     }
@@ -63,12 +71,12 @@ angular
             }
 
             /**
-                         * @ngdoc method
-                         * @name get_contratos_vigencia
-                         * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegal
-                         * @description
-                         * funcion para obtener la totalidad de los contratos por vigencia seleccionada
-                         */
+            * @ngdoc method
+            ** @name get_contratos_vigencia
+            * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegal
+            * @description
+            * funcion para obtener la totalidad de los contratos por vigencia seleccionada
+            */
             self.buscar_contrato = function () {
                 self.novedadEnCurso = false;
                 $scope.novedadesTabla = [];
@@ -94,6 +102,7 @@ angular
                         self.contrato_vigencia
                     )
                     .then(function (agora_response) {
+                        console.log(agora_response);
                         if (agora_response.data.length > 0) {
                             self.contrato_obj.numero_contrato = self.contrato_id;
                             self.contrato_obj.id =
@@ -156,141 +165,6 @@ angular
 
 
                                     //Obtiene el tipo de contrato y el tipo de la ultima novedad hecha para saber si el contrato fue cedido.
-                                    novedadesMidRequest
-                                        .get(
-                                            "novedad",
-                                            self.contrato_obj.numero_contrato +
-                                            "/" +
-                                            self.contrato_obj.vigencia
-                                        )
-                                        .then(function (response_sql) {
-                                            for (var i = 0; i < response_sql.data.Body.length; i++) {
-                                                if (
-                                                    response_sql.data.Body[i].id !=
-                                                    undefined
-                                                ) {
-                                                    $scope.novedadesTabla.push({
-                                                        id: response_sql.data.Body[i].id,
-                                                        tipoNovedad: response_sql.data.Body[i].nombreTipoNovedad,
-                                                        enlace: response_sql.data.Body[i].enlace,
-                                                        fecha: response_sql.data.Body[i].fechasolicitud,
-                                                        estado: response_sql.data.Body[i].estado,
-                                                    });
-                                                }
-                                            }
-                                            var elementos_cesion = response_sql.data.Body;
-                                            if (elementos_cesion != undefined && elementos_cesion.length != "0") {
-                                                var last_newness =
-                                                    elementos_cesion[elementos_cesion.length - 1];
-                                                if (last_newness.estado == "EN_TRAMITE") {
-                                                    self.novedadEnCurso = true;
-                                                    swal({
-                                                        title: $translate.instant("INFORMACION"),
-                                                        type: "info",
-                                                        html: $translate.instant("TITULO_NOVEDAD_EN_CURSO") +
-                                                            self.contrato_obj.numero_contrato +
-                                                            $translate.instant("ANIO") +
-                                                            self.contrato_obj.vigencia +
-                                                            ".",
-                                                        showCloseButton: false,
-                                                        showCancelButton: false,
-                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                        allowOutsideClick: false,
-                                                    })
-                                                }
-                                                novedadesRequest
-                                                    .get(
-                                                        "tipo_novedad",
-                                                        "query=Id:" + last_newness.tiponovedad
-                                                    )
-                                                    .then(function (nr_response) {
-                                                        self.contrato_obj.tipo_novedad =
-                                                            nr_response.data[0].CodigoAbreviacion;
-                                                        if (self.contrato_obj.tipo_novedad == "NP_CES") {
-                                                            self.contrato_obj.contratista =
-                                                                last_newness.cesionario;
-                                                            if (last_newness.poliza === "") {
-                                                                if (self.novedadEnCurso == false) {
-                                                                    self.estado_contrato_obj.estado = 10;
-                                                                    swal(
-                                                                        $translate.instant("INFORMACION"),
-                                                                        $translate.instant("DESCRIPCION_ACTA_CESION"),
-                                                                        "info"
-                                                                    );
-                                                                }
-                                                            }
-                                                        } else if (
-                                                            self.contrato_obj.tipo_novedad == "NP_SUS" ||
-                                                            self.contrato_obj.tipo_novedad == "NP_REI" ||
-                                                            self.contrato_obj.tipo_novedad == "NP_ADI" ||
-                                                            self.contrato_obj.tipo_novedad == "NP_PRO" ||
-                                                            self.contrato_obj.tipo_novedad == "NP_ADPRO"
-                                                        ) {
-                                                            self.contrato_obj.contratista =
-                                                                last_newness.cesionario;
-                                                        }
-                                                        //Obtiene los datos aosicados al proveedor de un contrato que ha tenido una novedad
-                                                        agoraRequest
-                                                            .get(
-                                                                "informacion_proveedor?query=Id:" +
-                                                                self.contrato_obj.contratista
-                                                            )
-                                                            .then(function (ip_response) {
-                                                                self.contrato_obj.contratista_documento =
-                                                                    ip_response.data[0].NumDocumento;
-                                                                self.contrato_obj.contratista_nombre =
-                                                                    ip_response.data[0].NomProveedor;
-                                                                self.estado_resultado_response = true;
-                                                            })
-                                                            .catch(function (error) {
-                                                                $scope.alert = "DESCRIPCION_ERROR_LEGAL_PROV";
-                                                                swal({
-                                                                    title: $translate.instant("TITULO_ERROR_LEGAL"),
-                                                                    type: "error",
-                                                                    html: $translate.instant($scope.alert) +
-                                                                        self.contrato_obj.numero_contrato +
-                                                                        $translate.instant("ANIO") +
-                                                                        self.contrato_obj.vigencia +
-                                                                        ".",
-                                                                    showCloseButton: true,
-                                                                    showCancelButton: false,
-                                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                    allowOutsideClick: false,
-                                                                }).then(function () { });
-                                                            });
-                                                    });
-                                            } else {
-                                                //Obtiene los datos aosicados al proveedor de un Rque no tiene novedades
-                                                agoraRequest
-                                                    .get(
-                                                        "informacion_proveedor?query=Id:" +
-                                                        self.contrato_obj.contratista
-                                                    )
-                                                    .then(function (ip_response) {
-                                                        self.contrato_obj.contratista_documento =
-                                                            ip_response.data[0].NumDocumento;
-                                                        self.contrato_obj.contratista_nombre =
-                                                            ip_response.data[0].NomProveedor;
-                                                        self.estado_resultado_response = true;
-                                                    })
-                                                    .catch(function (error) {
-                                                        $scope.alert = "DESCRIPCION_ERROR_LEGAL_PROV";
-                                                        swal({
-                                                            title: $translate.instant("TITULO_ERROR_LEGAL"),
-                                                            type: "error",
-                                                            html: $translate.instant($scope.alert) +
-                                                                self.contrato_obj.numero_contrato +
-                                                                $translate.instant("ANIO") +
-                                                                self.contrato_obj.vigencia +
-                                                                ".",
-                                                            showCloseButton: true,
-                                                            showCancelButton: false,
-                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                            allowOutsideClick: false,
-                                                        }).then(function () { });
-                                                    });
-                                            }
-                                        });
                                 })
                                 .catch(function (error) {
                                     swal(
@@ -320,9 +194,132 @@ angular
                     });
             };
 
+            self.crearC
+
+            self.crearSolicitudReinicio = function () {
+                self.reinicio_nov = {};
+                self.reinicio_nov.contrato = self.contrato_obj.numero_contrato;
+                self.reinicio_nov.vigencia = String(self.contrato_obj.vigencia);
+                self.reinicio_nov.motivo = self.motivo_suspension;
+                self.reinicio_nov.tiponovedad =
+                    nc_response.data[0].CodigoAbreviacion;
+                self.reinicio_nov.fecharegistro = new Date();
+                self.reinicio_nov.fechasolicitud = self.fecha_solicitud;
+                self.reinicio_nov.numerosolicitud = self.n_solicitud;
+                self.reinicio_nov.numerooficioestadocuentas = 0;
+                self.reinicio_nov.valor_desembolsado = 0;
+                self.reinicio_nov.saldo_contratista = 0;
+                self.reinicio_nov.saldo_universidad = 0;
+                self.reinicio_nov.fecha_terminacion_anticipada =
+                    "0001-01-01T00:00:00Z";
+                self.reinicio_nov.periodosuspension = self.diff_dias;
+                self.reinicio_nov.fechasuspension = self.f_suspension;
+                self.reinicio_nov.fechafinsuspension = self.f_finsuspension;
+                self.reinicio_nov.fechareinicio = self.f_reinicio;
+                self.reinicio_nov.fechafinefectiva = self.calcularFechaFin(self.diff_dias);
+                self.reinicio_nov.observacion = "";
+                self.reinicio_nov.cesionario = parseInt(
+                    self.contrato_obj.contratista
+                );
+                self.reinicio_nov.estado = self.estadoNovedad;
+            }
+
+            self.crearSolicitudCesion = function () {
+                self.cesion_nov = {};
+                self.cesion_nov.aclaracion = "";
+                self.cesion_nov.camposaclaracion = null;
+                self.cesion_nov.camposmodificacion = null;
+                self.cesion_nov.camposmodificados = null;
+                self.cesion_nov.cedente = parseInt(
+                    response_ced.data[0].Id
+                );
+                self.cesion_nov.cesionario = parseInt(
+                    response_ces.data[0].Id
+                );
+                self.cesion_nov.contrato =
+                    self.contrato_obj.numero_contrato;
+                self.cesion_nov.fechaadicion = "0001-01-01T00:00:00Z";
+                self.cesion_nov.fechacesion = new Date(self.f_cesion);
+                self.cesion_nov.fechafinefectiva = self.calcularFechaFin();
+                self.cesion_nov.fechaliquidacion = "0001-01-01T00:00:00Z";
+                self.cesion_nov.fechaprorroga = "0001-01-01T00:00:00Z";
+                self.cesion_nov.fechareinicio = "0001-01-01T00:00:00Z";
+                self.cesion_nov.fechasolicitud = new Date();
+                self.cesion_nov.fechasuspension = "0001-01-01T00:00:00Z";
+                self.cesion_nov.fechaterminacionanticipada =
+                    "0001-01-01T00:00:00Z";
+                self.cesion_nov.motivo = "";
+                self.cesion_nov.numeroactaentrega = 0;
+                self.cesion_nov.numerocdp = "";
+                self.cesion_nov.numerooficioestadocuentas =
+                    self.num_oficio;
+                self.cesion_nov.numerosolicitud = self.n_solicitud;
+                self.cesion_nov.observacion = self.observaciones;
+                self.cesion_nov.periodosuspension = 0;
+                self.cesion_nov.plazoactual = 0;
+                self.cesion_nov.poliza = "";
+                self.cesion_nov.tiempoprorroga = 0;
+                self.cesion_nov.tiponovedad =
+                    nc_response.data[0].CodigoAbreviacion;
+                self.cesion_nov.valoradicion = 0;
+                self.cesion_nov.valorfinalcontrato = 0;
+                self.cesion_nov.vigencia = String(
+                    self.contrato_obj.vigencia
+                );
+                self.cesion_nov.vigenciacdp = "";
+                self.cesion_nov.fechaoficio = new Date(self.f_oficio);
+                self.cesion_nov.fecharegistro = self.replaceAt(
+                    self.contrato_obj.fecha_registro,
+                    10,
+                    "T"
+                );
+                self.cesion_nov.estado = self.estadoNovedad;
+            }
 
 
+            novedadesRequest
+                .get(
+                    "novedades_poscontractuales/?query=Estado:4518&limit=0"
+                ).then(function (response) {
+                    console.log(response);
+                    for (var i = 0; i < response.data.length; i++) {
 
+                        console.log(response.data[i]);
+                        if (
+                            response.data[i].Id !=
+                            undefined
+                        ) {
+                            $scope.novedadesTabla.push({
+                                id: response.data[i].Id,
+                                tipoNovedad: response.data[i].TipoNovedad,
+                                fecha: response.data[i].FechaCreacion,
+                                estado: response.data[i].Estado,
+                            });
+                        }
+                    }
+                    console.log($scope.novedadesTabla);
+                });
 
-
+            if (self.rolActual == 'CONTRATISTA') {
+                agoraRequest.get(
+                    "informacion_proveedor?query=NumDocumento:" + token_service.getPayload().documento
+                ).then(function (responeIp) {
+                    agoraRequest.get(
+                        "contrato_general?query=Contratista:" + responeIp.data[0].Id
+                    ).then(function (responseCg) {
+                        if (responseCg.data !== undefined) {
+                            self.contrato_id = responseCg.data[responeIp.data.length - 1].ContratoSuscrito[0].NumeroContratoSuscrito;
+                            self.contrato_vigencia = responseCg.data[responeIp.data.length - 1].ContratoSuscrito[0].Vigencia;
+                            self.buscar_contrato();
+                        } else {
+                            swal(
+                                $translate.instant("El usuario no tiene un contrato activo!"),
+                                $translate.instant(""),
+                                "error"
+                            );
+                            window.location.href = "#/";
+                        }
+                    });
+                });
+            }
         });
