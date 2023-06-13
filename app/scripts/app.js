@@ -74,12 +74,12 @@ angular
         "core",
         "autenticacionMidService",
     ])
-    .run(function(amMoment) {
+    .run(function (amMoment) {
         amMoment.changeLocale("es");
     })
-    .factory("httpRequestInterceptor", function() {
+    .factory("httpRequestInterceptor", function () {
         return {
-            request: function(config) {
+            request: function (config) {
                 if (
                     window.localStorage.getItem("access_token") !== undefined &&
                     window.localStorage.getItem("access_token") !== null
@@ -102,25 +102,25 @@ angular
     })
     .config([
         "cfpLoadingBarProvider",
-        function(cfpLoadingBarProvider) {
+        function (cfpLoadingBarProvider) {
             cfpLoadingBarProvider.parentSelector = "#loading-bar-container";
             // cfpLoadingBarProvider.spinnerTemplate = '<div class="loading-div"><div><span class="fa loading-spinner"></div><div class="fa sub-loading-div">Por favor espere, cargando...</div></div>';
             cfpLoadingBarProvider.spinnerTemplate = "";
         },
     ])
-    .config(function($mdDateLocaleProvider) {
-        $mdDateLocaleProvider.formatDate = function(date) {
+    .config(function ($mdDateLocaleProvider) {
+        $mdDateLocaleProvider.formatDate = function (date) {
             return date ? moment.utc(date).format("YYYY-MM-DD") : "";
         };
     })
-    .config(function($httpProvider) {
+    .config(function ($httpProvider) {
         $httpProvider.interceptors.push("httpRequestInterceptor");
     })
     .config([
         "$locationProvider",
         "$routeProvider",
         "$httpProvider",
-        function($locationProvider, $routeProvider, $httpProvider) {
+        function ($locationProvider, $routeProvider, $httpProvider) {
             $httpProvider.defaults.headers.post = {};
             $httpProvider.defaults.headers.put = {};
             $locationProvider.hashPrefix("");
@@ -177,38 +177,38 @@ angular
                 })
                 .when(
                     "/seguimientoycontrol/legal/acta_inicio/:contrato_id/:contrato_vigencia", {
-                        templateUrl: "views/seguimientoycontrol/legal/acta_inicio.html",
-                        controller: "SeguimientoycontrolLegalActaInicioCtrl",
-                        controllerAs: "sLactaInicio",
-                    }
+                    templateUrl: "views/seguimientoycontrol/legal/acta_inicio.html",
+                    controller: "SeguimientoycontrolLegalActaInicioCtrl",
+                    controllerAs: "sLactaInicio",
+                }
                 )
                 .when(
                     "/seguimientoycontrol/legal/acta_suspension/:contrato_id/:contrato_vigencia", {
-                        templateUrl: "views/seguimientoycontrol/legal/acta_suspension.html",
-                        controller: "SeguimientoycontrolLegalActaSuspensionCtrl",
-                        controllerAs: "sLactaSuspension",
-                    }
+                    templateUrl: "views/seguimientoycontrol/legal/acta_suspension.html",
+                    controller: "SeguimientoycontrolLegalActaSuspensionCtrl",
+                    controllerAs: "sLactaSuspension",
+                }
                 )
                 .when(
                     "/seguimientoycontrol/legal/acta_reinicio/:contrato_id/:contrato_vigencia", {
-                        templateUrl: "views/seguimientoycontrol/legal/acta_reinicio.html",
-                        controller: "SeguimientoycontrolLegalActaReinicioCtrl",
-                        controllerAs: "sLactaReinicio",
-                    }
+                    templateUrl: "views/seguimientoycontrol/legal/acta_reinicio.html",
+                    controller: "SeguimientoycontrolLegalActaReinicioCtrl",
+                    controllerAs: "sLactaReinicio",
+                }
                 )
                 .when(
                     "/seguimientoycontrol/legal/acta_cesion/:contrato_id/:contrato_vigencia", {
-                        templateUrl: "views/seguimientoycontrol/legal/acta_cesion.html",
-                        controller: "SeguimientoycontrolLegalActaCesionCtrl",
-                        controllerAs: "sLactaCesion",
-                    }
+                    templateUrl: "views/seguimientoycontrol/legal/acta_cesion.html",
+                    controller: "SeguimientoycontrolLegalActaCesionCtrl",
+                    controllerAs: "sLactaCesion",
+                }
                 )
                 .when(
-                    "/seguimientoycontrol/legal/acta_adicion_prorroga/:contrato_id/:contrato_vigencia", {
-                        templateUrl: "views/seguimientoycontrol/legal/acta_adicion_prorroga.html",
-                        controller: "SeguimientoycontrolLegalActaAdicionProrrogaCtrl",
-                        controllerAs: "sLactaAdicionProrroga",
-                    }
+                    "/seguimientoycontrol/legal/acta_adicion_prorroga/:contrato_id/:contrato_vigencia/:edit", {
+                    templateUrl: "views/seguimientoycontrol/legal/acta_adicion_prorroga.html",
+                    controller: "SeguimientoycontrolLegalActaAdicionProrrogaCtrl",
+                    controllerAs: "sLactaAdicionProrroga",
+                }
                 )
                 .when("/seguimientoycontrol/legal/acta_liquidacion", {
                     templateUrl: "views/seguimientoycontrol/legal/acta_liquidacion.html",
@@ -217,10 +217,10 @@ angular
                 })
                 .when(
                     "/seguimientoycontrol/legal/acta_terminacion_liquidacion_bilateral/:contrato_id/:contrato_vigencia", {
-                        templateUrl: "views/seguimientoycontrol/legal/acta_terminacion_liquidacion_bilateral.html",
-                        controller: "SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl",
-                        controllerAs: "sLactaTerminacionAnticipada",
-                    }
+                    templateUrl: "views/seguimientoycontrol/legal/acta_terminacion_liquidacion_bilateral.html",
+                    controller: "SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl",
+                    controllerAs: "sLactaTerminacionAnticipada",
+                }
                 )
                 .when("/seguimientoycontrol/legal/novedad_otro_si_aclaratorio", {
                     templateUrl: "views/seguimientoycontrol/legal/novedad_otro_si_aclaratorio.html",
@@ -232,10 +232,15 @@ angular
                     controller: "SeguimientoycontrolLegalNovedadOtroSiModificatorioCtrl",
                     controllerAs: "sLotroSiModificatorio",
                 })
+                .when("/seguimientoycontrol/aprobacion", {
+                    templateUrl: "views/seguimientoycontrol/aprobacion.html",
+                    controller: "SeguimientoycontrolAprobacionCtrl",
+                    controllerAs: "sLaprobacion",
+                })
                 .when('/about', {
-                  templateUrl: 'views/about.html',
-                  controller: 'AboutCtrl',
-                  controllerAs: 'about'
+                    templateUrl: 'views/about.html',
+                    controller: 'AboutCtrl',
+                    controllerAs: 'about'
                 })
                 .otherwise({
                     redirectTo: "/",

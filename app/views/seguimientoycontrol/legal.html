@@ -12,41 +12,76 @@
             <div style="float:left;margin-bottom:2%;width:100%">
                 <div class="row" style="border:0px solid;">
                     <div class="col-sm-12 col-md-5">
-                        <div class="form-group col-md-12">
-                            <p style="margin:0; display:inline-block; width:40%;">
-                                <b>{{'NUMERO_CONTRATO' | translate}} *:</b>
-                            </p>
-                            <md-input-container style="margin:0; display:inline-block; width:40%;">
-                                <input type="number" id="contrato_id" name="contrato_id" required
-                                    ng-model="sLegal.contrato_id" ng-disabled="false" min="0">
-                                <div ng-messages="formLegal.contrato_id.$error">
-                                    <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                                </div>
-                            </md-input-container>
+                        <div class="col-md-12" style="padding-left:25px;" ng-if="sLaprobacion.rolActual=='CONTRATISTA'">
+                            <label for="boton_novedad">{{'SELECCIONE_UNA_NOVEDAD' | translate}}</label>
+                            <br>
+                            <div class="btn-group">
+                                <button type="button" id="boton_novedad" class="btn btn-primary dropdown-toggle"
+                                    data-toggle="dropdown">
+                                    {{'NOVEDADES' | translate}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li
+                                        ng-if="sLaprobacion.estado_contrato_obj.estado == 4 && sLaprobacion.novedadEnCurso == false">
+                                        <a ng-click="sLaprobacion.crearSolicitud()">Solicitud de suspensión</a>
+                                    </li>
+                                    <li
+                                        ng-if="sLaprobacion.estado_contrato_obj.estado == 2 && sLaprobacion.novedadEnCurso == false">
+                                        <a ng-click="sLaprobacion.crearSolicitudReinicio()">Solicitud de reinicio</a>
+                                    </li>
+                                    <li
+                                        ng-if="sLaprobacion.estado_contrato_obj.estado == 4 && sLaprobacion.novedadEnCurso == false">
+                                        <a ng-click="sLaprobacion.crearSolicitud()">Solicitud de cesión</a>
+                                    </li>
+                                </ul>
+                                </select>
+                            </div>
+                            <div class="btn-group" ng-if="sLaprobacion.estado_resultado_response == 1">
+                                <button type="button" id="boton_novedad" class="btn btn-success dropdown-toggle"
+                                    data-toggle="dropdown" ng-disabled="false">
+                                    {{'NOVEDADES' | translate}}
+                                    <span class="caret"></span>
+                                </button>
+                            </div>
                         </div>
-                        <div class="form-group col-md-12">
-                            <p style="margin:0; display:inline-block; width:40%;">
-                                <b>{{'VIGENCIA_CONTRATO' | translate}} *:</b>
-                            </p>
-                            <select class="form-control" ng-model="sLegal.contrato_vigencia"
-                                style="margin:0; display:inline-block; width:40%;">
-                                <option ng-repeat="vigencia in vigencias">{{vigencia}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <button class="btn btn-primary dropdown-toggle" ng-click="sLegal.buscar_contrato()">
-                                {{'BTN.BUSCAR' | translate}}
-                                {{'NUMERO_CONTRATO' | translate}}
-                            </button>
-                            <hr style="border-bottom:1px solid #cecdcc;">
+                        <div class="row" ng-if="sLegal.rolActual != 'CONTRATISTA'">
+                            <div class="form-group col-md-12">
+                                <p style="margin:0; display:inline-block; width:40%;">
+                                    <b>{{'NUMERO_CONTRATO' | translate}} *:</b>
+                                </p>
+                                <md-input-container style="margin:0; display:inline-block; width:40%;">
+                                    <input type="number" id="contrato_id" name="contrato_id" required
+                                        ng-model="sLegal.contrato_id" ng-disabled="false" min="0">
+                                    <div ng-messages="formLegal.contrato_id.$error">
+                                        <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <p style="margin:0; display:inline-block; width:40%;">
+                                    <b>{{'VIGENCIA_CONTRATO' | translate}} *:</b>
+                                </p>
+                                <select class="form-control" ng-model="sLegal.contrato_vigencia"
+                                    style="margin:0; display:inline-block; width:40%;">
+                                    <option ng-repeat="vigencia in vigencias">{{vigencia}}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <button class="btn btn-primary dropdown-toggle" ng-click="sLegal.buscar_contrato()">
+                                    {{'BTN.BUSCAR' | translate}}
+                                    {{'NUMERO_CONTRATO' | translate}}
+                                </button>
+                                <hr style="border-bottom:1px solid #cecdcc;">
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12" style="padding-left:25px;">
+                            <div class="col-md-12" style="padding-left:25px;" ng-if="sLegal.rolActual!='CONTRATISTA'">
                                 <label for="boton_novedad">{{'SELECCIONE_UNA_NOVEDAD' | translate}}</label>
                                 <br>
                                 <div class="btn-group" ng-if="sLegal.estado_resultado_response == true">
                                     <button type="button" id="boton_novedad" class="btn btn-primary dropdown-toggle"
-                                        data-toggle="dropdown">
+                                        data-toggle="dropdown" ng-disabled="sLegal.createBool">
                                         {{'NOVEDADES' | translate}}
                                         <span class="caret"></span>
                                     </button>
@@ -54,7 +89,7 @@
                                         <li
                                             ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
                                             <a
-                                                href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_ADICION_PRORROGA'
+                                                href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}/false">{{'CREAR_NOVEDAD_ADICION_PRORROGA'
                                                 | translate}}</a>
                                         </li>
                                         <li
@@ -64,19 +99,19 @@
                                                 | translate}}</a>
                                         </li>
                                         <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false && sLegal.rolActual!='CONTRATISTA'">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_suspension/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_SUSPENSION'
                                                 | translate}}</a>
                                         </li>
                                         <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 2 && sLegal.novedadEnCurso == false">
+                                            ng-if="sLegal.estado_contrato_obj.estado == 2 && sLegal.novedadEnCurso == false && sLegal.rolActual!='CONTRATISTA'">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_reinicio/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_REINICIO'
                                                 | translate}}</a>
                                         </li>
                                         <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false && sLegal.rolActual!='CONTRATISTA'">
                                             <a
                                                 href="#/seguimientoycontrol/legal/acta_cesion/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_CESION'
                                                 | translate}}</a>
@@ -90,6 +125,39 @@
                                     </ul>
                                     </select>
                                 </div>
+                                <!-- <div class="btn-group" ng-if="sLegal.estado_resultado_response == 0">
+                                    <button type="button" id="boton_novedad" class="btn btn-success dropdown-toggle"
+                                        data-toggle="dropdown" ng-disabled="false">
+                                        {{'NOVEDADES' | translate}} ola
+                                        <span class="caret"></span>
+                                    </button>
+                                </div> -->
+                            </div>
+                            <div class="col-md-12" style="padding-left:25px;" ng-if="sLegal.rolActual=='CONTRATISTA'">
+                                <label for="boton_novedad">{{'SELECCIONE_UNA_NOVEDAD' | translate}}</label>
+                                <br>
+                                <div class="btn-group" ng-if="sLegal.estado_resultado_response == true">
+                                    <button type="button" id="boton_novedad" class="btn btn-primary dropdown-toggle"
+                                        data-toggle="dropdown">
+                                        {{'NOVEDADES' | translate}}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                            <a ng-click="sLegal.crearSolicitud()">Solicitud de suspensión</a>
+                                        </li>
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 2 && sLegal.novedadEnCurso == false">
+                                            <a ng-click="sLegal.crearSolicitud()">Solicitud de reinicio</a>
+                                        </li>
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                            <a ng-click="sLegal.crearSolicitud()">Solicitud de cesión</a>
+                                        </li>
+                                    </ul>
+                                    </select>
+                                </div>
                                 <div class="btn-group" ng-if="sLegal.estado_resultado_response == 0">
                                     <button type="button" id="boton_novedad" class="btn btn-success dropdown-toggle"
                                         data-toggle="dropdown" ng-disabled="true">
@@ -98,6 +166,7 @@
                                     </button>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-7">
@@ -216,6 +285,9 @@
                                             <center>{{ novedad.estado }}</center>
                                         </td>
                                         <td>
+                                            <center>{{ documento.estado }}</center>
+                                        </td>
+                                        <td>
                                             <center>
                                                 <md-button class="md-icon-button"
                                                     ng-click="verDocumento(novedad.enlace)"
@@ -225,7 +297,8 @@
                                                 <!-- <md-button class="md-icon-button"
                                                     ng-click="verDocumento(novedad.enlace)"
                                                     ng-if="self.estado_contrato_obj.estado != 6 && self.estado_contrato_obj.estado != 8"
-                                                    disabled="true">
+                                                    disabled="true"
+                                                    href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}/true">
                                                     <span class="glyphicon glyphicon-edit"></span>
                                                 </md-button>
                                                 <md-button class="md-icon-button"
