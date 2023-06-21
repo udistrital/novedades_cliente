@@ -53,10 +53,10 @@ angular
                 for (const rol of self.rolesUsuario) {
                     if (
                         rol === 'SUPERVISOR' ||
-                        // rol === 'ASISTENTE_JURIDICA' ||
+                        rol === 'ASISTENTE_JURIDICA' ||
                         rol === 'CONTRATISTA'
                     ) {
-                        self.rolActual = rol;
+                        self.rolActual = "SUPERVISOR";
                         break;
                     }
                 }
@@ -151,7 +151,7 @@ angular
                                                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                 allowOutsideClick: false,
                                             });
-                                            self.createBool = true;
+                                            self.createBool = false;
                                         }
                                     }
                                     //obtener los documentos y soportes por contrato

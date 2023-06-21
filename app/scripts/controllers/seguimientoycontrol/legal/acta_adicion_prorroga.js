@@ -1677,6 +1677,22 @@ angular
                 };
             };
 
+            self.avisar = function () {
+                swal({
+                    title: $translate.instant("TITULO_BUEN_TRABAJO"),
+                    type: "success",
+                    html: "Se aprobó la solicitud de novedad del contrato " +
+                        self.contrato_obj.numero_contrato +
+                        $translate.instant("ANIO") +
+                        self.contrato_obj.vigencia +
+                        ".",
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                    allowOutsideClick: false,
+                })
+            }
+
             /**
              * @ngdoc method
              * @name formato_pdf

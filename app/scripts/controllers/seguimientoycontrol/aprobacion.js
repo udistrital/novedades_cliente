@@ -40,6 +40,7 @@ angular
             $scope.status = "";
             self.contrato_id = "";
             self.contrato_vigencia = "";
+            self.varRef = "";
 
             $scope.novedadesTabla = [];
             self.estado_resultado_response = true;
@@ -60,11 +61,11 @@ angular
                 for (const rol of self.rolesUsuario) {
                     if (
                         rol === 'SUPERVISOR' ||
-                        rol === 'ASISTENTE_JURIDICA' ||
+                        // rol === 'ASISTENTE_JURIDICA' ||
                         rol === 'CONTRATISTA'
                     ) {
-                        console.log(rol);
-                        self.rolActual = rol;
+                        self.rolActual = "ORDENADOR_DEL_GASTO";
+                        console.log(self.rolActual);
                         break;
                     }
                 }
@@ -398,6 +399,12 @@ angular
                     });
             }
 
+            self.revisarNovedad = function (contrato, vigencia) {
+                console.log("ola")
+                var ref = "#/seguimientoycontrol/legal/acta_adicion_prorroga/" + contrato + "/" + vigencia + "/false"
+                window.location.href = ref;
+            }
+
             self.crearSolicitudSuspension = function () {
                 self.suspension_nov = {};
                 self.suspension_nov.tiponovedad =
@@ -514,23 +521,24 @@ angular
             }
 
 
-            novedadesRequest
+            novedadesMidRequest
                 .get(
-                    "novedades_poscontractuales/?query=Estado:4518&limit=0"
+                    "aprobacion", self.rolActual
                 ).then(function (response) {
                     console.log(response);
-                    for (var i = 0; i < response.data.length; i++) {
+                    for (var i = 0; i < response.data.Body.length; i++) {
 
-                        console.log(response.data[i]);
+                        console.log(response.data.Body[i]);
                         if (
-                            response.data[i].Id !=
-                            undefined
+                            response.data.Body !=
+                            null
                         ) {
                             $scope.novedadesTabla.push({
-                                id: response.data[i].Id,
-                                tipoNovedad: response.data[i].TipoNovedad,
-                                fecha: response.data[i].FechaCreacion,
-                                estado: response.data[i].Estado,
+                                numContrato: response.data.Body[i].numContrato,
+                                vigencia: response.data.Body[i].vigencia,
+                                tipoNovedad: response.data.Body[i].tipoNovedad,
+                                fecha: response.data.Body[i].fechaCreacion,
+                                estado: response.data.Body[i].estado,
                             });
                         }
                     }
