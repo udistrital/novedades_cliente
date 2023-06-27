@@ -1464,20 +1464,18 @@ angular
                                         }],
 
                                 },
-                                {
-                                    text: [
-                                        { text: "La suma a ceder al señor(a) " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos }, { text: " (CESIONARIO)", bold: true }, {
-                                            text: " es de " +
-                                                NumeroALetras(self.valor_contrato_cesionario() + "") +
-                                                "($" +
-                                                numberFormat(String(self.valor_contrato_cesionario()) + "") +
-                                                "), por un plazo de " +
-                                                self.contrato_obj.plazo_cesionario +
-                                                " días.\n\n"
-                                        }],
-
-
-                                },
+                                // {
+                                //     text: [
+                                //         { text: "La suma a ceder al señor(a) " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos }, { text: " (CESIONARIO)", bold: true }, {
+                                //             text: " es de " +
+                                //                 NumeroALetras(self.valor_contrato_cesionario() + "") +
+                                //                 "($" +
+                                //                 numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                                //                 "), por un plazo de " +
+                                //                 self.contrato_obj.plazo_cesionario +
+                                //                 " días.\n\n"
+                                //         }],
+                                // },
                             ]
 
                         },
@@ -1486,7 +1484,7 @@ angular
                             text: [{
                                 text: [{
                                     text: "Que por medio del oficio " +
-                                    self.cesion_nov.numerooficioordenador +
+                                        self.cesion_nov.numerooficioordenador +
                                         " de fecha " +
                                         self.format_date_letter_mongo(self.fecha_oficioO) +
                                         ", recibido por la Oficina Asesora Jurídica, el señor(a) " +
@@ -1532,11 +1530,21 @@ angular
                                         ".\n\n",
                                 }],
                                 [{
-                                    text: "CLAUSULA SEGUNDA: PUBLICACIÓN. ",
+                                    text: "CLAUSULA SEGUNDA: VALOR CEDIDO. ",
                                     bold: true,
                                 },
                                 {
-                                    text: "- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se  procederá a la publicación del presente documento de cesión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente:\n\n",
+                                    text: "La suma a ceder a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
+                                },
+                                { text: " (CESIONARIO)", bold: true },
+                                {
+                                    text: " es de " +
+                                        NumeroALetras(self.valor_contrato_cesionario() + "") +
+                                        "($" +
+                                        numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                                        "), por un plazo de " +
+                                        self.contrato_obj.plazo_cesionario +
+                                        " días.\n\n"
                                 },
                                 ],
                                 [{
@@ -1554,7 +1562,7 @@ angular
                                 },
                                 ],
                                 [{
-                                    text: "CLAUSULA TERCERA: PUBLICACIÓN. ",
+                                    text: "CLAUSULA CUARTA: PUBLICACIÓN. ",
                                     bold: true,
                                 },
                                 {

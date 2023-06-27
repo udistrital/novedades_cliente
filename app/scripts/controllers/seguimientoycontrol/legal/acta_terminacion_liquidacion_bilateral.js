@@ -290,18 +290,33 @@ angular.module('contractualClienteApp')
                     self.fecha_terminacion_anticipada = fecha;
                 }
             });
-            //seleccionador de beneficiario de saldo
-            // self.selecionarSaldo = function () {
-            //     if (self.a_favor_de == "Universidad") {
-            //         self.a_favor.entidad = "la Universidad Distrital.";
-            //         self.a_favor.valor = self.terminacion_nov.saldo_universidad;
-            //         self.a_favor.existe = "no existe un saldo a favor de este.";
-            //     } else if (self.a_favor_de == "Contratista") {
-            //         self.a_favor.entidad = "el Contratista.";
-            //         self.a_favor.valor = self.terminacion_nov.saldo_contratista;
-            //         self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(String(self.terminacion_nov.saldo_contratista) + '');
-            //     }
-            // }
+
+            $scope.check_saldo = function () {
+                if (self.a_favor_de == "Universidad") {
+                    $(".universidad_check").show("fast");
+                    if ($(".contratista_check").is(":visible")) {
+                        $(".contratista_check").hide("fast");
+                    }
+                } else if (self.a_favor_de = "Contratista") {
+                    $(".contratista_check").show("fast");
+                    if ( $(".universidad_check").is(":visible")) {
+                        $(".universidad_check").hide("fast");
+                    }
+                }
+            }
+
+            // seleccionador de beneficiario de saldo
+            self.selecionarSaldo = function () {
+                if (self.a_favor_de == "Universidad") {
+                    self.a_favor.entidad = "la Universidad Distrital.";
+                    self.a_favor.valor = self.terminacion_nov.saldo_universidad;
+                    self.a_favor.existe = "no existe un saldo a favor de este.";
+                } else if (self.a_favor_de == "Contratista") {
+                    self.a_favor.entidad = "el Contratista.";
+                    self.a_favor.valor = self.terminacion_nov.saldo_contratista;
+                    self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(String(self.terminacion_nov.saldo_contratista) + '');
+                }
+            }
 
             /**
              * @ngdoc method
