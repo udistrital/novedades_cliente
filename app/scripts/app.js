@@ -204,7 +204,7 @@ angular
                     }
                 )
                 .when(
-                    "/seguimientoycontrol/legal/acta_adicion_prorroga/:contrato_id/:contrato_vigencia", {
+                    "/seguimientoycontrol/legal/acta_adicion_prorroga/:contrato_id/:contrato_vigencia/:edit", {
                         templateUrl: "views/seguimientoycontrol/legal/acta_adicion_prorroga.html",
                         controller: "SeguimientoycontrolLegalActaAdicionProrrogaCtrl",
                         controllerAs: "sLactaAdicionProrroga",
