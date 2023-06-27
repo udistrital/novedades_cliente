@@ -35,7 +35,7 @@ angular
             self.contratistaBool = false;
             self.usuarioJuridica = false;
             self.rolesUsuario = token_service.getPayload().role;
-            self.rolActual = "SUPERVISOR";
+            self.rolActual = "";
             self.createBool = true;
             $scope.status = "";
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
@@ -56,7 +56,8 @@ angular
                         rol === 'ASISTENTE_JURIDICA' ||
                         rol === 'CONTRATISTA'
                     ) {
-                        self.rolActual = rol;
+                        console.log(rol)
+                        self.rolActual = "SUPERVISOR";
                         break;
                     }
                 }
@@ -151,7 +152,7 @@ angular
                                                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                 allowOutsideClick: false,
                                             });
-                                            self.createBool = true;
+                                            self.createBool = false;
                                         }
                                     }
                                     //obtener los documentos y soportes por contrato
