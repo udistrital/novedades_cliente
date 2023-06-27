@@ -34,7 +34,7 @@ angular
             self.novedadEnCurso = false;
             self.contratistaBool = false;
             self.usuarioJuridica = false;
-            self.rolesUsuario = token_service.getPayload().role;
+            self.rolesUsuario = [];
             self.rolActual = "";
             self.createBool = true;
             $scope.status = "";
@@ -42,27 +42,27 @@ angular
                 $scope.vigencias = response.data;
             });
 
+            self.rolesUsuario = token_service.getPayload().role;
             // Asignación del rol del usuario
-            for (const rol of self.rolesUsuario) {
-                if (rol === 'ORDENADOR_DEL_GASTO') {
-                    self.rolActual = rol;
+            for (var i = 0; i < self.rolesUsuario.length; i++) {
+                if (self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO') {
+                    self.rolActual = self.rolesUsuario[i];
                     break;
                 }
             }
             if (self.rolActual != 'ORDENADOR_DEL_GASTO') {
-                for (const rol of self.rolesUsuario) {
+                for (var i = 0; i < self.rolesUsuario.length; i++) {
                     if (
-                        rol === 'SUPERVISOR' ||
-                        rol === 'ASISTENTE_JURIDICA' ||
-                        rol === 'CONTRATISTA'
+                        self.rolesUsuario[i] === 'SUPERVISOR' ||
+                        self.rolesUsuario[i] === 'ASISTENTE_JURIDICA' ||
+                        self.rolesUsuario[i] === 'CONTRATISTA'
                     ) {
-                        console.log(rol)
-                        self.rolActual = "SUPERVISOR";
+                        console.log(self.rolesUsuario[i])
+                        self.rolActual = self.rolesUsuario[i];
                         break;
                     }
                 }
             }
-
 
             /**
              * @ngdoc method
@@ -216,19 +216,19 @@ angular
                                                     elementos_cesion[elementos_cesion.length - 1];
                                                 if (last_newness.estado == "EN_TRAMITE") {
                                                     self.novedadEnCurso = true;
-                                                        swal({
-                                                            title: $translate.instant("INFORMACION"),
-                                                            type: "info",
-                                                            html: $translate.instant("TITULO_NOVEDAD_EN_CURSO") +
-                                                                self.contrato_obj.numero_contrato +
-                                                                $translate.instant("ANIO") +
-                                                                self.contrato_obj.vigencia +
-                                                                ".",
-                                                            showCloseButton: false,
-                                                            showCancelButton: false,
-                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                            allowOutsideClick: false,
-                                                        })
+                                                    swal({
+                                                        title: $translate.instant("INFORMACION"),
+                                                        type: "info",
+                                                        html: $translate.instant("TITULO_NOVEDAD_EN_CURSO") +
+                                                            self.contrato_obj.numero_contrato +
+                                                            $translate.instant("ANIO") +
+                                                            self.contrato_obj.vigencia +
+                                                            ".",
+                                                        showCloseButton: false,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                        allowOutsideClick: false,
+                                                    })
                                                 }
                                                 novedadesRequest
                                                     .get(
