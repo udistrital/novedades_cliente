@@ -36,11 +36,15 @@ angular
             self.f_reinicio = new Date();
             self.fecha_lim_inf = new Date();
             self.fecha_lim_sup = new Date();
+            self.fecha_solicitud = new Date();
+            self.fecha_oficioS = new Date();
+            self.fecha_oficioO = new Date();
             self.motivo = "";
             self.diff_dias = null;
             self.estado_suspendido = "{}";
             self.n_solicitud = null;
-            self.numero_oficio_estado_cuentas = null;
+            self.numero_oficio_supervisor = null;
+            self.numero_oficio_ordenador = null;
 
             self.novedades = [];
             self.contrato_id = $routeParams.contrato_id;
@@ -58,7 +62,7 @@ angular
                     this.value = this.value.slice(0, 7);
                 }
             });
-            const oficio_input = document.getElementById("numero_oficio_estado_cuentas");
+            const oficio_input = document.getElementById("numero_oficio_supervisor");
             oficio_input.addEventListener("input", function () {
                 if (this.value.length > 7) {
                     this.value = this.value.slice(0, 7);
@@ -606,12 +610,15 @@ angular
                             self.suspension_nov.motivo = self.motivo;
                             self.suspension_nov.periodosuspension = self.diff_dias;
                             self.suspension_nov.fecharegistro = new Date();
-                            self.suspension_nov.fechasolicitud = new Date();
+                            self.suspension_nov.fechasolicitud = self.fecha_solicitud;
                             self.suspension_nov.fechasuspension = self.f_inicio;
                             self.suspension_nov.fechareinicio = self.f_reinicio;
                             self.suspension_nov.fechafinsuspension = self.f_fin;
                             self.suspension_nov.fechafinefectiva = self.calcularFechaFin(self.diff_dias);
-                            self.suspension_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
+                            self.suspension_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
+                            self.suspension_nov.numerooficioordenador = self.numero_oficio_ordenador;
+                            self.suspension_nov.fechaoficiosupervisor = self.fecha_oficioS;
+                            self.suspension_nov.fechaoficioordenador = self.fecha_oficioO;
                             self.suspension_nov.cesionario = parseInt(
                                 self.contrato_obj.contratista
                             );
@@ -1355,9 +1362,9 @@ angular
 
                             'Que mediante escrito de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechasolicitud) + ' , el Contratista ' + self.contrato_obj.contratista_nombre + ', solicita a quien cumple la función supervisor, la autorización para realizar la Suspensión del Contrato de Prestación de Servicios durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
-                            'Que mediante oficio No ' + self.suspension_nov.numerooficioestadocuentas + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechasolicitud) + ' el Supervisor del CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que mediante oficio No ' + self.suspension_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fecha_oficioS) + ' el Supervisor del CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
-                            'Que por medio del oficio ' + self.suspension_nov.numerooficioestadocuentas + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechasolicitud) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del Contrato de Prestación de Servicios  No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que por medio del oficio ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fecha_oficioO) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del Contrato de Prestación de Servicios  No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
                         ]
                     },
                     {

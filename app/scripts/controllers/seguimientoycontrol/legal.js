@@ -43,18 +43,18 @@ angular
             });
 
             // Asignación del rol del usuario
-            for (const rol of self.rolesUsuario) {
-                if (rol === 'ORDENADOR_DEL_GASTO') {
-                    self.rolActual = rol;
+            for (var i = 0; i < self.rolesUsuario.length; i++) {
+                if (self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO') {
+                    self.rolActual = self.rolesUsuario[i];
                     break;
                 }
             }
             if (self.rolActual != 'ORDENADOR_DEL_GASTO') {
-                for (const rol of self.rolesUsuario) {
+                for (var i = 0; i < self.rolesUsuario.length; i++) {
                     if (
-                        rol === 'SUPERVISOR' ||
-                        rol === 'ASISTENTE_JURIDICA' ||
-                        rol === 'CONTRATISTA'
+                        self.rolesUsuario[i] === 'SUPERVISOR' ||
+                        self.rolesUsuario[i] === 'ASISTENTE_JURIDICA' ||
+                        self.rolesUsuario[i] === 'CONTRATISTA'
                     ) {
                         self.rolActual = "SUPERVISOR";
                         break;

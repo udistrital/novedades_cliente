@@ -70,8 +70,8 @@
                                 <div class="col-xs-12 col-md-6">
                                     <label>{{'NUMERO_SOLICITUD' | translate}}*</label>
                                     <md-input-container style="margin:0;">
-                                        <input type="number" id="n_solicitud" name="solicitud"
-                                            ng-model="sLactaSuspension.numero_solicitud" min="0" required>
+                                        <input type="text" id="n_solicitud" name="n_solicitud" ng-model="n_solicitud"
+                                            min="0" required>
                                         <div ng-messages="formSuspension.n_solicitud.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>
@@ -82,16 +82,13 @@
                                     <md-datepicker ng-model="sLactaSuspension.fecha_solicitud"></md-datepicker>
                                 </div>
                             </div>
-                            <!--  -->
                             <div class="row" style="border: 0px solid;"></div>
                             <div class="col-xs-12 col-md-6">
-                                <label>{{'NUMERO_OFICIO_ESTADO_CUENTAS' | translate}}*</label>
+                                <label>{{'NUMERO_OFICIO_SUPERVISOR' | translate}}*</label>
                                 <md-input-container style="margin:0;">
-                                    <input type="number" id="numero_oficio_estado_cuentas"
-                                        name="numero_oficio_estado_cuentas"
-                                        ng-model="sLactaSuspension.numero_oficio_estado_cuentas" min="0"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
-                                    <div ng-messages="formSuspension.numero_oficio_estado_cuentas.$error">
+                                    <input type="text" id="numero_oficio_supervisor" name="numero_oficio_supervisor"
+                                        ng-model="sLactaSuspension.numero_oficio_supervisor" min="0" required>
+                                    <div ng-messages="formSuspension.solicitud.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>
                                 </md-input-container>
@@ -100,6 +97,23 @@
                                 <label>{{'FECHA_OFICIO' | translate}}</label>
                                 <md-datepicker ng-model="sLactaSuspension.fecha_oficio"></md-datepicker>
                             </div>
+                            <div class="row" style="border: 0px solid;"></div>
+                            <div class="col-xs-12 col-md-6">
+                                <label>{{'NUMERO_OFICIO_ORDENADOR' | translate}}*</label>
+                                <md-input-container style="margin:0;">
+                                    <input type="text" id="numero_oficio_ordenador" name="numero_oficio_ordenador"
+                                        ng-model="sLactaSuspension.numero_oficio_ordenador" min="0" required>
+                                    <div ng-messages="formSuspension.numero_oficio_ordenador.$error">
+                                        <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <label>{{'FECHA_OFICIO_ORDENADOR' | translate}}</label>
+                                <md-datepicker ng-model="sLactaSuspension.fecha_oficioO"
+                                    md-max-date="sLactaSuspension.f_hoy"></md-datepicker>
+                            </div>
+
                     </div>
                     <div class="form-group col-md-6">
                         <p>
