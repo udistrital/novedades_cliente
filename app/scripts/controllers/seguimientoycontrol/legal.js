@@ -34,7 +34,7 @@ angular
             self.novedadEnCurso = false;
             self.contratistaBool = false;
             self.usuarioJuridica = false;
-            self.rolesUsuario = [];
+            self.rolesUsuario = token_service.getPayload().role;
             self.rolActual = "";
             self.createBool = true;
             $scope.status = "";
@@ -42,7 +42,6 @@ angular
                 $scope.vigencias = response.data;
             });
 
-            self.rolesUsuario = token_service.getPayload().role;
             // Asignación del rol del usuario
             for (var i = 0; i < self.rolesUsuario.length; i++) {
                 if (self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO') {
@@ -57,8 +56,7 @@ angular
                         self.rolesUsuario[i] === 'ASISTENTE_JURIDICA' ||
                         self.rolesUsuario[i] === 'CONTRATISTA'
                     ) {
-                        console.log(self.rolesUsuario[i])
-                        self.rolActual = self.rolesUsuario[i];
+                        self.rolActual = "SUPERVISOR";
                         break;
                     }
                 }
