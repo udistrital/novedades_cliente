@@ -36,7 +36,7 @@ angular
             self.usuarioJuridica = false;
             self.rolesUsuario = token_service.getPayload().role;
             self.rolActual = "";
-            self.createBool = true;
+            self.createBool = false;
             $scope.status = "";
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
                 $scope.vigencias = response.data;
