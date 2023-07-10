@@ -108,7 +108,7 @@
                             <tbody>
                                 <tr ng-repeat="novedad in novedadesTabla | limitTo:numLimit:start">
                                     <td>
-                                        <center>{{novedad.numero}}</center>
+                                        <center>{{novedad.numContrato}}</center>
                                     </td>
                                     <td>
                                         <center>{{novedad.vigencia}}</center>
@@ -120,12 +120,13 @@
                                         <center>{{novedad.fecha}}</center>
                                     </td>
                                     <td>
-                                        <center>{{ documento.estado }}</center>
+                                        <center>REVISION_ORDENADOR</center>
                                     </td>
                                     <td>
                                         <center>
-                                            <md-button class="md-icon-button" ng-click="verDocumento(novedad.enlace)"
-                                                ng-disabled="novedad.enlace == ''">
+                                            <md-button class="md-icon-button"
+                                                ng-if="self.estado_contrato_obj.estado != 6 && self.estado_contrato_obj.estado != 8"
+                                                ng-click="sLaprobacion.revisarNovedad(novedad.numContrato, novedad.vigencia)">
                                                 <span class="glyphicon glyphicon-ok"></span>
                                             </md-button>
                                             <md-button class="md-icon-button" ng-click="verDocumento(novedad.enlace)"

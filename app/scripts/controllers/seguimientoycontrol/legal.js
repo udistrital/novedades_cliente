@@ -36,27 +36,27 @@ angular
             self.usuarioJuridica = false;
             self.rolesUsuario = token_service.getPayload().role;
             self.rolActual = "";
-            self.createBool = true;
+            self.createBool = false;
             $scope.status = "";
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
                 $scope.vigencias = response.data;
             });
 
             // Asignación del rol del usuario
-            for (const rol of self.rolesUsuario) {
-                if (rol === 'ORDENADOR_DEL_GASTO') {
-                    self.rolActual = rol;
+            for (var i = 0; i < self.rolesUsuario.length; i++) {
+                if (self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO') {
+                    self.rolActual = self.rolesUsuario[i];
                     break;
                 }
             }
             if (self.rolActual != 'ORDENADOR_DEL_GASTO') {
-                for (const rol of self.rolesUsuario) {
+                for (var i = 0; i < self.rolesUsuario.length; i++) {
                     if (
-                        rol === 'SUPERVISOR' ||
-                        // rol === 'ASISTENTE_JURIDICA' ||
-                        rol === 'CONTRATISTA'
+                        self.rolesUsuario[i] === 'SUPERVISOR' ||
+                        self.rolesUsuario[i] === 'ASISTENTE_JURIDICA' ||
+                        self.rolesUsuario[i] === 'CONTRATISTA'
                     ) {
-                        self.rolActual = rol;
+                        self.rolActual = "SUPERVISOR";
                         break;
                     }
                 }
@@ -72,7 +72,7 @@ angular
             self.buscar_contrato = function () {
                 self.novedadEnCurso = false;
                 $scope.novedadesTabla = [];
-                $scope.novedadesProceso= [];
+                $scope.novedadesProceso = [];
                 self.estado_resultado_response = false;
                 self.documentoSelect = null;
                 if (
@@ -151,7 +151,7 @@ angular
                                                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                 allowOutsideClick: false,
                                             });
-                                            self.createBool = true;
+                                            self.createBool = false;
                                         }
                                     }
                                     //obtener los documentos y soportes por contrato
@@ -195,7 +195,6 @@ angular
                                             self.contrato_obj.vigencia
                                         )
                                         .then(function (response_sql) {
-                                            console.log(response_sql);
                                             for (var i = 0; i < response_sql.data.Body.length; i++) {
                                                 if (
                                                     response_sql.data.Body[i].id !=
@@ -210,7 +209,6 @@ angular
                                                     });
                                                 }
                                             }
-                                            console.log($scope.novedadesTabla);
                                             var elementos_cesion = response_sql.data.Body;
                                             if (elementos_cesion != undefined && elementos_cesion.length != "0") {
                                                 var last_newness =
@@ -376,28 +374,6 @@ angular
                 });
             }
 
-            /**
-             * @ngdoc method
-             * @name crearSolicitud
-             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegal
-             * @description
-             * Realiza el registro de la solicutud de la novedad
-             */
-            self.crearSolicitud = function () {
-                swal({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then(function () {
-
-                    console.log("Aqui se ejecuta");
-
-                }).catch(swal.noop);
-            }
 
             /**
              * @ngdoc method

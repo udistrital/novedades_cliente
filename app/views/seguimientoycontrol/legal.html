@@ -1,4 +1,9 @@
 <br>
+<li>
+    <a
+        href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}/false">{{'CREAR_NOVEDAD_ADICION_PRORROGA'
+        | translate}}</a>
+</li>
 <div class="panel panel-default">
     <div class="panel panel-body">
         <p>
@@ -166,7 +171,7 @@
                                     </button>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-7">
@@ -294,18 +299,16 @@
                                                     ng-disabled="novedad.enlace == ''">
                                                     <span class="glyphicon glyphicon-eye-open"></span>
                                                 </md-button>
-                                                <!-- <md-button class="md-icon-button"
-                                                    ng-click="verDocumento(novedad.enlace)"
+                                                <md-button class="md-icon-button"
                                                     ng-if="self.estado_contrato_obj.estado != 6 && self.estado_contrato_obj.estado != 8"
-                                                    disabled="true"
-                                                    href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}/true">
+                                                    href="#/seguimientoycontrol/legal">
                                                     <span class="glyphicon glyphicon-edit"></span>
                                                 </md-button>
                                                 <md-button class="md-icon-button"
                                                     ng-click="eliminarNovedad(novedad.id)"
                                                     disabled="true">
                                                     <span class="glyphicon glyphicon-trash"></span>
-                                                </md-button> -->
+                                                </md-button>
                                             </center>
                                         </td>
                                     </tr>

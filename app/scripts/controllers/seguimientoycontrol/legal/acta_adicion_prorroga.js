@@ -81,14 +81,14 @@ angular
                 if (this.value.length > 7) {
                     this.value = this.value.slice(0, 7);
                 }
-            })
+            });
 
             const oficio_input = document.getElementById("oficio");
             oficio_input.addEventListener("input", function () {
                 if (this.value.length > 7) {
                     this.value = this.value.slice(0, 7);
                 }
-            })
+            });
 
             agoraRequest
                 .get("informacion_persona_natural?query=Id:" + self.elaboro_cedula)
@@ -1136,7 +1136,7 @@ angular
                     new Date().getMinutes();
 
                 var docDefinition = self.formato_pdf();
-                const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+                dpdfDocGenerator = pdfMake.createPdf(docDefinition);
                 pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(data,
                         "acta_adicion_prorroga_contrato_" +
@@ -1676,6 +1676,22 @@ angular
                     },
                 };
             };
+
+            self.avisar = function () {
+                swal({
+                    title: $translate.instant("TITULO_BUEN_TRABAJO"),
+                    type: "success",
+                    html: "Se aprobó la solicitud de novedad del contrato " +
+                        self.contrato_obj.numero_contrato +
+                        $translate.instant("ANIO") +
+                        self.contrato_obj.vigencia +
+                        ".",
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                    allowOutsideClick: false,
+                })
+            }
 
             /**
              * @ngdoc method
