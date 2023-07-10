@@ -58,14 +58,14 @@ angular
                 if (this.value.length > 7) {
                     this.value = this.value.slice(0, 7);
                 }
-            })
+            });
 
             const oficio_input = document.getElementById("oficio");
             oficio_input.addEventListener("input", function () {
                 if (this.value.length > 7) {
                     this.value = this.value.slice(0, 7);
                 }
-            })
+            });
 
             //Obtiene los datos de quien elaboró la Novedad
             agoraRequest

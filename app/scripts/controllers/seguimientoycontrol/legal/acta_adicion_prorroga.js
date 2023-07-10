@@ -81,14 +81,14 @@ angular
                 if (this.value.length > 7) {
                     this.value = this.value.slice(0, 7);
                 }
-            })
+            });
 
             const oficio_input = document.getElementById("oficio");
             oficio_input.addEventListener("input", function () {
                 if (this.value.length > 7) {
                     this.value = this.value.slice(0, 7);
                 }
-            })
+            });
 
             agoraRequest
                 .get("informacion_persona_natural?query=Id:" + self.elaboro_cedula)

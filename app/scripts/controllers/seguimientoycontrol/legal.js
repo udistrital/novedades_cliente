@@ -36,7 +36,7 @@ angular
             self.usuarioJuridica = false;
             self.rolesUsuario = [];
             self.rolActual = "";
-            self.createBool = true;
+            self.createBool = false;
             $scope.status = "";
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
                 $scope.vigencias = response.data;
@@ -57,7 +57,7 @@ angular
                         self.rolesUsuario[i] === 'ASISTENTE_JURIDICA' ||
                         self.rolesUsuario[i] === 'CONTRATISTA'
                     ) {
-                        console.log(self.rolesUsuario[i])
+                        // console.log(self.rolesUsuario[i]);
                         self.rolActual = self.rolesUsuario[i];
                         break;
                     }
