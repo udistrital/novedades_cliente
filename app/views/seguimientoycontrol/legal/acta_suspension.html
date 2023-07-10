@@ -79,7 +79,8 @@
                                 </div>
                                 <div class="col-xs-12 col-md-6">
                                     <label>{{'FECHA_SOLICITUD' | translate}}</label>
-                                    <md-datepicker ng-model="sLactaSuspension.fecha_solicitud"></md-datepicker>
+                                    <md-datepicker ng-model="sLactaSuspension.fecha_solicitud"
+                                        md-max-date="sLactaSuspension.f_hoy"></md-datepicker>
                                 </div>
                             </div>
                             <div class="row" style="border: 0px solid;"></div>
@@ -94,8 +95,9 @@
                                 </md-input-container>
                             </div>
                             <div class="col-xs-12 col-md-6">
-                                <label>{{'FECHA_OFICIO' | translate}}</label>
-                                <md-datepicker ng-model="sLactaSuspension.fecha_oficio"></md-datepicker>
+                                <label>{{'FECHA_OFICIO_SUPERVISOR' | translate}}</label>
+                                <md-datepicker ng-model="sLactaSuspension.fecha_oficioS"
+                                    md-max-date="sLactaSuspension.f_hoy"></md-datepicker>
                             </div>
                             <div class="row" style="border: 0px solid;"></div>
                             <div class="col-xs-12 col-md-6">

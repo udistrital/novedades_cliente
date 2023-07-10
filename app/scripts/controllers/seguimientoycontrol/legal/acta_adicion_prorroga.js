@@ -1136,7 +1136,7 @@ angular
                     new Date().getMinutes();
 
                 var docDefinition = self.formato_pdf();
-                dpdfDocGenerator = pdfMake.createPdf(docDefinition);
+                const pdfDocGenerator = pdfMake.createPdf(docDefinition);
                 pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(data,
                         "acta_adicion_prorroga_contrato_" +
