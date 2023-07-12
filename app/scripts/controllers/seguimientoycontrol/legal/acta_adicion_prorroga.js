@@ -74,7 +74,7 @@ angular
             self.estadoNovedad = "";
             self.novedadOtrosi = false;
 
-            self.editBool = true;
+            self.editBool = false;
 
             const input = document.getElementById("solicitud");
             input.addEventListener("input", function () {
@@ -293,7 +293,7 @@ angular
                                             last_novelty.tiponovedad == 7 ||
                                             last_novelty.tiponovedad == 8
                                         ) {
-                                            self.asginarCamposEdicion(last_novelty);
+                                            self.asignarCamposEdicion(last_novelty);
                                         }
                                     }
                                     self.contrato_obj.contratista = last_novelty.cesionario;
@@ -439,7 +439,7 @@ angular
                     }
                 });
 
-            self.asginarCamposEdicion = function (novedad) {
+            self.asignarCamposEdicion = function (novedad) {
                 if (novedad.tiponovedad == 6) {
                     $scope.adicion = true;
                     $scope.prorroga = false;

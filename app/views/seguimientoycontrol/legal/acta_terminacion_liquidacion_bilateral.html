@@ -156,10 +156,7 @@
                                         <input type="number" name="saldo_contratista"
                                             ng-model="sLactaTerminacionAnticipada.saldo_contratista"
                                             id="saldo_contratista"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
-                                        <div ng-messages="formTerminacion.saldo_contratista.$error">
-                                            <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                                        </div>
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" >
                                     </md-input-container>
                                 </div>
                                 <div class="form-group col-md-6 universidad_check" style="display: none;">
@@ -170,10 +167,7 @@
                                         <input type="number" name="saldo_universidad"
                                             ng-model="sLactaTerminacionAnticipada.saldo_universidad"
                                             id="saldo_universidad"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
-                                        <div ng-messages="formTerminacion.saldo_universidad.$error">
-                                            <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                                        </div>
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                     </md-input-container>
                                 </div>
                             </div>
