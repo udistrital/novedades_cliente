@@ -368,17 +368,18 @@ angular
                                 self.contrato_obj_replica.esFechaActual = true;
                                 novedadesMidRequest
                                     .post("replica", self.contrato_obj_replica)
-                                    .then(function (request_novedades) {
+                                    .then(function (response_replica) {
+                                        // console.log(response_replica);
                                         if (
-                                            request_novedades.status == 200 ||
-                                            request_novedades.statusText == "OK"
+                                            response_replica.status == 200 ||
+                                            response_replica.statusText == "OK"
                                         ) {
                                             console.log("Replica correcta");
                                             novedadesMidRequest
                                                 .post("novedad", self.suspension_nov)
-                                                .then(function (request_novedades) {
+                                                .then(function (response_replica) {
                                                     if (
-                                                        request_novedades.status == 200 ||
+                                                        response_replica.status == 200 ||
                                                         response.statusText == "Ok"
                                                     ) {
                                                         agoraRequest
@@ -615,8 +616,8 @@ angular
                             self.suspension_nov.fechareinicio = self.f_reinicio;
                             self.suspension_nov.fechafinsuspension = self.f_fin;
                             self.suspension_nov.fechafinefectiva = self.calcularFechaFin(self.diff_dias);
-                            self.suspension_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
-                            self.suspension_nov.numerooficioordenador = self.numero_oficio_ordenador;
+                            self.suspension_nov.numerooficiosupervisor = parseInt(self.numero_oficio_supervisor);
+                            self.suspension_nov.numerooficioordenador = parseInt(self.numero_oficio_ordenador);
                             self.suspension_nov.fechaoficiosupervisor = self.fecha_oficioS;
                             self.suspension_nov.fechaoficioordenador = self.fecha_oficioO;
                             self.suspension_nov.cesionario = parseInt(
@@ -657,6 +658,8 @@ angular
                     self.contrato_obj_replica.FechaFin = self.f_fin;
                     self.contrato_obj_replica.UnidadEjecucion = 205;
                     self.contrato_obj_replica.TipoNovedad = parseFloat(216);
+                    self.contrato_obj_replica.NumeroCdp = 0;
+                    self.contrato_obj_replica.VigenciaCdp = 0;
                     self.contrato_obj_replica.esFechaActual = true;
 
                     //primero obtenemos el estado actual - en esta caso es 'En ejecucion'

@@ -79,7 +79,7 @@
                                 <div class="col-xs-12 col-md-6">
                                     <label>{{'NUMERO_SOLICITUD' | translate}}*</label>
                                     <md-input-container style="margin:0;">
-                                        <input type="number" id="n_solicitud" name="solicitud" ng-model="n_solicitud"
+                                        <input type="number" id="n_solicitud" name="solicitud" ng-model="sLactaReinicio.n_solicitud"
                                             min="0" required>
                                         <div ng-messages="formReinicio.n_solicitud.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
@@ -95,7 +95,7 @@
                             <div class="col-xs-12 col-md-6">
                                 <label>{{'NUMERO_OFICIO' | translate}}*</label>
                                 <md-input-container style="margin:0;">
-                                    <input type="number" id="oficio" name="oficio" ng-model="numero_oficio" min="0"
+                                    <input type="number" id="oficio" name="oficio" ng-model="sLactaReinicio.numero_oficio" min="0"
                                         required>
                                     <div ng-messages="formReinicio.oficio.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>

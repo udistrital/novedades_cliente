@@ -830,8 +830,7 @@ angular
                             self.reinicio_nov.valor_desembolsado = 0;
                             self.reinicio_nov.saldo_contratista = 0;
                             self.reinicio_nov.saldo_universidad = 0;
-                            self.reinicio_nov.fecha_terminacion_anticipada =
-                                "0001-01-01T00:00:00Z";
+                            self.reinicio_nov.fecha_terminacion_anticipada ="0001-01-01T00:00:00Z";
                             self.reinicio_nov.periodosuspension = self.diff_dias;
                             self.reinicio_nov.fechasuspension = self.f_suspension;
                             self.reinicio_nov.fechafinsuspension = self.f_finsuspension;
