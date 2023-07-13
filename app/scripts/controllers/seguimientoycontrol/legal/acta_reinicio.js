@@ -233,17 +233,17 @@ angular
                         //     });
                         //Obtiene datos de la novedad de suspensión
 
-                        amazonAdministrativaRequest
-                            .get("novedad_postcontractual?query=numero_contrato:" + self.contrato_obj.numero_contrato + ",vigencia:" + self.contrato_obj.vigencia + ",TipoNovedad:216&limit=0&sortby=FechaRegistro&order=desc")
-                            .then(function (sus_response) {
-                                self.suspension_obj.id = sus_response.data[0].Id;
-                                self.suspension_obj.FechaInicio = sus_response.data[0].FechaInicio;
-                                self.suspension_obj.FechaRegistro = sus_response.data[0].FechaRegistro;
-                                self.suspension_obj.Vigencia = sus_response.data[0].Vigencia;
-                                self.suspension_obj.UnidadEjecucion = sus_response.data[0].UnidadEjecucion;
-                                self.suspension_obj.PlazoEjecucion = sus_response.data[0].PlazoEjecucion;
-                                self.suspension_obj.NumeroContrato = sus_response.data[0].NumeroContrato;
-                            });
+                        // amazonAdministrativaRequest
+                        //     .get("novedad_postcontractual?query=numero_contrato:" + self.contrato_obj.numero_contrato + ",vigencia:" + self.contrato_obj.vigencia + ",TipoNovedad:216&limit=0&sortby=FechaRegistro&order=desc")
+                        //     .then(function (sus_response) {
+                        //         self.suspension_obj.id = sus_response.data[0].Id;
+                        //         self.suspension_obj.FechaInicio = sus_response.data[0].FechaInicio;
+                        //         self.suspension_obj.FechaRegistro = sus_response.data[0].FechaRegistro;
+                        //         self.suspension_obj.Vigencia = sus_response.data[0].Vigencia;
+                        //         self.suspension_obj.UnidadEjecucion = sus_response.data[0].UnidadEjecucion;
+                        //         self.suspension_obj.PlazoEjecucion = sus_response.data[0].PlazoEjecucion;
+                        //         self.suspension_obj.NumeroContrato = sus_response.data[0].NumeroContrato;
+                        //     });
 
 
                         novedadesMidRequest
@@ -260,6 +260,13 @@ angular
                                         self.novedades[self.novedades.length - 1];
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                     //Consulta datos del contratista
+                                    console.log(last_cesion);
+                                    self.suspension_obj.FechaInicio = last_cesion.fechasuspension;
+                                    self.suspension_obj.FechaRegistro = last_cesion.fecharegistro;
+                                    self.suspension_obj.Vigencia = last_cesion.vigencia;
+                                    self.suspension_obj.UnidadEjecucion = 205;
+                                    self.suspension_obj.PlazoEjecucion = last_cesion.periodosuspension;
+                                    self.suspension_obj.NumeroContrato = last_cesion.contrato;
                                     agoraRequest
                                         .get(
                                             "informacion_proveedor?query=Id:" +
@@ -732,52 +739,53 @@ angular
                                     });
                             } else {
                                 novedadesMidRequest
-                                    .put("replica", self.suspension_obj.id, self.contrato_obj_replica)
-                                    .then(function (request_argo) {
+                                    .post("novedad", self.reinicio_nov)
+                                    .then(function (response_nosql) {
                                         if (
-                                            request_argo.status == 200 ||
-                                            request_argo.statusText == "Ok"
+                                            response_nosql.status == 200 ||
+                                            response_nosql.statusText == "OK"
                                         ) {
-                                            novedadesMidRequest
-                                                .post("novedad", self.reinicio_nov)
-                                                .then(function (response_nosql) {
+                                            agoraRequest
+                                                .post("contrato_estado", nuevoEstado)
+                                                .then(function (response) {
                                                     if (
-                                                        response_nosql.status == 200 ||
-                                                        response_nosql.statusText == "OK"
+                                                        response.status == 201 ||
+                                                        Object.keys(response.data) > 0
                                                     ) {
-                                                        agoraRequest
-                                                            .post("contrato_estado", nuevoEstado)
-                                                            .then(function (response) {
-                                                                if (
-                                                                    response.status == 201 ||
-                                                                    Object.keys(response.data) > 0
-                                                                ) {
-                                                                    pdfMake
-                                                                        .createPdf(docDefinition)
-                                                                        .download(
-                                                                            "acta_reinicio_contrato_" +
-                                                                            self.contrato_id + "_" +
-                                                                            dateTime + ".pdf"
-                                                                        );
-                                                                    swal(
-                                                                        $translate.instant("TITULO_BUEN_TRABAJO"),
-                                                                        $translate.instant("DESCRIPCION_REINICIO") +
-                                                                        self.contrato_obj.numero_contrato +
-                                                                        " " +
-                                                                        $translate.instant("ANIO") +
-                                                                        ": " +
-                                                                        self.contrato_obj.vigencia,
-                                                                        "success"
-                                                                    ).then(function () {
-                                                                        window.location.href =
-                                                                            "#/seguimientoycontrol/legal";
-                                                                    });
-                                                                }
-                                                            });
+                                                        pdfMake
+                                                            .createPdf(docDefinition)
+                                                            .download(
+                                                                "acta_reinicio_contrato_" +
+                                                                self.contrato_id + "_" +
+                                                                dateTime + ".pdf"
+                                                            );
+                                                        swal(
+                                                            $translate.instant("TITULO_BUEN_TRABAJO"),
+                                                            $translate.instant("DESCRIPCION_REINICIO") +
+                                                            self.contrato_obj.numero_contrato +
+                                                            " " +
+                                                            $translate.instant("ANIO") +
+                                                            ": " +
+                                                            self.contrato_obj.vigencia,
+                                                            "success"
+                                                        ).then(function () {
+                                                            window.location.href =
+                                                                "#/seguimientoycontrol/legal";
+                                                        });
                                                     }
                                                 });
-                                        };
+                                        }
                                     });
+                                // novedadesMidRequest
+                                //     .put("replica", self.suspension_obj.id, self.contrato_obj_replica)
+                                //     .then(function (request_argo) {
+                                //         if (
+                                //             request_argo.status == 200 ||
+                                //             request_argo.statusText == "Ok"
+                                //         ) {
+
+                                //         };
+                                //     });
                             }
                         }
                     });
@@ -830,7 +838,7 @@ angular
                             self.reinicio_nov.valor_desembolsado = 0;
                             self.reinicio_nov.saldo_contratista = 0;
                             self.reinicio_nov.saldo_universidad = 0;
-                            self.reinicio_nov.fecha_terminacion_anticipada ="0001-01-01T00:00:00Z";
+                            self.reinicio_nov.fecha_terminacion_anticipada = "0001-01-01T00:00:00Z";
                             self.reinicio_nov.periodosuspension = self.diff_dias;
                             self.reinicio_nov.fechasuspension = self.f_suspension;
                             self.reinicio_nov.fechafinsuspension = self.f_finsuspension;
