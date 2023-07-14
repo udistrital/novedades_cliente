@@ -49,8 +49,8 @@ angular.module('contractualClienteApp')
             self.numero_oficio_estado_cuentas = null;
             self.fecha_oficio = new Date();
             self.valor_desembolsado = '';
-            self.saldo_contratista = '';
-            self.saldo_universidad = null;
+            self.saldo_contratista = 0;
+            self.saldo_universidad = 0;
             self.fecha_solicitud = new Date();
             self.fecha_terminacion_anticipada = new Date();
             self.estados = [];
@@ -296,11 +296,13 @@ angular.module('contractualClienteApp')
                     $(".universidad_check").show("fast");
                     if ($(".contratista_check").is(":visible")) {
                         $(".contratista_check").hide("fast");
+                        self.saldo_contratista = 0;
                     }
                 } else if (self.a_favor_de = "Contratista") {
                     $(".contratista_check").show("fast");
-                    if ( $(".universidad_check").is(":visible")) {
+                    if ($(".universidad_check").is(":visible")) {
                         $(".universidad_check").hide("fast");
+                        self.saldo_universidad = 0;
                     }
                 }
             }
