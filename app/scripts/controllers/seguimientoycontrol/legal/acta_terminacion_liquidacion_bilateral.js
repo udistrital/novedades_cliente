@@ -386,66 +386,65 @@ angular.module('contractualClienteApp')
                                         request_novedades.statusText == "OK"
                                     ) {
                                         console.log("Replica correcta");
-                                        console.log("Obj: ", self.terminacion_nov);
-                                        // novedadesMidRequest
-                                        //     .post('novedad', self.terminacion_nov)
-                                        //     .then(function (response_nosql) {
-                                        //         if (response_nosql.status == 200 || response_nosql.statusText == "Ok") {
-                                        //             agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
-                                        //                 if (response.status == 201 || Object.keys(response.data) > 0) {
-                                        //                     pdfMake
-                                        //                         .createPdf(output)
-                                        //                         .download(
-                                        //                             "acta_terminacion_anticipada_" +
-                                        //                             self.contrato_id +
-                                        //                             "_" +
-                                        //                             dateTime +
-                                        //                             ".pdf"
-                                        //                         );
-                                        //                     $scope.alert = 'DESCRIPCION_TERMINACION'
-                                        //                     swal({
-                                        //                         title: $translate.instant('TITULO_BUEN_TRABAJO'),
-                                        //                         type: 'success',
-                                        //                         html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
-                                        //                         showCloseButton: false,
-                                        //                         showCancelButton: false,
-                                        //                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                        //                         allowOutsideClick: false
-                                        //                     }).then(function () {
-                                        //                         window.location.href = "#/seguimientoycontrol/legal";
-                                        //                     });
-                                        //                 }
-                                        //             });
-                                        //         } else {
-                                        //             //respuesta incorrecta, ej: 400/500
-                                        //             $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
-                                        //             swal({
-                                        //                 title: $translate.instant('TITULO_ERROR_ACTA'),
-                                        //                 type: 'error',
-                                        //                 html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
-                                        //                     $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
-                                        //                 showCloseButton: true,
-                                        //                 showCancelButton: false,
-                                        //                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                        //                 allowOutsideClick: false
-                                        //             }).then(function () {
+                                        novedadesMidRequest
+                                            .post('novedad', self.terminacion_nov)
+                                            .then(function (response_nosql) {
+                                                if (response_nosql.status == 200 || response_nosql.statusText == "Ok") {
+                                                    agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
+                                                        if (response.status == 201 || Object.keys(response.data) > 0) {
+                                                            pdfMake
+                                                                .createPdf(output)
+                                                                .download(
+                                                                    "acta_terminacion_anticipada_" +
+                                                                    self.contrato_id +
+                                                                    "_" +
+                                                                    dateTime +
+                                                                    ".pdf"
+                                                                );
+                                                            $scope.alert = 'DESCRIPCION_TERMINACION'
+                                                            swal({
+                                                                title: $translate.instant('TITULO_BUEN_TRABAJO'),
+                                                                type: 'success',
+                                                                html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato + $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                                showCloseButton: false,
+                                                                showCancelButton: false,
+                                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                allowOutsideClick: false
+                                                            }).then(function () {
+                                                                window.location.href = "#/seguimientoycontrol/legal";
+                                                            });
+                                                        }
+                                                    });
+                                                } else {
+                                                    //respuesta incorrecta, ej: 400/500
+                                                    $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                                    swal({
+                                                        title: $translate.instant('TITULO_ERROR_ACTA'),
+                                                        type: 'error',
+                                                        html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
+                                                            $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                        showCloseButton: true,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                        allowOutsideClick: false
+                                                    }).then(function () {
 
-                                        //             });
-                                        //         }
-                                        //     }).catch(function (error) {
-                                        //         //Servidor no disponible
-                                        //         $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
-                                        //         swal({
-                                        //             title: $translate.instant('TITULO_ERROR_ACTA'),
-                                        //             type: 'error',
-                                        //             html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
-                                        //                 $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
-                                        //             showCloseButton: true,
-                                        //             showCancelButton: false,
-                                        //             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                        //             allowOutsideClick: false
-                                        //         }).then(function () { });
-                                        //     });
+                                                    });
+                                                }
+                                            }).catch(function (error) {
+                                                //Servidor no disponible
+                                                $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                                swal({
+                                                    title: $translate.instant('TITULO_ERROR_ACTA'),
+                                                    type: 'error',
+                                                    html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
+                                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                                    showCloseButton: true,
+                                                    showCancelButton: false,
+                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                    allowOutsideClick: false
+                                                }).then(function () { });
+                                            });
                                     }
                                 }).catch(function (error) {
                                     //Error en la replica
