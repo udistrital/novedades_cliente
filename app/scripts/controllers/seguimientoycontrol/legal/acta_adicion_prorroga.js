@@ -56,7 +56,8 @@ angular
             self.fecha.dia_mes = f.getDate();
             self.fecha.mes = meses[f.getMonth()];
             self.fecha.anio = f.getFullYear();
-            self.fecha_solicitud = new Date();
+            self.
+                self.fecha_solicitud = new Date();
             self.fecha_oficio = new Date();
             self.fecha_prorroga = new Date();
             self.fecha_ultimo_corte_fisico = new Date();
@@ -74,7 +75,7 @@ angular
             self.estadoNovedad = "";
             self.novedadOtrosi = false;
 
-            self.editBool = false;
+            self.editBool = $routeParams.contrato_vigencia === true;
 
             const input = document.getElementById("solicitud");
             input.addEventListener("input", function () {
@@ -287,7 +288,7 @@ angular
                                 if (self.novedades.length != '0') {
                                     var last_novelty =
                                         self.novedades[self.novedades.length - 1];
-                                    if (self.editBool) {
+                                    if (self.editBool == true) {
                                         if (
                                             last_novelty.tiponovedad == 6 ||
                                             last_novelty.tiponovedad == 7 ||
@@ -1025,6 +1026,8 @@ angular
                             contrato: self.contrato_obj.numero_contrato,
                             numerosolicitud: $scope.numero_solicitud,
                             fechasolicitud: self.fecha_solicitud,
+                            numerooficiosupervisor: "",
+                            numerooficioordenador: "",
                             numerocdp: String(self.contrato_obj.cdp_numero),
                             vigenciacdp: String(self.contrato_obj.cdp_anno),
                             numerorp: String(self.contrato_obj.rp_numero),
@@ -1067,39 +1070,40 @@ angular
                             TipoNovedad: parseFloat(220),
                             esFechaActual: false,
                         };
-                        if (self.estadoNovedad == "4518") {
-                            self.formato_generacion_pdf();
-                        } else {
+                        console.log(self.data_acta_adicion_prorroga);
+                        // if (self.estadoNovedad == "4518") {
+                        //     self.formato_generacion_pdf();
+                        // } else {
 
-                            self.contrato_obj_replica.esFechaActual = true;
-                            novedadesMidRequest
-                                .post("replica", self.contrato_obj_replica)
-                                .then(function (request_novedades) {
-                                    if (
-                                        request_novedades.status == 200 ||
-                                        request_novedades.statusText == "OK"
-                                    ) {
-                                        self.formato_generacion_pdf();
-                                        console.log("Replica correcta");
-                                    }
-                                }).catch(function (error) {
-                                    //Error en la replica
-                                    $scope.alert = "TITULO_ERROR_REPLICA";
-                                    swal({
-                                        title: $translate.instant("TITULO_ERROR_ACTA"),
-                                        type: "error",
-                                        html: $translate.instant($scope.alert) +
-                                            self.contrato_obj.numero_contrato +
-                                            $translate.instant("ANIO") +
-                                            self.contrato_obj.vigencia +
-                                            ".",
-                                        showCloseButton: true,
-                                        showCancelButton: false,
-                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                        allowOutsideClick: false,
-                                    }).then(function () { });
-                                });
-                        }
+                        //     self.contrato_obj_replica.esFechaActual = true;
+                        //     novedadesMidRequest
+                        //         .post("replica", self.contrato_obj_replica)
+                        //         .then(function (request_novedades) {
+                        //             if (
+                        //                 request_novedades.status == 200 ||
+                        //                 request_novedades.statusText == "OK"
+                        //             ) {
+                        //                 self.formato_generacion_pdf();
+                        //                 console.log("Replica correcta");
+                        //             }
+                        //         }).catch(function (error) {
+                        //             //Error en la replica
+                        //             $scope.alert = "TITULO_ERROR_REPLICA";
+                        //             swal({
+                        //                 title: $translate.instant("TITULO_ERROR_ACTA"),
+                        //                 type: "error",
+                        //                 html: $translate.instant($scope.alert) +
+                        //                     self.contrato_obj.numero_contrato +
+                        //                     $translate.instant("ANIO") +
+                        //                     self.contrato_obj.vigencia +
+                        //                     ".",
+                        //                 showCloseButton: true,
+                        //                 showCancelButton: false,
+                        //                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        //                 allowOutsideClick: false,
+                        //             }).then(function () { });
+                        //         });
+                        // }
                     });
                 }
                 // else {
