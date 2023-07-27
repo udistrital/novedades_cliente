@@ -93,6 +93,7 @@
                             <div class="row" style="border: 0px solid;">
                                 <div class="col-xs-12 col-md-6">
                                     <label>{{'NUMERO_SOLICITUD_NECESIDAD' | translate}}*</label>
+                                    <br>
                                     <md-input-container style="margin:0;">
                                         <input type="text" id="solicitud" name="solicitud" ng-model="numero_solicitud"
                                             min="0" required>
@@ -102,15 +103,17 @@
                                     </md-input-container>
                                 </div>
                                 <div class="col-xs-12 col-md-6">
-                                    <label>{{'FECHA_SOLICITUD' | translate}}</label>
+                                    <label>{{'FECHA_SOLICITUD_NECESIDAD' | translate}}</label>
+                                    <br>
                                     <md-datepicker ng-model="sLactaAdicionProrroga.fecha_solicitud"></md-datepicker>
                                 </div>
                             </div>
                             <div class="row" style="border: 0px solid;"></div>
                             <div class="col-xs-12 col-md-6">
                                 <label>{{'NUMERO_OFICIO' | translate}}*</label>
+                                <br>
                                 <md-input-container style="margin:0;">
-                                    <input type="number" id="oficio" name="oficio" ng-model="numero_oficio" min="0"
+                                    <input type="text" id="oficio" name="oficio" ng-model="numero_oficio" min="0"
                                         required>
                                     <div ng-messages="formadipro.solicitud.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
@@ -119,6 +122,7 @@
                             </div>
                             <div class="col-xs-12 col-md-6">
                                 <label>{{'FECHA_OFICIO' | translate}}</label>
+                                <br>
                                 <md-datepicker ng-model="sLactaAdicionProrroga.fecha_oficio"></md-datepicker>
                             </div>
 
@@ -186,15 +190,17 @@
                                     </div>
                                     <div class="col-xs-12 col-md-6">
                                         <label for="fecha-adicion">{{'FECHA_ADICION' | translate}}</label>
+                                        <br>
                                         <md-datepicker ng-model="sLactaAdicionProrroga.fecha_prorroga"
                                             ng-disabled="true">
                                         </md-datepicker>
                                     </div>
                                 </div>
-                                <div class="row" style="border: 0px solid;"></div>
+                                <br>
                                 <div class="row" style="border: 0px solid;">
                                     <div class="col-xs-12 col-md-6">
                                         <label>{{'VALOR_ADICION' | translate}} *</label>
+                                        <br>
                                         <md-input-container style="margin:0;">
                                             <input type="text" id="valor_adicion" name="valor_adicion"
                                                 ng-model="valor_adicion" ng-keyup="total_valor_contrato($event)" min="1"
@@ -206,6 +212,7 @@
                                     </div>
                                     <div class="col-xs-12 col-md-6">
                                         <label>{{'NUEVO_VALOR_CONTRATO' | translate}}</label>
+                                        <br>
                                         <md-input-container style="margin:0;">
                                             <input type="text" id="nuevo_valor_contrato" name="nuevo_valor_contrato"
                                                 ng-model="nuevo_valor_contrato" readonly>

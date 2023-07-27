@@ -169,6 +169,7 @@ var text_es = {
     INSERCION_RP: "Se insertó correctamente la solicitud del registro presupuestal con los siguientes datos",
     VIGENCIA_SOLICITUD: "Vigencia solicitud",
     FECHA_SOLICITUD: "Fecha solicitud",
+    FECHA_SOLICITUD_NECESIDAD: "Fecha solicitud de necesidad",
     SELECCIONE_UNA_VIGENCIA: "Seleccione la Vigencia",
     RESPONSABLE_DOCUMENTO: "Responsable documento",
     RESPONSABLE: "Responsable",

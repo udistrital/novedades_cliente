@@ -53,19 +53,19 @@ angular
             self.estados = [];
             self.elaboro_cedula = token_service.getPayload().documento;
 
-            const solic_input = document.getElementById("n_solicitud");
-            solic_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
+            // const solic_input = document.getElementById("n_solicitud");
+            // solic_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
 
-            const oficio_input = document.getElementById("oficio");
-            oficio_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
+            // const oficio_input = document.getElementById("oficio");
+            // oficio_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
 
             //Obtiene los datos de quien elaboró la Novedad
             agoraRequest
@@ -255,6 +255,7 @@ angular
                             )
                             .then(function (response) {
                                 self.novedades = response.data.Body;
+                                self.calcularFechaFin(0);
                                 if (self.novedades.length != "0") {
                                     var last_cesion =
                                         self.novedades[self.novedades.length - 1];
