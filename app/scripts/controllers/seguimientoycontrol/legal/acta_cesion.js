@@ -24,7 +24,8 @@ angular
             novedadesMidRequest,
             titanMidRequest,
             novedadesRequest,
-            pdfMakerService
+            pdfMakerService,
+            financieraJbpmRequest
         ) {
             var self = this;
 
