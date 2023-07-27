@@ -81,6 +81,16 @@ angular
                         ipn_response.data[0].SegundoApellido;
                 });
 
+            financieraJbpmRequest
+                .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
+                .then(function (response) {
+                    var data = response.data.cdps_vigencia.cdp_vigencia;
+                    // console.log(data);
+                    if (data != undefined && data[0].id_numero_solicitud != null) {
+                        self.n_solicitud = data[0].id_numero_solicitud;
+                    }
+                });
+
             agoraRequest
                 .get("estado_contrato?query=NombreEstado:En ejecucion")
                 .then(function (ec_response) {

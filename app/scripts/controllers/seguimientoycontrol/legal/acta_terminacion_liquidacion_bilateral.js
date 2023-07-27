@@ -94,6 +94,16 @@ angular.module('contractualClienteApp')
                 }
             });
 
+            financieraJbpmRequest
+                .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
+                .then(function (response) {
+                    var data = response.data.cdps_vigencia.cdp_vigencia;
+                    // console.log(data);
+                    if (data != undefined && data[0].id_numero_solicitud != null) {
+                        self.numero_solicitud = data[0].id_numero_solicitud;
+                    }
+                });
+
             agoraRequest.get('estado_contrato?query=NombreEstado:Suspendido').then(function (ec_response) {
                 self.estados[1] = ec_response.data[0];
             });
