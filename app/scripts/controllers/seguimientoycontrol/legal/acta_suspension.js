@@ -56,18 +56,18 @@ angular
             self.idRegistro = "";
             self.elaboro_cedula = token_service.getPayload().documento;
 
-            const solic_input = document.getElementById("n_solicitud");
-            solic_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
-            const oficio_input = document.getElementById("numero_oficio_supervisor");
-            oficio_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
+            // const solic_input = document.getElementById("n_solicitud");
+            // solic_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
+            // const oficio_input = document.getElementById("numero_oficio_supervisor");
+            // oficio_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
 
             //Obtiene los datos de quien elaboró la Novedad
             agoraRequest
@@ -81,6 +81,16 @@ angular
                         ipn_response.data[0].PrimerApellido +
                         " " +
                         ipn_response.data[0].SegundoApellido;
+                });
+
+            financieraJbpmRequest
+                .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
+                .then(function (response) {
+                    var data = response.data.cdps_vigencia.cdp_vigencia;
+                    // console.log(data);
+                    if (data != undefined && data[0].id_numero_solicitud != null) {
+                        self.n_solicitud = data[0].id_numero_solicitud;
+                    }
                 });
 
             agoraRequest
@@ -231,10 +241,12 @@ angular
                                 self.contrato_obj.vigencia
                             )
                             .then(function (response_sql) {
-                                var elementos_cesion = response_sql.data.Body;
-                                if (elementos_cesion.length != "0") {
+                                self.novedades = response_sql.data.Body;
+                                self.fecha_lim_sup = self.calcularFechaFin(0);
+                                console.log(self.fecha_lim_sup);
+                                if (self.novedades.length != "0") {
                                     var last_cesion =
-                                        elementos_cesion[elementos_cesion.length - 1];
+                                        self.novedades[self.novedades.length - 1];
                                     self.contrato_obj.contratista = last_cesion.cesionario;
                                     //Obtencion de datos del contratista
                                     agoraRequest
@@ -616,8 +628,8 @@ angular
                             self.suspension_nov.fechareinicio = self.f_reinicio;
                             self.suspension_nov.fechafinsuspension = self.f_fin;
                             self.suspension_nov.fechafinefectiva = self.calcularFechaFin(self.diff_dias);
-                            self.suspension_nov.numerooficiosupervisor = parseInt(self.numero_oficio_supervisor);
-                            self.suspension_nov.numerooficioordenador = parseInt(self.numero_oficio_ordenador);
+                            self.suspension_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
+                            self.suspension_nov.numerooficioordenador = self.numero_oficio_ordenador;
                             self.suspension_nov.fechaoficiosupervisor = self.fecha_oficioS;
                             self.suspension_nov.fechaoficioordenador = self.fecha_oficioO;
                             self.suspension_nov.cesionario = parseInt(
@@ -1353,7 +1365,7 @@ angular
                     {
                         style: ['general_font'],
                         ol: [
-                            'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' + self.contrato_obj.contratista_nombre + ' se suscribió el CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' cuyo objeto es “' + self.contrato_obj.objeto + '.”',
+                            'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' + self.contrato_obj.contratista_nombre + ' se suscribió el CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' cuyo objeto es “' + self.contrato_obj.objeto + '.\n”',
 
                             {
                                 style: ['general_font'],
@@ -1365,9 +1377,9 @@ angular
 
                             'Que mediante escrito de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechasolicitud) + ' , el Contratista ' + self.contrato_obj.contratista_nombre + ', solicita a quien cumple la función supervisor, la autorización para realizar la Suspensión del Contrato de Prestación de Servicios durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
-                            'Que mediante oficio No ' + self.suspension_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fecha_oficioS) + ' el Supervisor del CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que mediante oficio No ' + self.suspension_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
-                            'Que por medio del oficio ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fecha_oficioO) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del Contrato de Prestación de Servicios  No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que por medio del oficio ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del Contrato de Prestación de Servicios  No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
                         ]
                     },
                     {
@@ -1402,6 +1414,16 @@ angular
 
 
                         }]
+                    },
+                    {
+                        style: ["general_font"],
+                        text: [
+                            "MOTIVO DE LA SUSPENSIÓN: " +
+                            self.motivo +
+                            ".\n\n" +
+                            "Para constancia, firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
+                            "\n\n\n\n\n",
+                        ],
                     },
                     // {
                     //     style: ["general_font"],

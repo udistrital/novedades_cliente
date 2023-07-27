@@ -40,6 +40,22 @@ angular
             self.fecha_oficioO = new Date();
             self.valor_desembolsado = null;
             self.valor_a_favor = "";
+            self.valor_contrato_letras = "";
+            self.contrato_plazo_letras = "";
+            var meses = new Array(
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            );
             //self.f_oficio = new Date();
             self.f_cesion = new Date();
             self.f_terminacion = new Date();
@@ -55,18 +71,18 @@ angular
             self.idRegistro = "";
             self.novedadCesion = false;
 
-            const solic_input = document.getElementById("n_solicitud");
-            solic_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
-            const oficio_input = document.getElementById("numero_oficio_supervisor");
-            oficio_input.addEventListener("input", function () {
-                if (this.value.length > 11) {
-                    this.value = this.value.slice(0, 11);
-                }
-            });
+            // const solic_input = document.getElementById("n_solicitud");
+            // solic_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
+            // const oficio_input = document.getElementById("numero_oficio_supervisor");
+            // oficio_input.addEventListener("input", function () {
+            //     if (this.value.length > 11) {
+            //         this.value = this.value.slice(0, 11);
+            //     }
+            // });
             const valordes_input = document.getElementById("valor_desembolsado");
             valordes_input.addEventListener("input", function () {
                 if (this.value.length > 11) {
@@ -92,6 +108,16 @@ angular
                         ipn_response.data[0].PrimerApellido +
                         " " +
                         ipn_response.data[0].SegundoApellido;
+                });
+
+            financieraJbpmRequest
+                .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
+                .then(function (response) {
+                    var data = response.data.cdps_vigencia.cdp_vigencia;
+                    // console.log(data);
+                    if (data != undefined && data[0].id_numero_solicitud != null) {
+                        self.n_solicitud = data[0].id_numero_solicitud;
+                    }
                 });
 
             agoraRequest
@@ -125,7 +151,14 @@ angular
                         self.contrato_obj.tipo_contrato =
                             agora_response.data[0].TipoContrato.TipoContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
-
+                        var fecha_reg = self.contrato_obj.fecha_registro;
+                        var res = fecha_reg.split("-");
+                        self.fecha_reg_dia = res[2].substring(0, 2);
+                        self.fecha_reg_mes = meses[parseInt(res[1] - 1)];
+                        self.fecha_reg_ano = res[0];
+                        console.log(self.fecha_reg_dia);
+                        console.log(self.fecha_reg_mes);
+                        console.log(self.fecha_reg_ano);
                         //Se obtiene los datos de Acta de Inicio.
                         amazonAdministrativaRequest
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
@@ -247,6 +280,7 @@ angular
                             )
                             .then(function (response_sql) {
                                 self.novedades = response_sql.data.Body;
+                                self.fecha_lim_sup = self.calcularFechaFin();
                                 if (self.novedades.length != "0") {
                                     var last_cesion =
                                         self.novedades[self.novedades.length - 1];
@@ -568,7 +602,6 @@ angular
              * actualizacion de los datos del contrato y reporte de la novedad
              */
             self.generarActa = function () {
-
                 var fechaActual = new Date();
                 if (
                     (fechaActual.getDate() == self.f_cesion.getDate()
@@ -580,6 +613,16 @@ angular
                 } else {
                     self.estadoNovedad = "4518";
                 }
+                self.valor_contrato_letras = numeroALetras(parseFloat(self.contrato_obj.valor), {
+                    plural: $translate.instant("PESOS"),
+                    singular: $translate.instant("PESO"),
+                    centPlural: $translate.instant("CENTAVOS"),
+                    centSingular: $translate.instant("CENTAVO"),
+                });
+                self.contrato_plazo_letras = numeroALetras(self.contrato_obj.plazo, {
+                    plural: $translate.instant("("),
+                    singular: $translate.instant("("),
+                });
                 var f_inicio_contrato = moment(self.contrato_obj.Inicio);
                 var f_cesion = moment(self.f_terminacion);
                 var f_terminacion_contrato = moment(self.contrato_obj.Fin);
@@ -637,6 +680,8 @@ angular
                                             self.cesion_nov.numeroactaentrega = 0;
                                             self.cesion_nov.numerocdp = "";
                                             self.cesion_nov.numerosolicitud = self.n_solicitud;
+                                            self.cesion_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
+                                            self.cesion_nov.numerooficioordenador = self.numero_oficio_ordenador;
                                             self.cesion_nov.observacion = self.observaciones;
                                             self.cesion_nov.periodosuspension = 0;
                                             self.cesion_nov.plazoactual = 0;
@@ -650,7 +695,6 @@ angular
                                                 self.contrato_obj.vigencia
                                             );
                                             self.cesion_nov.vigenciacdp = "";
-                                            self.cesion_nov.fechaoficio = new Date(self.f_oficio);
                                             self.cesion_nov.fecharegistro = self.replaceAt(
                                                 self.contrato_obj.fecha_registro,
                                                 10,
@@ -675,7 +719,6 @@ angular
                                             if (self.cesion_nov.tiponovedad === "NP_CES") {
                                                 self.contrato_obj_replica.TipoNovedad = parseFloat(219);
                                             }
-
                                             if (self.estadoNovedad == "4519") {
                                                 self.contrato_obj_replica.esFechaActual = true;
                                                 novedadesMidRequest
@@ -1114,6 +1157,49 @@ angular
                 );
             };
 
+            self.agregarSuspension = function () {
+                if (self.novedades.length > 0) {
+                    for (var i = self.novedades.length - 1; i >= 0; i--) {
+                        var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
+                        if (self.novedades[i].tiponovedad == 1) {
+                            var fechaInicio = self.novedades[i].fechasuspension;
+                            var fechaFin = self.novedades[i].fechafinsuspension;
+                            var res1 = fechaInicio.split("-");
+                            var res2 = fechaFin.split("-");
+                            var fecha_sus_dia = res1[2].substring(0, 2);
+                            var fecha_sus_mes = meses[parseInt(res1[1] - 1)];
+                            var fecha_sus_ano = res1[0];
+                            var fecha_fin_dia = res2[2].substring(0, 2);
+                            var fecha_fin_mes = meses[parseInt(res2[1] - 1)];
+                            var fecha_fin_ano = res2[0];
+
+                            return {
+                                text: "Que, mediante acta con fecha de suscripción del " +
+                                    fechaSolicitud[2].substring(0, 2) +
+                                    " de " + meses[parseInt(fechaSolicitud[1] - 1)] +
+                                    " de " + fechaSolicitud[0] +
+                                    ", se suspendió el " +
+                                    self.contrato_obj.tipo_contrato +
+                                    " No. " +
+                                    self.contrato_obj.numero_contrato +
+                                    " de " +
+                                    self.contrato_obj.vigencia +
+                                    " durante el periodo comprendido entre el " +
+                                    fecha_sus_dia + " de " + fecha_sus_mes + " de " + fecha_sus_ano +
+                                    " y el día " + fecha_fin_dia + " de " + fecha_fin_mes + " de " + fecha_fin_ano
+                            };
+
+                        }
+                    }
+                } else {
+                    return "";
+                }
+            }
+
+            self.agregarReinicio = function () {
+
+            }
+
             /**
              * @ngdoc method
              * @name get_plantilla
@@ -1357,7 +1443,44 @@ angular
                                 self.contrato_obj.objeto +
                                 "”\n\n",
                         },
-                        [{
+                        {
+                            text: [
+                                {
+                                    text: "Que la cláusula 3 del " +
+                                        self.contrato_obj.tipo_contrato +
+                                        " No. " +
+                                        self.contrato_obj.numero_contrato +
+                                        " de " +
+                                        self.contrato_obj.vigencia +
+                                        ", establece como valor del contrato "
+                                }, { text: '“(...) El valor del presente Contrato corresponde a la suma de ', italics: true, }, {
+                                    text:
+                                        self.valor_contrato_letras + ' ($' + numberFormat(String(self.contrato_obj.valor)) + ')', bold: true, italics: true,
+                                },
+                                {
+                                    text: ' incluido IVA, así como todos los impuestos y retenciones legalmente (...)“\n\n', italics: true,
+                                }]
+                        },
+                        {
+                            text: [
+                                {
+                                    text: "Que la cláusula 6 del " +
+                                        self.contrato_obj.tipo_contrato +
+                                        " No. " +
+                                        self.contrato_obj.numero_contrato +
+                                        " de " +
+                                        self.contrato_obj.vigencia +
+                                        ", establece como plazo del contrato "
+                                }, { text: '“El plazo de ejecución del Contrato es ', italics: true, }, {
+                                    text:
+                                        self.contrato_plazo_letras + self.contrato_obj.plazo + ') MESES, ', bold: true, italics: true,
+                                },
+                                {
+                                    text: 'contados a partir del cumplimiento de los requisitos de ejecución“, esto es, según el acta de inicio el ' +
+                                        self.fecha_reg_dia + " de " + self.fecha_reg_mes + " de " + self.fecha_reg_ano + ".\n\n", italics: true,
+                                }]
+                        },
+                        {
                             text: [
                                 {
                                     text: "Que la cláusula 15 - Cesión. Del " +
@@ -1370,14 +1493,12 @@ angular
                                 }, { text: '“El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de ', italics: true, }, {
                                     text: 'LA UNIVERSIDAD"\n\n', bold: true, italics: true,
                                 }]
-                        }],
-
-
-
-
+                        },
+                        self.agregarSuspension(),
+                        self.agregarReinicio(),
                         {
                             text: "Que mediante escrito de fecha " +
-                                self.format_date_letter_mongo(self.f_oficio) +
+                                self.format_date_letter_mongo(self.fecha_solicitud) +
                                 ", el Contratista " +
                                 self.contrato_obj.contratista_nombre +
                                 ", (cedente) solicita a " +
@@ -1498,7 +1619,7 @@ angular
                                 { text: "El señor(a) " + self.contrato_obj.contratista_nombre }, { text: " (CEDENTE)", bold: true },
                                 {
                                     text: " cede el " + self.contrato_obj.tipo_contrato + " No." + self.contrato_obj.numero_contrato + ", suscrito el día " +
-                                        self.format_date_letter_mongo(self.f_oficio) + ", a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
+                                        self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ", a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
                                 },
                                 { text: " (CESIONARIO)", bold: true },
                                 {
@@ -1551,6 +1672,16 @@ angular
                                 },
                             ],
                         },
+                        ],
+                    },
+                    {
+                        style: ["general_font"],
+                        text: [
+                            "MOTIVO DE LA CESIÓN: " +
+                            self.observaciones +
+                            ".\n\n" +
+                            "Para constancia, firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
+                            "\n\n\n\n\n",
                         ],
                     },
                     {
@@ -1727,6 +1858,217 @@ angular
                 };
 
             };
+            var numeroALetras = (function () {
+                function Unidades(num) {
+                    switch (num) {
+                        case 1:
+                            return $translate.instant("UN");
+                        case 2:
+                            return $translate.instant("DOS");
+                        case 3:
+                            return $translate.instant("TRES");
+                        case 4:
+                            return $translate.instant("CUATRO");
+                        case 5:
+                            return $translate.instant("CINCO");
+                        case 6:
+                            return $translate.instant("SEIS");
+                        case 7:
+                            return $translate.instant("SIETE");
+                        case 8:
+                            return $translate.instant("OCHO");
+                        case 9:
+                            return $translate.instant("NUEVE");
+                    }
+                    return "";
+                }
+
+                function Decenas(num) {
+                    var decena = Math.floor(num / 10);
+                    var unidad = num - decena * 10;
+                    switch (decena) {
+                        case 1:
+                            switch (unidad) {
+                                case 0:
+                                    return $translate.instant("DIEZ");
+                                case 1:
+                                    return $translate.instant("ONCE");
+                                case 2:
+                                    return $translate.instant("DOCE");
+                                case 3:
+                                    return $translate.instant("TRECE");
+                                case 4:
+                                    return $translate.instant("CATORCE");
+                                case 5:
+                                    return $translate.instant("QUINCE");
+                                case 6:
+                                    return $translate.instant("DIECISEIS");
+                                case 7:
+                                    return $translate.instant("DIECISIETE");
+                                case 8:
+                                    return $translate.instant("DIECIOCHO");
+                                case 9:
+                                    return $translate.instant("DIECINUEVE");
+                                default:
+                                    return $translate.instant("DIECI") + Unidades(unidad);
+                            }
+                        case 2:
+                            if (unidad == 0) {
+                                return $translate.instant("VEINTE");
+                            } else {
+                                return $translate.instant("VEINTI") + Unidades(unidad);
+                            }
+                        case 3:
+                            return DecenasY($translate.instant("TREINTA"), unidad);
+                        case 4:
+                            return DecenasY($translate.instant("CUARENTA"), unidad);
+                        case 5:
+                            return DecenasY($translate.instant("CINCUENTA"), unidad);
+                        case 6:
+                            return DecenasY($translate.instant("SESENTA"), unidad);
+                        case 7:
+                            return DecenasY($translate.instant("SETENTA"), unidad);
+                        case 8:
+                            return DecenasY($translate.instant("OCHENTA"), unidad);
+                        case 9:
+                            return DecenasY($translate.instant("NOVENTA"), unidad);
+                        case 0:
+                            return Unidades(unidad);
+                    }
+                }
+
+                function DecenasY(strSin, numUnidades) {
+                    if (numUnidades > 0)
+                        return strSin + $translate.instant("Y") + Unidades(numUnidades);
+                    return strSin;
+                }
+
+                function Centenas(num) {
+                    var centenas = Math.floor(num / 100);
+                    var decenas = num - centenas * 100;
+                    switch (centenas) {
+                        case 1:
+                            if (decenas > 0)
+                                return $translate.instant("CIENTO") + Decenas(decenas);
+                            return $translate.instant("CIEN");
+                        case 2:
+                            return $translate.instant("DOSCIENTOS") + Decenas(decenas);
+                        case 3:
+                            return $translate.instant("TRESCIENTOS") + Decenas(decenas);
+                        case 4:
+                            return $translate.instant("CUATROCIENTOS") + Decenas(decenas);
+                        case 5:
+                            return $translate.instant("QUINIENTOS") + Decenas(decenas);
+                        case 6:
+                            return $translate.instant("SEISCIENTOS") + Decenas(decenas);
+                        case 7:
+                            return $translate.instant("SETECIENTOS") + Decenas(decenas);
+                        case 8:
+                            return $translate.instant("OCHOCIENTOS") + Decenas(decenas);
+                        case 9:
+                            return $translate.instant("NOVECIENTOS") + Decenas(decenas);
+                    }
+                    return Decenas(decenas);
+                }
+
+                function Seccion(num, divisor, strSingular, strPlural) {
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var letras = "";
+                    if (cientos > 0)
+                        if (cientos > 1) letras = Centenas(cientos) + " " + strPlural;
+                        else letras = strSingular;
+                    if (resto > 0) letras += "";
+                    return letras;
+                }
+
+                function Miles(num) {
+                    var divisor = 1000;
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var strMiles = Seccion(
+                        num,
+                        divisor,
+                        $translate.instant("UNMIL"),
+                        $translate.instant("MIL")
+                    );
+                    var strCentenas = Centenas(resto);
+                    if (strMiles == "") return strCentenas;
+                    return strMiles + " " + strCentenas;
+                }
+
+                function Millones(num) {
+                    var divisor = 1000000;
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var strMillones = Seccion(
+                        num,
+                        divisor,
+                        $translate.instant("UNMILLON"),
+                        $translate.instant("MILLONES")
+                    );
+                    var strMiles = Miles(resto);
+                    if (strMillones == "") return strMiles;
+                    return strMillones + " " + strMiles;
+                }
+
+                return function NumeroALetras(num, currency) {
+                    currency = currency || {};
+                    var data = {
+                        numero: num,
+                        enteros: Math.floor(num),
+                        centavos: Math.round(num * 100) - Math.floor(num) * 100,
+                        letrasCentavos: "",
+                        letrasMonedaPlural: currency.plural || $translate.instant("PESOS"),
+                        letrasMonedaSingular: currency.singular || $translate.instant("PESO"),
+                        letrasMonedaCentavoPlural: currency.centPlural || "CHIQUI PESOS",
+                        letrasMonedaCentavoSingular: currency.centSingular || "CHIQUI PESO",
+                    };
+
+                    if (data.centavos > 0) {
+                        data.letrasCentavos =
+                            $translate.instant("CON") +
+                            (function () {
+                                if (data.centavos == 1)
+                                    return (
+                                        Millones(data.centavos) +
+                                        " " +
+                                        data.letrasMonedaCentavoSingular
+                                    );
+                                else
+                                    return (
+                                        Millones(data.centavos) +
+                                        " " +
+                                        data.letrasMonedaCentavoPlural
+                                    );
+                            })();
+                    }
+
+                    if (data.enteros == 0)
+                        return (
+                            $translate.instant("CERO") +
+                            data.letrasMonedaPlural +
+                            " " +
+                            data.letrasCentavos
+                        );
+                    if (data.enteros == 1)
+                        return (
+                            Millones(data.enteros) +
+                            " " +
+                            data.letrasMonedaSingular +
+                            " " +
+                            data.letrasCentavos
+                        );
+                    else
+                        return (
+                            Millones(data.enteros) +
+                            " " +
+                            data.letrasMonedaPlural +
+                            " " +
+                            data.letrasCentavos
+                        );
+                };
+            })();
         }
 
     )

@@ -35,22 +35,22 @@ angular.module('contractualClienteApp')
             self.novedades = [];
             self.estadoNovedad = "";
             self.f_hoy = new Date();
-            self.n_solicitud = null;
             self.fecha_inicio = "";
             self.motivo = "";
-            self.num_oficio = null;
             self.estado_suspendido = "{}";
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
             self.contrato_obj_replica = {};
             self.a_favor = {};
-            self.numero_solicitud = null;
-            self.numero_oficio_estado_cuentas = null;
-            self.fecha_oficio = new Date();
+            self.numero_solicitud = "";
+            self.numero_oficio_supervisor = "";
+            self.numero_oficio_ordenador = "";
+            self.fecha_oficioO = new Date();
+            self.fecha_oficioS = new Date();
             self.valor_desembolsado = '';
-            self.saldo_contratista = 0;
-            self.saldo_universidad = 0;
+            self.saldo_contratista = '';
+            self.saldo_universidad = '';
             self.fecha_solicitud = new Date();
             self.fecha_terminacion_anticipada = new Date();
             self.estados = [];
@@ -59,19 +59,19 @@ angular.module('contractualClienteApp')
             self.elaboro = '';
             self.elaboro_cedula = token_service.getPayload().documento;
 
-            const solic_input = document.getElementById("numero_solicitud");
-            solic_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
+            // const solic_input = document.getElementById("numero_solicitud");
+            // solic_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
 
-            const oficio_input = document.getElementById("numero_oficio_estado_cuentas");
-            oficio_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
+            // const oficio_input = document.getElementById("numero_oficio_supervisor");
+            // oficio_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
 
             const desembolsado_input = document.getElementById("valor_desembolsado");
             desembolsado_input.addEventListener("input", function () {
@@ -93,6 +93,16 @@ angular.module('contractualClienteApp')
                     this.value = this.value.slice(0, 10);
                 }
             });
+
+            financieraJbpmRequest
+                .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
+                .then(function (response) {
+                    var data = response.data.cdps_vigencia.cdp_vigencia;
+                    // console.log(data);
+                    if (data != undefined && data[0].id_numero_solicitud != null) {
+                        self.numero_solicitud = data[0].id_numero_solicitud;
+                    }
+                });
 
             agoraRequest.get('estado_contrato?query=NombreEstado:Suspendido').then(function (ec_response) {
                 self.estados[1] = ec_response.data[0];
@@ -197,6 +207,7 @@ angular.module('contractualClienteApp')
 
                     novedadesMidRequest.get('novedad', self.contrato_obj.numero_contrato + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
                         self.novedades = response_sql.data.Body;
+                        self.fecha_lim_sup = self.calcularFechaFin();
                         if (self.novedades.length != '0') {
                             var last_cesion = self.novedades[self.novedades.length - 1];
                             self.contrato_obj.contratista = last_cesion.cesionario;
@@ -291,21 +302,68 @@ angular.module('contractualClienteApp')
                 }
             });
 
-            $scope.check_saldo = function () {
-                if (self.a_favor_de == "Universidad") {
-                    $(".universidad_check").show("fast");
-                    if ($(".contratista_check").is(":visible")) {
-                        $(".contratista_check").hide("fast");
-                        self.saldo_contratista = 0;
+            /**
+             * @ngdoc method
+             * @name formato_valores_terminacion
+             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl
+             * @description
+             * funcion para modificar el formato de valores para la interfaz
+             */
+            $scope.formato_valores_terminacion = function (evento, num) {
+                var valor = evento.target.value.replace(/[^0-9\.]/g, "");
+                console.log(parseInt(self.contrato_obj.valor));
+                var valor_valido = parseInt(self.contrato_obj.valor);
+                if (num == 1) {
+                    if (valor <= valor_valido) {
+                        self.valor_desembolsado = numberFormat(valor);
+                    } else {
+                        self.valor_desembolsado = undefined;
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            "El valor desembolsado no puede ser mayor al valor del contrato",
+                            "info"
+                        );
                     }
-                } else if (self.a_favor_de = "Contratista") {
-                    $(".contratista_check").show("fast");
-                    if ($(".universidad_check").is(":visible")) {
-                        $(".universidad_check").hide("fast");
-                        self.saldo_universidad = 0;
+                } else if (num == 2) {
+                    if (valor <= valor_valido) {
+                        self.saldo_contratista = numberFormat(valor);
+                    } else {
+                        self.saldo_contratista = undefined;
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            "El saldo a favor del contratista no puede ser mayor al valor del contrato",
+                            "info"
+                        );
+                    }
+                } else if (num == 3) {
+                    if (valor <= valor_valido) {
+                        self.saldo_universidad = numberFormat(valor);
+                    } else {
+                        self.saldo_universidad = undefined;
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            "El saldo a favor de la Universidad no puede ser mayor al valor del contrato",
+                            "info"
+                        );
                     }
                 }
-            }
+            };
+
+            // $scope.check_saldo = function () {
+            //     if (self.a_favor_de == "Universidad") {
+            //         $(".universidad_check").show("fast");
+            //         if ($(".contratista_check").is(":visible")) {
+            //             $(".contratista_check").hide("fast");
+            //             self.saldo_contratista = 0;
+            //         }
+            //     } else if (self.a_favor_de = "Contratista") {
+            //         $(".contratista_check").show("fast");
+            //         if ($(".universidad_check").is(":visible")) {
+            //             $(".universidad_check").hide("fast");
+            //             self.saldo_universidad = 0;
+            //         }
+            //     }
+            // }
 
             // seleccionador de beneficiario de saldo
             self.selecionarSaldo = function () {
@@ -507,13 +565,15 @@ angular.module('contractualClienteApp')
                         self.terminacion_nov.motivo = self.motivo;
                         self.terminacion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
                         self.terminacion_nov.fecharegistro = new Date();
-                        self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
-                        self.terminacion_nov.fechaoficio = self.fecha_oficio;
                         self.terminacion_nov.numerosolicitud = self.numero_solicitud;
-                        self.terminacion_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
-                        self.terminacion_nov.valor_desembolsado = self.valor_desembolsado;
-                        self.terminacion_nov.saldo_contratista = self.saldo_contratista;
-                        self.terminacion_nov.saldo_universidad = self.saldo_universidad;
+                        self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
+                        self.terminacion_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
+                        self.terminacion_nov.fechaoficiosupervisor = self.fecha_oficioS;
+                        self.terminacion_nov.numerooficioordenador = self.numero_oficio_ordenador;
+                        self.terminacion_nov.fechaoficioordenador = self.fecha_oficioO;
+                        self.terminacion_nov.valor_desembolsado = parseFloat(self.valor_desembolsado.replace(/\,/g, ""));
+                        self.terminacion_nov.saldo_contratista = parseFloat(self.saldo_contratista.replace(/\,/g, ""));
+                        self.terminacion_nov.saldo_universidad = parseFloat(self.saldo_universidad.replace(/\,/g, ""));
                         self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;
                         self.terminacion_nov.fechafinefectiva = self.fecha_terminacion_anticipada;
                         self.terminacion_nov.estado = self.estadoNovedad;
@@ -1046,17 +1106,17 @@ angular.module('contractualClienteApp')
 
                             'Que el contrato se perfeccionó y ejecutó mediante Registro Presupuestal No. ' + self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n',
 
-                            'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' + self.contrato_obj.plazo + 'meses (contados a partir del perfeccionamiento de la Orden y/o contrato), es decir del ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
+                            'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' + NumeroALetras(self.contrato_obj.plazo) + '(' + self.contrato_obj.plazo + ')' + ' meses (contados a partir del perfeccionamiento de la Orden y/o contrato), es decir del ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
 
                             'Que el valor de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó en la suma total de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(String(self.contrato_obj.valor) + "") + '),\n\n',
 
-                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficio) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' como Supervisor del mismo.\n\n',
+                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante carta de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' al Supervisor del mismo.\n\n',
 
                             'Que según certificación de fecha ' + self.format_date_letter_mongo(self.contrato_obj.cdp_fecha) + ', expedida por Jefe de Sección de Presupuesto, presenta un saldo a la fecha de  ' + NumeroALetras(self.a_favor.valor) + '($' + numberFormat(String(self.a_favor.valor) + '') + ').\n\n',
 
-                            'Que mediante oficio No ' + numberFormat(String(self.terminacion_nov.numerooficioestadocuentas) + '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' el Supervisor del CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
+                            'Que mediante oficio No ' + numberFormat(String(self.terminacion_nov.numerooficiosupervisor) + '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
 
-                            'Que por medio del oficio ' + numberFormat(String(self.terminacion_nov.numerooficioestadocuentas) + '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
+                            'Que por medio del oficio ' + numberFormat(String(self.terminacion_nov.numerooficioordenador) + '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
 
                         ]
                     },

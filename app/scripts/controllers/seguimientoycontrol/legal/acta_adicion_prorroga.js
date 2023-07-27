@@ -74,7 +74,7 @@ angular
             self.estadoNovedad = "";
             self.novedadOtrosi = false;
 
-            self.editBool = false;
+            self.editBool = $routeParams.contrato_vigencia === true;
 
             const input = document.getElementById("solicitud");
             input.addEventListener("input", function () {
@@ -89,6 +89,16 @@ angular
                     this.value = this.value.slice(0, 7);
                 }
             });
+
+            financieraJbpmRequest
+                .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
+                .then(function (response) {
+                    var data = response.data.cdps_vigencia.cdp_vigencia;
+                    // console.log(data);
+                    if (data != undefined && data[0].id_numero_solicitud != null) {
+                        $scope.numero_solicitud = data[0].id_numero_solicitud;
+                    }
+                });
 
             agoraRequest
                 .get("informacion_persona_natural?query=Id:" + self.elaboro_cedula)
@@ -284,10 +294,11 @@ angular
                             )
                             .then(function (response) {
                                 self.novedades = response.data.Body;
+                                self.calcularFechaFin(0, true);
                                 if (self.novedades.length != '0') {
                                     var last_novelty =
                                         self.novedades[self.novedades.length - 1];
-                                    if (self.editBool) {
+                                    if (self.editBool == true) {
                                         if (
                                             last_novelty.tiponovedad == 6 ||
                                             last_novelty.tiponovedad == 7 ||
@@ -455,7 +466,8 @@ angular
                     $scope.check_prorroga();
                 }
                 $scope.numero_solicitud = parseInt(novedad.numerosolicitud);
-                $scope.motivo = novedad.motivo;
+                $scope.numero_oficio = novedad.
+                    $scope.motivo = novedad.motivo;
                 $scope.valor_adicion = numberFormat(novedad.valoradicion.toString());
                 $scope.tiempo_prorroga = parseInt(novedad.tiempoprorroga);
                 self.fecha_solicitud = new Date(novedad.fechasolicitud);
@@ -1025,6 +1037,8 @@ angular
                             contrato: self.contrato_obj.numero_contrato,
                             numerosolicitud: $scope.numero_solicitud,
                             fechasolicitud: self.fecha_solicitud,
+                            numerooficiosupervisor: "",
+                            numerooficioordenador: $scope.numero_oficio,
                             numerocdp: String(self.contrato_obj.cdp_numero),
                             vigenciacdp: String(self.contrato_obj.cdp_anno),
                             numerorp: String(self.contrato_obj.rp_numero),
@@ -1067,37 +1081,40 @@ angular
                             TipoNovedad: parseFloat(220),
                             esFechaActual: false,
                         };
+                        console.log(self.data_acta_adicion_prorroga);
                         if (self.estadoNovedad == "4518") {
                             self.formato_generacion_pdf();
                         } else {
-
                             self.contrato_obj_replica.esFechaActual = true;
+                            console.log(self.contrato_obj_replica);
                             novedadesMidRequest
                                 .post("replica", self.contrato_obj_replica)
                                 .then(function (request_novedades) {
+                                    console.log(request_novedades);
                                     if (
                                         request_novedades.status == 200 ||
                                         request_novedades.statusText == "OK"
                                     ) {
                                         self.formato_generacion_pdf();
                                         console.log("Replica correcta");
+                                    } else {
+                                        //Error en la replica
+                                        $scope.alert = "TITULO_ERROR_REPLICA";
+                                        swal({
+                                            title: $translate.instant("TITULO_ERROR_ACTA"),
+                                            type: "error",
+                                            html: $translate.instant($scope.alert) +
+                                                self.contrato_obj.numero_contrato +
+                                                $translate.instant("ANIO") +
+                                                self.contrato_obj.vigencia +
+                                                ".",
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false,
+                                        }).then(function () { });
+
                                     }
-                                }).catch(function (error) {
-                                    //Error en la replica
-                                    $scope.alert = "TITULO_ERROR_REPLICA";
-                                    swal({
-                                        title: $translate.instant("TITULO_ERROR_ACTA"),
-                                        type: "error",
-                                        html: $translate.instant($scope.alert) +
-                                            self.contrato_obj.numero_contrato +
-                                            $translate.instant("ANIO") +
-                                            self.contrato_obj.vigencia +
-                                            ".",
-                                        showCloseButton: true,
-                                        showCancelButton: false,
-                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                        allowOutsideClick: false,
-                                    }).then(function () { });
                                 });
                         }
                     });
@@ -1173,6 +1190,61 @@ angular
                 };
                 return fecha.toLocaleDateString("es-ES", options);
             };
+
+            self.agregarCesion = function () {
+                if (self.novedades.length > 0) {
+                    for (var i = self.novedades.length - 1; i > 0; i--) {
+                        if (self.novedades[i].tiponovedad == 2) {
+                            var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
+                            agoraRequest
+                                .get(
+                                    "informacion_proveedor?query=Id:" + self.novedades[i].cedente
+                                )
+                                .then(function (ip_response) {
+                                    var cedente_nombre = ip_response.data[0].NomProveedor;
+                                    console.log({
+                                        text: [{
+                                            text: "Que el " +
+                                                fechaSolicitud[2].substring(0, 2) +
+                                                " de " + meses[parseInt(fechaSolicitud[1] - 1)] +
+                                                " de " + fechaSolicitud[0] +
+                                                ", mediante Acta de Cesión, "
+                                        },
+                                        {
+                                            text: cedente_nombre,
+                                            bold: true,
+                                        },
+                                        {
+                                            text: " cedió en todas sus órdenes, el " +
+                                                self.contrato_obj.tipo_contrato +
+                                                " No. " +
+                                                self.contrato_obj.numero_contrato +
+                                                " de " +
+                                                self.contrato_obj.vigencia + " a "
+                                        },
+                                        {
+                                            text: self.contrato_obj.contratista_nombre + ", ",
+                                            bold: true,
+                                        },
+                                        {
+                                            text: "identificado(a) con " +
+                                                self.contrato_obj.contratista_tipo_Documento +
+                                                " No. " +
+                                                self.contrato_obj.contratista_documento +
+                                                " expedida en " +
+                                                self.contrato_obj.contratista_ciudad_cedula +
+                                                ", quien cumple con las cualidades y competencias para el desarrollo de actividades y ejecución del contrato.",
+                                        },
+                                        ],
+                                    });
+                                });
+                        }
+                    }
+                } else {
+                    console.log("No hay novedades viejo");
+                    return ""
+                }
+            }
 
             /**
              * @ngdoc method
@@ -1328,7 +1400,7 @@ angular
                                     ', cuyo objeto es '
                             },
                             {
-                                text: '"' + self.contrato_obj.objeto + '"\n', bold: true
+                                text: '"' + self.contrato_obj.objeto + '"\n\n', bold: true
                             },
                             ],
                         },
@@ -1374,6 +1446,7 @@ angular
                         //         { text: '' },
                         //     ]
                         // },
+                        // self.agregarCesion(),
                         {
                             text: [{
                                 text: "Que la "
@@ -1567,13 +1640,22 @@ angular
                         //         " se obligan en todos sus órdenes y manifestaciones.",
                         // },
                         //     "\n\n",
-                        {
-                            text: "Para constancia, se firma en Bogotá, D.C., a los ______________________________________________.",
-                        },
-                            "\n\n\n\n\n\n",
+                        // {
+                        //     text: "Para constancia, se firma en Bogotá, D.C., a los ______________________________________________.",
+                        // },
+                        //     "\n\n\n\n\n\n",
                         ],
                     },
-
+                    {
+                        style: ["general_font"],
+                        text: [
+                            "MOTIVO DE LA NOVEDAD: " +
+                            $scope.motivo +
+                            ".\n\n" +
+                            "Para constancia, firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
+                            "\n\n\n\n\n\n\n\n\n",
+                        ],
+                    },
                     {
                         style: ["table"],
                         table: {
@@ -1603,6 +1685,7 @@ angular
                                 ],
                             ],
                         },
+                        unbreakable: true,
                         layout: "noBorders",
                     },
                     {

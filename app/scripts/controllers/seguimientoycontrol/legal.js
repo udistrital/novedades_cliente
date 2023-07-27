@@ -206,7 +206,7 @@ angular
                                                         tipoNovedad: response_sql.data.Body[i].nombreTipoNovedad,
                                                         enlace: response_sql.data.Body[i].enlace,
                                                         fecha: response_sql.data.Body[i].fechasolicitud,
-                                                        estado: response_sql.data.Body[i].estado,
+                                                        estado: response_sql.data.Body[i].nombreEstado,
                                                     });
                                                 }
                                             }
@@ -214,7 +214,7 @@ angular
                                             if (elementos_cesion != undefined && elementos_cesion.length != "0") {
                                                 var last_newness =
                                                     elementos_cesion[elementos_cesion.length - 1];
-                                                if (last_newness.estado == "EN_TRAMITE") {
+                                                if (last_newness.estado == "4518") {
                                                     self.novedadEnCurso = true;
                                                     swal({
                                                         title: $translate.instant("INFORMACION"),
