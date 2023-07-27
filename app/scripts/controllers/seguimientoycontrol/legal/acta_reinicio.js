@@ -24,7 +24,8 @@ angular
             amazonAdministrativaRequest,
             novedadesMidRequest,
             novedadesRequest,
-            pdfMakerService
+            pdfMakerService,
+            financieraJbpmRequest
         ) {
             this.awesomeThings = ["HTML5 Boilerplate", "AngularJS", "Karma"];
 
