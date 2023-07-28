@@ -1324,7 +1324,7 @@ angular
                                 bold: true,
                             },
                             {
-                                text: "mayor de edad, vecino de esta ciudad, identificado con cédula de ciudadanía No. " +
+                                text: "mayor de edad, vecino(a) de esta ciudad, identificado(a) con cédula de ciudadanía No. " +
                                     self.contrato_obj.ordenador_gasto_documento +
                                     " expedida en " + self.contrato_obj.ordenador_gasto_ciudad_documento +
                                     ", quien actúa en calidad de " +
@@ -1355,7 +1355,7 @@ angular
                                 bold: true,
                             },
                             {
-                                text: "identificado con " +
+                                text: "identificado(a) con " +
                                     self.contrato_obj.contratista_tipo_Documento +
                                     " No. " +
                                     self.contrato_obj.contratista_documento +
@@ -1465,7 +1465,7 @@ angular
                                 text: ", establece que: "
                             },
                             {
-                                text: '"El contrato solo podrá ser modificado. adicionado y/o prorrogado de mutuo acuerdo entre las partes, mediante OTROSI, el cual hará parte integral del presente contrato".\n\n',
+                                text: '"El contrato solo podrá ser modificado, adicionado y/o prorrogado de mutuo acuerdo entre las partes, mediante OTROSI, el cual hará parte integral del presente contrato".\n\n',
                                 italics: true
                             },
                             ]
@@ -1572,7 +1572,7 @@ angular
                         { text: " Como consecuencia de lo anterior, " },
                         { text: "MODIFICAR LA CLAUSULA TERCERA", bold: true },
                         {
-                            text: "  del citado contrato, la cual quedará así: \n",
+                            text: "  del citado contrato, la cual quedará así: \n\n",
 
                         },
                         {
@@ -1625,7 +1625,7 @@ angular
                         { text: "CLÁUSULA SEXTA.-", bold: true },
                         {
                             text: "La presente prórroga y adición requiere para su perfeccionamiento y legalización, la suscripción de la misma por las partes, " +
-                                "la actualización y aprobación de las garantía única  y la expedición del Registro Presupuestal.",
+                                "la actualización y aprobación de la garantía única  y la expedición del Registro Presupuestal.",
                         },
                             "\n\n",
                         { text: "CLÁUSULA SÉPTIMA: ", bold: true },
@@ -1652,7 +1652,7 @@ angular
                             "MOTIVO DE LA NOVEDAD: " +
                             $scope.motivo +
                             ".\n\n" +
-                            "Para constancia, firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
+                            "Para constancia, se firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
                             "\n\n\n\n\n\n\n\n\n",
                         ],
                     },
