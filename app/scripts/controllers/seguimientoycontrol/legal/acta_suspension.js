@@ -1411,7 +1411,7 @@ angular
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA SEGUNDA: PUBLICACIÓN ', bold: true },
-                                { text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de suspensión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente.\n\n\n' }
+                                { text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de suspensión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente.\n\n' }
                             ]
 
 
