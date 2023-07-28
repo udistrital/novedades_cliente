@@ -1605,7 +1605,7 @@ angular
                         { text: " Como consecuencia de lo anterior, " },
                         { text: "MODIFICAR la CLAUSULA SEXTA", bold: true },
                         {
-                            text: " del citado contrato, la cual quedará así: \n"
+                            text: " del citado contrato, la cual quedará así: \n\n"
 
                         },
                         {
