@@ -259,6 +259,7 @@ angular.module('contractualClienteApp')
                                             var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
                                             self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
                                             self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                                            self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
                                         }
                                     });
                             });
@@ -367,14 +368,23 @@ angular.module('contractualClienteApp')
 
             // seleccionador de beneficiario de saldo
             self.selecionarSaldo = function () {
-                if (self.a_favor_de == "Universidad") {
-                    self.a_favor.entidad = "la Universidad Distrital.";
+                if (self.saldo_contratista == 0) {
+                    // self.a_favor.entidad = "la Universidad Distrital.";
                     self.a_favor.valor = self.terminacion_nov.saldo_universidad;
                     self.a_favor.existe = "no existe un saldo a favor de este.";
-                } else if (self.a_favor_de == "Contratista") {
-                    self.a_favor.entidad = "el Contratista.";
-                    self.a_favor.valor = self.terminacion_nov.saldo_contratista;
-                    self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(String(self.terminacion_nov.saldo_contratista) + '');
+                } else {
+                    // self.a_favor.entidad = "el Contratista.";
+                    self.a_favor.valor = parseFloat(self.saldo_contratista.replace(/\,/g, "")) + parseFloat(self.saldo_universidad.replace(/\,/g, ""));
+                    self.a_favor.existe = ' queda un saldo pendiente a su favor por el periodo comprendido entre el dia ' +
+                        self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' +
+                        self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por la suma de ' +
+                        numeroALetras(self.terminacion_nov.saldo_contratista, {
+                            plural: $translate.instant("PESOS"),
+                            singular: $translate.instant("PESO"),
+                            centPlural: $translate.instant("CENTAVOS"),
+                            centSingular: $translate.instant("CENTAVO"),
+                        }) + " MONEDA CORRIENTE ($" +
+                        numberFormat(String(self.terminacion_nov.saldo_contratista) + ' M/Cte.)');
                 }
             }
 
@@ -790,207 +800,217 @@ angular.module('contractualClienteApp')
                 }
             }
 
-            function Unidades(num) {
-
-                switch (num) {
-                    case 1:
-                        return "Un";
-                    case 2:
-                        return "Dos";
-                    case 3:
-                        return "Tres";
-                    case 4:
-                        return "Cuatro";
-                    case 5:
-                        return "Cinco";
-                    case 6:
-                        return "Seis";
-                    case 7:
-                        return "Siete";
-                    case 8:
-                        return "Ocho";
-                    case 9:
-                        return "Nueve";
-                }
-
-                return "";
-            } //Unidades()
-
-            function Decenas(num) {
-
-                var decena = Math.floor(num / 10);
-                var unidad = num - (decena * 10);
-
-                switch (decena) {
-                    case 1:
-                        switch (unidad) {
-                            case 0:
-                                return "Diez";
-                            case 1:
-                                return "Once";
-                            case 2:
-                                return "Doce";
-                            case 3:
-                                return "Trece";
-                            case 4:
-                                return "Catorce";
-                            case 5:
-                                return "Quince";
-                            default:
-                                return "Dieci" + Unidades(unidad);
-                        }
-                    case 2:
-                        switch (unidad) {
-                            case 0:
-                                return "Veinte";
-                            default:
-                                return "Veinti" + Unidades(unidad);
-                        }
-                    case 3:
-                        return DecenasY("Treinta", unidad);
-                    case 4:
-                        return DecenasY("Cuarenta", unidad);
-                    case 5:
-                        return DecenasY("Cincuenta", unidad);
-                    case 6:
-                        return DecenasY("Sesenta", unidad);
-                    case 7:
-                        return DecenasY("Setenta", unidad);
-                    case 8:
-                        return DecenasY("Ochenta", unidad);
-                    case 9:
-                        return DecenasY("Noventa", unidad);
-                    case 0:
-                        return Unidades(unidad);
-                }
-            } //Decenas()
-
-            function DecenasY(strSin, numUnidades) {
-                if (numUnidades > 0)
-                    return strSin + " Y " + Unidades(numUnidades)
-
-                return strSin;
-            } //DecenasY()
-
-            function Centenas(num) {
-                var centenas = Math.floor(num / 100);
-                var decenas = num - (centenas * 100);
-
-                switch (centenas) {
-                    case 1:
-                        if (decenas > 0)
-                            return "Ciento " + Decenas(decenas);
-                        return "Cien";
-                    case 2:
-                        return "Doscientos " + Decenas(decenas);
-                    case 3:
-                        return "Trescientos " + Decenas(decenas);
-                    case 4:
-                        return "Cuatroscientos " + Decenas(decenas);
-                    case 5:
-                        return "Quinientos " + Decenas(decenas);
-                    case 6:
-                        return "Seiscientos" + Decenas(decenas);
-                    case 7:
-                        return "Setecientos " + Decenas(decenas);
-                    case 8:
-                        return "Ochocientos " + Decenas(decenas);
-                    case 9:
-                        return "Novecientos " + Decenas(decenas);
-                }
-
-                return Decenas(decenas);
-            } //Centenas()
-
-            function Seccion(num, divisor, strSingular, strPlural) {
-                var cientos = Math.floor(num / divisor)
-                var resto = num - (cientos * divisor)
-                var letras = "";
-                if (cientos > 0)
-                    if (cientos > 1)
-                        letras = Centenas(cientos) + " " + strPlural;
-                    else
-                        letras = strSingular;
-                if (resto > 0)
-                    letras += "";
-                return letras;
-            } //Seccion()
-
-            function Miles(num) {
-                var divisor = 1000;
-                var cientos = Math.floor(num / divisor)
-                var resto = num - (cientos * divisor)
-
-                var strMiles = Seccion(num, divisor, "Un Mil", "Mil");
-                var strCentenas = Centenas(resto);
-
-                if (strMiles == "")
-                    return strCentenas;
-
-                return strMiles + " " + strCentenas;
-            } //Miles()
-
-            function Millones(num) {
-                var divisor = 1000000;
-                var cientos = Math.floor(num / divisor)
-                var resto = num - (cientos * divisor)
-
-                var strMillones = Seccion(num, divisor, "Un Millón ", "Millones ");
-                var strMiles = Miles(resto);
-
-                if (strMillones == "")
-                    return strMiles;
-
-                return strMillones + " " + strMiles;
-            } //Millones()
-            function NumeroALetras(num) {
-                var data = {
-                    numero: num,
-                    enteros: Math.floor(num),
-                    centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
-                    letrasCentavos: "",
-                    letrasMonedaPlural: 'Pesos', //“PESOS”, 'Dólares', 'Bolívares', 'etcs'
-                    letrasMonedaSingular: 'Peso', //“PESO”, 'Dólar', 'Bolivar', 'etc'
-
-                    letrasMonedaCentavoPlural: "Centavos",
-                    letrasMonedaCentavoSingular: "Centavo"
-                };
-
-                if (data.centavos > 0) {
-                    data.letrasCentavos = "Con " + (function () {
-                        if (data.centavos == 1)
-                            return Millones(data.centavos) + " " + data.letrasMonedaCentavoSingular;
-                        else
-                            return Millones(data.centavos) + " " + data.letrasMonedaCentavoPlural;
-                    })();
-                };
-
-                if (data.enteros == 0)
-                    return "Cero " + data.letrasMonedaPlural + " " + data.letrasCentavos;
-                if (data.enteros == 1)
-                    return Millones(data.enteros) + " " + data.letrasMonedaSingular + " " + data.letrasCentavos;
-                else
-                    return Millones(data.enteros) + " " + data.letrasMonedaPlural + " " + data.letrasCentavos;
-            } //NumeroALetras()
-            function tiempoEjecucion(tiempo, unidad) {
-                if (unidad == '205') {
-                    var meses = tiempo / 30;
-                    if (meses > 1) {
-                        meses = Math.floor(meses);
-                        var parcial = meses * 30;
-                        var dias = tiempo - parcial;
-                        var plazo = meses + " mes(es) y " + dias + " dia(s) ";
-                    } else {
-                        var plazo = tiempo + " dia(s) ";
+            var numeroALetras = (function () {
+                function Unidades(num) {
+                    switch (num) {
+                        case 1:
+                            return $translate.instant("UN");
+                        case 2:
+                            return $translate.instant("DOS");
+                        case 3:
+                            return $translate.instant("TRES");
+                        case 4:
+                            return $translate.instant("CUATRO");
+                        case 5:
+                            return $translate.instant("CINCO");
+                        case 6:
+                            return $translate.instant("SEIS");
+                        case 7:
+                            return $translate.instant("SIETE");
+                        case 8:
+                            return $translate.instant("OCHO");
+                        case 9:
+                            return $translate.instant("NUEVE");
                     }
-                } else if (unidad == '206') {
-                    var plazo = tiempo + " Mes(es) ";
-                } else {
-                    var meses = tiempo * 12;
-                    var plazo = meses + " mes(es) ";
+                    return "";
                 }
-                return plazo;
-            }
+
+                function Decenas(num) {
+                    var decena = Math.floor(num / 10);
+                    var unidad = num - decena * 10;
+                    switch (decena) {
+                        case 1:
+                            switch (unidad) {
+                                case 0:
+                                    return $translate.instant("DIEZ");
+                                case 1:
+                                    return $translate.instant("ONCE");
+                                case 2:
+                                    return $translate.instant("DOCE");
+                                case 3:
+                                    return $translate.instant("TRECE");
+                                case 4:
+                                    return $translate.instant("CATORCE");
+                                case 5:
+                                    return $translate.instant("QUINCE");
+                                case 6:
+                                    return $translate.instant("DIECISEIS");
+                                case 7:
+                                    return $translate.instant("DIECISIETE");
+                                case 8:
+                                    return $translate.instant("DIECIOCHO");
+                                case 9:
+                                    return $translate.instant("DIECINUEVE");
+                                default:
+                                    return $translate.instant("DIECI") + Unidades(unidad);
+                            }
+                        case 2:
+                            if (unidad == 0) {
+                                return $translate.instant("VEINTE");
+                            } else {
+                                return $translate.instant("VEINTI") + Unidades(unidad);
+                            }
+                        case 3:
+                            return DecenasY($translate.instant("TREINTA"), unidad);
+                        case 4:
+                            return DecenasY($translate.instant("CUARENTA"), unidad);
+                        case 5:
+                            return DecenasY($translate.instant("CINCUENTA"), unidad);
+                        case 6:
+                            return DecenasY($translate.instant("SESENTA"), unidad);
+                        case 7:
+                            return DecenasY($translate.instant("SETENTA"), unidad);
+                        case 8:
+                            return DecenasY($translate.instant("OCHENTA"), unidad);
+                        case 9:
+                            return DecenasY($translate.instant("NOVENTA"), unidad);
+                        case 0:
+                            return Unidades(unidad);
+                    }
+                }
+
+                function DecenasY(strSin, numUnidades) {
+                    if (numUnidades > 0)
+                        return strSin + $translate.instant("Y") + Unidades(numUnidades);
+                    return strSin;
+                }
+
+                function Centenas(num) {
+                    var centenas = Math.floor(num / 100);
+                    var decenas = num - centenas * 100;
+                    switch (centenas) {
+                        case 1:
+                            if (decenas > 0)
+                                return $translate.instant("CIENTO") + Decenas(decenas);
+                            return $translate.instant("CIEN");
+                        case 2:
+                            return $translate.instant("DOSCIENTOS") + Decenas(decenas);
+                        case 3:
+                            return $translate.instant("TRESCIENTOS") + Decenas(decenas);
+                        case 4:
+                            return $translate.instant("CUATROCIENTOS") + Decenas(decenas);
+                        case 5:
+                            return $translate.instant("QUINIENTOS") + Decenas(decenas);
+                        case 6:
+                            return $translate.instant("SEISCIENTOS") + Decenas(decenas);
+                        case 7:
+                            return $translate.instant("SETECIENTOS") + Decenas(decenas);
+                        case 8:
+                            return $translate.instant("OCHOCIENTOS") + Decenas(decenas);
+                        case 9:
+                            return $translate.instant("NOVECIENTOS") + Decenas(decenas);
+                    }
+                    return Decenas(decenas);
+                }
+
+                function Seccion(num, divisor, strSingular, strPlural) {
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var letras = "";
+                    if (cientos > 0)
+                        if (cientos > 1) letras = Centenas(cientos) + " " + strPlural;
+                        else letras = strSingular;
+                    if (resto > 0) letras += "";
+                    return letras;
+                }
+
+                function Miles(num) {
+                    var divisor = 1000;
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var strMiles = Seccion(
+                        num,
+                        divisor,
+                        $translate.instant("UNMIL"),
+                        $translate.instant("MIL")
+                    );
+                    var strCentenas = Centenas(resto);
+                    if (strMiles == "") return strCentenas;
+                    return strMiles + " " + strCentenas;
+                }
+
+                function Millones(num) {
+                    var divisor = 1000000;
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var strMillones = Seccion(
+                        num,
+                        divisor,
+                        $translate.instant("UNMILLON"),
+                        $translate.instant("MILLONES")
+                    );
+                    var strMiles = Miles(resto);
+                    if (strMillones == "") return strMiles;
+                    return strMillones + " " + strMiles;
+                }
+
+                return function NumeroALetras(num, currency) {
+                    currency = currency || {};
+                    var data = {
+                        numero: num,
+                        enteros: Math.floor(num),
+                        centavos: Math.round(num * 100) - Math.floor(num) * 100,
+                        letrasCentavos: "",
+                        letrasMonedaPlural: currency.plural || $translate.instant("PESOS"),
+                        letrasMonedaSingular: currency.singular || $translate.instant("PESO"),
+                        letrasMonedaCentavoPlural: currency.centPlural || "CHIQUI PESOS",
+                        letrasMonedaCentavoSingular: currency.centSingular || "CHIQUI PESO",
+                    };
+
+                    if (data.centavos > 0) {
+                        data.letrasCentavos =
+                            $translate.instant("CON") +
+                            (function () {
+                                if (data.centavos == 1)
+                                    return (
+                                        Millones(data.centavos) +
+                                        " " +
+                                        data.letrasMonedaCentavoSingular
+                                    );
+                                else
+                                    return (
+                                        Millones(data.centavos) +
+                                        " " +
+                                        data.letrasMonedaCentavoPlural
+                                    );
+                            })();
+                    }
+
+                    if (data.enteros == 0)
+                        return (
+                            $translate.instant("CERO") +
+                            data.letrasMonedaPlural +
+                            " " +
+                            data.letrasCentavos
+                        );
+                    if (data.enteros == 1)
+                        return (
+                            Millones(data.enteros) +
+                            " " +
+                            data.letrasMonedaSingular +
+                            " " +
+                            data.letrasCentavos
+                        );
+                    else
+                        return (
+                            Millones(data.enteros) +
+                            " " +
+                            data.letrasMonedaPlural +
+                            " " +
+                            data.letrasCentavos
+                        );
+                };
+            })();
 
             self.get_plantilla = function () {
                 return {
@@ -1053,7 +1073,16 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'VALOR', bold: true, style: 'topHeader' },
-                                    { text: NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(String(self.contrato_obj.valor) + ""), style: 'topHeader' }
+                                    {
+                                        text: numeroALetras(
+                                            self.contrato_obj.valor, {
+                                            plural: $translate.instant("PESOS"),
+                                            singular: $translate.instant("PESO"),
+                                            centPlural: $translate.instant("CENTAVOS"),
+                                            centSingular: $translate.instant("CENTAVO"),
+                                        }) + '($' + numberFormat(String(self.contrato_obj.valor) + ")"),
+                                        style: 'topHeader'
+                                    }
                                 ],
                                 [
                                     { text: 'FECHA DE INCIO', bold: true, style: 'topHeader' },
@@ -1073,7 +1102,7 @@ angular.module('contractualClienteApp')
                         text: [{
 
                             text: [{
-                                text: '\n\nEntre los suscritos a saber, ' + self.contrato_obj.ordenadorGasto_nombre + ', mayor de edad, identificado con ' + self.contrato_obj.ordenador_gasto_tipo_documento + ' No. ' +
+                                text: '\n\nEntre los suscritos a saber, ' + self.contrato_obj.ordenadorGasto_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.ordenador_gasto_tipo_documento + ' No. ' +
                                     self.contrato_obj.ordenador_gasto_documento + ' de ' + self.contrato_obj.ordenador_gasto_ciudad_documento + ' quien actúa en calidad de ' + self.contrato_obj.ordenadorGasto_rol + ' según ' + self.contrato_obj.ordenador_gasto_resolucion + ' y ordenador del gasto, y por la otra ' + self.contrato_obj.contratista_nombre + ', mayor de edad, e identificado(a) con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ' de ' + self.contrato_obj.contratista_ciudad_documento + ' quíén actúa en calidad de contratista, hemos convenido en'
                             },
                             { text: ' TERMINAR ANTICIPADAMENTE Y POR MUTUO ACUERDO ', bold: true },
@@ -1089,7 +1118,7 @@ angular.module('contractualClienteApp')
                         style: ['general_list'],
                         ol: [
 
-                            'Que entre la Universidad Distrital Francisco José de Caldas y el señor ' + self.contrato_obj.contratista_nombre + ', se suscribió el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', cuyo objeto es: "' + self.contrato_obj.objeto + '".\n\n',
+                            'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' + self.contrato_obj.contratista_nombre + ', se suscribió el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', cuyo objeto es: "' + self.contrato_obj.objeto + '".\n\n',
 
                             //'Que el valor del  ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó por la suma de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + "), y un plazo de " + self.contrato_obj.plazo + ' meses, contados partir del acta de inicio, lo cual tuvo lugar el día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
                             {
@@ -1106,17 +1135,34 @@ angular.module('contractualClienteApp')
 
                             'Que el contrato se perfeccionó y ejecutó mediante Registro Presupuestal No. ' + self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n',
 
-                            'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' + NumeroALetras(self.contrato_obj.plazo) + '(' + self.contrato_obj.plazo + ')' + ' meses (contados a partir del perfeccionamiento de la Orden y/o contrato), es decir del ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
+                            'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' +
+                            numeroALetras(self.contrato_obj.plazo, {
+                                plural: $translate.instant("("),
+                                singular: $translate.instant("("),
+                            }) + self.contrato_obj.plazo + ')' + ' meses (contados a partir del perfeccionamiento de la Orden y/o contrato), es decir del ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
 
-                            'Que el valor de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó en la suma total de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(String(self.contrato_obj.valor) + "") + '),\n\n',
+                            'Que el valor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó en la suma total de ' +
+                            numeroALetras(self.contrato_obj.valor, {
+                                plural: $translate.instant("PESOS"),
+                                singular: $translate.instant("PESO"),
+                                centPlural: $translate.instant("CENTAVOS"),
+                                centSingular: $translate.instant("CENTAVO"),
+                            }) + "MODENA CORRIENTE ($" + numberFormat(String(self.contrato_obj.valor) + "") + ' M/Cte.).\n\n',
 
-                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante carta de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' al Supervisor del mismo.\n\n',
+                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante carta de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
+                            ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
 
-                            'Que según certificación de fecha ' + self.format_date_letter_mongo(self.contrato_obj.cdp_fecha) + ', expedida por Jefe de Sección de Presupuesto, presenta un saldo a la fecha de  ' + NumeroALetras(self.a_favor.valor) + '($' + numberFormat(String(self.a_favor.valor) + '') + ').\n\n',
+                            'Que según certificación No. ' + self.contrato_obj.cdp_numero + " de " + self.contrato_obj.rp_fecha + ', expedida por Jefe de Sección de Presupuesto, presenta un saldo a la fecha de  ' +
+                            numeroALetras(self.a_favor.valor, {
+                                plural: $translate.instant("PESOS"),
+                                singular: $translate.instant("PESO"),
+                                centPlural: $translate.instant("CENTAVOS"),
+                                centSingular: $translate.instant("CENTAVO"),
+                            }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.a_favor.valor) + '') + ' M/CTE).\n\n',
 
-                            'Que mediante oficio No ' + numberFormat(String(self.terminacion_nov.numerooficiosupervisor) + '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
+                            'Que mediante oficio No ' + self.terminacion_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunicó al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
 
-                            'Que por medio del oficio ' + numberFormat(String(self.terminacion_nov.numerooficioordenador) + '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
+                            'Que por medio del oficio ' + self.terminacion_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
 
                         ]
                     },
@@ -1135,7 +1181,7 @@ angular.module('contractualClienteApp')
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA PRIMERA: TERMINAR Y LIQUIDAR DE MANERA ANTICIPADA Y DE MUTUO ACUERDO el contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', ', bold: true },
-                                { text: 'a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' de la siguiente manera:\n\n' }
+                                { text: 'a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ' de la siguiente manera:\n\n' }
                             ]
 
 
@@ -1171,7 +1217,7 @@ angular.module('contractualClienteApp')
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA SEGUNDA : ', bold: true },
-                                { text: ' Teniendo en cuenta que el Contratista ' + self.contrato_obj.contratista_nombre + ', ejecutó los servicios hasta el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', del año en curso y ' + self.a_favor.existe + '\n\n\n' }
+                                { text: ' Teniendo en cuenta que el Contratista ' + self.contrato_obj.contratista_nombre + ', ejecutará los servicios hasta el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', ' + self.a_favor.existe + '\n\n' }
                             ]
                         }]
                     },
@@ -1181,7 +1227,10 @@ angular.module('contractualClienteApp')
                             text: [
                                 { text: ' CLÁUSULA TERCERA : ', bold: true },
                                 {
-                                    text: 'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' a nombre de ' + self.contrato_obj.contratista_nombre + ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del mismo, declarandose a paz y salvo por todo concepto una vez se compruebe el pago de la cláusula segunda de la presente Acta.\n\n '
+                                    text: 'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' +
+                                        self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' a nombre de ' +
+                                        self.contrato_obj.contratista_nombre + ", con efectos legales a partir del " + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) +
+                                        ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del mismo, declarándose a paz y salvo por todo concepto una vez se compruebe el pago de la cláusula segunda de la presente Acta.\n\n '
                                 }
                             ],
 
@@ -1206,8 +1255,9 @@ angular.module('contractualClienteApp')
                         style: ['general_font'],
                         text: [{
                             text: [
-                                { text: 'Dado en Bogotá, D.C. a los __________________________________\n\n\n\n\n\n\n\n\n\n\n\n' }
-                            ]
+                                "Para constancia, firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
+                                "\n\n\n\n\n\n\n\n\n",
+                            ],
                         }]
                     },
                     {

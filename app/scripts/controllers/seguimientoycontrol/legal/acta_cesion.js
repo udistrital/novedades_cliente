@@ -576,6 +576,7 @@ angular
                         }
                     })
                     .catch(function (error) {
+                        console.log("error: ", error);
                         //Servidor no disponible
                         $scope.alert = "DESCRIPCION_ERROR_CESION2";
                         swal({
@@ -1187,7 +1188,7 @@ angular
                                     self.contrato_obj.vigencia +
                                     " durante el periodo comprendido entre el " +
                                     fecha_sus_dia + " de " + fecha_sus_mes + " de " + fecha_sus_ano +
-                                    " y el día " + fecha_fin_dia + " de " + fecha_fin_mes + " de " + fecha_fin_ano
+                                    " y el día " + fecha_fin_dia + " de " + fecha_fin_mes + " de " + fecha_fin_ano + ".\n"
                             };
 
                         }
@@ -1195,10 +1196,6 @@ angular
                 } else {
                     return "";
                 }
-            }
-
-            self.agregarReinicio = function () {
-
             }
 
             /**
@@ -1386,7 +1383,7 @@ angular
                                 self.contrato_obj.ordenadorGasto_nombre +
                                 " mayor de edad vecino(a) de esta ciudad, identificado(a) con " +
                                 self.contrato_obj.ordenador_gasto_tipo_documento +
-                                " Nro " +
+                                " No. " +
                                 self.contrato_obj.ordenador_gasto_documento +
                                 " expedida en " +
                                 self.contrato_obj.ordenador_gasto_ciudad_documento +
@@ -1456,10 +1453,10 @@ angular
                                         ", establece como valor del contrato "
                                 }, { text: '“(...) El valor del presente Contrato corresponde a la suma de ', italics: true, }, {
                                     text:
-                                        self.valor_contrato_letras + ' ($' + numberFormat(String(self.contrato_obj.valor)) + ')', bold: true, italics: true,
+                                        self.valor_contrato_letras + ' MONEDA CORRIENTE ($' + numberFormat(String(self.contrato_obj.valor)) + ' M/CTE)', bold: true, italics: true,
                                 },
                                 {
-                                    text: ' incluido IVA, así como todos los impuestos y retenciones legalmente (...)“\n\n', italics: true,
+                                    text: ' incluido IVA, así como todos los impuestos y retenciones legalmente (...)“.\n\n', italics: true,
                                 }]
                         },
                         {
@@ -1496,15 +1493,15 @@ angular
                                 }]
                         },
                         self.agregarSuspension(),
-                        self.agregarReinicio(),
+                        // self.agregarReinicio(),
                         {
                             text: "Que mediante escrito de fecha " +
                                 self.format_date_letter_mongo(self.fecha_solicitud) +
-                                ", el Contratista " +
+                                ", el(la) Contratista " +
                                 self.contrato_obj.contratista_nombre +
                                 ", (cedente) solicita a " +
                                 self.contrato_obj.supervisor_nombre +
-                                " quien cumple la función supervisor, la autorización para realizar la Cesión del " +
+                                " quien cumple la función de supervisor, la autorización para realizar la Cesión del " +
                                 self.contrato_obj.tipo_contrato +
                                 " a partir del día " +
                                 self.format_date_letter_mongo(self.f_cesion) +
@@ -1512,7 +1509,7 @@ angular
                                 self.cesionario_obj.nombre +
                                 " " +
                                 self.cesionario_obj.apellidos +
-                                " (cesionario) quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n",
+                                " (cesionario) quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n\n",
                         },
                         [{
                             text: "Que mediante oficio No. " +
@@ -1529,33 +1526,40 @@ angular
                                 self.contrato_obj.ordenadorGasto_nombre +
                                 " en calidad de Ordenador el Gasto del citado contrato, la autorización para ceder el mismo, a partir del día " +
                                 self.format_date_letter_mongo(self.f_cesion) +
-                                ", y aportó un estado financiero expedido por la Sección de Presupuesto, en donde informa lo siguiente:\n\n",
+                                " a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos +
+                                " (cesionario), y aportó un estado financiero expedido por la Sección de Presupuesto, en donde informa lo siguiente:\n\n",
                         },
                         {
                             ul: [
-                                [{
+                                {
                                     text: "Por los servicios prestados por el señor(a) " +
-                                        self.contrato_obj.contratista_nombre
-                                }, { text: " CONTRATISTA CEDENTE,", bold: true }, {
-                                    text: " hasta el día " +
-                                        self.format_date_letter_mongo(self.f_terminacion) +
-                                        " se reconoció un valor total de " +
-                                        NumeroALetras(self.valor_desembolsado + "") +
-                                        "($" +
-                                        numberFormat(String(self.valor_desembolsado) + "") +
-                                        "), y ejecutor del contrato un plazo de " +
+                                        self.contrato_obj.contratista_nombre +
+                                        " (CEDENTE), hasta el día " + self.format_date_letter_mongo(self.f_terminacion) +
+                                        ", se reconoció un valor total de " + NumeroALetras(self.valor_desembolsado + "") +
+                                        "MONEDA CORRIENTE ($" + numberFormat(String(self.valor_desembolsado) + "") +
+                                        " M/CTE), por el plazo ejecutado del contrato de " +
                                         self.contrato_obj.plazo +
                                         " meses.\n\n"
                                 },
-                                ],
+                                // { text: " CONTRATISTA CEDENTE,", bold: true }, {
+                                //     text: " hasta el día " +
+                                //         self.format_date_letter_mongo(self.f_terminacion) +
+                                //         " se reconoció un valor total de " +
+                                //         NumeroALetras(self.valor_desembolsado + "") +
+                                //         "($" +
+                                //         numberFormat(String(self.valor_desembolsado) + "") +
+                                //         "), por el plazo ejecutado del contrato de " +
+                                //         self.contrato_obj.plazo +
+                                //         " meses.\n\n"
+                                // },
                                 {
                                     text: [
-                                        { text: "Existe un valor pendiente por cancelar al señor " + self.contrato_obj.contratista_nombre }, { text: "(CEDENTE), ", bold: true }, {
+                                        { text: "Existe un valor pendiente por cancelar al señor(a) " + self.contrato_obj.contratista_nombre }, { text: "(CEDENTE), ", bold: true }, {
                                             text: "por valor de " +
                                                 NumeroALetras(self.valor_a_favor + "") +
-                                                "($" +
+                                                "MONEDA CORRIENTE ($" +
                                                 numberFormat(String(self.valor_a_favor) + "") +
-                                                "), que corresponden al periodo comprendido entre el día " +
+                                                " M/CTE), que corresponden al periodo comprendido entre el día " +
                                                 self.format_date_letter_mongo(self.contrato_obj.Inicio) +
                                                 " al dia " +
                                                 self.format_date_letter_mongo(self.f_terminacion) +
@@ -1563,18 +1567,18 @@ angular
                                         }],
 
                                 },
-                                // {
-                                //     text: [
-                                //         { text: "La suma a ceder al señor(a) " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos }, { text: " (CESIONARIO)", bold: true }, {
-                                //             text: " es de " +
-                                //                 NumeroALetras(self.valor_contrato_cesionario() + "") +
-                                //                 "($" +
-                                //                 numberFormat(String(self.valor_contrato_cesionario()) + "") +
-                                //                 "), por un plazo de " +
-                                //                 self.contrato_obj.plazo_cesionario +
-                                //                 " días.\n\n"
-                                //         }],
-                                // },
+                                {
+                                    text: [
+                                        { text: "La suma a ceder al señor(a) " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos }, { text: " (CESIONARIO)", bold: true }, {
+                                            text: " es de " +
+                                                NumeroALetras(self.valor_contrato_cesionario() + "") +
+                                                "MONEDA CORRIENTE ($" +
+                                                numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                                                " M/CTE), por un plazo de " +
+                                                self.contrato_obj.plazo_cesionario +
+                                                " días.\n\n"
+                                        }],
+                                },
                             ]
 
                         },
@@ -1639,9 +1643,9 @@ angular
                                 {
                                     text: " es de " +
                                         NumeroALetras(self.valor_contrato_cesionario() + "") +
-                                        "($" +
+                                        "MONEDA CORRIENTE ($" +
                                         numberFormat(String(self.valor_contrato_cesionario()) + "") +
-                                        "), por un plazo de " +
+                                        " M/CTE), por un plazo de " +
                                         self.contrato_obj.plazo_cesionario +
                                         " días.\n\n"
                                 },
@@ -1668,9 +1672,17 @@ angular
                                     text: "- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se  procederá a la publicación del presente documento de cesión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente:\n\n",
                                 },
                                 ],
-                                {
-                                    text: "En constancia de lo consignado en el presente documento, se firma, \n\nen Bogotá, D.C., a los ________________________________________.\n\n\n",
+                                [{
+                                    text: "CLAUSULA CUARTA: PUBLICACIÓN. ",
+                                    bold: true,
                                 },
+                                {
+                                    text: "- En virtud de lo dispuesto en el Artículo 223 del decreto Ley 019 de 2012, en concordancia con el Artículo 2.2.1.1.1.7.1 del Decreto 1082 de 2015 y el manual de contratación vigente, se procederá a la publicación del presente documento de cesión en el SECOP que administra la Agencia Nacional de Contratación Pública - Colombia Compra Eficiente:\n\n",
+                                },
+                                ]
+                                // {
+                                //     text: "En constancia de lo consignado en el presente documento, se firma, \n\nen Bogotá, D.C., a los ________________________________________.\n\n\n",
+                                // },
                             ],
                         },
                         ],
@@ -1681,7 +1693,7 @@ angular
                             "MOTIVO DE LA CESIÓN: " +
                             self.observaciones +
                             ".\n\n" +
-                            "Para constancia, firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
+                            "En constancia de lo consignado en el presente documento, firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
                             "\n\n\n\n\n",
                         ],
                     },

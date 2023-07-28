@@ -76,19 +76,19 @@ angular
 
             self.editBool = $routeParams.contrato_vigencia === true;
 
-            const input = document.getElementById("solicitud");
-            input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
+            // const input = document.getElementById("solicitud");
+            // input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
 
-            const oficio_input = document.getElementById("oficio");
-            oficio_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
+            // const oficio_input = document.getElementById("oficio");
+            // oficio_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
 
             financieraJbpmRequest
                 .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
@@ -1202,7 +1202,7 @@ angular
                                 )
                                 .then(function (ip_response) {
                                     var cedente_nombre = ip_response.data[0].NomProveedor;
-                                    console.log({
+                                    return {
                                         text: [{
                                             text: "Que el " +
                                                 fechaSolicitud[2].substring(0, 2) +
@@ -1236,7 +1236,7 @@ angular
                                                 ", quien cumple con las cualidades y competencias para el desarrollo de actividades y ejecución del contrato.",
                                         },
                                         ],
-                                    });
+                                    }
                                 });
                         }
                     }
@@ -1446,7 +1446,7 @@ angular
                         //         { text: '' },
                         //     ]
                         // },
-                        // self.agregarCesion(),
+                        self.agregarCesion(),
                         {
                             text: [{
                                 text: "Que la "
@@ -1482,7 +1482,7 @@ angular
                             },
                             //{ text: "LA UNIVERSIDAD, ", bold: true },
                             {
-                                text: ", solicitud la adición y/o prorroga del " + self.contrato_obj.tipo_contrato +
+                                text: ", solicitó la adición y/o prorroga del " + self.contrato_obj.tipo_contrato +
                                     " No. " +
                                     self.contrato_id +
                                     " de " +
@@ -1635,15 +1635,15 @@ angular
                                 "la presente Adición y Prórroga se deberá publicar en el portal SECOP II, una vez esté suscrita por las partes, y sea devuelta a la Oficina Jurídica para el archivo correspondiente."
                         },
                             "\n\n\n",
-                        // {
-                        //     text: "Las partes manifiestan libremente que han procedido a la lectura total y cuidadosa del presente documento, por lo que, en consecuencia," +
-                        //         " se obligan en todos sus órdenes y manifestaciones.",
-                        // },
-                        //     "\n\n",
-                        // {
-                        //     text: "Para constancia, se firma en Bogotá, D.C., a los ______________________________________________.",
-                        // },
-                        //     "\n\n\n\n\n\n",
+                            // {
+                            //     text: "Las partes manifiestan libremente que han procedido a la lectura total y cuidadosa del presente documento, por lo que, en consecuencia," +
+                            //         " se obligan en todos sus órdenes y manifestaciones.",
+                            // },
+                            //     "\n\n",
+                            // {
+                            //     text: "Para constancia, se firma en Bogotá, D.C., a los ______________________________________________.",
+                            // },
+                            //     "\n\n\n\n\n\n",
                         ],
                     },
                     {

@@ -1159,7 +1159,7 @@ angular
                                     style: "topHeader",
                                 },
                                 {
-                                    text: self.suspension_obj.PlazoEjecucion,
+                                    text: self.suspension_obj.PlazoEjecucion + " Meses",
                                     style: "topHeader",
                                 },
                                 ],
@@ -1202,7 +1202,7 @@ angular
                             "\n\n",
                             "Entre los suscritos, a saber " +
                             self.contrato_obj.supervisor_nombre_completo +
-                            " identificado con  " +
+                            " identificado(a) con  " +
                             self.contrato_obj.supervisor_tipo_documento +
                             " No. " +
                             self.contrato_obj.supervisor_cedula +
@@ -1210,13 +1210,13 @@ angular
                             self.contrato_obj.supervisor_ciudad_documento +
                             " en su calidad de interventor y/o supervisor y " +
                             self.contrato_obj.contratista_nombre +
-                            " identificado con " +
+                            " identificado(a) con " +
                             self.contrato_obj.contratista_tipo_documento +
                             " No. " +
                             self.contrato_obj.contratista_documento +
                             " de " +
                             self.contrato_obj.contratista_ciudad_documento +
-                            " en su calidad de contratista, se ha determinado REINICIAR el contrato de " +
+                            " en su calidad de contratista, se ha determinado REINICIAR el " +
                             self.contrato_obj.tipo_contrato +
                             " No. " +
                             self.contrato_id +
