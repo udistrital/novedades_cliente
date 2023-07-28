@@ -1258,9 +1258,9 @@ angular
                                     { text: "VALOR", bold: true, style: "topHeader" },
                                     {
                                         text: NumeroALetras(self.contrato_obj.valor) +
-                                            "($" +
+                                            "MONEDA CORRIENTE ($" +
                                             numberFormat(String(self.contrato_obj.valor) + "") +
-                                            ")",
+                                            " M/CTE)",
                                         style: "topHeader",
                                     },
                                 ],
@@ -1365,21 +1365,23 @@ angular
                     {
                         style: ['general_font'],
                         ol: [
-                            'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' + self.contrato_obj.contratista_nombre + ' se suscribió el CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' cuyo objeto es “' + self.contrato_obj.objeto + '"\n\n',
+                            'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' + self.contrato_obj.contratista_nombre + ' se suscribió el CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' cuyo objeto es “' + self.contrato_obj.objeto + '"\n\n',
 
                             {
                                 style: ['general_font'],
                                 text: [
-                                    { text: 'Que la cláusula del CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ', establece que ' },
-                                    { text: '“Las partes contratantes podrán suspender la ejecución del contrato, mediante la suscripción de un acta en donde conste tal evento, cuando medie alguna de las siguientes causales: 1) Por circunstancias de fuerza mayor o caso fortuito, debidamente comprobadas, que imposibiliten su ejecución. 2) Por solicitud, debidamente sustentada, elevada por una de las partes. El término de suspensión no será computable para efecto del plazo de ejecución del contrato,ni dará derecho a exigir indemnización, sobrecostos o reajustes, ni a reclamar gastos diferentes a los pactados en el contrato.”.\n\n', italics: true, }
+                                    { text: 'Que la cláusula diecinueve (19) del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', establece que ' },
+                                    { text: '“Las partes contratantes podrán suspender la ejecución del contrato, mediante la suscripción de un acta en donde conste tal evento, cuando medie alguna de las siguientes causales: 1) Por circunstancias de fuerza mayor o caso fortuito, debidamente comprobadas, que imposibiliten su ejecución. 2) Por solicitud, debidamente sustentada, elevada por una de las partes. El término de suspensión no será computable para efecto del plazo de ejecución del contrato, ni dará derecho a exigir indemnización, sobrecostos o reajustes, ni a reclamar gastos diferentes a los pactados en el contrato.”.\n\n', italics: true, }
                                 ]
                             },
 
-                            'Que mediante escrito de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechasolicitud) + ' , el Contratista ' + self.contrato_obj.contratista_nombre + ', solicita a quien cumple la función de supervisor, la autorización para realizar la Suspensión del Contrato de Prestación de Servicios durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que mediante escrito de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechasolicitud) + ' , el Contratista ' + self.contrato_obj.contratista_nombre + ', solicita a ' + self.contrato_obj.supervisor_nombre_completo + ', quien cumple la función de supervisor, la autorización para realizar la Suspensión del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
                             'Que mediante oficio No. ' + self.suspension_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
-                            'Que por medio del oficio No. ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del Contrato de Prestación de Servicios  No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que por medio del oficio No. ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la revisión del acta de suspensión del Contrato de Prestación de Servicios  No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+
+                            'Que la presente acta de suspensión sólo tendrá efectos a partir del ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' al ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
                         ]
                     },
                     {
@@ -1398,7 +1400,7 @@ angular
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA PRIMERA: SUSPENDER ', bold: true },
-                                { text: 'el contrato de prestación de servicios No. ' + self.contrato_id + ', durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n', }
+                                { text: 'el contrato de prestación de servicios No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n', }
                             ]
 
 
@@ -1416,12 +1418,23 @@ angular
                         }]
                     },
                     {
+                        style: ['general_font'],
+                        text: [{
+                            text: [
+                                { text: ' CLÁUSULA TERCERA: GARANTÍAS Y MECANISMO DE COBERTURA DE RIESGO ', bold: true },
+                                { text: '- EL CONTRATISTA una vez se reinicie el contrato, deberá aportar una póliza de garantías donde se amplía el plazo de ejecución, deducido de los días de suspensión del contrato y 4 meses más.\n\n\n' }
+                            ]
+
+
+                        }]
+                    },
+                    {
                         style: ["general_font"],
                         text: [
                             "MOTIVO DE LA SUSPENSIÓN: " +
                             self.motivo +
                             ".\n\n" +
-                            "Para constancia, firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
+                            "Para constancia, se firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
                             "\n\n\n\n\n",
                         ],
                     },
@@ -1529,6 +1542,7 @@ angular
                                 // ],
                             ],
                         },
+                        unbreakable: true,
                         layout: "noBorders",
                     },
                         "\n",

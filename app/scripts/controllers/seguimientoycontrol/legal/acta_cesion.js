@@ -1100,7 +1100,16 @@ angular
                         ".pdf",
                         self
                     ).then(function (enlace) {
-                        self.postNovedad(output, dateTime, enlace);
+                        // self.postNovedad(output, dateTime, enlace);
+                        pdfMake
+                            .createPdf(output)
+                            .download(
+                                "acta_cesion_contrato_" +
+                                self.contrato_id +
+                                "_" +
+                                dateTime +
+                                ".pdf"
+                            );
                     });
                 });
             };
@@ -1188,11 +1197,38 @@ angular
                                     self.contrato_obj.vigencia +
                                     " durante el periodo comprendido entre el " +
                                     fecha_sus_dia + " de " + fecha_sus_mes + " de " + fecha_sus_ano +
-                                    " y el día " + fecha_fin_dia + " de " + fecha_fin_mes + " de " + fecha_fin_ano + ".\n"
+                                    " y el día " + fecha_fin_dia + " de " + fecha_fin_mes + " de " + fecha_fin_ano + ".\n\n"
                             };
 
                         }
                     }
+                    return "";
+                } else {
+                    return "";
+                }
+            }
+
+            self.agregarReinicio = function () {
+                if (self.novedades.length > 0) {
+                    for (var i = self.novedades.length - 1; i >= 0; i--) {
+                        var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
+                        if (self.novedades[i].tiponovedad == 1) {
+                            return {
+                                text: "Que, mediante acta con fecha de suscripción del " +
+                                    fechaSolicitud[2].substring(0, 2) +
+                                    " de " + meses[parseInt(fechaSolicitud[1] - 1)] +
+                                    " de " + fechaSolicitud[0] +
+                                    ", se reinició el " +
+                                    self.contrato_obj.tipo_contrato +
+                                    " No. " +
+                                    self.contrato_obj.numero_contrato +
+                                    " de " +
+                                    self.contrato_obj.vigencia + ".\n\n"
+                            };
+
+                        }
+                    }
+                    return "";
                 } else {
                     return "";
                 }
@@ -1389,10 +1425,9 @@ angular
                                 self.contrato_obj.ordenador_gasto_ciudad_documento +
                                 ", quien actúa en calidad de " +
                                 self.contrato_obj.ordenadorGasto_rol +
-                                ", y Ordenador del Gasto, del " +
-                                self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_id +
+                                ", y Ordenador del Gasto, del " + self.contrato_obj.tipo_contrato +
+                                " No. " + self.contrato_id +
+                                " de " + self.contrato_vigencia +
                                 ", de otra, " +
                                 self.contrato_obj.contratista_nombre +
                                 ", identificado(a) con " +
@@ -1493,13 +1528,13 @@ angular
                                 }]
                         },
                         self.agregarSuspension(),
-                        // self.agregarReinicio(),
+                        self.agregarReinicio(),
                         {
-                            text: "Que mediante escrito de fecha " +
+                            text: "Que, mediante escrito de fecha " +
                                 self.format_date_letter_mongo(self.fecha_solicitud) +
                                 ", el(la) Contratista " +
                                 self.contrato_obj.contratista_nombre +
-                                ", (cedente) solicita a " +
+                                " (cedente), solicita a " +
                                 self.contrato_obj.supervisor_nombre +
                                 " quien cumple la función de supervisor, la autorización para realizar la Cesión del " +
                                 self.contrato_obj.tipo_contrato +
@@ -1524,7 +1559,7 @@ angular
                                 self.contrato_obj.vigencia +
                                 ", le comunicó al señor(a) " +
                                 self.contrato_obj.ordenadorGasto_nombre +
-                                " en calidad de Ordenador el Gasto del citado contrato, la autorización para ceder el mismo, a partir del día " +
+                                " en calidad de Ordenador del Gasto del citado contrato, la autorización para ceder el mismo, a partir del día " +
                                 self.format_date_letter_mongo(self.f_cesion) +
                                 " a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos +
                                 " (cesionario), y aportó un estado financiero expedido por la Sección de Presupuesto, en donde informa lo siguiente:\n\n",
@@ -1582,109 +1617,96 @@ angular
                             ]
 
                         },
-
+                        ],
                         {
                             text: [{
-                                text: [{
-                                    text: "Que por medio del oficio " +
-                                        self.cesion_nov.numerooficioordenador +
-                                        " de fecha " +
-                                        self.format_date_letter_mongo(self.fecha_oficioO) +
-                                        ", recibido por la Oficina Asesora Jurídica, el señor(a) " +
-                                        self.contrato_obj.ordenadorGasto_nombre +
-                                        ", como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de cesión del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_obj.numero_contrato +
-                                        " de " +
-                                        self.contrato_obj.vigencia +
-                                        ", a partir día " +
-                                        self.format_date_letter_mongo(self.f_cesion) +
-                                        ", a favor de " +
-                                        self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
-                                },
-                                { text: " (CESIONARIO).\n\n", bold: true }]
-
-                            }],
+                                text: "Que por medio del oficio " +
+                                    self.cesion_nov.numerooficioordenador +
+                                    " de fecha " +
+                                    self.format_date_letter_mongo(self.fecha_oficioO) +
+                                    ", recibido por la Oficina Asesora Jurídica, el señor(a) " +
+                                    self.contrato_obj.ordenadorGasto_nombre +
+                                    ", como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de cesión del " +
+                                    self.contrato_obj.tipo_contrato +
+                                    " No. " +
+                                    self.contrato_obj.numero_contrato +
+                                    " de " +
+                                    self.contrato_obj.vigencia +
+                                    ", a partir del día " +
+                                    self.format_date_letter_mongo(self.f_cesion) +
+                                    ", a favor de " +
+                                    self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
+                            },
+                            { text: " (CESIONARIO).\n\n", bold: true }]
                         },
                         ],
-
-                        {
-
-                            text: [
-                                [{
-                                    text: "Por lo anterior las partes acuerdan las siguientes ",
-                                },
-                                {
-                                    text: "CLÁUSULAS:\n\n",
-                                    bold: true,
-                                },
-                                ],
-                                [{ text: "CLÁUSULA PRIMERA: CESIÓN. ", bold: true, },
-                                { text: "El señor(a) " + self.contrato_obj.contratista_nombre }, { text: " (CEDENTE)", bold: true },
-                                {
-                                    text: " cede el " + self.contrato_obj.tipo_contrato + " No." + self.contrato_obj.numero_contrato + ", suscrito el día " +
-                                        self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ", a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
-                                },
-                                { text: " (CESIONARIO)", bold: true },
-                                {
-                                    text: ", en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día " +
-                                        self.format_date_letter_mongo(self.f_cesion) +
-                                        ".\n\n",
-                                }],
-                                [{
-                                    text: "CLAUSULA SEGUNDA: VALOR CEDIDO. ",
-                                    bold: true,
-                                },
-                                {
-                                    text: "La suma a ceder a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
-                                },
-                                { text: " (CESIONARIO)", bold: true },
-                                {
-                                    text: " es de " +
-                                        NumeroALetras(self.valor_contrato_cesionario() + "") +
-                                        "MONEDA CORRIENTE ($" +
-                                        numberFormat(String(self.valor_contrato_cesionario()) + "") +
-                                        " M/CTE), por un plazo de " +
-                                        self.contrato_obj.plazo_cesionario +
-                                        " días.\n\n"
-                                },
-                                ],
-                                [{
-                                    text: "CLAUSULA TERCERA: GARANTÍA. EL CESIONARIO ",
-                                    bold: true,
-                                },
-                                {
-                                    text: "se compromete a modificar la Póliza de Cumplimiento expedida en virtud del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_obj.numero_contrato +
-                                        " de " +
-                                        self.contrato_obj.vigencia +
-                                        " o a expedir una nueva de conformidad con la suscripción del presente documento. \n\n",
-                                },
-                                ],
-                                [{
-                                    text: "CLAUSULA CUARTA: PUBLICACIÓN. ",
-                                    bold: true,
-                                },
-                                {
-                                    text: "- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se  procederá a la publicación del presente documento de cesión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente:\n\n",
-                                },
-                                ],
-                                [{
-                                    text: "CLAUSULA CUARTA: PUBLICACIÓN. ",
-                                    bold: true,
-                                },
-                                {
-                                    text: "- En virtud de lo dispuesto en el Artículo 223 del decreto Ley 019 de 2012, en concordancia con el Artículo 2.2.1.1.1.7.1 del Decreto 1082 de 2015 y el manual de contratación vigente, se procederá a la publicación del presente documento de cesión en el SECOP que administra la Agencia Nacional de Contratación Pública - Colombia Compra Eficiente:\n\n",
-                                },
-                                ]
-                                // {
-                                //     text: "En constancia de lo consignado en el presente documento, se firma, \n\nen Bogotá, D.C., a los ________________________________________.\n\n\n",
-                                // },
+                    },
+                    {
+                        style: ["general_font"],
+                        text: [
+                            [{
+                                text: "Por lo anterior las partes acuerdan las siguientes ",
+                            },
+                            {
+                                text: "CLÁUSULAS:\n\n",
+                                bold: true,
+                            },
                             ],
-                        },
+                            [{ text: "CLÁUSULA PRIMERA: CESIÓN. ", bold: true, },
+                            { text: "El señor(a) " + self.contrato_obj.contratista_nombre }, { text: " (CEDENTE)", bold: true },
+                            {
+                                text: " cede el " + self.contrato_obj.tipo_contrato + " No. " + self.contrato_obj.numero_contrato + ", suscrito el día " +
+                                    self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ", a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
+                            },
+                            { text: " (CESIONARIO)", bold: true },
+                            {
+                                text: ", en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día " +
+                                    self.format_date_letter_mongo(self.f_cesion) +
+                                    ".\n\n",
+                            }],
+                            [{
+                                text: "CLAUSULA SEGUNDA: VALOR CEDIDO. ",
+                                bold: true,
+                            },
+                            {
+                                text: "La suma a ceder a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
+                            },
+                            { text: " (CESIONARIO)", bold: true },
+                            {
+                                text: " es de " +
+                                    NumeroALetras(self.valor_contrato_cesionario() + "") +
+                                    "MONEDA CORRIENTE ($" +
+                                    numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                                    " M/CTE), por un plazo de " +
+                                    self.contrato_obj.plazo_cesionario +
+                                    " días.\n\n"
+                            },
+                            ],
+                            [{
+                                text: "CLAUSULA TERCERA: GARANTÍA. EL CESIONARIO ",
+                                bold: true,
+                            },
+                            {
+                                text: "se compromete a modificar la Póliza de Cumplimiento expedida en virtud del " +
+                                    self.contrato_obj.tipo_contrato +
+                                    " No. " +
+                                    self.contrato_obj.numero_contrato +
+                                    " de " +
+                                    self.contrato_obj.vigencia +
+                                    " o a expedir una nueva de conformidad con la suscripción del presente documento. \n\n",
+                            },
+                            ],
+                            [{
+                                text: "CLAUSULA CUARTA: PUBLICACIÓN. ",
+                                bold: true,
+                            },
+                            {
+                                text: "- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se  procederá a la publicación del presente documento de cesión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente:\n\n",
+                            },
+                            ],
+                            // {
+                            //     text: "En constancia de lo consignado en el presente documento, se firma, \n\nen Bogotá, D.C., a los ________________________________________.\n\n\n",
+                            // },
                         ],
                     },
                     {
@@ -1693,7 +1715,7 @@ angular
                             "MOTIVO DE LA CESIÓN: " +
                             self.observaciones +
                             ".\n\n" +
-                            "En constancia de lo consignado en el presente documento, firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
+                            "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
                             "\n\n\n\n\n",
                         ],
                     },
@@ -1793,6 +1815,7 @@ angular
                                 ],
                             ],
                         },
+                        unbreakable: true,
                         layout: "noBorders",
 
                     },
