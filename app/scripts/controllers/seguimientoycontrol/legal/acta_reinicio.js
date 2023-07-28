@@ -1138,9 +1138,9 @@ angular
                                     { text: "VALOR", bold: true, style: "topHeader" },
                                     {
                                         text: NumeroALetras(self.contrato_obj.valor) +
-                                            "($" +
+                                            "MONEDA CORRIENTE ($" +
                                             numberFormat(self.contrato_obj.valor) +
-                                            ")",
+                                            " M/CTE)",
                                         style: "topHeader",
                                     },
                                 ],
@@ -1237,7 +1237,7 @@ angular
                             "MOTIVO DE LA SUSPENSIÓN: " +
                             self.novedad_motivo +
                             ".\n\n" +
-                            "Para constancia, firman las partes a los _____ dias del mes de ______________ del año ________.",
+                            "Para constancia, se firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
                             "\n\n\n\n\n",
                         ],
                     },
@@ -1306,6 +1306,7 @@ angular
                                 // ],
                             ],
                         },
+                        unbreakable: true,
                         layout: "noBorders",
                     },
                     {

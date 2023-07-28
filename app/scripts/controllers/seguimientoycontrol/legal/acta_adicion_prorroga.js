@@ -1236,13 +1236,13 @@ angular
                                                 ", quien cumple con las cualidades y competencias para el desarrollo de actividades y ejecución del contrato.",
                                         },
                                         ],
-                                    }
+                                    };
                                 });
                         }
                     }
+                    return "";
                 } else {
-                    console.log("No hay novedades viejo");
-                    return ""
+                    return "";
                 }
             }
 
@@ -1329,7 +1329,7 @@ angular
                                     " expedida en " + self.contrato_obj.ordenador_gasto_ciudad_documento +
                                     ", quien actúa en calidad de " +
                                     self.contrato_obj.ordenadorGasto_rol +
-                                    ", según Resolución de Rectoría No. " +
+                                    ", según " +
                                     self.contrato_obj.ordenador_gasto_resolucion
                                 //", así como en nombre y representación legal de la ",                                    
                             },
