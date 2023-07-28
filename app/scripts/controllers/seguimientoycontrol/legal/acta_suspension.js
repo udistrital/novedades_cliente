@@ -1313,7 +1313,7 @@ angular
 
                             "Entre los suscritos a saber, " +
                             self.contrato_obj.supervisor_nombre_completo +
-                            " identificado con " +
+                            " identificado(a) con " +
                             self.contrato_obj.supervisor_tipo_documento +
                             " No. " +
                             self.contrato_obj.supervisor_cedula +
@@ -1321,7 +1321,7 @@ angular
                             self.contrato_obj.supervisor_ciudad_documento +
                             " en su calidad de supervisor, y " +
                             self.contrato_obj.contratista_nombre +
-                            " identificado con " +
+                            " identificado(a) con " +
                             self.contrato_obj.contratista_tipo_documento +
                             " No. " +
                             self.contrato_obj.contratista_documento +
@@ -1337,7 +1337,6 @@ angular
                             self.format_date_letter_mongo(self.f_inicio) +
                             " y el dia " +
                             self.format_date_letter_mongo(self.f_fin) +
-                            " del año " +
                             //self.contrato_vigencia +
                             ", previas las siguientes consideraciones:\n\n",
 
@@ -1366,7 +1365,7 @@ angular
                     {
                         style: ['general_font'],
                         ol: [
-                            'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' + self.contrato_obj.contratista_nombre + ' se suscribió el CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' cuyo objeto es “' + self.contrato_obj.objeto + '.\n”',
+                            'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' + self.contrato_obj.contratista_nombre + ' se suscribió el CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' cuyo objeto es “' + self.contrato_obj.objeto + '"\n\n',
 
                             {
                                 style: ['general_font'],
@@ -1376,11 +1375,11 @@ angular
                                 ]
                             },
 
-                            'Que mediante escrito de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechasolicitud) + ' , el Contratista ' + self.contrato_obj.contratista_nombre + ', solicita a quien cumple la función supervisor, la autorización para realizar la Suspensión del Contrato de Prestación de Servicios durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que mediante escrito de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechasolicitud) + ' , el Contratista ' + self.contrato_obj.contratista_nombre + ', solicita a quien cumple la función de supervisor, la autorización para realizar la Suspensión del Contrato de Prestación de Servicios durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
-                            'Que mediante oficio No ' + self.suspension_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que mediante oficio No. ' + self.suspension_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
-                            'Que por medio del oficio ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del Contrato de Prestación de Servicios  No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que por medio del oficio No. ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de suspensión del Contrato de Prestación de Servicios  No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
                         ]
                     },
                     {
