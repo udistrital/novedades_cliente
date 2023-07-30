@@ -168,6 +168,7 @@ angular
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                                 self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
                                 self.fecha_lim_inf.setDate(self.fecha_lim_inf.getDate() + 1);
+                                self.f_cesion = self.fecha_lim_inf;
                                 self.fecha_lim_sup = self.calcularFechaFin();
                             });
                         //Se obtiene información del supervisor
@@ -430,33 +431,70 @@ angular
 
             });
 
-            $scope.validarValorDesembolsado = function (evento) {
-                // console.log(typeof self.contrato_obj.valor);
-                // console.log(evento.target.value);
-                var valor_cesion = evento.target.value;
-                if (valor_cesion > self.contrato_obj.valor) {
-                    self.valor_desembolsado = undefined;
-                    swal(
-                        $translate.instant("TITULO_ADVERTENCIA"),
-                        "El valor desembolsado debe ser menor al valor del contrato",
-                        "info"
-                    );
-                }
-            }
+            // /**
+            //  * @ngdoc method
+            //  * @name formato_valores_cesion
+            //  * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
+            //  * @description
+            //  * funcion para modificar el formato de valores para la interfaz
+            //  */
+            // $scope.formato_valores_cesion = function (evento, num) {
+            //     var valor = evento.target.value.replace(/[^0-9\.]/g, "");
+            //     console.log(parseInt(self.contrato_obj.valor));
+            //     var valor_valido = self.contrato_obj.valor * 0.5;
+            //     if (num == 1) {
+            //         if (valor <= valor_valido) {
+            //             self.valor_desembolsado = numberFormat(valor);
+            //         } else {
+            //             self.valor_desembolsado = undefined;
+            //             swal(
+            //                 $translate.instant("TITULO_ADVERTENCIA"),
+            //                 "El valor desembolsado no puede ser mayor al valor del contrato",
+            //                 "info"
+            //             );
+            //         }
+            //     } else if (num == 2) {
+            //         if (valor <= valor_valido) {
+            //             self.valor_a_favor = numberFormat(valor);
+            //         } else {
+            //             self.valor_a_favor = undefined;
+            //             swal(
+            //                 $translate.instant("TITULO_ADVERTENCIA"),
+            //                 "El valor a favor del cedente no puede ser mayor al valor del contrato",
+            //                 "info"
+            //             );
+            //         }
+            //     }
+            // };
 
-            $scope.validarValorCedente = function (evento) {
-                // console.log(typeof self.contrato_obj.valor);
-                // console.log(evento.target.value);
-                var valor_cesion = evento.target.value;
-                if (valor_cesion > self.contrato_obj.valor) {
-                    self.valor_a_favor = undefined;
-                    swal(
-                        $translate.instant("TITULO_ADVERTENCIA"),
-                        "El valor a favor del cedente debe ser menor al valor del contrato",
-                        "info"
-                    );
-                }
-            }
+            // $scope.validarValorDesembolsado = function (evento) {
+            //     // console.log(typeof self.contrato_obj.valor);
+            //     // console.log(evento.target.value);
+            //     var valor_cesion = evento.target.value;
+            //     if (valor_cesion > self.contrato_obj.valor) {
+            //         self.valor_desembolsado = undefined;
+            //         swal(
+            //             $translate.instant("TITULO_ADVERTENCIA"),
+            //             "El valor desembolsado debe ser menor al valor del contrato",
+            //             "info"
+            //         );
+            //     }
+
+            // }
+
+            // $scope.validarValorCedente = function (evento) {
+            //     // console.log(typeof self.contrato_obj.valor);
+            //     // console.log(evento.target.value);
+            //     var valor_cesion = evento.target.value;
+            //     if (valor_cesion > self.contrato_obj.valor) {
+            //         self.valor_a_favor = undefined;
+            //         swal(
+            //             $translate.instant("TITULO_ADVERTENCIA"),
+            //             "El valor a favor del cedente debe ser menor al valor del contrato",
+            //             "info"
+            //         );
+            //     }
+            // }
 
             //consulta cesionario
             amazonAdministrativaRequest
