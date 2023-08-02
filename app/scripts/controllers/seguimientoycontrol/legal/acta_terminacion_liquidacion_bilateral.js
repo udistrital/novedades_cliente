@@ -232,6 +232,7 @@ angular.module('contractualClienteApp')
                                             var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
                                             self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
                                             self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                                            self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
                                         }
                                     });
                             });
@@ -375,9 +376,7 @@ angular.module('contractualClienteApp')
                 } else {
                     // self.a_favor.entidad = "el Contratista.";
                     self.a_favor.valor = parseFloat(self.saldo_contratista.replace(/\,/g, "")) + parseFloat(self.saldo_universidad.replace(/\,/g, ""));
-                    self.a_favor.existe = ' queda un saldo pendiente a su favor por el periodo comprendido entre el dia ' +
-                        self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' +
-                        self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por la suma de ' +
+                    self.a_favor.existe = ' queda un saldo pendiente a su favor, por la suma de ' +
                         numeroALetras(self.terminacion_nov.saldo_contratista, {
                             plural: $translate.instant("PESOS"),
                             singular: $translate.instant("PESO"),
@@ -1176,7 +1175,7 @@ angular.module('contractualClienteApp')
 
                             'Que mediante oficio No. ' + self.terminacion_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunicó al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
 
-                            'Que por medio del oficio No. ' + self.terminacion_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
+                            'Que por medio del oficio No. ' + self.terminacion_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.contrato_obj.fecha_terminacion_anticipada) + '.\n\n',
 
                         ]
                     },
@@ -1244,7 +1243,7 @@ angular.module('contractualClienteApp')
                                     text: 'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' +
                                         self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' a nombre de ' +
                                         self.contrato_obj.contratista_nombre + ", con efectos legales a partir del " + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) +
-                                        ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del mismo, declarándose a paz y salvo por todo concepto una vez se compruebe el pago de la cláusula segunda de la presente Acta.\n\n '
+                                        ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del mismo, declarándose a paz y salvo por todo concepto una vez se compruebe el pago de la cláusula segunda de la presente Acta.\n\n'
                                 }
                             ],
 
@@ -1257,7 +1256,7 @@ angular.module('contractualClienteApp')
                             text: [
                                 { text: 'CLAUSULA CUARTA: PUBLICACIÓN. ', bold: true },
                                 {
-                                    text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de terminación y liquidación bilateral en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente..\n\n '
+                                    text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de terminación y liquidación bilateral en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente..\n\n'
                                 }
                             ],
 

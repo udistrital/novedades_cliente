@@ -74,7 +74,7 @@ var text_es = {
     HASTA_AGOTAR_PRESUPUESTO: "Hasta Agotar Presupuesto",
     AÑOS: "Años",
     MESES: "Meses",
-    DIAS: "Días",
+    DIAS: "DÍAS",
     TIPO_NECESIDAD: "Tipo de Necesidad",
     TIPO_FINANCIACION: "Tipo de Financiación",
     TIPO_CONTRATO_NECESIDAD: "Tipo de Contrato Necesidad",
