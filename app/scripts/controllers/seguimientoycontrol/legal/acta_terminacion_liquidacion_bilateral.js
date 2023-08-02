@@ -689,16 +689,16 @@ angular.module('contractualClienteApp')
                         ".pdf",
                         self
                     ).then(function (enlace) {
-                        // self.postNovedad(nuevoEstado, output, dateTime, enlace);
-                        pdfMake
-                            .createPdf(output)
-                            .download(
-                                "acta_terminacion_anticipada_" +
-                                self.contrato_id +
-                                "_" +
-                                dateTime +
-                                ".pdf"
-                            );
+                        self.postNovedad(nuevoEstado, output, dateTime, enlace);
+                        // pdfMake
+                        //     .createPdf(output)
+                        //     .download(
+                        //         "acta_terminacion_anticipada_" +
+                        //         self.contrato_id +
+                        //         "_" +
+                        //         dateTime +
+                        //         ".pdf"
+                        //     );
                     });
                 });
             }

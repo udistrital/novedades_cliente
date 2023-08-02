@@ -1199,16 +1199,16 @@ angular
                         ".pdf",
                         self
                     ).then(function (enlace) {
-                        // self.postNovedad(output, dateTime, enlace);
-                        pdfMake
-                            .createPdf(output)
-                            .download(
-                                "acta_cesion_contrato_" +
-                                self.contrato_id +
-                                "_" +
-                                dateTime +
-                                ".pdf"
-                            );
+                        self.postNovedad(output, dateTime, enlace);
+                        // pdfMake
+                        //     .createPdf(output)
+                        //     .download(
+                        //         "acta_cesion_contrato_" +
+                        //         self.contrato_id +
+                        //         "_" +
+                        //         dateTime +
+                        //         ".pdf"
+                        //     );
                     });
                 });
             };
