@@ -168,8 +168,9 @@
                                         {{'VALOR_DESEMBOLSADO' | translate}} *:
                                     </label>
                                     <md-input-container style="margin:0;">
-                                        <input type="number" name="valor_desembolsado"
+                                        <input type="text" name="valor_desembolsado"
                                             ng-model="sLactaCesion.valor_desembolsado" required id="valor_desembolsado"
+                                            ng-keyup="formato_valores_cesion($event, 1)"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                         <div ng-messages="formCesion.valor_desembolsado.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
@@ -181,10 +182,24 @@
                                         {{'VALOR_A_FAVOR' | translate}} *:
                                     </label>
                                     <md-input-container style="margin:0;">
-                                        <input type="number" name="valor_a_favor" ng-model="sLactaCesion.valor_a_favor"
-                                            required id="valor_a_favor"
+                                        <input type="text" name="valor_a_favor" ng-model="sLactaCesion.valor_a_favor"
+                                            required id="valor_a_favor" ng-keyup="formato_valores_cesion($event, 2)"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                         <div ng-messages="formCesion.valor_a_favor.$error">
+                                            <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div class="col-md-6"></div>
+                                <div class="col-md-6">
+                                    <label style="width:100%;">
+                                        Días faltantes por pago (cedente)
+                                    </label>
+                                    <md-input-container style="margin:0;">
+                                        <input type="number" name="dias_pago_cedente"
+                                            ng-model="sLactaCesion.dias_pago_cedente" required id="dias_pago_cedente"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        <div ng-messages="formCesion.dias_pago_cedente.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>
                                     </md-input-container>

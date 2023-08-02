@@ -41,6 +41,9 @@ angular
             self.fecha_oficioO = new Date();
             self.valor_desembolsado = null;
             self.valor_a_favor = "";
+            self.plazo_cedente = 0;
+            self.plazo_cedente_letras = "";
+            self.dias_pago_cedente = 0;
             self.valor_contrato_letras = "";
             self.contrato_plazo_letras = "";
             var meses = new Array(
@@ -282,6 +285,14 @@ angular
                             )
                             .then(function (response_sql) {
                                 self.novedades = response_sql.data.Body;
+                                for (var i = self.novedades.length - 1; i > 0; i--) {
+                                    if (self.novedades[i].tiponovedad == 2) {
+                                        self.contrato_obj.Inicio = self.novedades[i].fechacesion;
+                                        self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
+                                        self.f_cesion = self.fecha_lim_inf;
+                                        break;
+                                    }
+                                }
                                 self.fecha_lim_sup = self.calcularFechaFin();
                                 if (self.novedades.length != "0") {
                                     var last_cesion =
@@ -424,48 +435,96 @@ angular
                     self.f_cesion = fecha;
                 }
                 self.f_terminacion = new Date(self.f_cesion);
-                self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
+                self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
                 if (self.f_terminacion.getDate() == 31) {
                     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
                 };
-
+                var fechaInicio = new Date(self.contrato_obj.Inicio);
+                fechaInicio.setDate(fechaInicio.getDate() + 1);
+                if (fechaInicio.getDate() == 31) {
+                    fechaInicio.setDate(fechaInicio.getDate() + 1);
+                }
+                fechaInicio.setHours(0, 0, 0, 0);
+                var months = self.f_terminacion.getMonth() - fechaInicio.getMonth() + (12 * (self.f_terminacion.getFullYear() - fechaInicio.getFullYear()));
+                var days = 0;
+                if (months != 0) {
+                    if (fechaInicio.getDate() < self.f_terminacion.getDate()) {
+                        days += self.f_terminacion.getDate() - fechaInicio.getDate();
+                    } else {
+                        months -= 1;
+                        days += (30 - fechaInicio.getDate()) + (self.f_terminacion.getDate());
+                    }
+                } else {
+                    console.log("No hay meses");
+                    days += self.f_terminacion.getDate() - fechaInicio.getDate();
+                }
+                days += (months * 30) + 1;
+                self.plazo_cedente_letras = self.calculoDiasLetras(days);
             });
 
-            // /**
-            //  * @ngdoc method
-            //  * @name formato_valores_cesion
-            //  * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
-            //  * @description
-            //  * funcion para modificar el formato de valores para la interfaz
-            //  */
-            // $scope.formato_valores_cesion = function (evento, num) {
-            //     var valor = evento.target.value.replace(/[^0-9\.]/g, "");
-            //     console.log(parseInt(self.contrato_obj.valor));
-            //     var valor_valido = self.contrato_obj.valor * 0.5;
-            //     if (num == 1) {
-            //         if (valor <= valor_valido) {
-            //             self.valor_desembolsado = numberFormat(valor);
-            //         } else {
-            //             self.valor_desembolsado = undefined;
-            //             swal(
-            //                 $translate.instant("TITULO_ADVERTENCIA"),
-            //                 "El valor desembolsado no puede ser mayor al valor del contrato",
-            //                 "info"
-            //             );
-            //         }
-            //     } else if (num == 2) {
-            //         if (valor <= valor_valido) {
-            //             self.valor_a_favor = numberFormat(valor);
-            //         } else {
-            //             self.valor_a_favor = undefined;
-            //             swal(
-            //                 $translate.instant("TITULO_ADVERTENCIA"),
-            //                 "El valor a favor del cedente no puede ser mayor al valor del contrato",
-            //                 "info"
-            //             );
-            //         }
-            //     }
-            // };
+            /**
+             * @ngdoc method
+             * @name formato_valores_cesion
+             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
+             * @description
+             * funcion para modificar el formato de valores para la interfaz
+             */
+            $scope.formato_valores_cesion = function (evento, num) {
+                var valor = evento.target.value.replace(/[^0-9\.]/g, "");
+                console.log(parseInt(self.contrato_obj.valor));
+                var valor_valido = parseInt(self.contrato_obj.valor);
+                if (num == 1) {
+                    if (valor <= valor_valido) {
+                        self.valor_desembolsado = numberFormat(valor);
+                    } else {
+                        self.valor_desembolsado = undefined;
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            "El valor desembolsado no puede ser mayor al valor del contrato",
+                            "info"
+                        );
+                    }
+                } else if (num == 2) {
+                    if (valor <= valor_valido) {
+                        self.valor_a_favor = numberFormat(valor);
+                    } else {
+                        self.valor_a_favor = undefined;
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            "El valor a favor del cedente no puede ser mayor al valor del contrato",
+                            "info"
+                        );
+                    }
+                }
+            };
+
+            self.calculoDiasLetras = function (num) {
+
+                var plazo_meses = num / 30;
+                var res = String(plazo_meses).split(".");
+                var cantidad_meses = res[0];
+                var decimal_cantidad_dias = "0." + res[1];
+                var cantidad_dias = Math.ceil(parseFloat(decimal_cantidad_dias) / 0.03333333333336);
+                var cantidad_meses_letras = numeroALetras(cantidad_meses, {
+                    plural: $translate.instant("("),
+                    singular: $translate.instant("("),
+                });
+                var cantidad_dias_letras = numeroALetras(cantidad_dias, {
+                    plural: $translate.instant("("),
+                    singular: $translate.instant("("),
+                });
+                var texto =
+                    cantidad_meses_letras +
+                    cantidad_meses +
+                    " ) " +
+                    $translate.instant("MENSAJE_MESES") +
+                    " " +
+                    cantidad_dias_letras +
+                    cantidad_dias +
+                    " ) " +
+                    $translate.instant("DIAS");
+                return texto.toLowerCase();
+            }
 
             // $scope.validarValorDesembolsado = function (evento) {
             //     // console.log(typeof self.contrato_obj.valor);
@@ -731,6 +790,8 @@ angular
                                                 nc_response.data[0].CodigoAbreviacion;
                                             self.cesion_nov.valoradicion = 0;
                                             self.cesion_nov.valorfinalcontrato = 0;
+                                            self.cesion_nov.valor_desembolsado = parseFloat(self.valor_desembolsado.replace(/\,/g, ""));
+                                            self.cesion_nov.valor_a_favor = parseFloat(self.valor_a_favor.replace(/\,/g, ""));
                                             self.cesion_nov.vigencia = String(
                                                 self.contrato_obj.vigencia
                                             );
@@ -1138,16 +1199,16 @@ angular
                         ".pdf",
                         self
                     ).then(function (enlace) {
-                        self.postNovedad(output, dateTime, enlace);
-                        // pdfMake
-                        //     .createPdf(output)
-                        //     .download(
-                        //         "acta_cesion_contrato_" +
-                        //         self.contrato_id +
-                        //         "_" +
-                        //         dateTime +
-                        //         ".pdf"
-                        //     );
+                        // self.postNovedad(output, dateTime, enlace);
+                        pdfMake
+                            .createPdf(output)
+                            .download(
+                                "acta_cesion_contrato_" +
+                                self.contrato_id +
+                                "_" +
+                                dateTime +
+                                ".pdf"
+                            );
                     });
                 });
             };
@@ -1202,7 +1263,7 @@ angular
             self.valor_contrato_cesionario = function () {
                 return (
                     self.contrato_obj.valor -
-                    (self.valor_a_favor + self.valor_desembolsado)
+                    (parseFloat(self.valor_a_favor.replace(/\,/g, "")) + parseFloat(self.valor_desembolsado.replace(/\,/g, "")))
                 );
             };
 
@@ -1608,11 +1669,11 @@ angular
                                     text: "Por los servicios prestados por el señor(a) " +
                                         self.contrato_obj.contratista_nombre +
                                         " (CEDENTE), hasta el día " + self.format_date_letter_mongo(self.f_terminacion) +
-                                        ", se reconoció un valor total de " + NumeroALetras(self.valor_desembolsado + "") +
-                                        "MONEDA CORRIENTE ($" + numberFormat(String(self.valor_desembolsado) + "") +
+                                        ", se reconoció un valor total de " + NumeroALetras(self.cesion_nov.valor_desembolsado + "") +
+                                        "MONEDA CORRIENTE ($" + numberFormat(self.cesion_nov.valor_desembolsado + "") +
                                         " M/CTE), por el plazo ejecutado del contrato de " +
-                                        self.contrato_obj.plazo +
-                                        " meses.\n\n"
+                                        self.plazo_cedente_letras +
+                                        ".\n\n"
                                 },
                                 // { text: " CONTRATISTA CEDENTE,", bold: true }, {
                                 //     text: " hasta el día " +
@@ -1629,13 +1690,10 @@ angular
                                     text: [
                                         { text: "Existe un valor pendiente por cancelar al señor(a) " + self.contrato_obj.contratista_nombre }, { text: "(CEDENTE), ", bold: true }, {
                                             text: "por valor de " +
-                                                NumeroALetras(self.valor_a_favor + "") +
+                                                NumeroALetras(parseInt(self.cesion_nov.valor_a_favor) + "") +
                                                 "MONEDA CORRIENTE ($" +
-                                                numberFormat(String(self.valor_a_favor) + "") +
-                                                " M/CTE), que corresponden al periodo comprendido entre el día " +
-                                                self.format_date_letter_mongo(self.contrato_obj.Inicio) +
-                                                " al dia " +
-                                                self.format_date_letter_mongo(self.f_terminacion) +
+                                                numberFormat(self.cesion_nov.valor_a_favor + "") +
+                                                " M/CTE), por un plazo de " + self.calculoDiasLetras(self.dias_pago_cedente) +
                                                 ".\n\n"
                                         }],
 
