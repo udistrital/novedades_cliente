@@ -525,8 +525,14 @@ angular
             $scope.total_valor_contrato = function (evento) {
                 console.log(evento.target.value);
                 var valor_adicion = evento.target.value.replace(/[^0-9\.]/g, "");
+                var adiciones = 0;
+                for (var i = 0; i < self.novedades.length; i++) {
+                    if (self.novedades[i].tiponovedad == 6 || self.novedades[i].tiponovedad == 8) {
+                        adiciones += parseFloat(self.novedades[i].valoradicion);
+                    }
+                }
                 var valor_contrato =
-                    parseFloat(valor_adicion) + parseFloat(self.contrato_obj.valor);
+                    parseFloat(valor_adicion) + parseFloat(self.contrato_obj.valor) + adiciones;
                 var valor_valido_adicion = self.contrato_obj.valor * 0.5;
                 if (valor_adicion <= valor_valido_adicion) {
                     $scope.nuevo_valor_contrato = numberFormat(String(valor_contrato));
@@ -566,6 +572,12 @@ angular
             $scope.total_plazo_contrato = function (evento) {
 
                 var valor_prorroga = evento.target.value.replace(/[^0-9\.]/g, "");
+                var prorrogas = 0;
+                for (var i = 0; i < self.novedades.length; i++) {
+                    if (self.novedades[i].tiponovedad == 7 || self.novedades[i].tiponovedad == 8) {
+                        prorrogas += parseInt(self.novedades[i].tiempoprorroga);
+                    }
+                }
                 var plazo_actual_dias = parseInt(self.contrato_obj.plazo) * 30;
                 var valor_valido_prorroga = plazo_actual_dias * 0.5;
                 $scope.valor_prorroga_final = valor_prorroga;
@@ -580,7 +592,7 @@ angular
                     " ) " +
                     $translate.instant("DIAS");
                 if (valor_prorroga <= valor_valido_prorroga) {
-                    var valor_plazo_dias = parseInt(valor_prorroga) + plazo_actual_dias;
+                    var valor_plazo_dias = parseInt(valor_prorroga) + plazo_actual_dias + prorrogas;
                     var valor_plazo_meses = valor_plazo_dias / 30;
                     var res = String(valor_plazo_meses).split(".");
                     var cantidad_meses = res[0];
