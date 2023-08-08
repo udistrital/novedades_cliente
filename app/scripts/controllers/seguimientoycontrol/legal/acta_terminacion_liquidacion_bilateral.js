@@ -313,7 +313,6 @@ angular.module('contractualClienteApp')
              */
             $scope.formato_valores_terminacion = function (evento, num) {
                 var valor = evento.target.value.replace(/[^0-9\.]/g, "");
-                console.log(parseInt(self.contrato_obj.valor));
                 var valor_valido = parseInt(self.contrato_obj.valor);
                 if (num == 1) {
                     if (valor <= valor_valido) {
@@ -399,7 +398,6 @@ angular.module('contractualClienteApp')
                 self.terminacion_nov.enlace = enlaceDoc;
                 novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                     if (vc_response.data.Body == "true") {
-                        console.log(self.terminacion_nov)
                         if (self.terminacion_nov.estado == "4518") {
                             novedadesMidRequest
                                 .post('novedad', self.terminacion_nov)

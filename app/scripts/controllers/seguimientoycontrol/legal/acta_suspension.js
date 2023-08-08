@@ -244,7 +244,6 @@ angular
                             .then(function (response_sql) {
                                 self.novedades = response_sql.data.Body;
                                 self.fecha_lim_sup = self.calcularFechaFin(0);
-                                console.log(self.fecha_lim_sup);
                                 if (self.novedades.length != "0") {
                                     var last_cesion =
                                         self.novedades[self.novedades.length - 1];
@@ -742,9 +741,9 @@ angular
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
-                console.log("diasNovedad", diasNovedad);
+                // console.log("diasNovedad", diasNovedad);
 
-                console.log("FechaFin: ", nuevaFechaFin);
+                // console.log("FechaFin: ", nuevaFechaFin);
 
                 if (diasNovedad != 0) {
                     diasNovedad = parseInt(diasNovedad) + 1;
@@ -766,7 +765,7 @@ angular
                     } else if (nuevaFechaFin.getDate() < 31) {
                         nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
                     }
-                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                    // console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
                 return nuevaFechaFin;
             }

@@ -363,7 +363,6 @@ angular
 
                                             $scope.update = function () {
                                                 var cod = JSON.parse(document.getElementById("rp").value);
-                                                console.log(cod);
                                                 var cadena = cod.rp + " - " + cod.vigencia;
                                                 self.selected = cadena;
                                                 self.contrato_obj.cdp_numero =
@@ -433,7 +432,6 @@ angular
                                                 });
 
                                             $scope.update = function () {
-                                                console.log(JSON.parse(document.getElementById("rp").value));
                                                 var cod = JSON.parse(document.getElementById("rp").value);
                                                 var cadena = cod.rp + " - " + cod.vigencia;
                                                 self.selected = cadena;
@@ -523,7 +521,6 @@ angular
              * funcion para obtener el valor final del contrato
              */
             $scope.total_valor_contrato = function (evento) {
-                console.log(evento.target.value);
                 var valor_adicion = evento.target.value.replace(/[^0-9\.]/g, "");
                 var adiciones = 0;
                 for (var i = 0; i < self.novedades.length; i++) {
@@ -549,8 +546,6 @@ angular
                         centSingular: $translate.instant("CENTAVO"),
                     });
                     $scope.valor_adicion = numberFormat(valor_adicion);
-                    console.log($scope.valor_adicion);
-                    console.log(typeof valor_adicion);
                 } else {
                     $scope.valor_adicion = undefined;
                     $scope.nuevo_valor_contrato = "";
@@ -963,7 +958,7 @@ angular
              * funcion que valida los datos de la novedad a actualizar
              */
             self.actualizarNovedad = function (dataNovedad) {
-                console.log(dataNovedad);
+                // console.log(dataNovedad);
                 var idStr = self.contrato_obj.numero_contrato;
                 novedadesMidRequest
                     .put("novedad", idStr, dataNovedad)
@@ -1093,16 +1088,16 @@ angular
                             TipoNovedad: parseFloat(220),
                             esFechaActual: false,
                         };
-                        console.log(self.data_acta_adicion_prorroga);
+                        // console.log(self.data_acta_adicion_prorroga);
                         if (self.estadoNovedad == "4518") {
                             self.formato_generacion_pdf();
                         } else {
                             self.contrato_obj_replica.esFechaActual = true;
-                            console.log(self.contrato_obj_replica);
+                            // console.log(self.contrato_obj_replica);
                             novedadesMidRequest
                                 .post("replica", self.contrato_obj_replica)
                                 .then(function (request_novedades) {
-                                    console.log(request_novedades);
+                                    // console.log(request_novedades);
                                     if (
                                         request_novedades.status == 200 ||
                                         request_novedades.statusText == "OK"
