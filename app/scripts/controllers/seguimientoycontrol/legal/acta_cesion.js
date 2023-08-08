@@ -465,7 +465,6 @@ angular
              */
             $scope.formato_valores_cesion = function (evento, num) {
                 var valor = evento.target.value.replace(/[^0-9\.]/g, "");
-                console.log(parseInt(self.contrato_obj.valor));
                 var valor_valido = parseInt(self.contrato_obj.valor);
                 if (num == 1) {
                     if (valor <= valor_valido) {
@@ -695,9 +694,6 @@ angular
              * actualizacion de los datos del contrato y reporte de la novedad
              */
             self.generarActa = function () {
-                console.log(typeof self.f_terminacion);
-                console.log(typeof self.f_cesion);
-                console.log(self.contrato_obj.Inicio);
                 var fechaActual = new Date();
                 if (
                     (fechaActual.getDate() == self.f_cesion.getDate()
@@ -731,7 +727,6 @@ angular
                 // .then(function (acta_response) {                    
                 //     self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                 // });
-                console.log($scope.formCesion);
                 if ($scope.formCesion.$valid) {
                     amazonAdministrativaRequest
                         .get(
