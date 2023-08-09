@@ -701,9 +701,9 @@ angular
                         && fechaActual.getFullYear() == self.f_cesion.getFullYear())
                     || fechaActual > self.f_cesion
                 ) {
-                    self.estadoNovedad = "4519";
+                    self.estadoNovedad = "TERM";
                 } else {
-                    self.estadoNovedad = "4518";
+                    self.estadoNovedad = "ENTR";
                 }
                 self.valor_contrato_letras = numeroALetras(parseFloat(self.contrato_obj.valor), {
                     plural: $translate.instant("PESOS"),
@@ -813,7 +813,7 @@ angular
                                             if (self.cesion_nov.tiponovedad === "NP_CES") {
                                                 self.contrato_obj_replica.TipoNovedad = parseFloat(219);
                                             }
-                                            if (self.estadoNovedad == "4519") {
+                                            if (self.estadoNovedad == "TERM") {
                                                 self.contrato_obj_replica.esFechaActual = true;
                                                 novedadesMidRequest
                                                     .post("replica", self.contrato_obj_replica)
