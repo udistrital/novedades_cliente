@@ -712,7 +712,7 @@ angular
                     .then(function (vc_response) {
                         self.validacion = vc_response.data.Body;
                         if (self.validacion == "true") {
-                            if (self.estadoNovedad == "4518") {
+                            if (self.estadoNovedad == "ENTR") {
                                 novedadesMidRequest
                                     .post("novedad", self.reinicio_nov)
                                     .then(function (response_nosql) {
@@ -743,7 +743,6 @@ angular
                                         }
                                     });
                             } else {
-                                console.log("ReplicaObj", self.contrato_obj_replica);
                                 novedadesMidRequest
                                     .put("replica", self.suspension_obj.id, self.contrato_obj_replica)
                                     .then(function (request_argo) {
@@ -822,9 +821,9 @@ angular
                         && fechaActual.getFullYear() == self.f_reinicio.getFullYear())
                     || fechaActual > self.f_reinicio
                 ) {
-                    self.estadoNovedad = "4519";
+                    self.estadoNovedad = "TERM";
                 } else {
-                    self.estadoNovedad = "4518";
+                    self.estadoNovedad = "ENTR";
                 }
                 if ($scope.formReinicio.$valid) {
                     novedadesRequest
@@ -919,9 +918,9 @@ angular
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
-                console.log("diasNovedad", diasNovedad);
+                // console.log("diasNovedad", diasNovedad);
 
-                console.log("FechaFin: ", nuevaFechaFin);
+                // console.log("FechaFin: ", nuevaFechaFin);
 
                 if (diasNovedad != 0) {
                     diasNovedad = parseInt(diasNovedad) + 1;
@@ -943,7 +942,7 @@ angular
                     } else if (nuevaFechaFin.getDate() < 31) {
                         nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
                     }
-                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                    // console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
                 return nuevaFechaFin;
 

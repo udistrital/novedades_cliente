@@ -376,7 +376,7 @@ angular
                     .then(function (vc_response) {
                         self.validacion = vc_response.data.Body;
                         if (self.validacion == "true") {
-                            if (self.estadoNovedad == "4519") {
+                            if (self.estadoNovedad == "TERM") {
                                 self.contrato_obj_replica.esFechaActual = true;
                                 novedadesMidRequest
                                     .post("replica", self.contrato_obj_replica)
@@ -568,9 +568,9 @@ angular
                         && fechaActual.getFullYear() == self.f_inicio.getFullYear())
                     || fechaActual > self.f_inicio
                 ) {
-                    self.estadoNovedad = "4519";
+                    self.estadoNovedad = "TERM";
                 } else {
-                    self.estadoNovedad = "4518";
+                    self.estadoNovedad = "ENTR";
                 }
                 if (self.f_inicio.getDate() == 31) {
                     //respuesta incorrecta, ej: 400/500

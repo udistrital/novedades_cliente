@@ -398,7 +398,7 @@ angular.module('contractualClienteApp')
                 self.terminacion_nov.enlace = enlaceDoc;
                 novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                     if (vc_response.data.Body == "true") {
-                        if (self.terminacion_nov.estado == "4518") {
+                        if (self.terminacion_nov.estado == "ENTR") {
                             novedadesMidRequest
                                 .post('novedad', self.terminacion_nov)
                                 .then(function (response_nosql) {
@@ -558,9 +558,9 @@ angular.module('contractualClienteApp')
                         && fechaActual.getFullYear() == self.fecha_terminacion_anticipada.getFullYear())
                     || fechaActual > self.fecha_terminacion_anticipada
                 ) {
-                    self.estadoNovedad = "4519";
+                    self.estadoNovedad = "TERM";
                 } else {
-                    self.estadoNovedad = "4518";
+                    self.estadoNovedad = "ENTR";
                 }
 
                 if ($scope.formTerminacion.$valid) {

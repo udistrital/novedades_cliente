@@ -1035,9 +1035,9 @@ angular
                                 && fechaActual.getFullYear() == self.fecha_prorroga.getFullYear())
                             || fechaActual > self.fecha_prorroga
                         ) {
-                            self.estadoNovedad = "4519";
+                            self.estadoNovedad = "TERM";
                         } else {
-                            self.estadoNovedad = "4518";
+                            self.estadoNovedad = "ENTR";
                         }
                         //objeto acta adición_prórroga
                         self.data_acta_adicion_prorroga = {
@@ -1089,7 +1089,7 @@ angular
                             esFechaActual: false,
                         };
                         // console.log(self.data_acta_adicion_prorroga);
-                        if (self.estadoNovedad == "4518") {
+                        if (self.estadoNovedad == "ENTR") {
                             self.formato_generacion_pdf();
                         } else {
                             self.contrato_obj_replica.esFechaActual = true;

@@ -214,7 +214,7 @@ angular
                                             if (elementos_cesion != undefined && elementos_cesion.length != "0") {
                                                 var last_newness =
                                                     elementos_cesion[elementos_cesion.length - 1];
-                                                if (last_newness.estado == "4518") {
+                                                if (last_newness.estado == "ENTR") {
                                                     self.novedadEnCurso = true;
                                                     swal({
                                                         title: $translate.instant("INFORMACION"),
@@ -470,29 +470,6 @@ angular
 
             }
             $scope.eliminarNovedad = function (idRegNov) {
-                if (estado == "EN_TRAMITE") {
-                    estructura = {
-                        "Id": 9530,
-                        "NumeroSolicitud": "7617171",
-                        "ContratoId": 3007,
-                        "NumeroCdpId": 0,
-                        "Motivo": "prueba",
-                        "Aclaracion": "",
-                        "Observacion": "",
-                        "Vigencia": 2023,
-                        "VigenciaCdp": 0,
-                        "FechaCreacion": "2023-02-20 09:03:11.521786 +0000 +0000",
-                        "FechaModificacion": "2023-02-20 09:03:11.521786 +0000 +0000",
-                        "Activo": true,
-                        "TipoNovedad": 3,
-                        "Estado": "TERMINADA"
-                    };
-                    novedadesMidRequest
-                        .put("novedad", idRegNov, estructura)
-                        .then(function (response) {
-                            console.log("Res: ", response)
-                        });
-                }
 
             }
 
