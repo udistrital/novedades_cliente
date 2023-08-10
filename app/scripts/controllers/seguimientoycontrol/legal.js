@@ -14,6 +14,7 @@ angular
         function (
             $scope,
             $translate,
+            token_service,
             novedadesMidRequest,
             novedadesRequest,
             agoraRequest,
@@ -30,14 +31,38 @@ angular
             self.contrato_obj = {};
             self.estado_resultado_response = false;
             self.estado_contrato_obj.estado = 0;
-            // self.editButton = false;
+            self.novedadEnCurso = false;
+            self.contratistaBool = false;
+            self.usuarioJuridica = false;
+            self.rolesUsuario = [];
+            self.rolActual = "";
+            self.createBool = false;
+            $scope.status = "";
             agoraRequest.get("vigencia_contrato", "").then(function (response) {
                 $scope.vigencias = response.data;
             });
-            // $scope.documentos = [];
 
-            $scope.status = "  ";
-
+            self.rolesUsuario = token_service.getPayload().role;
+            // Asignación del rol del usuario
+            for (var i = 0; i < self.rolesUsuario.length; i++) {
+                if (self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO') {
+                    self.rolActual = self.rolesUsuario[i];
+                    break;
+                }
+            }
+            if (self.rolActual != 'ORDENADOR_DEL_GASTO') {
+                for (var i = 0; i < self.rolesUsuario.length; i++) {
+                    if (
+                        self.rolesUsuario[i] === 'SUPERVISOR' ||
+                        self.rolesUsuario[i] === 'ASISTENTE_JURIDICA' ||
+                        self.rolesUsuario[i] === 'CONTRATISTA'
+                    ) {
+                        // console.log(self.rolesUsuario[i]);
+                        self.rolActual = self.rolesUsuario[i];
+                        break;
+                    }
+                }
+            }
 
             /**
              * @ngdoc method
@@ -47,7 +72,8 @@ angular
              * funcion para obtener la totalidad de los contratos por vigencia seleccionada
              */
             self.buscar_contrato = function () {
-                $scope.documentos = [];
+                self.novedadEnCurso = false;
+                $scope.novedadesTabla = [];
                 self.estado_resultado_response = false;
                 self.documentoSelect = null;
                 if (
@@ -109,35 +135,57 @@ angular
                                     if (self.estado_contrato_obj.estado == 3) {
                                         swal($translate.instant("CONTRATO_INICIO"), "", "info");
                                     }
+                                    if (self.rolActual == "SUPERVISOR") {
+                                        if (agora_response.data[0].Supervisor.Documento.toString() == token_service.getPayload().documento) {
+                                            self.createBool = false;
+                                        } else {
+                                            swal({
+                                                title: $translate.instant("INFORMACION"),
+                                                type: "info",
+                                                html: "El contrato # " +
+                                                    self.contrato_obj.numero_contrato +
+                                                    $translate.instant("ANIO") +
+                                                    self.contrato_obj.vigencia +
+                                                    " No pertenece a la dependencia del supervisor.",
+                                                showCloseButton: false,
+                                                showCancelButton: false,
+                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                allowOutsideClick: false,
+                                            });
+                                            self.createBool = false;
+                                        }
+                                    }
                                     //obtener los documentos y soportes por contrato
-                                    documentosCrudRequest
-                                        .get(
-                                            "documento",
-                                            "query=Descripcion:" +
-                                            self.contrato_obj.numero_contrato +
-                                            "" +
-                                            parseInt(self.contrato_obj.vigencia) +
-                                            "&limit=0"
-                                        )
-                                        .then(function (doc_response) {
-                                            if (doc_response.data != null) {
-                                                $scope.documentos = [];
-                                                for (var i = 0; i < doc_response.data.length; i++) {
-                                                    if (
-                                                        doc_response.data[i].Id !=
-                                                        undefined
-                                                    ) {
-                                                        $scope.documentos.push({
-                                                            idDocumento: doc_response.data[i].Id,
-                                                            enlace: doc_response.data[i].Enlace,
-                                                            label: doc_response.data[i].Nombre,
-                                                            fechaCreacion: doc_response.data[i]
-                                                                .FechaCreacion,
-                                                        });
-                                                    }
-                                                }
-                                            }
-                                        });
+                                    // documentosCrudRequest
+                                    //     .get(
+                                    //         "documento",
+                                    //         "query=Descripcion:" +
+                                    //         self.contrato_obj.numero_contrato +
+                                    //         "" +
+                                    //         parseInt(self.contrato_obj.vigencia) +
+                                    //         "&limit=0"
+                                    //     )
+                                    //     .then(function (doc_response) {
+                                    //         if (doc_response.data != null) {
+                                    //             for (var i = 0; i < doc_response.data.length; i++) {
+                                    //                 if (
+                                    //                     doc_response.data[i].Id !=
+                                    //                     undefined
+                                    //                 ) {
+                                    //                     var metadatos = JSON.parse(doc_response.data[i].Metadatos)
+                                    //                     $scope.novedadesTabla.push({
+                                    //                         idDocumento: doc_response.data[i].Id,
+                                    //                         enlace: doc_response.data[i].Enlace,
+                                    //                         label: doc_response.data[i].Nombre,
+                                    //                         fechaCreacion: doc_response.data[i]
+                                    //                             .FechaCreacion,
+                                    //                         estado: metadatos.estado,
+                                    //                     });
+                                    //                 }
+                                    //             }
+                                    //         }
+                                    //     });
+
 
                                     //Obtiene el tipo de contrato y el tipo de la ultima novedad hecha para saber si el contrato fue cedido.
                                     novedadesMidRequest
@@ -148,10 +196,40 @@ angular
                                             self.contrato_obj.vigencia
                                         )
                                         .then(function (response_sql) {
+                                            for (var i = 0; i < response_sql.data.Body.length; i++) {
+                                                if (
+                                                    response_sql.data.Body[i].id !=
+                                                    undefined
+                                                ) {
+                                                    $scope.novedadesTabla.push({
+                                                        id: response_sql.data.Body[i].id,
+                                                        tipoNovedad: response_sql.data.Body[i].nombreTipoNovedad,
+                                                        enlace: response_sql.data.Body[i].enlace,
+                                                        fecha: response_sql.data.Body[i].fechasolicitud,
+                                                        estado: response_sql.data.Body[i].nombreEstado,
+                                                    });
+                                                }
+                                            }
                                             var elementos_cesion = response_sql.data.Body;
                                             if (elementos_cesion != undefined && elementos_cesion.length != "0") {
                                                 var last_newness =
                                                     elementos_cesion[elementos_cesion.length - 1];
+                                                if (last_newness.estado == "ENTR") {
+                                                    self.novedadEnCurso = true;
+                                                    swal({
+                                                        title: $translate.instant("INFORMACION"),
+                                                        type: "info",
+                                                        html: $translate.instant("TITULO_NOVEDAD_EN_CURSO") +
+                                                            self.contrato_obj.numero_contrato +
+                                                            $translate.instant("ANIO") +
+                                                            self.contrato_obj.vigencia +
+                                                            ".",
+                                                        showCloseButton: false,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                        allowOutsideClick: false,
+                                                    })
+                                                }
                                                 novedadesRequest
                                                     .get(
                                                         "tipo_novedad",
@@ -164,12 +242,14 @@ angular
                                                             self.contrato_obj.contratista =
                                                                 last_newness.cesionario;
                                                             if (last_newness.poliza === "") {
-                                                                self.estado_contrato_obj.estado = 10;
-                                                                swal(
-                                                                    $translate.instant("INFORMACION"),
-                                                                    $translate.instant("DESCRIPCION_ACTA_CESION"),
-                                                                    "info"
-                                                                );
+                                                                if (self.novedadEnCurso == false) {
+                                                                    self.estado_contrato_obj.estado = 10;
+                                                                    swal(
+                                                                        $translate.instant("INFORMACION"),
+                                                                        $translate.instant("DESCRIPCION_ACTA_CESION"),
+                                                                        "info"
+                                                                    );
+                                                                }
                                                             }
                                                         } else if (
                                                             self.contrato_obj.tipo_novedad == "NP_SUS" ||
@@ -193,6 +273,22 @@ angular
                                                                 self.contrato_obj.contratista_nombre =
                                                                     ip_response.data[0].NomProveedor;
                                                                 self.estado_resultado_response = true;
+                                                            })
+                                                            .catch(function (error) {
+                                                                $scope.alert = "DESCRIPCION_ERROR_LEGAL_PROV";
+                                                                swal({
+                                                                    title: $translate.instant("TITULO_ERROR_LEGAL"),
+                                                                    type: "error",
+                                                                    html: $translate.instant($scope.alert) +
+                                                                        self.contrato_obj.numero_contrato +
+                                                                        $translate.instant("ANIO") +
+                                                                        self.contrato_obj.vigencia +
+                                                                        ".",
+                                                                    showCloseButton: true,
+                                                                    showCancelButton: false,
+                                                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                    allowOutsideClick: false,
+                                                                }).then(function () { });
                                                             });
                                                     });
                                             } else {
@@ -208,6 +304,22 @@ angular
                                                         self.contrato_obj.contratista_nombre =
                                                             ip_response.data[0].NomProveedor;
                                                         self.estado_resultado_response = true;
+                                                    })
+                                                    .catch(function (error) {
+                                                        $scope.alert = "DESCRIPCION_ERROR_LEGAL_PROV";
+                                                        swal({
+                                                            title: $translate.instant("TITULO_ERROR_LEGAL"),
+                                                            type: "error",
+                                                            html: $translate.instant($scope.alert) +
+                                                                self.contrato_obj.numero_contrato +
+                                                                $translate.instant("ANIO") +
+                                                                self.contrato_obj.vigencia +
+                                                                ".",
+                                                            showCloseButton: true,
+                                                            showCancelButton: false,
+                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                            allowOutsideClick: false,
+                                                        }).then(function () { });
                                                     });
                                             }
                                         });
@@ -239,6 +351,20 @@ angular
                         );
                     });
             };
+
+            if (self.rolActual == 'CONTRATISTA') {
+                agoraRequest.get(
+                    "informacion_proveedor?query=NumDocumento:" + token_service.getPayload().documento
+                ).then(function (responeIp) {
+                    agoraRequest.get(
+                        "contrato_general?query=Contratista:" + responeIp.data[0].Id
+                    ).then(function (responseCg) {
+                        self.contrato_id = responseCg.data[0].ContratoSuscrito[0].NumeroContratoSuscrito;
+                        self.contrato_vigencia = responseCg.data[0].ContratoSuscrito[0].Vigencia;
+                        self.buscar_contrato();
+                    });
+                });
+            }
 
             /**
              * @ngdoc method
@@ -286,7 +412,7 @@ angular
                 $mdDialog
                     .show({
                         templateUrl: "views/seguimientoycontrol/novedad-tabla.html",
-                        locals: { documentos: $scope.documentos },
+                        locals: { documentos: $scope.novedadesTabla },
                         parent: angular.element(document.body),
                         targetEvent: ev,
                         clickOutsideToClose: true,
@@ -340,21 +466,24 @@ angular
                     });
             }
 
-            $scope.editarNovedad = function (novedad) {
-                
+            $scope.editarNovedad = function (idRegNov) {
+
+            }
+            $scope.eliminarNovedad = function (idRegNov) {
+
             }
 
             $scope.$watch("documentos", function (newVal) {
                 if (newVal) {
                     $scope.pages = Math.ceil(
-                        $scope.documentos.length / $scope.numLimit
+                        $scope.novedadesTabla.length / $scope.numLimit
                     );
                 }
             });
             $scope.hideNext = function () {
                 if (
                     $scope.start + $scope.numLimit <
-                    $scope.documentos.length
+                    $scope.novedadesTabla.length
                 ) {
                     return false;
                 } else return true;
@@ -375,7 +504,7 @@ angular
             };
 
             function DialogController($scope, $mdDialog, documentos) {
-                $scope.documentos = documentos;
+                $scope.novedadesTabla = documentos;
                 $scope.hide = function () {
                     $mdDialog.hide();
                 };
@@ -412,14 +541,14 @@ angular
                 $scope.$watch("documentos", function (newVal) {
                     if (newVal) {
                         $scope.pages = Math.ceil(
-                            $scope.documentos.length / $scope.numLimit
+                            $scope.novedadesTabla.length / $scope.numLimit
                         );
                     }
                 });
                 $scope.hideNext = function () {
                     if (
                         $scope.start + $scope.numLimit <
-                        $scope.documentos.length
+                        $scope.novedadesTabla.length
                     ) {
                         return false;
                     } else return true;
