@@ -196,18 +196,20 @@ angular
                                             self.contrato_obj.vigencia
                                         )
                                         .then(function (response_sql) {
-                                            for (var i = 0; i < response_sql.data.Body.length; i++) {
-                                                if (
-                                                    response_sql.data.Body[i].id !=
-                                                    undefined
-                                                ) {
-                                                    $scope.novedadesTabla.push({
-                                                        id: response_sql.data.Body[i].id,
-                                                        tipoNovedad: response_sql.data.Body[i].nombreTipoNovedad,
-                                                        enlace: response_sql.data.Body[i].enlace,
-                                                        fecha: response_sql.data.Body[i].fechasolicitud,
-                                                        estado: response_sql.data.Body[i].nombreEstado,
-                                                    });
+                                            if (response_sql.data !== undefined) {
+                                                for (var i = 0; i < response_sql.data.Body.length; i++) {
+                                                    if (
+                                                        response_sql.data.Body[i].id !=
+                                                        undefined
+                                                    ) {
+                                                        $scope.novedadesTabla.push({
+                                                            id: response_sql.data.Body[i].id,
+                                                            tipoNovedad: response_sql.data.Body[i].nombreTipoNovedad,
+                                                            enlace: response_sql.data.Body[i].enlace,
+                                                            fecha: response_sql.data.Body[i].fechasolicitud,
+                                                            estado: response_sql.data.Body[i].nombreEstado,
+                                                        });
+                                                    }
                                                 }
                                             }
                                             var elementos_cesion = response_sql.data.Body;
