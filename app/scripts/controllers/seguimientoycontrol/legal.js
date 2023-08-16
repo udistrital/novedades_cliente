@@ -44,6 +44,10 @@ angular
 
             self.rolesUsuario = token_service.getPayload().role;
             // Asignación del rol del usuario
+            console.log("rolesUsuarioArray: ", self.rolesUsuario);
+            console.log("Role: ", token_service.getPayload().role);
+            console.log("getPayload: ", token_service.getPayload());
+            console.log("Token_service: ", token_service);
             for (var i = 0; i < self.rolesUsuario.length; i++) {
                 if (self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO') {
                     self.rolActual = self.rolesUsuario[i];
@@ -196,20 +200,18 @@ angular
                                             self.contrato_obj.vigencia
                                         )
                                         .then(function (response_sql) {
-                                            if (response_sql.data !== undefined) {
-                                                for (var i = 0; i < response_sql.data.Body.length; i++) {
-                                                    if (
-                                                        response_sql.data.Body[i].id !=
-                                                        undefined
-                                                    ) {
-                                                        $scope.novedadesTabla.push({
-                                                            id: response_sql.data.Body[i].id,
-                                                            tipoNovedad: response_sql.data.Body[i].nombreTipoNovedad,
-                                                            enlace: response_sql.data.Body[i].enlace,
-                                                            fecha: response_sql.data.Body[i].fechasolicitud,
-                                                            estado: response_sql.data.Body[i].nombreEstado,
-                                                        });
-                                                    }
+                                            for (var i = 0; i < response_sql.data.Body.length; i++) {
+                                                if (
+                                                    response_sql.data.Body[i].id !=
+                                                    undefined
+                                                ) {
+                                                    $scope.novedadesTabla.push({
+                                                        id: response_sql.data.Body[i].id,
+                                                        tipoNovedad: response_sql.data.Body[i].nombreTipoNovedad,
+                                                        enlace: response_sql.data.Body[i].enlace,
+                                                        fecha: response_sql.data.Body[i].fechasolicitud,
+                                                        estado: response_sql.data.Body[i].nombreEstado,
+                                                    });
                                                 }
                                             }
                                             var elementos_cesion = response_sql.data.Body;
