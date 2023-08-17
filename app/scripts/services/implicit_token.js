@@ -34,11 +34,11 @@ if (
     } else {
         window.localStorage.clear();
     }
-    req.onreadystatechange = function(e) {
+    req.onreadystatechange = function (e) {
         if (req.readyState === 4) {
             if (req.status === 200) {
                 //
-            } else if (req.status === 400) {} else {}
+            } else if (req.status === 400) { } else { }
         }
     };
 }
@@ -47,14 +47,14 @@ angular
     .module("implicitToken", [])
     .factory(
         "token_service",
-        function($q, CONF, md5, $interval, autenticacionMidRequest) {
+        function ($q, CONF, md5, $interval, autenticacionMidRequest) {
             var service = {
                 //session: $localStorage.default(params),
                 header: null,
                 token: null,
                 logout_url: null,
                 loaded_data: false,
-                getLoginData: function() {
+                getLoginData: function () {
                     //Para  llamar el api de autenticacion
                     var deferred = $q.defer();
                     if (
@@ -87,7 +87,7 @@ angular
                                         Authorization: "Bearer " + window.localStorage.getItem("access_token"),
                                     },
                                 })
-                                .then(function(respuestaAutenticacion) {
+                                .then(function (respuestaAutenticacion) {
                                     //appUserDocument = respuestaAutenticacion.data.documento;
 
                                     appUserDocument = respuestaAutenticacion.data.documento;
@@ -104,7 +104,7 @@ angular
                                     //
                                     deferred.resolve(true);
                                 })
-                                .catch(function(excepcionAutenticacion) {
+                                .catch(function (excepcionAutenticacion) {
                                     console.log("fallo la autenticacion");
                                     //service.logout();
                                 });
@@ -116,7 +116,7 @@ angular
                     }
                     return deferred.promise;
                 },
-                generateState: function() {
+                generateState: function () {
                     var text = ((Date.now() + Math.random()) * Math.random())
                         .toString()
                         .replace(".", "");
@@ -125,7 +125,7 @@ angular
                 setting_bearer: {
                     headers: {},
                 },
-                getHeader: function() {
+                getHeader: function () {
                     service.setting_bearer = {
                         headers: {
                             Accept: "application/json",
@@ -135,7 +135,7 @@ angular
                     };
                     return service.setting_bearer;
                 },
-                login: function() {
+                login: function () {
                     if (!CONF.GENERAL.TOKEN.nonce) {
                         CONF.GENERAL.TOKEN.nonce = service.generateState();
                     }
@@ -163,7 +163,7 @@ angular
                     window.location = url;
                     return url;
                 },
-                live_token: function() {
+                live_token: function () {
                     if (
                         window.localStorage.getItem("id_token") === "undefined" ||
                         window.localStorage.getItem("id_token") === null ||
@@ -189,11 +189,22 @@ angular
                         return true;
                     }
                 },
-                getPayload: function() {
-                    var id_token = window.localStorage.getItem("id_token").split(".");
-                    return JSON.parse(atob(id_token[1]));
+                getPayload: function () {
+                    var id_token = window.localStorage.getItem('id_token').split('.');
+                    var access_code = window.localStorage.getItem('access_code');
+                    var access_role = window.localStorage.getItem('access_role');
+                    var data = angular.fromJson(atob(id_token[1]));
+                    //console.log('access_code:',access_code,'access_role: ',access_role);
+                    if (!data.documento) {
+                        data.documento = angular.fromJson(atob(access_code));
+                    }
+                    if (!data.role) {
+                        data.role = angular.fromJson(atob(access_role));
+                    }
+                    //console.log('data:',data)
+                    return data;
                 },
-                getAppPayload: function() {
+                getAppPayload: function () {
                     var id_token = window.localStorage.getItem("id_token").split(".");
                     var access_code = window.localStorage.getItem("access_code");
                     var access_role = window.localStorage.getItem("access_role");
@@ -209,16 +220,16 @@ angular
                     // console.log("data:", data);
                     return data;
                 },
-                logout: function() {
+                logout: function () {
                     window.location.replace(service.logout_url);
                 },
-                expired: function() {
+                expired: function () {
                     return (
                         new Date(window.localStorage.getItem("expires_at")) < new Date()
                     );
                 },
 
-                setExpiresAt: function() {
+                setExpiresAt: function () {
                     if (
                         angular.isUndefined(window.localStorage.getItem("expires_at")) ||
                         window.localStorage.getItem("expires_at") === null
@@ -233,12 +244,12 @@ angular
                     }
                 },
 
-                timer: function() {
+                timer: function () {
                     if (!angular.isUndefined(window.localStorage.getItem("expires_at")) ||
                         window.localStorage.getItem("expires_at") === null ||
                         window.localStorage.getItem("expires_at") === "Invalid Date"
                     ) {
-                        $interval(function() {
+                        $interval(function () {
                             if (service.expired()) {
                                 service.logout();
                                 service.clearStorage();
@@ -249,7 +260,7 @@ angular
                     }
                 },
 
-                logoutValid: function() {
+                logoutValid: function () {
                     var state;
                     var valid = true;
                     var queryString = location.search.substring(1);
@@ -266,7 +277,7 @@ angular
                     }
                     return valid;
                 },
-                clearStorage: function() {
+                clearStorage: function () {
                     window.localStorage.removeItem("access_token");
                     window.localStorage.removeItem("id_token");
                     window.localStorage.removeItem("expires_in");

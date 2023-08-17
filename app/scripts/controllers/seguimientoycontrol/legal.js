@@ -44,10 +44,6 @@ angular
 
             self.rolesUsuario = token_service.getPayload().role;
             // Asignación del rol del usuario
-            console.log("rolesUsuarioArray: ", self.rolesUsuario);
-            console.log("Role: ", token_service.getPayload().role);
-            console.log("getPayload: ", token_service.getPayload());
-            console.log("Token_service: ", token_service);
             for (var i = 0; i < self.rolesUsuario.length; i++) {
                 if (self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO') {
                     self.rolActual = self.rolesUsuario[i];
