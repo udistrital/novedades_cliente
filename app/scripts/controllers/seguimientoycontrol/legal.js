@@ -31,6 +31,7 @@ angular
             self.contrato_obj = {};
             self.estado_resultado_response = false;
             self.estado_contrato_obj.estado = 0;
+            self.novedades = [];
             self.novedadEnCurso = false;
             self.contratistaBool = false;
             self.usuarioJuridica = false;
@@ -101,6 +102,13 @@ angular
                             self.contrato_obj.id =
                                 agora_response.data[0].ContratoSuscrito[0].NumeroContrato.Id;
                             self.contrato_obj.valor = agora_response.data[0].ValorContrato;
+                            // var adiciones = 0;
+                            // for (var i = 0; i < self.novedades.length; i++) {
+                            //     if (self.novedades[i].tiponovedad == 6 || self.novedades[i].tiponovedad == 8) {
+                            //         adiciones += parseFloat(self.novedades[i].valoradicion);
+                            //     }
+                            // }
+                            // self.contrato_obj.valor = parseFloat(agora_response.data[0].ValorContrato) + adiciones;
                             self.contrato_obj.objeto = agora_response.data[0].ObjetoContrato;
                             self.contrato_obj.fecha_registro =
                                 agora_response.data[0].FechaRegistro;
@@ -211,6 +219,7 @@ angular
                                                 }
                                             }
                                             var elementos_cesion = response_sql.data.Body;
+                                            self.novedades = elementos_cesion;
                                             if (elementos_cesion != undefined && elementos_cesion.length != "0") {
                                                 var last_newness =
                                                     elementos_cesion[elementos_cesion.length - 1];
