@@ -626,28 +626,28 @@ angular
                             request_novedades.status == 200 ||
                             request_novedades.statusText == "OK"
                         ) {
-                            // pdfMake
-                            //     .createPdf(output)
-                            //     .download(
-                            //         "acta_cesion_contrato_" +
-                            //         self.contrato_id +
-                            //         "_" +
-                            //         dateTime +
-                            //         ".pdf"
-                            //     );
-                            // swal(
-                            //     $translate.instant("TITULO_BUEN_TRABAJO"),
-                            //     $translate.instant("DESCRIPCION_CESION") +
-                            //     self.contrato_obj.numero_contrato +
-                            //     " " +
-                            //     $translate.instant("ANIO") +
-                            //     ": " +
-                            //     self.contrato_obj.vigencia,
-                            //     "success"
-                            // ).then(function () {
-                            //     window.location.href =
-                            //         "#/seguimientoycontrol/legal";
-                            // });
+                            pdfMake
+                                .createPdf(output)
+                                .download(
+                                    "acta_cesion_contrato_" +
+                                    self.contrato_id +
+                                    "_" +
+                                    dateTime +
+                                    ".pdf"
+                                );
+                            swal(
+                                $translate.instant("TITULO_BUEN_TRABAJO"),
+                                $translate.instant("DESCRIPCION_CESION") +
+                                self.contrato_obj.numero_contrato +
+                                " " +
+                                $translate.instant("ANIO") +
+                                ": " +
+                                self.contrato_obj.vigencia,
+                                "success"
+                            ).then(function () {
+                                window.location.href =
+                                    "#/seguimientoycontrol/legal";
+                            });
                         } else {
                             //respuesta incorrecta, ej: 400/500
                             $scope.alert = "DESCRIPCION_ERROR_CESION2";
