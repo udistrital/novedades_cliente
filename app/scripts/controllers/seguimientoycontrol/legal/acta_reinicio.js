@@ -886,7 +886,8 @@ angular
                                     }
 
                                     self.estados[0] = estado_temp_from;
-                                    self.formato_generacion_pdf(nuevoEstado);
+                                    console.log(self.reinicio_nov);
+                                    // self.formato_generacion_pdf(nuevoEstado);
 
                                 });
                         });
@@ -900,20 +901,14 @@ angular
                 }
             };
 
-            self.calcularFechaFin = function (diasNovedad) {
+            self.calcularFechaFin = function (nuevosDiasNovedad) {
 
                 var fechaFin;
                 var fechaFinEfectiva;
                 if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                    var diasSuspension = self.novedades[self.novedades.length - 1].periodosuspension;
                     fechaFinEfectiva = new Date(fechaFin);
-                } else {
-                    fechaFin = self.contrato_obj.Fin;
-                    fechaFinEfectiva = new Date(fechaFin);
-                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    if (fechaFinEfectiva.getDate() == 31) {
-                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    }
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
@@ -921,27 +916,34 @@ angular
 
                 // console.log("FechaFin: ", nuevaFechaFin);
 
-                if (diasNovedad != 0) {
-                    diasNovedad = parseInt(diasNovedad) + 1;
-                    var fechaAux = new Date(fechaFinEfectiva);
-                    var dd = fechaFinEfectiva.getDate();
-                    fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
-                    fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
-                    nuevaFechaFin.setMonth(fechaFinEfectiva.getMonth() + (diasNovedad / 30));
-                    if (fechaAux.getDate() == 31) {
-                        if (dd + (diasNovedad % 30) > 30) {
-                            if ((dd + (diasNovedad % 30)) == 31) {
-                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) + 1);
-                            } else {
-                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
-                            }
-                        } else {
-                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
-                        }
-                    } else if (nuevaFechaFin.getDate() < 31) {
-                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                if (nuevosDiasNovedad != 0) {
+                    var diasNovedad = diasSuspension - nuevosDiasNovedad;
+                    console.log(diasNovedad);
+                    console.log(nuevaFechaFin);
+                    nuevaFechaFin.setDate(nuevaFechaFin.getDate() - diasNovedad);
+                    if (nuevaFechaFin.getDate() == 31) {
+                        nuevaFechaFin.setDate(nuevaFechaFin.getDate() - 1);
                     }
-                    // console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                    console.log(nuevaFechaFin);
+                    // var fechaAux = new Date(fechaFinEfectiva);
+                    // var dd = fechaFinEfectiva.getDate();
+                    // fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
+                    // fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
+                    // nuevaFechaFin.setMonth(fechaFinEfectiva.getMonth() + (diasNovedad / 30));
+                    // if (fechaAux.getDate() == 31) {
+                    //     if (dd + (diasNovedad % 30) > 30) {
+                    //         if ((dd + (diasNovedad % 30)) == 31) {
+                    //             nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) + 1);
+                    //         } else {
+                    //             nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
+                    //         }
+                    //     } else {
+                    //         nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                    //     }
+                    // } else if (nuevaFechaFin.getDate() < 31) {
+                    //     nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                    // }
+                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
                 return nuevaFechaFin;
 
