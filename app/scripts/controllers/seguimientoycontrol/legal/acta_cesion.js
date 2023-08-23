@@ -168,7 +168,8 @@ angular
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                                 self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
                                 self.fecha_lim_inf.setDate(self.fecha_lim_inf.getDate() + 1);
-                                self.f_cesion = new Date(self.fecha_lim_inf);
+                                self.fecha_lim_sup = self.calcularFechaFin();
+                                self.f_cesion = new Date(self.fecha_lim_sup);
                                 novedadesMidRequest
                                     .get(
                                         "novedad",
@@ -183,10 +184,10 @@ angular
                                             if (self.novedades[i].tiponovedad == 2) {
                                                 self.contrato_obj.Inicio = self.novedades[i].fechacesion;
                                                 self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
-                                                self.f_cesion = new Date(self.fecha_lim_sup);
                                                 break;
                                             }
                                         }
+                                        self.f_cesion = new Date(self.fecha_lim_inf);
                                         if (self.novedades.length != "0") {
                                             var last_cesion =
                                                 self.novedades[self.novedades.length - 1];
@@ -813,6 +814,7 @@ angular
                                             if (self.cesion_nov.tiponovedad === "NP_CES") {
                                                 self.contrato_obj_replica.TipoNovedad = parseFloat(219);
                                             }
+                                            // self.formato_generacion_pdf();
                                             if (self.estadoNovedad == "TERM") {
                                                 self.contrato_obj_replica.esFechaActual = true;
                                                 novedadesMidRequest
