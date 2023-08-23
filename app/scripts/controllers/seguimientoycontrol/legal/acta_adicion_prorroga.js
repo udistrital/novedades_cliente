@@ -839,7 +839,7 @@ angular
                 if (setDate) {
                     self.fecha_prorroga = nuevaFechaFin;
                     self.fecha_prorroga.setDate(self.fecha_prorroga.getDate() + 1);
-                    console.log(self.fecha_prorroga);
+                    // console.log(self.fecha_prorroga);
                 } else if (diasNovedad != 0) {
                     diasNovedad = parseInt(diasNovedad) + 1;
                     var fechaAux = new Date(fechaFinEfectiva);
@@ -860,7 +860,7 @@ angular
                     } else if (nuevaFechaFin.getDate() < 31) {
                         nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
                     }
-                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                    // console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
                 return nuevaFechaFin;
             }
