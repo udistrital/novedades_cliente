@@ -188,7 +188,7 @@ angular
                                                 break;
                                             }
                                         }
-                                        self.f_cesion = new Date(self.fecha_lim_inf);
+                                        self.f_cesion = new Date(self.fecha_lim_sup);
                                         if (self.novedades.length != "0") {
                                             var last_cesion =
                                                 self.novedades[self.novedades.length - 1];
