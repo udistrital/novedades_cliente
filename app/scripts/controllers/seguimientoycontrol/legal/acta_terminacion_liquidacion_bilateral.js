@@ -53,6 +53,7 @@ angular.module('contractualClienteApp')
             self.saldo_universidad = '';
             self.fecha_solicitud = new Date();
             self.fecha_terminacion_anticipada = new Date();
+            self.f_certificacion = new Date();
             self.estados = [];
             self.estadoNovedad = "";
             self.idRegistro = "";
@@ -1060,7 +1061,7 @@ angular.module('contractualClienteApp')
                                     { text: self.contrato_obj.tipo_contrato, style: 'topHeader' }
                                 ],
                                 [
-                                    { text: 'CONTRATO No', bold: true, style: 'topHeader' },
+                                    { text: 'CONTRATO No.', bold: true, style: 'topHeader' },
                                     {
                                         text: [
                                             { text: self.contrato_id, bold: true },
@@ -1163,7 +1164,7 @@ angular.module('contractualClienteApp')
                             'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante carta de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
                             ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
 
-                            'Que según certificación No. ' + self.contrato_obj.cdp_numero + " de " + self.contrato_obj.rp_fecha + ', expedida por Jefe de Sección de Presupuesto, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' presenta un saldo a la fecha de ' +
+                            'Que según certificación de fecha ' + self.format_date_letter_mongo(self.f_certificacion) + ', expedida por el Jefe de la Unidad de Presupuesto, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' presenta un saldo a la fecha de ' +
                             numeroALetras(self.a_favor.valor, {
                                 plural: $translate.instant("PESOS"),
                                 singular: $translate.instant("PESO"),
@@ -1254,7 +1255,7 @@ angular.module('contractualClienteApp')
                             text: [
                                 { text: 'CLAUSULA CUARTA: PUBLICACIÓN. ', bold: true },
                                 {
-                                    text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de terminación y liquidación bilateral en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente..\n\n'
+                                    text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No. 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de terminación y liquidación bilateral en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente..\n\n'
                                 }
                             ],
 
@@ -1266,8 +1267,8 @@ angular.module('contractualClienteApp')
                         style: ['general_font'],
                         text: [{
                             text: [
-                                "Para constancia, se firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
-                                "\n\n\n\n\n\n\n\n\n",
+                                "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., el día " + self.format_date_letter_mongo(self.f_expedicion_acta) + ".",
+                                "\n",
                             ],
                         }]
                     },
@@ -1276,6 +1277,30 @@ angular.module('contractualClienteApp')
                         table: {
                             widths: [270, 270],
                             body: [
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
                                 [{
                                     text: "______________________________________",
                                     bold: false,

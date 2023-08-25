@@ -68,6 +68,7 @@ angular
             self.fecha_lim_sup = new Date();
             self.observaciones = "";
             self.fecha_solicitud = new Date();
+            self.f_expedicion_acta = new Date();
             self.n_solicitud = null;
             self.elaboro = "";
             self.elaboro_cedula = token_service.getPayload().documento;
@@ -1656,7 +1657,7 @@ angular
                                 " en calidad de Ordenador del Gasto del citado contrato, la autorización para ceder el mismo, a partir del día " +
                                 self.format_date_letter_mongo(self.f_cesion) +
                                 " a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos +
-                                " (cesionario), y aportó un estado financiero expedido por la Sección de Presupuesto, en donde informa lo siguiente:\n\n",
+                                " (cesionario), y aportó un estado financiero expedido por la Unidad de Presupuesto, en donde informa lo siguiente:\n\n",
                         },
                         {
                             ul: [
@@ -1715,7 +1716,7 @@ angular
                                     self.cesion_nov.numerooficioordenador +
                                     " de fecha " +
                                     self.format_date_letter_mongo(self.fecha_oficioO) +
-                                    ", recibido por la Oficina Asesora Jurídica, el señor(a) " +
+                                    ", recibido por la Oficina de Contratación, el señor(a) " +
                                     self.contrato_obj.ordenadorGasto_nombre +
                                     ", como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de cesión del " +
                                     self.contrato_obj.tipo_contrato +
@@ -1803,11 +1804,11 @@ angular
                     {
                         style: ["general_font"],
                         text: [
-                            "MOTIVO DE LA CESIÓN: " +
-                            self.observaciones +
-                            ".\n\n" +
-                            "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
-                            "\n\n\n\n\n",
+                            // "MOTIVO DE LA CESIÓN: " +
+                            // self.observaciones +
+                            // ".\n\n" +
+                            "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., el día " + self.format_date_letter_mongo(self.f_expedicion_acta) + ".",
+                            "\n",
                         ],
                     },
                     {
@@ -1815,6 +1816,30 @@ angular
                         table: {
                             widths: [270, 270],
                             body: [
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
                                 [{
                                     text: "______________________________________",
                                     bold: false,
@@ -1926,19 +1951,19 @@ angular
                                 [
                                     { text: "Proyectó", bold: false },
                                     self.elaboro,
-                                    "Abogado Oficina Asesora Jurídica",
+                                    "Abogado Oficina de Contratación",
                                     "",
                                 ],
                                 [
                                     { text: "Revisó", bold: false },
                                     self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina Asesora Jurídica",
+                                    "Jefe Oficina de Contratación",
                                     "",
                                 ],
                                 [
                                     { text: "Aprobó", bold: false },
                                     self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina Asesora Jurídica",
+                                    "Jefe Oficina de Contratación",
                                     "",
                                 ]
                             ],
