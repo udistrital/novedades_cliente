@@ -36,7 +36,9 @@ angular
             self.contrato_obj = {};
             self.fecha = {};
             self.f_hoy = new Date();
-            self.cdprp = [];
+            self.cdp_numero = 0;
+            self.cdp_vigencia = 0;
+            // self.cdprp = [];
             self.selected = "";
             var meses = new Array(
                 "Enero",
@@ -57,6 +59,7 @@ angular
             self.fecha.mes = meses[f.getMonth()];
             self.fecha.anio = f.getFullYear();
             self.fecha_solicitud = new Date();
+            self.f_expedicion_acta = new Date();
             self.fecha_oficio = new Date();
             self.fecha_prorroga = new Date();
             self.fecha_ultimo_corte_fisico = new Date();
@@ -348,30 +351,30 @@ angular
                                                         allowOutsideClick: false,
                                                     }).then(function () { });
                                                 });
-                                            financieraJbpmRequest
-                                                .get(
-                                                    "cdprptercerocontrato/" +
-                                                    self.contrato_obj.vigencia + "/" +
-                                                    self.contrato_obj.numero_contrato
-                                                )
-                                                .then(function (financiera_response) {
-                                                    if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
-                                                        self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                                                    }
-                                                });
+                                            // financieraJbpmRequest
+                                            //     .get(
+                                            //         "cdprptercerocontrato/" +
+                                            //         self.contrato_obj.vigencia + "/" +
+                                            //         self.contrato_obj.numero_contrato
+                                            //     )
+                                            //     .then(function (financiera_response) {
+                                            //         if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                            //             self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                            //         }
+                                            //     });
                                             //Consulta el CDP
 
-                                            $scope.update = function () {
-                                                var cod = JSON.parse(document.getElementById("rp").value);
-                                                var cadena = cod.rp + " - " + cod.vigencia;
-                                                self.selected = cadena;
-                                                self.contrato_obj.cdp_numero =
-                                                    cod.cdp;
-                                                self.contrato_obj.cdp_anno =
-                                                    cod.vigencia;
-                                                self.contrato_obj.rp_numero =
-                                                    cod.rp;
-                                            }
+                                            // $scope.update = function () {
+                                            //     var cod = JSON.parse(document.getElementById("rp").value);
+                                            //     var cadena = cod.rp + " - " + cod.vigencia;
+                                            //     self.selected = cadena;
+                                            //     self.contrato_obj.cdp_numero =
+                                            //         cod.cdp;
+                                            //     self.contrato_obj.cdp_anno =
+                                            //         cod.vigencia;
+                                            //     self.contrato_obj.rp_numero =
+                                            //         cod.rp;
+                                            // }
                                         });
                                 } else {
                                     //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
@@ -419,29 +422,29 @@ angular
                                                     }).then(function () { });
                                                 });
                                             //Consulta el CDP
-                                            financieraJbpmRequest
-                                                .get(
-                                                    "cdprptercerocontrato/" +
-                                                    self.contrato_obj.vigencia + "/" +
-                                                    self.contrato_obj.numero_contrato
-                                                )
-                                                .then(function (financiera_response) {
-                                                    if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
-                                                        self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                                                    }
-                                                });
+                                            // financieraJbpmRequest
+                                            //     .get(
+                                            //         "cdprptercerocontrato/" +
+                                            //         self.contrato_obj.vigencia + "/" +
+                                            //         self.contrato_obj.numero_contrato
+                                            //     )
+                                            //     .then(function (financiera_response) {
+                                            //         if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                            //             self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                            //         }
+                                            //     });
 
-                                            $scope.update = function () {
-                                                var cod = JSON.parse(document.getElementById("rp").value);
-                                                var cadena = cod.rp + " - " + cod.vigencia;
-                                                self.selected = cadena;
-                                                self.contrato_obj.cdp_numero =
-                                                    cod.cdp;
-                                                self.contrato_obj.cdp_anno =
-                                                    cod.vigencia;
-                                                self.contrato_obj.rp_numero =
-                                                    cod.rp;
-                                            }
+                                            // $scope.update = function () {
+                                            //     var cod = JSON.parse(document.getElementById("rp").value);
+                                            //     var cadena = cod.rp + " - " + cod.vigencia;
+                                            //     self.selected = cadena;
+                                            //     self.contrato_obj.cdp_numero =
+                                            //         cod.cdp;
+                                            //     self.contrato_obj.cdp_anno =
+                                            //         cod.vigencia;
+                                            //     self.contrato_obj.rp_numero =
+                                            //         cod.rp;
+                                            // }
                                         });
                                 }
                             });
@@ -637,21 +640,21 @@ angular
                     $scope.valor_adicion = "";
                     $scope.nuevo_valor_contrato = "";
                     $scope.nuevo_valor_contrato_letras = "";
-                    self.contrato_obj.cdp_numero = undefined;
+                    // self.contrato_obj.cdp_numero = undefined;
                     self.selected = "";
                 } else {
                     $(".panel_adicion").show("fast");
-                    financieraJbpmRequest
-                        .get(
-                            "cdprptercerocontrato/" +
-                            self.contrato_obj.vigencia + "/" +
-                            self.contrato_obj.numero_contrato
-                        )
-                        .then(function (financiera_response) {
-                            if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
-                                self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                            }
-                        });
+                    // financieraJbpmRequest
+                    //     .get(
+                    //         "cdprptercerocontrato/" +
+                    //         self.contrato_obj.vigencia + "/" +
+                    //         self.contrato_obj.numero_contrato
+                    //     )
+                    //     .then(function (financiera_response) {
+                    //         if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                    //             self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                    //         }
+                    //     });
                 }
             };
 
@@ -666,7 +669,6 @@ angular
                 if ($(".panel_prorroga").is(":visible")) {
                     $(".panel_prorroga").hide("fast");
                     $scope.tiempo_prorroga = "";
-                    $scope.fecha_prorroga = "";
                     $scope.nuevo_plazo_contrato = "";
                 } else {
                     $(".panel_prorroga").show("fast");
@@ -702,19 +704,12 @@ angular
                     } else {
                         $scope.estado_novedad = false;
                     }
-                    var cod = JSON.parse(document.getElementById("rp").value);
+                    // var cod = JSON.parse(document.getElementById("rp").value);
                 } catch (error) {
                     if ($scope.estado_novedad == false) {
                         swal(
                             $translate.instant("TITULO_ADVERTENCIA"),
                             $translate.instant("DESCRIPCION_ADVERTENCIA"),
-                            "info"
-                        );
-                    } else if (cod == undefined) {
-                        self.novedadOtrosi = true;
-                        swal(
-                            $translate.instant("TITULO_ADVERTENCIA"),
-                            "Debe seleccionar un CDP para crear la novedad!",
                             "info"
                         );
                     }
@@ -837,11 +832,13 @@ angular
                 // console.log("FechaFin: ", nuevaFechaFin);
 
                 if (setDate) {
-                    self.fecha_prorroga = nuevaFechaFin;
-                    self.fecha_prorroga.setDate(self.fecha_prorroga.getDate() + 1);
-                    // console.log(self.fecha_prorroga);
+
+                    var fecha = new Date(nuevaFechaFin);
+                    fecha.setDate(nuevaFechaFin.getDate() + 1);
+                    self.fecha_prorroga = fecha;
+
                 } else if (diasNovedad != 0) {
-                    diasNovedad = parseInt(diasNovedad) + 1;
+                    diasNovedad = parseInt(diasNovedad);
                     var fechaAux = new Date(fechaFinEfectiva);
                     var dd = fechaFinEfectiva.getDate();
                     fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
@@ -855,13 +852,14 @@ angular
                                 nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
                             }
                         } else {
-                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
                         }
-                    } else if (nuevaFechaFin.getDate() < 31) {
-                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                    } else {
+                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
                     }
-                    // console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
+                // console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                nuevaFechaFin.setHours(0, 0, 0, 0);
                 return nuevaFechaFin;
             }
 
@@ -1040,38 +1038,29 @@ angular
                             self.estadoNovedad = "ENTR";
                         }
                         //objeto acta adición_prórroga
+                        self.fecha_solicitud.setHours(0, 0, 0, 0);
+                        self.fecha_prorroga.setHours(0, 0, 0, 0);
                         self.data_acta_adicion_prorroga = {
                             contrato: self.contrato_obj.numero_contrato,
                             numerosolicitud: $scope.numero_solicitud,
                             fechasolicitud: self.fecha_solicitud,
                             numerooficiosupervisor: "",
                             numerooficioordenador: $scope.numero_oficio,
-                            numerocdp: String(self.contrato_obj.cdp_numero),
-                            vigenciacdp: String(self.contrato_obj.cdp_anno),
-                            numerorp: String(self.contrato_obj.rp_numero),
-                            vigenciarp: String(self.contrato_obj.cdp_anno),
+                            numerocdp: String(self.cdp_numero),
+                            vigenciacdp: String(self.cdp_vigencia),
+                            numerorp: String(0),
+                            vigenciarp: String(0),
                             valoradicion: parseFloat($scope.valor_adicion.replace(/\,/g, "")),
                             fechaadicion: self.fecha_prorroga,
                             tiempoprorroga: parseInt($scope.tiempo_prorroga),
                             fechaprorroga: self.fecha_prorroga,
                             vigencia: String(self.contrato_obj.vigencia),
-                            motivo: $scope.motivo,
+                            motivo: "",
                             tiponovedad: tiponovedad,
                             cesionario: parseInt(self.contrato_obj.contratista),
                             fechafinefectiva: self.contrato_obj.nuevaFechaFin,
                             estado: self.estadoNovedad,
                         };
-                        if ($scope.adicion == true && $scope.prorroga == true) {
-                            self.contrato_obj_replica.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
-                            self.contrato_obj_replica.VigenciaCdp = parseInt(self.contrato_obj.cdp_anno);
-
-                        } else if ($scope.adicion == true && $scope.prorroga == false) {
-                            self.contrato_obj_replica.NumeroCdp = parseInt(self.data_acta_adicion_prorroga.numerocdp);
-                            self.contrato_obj_replica.VigenciaCdp = parseInt(self.contrato_obj.cdp_anno);
-                        } else {
-                            self.contrato_obj_replica.NumeroCdp = 0;
-                            self.contrato_obj_replica.VigenciaCdp = 0;
-                        }
 
                         //Recolección datos objeto POST Replica
                         self.contrato_obj_replica = {
@@ -1083,12 +1072,25 @@ angular
                             PlazoEjecucion: parseInt($scope.tiempo_prorroga),
                             FechaInicio: self.fecha_prorroga,
                             FechaFin: new Date(self.contrato_obj.nuevaFechaFin),
-                            ValorNovedad: parseFloat($scope.nuevo_valor_contrato.replace(/\,/g, "")),
+                            ValorNovedad: parseFloat($scope.valor_adicion.replace(/\,/g, "")),
                             UnidadEjecucion: 205,
                             TipoNovedad: parseFloat(220),
                             esFechaActual: false,
                         };
+                        if ($scope.adicion == true && $scope.prorroga == true) {
+                            self.contrato_obj_replica.NumeroCdp = self.cdp_numero;
+                            self.contrato_obj_replica.VigenciaCdp = self.cdp_vigencia;
+
+                        } else if ($scope.adicion == true && $scope.prorroga == false) {
+                            self.contrato_obj_replica.NumeroCdp = self.cdp_numero;
+                            self.contrato_obj_replica.VigenciaCdp = self.cdp_vigencia;
+                        } else {
+                            self.contrato_obj_replica.NumeroCdp = 0;
+                            self.contrato_obj_replica.VigenciaCdp = 0;
+                        }
                         // console.log(self.data_acta_adicion_prorroga);
+                        // console.log(self.contrato_obj_replica);
+                        // self.formato_generacion_pdf();
                         if (self.estadoNovedad == "ENTR") {
                             self.formato_generacion_pdf();
                         } else {
@@ -1170,6 +1172,12 @@ angular
                         ".pdf",
                         self).then(function (enlace) {
                             self.PostNovedad(dateTime, docDefinition, enlace);
+                            // pdfMake.createPdf(docDefinition).
+                            //     download(
+                            //         "acta_adicion_prorroga_contrato_" +
+                            //         self.contrato_id + "_" + dateTime +
+                            //         ".pdf"
+                            //     );
                         });
                 });
             }
@@ -1303,7 +1311,7 @@ angular
                                     fontSize: 6,
                                 },],
                                 [{
-                                    text: "OFICINA ASESORA JURÍDICA",
+                                    text: "OFICINA DE CONTRATACIÓN",
                                     alignment: "center",
                                     fontSize: 6,
                                 },],
@@ -1481,7 +1489,7 @@ angular
                             text: [{
                                 text: "Que mediante oficio " +
                                     $scope.numero_oficio +
-                                    ", recibido por la Oficina Asesora Jurídica el día " +
+                                    ", recibido por la Oficina de Contratación el día " +
                                     self.format_date_letter_mongo(self.fecha_solicitud) +
                                     ", el " +
                                     self.contrato_obj.ordenadorGasto_rol,
@@ -1525,7 +1533,7 @@ angular
                         },
                         {
                             text: [{
-                                text: "Que quienes suscriben el presente documento son plenamente capaces para hacerlo y obligarse, además de que la Oficina Asesora Jurídica de ",
+                                text: "Que quienes suscriben el presente documento son plenamente capaces para hacerlo y obligarse, además de que la Oficina de Contratación de ",
                             },
                             { text: "LA UNIVERSIDAD ", bold: true },
                             {
@@ -1539,13 +1547,13 @@ angular
                             },
                             {
                                 text: " Certificado de Disponibilidad Presupuestal No. " +
-                                    self.contrato_obj.cdp_numero +
+                                    self.cdp_numero +
                                     " de " +
-                                    self.contrato_obj.cdp_anno +
+                                    self.cdp_vigencia +
                                     ", ",
                                 bold: true
                             },
-                            { text: "expedido por la Sección de Presupuesto.\n " },
+                            { text: "expedido por la Unidad de Presupuesto.\n " },
                             ],
                         },
                         {
@@ -1639,7 +1647,7 @@ angular
                         {
                             text: "De conformidad con lo establecido en la Circular No. 001 de 2019, proferida por Colombia Compra Eficiente, " +
                                 "y en atención a lo establecido en al Acuerdo 003 de 2015 -Estatuto de Contratación de la Universidad Distrital- " +
-                                "la presente Adición y Prórroga se deberá publicar en el portal SECOP II, una vez esté suscrita por las partes, y sea devuelta a la Oficina Jurídica para el archivo correspondiente."
+                                "la presente Adición y Prórroga se deberá publicar en el portal SECOP II, una vez esté suscrita por las partes, y sea devuelta a la Oficina de Contratación para el archivo correspondiente."
                         },
                             "\n\n\n",
                             // {
@@ -1656,11 +1664,11 @@ angular
                     {
                         style: ["general_font"],
                         text: [
-                            "MOTIVO DE LA NOVEDAD: " +
-                            $scope.motivo +
-                            ".\n\n" +
-                            "Para constancia, se firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
-                            "\n\n\n\n\n\n\n\n\n",
+                            // "MOTIVO DE LA NOVEDAD: " +
+                            // $scope.motivo +
+                            // ".\n\n" +
+                            "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., el día " + self.format_date_letter_mongo(self.f_expedicion_acta) + ".",
+                            "\n",
                         ],
                     },
                     {
@@ -1668,27 +1676,52 @@ angular
                         table: {
                             widths: ["*", "*"],
                             body: [
-                                [{
-                                    text: [
-                                        "______________________________________\n",
-                                        {
-                                            text: self.contrato_obj.ordenadorGasto_nombre + "\n",
-                                            bold: true,
-                                        },
-                                        { text: self.contrato_obj.ordenadorGasto_rol + "\n" },
-                                        "La Universidad",
-                                    ],
-                                },
-                                {
-                                    text: [
-                                        "______________________________________\n",
-                                        {
-                                            text: self.contrato_obj.contratista_nombre + "\n",
-                                            bold: true,
-                                        },
-                                        "El Contratista",
-                                    ],
-                                },
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: [
+                                            "______________________________________\n",
+                                            {
+                                                text: self.contrato_obj.ordenadorGasto_nombre + "\n",
+                                                bold: true,
+                                            },
+                                            { text: self.contrato_obj.ordenadorGasto_rol + "\n" },
+                                            "La Universidad",
+                                        ],
+                                    },
+                                    {
+                                        text: [
+                                            "______________________________________\n",
+                                            {
+                                                text: self.contrato_obj.contratista_nombre + "\n",
+                                                bold: true,
+                                            },
+                                            "El Contratista",
+                                        ],
+                                    },
                                 ],
                             ],
                         },
@@ -1714,13 +1747,13 @@ angular
                                 [
                                     { text: "Proyectó", bold: true },
                                     self.elaboro,
-                                    "Abogado Oficina Asesora Jurídica",
+                                    "Abogado Oficina de Contratación",
                                     "",
                                 ],
                                 [
                                     { text: "Aprobó", bold: true },
                                     self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina Asesora Jurídica",
+                                    "Jefe Oficina de Contratación",
                                     "",
                                 ],
                             ],
