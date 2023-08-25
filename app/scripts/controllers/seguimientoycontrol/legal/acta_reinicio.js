@@ -42,6 +42,7 @@ angular
             self.suspension_obj = {};
             self.n_solicitud = null;
             self.fecha_solicitud = new Date();
+            self.f_expedicion_acta = new Date();
             self.auxiliar = null;
             self.novedades = [];
             self.estadoNovedad = "";
@@ -886,6 +887,7 @@ angular
 
 
                                     self.estados[0] = estado_temp_from;
+                                    // console.log(self.reinicio_nov);
                                     self.formato_generacion_pdf(nuevoEstado);
 
                                 });
@@ -901,20 +903,14 @@ angular
                 }
             };
 
-            self.calcularFechaFin = function (diasNovedad) {
+            self.calcularFechaFin = function (nuevosDiasNovedad) {
 
                 var fechaFin;
                 var fechaFinEfectiva;
                 if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                    var diasSuspension = self.novedades[self.novedades.length - 1].periodosuspension;
                     fechaFinEfectiva = new Date(fechaFin);
-                } else {
-                    fechaFin = self.contrato_obj.Fin;
-                    fechaFinEfectiva = new Date(fechaFin);
-                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    if (fechaFinEfectiva.getDate() == 31) {
-                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    }
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
@@ -922,27 +918,34 @@ angular
 
                 // console.log("FechaFin: ", nuevaFechaFin);
 
-                if (diasNovedad != 0) {
-                    diasNovedad = parseInt(diasNovedad) + 1;
-                    var fechaAux = new Date(fechaFinEfectiva);
-                    var dd = fechaFinEfectiva.getDate();
-                    fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
-                    fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
-                    nuevaFechaFin.setMonth(fechaFinEfectiva.getMonth() + (diasNovedad / 30));
-                    if (fechaAux.getDate() == 31) {
-                        if (dd + (diasNovedad % 30) > 30) {
-                            if ((dd + (diasNovedad % 30)) == 31) {
-                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) + 1);
-                            } else {
-                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
-                            }
-                        } else {
-                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
-                        }
-                    } else if (nuevaFechaFin.getDate() < 31) {
-                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                if (nuevosDiasNovedad != 0) {
+                    var diasNovedad = diasSuspension - nuevosDiasNovedad;
+                    console.log(diasNovedad);
+                    console.log(nuevaFechaFin);
+                    nuevaFechaFin.setDate(nuevaFechaFin.getDate() - diasNovedad);
+                    if (nuevaFechaFin.getDate() == 31) {
+                        nuevaFechaFin.setDate(nuevaFechaFin.getDate() - 1);
                     }
-                    // console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
+                    console.log(nuevaFechaFin);
+                    // var fechaAux = new Date(fechaFinEfectiva);
+                    // var dd = fechaFinEfectiva.getDate();
+                    // fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
+                    // fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
+                    // nuevaFechaFin.setMonth(fechaFinEfectiva.getMonth() + (diasNovedad / 30));
+                    // if (fechaAux.getDate() == 31) {
+                    //     if (dd + (diasNovedad % 30) > 30) {
+                    //         if ((dd + (diasNovedad % 30)) == 31) {
+                    //             nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) + 1);
+                    //         } else {
+                    //             nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
+                    //         }
+                    //     } else {
+                    //         nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                    //     }
+                    // } else if (nuevaFechaFin.getDate() < 31) {
+                    //     nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                    // }
+                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
                 return nuevaFechaFin;
 
@@ -1237,8 +1240,8 @@ angular
                             "MOTIVO DE LA SUSPENSIÓN: " +
                             self.novedad_motivo +
                             ".\n\n" +
-                            "Para constancia, se firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
-                            "\n\n\n\n\n",
+                            "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., el día " + self.format_date_letter_mongo(self.f_expedicion_acta) + ".",
+                            "\n",
                         ],
                     },
 
@@ -1247,6 +1250,30 @@ angular
                         table: {
                             widths: [270, 270],
                             body: [
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
                                 [{
                                     text: "______________________________________",
                                     bold: false,

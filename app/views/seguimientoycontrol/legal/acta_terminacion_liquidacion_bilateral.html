@@ -69,7 +69,7 @@
                     <div class="panel-body">
                         <form name="formTerminacion" action="" class="col-md-12">
                             <div class="row" style="border: 0px solid;">
-                                <div class="col-xs-12 col-md-6">
+                                <!-- <div class="col-xs-12 col-md-6">
                                     <label>{{'NUMERO_SOLICITUD_NECESIDAD' | translate}}*</label>
                                     <md-input-container style="margin:0;">
                                         <input type="text" id="numero_solicitud" name="numero_solicitud"
@@ -78,11 +78,16 @@
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>
                                     </md-input-container>
-                                </div>
+                                </div> -->
                                 <div class="col-xs-12 col-md-6">
-                                    <label>{{'FECHA_SOLICITUD_NECESIDAD' | translate}}</label>
+                                    <label>{{'FECHA_SOLICITUD' | translate}}</label>
                                     <md-datepicker ng-model="sLactaTerminacionAnticipada.fecha_solicitud"
                                         md-max-date="sLactaTerminacionAnticipada.f_hoy"></md-datepicker>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Fecha de expedición del acta</label>
+                                    <md-datepicker ng-model="sLactaTerminacionAnticipada.f_expedicion_acta"
+                                        md-placeholder="Ingrese fecha"></md-datepicker>
                                 </div>
                             </div>
                             <div class="row" style="border: 0px solid;"></div>
@@ -127,6 +132,12 @@
                                     md-max-date="sLactaTerminacionAnticipada.fecha_lim_sup">
                                 </md-datepicker>
                             </div>
+                            <div class="col-xs-12 col-md-6">
+                                <label for="fechaterminacion">Fecha certificación</label><br>
+                                <md-datepicker ng-model="sLactaTerminacionAnticipada.f_certificacion">
+                                </md-datepicker>
+                            </div>
+                            <div class="row" style="border: 0px solid;"></div><br>
                             <div class="form-group col-md-6">
                                 <label style="width:100%;">
                                     {{'VALOR_DESEMBOLSADO' | translate}} *:

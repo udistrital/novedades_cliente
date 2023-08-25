@@ -102,13 +102,6 @@ angular
                             self.contrato_obj.id =
                                 agora_response.data[0].ContratoSuscrito[0].NumeroContrato.Id;
                             self.contrato_obj.valor = agora_response.data[0].ValorContrato;
-                            // var adiciones = 0;
-                            // for (var i = 0; i < self.novedades.length; i++) {
-                            //     if (self.novedades[i].tiponovedad == 6 || self.novedades[i].tiponovedad == 8) {
-                            //         adiciones += parseFloat(self.novedades[i].valoradicion);
-                            //     }
-                            // }
-                            // self.contrato_obj.valor = parseFloat(agora_response.data[0].ValorContrato) + adiciones;
                             self.contrato_obj.objeto = agora_response.data[0].ObjetoContrato;
                             self.contrato_obj.fecha_registro =
                                 agora_response.data[0].FechaRegistro;
@@ -204,25 +197,31 @@ angular
                                             self.contrato_obj.vigencia
                                         )
                                         .then(function (response_sql) {
-                                            for (var i = 0; i < response_sql.data.Body.length; i++) {
+                                            self.novedades = response_sql.data.Body;
+                                            var adiciones = 0;
+                                            for (var i = 0; i < self.novedades.length; i++) {
+                                                if (self.novedades[i].tiponovedad == 6 || self.novedades[i].tiponovedad == 8) {
+                                                    adiciones += parseFloat(self.novedades[i].valoradicion);
+                                                }
+                                            }
+                                            self.contrato_obj.valor = parseFloat(self.contrato_obj.valor) + adiciones;
+                                            for (var i = 0; i < self.novedades.length; i++) {
                                                 if (
-                                                    response_sql.data.Body[i].id !=
+                                                    self.novedades[i].id !=
                                                     undefined
                                                 ) {
                                                     $scope.novedadesTabla.push({
-                                                        id: response_sql.data.Body[i].id,
-                                                        tipoNovedad: response_sql.data.Body[i].nombreTipoNovedad,
-                                                        enlace: response_sql.data.Body[i].enlace,
-                                                        fecha: response_sql.data.Body[i].fechasolicitud,
-                                                        estado: response_sql.data.Body[i].nombreEstado,
+                                                        id: self.novedades[i].id,
+                                                        tipoNovedad: self.novedades[i].nombreTipoNovedad,
+                                                        enlace: self.novedades[i].enlace,
+                                                        fecha: self.novedades[i].fechasolicitud,
+                                                        estado: self.novedades[i].nombreEstado,
                                                     });
                                                 }
                                             }
-                                            var elementos_cesion = response_sql.data.Body;
-                                            self.novedades = elementos_cesion;
-                                            if (elementos_cesion != undefined && elementos_cesion.length != "0") {
+                                            if (self.novedades != undefined && self.novedades.length != "0") {
                                                 var last_newness =
-                                                    elementos_cesion[elementos_cesion.length - 1];
+                                                    self.novedades[self.novedades.length - 1];
                                                 if (last_newness.estado == "ENTR") {
                                                     self.novedadEnCurso = true;
                                                     swal({

@@ -38,6 +38,7 @@ angular
             self.fecha_lim_inf = new Date();
             self.fecha_lim_sup = new Date();
             self.fecha_solicitud = new Date();
+            self.f_expedicion_acta = new Date();
             self.fecha_oficioS = new Date();
             self.fecha_oficioO = new Date();
             self.motivo = "";
@@ -1433,8 +1434,8 @@ angular
                             "MOTIVO DE LA SUSPENSIÓN: " +
                             self.motivo +
                             ".\n\n" +
-                            "Para constancia, se firma en Bogotá D.C., a los _____ dias del mes de ______________ del año ________.",
-                            "\n\n\n\n\n",
+                            "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., el día " + self.format_date_letter_mongo(self.f_expedicion_acta) + ".",
+                            "\n",
                         ],
                     },
                     // {
@@ -1449,6 +1450,30 @@ angular
                         table: {
                             widths: [270, 270],
                             body: [
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
                                 [{
                                     text: "______________________________________",
                                     bold: false,
