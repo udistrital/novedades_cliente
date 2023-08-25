@@ -93,15 +93,15 @@ angular
             //     }
             // });
 
-            financieraJbpmRequest
-                .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
-                .then(function (response) {
-                    var data = response.data.cdps_vigencia.cdp_vigencia;
-                    // console.log(data);
-                    if (data != undefined && data[0].id_numero_solicitud != null) {
-                        $scope.numero_solicitud = data[0].id_numero_solicitud;
-                    }
-                });
+            // financieraJbpmRequest
+            //     .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
+            //     .then(function (response) {
+            //         var data = response.data.cdps_vigencia.cdp_vigencia;
+            //         // console.log(data);
+            //         if (data != undefined && data[0].id_numero_solicitud != null) {
+            //             $scope.numero_solicitud = data[0].id_numero_solicitud;
+            //         }
+            //     });
 
             agoraRequest
                 .get("informacion_persona_natural?query=Id:" + self.elaboro_cedula)
