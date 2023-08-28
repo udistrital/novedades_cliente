@@ -179,7 +179,7 @@ angular
                         //Obtención de datos del jefe de juridica
                         agoraRequest
                             .get(
-                                "supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1"
+                                "supervisor_contrato?query=CargoId.Id:281&sortby=FechaFin&order=desc&limit=1"
                             )
                             .then(function (jj_response) {
                                 self.contrato_obj.jefe_juridica_documento =
