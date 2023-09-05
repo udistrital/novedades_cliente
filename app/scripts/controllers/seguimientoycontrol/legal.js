@@ -46,16 +46,16 @@ angular
             self.rolesUsuario = token_service.getPayload().role;
             // Asignación del rol del usuario
             for (var i = 0; i < self.rolesUsuario.length; i++) {
-                if (self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO') {
+                if (self.rolesUsuario[i] === 'ASISTENTE_JURIDICA') {
                     self.rolActual = self.rolesUsuario[i];
                     break;
                 }
             }
-            if (self.rolActual != 'ORDENADOR_DEL_GASTO') {
+            if (self.rolActual != 'ASISTENTE_JURIDICA') {
                 for (var i = 0; i < self.rolesUsuario.length; i++) {
                     if (
                         self.rolesUsuario[i] === 'SUPERVISOR' ||
-                        self.rolesUsuario[i] === 'ASISTENTE_JURIDICA' ||
+                        self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO' ||
                         self.rolesUsuario[i] === 'CONTRATISTA'
                     ) {
                         // console.log(self.rolesUsuario[i]);
@@ -64,6 +64,7 @@ angular
                     }
                 }
             }
+            // console.log("Rol", self.rolActual);
 
             /**
              * @ngdoc method

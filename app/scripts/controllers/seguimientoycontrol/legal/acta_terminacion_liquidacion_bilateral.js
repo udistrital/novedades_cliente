@@ -132,7 +132,11 @@ angular.module('contractualClienteApp')
 
                     //Se obtiene los datos de Acta de Inicio.
                     agoraRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.id).then(function (acta_response) {
-                        self.contrato_obj.FechaInicio = acta_response.data[0].FechaInicio;
+                        self.contrato_obj.FechaInicio = new Date(acta_response.data[0].FechaInicio);
+                        self.contrato_obj.FechaInicio.setDate(self.contrato_obj.FechaInicio.getDate() + 1)
+                        if (self.contrato_obj.FechaInicio.getDate() == 31) {
+                            self.contrato_obj.FechaInicio.setDate(self.contrato_obj.FechaInicio.getDate() + 1);
+                        }
                         self.contrato_obj.FechaFin = acta_response.data[0].FechaFin;
 
                         self.fecha_terminacion_anticipada = new Date(self.contrato_obj.FechaFin);
@@ -1151,7 +1155,7 @@ angular.module('contractualClienteApp')
                             numeroALetras(self.contrato_obj.plazo, {
                                 plural: $translate.instant("("),
                                 singular: $translate.instant("("),
-                            }) + self.contrato_obj.plazo + ')' + ' meses contados a partir del perfeccionamiento de la Orden y/o contrato, es decir del ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
+                            }) + self.contrato_obj.plazo + ')' + ' meses contados a partir del perfeccionamiento de la Orden y/o contrato, es decir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
 
                             'Que el valor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' se pactó en la suma total de ' +
                             numeroALetras(self.contrato_obj.valor, {
