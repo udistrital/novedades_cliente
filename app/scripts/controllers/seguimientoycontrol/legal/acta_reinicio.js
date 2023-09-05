@@ -141,7 +141,7 @@ angular
                                 self.calcularFechaFin(0);
                             });
 
-                        //Obtención de datos del jefe de juridica
+                        //Obtención de datos del jefe de Oficina de Contratación
                         agoraRequest
                             .get(
                                 "supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1"

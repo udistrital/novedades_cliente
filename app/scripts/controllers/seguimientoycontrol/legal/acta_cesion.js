@@ -165,10 +165,13 @@ angular
                         amazonAdministrativaRequest
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
                             .then(function (acta_response) {
-                                self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
+                                self.contrato_obj.Inicio = new Date(acta_response.data[0].FechaInicio);
+                                self.contrato_obj.inicio.setDate(self.contrato_obj.inicio.getDate() + 1)
+                                if (self.contrato_obj.inicio.getDate() == 31) {
+                                    self.contrato_obj.inicio.setDate(self.contrato_obj.inicio.getDate() + 1);
+                                }
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                                 self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
-                                self.fecha_lim_inf.setDate(self.fecha_lim_inf.getDate() + 1);
                                 self.fecha_lim_sup = self.calcularFechaFin();
                                 self.f_cesion = new Date(self.fecha_lim_sup);
                                 novedadesMidRequest
@@ -181,11 +184,13 @@ angular
                                     .then(function (response_sql) {
                                         self.novedades = response_sql.data.Body;
                                         self.fecha_lim_sup = self.calcularFechaFin();
-                                        for (var i = self.novedades.length - 1; i >= 0; i--) {
-                                            if (self.novedades[i].tiponovedad == 2) {
-                                                self.contrato_obj.Inicio = self.novedades[i].fechacesion;
-                                                self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
-                                                break;
+                                        if (self.novedades.length != 0) {
+                                            for (var i = self.novedades.length - 1; i >= 0; i--) {
+                                                if (self.novedades[i].tiponovedad == 2) {
+                                                    self.contrato_obj.Inicio = self.novedades[i].fechacesion;
+                                                    self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
+                                                    break;
+                                                }
                                             }
                                         }
                                         self.f_cesion = new Date(self.fecha_lim_sup);
@@ -360,7 +365,7 @@ angular
                                     });
                             });
 
-                        //Obtención de datos del jefe de juridica
+                        //Obtención de datos del jefe de Oficina de Contratación
                         amazonAdministrativaRequest
                             .get(
                                 "supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1"
@@ -1604,8 +1609,8 @@ angular
                                         self.contrato_plazo_letras + self.contrato_obj.plazo + ') MESES, ', bold: true, italics: true,
                                 },
                                 {
-                                    text: 'contados a partir del cumplimiento de los requisitos de ejecución“, esto es, según el acta de inicio el ' +
-                                        self.fecha_reg_dia + " de " + self.fecha_reg_mes + " de " + self.fecha_reg_ano + ".\n\n", italics: true,
+                                    text: 'contados a partir del cumplimiento de los requisitos de ejecución“, esto es, según el acta de inicio el ' + self.format_date_letter_mongo(self.contrato_obj.Inicio) +
+                                        ".\n\n", italics: true,
                                 }]
                         },
                         {
