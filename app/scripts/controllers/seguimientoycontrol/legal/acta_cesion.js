@@ -166,9 +166,9 @@ angular
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
                             .then(function (acta_response) {
                                 self.contrato_obj.Inicio = new Date(acta_response.data[0].FechaInicio);
-                                self.contrato_obj.inicio.setDate(self.contrato_obj.inicio.getDate() + 1)
-                                if (self.contrato_obj.inicio.getDate() == 31) {
-                                    self.contrato_obj.inicio.setDate(self.contrato_obj.inicio.getDate() + 1);
+                                self.contrato_obj.Inicio.setDate(self.contrato_obj.Inicio.getDate() + 1)
+                                if (self.contrato_obj.Inicio.getDate() == 31) {
+                                    self.contrato_obj.Inicio.setDate(self.contrato_obj.Inicio.getDate() + 1);
                                 }
                                 self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                                 self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
