@@ -169,8 +169,11 @@ angular
                                         self.contrato_obj.NumeroContrato
                                     )
                                     .then(function (acta_response) {
-                                        self.contrato_obj.inicio =
-                                            acta_response.data[0].FechaInicio;
+                                        self.contrato_obj.inicio = new Date(acta_response.data[0].FechaInicio);
+                                        self.contrato_obj.inicio.setDate(self.contrato_obj.inicio.getDate() + 1)
+                                        if (self.contrato_obj.inicio.getDate() == 31) {
+                                            self.contrato_obj.inicio.setDate(self.contrato_obj.inicio.getDate() + 1);
+                                        }
                                         self.contrato_obj.fin = acta_response.data[0].FechaFin;
                                         self.calcularFechaFin(0, true);
                                     });
@@ -1431,12 +1434,7 @@ angular
                                 bold: true,
                             },
                             {
-                                text: "contados a partir de la suscripción de la correspondiente Acta de inicio, lo cual tuvo lugar el " +
-                                    self.fecha_reg_dia +
-                                    " de " +
-                                    self.fecha_reg_mes +
-                                    " de " +
-                                    self.fecha_reg_ano +
+                                text: "contados a partir de la suscripción de la correspondiente Acta de inicio, lo cual tuvo lugar el " + self.format_date_letter_mongo(self.contrato_obj.inicio) +
                                     ".\n ",
                             },
                             ],
