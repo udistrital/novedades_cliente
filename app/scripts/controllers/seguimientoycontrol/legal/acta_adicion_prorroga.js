@@ -142,9 +142,13 @@ angular
                             agora_response.data[0].Supervisor.Cargo;
                         self.contrato_obj.fecha_registro =
                             agora_response.data[0].FechaRegistro;
-                        self.contrato_obj.fecha_suscripcion = String(
+                        self.contrato_obj.fecha_suscripcion = new Date(
                             agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion
                         );
+                        self.contrato_obj.fecha_suscripcion.setDate(self.contrato_obj.fecha_suscripcion.getDate() + 1)
+                        if (self.contrato_obj.fecha_suscripcion.getDate() == 31) {
+                            self.contrato_obj.fecha_suscripcion.setDate(self.contrato_obj.fecha_suscripcion.getDate() + 1);
+                        }
                         self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
                         self.contrato_obj.vigencia = self.contrato_vigencia;
                         var fecha_reg = self.contrato_obj.fecha_registro;
@@ -660,6 +664,34 @@ angular
                     //     });
                 }
             };
+
+            self.calculoDiasLetras = function (num) {
+
+                var plazo_meses = num / 30;
+                var res = String(plazo_meses).split(".");
+                var cantidad_meses = res[0];
+                var decimal_cantidad_dias = "0." + res[1];
+                var cantidad_dias = Math.ceil(parseFloat(decimal_cantidad_dias) / 0.03333333333336);
+                var cantidad_meses_letras = numeroALetras(cantidad_meses, {
+                    plural: $translate.instant("("),
+                    singular: $translate.instant("("),
+                });
+                var cantidad_dias_letras = numeroALetras(cantidad_dias, {
+                    plural: $translate.instant("("),
+                    singular: $translate.instant("("),
+                });
+                var texto =
+                    cantidad_meses_letras +
+                    cantidad_meses +
+                    " ) " +
+                    $translate.instant("MENSAJE_MESES") +
+                    " " +
+                    cantidad_dias_letras +
+                    cantidad_dias +
+                    " ) " +
+                    $translate.instant("DIAS");
+                return texto;
+            }
 
             /**
              * @ngdoc method
@@ -1201,7 +1233,6 @@ angular
                 var yyyy = date.getFullYear();
                 var fecha = new Date(yyyy, mm, dd);
                 var options = {
-                    weekday: "long",
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -1251,7 +1282,7 @@ angular
                                                 self.contrato_obj.contratista_documento +
                                                 " expedida en " +
                                                 self.contrato_obj.contratista_ciudad_cedula +
-                                                ", quien cumple con las cualidades y competencias para el desarrollo de actividades y ejecución del contrato.",
+                                                ", quien cumple con las cualidades y competencias para el desarrollo de actividades y ejecución del contrato.\n",
                                         },
                                         ],
                                     });
@@ -1301,7 +1332,7 @@ angular
                         bold: true,
                     },
                     {
-                        text: "contados a partir de la suscripción de la correspondiente Acta de inicio, lo cual tuvo lugar el " + self.format_date_letter_mongo(self.contrato_obj.inicio) +
+                        text: "contados a partir de la suscripción de la correspondiente Acta de inicio, lo cual tuvo lugar el día " + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) +
                             ".\n ",
                     },
                     ],
@@ -1372,12 +1403,11 @@ angular
                     },
                     { text: "y prórroga de " },
                     {
-                        text: "" +
-                            $scope.contrato_prorroga_letras + "" + $scope.valor_prorroga_final + ") DÍAS, ",
+                        text: (self.calculoDiasLetras($scope.valor_prorroga_final)).toUpperCase() + ",",
                         bold: true,
                     },
                     {
-                        text: "cuya justificación se encuentra descrita en la Solicitud de Necesidad No. " +
+                        text: " cuya justificación se encuentra descrita en la Solicitud de Necesidad No. " +
                             $scope.numero_solicitud +
                             " del día " +
                             self.format_date_letter_mongo(self.fecha_solicitud) +
@@ -1608,11 +1638,7 @@ angular
                                 self.contrato_id +
                                 " de " +
                                 self.fecha_reg_ano +
-                                " en " +
-                                $scope.contrato_prorroga_letras +
-                                "" +
-                                $scope.valor_prorroga_final +
-                                ") DÍAS.",
+                                " en " + (self.calculoDiasLetras($scope.valor_prorroga_final)).toUpperCase() + ".",
                         },
                             "\n\n",
 
