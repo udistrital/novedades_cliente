@@ -1210,8 +1210,8 @@ angular
             };
 
             self.agregarCesion = function () {
-                if (self.novedades.length > 0) {
-                    for (var i = self.novedades.length - 1; i > 0; i--) {
+                return $q(function (resolve) {
+                    for (var i = self.novedades.length - 1; i >= 0; i--) {
                         if (self.novedades[i].tiponovedad == 2) {
                             var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
                             agoraRequest
@@ -1220,7 +1220,7 @@ angular
                                 )
                                 .then(function (ip_response) {
                                     var cedente_nombre = ip_response.data[0].NomProveedor;
-                                    return {
+                                    resolve({
                                         text: [{
                                             text: "Que el " +
                                                 fechaSolicitud[2].substring(0, 2) +
@@ -1254,14 +1254,177 @@ angular
                                                 ", quien cumple con las cualidades y competencias para el desarrollo de actividades y ejecución del contrato.",
                                         },
                                         ],
-                                    };
+                                    });
                                 });
                         }
                     }
-                    return "";
-                } else {
-                    return "";
+                })
+
+            }
+
+            self.agregarConsideraciones = function () {
+                var estructura = [];
+                estructura.push({
+                    text: [{
+                        text: "El " +
+                            self.fecha_reg_dia +
+                            " de " +
+                            self.fecha_reg_mes +
+                            " de " +
+                            self.fecha_reg_ano +
+                            ", ",
+                    },
+                    { text: "LA UNIVERSIDAD y EL CONTRATISTA ", bold: true },
+                    {
+                        text: "suscribieron el " +
+                            self.contrato_obj.tipo_contrato +
+                            " No. " +
+                            self.contrato_id +
+                            " de " +
+                            self.fecha_reg_ano +
+                            ', cuyo objeto es '
+                    },
+                    {
+                        text: '"' + self.contrato_obj.objeto + '"\n\n', bold: true
+                    },
+                    ],
+                });
+                estructura.push({
+                    text: [{
+                        text: "Que el plazo de ejecución del contrato se estableció por ",
+                    },
+                    {
+                        text: "" +
+                            $scope.contrato_plazo_letras +
+                            self.contrato_obj.plazo +
+                            " ) MESES, ",
+                        bold: true,
+                    },
+                    {
+                        text: "contados a partir de la suscripción de la correspondiente Acta de inicio, lo cual tuvo lugar el " + self.format_date_letter_mongo(self.contrato_obj.inicio) +
+                            ".\n ",
+                    },
+                    ],
+                });
+                estructura.push({
+                    text: [{
+                        text: "Que se pactó como valor del citado contrato, la suma de ",
+                    },
+                    {
+                        text: "" +
+                            $scope.valor_contrato_letras +
+                            " MONEDA CORRIENTE ($" +
+                            numberFormat(String(self.contrato_obj.valor)) +
+                            " M/Cte.)\n ",
+                        bold: true,
+                    },
+                        //{ text: "incluido IVA." },
+                    ],
+                });
+                estructura.push({
+                    text: [{
+                        text: "Que la "
+                    },
+                    {
+                        text: "CLÁUSULA DIECISEIS ", bold: true
+                    },
+                    {
+                        text: "del " + self.contrato_obj.tipo_contrato +
+                            " No. " +
+                            self.contrato_id +
+                            " de " +
+                            self.fecha_reg_ano
+                    },
+                    {
+                        text: ", establece que: "
+                    },
+                    {
+                        text: '"El contrato solo podrá ser modificado, adicionado y/o prorrogado de mutuo acuerdo entre las partes, mediante OTROSI, el cual hará parte integral del presente contrato".\n\n',
+                        italics: true
+                    },
+                    ]
+                });
+                estructura.push({
+                    text: [{
+                        text: "Que mediante oficio " +
+                            $scope.numero_oficio +
+                            ", recibido por la Oficina de Contratación el día " +
+                            self.format_date_letter_mongo(self.fecha_oficio) +
+                            ", el " +
+                            self.contrato_obj.ordenadorGasto_rol,
+                        //" de ",
+                    },
+                    //{ text: "LA UNIVERSIDAD, ", bold: true },
+                    {
+                        text: ", solicitó la adición y/o prorroga del " + self.contrato_obj.tipo_contrato +
+                            " No. " +
+                            self.contrato_id +
+                            " de " +
+                            self.fecha_reg_ano + ", en su orden, por un valor de "
+                    },
+                    {
+                        text: "" +
+                            $scope.valor_adicion_letras +
+                            " MONEDA CORRIENTE ($" +
+                            $scope.valor_adicion +
+                            " M/Cte.), ",
+                        bold: true,
+                    },
+                    { text: "y prórroga de " },
+                    {
+                        text: "" +
+                            $scope.contrato_prorroga_letras + "" + $scope.valor_prorroga_final + ") DÍAS, ",
+                        bold: true,
+                    },
+                    {
+                        text: "cuya justificación se encuentra descrita en la Solicitud de Necesidad No. " +
+                            $scope.numero_solicitud +
+                            " del día " +
+                            self.format_date_letter_mongo(self.fecha_solicitud) +
+                            ".\n\n",
+                    },
+                    ],
+                });
+                estructura.push({
+                    text: "Que la presente adición no supera el 50% del valor inicialmente pactado, por lo que la solicitud se ajusta a lo consagrado en el inciso 2º" +
+                        " del artículo 86 de la Resolución de Rectoría 262 de 2015 (Procedimiento para Adición, Prórroga o Modificación del Contrato), resultando procedente " +
+                        "suscribir el presente documento.\n ",
+                });
+                estructura.push({
+                    text: [{
+                        text: "Que quienes suscriben el presente documento son plenamente capaces para hacerlo y obligarse, además de que la Oficina de Contratación de ",
+                    },
+                    { text: "LA UNIVERSIDAD ", bold: true },
+                    {
+                        text: "verificó la ausencia de antecedentes disciplinarios, judiciales y fiscales.\n ",
+                    },
+                    ],
+                });
+                estructura.push({
+                    text: [{
+                        text: "Que se cuenta con disponibilidad presupuestal para atender la presente adición, como se desprende del",
+                    },
+                    {
+                        text: " Certificado de Disponibilidad Presupuestal No. " +
+                            self.cdp_numero +
+                            " de " +
+                            self.cdp_vigencia +
+                            ", ",
+                        bold: true
+                    },
+                    { text: "expedido por la Unidad de Presupuesto.\n " },
+                    ],
+                });
+                estructura.push({
+                    text: "Que el acto aquí planteado es jurídicamente viable, de acuerdo con lo establecido en las normas civiles y comerciales pertinentes, y, en especial," +
+                        " en el Estatuto de Contratación de la Universidad Distrital Francisco José de Caldas y demás normas reglamentarias pertinentes y vigentes.\n\n\n",
+                });
+                if (self.novedades.length > 0) {
+                    self.agregarCesion().then(function (cesionStruct) {
+                        estructura.splice(3, 0, cesionStruct);
+                    });
                 }
+                return estructura;
             }
 
             /**
@@ -1397,168 +1560,7 @@ angular
                     },
                     {
                         style: ["general_font"],
-                        ol: [{
-                            text: [{
-                                text: "El " +
-                                    self.fecha_reg_dia +
-                                    " de " +
-                                    self.fecha_reg_mes +
-                                    " de " +
-                                    self.fecha_reg_ano +
-                                    ", ",
-                            },
-                            { text: "LA UNIVERSIDAD y EL CONTRATISTA ", bold: true },
-                            {
-                                text: "suscribieron el " +
-                                    self.contrato_obj.tipo_contrato +
-                                    " No. " +
-                                    self.contrato_id +
-                                    " de " +
-                                    self.fecha_reg_ano +
-                                    ', cuyo objeto es '
-                            },
-                            {
-                                text: '"' + self.contrato_obj.objeto + '"\n\n', bold: true
-                            },
-                            ],
-                        },
-                        {
-                            text: [{
-                                text: "Que el plazo de ejecución del contrato se estableció por ",
-                            },
-                            {
-                                text: "" +
-                                    $scope.contrato_plazo_letras +
-                                    self.contrato_obj.plazo +
-                                    " ) MESES, ",
-                                bold: true,
-                            },
-                            {
-                                text: "contados a partir de la suscripción de la correspondiente Acta de inicio, lo cual tuvo lugar el " + self.format_date_letter_mongo(self.contrato_obj.inicio) +
-                                    ".\n ",
-                            },
-                            ],
-                        },
-                        {
-                            text: [{
-                                text: "Que se pactó como valor del citado contrato, la suma de ",
-                            },
-                            {
-                                text: "" +
-                                    $scope.valor_contrato_letras +
-                                    " MONEDA CORRIENTE ($" +
-                                    numberFormat(String(self.contrato_obj.valor)) +
-                                    " M/Cte.)\n ",
-                                bold: true,
-                            },
-                                //{ text: "incluido IVA." },
-                            ],
-                        },
-                        // {
-                        //     text: [
-                        //         { text: '' },
-                        //     ]
-                        // },
-                        self.agregarCesion(),
-                        {
-                            text: [{
-                                text: "Que la "
-                            },
-                            {
-                                text: "CLÁUSULA DIECISEIS ", bold: true
-                            },
-                            {
-                                text: "del " + self.contrato_obj.tipo_contrato +
-                                    " No. " +
-                                    self.contrato_id +
-                                    " de " +
-                                    self.fecha_reg_ano
-                            },
-                            {
-                                text: ", establece que: "
-                            },
-                            {
-                                text: '"El contrato solo podrá ser modificado, adicionado y/o prorrogado de mutuo acuerdo entre las partes, mediante OTROSI, el cual hará parte integral del presente contrato".\n\n',
-                                italics: true
-                            },
-                            ]
-                        },
-                        {
-                            text: [{
-                                text: "Que mediante oficio " +
-                                    $scope.numero_oficio +
-                                    ", recibido por la Oficina de Contratación el día " +
-                                    self.format_date_letter_mongo(self.fecha_solicitud) +
-                                    ", el " +
-                                    self.contrato_obj.ordenadorGasto_rol,
-                                //" de ",
-                            },
-                            //{ text: "LA UNIVERSIDAD, ", bold: true },
-                            {
-                                text: ", solicitó la adición y/o prorroga del " + self.contrato_obj.tipo_contrato +
-                                    " No. " +
-                                    self.contrato_id +
-                                    " de " +
-                                    self.fecha_reg_ano + ", en su orden, por un valor de "
-                            },
-                            {
-                                text: "" +
-                                    $scope.valor_adicion_letras +
-                                    " MONEDA CORRIENTE ($" +
-                                    $scope.valor_adicion +
-                                    " M/Cte.), ",
-                                bold: true,
-                            },
-                            { text: "y prórroga de " },
-                            {
-                                text: "" +
-                                    $scope.contrato_prorroga_letras + "" + $scope.valor_prorroga_final + ") DÍAS, ",
-                                bold: true,
-                            },
-                            {
-                                text: "cuya justificación se encuentra descrita en la Solicitud de Necesidad No. " +
-                                    $scope.numero_solicitud +
-                                    " del día " +
-                                    self.format_date_letter_mongo(self.fecha_oficio) +
-                                    ".\n\n",
-                            },
-                            ],
-                        },
-                        {
-                            text: "Que la presente adición no supera el 50% del valor inicialmente pactado, por lo que la solicitud se ajusta a lo consagrado en el inciso 2º" +
-                                " del artículo 86 de la Resolución de Rectoría 262 de 2015 (Procedimiento para Adición, Prórroga o Modificación del Contrato), resultando procedente " +
-                                "suscribir el presente documento.\n ",
-                        },
-                        {
-                            text: [{
-                                text: "Que quienes suscriben el presente documento son plenamente capaces para hacerlo y obligarse, además de que la Oficina de Contratación de ",
-                            },
-                            { text: "LA UNIVERSIDAD ", bold: true },
-                            {
-                                text: "verificó la ausencia de antecedentes disciplinarios, judiciales y fiscales.\n ",
-                            },
-                            ],
-                        },
-                        {
-                            text: [{
-                                text: "Que se cuenta con disponibilidad presupuestal para atender la presente adición, como se desprende del",
-                            },
-                            {
-                                text: " Certificado de Disponibilidad Presupuestal No. " +
-                                    self.cdp_numero +
-                                    " de " +
-                                    self.cdp_vigencia +
-                                    ", ",
-                                bold: true
-                            },
-                            { text: "expedido por la Unidad de Presupuesto.\n " },
-                            ],
-                        },
-                        {
-                            text: "Que el acto aquí planteado es jurídicamente viable, de acuerdo con lo establecido en las normas civiles y comerciales pertinentes, y, en especial," +
-                                " en el Estatuto de Contratación de la Universidad Distrital Francisco José de Caldas y demás normas reglamentarias pertinentes y vigentes.\n\n\n",
-                        },
-                        ],
+                        ol: self.agregarConsideraciones(),
                     },
                     {
                         style: ["general_font"],
