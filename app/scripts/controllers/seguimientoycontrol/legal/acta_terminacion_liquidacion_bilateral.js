@@ -199,7 +199,7 @@ angular.module('contractualClienteApp')
                         });
 
                     //Obtención de datos del jefe de Oficina de Contratación
-                    agoraRequest.get('supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
+                    agoraRequest.get('supervisor_contrato?query=DependenciaSupervisor:DEP636&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
                         self.contrato_obj.jefe_juridica_documento = jj_response.data[0].Documento;
                         agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.jefe_juridica_documento).then(function (ijpn_response) {
                             coreAmazonRequest.get('ciudad', 'query=Id:' + ijpn_response.data[0].IdCiudadExpedicionDocumento).then(function (scj_response) {
