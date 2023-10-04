@@ -1282,7 +1282,7 @@ angular
                                                 self.contrato_obj.contratista_documento +
                                                 " expedida en " +
                                                 self.contrato_obj.contratista_ciudad_cedula +
-                                                ", quien cumple con las cualidades y competencias para el desarrollo de actividades y ejecución del contrato.\n",
+                                                ", quien cumple con las cualidades y competencias para el desarrollo de actividades y ejecución del contrato.\n\n",
                                         },
                                         ],
                                     });
@@ -1297,13 +1297,7 @@ angular
                 var estructura = [];
                 estructura.push({
                     text: [{
-                        text: "El " +
-                            self.fecha_reg_dia +
-                            " de " +
-                            self.fecha_reg_mes +
-                            " de " +
-                            self.fecha_reg_ano +
-                            ", ",
+                        text: "El día " + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ", ",
                     },
                     { text: "LA UNIVERSIDAD y EL CONTRATISTA ", bold: true },
                     {
@@ -1332,7 +1326,7 @@ angular
                         bold: true,
                     },
                     {
-                        text: "contados a partir de la suscripción de la correspondiente Acta de inicio, lo cual tuvo lugar el día " + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) +
+                        text: "contados a partir de la suscripción de la correspondiente Acta de inicio, lo cual tuvo lugar el día " + self.format_date_letter_mongo(self.contrato_obj.inicio) +
                             ".\n ",
                     },
                     ],
