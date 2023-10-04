@@ -35,9 +35,9 @@ angular
             self.novedades = [];
             self.texto_busqueda = "";
             self.persona_sel = "";
-            self.numero_oficio_supervisor = null;
+            self.numero_oficio_supervisor = "";
             self.fecha_oficioS = new Date();
-            self.numero_oficio_ordenador = null;
+            self.numero_oficio_ordenador = "";
             self.fecha_oficioO = new Date();
             self.valor_desembolsado = null;
             self.valor_a_favor = "";
@@ -156,6 +156,9 @@ angular
                         self.contrato_obj.tipo_contrato =
                             agora_response.data[0].TipoContrato.TipoContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
+                        if (self.contrato_obj.plazo > 30) {
+                            self.contrato_obj.plazo = Math.floor(self.contrato_obj.plazo / 30);
+                        }
                         var fecha_reg = self.contrato_obj.fecha_registro;
                         var res = fecha_reg.split("-");
                         self.fecha_reg_dia = res[2].substring(0, 2);
@@ -779,8 +782,16 @@ angular
                                             self.cesion_nov.numeroactaentrega = 0;
                                             self.cesion_nov.numerocdp = "";
                                             self.cesion_nov.numerosolicitud = self.n_solicitud;
-                                            self.cesion_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
-                                            self.cesion_nov.numerooficioordenador = self.numero_oficio_ordenador;
+                                            if (self.numero_oficio_supervisor == "") {
+                                                self.cesion_nov.numerooficiosupervisor = "n.a.";
+                                            } else {
+                                                self.cesion_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
+                                            }
+                                            if (self.numero_oficio_ordenador == "") {
+                                                self.cesion_nov.numerooficioordenador = "n.a.";
+                                            } else {
+                                                self.cesion_nov.numerooficioordenador = self.numero_oficio_ordenador;
+                                            }
                                             self.cesion_nov.observacion = self.observaciones;
                                             self.cesion_nov.periodosuspension = 0;
                                             self.cesion_nov.plazoactual = 0;
@@ -1268,11 +1279,76 @@ angular
                 );
             };
 
-            self.agregarSuspension = function () {
+            self.agregarConsideraciones = function () {
+                var estructura = [];
+                estructura.push({
+                    text: "Que entre la Universidad Distrital Francisco José de Caldas y el señor " +
+                        self.contrato_obj.contratista_nombre +
+                        ", se suscribió el " +
+                        self.contrato_obj.tipo_contrato +
+                        " No. " +
+                        self.contrato_obj.numero_contrato +
+                        " de " +
+                        self.contrato_obj.vigencia +
+                        ", cuyo objeto es “" +
+                        self.contrato_obj.objeto +
+                        "”\n\n",
+                });
+                estructura.push({
+                    text: [
+                        {
+                            text: "Que la cláusula 3 del " +
+                                self.contrato_obj.tipo_contrato +
+                                " No. " +
+                                self.contrato_obj.numero_contrato +
+                                " de " +
+                                self.contrato_obj.vigencia +
+                                ", establece como valor del contrato "
+                        }, { text: '“(...) El valor del presente Contrato corresponde a la suma de ', italics: true, }, {
+                            text:
+                                self.valor_contrato_letras + ' MONEDA CORRIENTE ($' + numberFormat(String(self.contrato_obj.valor)) + ' M/CTE)', bold: true, italics: true,
+                        },
+                        {
+                            text: ' incluido IVA, así como todos los impuestos y retenciones legalmente (...)“.\n\n', italics: true,
+                        }]
+                });
+                estructura.push({
+                    text: [
+                        {
+                            text: "Que la cláusula 6 del " +
+                                self.contrato_obj.tipo_contrato +
+                                " No. " +
+                                self.contrato_obj.numero_contrato +
+                                " de " +
+                                self.contrato_obj.vigencia +
+                                ", establece como plazo del contrato "
+                        }, { text: '“El plazo de ejecución del Contrato es ', italics: true, }, {
+                            text:
+                                self.contrato_plazo_letras + self.contrato_obj.plazo + ') MESES, ', bold: true, italics: true,
+                        },
+                        {
+                            text: 'contados a partir del cumplimiento de los requisitos de ejecución“, esto es, según el acta de inicio el ' + self.format_date_letter_mongo(self.contrato_obj.Inicio) +
+                                ".\n\n", italics: true,
+                        }]
+                });
+                estructura.push({
+                    text: [
+                        {
+                            text: "Que la cláusula 15 - Cesión. Del " +
+                                self.contrato_obj.tipo_contrato +
+                                " No. " +
+                                self.contrato_obj.numero_contrato +
+                                " de " +
+                                self.contrato_obj.vigencia +
+                                ", establece que "
+                        }, { text: '“El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de ', italics: true, }, {
+                            text: 'LA UNIVERSIDAD"\n\n', bold: true, italics: true,
+                        }]
+                });
                 if (self.novedades.length > 0) {
-                    for (var i = self.novedades.length - 1; i >= 0; i--) {
-                        var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
+                    for (var i = 0; i < self.novedades.length; i++) {
                         if (self.novedades[i].tiponovedad == 1) {
+                            var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
                             var fechaInicio = self.novedades[i].fechasuspension;
                             var fechaFin = self.novedades[i].fechafinsuspension;
                             var res1 = fechaInicio.split("-");
@@ -1284,7 +1360,7 @@ angular
                             var fecha_fin_mes = meses[parseInt(res2[1] - 1)];
                             var fecha_fin_ano = res2[0];
 
-                            return {
+                            estructura.push({
                                 text: "Que, mediante acta con fecha de suscripción del " +
                                     fechaSolicitud[2].substring(0, 2) +
                                     " de " + meses[parseInt(fechaSolicitud[1] - 1)] +
@@ -1298,22 +1374,12 @@ angular
                                     " durante el periodo comprendido entre el " +
                                     fecha_sus_dia + " de " + fecha_sus_mes + " de " + fecha_sus_ano +
                                     " y el día " + fecha_fin_dia + " de " + fecha_fin_mes + " de " + fecha_fin_ano + ".\n\n"
-                            };
+                            });
 
                         }
-                    }
-                    return "";
-                } else {
-                    return "";
-                }
-            }
-
-            self.agregarReinicio = function () {
-                if (self.novedades.length > 0) {
-                    for (var i = self.novedades.length - 1; i >= 0; i--) {
-                        var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
-                        if (self.novedades[i].tiponovedad == 1) {
-                            return {
+                        if (self.novedades[i].tiponovedad == 3) {
+                            var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
+                            estructura.push({
                                 text: "Que, mediante acta con fecha de suscripción del " +
                                     fechaSolicitud[2].substring(0, 2) +
                                     " de " + meses[parseInt(fechaSolicitud[1] - 1)] +
@@ -1324,14 +1390,119 @@ angular
                                     self.contrato_obj.numero_contrato +
                                     " de " +
                                     self.contrato_obj.vigencia + ".\n\n"
-                            };
+                            });
 
                         }
                     }
-                    return "";
-                } else {
-                    return "";
                 }
+                estructura.push({
+                    text: "Que, mediante escrito de fecha " +
+                        self.format_date_letter_mongo(self.fecha_solicitud) +
+                        ", el(la) Contratista " +
+                        self.contrato_obj.contratista_nombre +
+                        " (cedente), solicita a " +
+                        self.contrato_obj.supervisor_nombre +
+                        " quien cumple la función de supervisor, la autorización para realizar la Cesión del " +
+                        self.contrato_obj.tipo_contrato +
+                        " a partir del día " +
+                        self.format_date_letter_mongo(self.f_cesion) +
+                        ", a " +
+                        self.cesionario_obj.nombre +
+                        " " +
+                        self.cesionario_obj.apellidos +
+                        " (cesionario) quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n\n",
+                });
+                estructura.push([{
+                    text: "Que mediante oficio " +
+                        self.cesion_nov.numerooficiosupervisor +
+                        " de fecha " +
+                        self.format_date_letter_mongo(self.fecha_oficioS) +
+                        ", el supervisor del " +
+                        self.contrato_obj.tipo_contrato +
+                        " No. " +
+                        self.contrato_obj.numero_contrato +
+                        " de " +
+                        self.contrato_obj.vigencia +
+                        ", le comunicó al señor(a) " +
+                        self.contrato_obj.ordenadorGasto_nombre +
+                        " en calidad de Ordenador del Gasto del citado contrato, la autorización para ceder el mismo, a partir del día " +
+                        self.format_date_letter_mongo(self.f_cesion) +
+                        " a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos +
+                        " (cesionario), y aportó un estado financiero expedido por la Unidad de Presupuesto, en donde informa lo siguiente:\n\n",
+                },
+                {
+                    ul: [
+                        {
+                            text: "Por los servicios prestados por el señor(a) " +
+                                self.contrato_obj.contratista_nombre +
+                                " (CEDENTE), hasta el día " + self.format_date_letter_mongo(self.f_terminacion) +
+                                ", se reconoció un valor total de " + NumeroALetras(self.cesion_nov.valor_desembolsado + "") +
+                                "MONEDA CORRIENTE ($" + numberFormat(self.cesion_nov.valor_desembolsado + "") +
+                                " M/CTE), por el plazo ejecutado del contrato de " +
+                                self.plazo_cedente_letras +
+                                ".\n\n"
+                        },
+                        // { text: " CONTRATISTA CEDENTE,", bold: true }, {
+                        //     text: " hasta el día " +
+                        //         self.format_date_letter_mongo(self.f_terminacion) +
+                        //         " se reconoció un valor total de " +
+                        //         NumeroALetras(self.valor_desembolsado + "") +
+                        //         "($" +
+                        //         numberFormat(String(self.valor_desembolsado) + "") +
+                        //         "), por el plazo ejecutado del contrato de " +
+                        //         self.contrato_obj.plazo +
+                        //         " meses.\n\n"
+                        // },
+                        {
+                            text: [
+                                { text: "Existe un valor pendiente por cancelar al señor(a) " + self.contrato_obj.contratista_nombre }, { text: "(CEDENTE), ", bold: true }, {
+                                    text: "por valor de " +
+                                        NumeroALetras(parseInt(self.cesion_nov.valor_a_favor) + "") +
+                                        "MONEDA CORRIENTE ($" +
+                                        numberFormat(self.cesion_nov.valor_a_favor + "") +
+                                        " M/CTE), por un plazo de " + self.calculoDiasLetras(self.dias_pago_cedente) +
+                                        ".\n\n"
+                                }],
+
+                        },
+                        {
+                            text: [
+                                { text: "La suma a ceder al señor(a) " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos }, { text: " (CESIONARIO)", bold: true }, {
+                                    text: " es de " +
+                                        NumeroALetras(self.valor_contrato_cesionario() + "") +
+                                        "MONEDA CORRIENTE ($" +
+                                        numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                                        " M/CTE), por un plazo de " +
+                                        self.calculoDiasLetras(self.contrato_obj.plazo_cesionario) +
+                                        ".\n\n"
+                                }],
+                        },
+                    ]
+
+                },
+                ]);
+                estructura.push({
+                    text: [{
+                        text: "Que por medio del oficio " +
+                            self.cesion_nov.numerooficioordenador +
+                            " de fecha " +
+                            self.format_date_letter_mongo(self.fecha_oficioO) +
+                            ", recibido por la Oficina de Contratación, el señor(a) " +
+                            self.contrato_obj.ordenadorGasto_nombre +
+                            ", como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de cesión del " +
+                            self.contrato_obj.tipo_contrato +
+                            " No. " +
+                            self.contrato_obj.numero_contrato +
+                            " de " +
+                            self.contrato_obj.vigencia +
+                            ", a partir del día " +
+                            self.format_date_letter_mongo(self.f_cesion) +
+                            ", a favor de " +
+                            self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
+                    },
+                    { text: " (CESIONARIO).\n\n", bold: true }]
+                });
+                return estructura;
             }
 
             /**
@@ -1563,180 +1734,7 @@ angular
                     },
                     {
                         style: ["general_list"],
-                        ol: [{
-                            text: "Que entre la Universidad Distrital Francisco José de Caldas y el señor " +
-                                self.contrato_obj.contratista_nombre +
-                                ", se suscribió el " +
-                                self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_obj.numero_contrato +
-                                " de " +
-                                self.contrato_obj.vigencia +
-                                ", cuyo objeto es “" +
-                                self.contrato_obj.objeto +
-                                "”\n\n",
-                        },
-                        {
-                            text: [
-                                {
-                                    text: "Que la cláusula 3 del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_obj.numero_contrato +
-                                        " de " +
-                                        self.contrato_obj.vigencia +
-                                        ", establece como valor del contrato "
-                                }, { text: '“(...) El valor del presente Contrato corresponde a la suma de ', italics: true, }, {
-                                    text:
-                                        self.valor_contrato_letras + ' MONEDA CORRIENTE ($' + numberFormat(String(self.contrato_obj.valor)) + ' M/CTE)', bold: true, italics: true,
-                                },
-                                {
-                                    text: ' incluido IVA, así como todos los impuestos y retenciones legalmente (...)“.\n\n', italics: true,
-                                }]
-                        },
-                        {
-                            text: [
-                                {
-                                    text: "Que la cláusula 6 del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_obj.numero_contrato +
-                                        " de " +
-                                        self.contrato_obj.vigencia +
-                                        ", establece como plazo del contrato "
-                                }, { text: '“El plazo de ejecución del Contrato es ', italics: true, }, {
-                                    text:
-                                        self.contrato_plazo_letras + self.contrato_obj.plazo + ') MESES, ', bold: true, italics: true,
-                                },
-                                {
-                                    text: 'contados a partir del cumplimiento de los requisitos de ejecución“, esto es, según el acta de inicio el ' + self.format_date_letter_mongo(self.contrato_obj.Inicio) +
-                                        ".\n\n", italics: true,
-                                }]
-                        },
-                        {
-                            text: [
-                                {
-                                    text: "Que la cláusula 15 - Cesión. Del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_obj.numero_contrato +
-                                        " de " +
-                                        self.contrato_obj.vigencia +
-                                        ", establece que "
-                                }, { text: '“El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de ', italics: true, }, {
-                                    text: 'LA UNIVERSIDAD"\n\n', bold: true, italics: true,
-                                }]
-                        },
-                        self.agregarSuspension(),
-                        self.agregarReinicio(),
-                        {
-                            text: "Que, mediante escrito de fecha " +
-                                self.format_date_letter_mongo(self.fecha_solicitud) +
-                                ", el(la) Contratista " +
-                                self.contrato_obj.contratista_nombre +
-                                " (cedente), solicita a " +
-                                self.contrato_obj.supervisor_nombre +
-                                " quien cumple la función de supervisor, la autorización para realizar la Cesión del " +
-                                self.contrato_obj.tipo_contrato +
-                                " a partir del día " +
-                                self.format_date_letter_mongo(self.f_cesion) +
-                                ", a " +
-                                self.cesionario_obj.nombre +
-                                " " +
-                                self.cesionario_obj.apellidos +
-                                " (cesionario) quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n\n",
-                        },
-                        [{
-                            text: "Que mediante oficio No. " +
-                                self.cesion_nov.numerooficiosupervisor +
-                                " de fecha " +
-                                self.format_date_letter_mongo(self.fecha_oficioS) +
-                                ", el supervisor del " +
-                                self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_obj.numero_contrato +
-                                " de " +
-                                self.contrato_obj.vigencia +
-                                ", le comunicó al señor(a) " +
-                                self.contrato_obj.ordenadorGasto_nombre +
-                                " en calidad de Ordenador del Gasto del citado contrato, la autorización para ceder el mismo, a partir del día " +
-                                self.format_date_letter_mongo(self.f_cesion) +
-                                " a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos +
-                                " (cesionario), y aportó un estado financiero expedido por la Unidad de Presupuesto, en donde informa lo siguiente:\n\n",
-                        },
-                        {
-                            ul: [
-                                {
-                                    text: "Por los servicios prestados por el señor(a) " +
-                                        self.contrato_obj.contratista_nombre +
-                                        " (CEDENTE), hasta el día " + self.format_date_letter_mongo(self.f_terminacion) +
-                                        ", se reconoció un valor total de " + NumeroALetras(self.cesion_nov.valor_desembolsado + "") +
-                                        "MONEDA CORRIENTE ($" + numberFormat(self.cesion_nov.valor_desembolsado + "") +
-                                        " M/CTE), por el plazo ejecutado del contrato de " +
-                                        self.plazo_cedente_letras +
-                                        ".\n\n"
-                                },
-                                // { text: " CONTRATISTA CEDENTE,", bold: true }, {
-                                //     text: " hasta el día " +
-                                //         self.format_date_letter_mongo(self.f_terminacion) +
-                                //         " se reconoció un valor total de " +
-                                //         NumeroALetras(self.valor_desembolsado + "") +
-                                //         "($" +
-                                //         numberFormat(String(self.valor_desembolsado) + "") +
-                                //         "), por el plazo ejecutado del contrato de " +
-                                //         self.contrato_obj.plazo +
-                                //         " meses.\n\n"
-                                // },
-                                {
-                                    text: [
-                                        { text: "Existe un valor pendiente por cancelar al señor(a) " + self.contrato_obj.contratista_nombre }, { text: "(CEDENTE), ", bold: true }, {
-                                            text: "por valor de " +
-                                                NumeroALetras(parseInt(self.cesion_nov.valor_a_favor) + "") +
-                                                "MONEDA CORRIENTE ($" +
-                                                numberFormat(self.cesion_nov.valor_a_favor + "") +
-                                                " M/CTE), por un plazo de " + self.calculoDiasLetras(self.dias_pago_cedente) +
-                                                ".\n\n"
-                                        }],
-
-                                },
-                                {
-                                    text: [
-                                        { text: "La suma a ceder al señor(a) " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos }, { text: " (CESIONARIO)", bold: true }, {
-                                            text: " es de " +
-                                                NumeroALetras(self.valor_contrato_cesionario() + "") +
-                                                "MONEDA CORRIENTE ($" +
-                                                numberFormat(String(self.valor_contrato_cesionario()) + "") +
-                                                " M/CTE), por un plazo de " +
-                                                self.calculoDiasLetras(self.contrato_obj.plazo_cesionario) +
-                                                ".\n\n"
-                                        }],
-                                },
-                            ]
-
-                        },
-                        ],
-                        {
-                            text: [{
-                                text: "Que por medio del oficio " +
-                                    self.cesion_nov.numerooficioordenador +
-                                    " de fecha " +
-                                    self.format_date_letter_mongo(self.fecha_oficioO) +
-                                    ", recibido por la Oficina de Contratación, el señor(a) " +
-                                    self.contrato_obj.ordenadorGasto_nombre +
-                                    ", como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de cesión del " +
-                                    self.contrato_obj.tipo_contrato +
-                                    " No. " +
-                                    self.contrato_obj.numero_contrato +
-                                    " de " +
-                                    self.contrato_obj.vigencia +
-                                    ", a partir del día " +
-                                    self.format_date_letter_mongo(self.f_cesion) +
-                                    ", a favor de " +
-                                    self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
-                            },
-                            { text: " (CESIONARIO).\n\n", bold: true }]
-                        },
-                        ],
+                        ol: self.agregarConsideraciones(),
                     },
                     {
                         style: ["general_font"],

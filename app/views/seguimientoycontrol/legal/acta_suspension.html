@@ -93,7 +93,7 @@
                                 <label>{{'NUMERO_OFICIO_SUPERVISOR' | translate}}*</label>
                                 <md-input-container style="margin:0;">
                                     <input type="text" id="numero_oficio_supervisor" name="numero_oficio_supervisor"
-                                        ng-model="sLactaSuspension.numero_oficio_supervisor" min="0" required>
+                                        ng-model="sLactaSuspension.numero_oficio_supervisor">
                                     <div ng-messages="formSuspension.solicitud.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>
@@ -109,7 +109,7 @@
                                 <label>{{'NUMERO_OFICIO_ORDENADOR' | translate}}*</label>
                                 <md-input-container style="margin:0;">
                                     <input type="text" id="numero_oficio_ordenador" name="numero_oficio_ordenador"
-                                        ng-model="sLactaSuspension.numero_oficio_ordenador" min="0" required>
+                                        ng-model="sLactaSuspension.numero_oficio_ordenador">
                                     <div ng-messages="formSuspension.numero_oficio_ordenador.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>

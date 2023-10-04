@@ -122,6 +122,9 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.fecha_registro = agora_response.data[0].FechaRegistro;
                     self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                     self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
+                    if (self.contrato_obj.plazo > 30) {
+                        self.contrato_obj.plazo = Math.floor(self.contrato_obj.plazo/30);
+                    }
                     self.contrato_obj.vigencia = self.contrato_vigencia;
                     self.contrato_obj.supervisor_cedula = agora_response.data[0].Supervisor.Documento;
                     self.contrato_obj.supervisor_rol = agora_response.data[0].Supervisor.Cargo;
@@ -579,9 +582,17 @@ angular.module('contractualClienteApp')
                         self.terminacion_nov.fecharegistro = new Date();
                         self.terminacion_nov.numerosolicitud = self.numero_solicitud;
                         self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
-                        self.terminacion_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
+                        if (self.numero_oficio_supervisor == "") {
+                            self.terminacion_nov.numerooficiosupervisor = "n.a.";
+                        } else {
+                            self.terminacion_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
+                        }
+                        if (self.numero_oficio_ordenador == "") {
+                            self.terminacion_nov.numerooficioordenador = "n.a.";
+                        } else {
+                            self.terminacion_nov.numerooficioordenador = self.numero_oficio_ordenador;
+                        }
                         self.terminacion_nov.fechaoficiosupervisor = self.fecha_oficioS;
-                        self.terminacion_nov.numerooficioordenador = self.numero_oficio_ordenador;
                         self.terminacion_nov.fechaoficioordenador = self.fecha_oficioO;
                         self.terminacion_nov.valor_desembolsado = parseFloat(self.valor_desembolsado.replace(/\,/g, ""));
                         self.terminacion_nov.saldo_contratista = parseFloat(self.saldo_contratista.replace(/\,/g, ""));
@@ -1176,9 +1187,9 @@ angular.module('contractualClienteApp')
                                 centSingular: $translate.instant("CENTAVO"),
                             }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.a_favor.valor) + '') + ' M/CTE).\n\n',
 
-                            'Que mediante oficio No. ' + self.terminacion_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunicó al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
+                            'Que mediante oficio ' + self.terminacion_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunicó al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
 
-                            'Que por medio del oficio No. ' + self.terminacion_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
+                            'Que por medio del oficio ' + self.terminacion_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
 
                         ]
                     },
