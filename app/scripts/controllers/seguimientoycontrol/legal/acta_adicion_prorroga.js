@@ -1252,7 +1252,7 @@ angular
                 return $q(function (resolve) {
                     for (var i = self.novedades.length - 1; i >= 0; i--) {
                         if (self.novedades[i].tiponovedad == 2) {
-                            var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
+                            var fechacesion = self.novedades[i].fechacesion.split("-");
                             agoraRequest
                                 .get(
                                     "informacion_proveedor?query=Id:" + self.novedades[i].cedente
@@ -1261,36 +1261,38 @@ angular
                                     var cedente_nombre = ip_response.data[0].NomProveedor;
                                     resolve({
                                         text: [{
-                                            text: "Que el " +
-                                                fechaSolicitud[2].substring(0, 2) +
-                                                " de " + meses[parseInt(fechaSolicitud[1] - 1)] +
-                                                " de " + fechaSolicitud[0] +
-                                                ", mediante Acta de Cesión, "
+                                            text: "Que, mediante Acta de Cesión con efectos legales a partir del día " +
+                                            fechacesion[2].substring(0, 2) +
+                                                " de " + meses[parseInt(fechacesion[1] - 1)] +
+                                                " de " + fechacesion[0] +
+                                                ", el(la) contratista "
                                         },
                                         {
                                             text: cedente_nombre,
                                             bold: true,
                                         },
                                         {
-                                            text: " cedió en todas sus órdenes, el " +
+                                            text: " cede el " +
                                                 self.contrato_obj.tipo_contrato +
                                                 " No. " +
                                                 self.contrato_obj.numero_contrato +
                                                 " de " +
-                                                self.contrato_obj.vigencia + " a "
+                                                self.contrato_obj.vigencia +
+                                                ", en todas las obligaciones, términos y condiciones pactadas en el contrato a "
                                         },
                                         {
                                             text: self.contrato_obj.contratista_nombre + ", ",
                                             bold: true,
                                         },
                                         {
-                                            text: "identificado(a) con " +
-                                                self.contrato_obj.contratista_tipo_Documento +
-                                                " No. " +
-                                                self.contrato_obj.contratista_documento +
-                                                " expedida en " +
-                                                self.contrato_obj.contratista_ciudad_cedula +
-                                                ", quien cumple con las cualidades y competencias para el desarrollo de actividades y ejecución del contrato.\n\n",
+                                            text: 
+                                                // "identificado(a) con " +
+                                                // self.contrato_obj.contratista_tipo_Documento +
+                                                // " No. " +
+                                                // self.contrato_obj.contratista_documento +
+                                                // " expedida en " +
+                                                // self.contrato_obj.contratista_ciudad_cedula +
+                                                "quien ha venido ejecutando el desarrollo de actividades hasta el momento.\n\n",
                                         },
                                         ],
                                     });
