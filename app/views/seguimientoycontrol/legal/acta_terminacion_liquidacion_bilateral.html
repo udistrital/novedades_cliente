@@ -95,8 +95,7 @@
                                 <label>{{'NUMERO_OFICIO_SUPERVISOR' | translate}}*</label>
                                 <md-input-container style="margin:0;">
                                     <input type="text" id="numero_oficio_supervisor" name="numero_oficio_supervisor"
-                                        ng-model="sLactaTerminacionAnticipada.numero_oficio_supervisor" min="0"
-                                        required>
+                                        ng-model="sLactaTerminacionAnticipada.numero_oficio_supervisor">
                                     <div ng-messages="formTerminacion.solicitud.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>
@@ -112,7 +111,7 @@
                                 <label>{{'NUMERO_OFICIO_ORDENADOR' | translate}}*</label>
                                 <md-input-container style="margin:0;">
                                     <input type="text" id="numero_oficio_ordenador" name="numero_oficio_ordenador"
-                                        ng-model="sLactaTerminacionAnticipada.numero_oficio_ordenador" min="0" required>
+                                        ng-model="sLactaTerminacionAnticipada.numero_oficio_ordenador">
                                     <div ng-messages="formTerminacion.numero_oficio_ordenador.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>

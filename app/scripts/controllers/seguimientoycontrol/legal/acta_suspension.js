@@ -45,8 +45,8 @@ angular
             self.diff_dias = null;
             self.estado_suspendido = "{}";
             self.n_solicitud = null;
-            self.numero_oficio_supervisor = null;
-            self.numero_oficio_ordenador = null;
+            self.numero_oficio_supervisor = "";
+            self.numero_oficio_ordenador = "";
 
             self.novedades = [];
             self.contrato_id = $routeParams.contrato_id;
@@ -125,6 +125,9 @@ angular
                         self.contrato_obj.tipo_contrato =
                             agora_response.data[0].TipoContrato.TipoContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
+                        if (self.contrato_obj.plazo > 30) {
+                            self.contrato_obj.plazo = Math.floor(self.contrato_obj.plazo / 30);
+                        }
                         self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                         self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
 
@@ -629,8 +632,16 @@ angular
                             self.suspension_nov.fechareinicio = self.f_reinicio;
                             self.suspension_nov.fechafinsuspension = self.f_fin;
                             self.suspension_nov.fechafinefectiva = self.calcularFechaFin(self.diff_dias);
-                            self.suspension_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
-                            self.suspension_nov.numerooficioordenador = self.numero_oficio_ordenador;
+                            if (self.numero_oficio_supervisor == "") {
+                                self.suspension_nov.numerooficiosupervisor = "n.a.";
+                            } else {
+                                self.suspension_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
+                            }
+                            if (self.numero_oficio_ordenador == "") {
+                                self.suspension_nov.numerooficioordenador = "n.a.";
+                            } else {
+                                self.suspension_nov.numerooficioordenador = self.numero_oficio_ordenador;
+                            }
                             self.suspension_nov.fechaoficiosupervisor = self.fecha_oficioS;
                             self.suspension_nov.fechaoficioordenador = self.fecha_oficioO;
                             self.suspension_nov.cesionario = parseInt(
@@ -1377,9 +1388,9 @@ angular
 
                             'Que mediante escrito de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechasolicitud) + ' , el Contratista ' + self.contrato_obj.contratista_nombre + ', solicita a ' + self.contrato_obj.supervisor_nombre_completo + ', quien cumple la función de supervisor, la autorización para realizar la Suspensión del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
-                            'Que mediante oficio No. ' + self.suspension_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que mediante oficio ' + self.suspension_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
-                            'Que por medio del oficio No. ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la revisión del acta de suspensión del Contrato de Prestación de Servicios  No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que por medio del oficio ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la revisión del acta de suspensión del Contrato de Prestación de Servicios  No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
                             'Que la presente acta de suspensión sólo tendrá efectos a partir del ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' al ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
                         ]

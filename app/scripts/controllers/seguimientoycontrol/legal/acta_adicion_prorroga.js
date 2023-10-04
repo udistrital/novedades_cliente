@@ -60,6 +60,7 @@ angular
             self.fecha.anio = f.getFullYear();
             self.fecha_solicitud = new Date();
             self.f_expedicion_acta = new Date();
+            self.numero_oficio = "";
             self.fecha_oficio = new Date();
             self.fecha_prorroga = new Date();
             self.fecha_ultimo_corte_fisico = new Date();
@@ -136,6 +137,9 @@ angular
                         self.contrato_obj.objeto = agora_response.data[0].ObjetoContrato;
                         self.contrato_obj.valor = agora_response.data[0].ValorContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
+                        if (self.contrato_obj.plazo > 30) {
+                            self.contrato_obj.plazo = Math.floor(self.contrato_obj.plazo / 30);
+                        }
                         // self.contrato_obj.supervisor_cedula =
                         //     agora_response.data[0].Supervisor.Documento;
                         self.contrato_obj.supervisor_rol =
@@ -474,8 +478,7 @@ angular
                     $scope.check_prorroga();
                 }
                 $scope.numero_solicitud = parseInt(novedad.numerosolicitud);
-                $scope.numero_oficio = novedad.
-                    $scope.motivo = novedad.motivo;
+                $scope.motivo = novedad.motivo;
                 $scope.valor_adicion = numberFormat(novedad.valoradicion.toString());
                 $scope.tiempo_prorroga = parseInt(novedad.tiempoprorroga);
                 self.fecha_solicitud = new Date(novedad.fechasolicitud);
@@ -1079,8 +1082,8 @@ angular
                             contrato: self.contrato_obj.numero_contrato,
                             numerosolicitud: $scope.numero_solicitud,
                             fechasolicitud: self.fecha_solicitud,
-                            numerooficiosupervisor: "",
-                            numerooficioordenador: $scope.numero_oficio,
+                            numerooficiosupervisor: "n.a.",
+                            numerooficioordenador: self.numero_oficio,
                             numerocdp: String(self.cdp_numero),
                             vigenciacdp: String(self.cdp_vigencia),
                             numerorp: String(0),
@@ -1096,6 +1099,11 @@ angular
                             fechafinefectiva: self.contrato_obj.nuevaFechaFin,
                             estado: self.estadoNovedad,
                         };
+                        if (self.numero_oficio == "") {
+                            self.data_acta_adicion_prorroga.numerooficioordenador = "n.a.";
+                        } else {
+                            self.data_acta_adicion_prorroga.numerooficioordenador = self.numero_oficio;
+                        }
 
                         //Recolección datos objeto POST Replica
                         self.contrato_obj_replica = {
@@ -1372,8 +1380,8 @@ angular
                 estructura.push({
                     text: [{
                         text: "Que mediante oficio " +
-                            $scope.numero_oficio +
-                            ", recibido por la Oficina de Contratación el día " +
+                            self.numero_oficio +
+                            " recibido por la Oficina de Contratación el día " +
                             self.format_date_letter_mongo(self.fecha_oficio) +
                             ", el " +
                             self.contrato_obj.ordenadorGasto_rol,
