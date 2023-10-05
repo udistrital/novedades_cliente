@@ -65,6 +65,8 @@ angular
             self.fecha_prorroga = new Date();
             self.fecha_ultimo_corte_fisico = new Date();
             self.fecha_ultimo_corte_financiero = new Date();
+            self.plazoDias = false;
+            self.plazoMeses = "";
             self.valor_ejecutado = "";
             self.pocentaje_ejecutado = "";
             self.elaboro = "";
@@ -137,8 +139,11 @@ angular
                         self.contrato_obj.objeto = agora_response.data[0].ObjetoContrato;
                         self.contrato_obj.valor = agora_response.data[0].ValorContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
-                        if (self.contrato_obj.plazo > 30) {
-                            self.contrato_obj.plazo = Math.floor(self.contrato_obj.plazo / 30);
+                        if (self.contrato_obj.plazo > 12) {
+                            self.plazoDias = true;
+                            self.plazoMeses = self.calculoDiasLetras(self.contrato_obj.plazo);
+                        } else {
+                            self.plazoMeses = self.calculoDiasLetras(self.contrato_obj.plazo*30);
                         }
                         // self.contrato_obj.supervisor_cedula =
                         //     agora_response.data[0].Supervisor.Documento;
@@ -586,19 +591,28 @@ angular
                         prorrogas += parseInt(self.novedades[i].tiempoprorroga);
                     }
                 }
-                var plazo_actual_dias = parseInt(self.contrato_obj.plazo) * 30;
+                var plazo_actual_dias = 0;
+                if (self.plazoDias) {
+                    plazo_actual_dias = self.contrato_obj.plazo;
+                } else {
+                    plazo_actual_dias = parseInt(self.contrato_obj.plazo) * 30;
+                }
                 var valor_valido_prorroga = plazo_actual_dias * 0.5;
                 $scope.valor_prorroga_final = valor_prorroga;
-                $scope.nuevo_plazo_contrato =
-                    $scope.cantidad_meses_letras +
-                    cantidad_meses +
-                    " ) " +
-                    $translate.instant("MENSAJE_MESES") +
-                    " " +
-                    $scope.cantidad_dias_letras +
-                    cantidad_dias +
-                    " ) " +
-                    $translate.instant("DIAS");
+                if (self.plazoDias) {
+                    $scope.nuevo_plazo_contrato = self.calculoDiasLetras();
+                } else {
+                    $scope.nuevo_plazo_contrato =
+                        $scope.cantidad_meses_letras +
+                        cantidad_meses +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES") +
+                        " " +
+                        $scope.cantidad_dias_letras +
+                        cantidad_dias +
+                        " ) " +
+                        $translate.instant("DIAS");
+                }
                 if (valor_prorroga <= valor_valido_prorroga) {
                     var valor_plazo_dias = parseInt(valor_prorroga) + plazo_actual_dias + prorrogas;
                     var valor_plazo_meses = valor_plazo_dias / 30;
@@ -616,16 +630,20 @@ angular
                         plural: $translate.instant("("),
                         singular: $translate.instant("("),
                     });
-                    $scope.nuevo_plazo_contrato =
-                        $scope.cantidad_meses_letras +
-                        cantidad_meses +
-                        " ) " +
-                        $translate.instant("MENSAJE_MESES") +
-                        " " +
-                        $scope.cantidad_dias_letras +
-                        cantidad_dias +
-                        " ) " +
-                        $translate.instant("DIAS");
+                    if (self.plazoDias) {
+                        $scope.nuevo_plazo_contrato = self.calculoDiasLetras(valor_plazo_dias);
+                    } else {
+                        $scope.nuevo_plazo_contrato =
+                            $scope.cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES") +
+                            " " +
+                            $scope.cantidad_dias_letras +
+                            cantidad_dias +
+                            " ) " +
+                            $translate.instant("DIAS");
+                    }
                     $scope.tiempo_prorroga = valor_prorroga;
                 } else {
                     $scope.tiempo_prorroga = undefined;
@@ -763,10 +781,15 @@ angular
                 $scope.cantidad_salarios_minimos = (
                     valor_contrato_inicial / 737717
                 ).toFixed(2);
-                $scope.contrato_plazo_letras = numeroALetras(self.contrato_obj.plazo, {
-                    plural: $translate.instant("("),
-                    singular: $translate.instant("("),
-                });
+                if (self.plazoDias) {
+                    $scope.contrato_plazo_letras = self.calculoDiasLetras(self.contrato_obj.plazo);
+                } else {
+                    $scope.contrato_plazo_letras = numeroALetras(self.contrato_obj.plazo, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    }) + self.contrato_obj.plazo + " ) MESES, ";
+                }
+
                 $scope.contrato_prorroga_letras = numeroALetras(
                     $scope.valor_prorroga_final, {
                     plural: $translate.instant("("),
@@ -784,7 +807,11 @@ angular
                         .get("tipo_novedad", "query=Nombre:" + $scope.estado_novedad)
                         .then(function (nc_response) {
                             self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
-                            $scope.nuevo_plazo_contrato = self.contrato_obj.plazo + " meses";
+                            if (self.plazoDias) {
+                                $scope.nuevo_plazo_contrato = self.calculoDiasLetras(self.contrato_obj.plazo);
+                            } else {
+                                $scope.nuevo_plazo_contrato = self.contrato_obj.plazo + " meses";
+                            }
                             callback(self.tiponovedad);
                         });
                     self.contrato_obj.nuevaFechaFin = self.calcularFechaFin(1, false);
@@ -1131,44 +1158,44 @@ angular
                             self.contrato_obj_replica.NumeroCdp = 0;
                             self.contrato_obj_replica.VigenciaCdp = 0;
                         }
-                        // console.log(self.data_acta_adicion_prorroga);
-                        // console.log(self.contrato_obj_replica);
-                        // self.formato_generacion_pdf();
-                        if (self.estadoNovedad == "ENTR") {
-                            self.formato_generacion_pdf();
-                        } else {
-                            self.contrato_obj_replica.esFechaActual = true;
-                            // console.log(self.contrato_obj_replica);
-                            novedadesMidRequest
-                                .post("replica", self.contrato_obj_replica)
-                                .then(function (request_novedades) {
-                                    // console.log(request_novedades);
-                                    if (
-                                        request_novedades.status == 200 ||
-                                        request_novedades.statusText == "OK"
-                                    ) {
-                                        self.formato_generacion_pdf();
-                                        console.log("Replica correcta");
-                                    } else {
-                                        //Error en la replica
-                                        $scope.alert = "TITULO_ERROR_REPLICA";
-                                        swal({
-                                            title: $translate.instant("TITULO_ERROR_ACTA"),
-                                            type: "error",
-                                            html: $translate.instant($scope.alert) +
-                                                self.contrato_obj.numero_contrato +
-                                                $translate.instant("ANIO") +
-                                                self.contrato_obj.vigencia +
-                                                ".",
-                                            showCloseButton: true,
-                                            showCancelButton: false,
-                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                            allowOutsideClick: false,
-                                        }).then(function () { });
+                        console.log(self.data_acta_adicion_prorroga);
+                        console.log(self.contrato_obj_replica);
+                        self.formato_generacion_pdf();
+                        // if (self.estadoNovedad == "ENTR") {
+                        //     self.formato_generacion_pdf();
+                        // } else {
+                        //     self.contrato_obj_replica.esFechaActual = true;
+                        //     // console.log(self.contrato_obj_replica);
+                        //     novedadesMidRequest
+                        //         .post("replica", self.contrato_obj_replica)
+                        //         .then(function (request_novedades) {
+                        //             // console.log(request_novedades);
+                        //             if (
+                        //                 request_novedades.status == 200 ||
+                        //                 request_novedades.statusText == "OK"
+                        //             ) {
+                        //                 self.formato_generacion_pdf();
+                        //                 console.log("Replica correcta");
+                        //             } else {
+                        //                 //Error en la replica
+                        //                 $scope.alert = "TITULO_ERROR_REPLICA";
+                        //                 swal({
+                        //                     title: $translate.instant("TITULO_ERROR_ACTA"),
+                        //                     type: "error",
+                        //                     html: $translate.instant($scope.alert) +
+                        //                         self.contrato_obj.numero_contrato +
+                        //                         $translate.instant("ANIO") +
+                        //                         self.contrato_obj.vigencia +
+                        //                         ".",
+                        //                     showCloseButton: true,
+                        //                     showCancelButton: false,
+                        //                     confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        //                     allowOutsideClick: false,
+                        //                 }).then(function () { });
 
-                                    }
-                                });
-                        }
+                        //             }
+                        //         });
+                        // }
                     });
                 }
                 // else {
@@ -1214,13 +1241,13 @@ angular
                         dateTime +
                         ".pdf",
                         self).then(function (enlace) {
-                            self.PostNovedad(dateTime, docDefinition, enlace);
-                            // pdfMake.createPdf(docDefinition).
-                            //     download(
-                            //         "acta_adicion_prorroga_contrato_" +
-                            //         self.contrato_id + "_" + dateTime +
-                            //         ".pdf"
-                            //     );
+                            // self.PostNovedad(dateTime, docDefinition, enlace);
+                            pdfMake.createPdf(docDefinition).
+                                download(
+                                    "acta_adicion_prorroga_contrato_" +
+                                    self.contrato_id + "_" + dateTime +
+                                    ".pdf"
+                                );
                         });
                 });
             }
@@ -1262,7 +1289,7 @@ angular
                                     resolve({
                                         text: [{
                                             text: "Que, mediante Acta de Cesión con efectos legales a partir del día " +
-                                            fechacesion[2].substring(0, 2) +
+                                                fechacesion[2].substring(0, 2) +
                                                 " de " + meses[parseInt(fechacesion[1] - 1)] +
                                                 " de " + fechacesion[0] +
                                                 ", el(la) contratista "
@@ -1285,7 +1312,7 @@ angular
                                             bold: true,
                                         },
                                         {
-                                            text: 
+                                            text:
                                                 // "identificado(a) con " +
                                                 // self.contrato_obj.contratista_tipo_Documento +
                                                 // " No. " +
@@ -1329,10 +1356,7 @@ angular
                         text: "Que el plazo de ejecución del contrato se estableció por ",
                     },
                     {
-                        text: "" +
-                            $scope.contrato_plazo_letras +
-                            self.contrato_obj.plazo +
-                            " ) MESES, ",
+                        text: self.plazoMeses,
                         bold: true,
                     },
                     {
