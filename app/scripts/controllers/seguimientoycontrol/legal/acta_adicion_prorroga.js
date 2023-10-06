@@ -704,16 +704,25 @@ angular
                     plural: $translate.instant("("),
                     singular: $translate.instant("("),
                 });
-                var texto =
-                    cantidad_meses_letras +
-                    cantidad_meses +
-                    " ) " +
-                    $translate.instant("MENSAJE_MESES") +
-                    " Y " +
-                    cantidad_dias_letras +
-                    cantidad_dias +
-                    " ) " +
-                    $translate.instant("DIAS");
+                var texto = "";
+                if (cantidad_dias == 0) {
+                    var texto =
+                        cantidad_meses_letras +
+                        cantidad_meses +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES");
+                } else {
+                    var texto =
+                        cantidad_meses_letras +
+                        cantidad_meses +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES") +
+                        " Y " +
+                        cantidad_dias_letras +
+                        cantidad_dias +
+                        " ) " +
+                        $translate.instant("DIAS");
+                }
                 return texto;
             }
 
@@ -1481,7 +1490,7 @@ angular
                     },
                     { text: "y prórroga de " },
                     {
-                        text: (self.calculoPlazoLetras($scope.valor_prorroga_final)).toUpperCase() + ",",
+                        text: (self.calculoDiasLetras($scope.valor_prorroga_final)).toUpperCase() + ",",
                         bold: true,
                     },
                     {
@@ -1716,7 +1725,7 @@ angular
                                 self.contrato_id +
                                 " de " +
                                 self.fecha_reg_ano +
-                                " en " + (self.calculoPlazoLetras($scope.valor_prorroga_final)).toUpperCase() + ".",
+                                " en " + (self.calculoDiasLetras($scope.valor_prorroga_final)).toUpperCase() + ".",
                         },
                             "\n\n",
 
