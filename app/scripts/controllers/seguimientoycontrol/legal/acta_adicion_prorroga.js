@@ -141,10 +141,8 @@ angular
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
                         if (self.contrato_obj.plazo > 12) {
                             self.plazoDias = true;
-                            self.plazoMeses = self.calculoDiasLetras(self.contrato_obj.plazo);
-                        } else {
-                            self.plazoMeses = self.calculoDiasLetras(self.contrato_obj.plazo * 30);
                         }
+                        self.plazoMeses = self.calculoPlazoLetras(self.contrato_obj.plazo);
                         // self.contrato_obj.supervisor_cedula =
                         //     agora_response.data[0].Supervisor.Documento;
                         self.contrato_obj.supervisor_rol =
@@ -599,21 +597,22 @@ angular
                 }
                 var valor_valido_prorroga = plazo_actual_dias * 0.5;
                 $scope.valor_prorroga_final = valor_prorroga;
-                if (self.plazoDias) {
-                    $scope.nuevo_plazo_contrato = self.calculoDiasLetras();
-                } else {
-                    $scope.nuevo_plazo_contrato =
-                        $scope.cantidad_meses_letras +
-                        cantidad_meses +
-                        " ) " +
-                        $translate.instant("MENSAJE_MESES") +
-                        " " +
-                        $scope.cantidad_dias_letras +
-                        cantidad_dias +
-                        " ) " +
-                        $translate.instant("DIAS");
-                }
+                // if (self.plazoDias) {
+                //     $scope.nuevo_plazo_contrato = self.calculoDiasLetras();
+                // } else {
+                //     $scope.nuevo_plazo_contrato =
+                //         $scope.cantidad_meses_letras +
+                //         cantidad_meses +
+                //         " ) " +
+                //         $translate.instant("MENSAJE_MESES") +
+                //         " " +
+                //         $scope.cantidad_dias_letras +
+                //         cantidad_dias +
+                //         " ) " +
+                //         $translate.instant("DIAS");
+                // }
                 if (valor_prorroga <= valor_valido_prorroga) {
+
                     var valor_plazo_dias = parseInt(valor_prorroga) + plazo_actual_dias + prorrogas;
                     var valor_plazo_meses = valor_plazo_dias / 30;
                     var res = String(valor_plazo_meses).split(".");
@@ -630,15 +629,19 @@ angular
                         plural: $translate.instant("("),
                         singular: $translate.instant("("),
                     });
-                    if (self.plazoDias) {
-                        $scope.nuevo_plazo_contrato = self.calculoDiasLetras(valor_plazo_dias);
+                    if (cantidad_dias == 0) {
+                        $scope.nuevo_plazo_contrato =
+                            $scope.cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES");
                     } else {
                         $scope.nuevo_plazo_contrato =
                             $scope.cantidad_meses_letras +
                             cantidad_meses +
                             " ) " +
                             $translate.instant("MENSAJE_MESES") +
-                            " " +
+                            " Y " +
                             $scope.cantidad_dias_letras +
                             cantidad_dias +
                             " ) " +
@@ -706,12 +709,62 @@ angular
                     cantidad_meses +
                     " ) " +
                     $translate.instant("MENSAJE_MESES") +
-                    " " +
+                    " Y " +
                     cantidad_dias_letras +
                     cantidad_dias +
                     " ) " +
                     $translate.instant("DIAS");
                 return texto;
+            }
+
+            self.calculoPlazoLetras = function (plazo) {
+                if (self.plazoDias) {
+                    var plazo_meses = plazo / 30;
+                    var res = String(plazo_meses).split(".");
+                    var cantidad_meses = res[0];
+                    var decimal_cantidad_dias = "0." + res[1];
+                    var cantidad_dias = Math.ceil(parseFloat(decimal_cantidad_dias) / 0.03333333333336);
+                    var cantidad_meses_letras = numeroALetras(cantidad_meses, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var cantidad_dias_letras = numeroALetras(cantidad_dias, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto = "";
+                    if (cantidad_dias == 0) {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES");
+                    } else {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES") +
+                            " Y " +
+                            cantidad_dias_letras +
+                            cantidad_dias +
+                            " ) " +
+                            $translate.instant("DIAS");
+                    }
+                    return texto;
+
+                } else {
+                    var cantidad_meses_letras = numeroALetras(plazo, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto =
+                        cantidad_meses_letras +
+                        plazo +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES");
+                    return texto;
+                }
             }
 
             /**
@@ -782,7 +835,7 @@ angular
                     valor_contrato_inicial / 737717
                 ).toFixed(2);
                 if (self.plazoDias) {
-                    $scope.contrato_plazo_letras = self.calculoDiasLetras(self.contrato_obj.plazo);
+                    $scope.contrato_plazo_letras = self.calculoPlazoLetras(self.contrato_obj.plazo);
                 } else {
                     $scope.contrato_plazo_letras = numeroALetras(self.contrato_obj.plazo, {
                         plural: $translate.instant("("),
@@ -808,7 +861,7 @@ angular
                         .then(function (nc_response) {
                             self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
                             if (self.plazoDias) {
-                                $scope.nuevo_plazo_contrato = self.calculoDiasLetras(self.contrato_obj.plazo);
+                                $scope.nuevo_plazo_contrato = self.calculoPlazoLetras(self.contrato_obj.plazo);
                             } else {
                                 $scope.nuevo_plazo_contrato = self.contrato_obj.plazo + " meses";
                             }
@@ -1158,9 +1211,6 @@ angular
                             self.contrato_obj_replica.NumeroCdp = 0;
                             self.contrato_obj_replica.VigenciaCdp = 0;
                         }
-                        // console.log(self.data_acta_adicion_prorroga);
-                        // console.log(self.contrato_obj_replica);
-                        // self.formato_generacion_pdf();
                         if (self.estadoNovedad == "ENTR") {
                             self.formato_generacion_pdf();
                         } else {
@@ -1431,7 +1481,7 @@ angular
                     },
                     { text: "y prórroga de " },
                     {
-                        text: (self.calculoDiasLetras($scope.valor_prorroga_final)).toUpperCase() + ",",
+                        text: (self.calculoPlazoLetras($scope.valor_prorroga_final)).toUpperCase() + ",",
                         bold: true,
                     },
                     {
@@ -1666,7 +1716,7 @@ angular
                                 self.contrato_id +
                                 " de " +
                                 self.fecha_reg_ano +
-                                " en " + (self.calculoDiasLetras($scope.valor_prorroga_final)).toUpperCase() + ".",
+                                " en " + (self.calculoPlazoLetras($scope.valor_prorroga_final)).toUpperCase() + ".",
                         },
                             "\n\n",
 
