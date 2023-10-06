@@ -516,16 +516,24 @@ angular
                     plural: $translate.instant("("),
                     singular: $translate.instant("("),
                 });
-                var texto =
-                    cantidad_meses_letras +
-                    cantidad_meses +
-                    " ) " +
-                    $translate.instant("MENSAJE_MESES") +
-                    " " +
-                    cantidad_dias_letras +
-                    cantidad_dias +
-                    " ) " +
-                    $translate.instant("DIAS");
+                if (cantidad_dias == 0) {
+                    var texto =
+                        cantidad_meses_letras +
+                        cantidad_meses +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES");
+                } else {
+                    var texto =
+                        cantidad_meses_letras +
+                        cantidad_meses +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES") +
+                        " Y " +
+                        cantidad_dias_letras +
+                        cantidad_dias +
+                        " ) " +
+                        $translate.instant("DIAS");
+                }
                 return texto.toLowerCase();
             }
 

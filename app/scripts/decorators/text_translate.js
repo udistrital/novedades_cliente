@@ -331,7 +331,7 @@ var text_es = {
     FECHA_PRORROGA: "Fecha Prórroga",
     NUEVO_PLAZO_CONTRATO: "Nuevo Plazo del Contrato",
     NUEVO_PLAZO_CONTRATO_PLACEHOLDER: "Nuevo plazo del contrato (En meses)",
-    MENSAJE_MESES: "MESES Y",
+    MENSAJE_MESES: "MESES",
     MESES_MAY: "MESES",
     DIAS_MAY: "DÍAS",
     DIA: "DÍA",
