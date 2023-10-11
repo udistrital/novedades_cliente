@@ -285,20 +285,33 @@ angular
                                     og_response.data[0].InfoResolucion;
                                 self.contrato_obj.ordenador_gasto_Inicio =
                                     og_response.data[0].FechaInicio;
-                                // agoraRequest
-                                //     .get(
-                                //         "informacion_persona_natural?query=Id:" +
-                                //         og_response.data[0].Documento
-                                //     )
-                                //     .then(function (ispn_response) {
-                                //         self.contrato_obj.ordenador_gasto_tipo_documento =
-                                //             ispn_response.data[0].TipoDocumento.ValorParametro;
-                                //     });
-                                coreAmazonRequest
-                                    .get("ciudad", "query=Id:" + og_response.data[0].IdCiudad)
-                                    .then(function (sc_response) {
-                                        self.contrato_obj.ordenador_gasto_ciudad_documento =
-                                            sc_response.data[0].Nombre;
+                                agoraRequest
+                                    .get(
+                                        "informacion_persona_natural?query=Id:" +
+                                        self.contrato_obj.ordenador_gasto_documento
+                                    )
+                                    .then(function (iopn_response) {
+                                        coreAmazonRequest
+                                            .get(
+                                                "ciudad",
+                                                "query=Id:" +
+                                                iopn_response.data[0].IdCiudadExpedicionDocumento
+                                            )
+                                            .then(function (scj_response) {
+                                                console.log(scj_response);
+                                                self.contrato_obj.ordenador_gasto_ciudad_documento =
+                                                    scj_response.data[0].Nombre;
+                                                self.contrato_obj.ordenador_gasto_tipo_documento =
+                                                    iopn_response.data[0].TipoDocumento.ValorParametro;
+                                                self.contrato_obj.ordenador_gasto_nombre_completo =
+                                                    iopn_response.data[0].PrimerNombre +
+                                                    " " +
+                                                    iopn_response.data[0].SegundoNombre +
+                                                    " " +
+                                                    iopn_response.data[0].PrimerApellido +
+                                                    " " +
+                                                    iopn_response.data[0].SegundoApellido;
+                                            });
                                     });
                             });
 
@@ -1544,6 +1557,33 @@ angular
                 return estructura;
             }
 
+            self.agregarFirmas = function () {
+                var firmas = [];
+                console.log(typeof self.elaboro_cedula);
+                console.log(typeof self.contrato_obj.jefe_juridica_documento);
+                firmas.push([
+                    "",
+                    { text: "Nombre", bold: true },
+                    { text: "Cargo", bold: true },
+                    { text: "Firma", bold: true },
+                ]);
+                if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                    firmas.push([
+                        { text: "Proyectó", bold: true },
+                        self.elaboro,
+                        "Abogado Oficina de Contratación",
+                        "",
+                    ]);
+                }
+                firmas.push([
+                    { text: "Aprobó", bold: true },
+                    self.contrato_obj.jefe_juridica_nombre_completo,
+                    "Jefe Oficina de Contratación",
+                    "",
+                ]);
+                return firmas;
+            }
+
             /**
              * @ngdoc method
              * @name format_date
@@ -1622,7 +1662,8 @@ angular
                                 bold: true,
                             },
                             {
-                                text: "mayor de edad, vecino(a) de esta ciudad, identificado(a) con cédula de ciudadanía No. " +
+                                text: "mayor de edad, vecino(a) de esta ciudad, identificado(a) con " +
+                                    self.contrato_obj.ordenador_gasto_tipo_documento + " No. " +
                                     self.contrato_obj.ordenador_gasto_documento +
                                     " expedida en " + self.contrato_obj.ordenador_gasto_ciudad_documento +
                                     ", quien actúa en calidad de " +
@@ -1850,26 +1891,7 @@ angular
                         style: "table3",
                         table: {
                             widths: [65, 130, 130, 150],
-                            body: [
-                                [
-                                    "",
-                                    { text: "Nombre", bold: true },
-                                    { text: "Cargo", bold: true },
-                                    { text: "Firma", bold: true },
-                                ],
-                                [
-                                    { text: "Proyectó", bold: true },
-                                    self.elaboro,
-                                    "Abogado Oficina de Contratación",
-                                    "",
-                                ],
-                                [
-                                    { text: "Aprobó", bold: true },
-                                    self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina de Contratación",
-                                    "",
-                                ],
-                            ],
+                            body: self.agregarFirmas(),
                         },
                     },
                     ],
