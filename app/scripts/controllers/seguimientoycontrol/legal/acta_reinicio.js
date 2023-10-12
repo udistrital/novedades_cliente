@@ -456,7 +456,6 @@ angular
                 var yyyy = date.getFullYear();
                 var fecha = new Date(yyyy, mm, dd);
                 var options = {
-                    weekday: "long",
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -1074,7 +1073,7 @@ angular
                                     [
                                         " ",
                                         {
-                                            text: "Proceso: Gestión Jurídica",
+                                            text: "Proceso: Gestión de Contratación",
                                             alignment: "center",
                                             fontSize: 9,
                                         },
@@ -1349,13 +1348,13 @@ angular
                                 [
                                     { text: "Elaboró", bold: true },
                                     self.elaboro,
-                                    "Abogado Oficina Asesora Jurídica",
+                                    "Abogado Oficina de Contratación",
                                     "",
                                 ],
                                 [
                                     { text: "Revisó y Aprobó", bold: true },
                                     self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina Asesora Jurídica",
+                                    "Jefe Oficina de Contratación",
                                     "",
                                 ],
                             ],
