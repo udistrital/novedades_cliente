@@ -130,7 +130,8 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.supervisor_cedula = agora_response.data[0].Supervisor.Documento;
                     self.contrato_obj.supervisor_rol = agora_response.data[0].Supervisor.Cargo;
                     self.contrato_obj.contratista = agora_response.data[0].Contratista;
-                    self.contrato_obj.fecha_suscripcion = String(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
+                    self.contrato_obj.fecha_suscripcion = new Date(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
+                    self.contrato_obj.fecha_suscripcion.setDate(self.contrato_obj.fecha_suscripcion.getUTCDate());
                     self.contrato_obj.tipo_contrato = agora_response.data[0].TipoContrato.TipoContrato;
                     self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
 
@@ -1181,7 +1182,7 @@ angular.module('contractualClienteApp')
                                 centSingular: $translate.instant("CENTAVO"),
                             }) + "MODENA CORRIENTE ($" + numberFormat(String(self.contrato_obj.valor) + "") + ' M/Cte.).\n\n',
 
-                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante carta de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
+                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
                             ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
 
                             'Que según certificación de fecha ' + self.format_date_letter_mongo(self.f_certificacion) + ', expedida por el Jefe de la Unidad de Presupuesto, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' presenta un saldo a la fecha de ' +
