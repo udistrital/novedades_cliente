@@ -1272,7 +1272,6 @@ angular
                 var yyyy = date.getFullYear();
                 var fecha = new Date(yyyy, mm, dd);
                 var options = {
-                    weekday: "long",
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -1566,7 +1565,7 @@ angular
                                     [
                                         " ",
                                         {
-                                            text: "Proceso: Gestión Jurídica",
+                                            text: "Proceso: Gestión de Contratación",
                                             alignment: "center",
                                             fontSize: 9,
                                         },

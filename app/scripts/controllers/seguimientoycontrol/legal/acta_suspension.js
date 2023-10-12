@@ -1142,7 +1142,6 @@ angular
                 var yyyy = date.getFullYear();
                 var fecha = new Date(yyyy, mm, dd);
                 var options = {
-                    weekday: "long",
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -1203,7 +1202,7 @@ angular
                                     [
                                         " ",
                                         {
-                                            text: "Proceso: Gestión Jurídica",
+                                            text: "Proceso: Gestión de Contratación",
                                             alignment: "center",
                                             fontSize: 9,
                                         },
@@ -1390,7 +1389,7 @@ angular
 
                             'Que mediante oficio ' + self.suspension_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
-                            'Que por medio del oficio ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la revisión del acta de suspensión del Contrato de Prestación de Servicios  No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que por medio del oficio ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficioordenador) + ' recibido por la Oficina de Contratación, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la revisión del acta de suspensión del Contrato de Prestación de Servicios  No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
 
                             'Que la presente acta de suspensión sólo tendrá efectos a partir del ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' al ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
                         ]
@@ -1595,19 +1594,19 @@ angular
                                 [
                                     { text: "Proyectó", bold: true },
                                     self.elaboro,
-                                    "Abogado Oficina Asesora Jurídica",
+                                    "Abogado Oficina de Contratación",
                                     "",
                                 ],
                                 [
                                     { text: "Revisó", bold: true },
                                     self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina Asesora Jurídica",
+                                    "Jefe Oficina de Contratación",
                                     "",
                                 ],
                                 [
                                     { text: "Aprobó", bold: true },
                                     self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina Asesora Jurídica",
+                                    "Jefe Oficina de Contratación",
                                     "",
                                 ],
                             ],
