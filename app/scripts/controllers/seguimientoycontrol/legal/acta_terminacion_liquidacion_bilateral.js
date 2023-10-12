@@ -53,6 +53,7 @@ angular.module('contractualClienteApp')
             self.saldo_universidad = '';
             self.fecha_solicitud = new Date();
             self.fecha_terminacion_anticipada = new Date();
+            self.fecha_efectos_legales = new Date();
             self.f_certificacion = new Date();
             self.estados = [];
             self.estadoNovedad = "";
@@ -123,13 +124,14 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                     self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
                     if (self.contrato_obj.plazo > 30) {
-                        self.contrato_obj.plazo = Math.floor(self.contrato_obj.plazo/30);
+                        self.contrato_obj.plazo = Math.floor(self.contrato_obj.plazo / 30);
                     }
                     self.contrato_obj.vigencia = self.contrato_vigencia;
                     self.contrato_obj.supervisor_cedula = agora_response.data[0].Supervisor.Documento;
                     self.contrato_obj.supervisor_rol = agora_response.data[0].Supervisor.Cargo;
                     self.contrato_obj.contratista = agora_response.data[0].Contratista;
-                    self.contrato_obj.fecha_suscripcion = String(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
+                    self.contrato_obj.fecha_suscripcion = new Date(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
+                    self.contrato_obj.fecha_suscripcion.setDate(self.contrato_obj.fecha_suscripcion.getUTCDate());
                     self.contrato_obj.tipo_contrato = agora_response.data[0].TipoContrato.TipoContrato;
                     self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
 
@@ -597,10 +599,14 @@ angular.module('contractualClienteApp')
                         self.terminacion_nov.valor_desembolsado = parseFloat(self.valor_desembolsado.replace(/\,/g, ""));
                         self.terminacion_nov.saldo_contratista = parseFloat(self.saldo_contratista.replace(/\,/g, ""));
                         self.terminacion_nov.saldo_universidad = parseFloat(self.saldo_universidad.replace(/\,/g, ""));
-                        self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;
-                        self.terminacion_nov.fechafinefectiva = self.fecha_terminacion_anticipada;
+                        self.terminacion_nov.fecha_terminacion_anticipada = new Date(self.fecha_terminacion_anticipada);
+                        self.terminacion_nov.fechafinefectiva = new Date(self.fecha_terminacion_anticipada);
                         self.terminacion_nov.estado = self.estadoNovedad;
-
+                        self.fecha_efectos_legales = new Date(self.fecha_terminacion_anticipada);
+                        self.fecha_efectos_legales.setDate(self.fecha_efectos_legales.getDate() + 1);
+                        if (self.fecha_efectos_legales.getDate() == 31) {
+                            self.fecha_efectos_legales.setDate(self.fecha_efectos_legales.getDate() + 1);
+                        }
                         // Recolección datos objeto POST Replica
                         self.contrato_obj_replica.NumeroContrato = self.contrato_obj.numero_contrato;
                         self.contrato_obj_replica.Vigencia = parseInt(self.contrato_obj.vigencia);
@@ -694,6 +700,15 @@ angular.module('contractualClienteApp')
 
                 const pdfDocGenerator = pdfMake.createPdf(output);
                 pdfDocGenerator.getBase64(function (data) {
+                    // pdfMake
+                    //     .createPdf(output)
+                    //     .download(
+                    //         "acta_terminacion_anticipada_" +
+                    //         self.contrato_id +
+                    //         "_" +
+                    //         dateTime +
+                    //         ".pdf"
+                    //     );
                     pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_terminacion_anticipada_" +
@@ -704,15 +719,6 @@ angular.module('contractualClienteApp')
                         self
                     ).then(function (enlace) {
                         self.postNovedad(nuevoEstado, output, dateTime, enlace);
-                        // pdfMake
-                        //     .createPdf(output)
-                        //     .download(
-                        //         "acta_terminacion_anticipada_" +
-                        //         self.contrato_id +
-                        //         "_" +
-                        //         dateTime +
-                        //         ".pdf"
-                        //     );
                     });
                 });
             }
@@ -750,7 +756,7 @@ angular.module('contractualClienteApp')
                 var mm = date.getMonth();
                 var yyyy = date.getFullYear();
                 var fecha = new Date(yyyy, mm, dd);
-                var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var options = { year: 'numeric', month: 'long', day: 'numeric' };
                 return fecha.toLocaleDateString("es-ES", options);
             };
             /**
@@ -1056,7 +1062,7 @@ angular.module('contractualClienteApp')
                                         ' '
                                     ],
                                     [' ',
-                                        { text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 9 },
+                                        { text: 'Proceso: Gestión de Contratación', alignment: 'center', fontSize: 9 },
                                         { text: 'Fecha de Aprobación: 30/07/2019', fontSize: 9 },
                                         ' '
                                     ],
@@ -1176,7 +1182,7 @@ angular.module('contractualClienteApp')
                                 centSingular: $translate.instant("CENTAVO"),
                             }) + "MODENA CORRIENTE ($" + numberFormat(String(self.contrato_obj.valor) + "") + ' M/Cte.).\n\n',
 
-                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante carta de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
+                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
                             ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
 
                             'Que según certificación de fecha ' + self.format_date_letter_mongo(self.f_certificacion) + ', expedida por el Jefe de la Unidad de Presupuesto, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' presenta un saldo a la fecha de ' +
@@ -1187,9 +1193,9 @@ angular.module('contractualClienteApp')
                                 centSingular: $translate.instant("CENTAVO"),
                             }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.a_favor.valor) + '') + ' M/CTE).\n\n',
 
-                            'Que mediante oficio ' + self.terminacion_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunicó al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
+                            'Que mediante oficio ' + self.numero_oficio_supervisor + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunicó al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n',
 
-                            'Que por medio del oficio ' + self.terminacion_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficioordenador) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
+                            'Que por medio del oficio ' + self.numero_oficio_ordenador + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficioordenador) + ' recibido por la Oficina de Contratación, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n',
 
                         ]
                     },
@@ -1208,7 +1214,7 @@ angular.module('contractualClienteApp')
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA PRIMERA: TERMINAR Y LIQUIDAR DE MANERA ANTICIPADA Y DE MUTUO ACUERDO el contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', ', bold: true },
-                                { text: 'a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ' de la siguiente manera:\n\n' }
+                                { text: 'a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + ' de la siguiente manera:\n\n' }
                             ]
 
 
@@ -1256,7 +1262,7 @@ angular.module('contractualClienteApp')
                                 {
                                     text: 'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' +
                                         self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' a nombre de ' +
-                                        self.contrato_obj.contratista_nombre + ", con efectos legales a partir del " + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) +
+                                        self.contrato_obj.contratista_nombre + ", con efectos legales a partir del " + self.format_date_letter_mongo(self.fecha_efectos_legales) +
                                         ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del mismo, declarándose a paz y salvo por todo concepto una vez se compruebe el pago de la cláusula segunda de la presente Acta.\n\n'
                                 }
                             ],
@@ -1397,19 +1403,19 @@ angular.module('contractualClienteApp')
                                 [
                                     { text: 'Proyectó', bold: true },
                                     self.elaboro,
-                                    "Abogado Oficina Asesora Jurídica",
+                                    "Abogado Oficina de Contratación",
                                     ""
                                 ],
                                 [
                                     { text: 'Revisó', bold: true },
                                     self.contrato_obj.jefe_juridica_nombre_completo,
-                                    'Jefe Oficina Asesora Jurídica',
+                                    'Jefe Oficina de Contratación',
                                     ''
                                 ],
                                 [
                                     { text: 'Aprobó', bold: true },
                                     self.contrato_obj.jefe_juridica_nombre_completo,
-                                    'Jefe Oficina Asesora Jurídica',
+                                    'Jefe Oficina de Contratación',
                                     ''
                                 ],
                             ]
