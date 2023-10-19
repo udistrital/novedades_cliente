@@ -75,7 +75,8 @@ angular
             self.contrato_obj_replica = {};
             self.elaboro_cedula = token_service.getPayload().documento;
             var adicionProrroga = "";
-
+            self.nueva_clausula_text = "";
+            self.posicion_clausula = 0;
             self.novedades = [];
             self.estadoNovedad = "";
             self.novedadOtrosi = false;
@@ -167,7 +168,8 @@ angular
                         agoraRequest
                             .get(
                                 "contrato_suscrito?query=NumeroContratoSuscrito:" +
-                                self.contrato_obj.numero_contrato
+                                self.contrato_obj.numero_contrato +
+                                ",Vigencia:" + self.contrato_obj.vigencia
                             )
                             .then(function (acta_response) {
                                 self.contrato_obj.NumeroContrato =
@@ -1305,6 +1307,12 @@ angular
 
                 var docDefinition = self.formato_pdf();
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+                // pdfMake.createPdf(docDefinition).
+                //     download(
+                //         "acta_adicion_prorroga_contrato_" +
+                //         self.contrato_id + "_" + dateTime +
+                //         ".pdf"
+                //     );
                 pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(data,
                         "acta_adicion_prorroga_contrato_" +
@@ -1314,12 +1322,6 @@ angular
                         ".pdf",
                         self).then(function (enlace) {
                             self.PostNovedad(dateTime, docDefinition, enlace);
-                            // pdfMake.createPdf(docDefinition).
-                            //     download(
-                            //         "acta_adicion_prorroga_contrato_" +
-                            //         self.contrato_id + "_" + dateTime +
-                            //         ".pdf"
-                            //     );
                         });
                 });
             }
@@ -1557,6 +1559,136 @@ angular
                 return estructura;
             }
 
+            self.agregarClausulas = function () {
+                const clausulasTitulo = [];
+                const clausulasText = [];
+                for (var i = 0; i < 11; i++) {
+                    const numero = i + 1;
+                    var clausula_titulo;
+
+                    switch (numero) {
+                        case 1:
+                            clausula_titulo = "CLÁUSULA PRIMERA.- ADICIONAR";
+                            break;
+                        case 2:
+                            clausula_titulo = "CLÁUSULA SEGUNDA.-";
+                            break;
+                        case 3:
+                            clausula_titulo = "CLÁUSULA TERCERA.- PRORROGAR";
+                            break;
+                        case 4:
+                            clausula_titulo = "CLÁUSULA CUARTA: ";
+                            break;
+                        case 5:
+                            clausula_titulo = "CLÁUSULA QUINTA: ";
+                            break;
+                        case 6:
+                            clausula_titulo = "CLÁUSULA SEXTA: ";
+                            break;
+                        case 7:
+                            clausula_titulo = "CLÁUSULA SÉPTIMA: ";
+                            break;
+                        case 8:
+                            clausula_titulo = "CLÁUSULA OCTAVA: "
+                            break;
+                        case 9:
+                            clausula_titulo = "CLÁUSULA NOVENA: "
+                            break;
+                        case 10:
+                            clausula_titulo = "CLÁUSULA DÉCIMA: "
+                            break;
+                        default:
+                            clausula_titulo = "cláusula " + numero + "ª";
+                    }
+
+                    clausulasTitulo.push({ text: clausula_titulo, bold: true });
+                }
+
+                clausulasText.push({
+                    text: "En consecuencia de lo anterior, las partes acuerdan:\n\n\n",
+                });
+                clausulasText.push({
+                    text: " al valor del " +
+                        self.contrato_obj.tipo_contrato +
+                        " No. " +
+                        self.contrato_id +
+                        " de " +
+                        self.fecha_reg_ano +
+                        ", la suma de " +
+                        $scope.valor_adicion_letras +
+                        " MONEDA CORRIENTE ($" +
+                        $scope.valor_adicion +
+                        " M/Cte.).\n\n",
+                });
+                clausulasText.push([
+                    { text: " Como consecuencia de lo anterior, " },
+                    { text: "MODIFICAR LA CLAUSULA TERCERA", bold: true },
+                    {
+                        text: "  del citado contrato, la cual quedará así: \n\n",
+
+                    },
+                    {
+                        text: "“...El valor del presente contrato corresponde a la suma de " +
+                            $scope.nuevo_valor_contrato_letras +
+                            " MONEDA CORRIENTE ($" +
+                            $scope.nuevo_valor_contrato +
+                            " M/Cte.) , incluido IVA, así como todos los impuestos y retenciones legamente establecidos…”.",
+                        italics: true,
+                    },
+                    "\n\n"
+                ]);
+                clausulasText.push({
+                    text: "el plazo de ejecución del " +
+                        self.contrato_obj.tipo_contrato +
+                        " No. " +
+                        self.contrato_id +
+                        " de " +
+                        self.fecha_reg_ano +
+                        " en " + (self.calculoDiasLetras($scope.valor_prorroga_final)).toUpperCase() + ".\n\n",
+                });
+                clausulasText.push([
+                    { text: " Como consecuencia de lo anterior, " },
+                    { text: "MODIFICAR la CLAUSULA SEXTA", bold: true },
+                    {
+                        text: " del citado contrato, la cual quedará así: \n\n"
+
+                    },
+                    {
+                        text: "“...El plazo de ejecución del contrato será de " +
+                            $scope.nuevo_plazo_contrato +
+                            ", contados a partir de los requisitos de ejecución…”.",
+                        italics: true,
+                    },
+                    "\n\n",
+                ]);
+                clausulasText.push({
+                    text: "Las cláusulas y condiciones no modificadas por el presente instrumento continúan vigentes en los términos del contrato primigenio.\n\n",
+                });
+                clausulasText.push({
+                    text: "La presente prórroga y adición requiere para su perfeccionamiento y legalización, la suscripción de la misma por las partes, " +
+                        "la actualización y aprobación de la garantía única  y la expedición del Registro Presupuestal.\n\n",
+                });
+                clausulasText.push({
+                    text: "De conformidad con lo establecido en la Circular No. 001 de 2019, proferida por Colombia Compra Eficiente, " +
+                        "y en atención a lo establecido en al Acuerdo 003 de 2015 -Estatuto de Contratación de la Universidad Distrital- " +
+                        "la presente Adición y Prórroga se deberá publicar en el portal SECOP II, una vez esté suscrita por las partes, y sea devuelta a la Oficina de Contratación para el archivo correspondiente.\n\n"
+                });
+                var for_limit = 7;
+                console.log(self.posicion_clausula);
+                if ($scope.nueva_clausula) {
+                    clausulasText.splice(self.posicion_clausula, 0, { text: self.nueva_clausula_text + "\n\n" });
+                    for_limit += 1
+                }
+
+                var estructuraText = [];
+                estructuraText.push(clausulasText[0]);
+                for (var i = 1; i <= for_limit; i++) {
+                    estructuraText.push(clausulasTitulo[i - 1]);
+                    estructuraText.push(clausulasText[i])
+                }
+                return estructuraText;
+            }
+
             self.agregarFirmas = function () {
                 var firmas = [];
                 console.log(typeof self.elaboro_cedula);
@@ -1722,98 +1854,100 @@ angular
                     },
                     {
                         style: ["general_font"],
-                        text: [{
-                            text: "En consecuencia de lo anterior, las partes acuerdan:\n\n\n",
-                        },
-                        { text: "CLÁUSULA PRIMERA.-  ADICIONAR", bold: true },
-                        {
-                            text: " al valor del " +
-                                self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_id +
-                                " de " +
-                                self.fecha_reg_ano +
-                                ", la suma de " +
-                                $scope.valor_adicion_letras +
-                                " MONEDA CORRIENTE ($" +
-                                $scope.valor_adicion +
-                                " M/Cte.).",
-                        },
-                            "\n\n",
+                        text: self.agregarClausulas(),
+                        // text: [{
+                        //     text: "En consecuencia de lo anterior, las partes acuerdan:\n\n\n",
+                        // },
+                        // { text: "CLÁUSULA PRIMERA.-  ADICIONAR", bold: true },
+                        // {
+                        //     text: " al valor del " +
+                        //         self.contrato_obj.tipo_contrato +
+                        //         " No. " +
+                        //         self.contrato_id +
+                        //         " de " +
+                        //         self.fecha_reg_ano +
+                        //         ", la suma de " +
+                        //         $scope.valor_adicion_letras +
+                        //         " MONEDA CORRIENTE ($" +
+                        //         $scope.valor_adicion +
+                        //         " M/Cte.).",
+                        // },
+                        //     "\n\n",
 
-                        { text: "CLÁUSULA SEGUNDA.-", bold: true },
-                        { text: " Como consecuencia de lo anterior, " },
-                        { text: "MODIFICAR LA CLAUSULA TERCERA", bold: true },
-                        {
-                            text: "  del citado contrato, la cual quedará así: \n\n",
+                        // { text: "CLÁUSULA SEGUNDA.-", bold: true },
+                        // { text: " Como consecuencia de lo anterior, " },
+                        // { text: "MODIFICAR LA CLAUSULA TERCERA", bold: true },
+                        // {
+                        //     text: "  del citado contrato, la cual quedará así: \n\n",
 
-                        },
-                        {
-                            text: "“...El valor del presente contrato corresponde a la suma de " +
-                                $scope.nuevo_valor_contrato_letras +
-                                " MONEDA CORRIENTE ($" +
-                                $scope.nuevo_valor_contrato +
-                                " M/Cte.) , incluido IVA, así como todos los impuestos y retenciones legamente establecidos…”.",
-                            italics: true,
-                        },
-                            "\n\n",
+                        // },
+                        // {
+                        //     text: "“...El valor del presente contrato corresponde a la suma de " +
+                        //         $scope.nuevo_valor_contrato_letras +
+                        //         " MONEDA CORRIENTE ($" +
+                        //         $scope.nuevo_valor_contrato +
+                        //         " M/Cte.) , incluido IVA, así como todos los impuestos y retenciones legamente establecidos…”.",
+                        //     italics: true,
+                        // },
+                        //     "\n\n",
 
-                        { text: "CLÁUSULA TERCERA.- PRORROGAR", bold: true },
-                        {
-                            text: "el plazo de ejecución del " +
-                                self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_id +
-                                " de " +
-                                self.fecha_reg_ano +
-                                " en " + (self.calculoDiasLetras($scope.valor_prorroga_final)).toUpperCase() + ".",
-                        },
-                            "\n\n",
+                        // { text: "CLÁUSULA TERCERA.- PRORROGAR", bold: true },
+                        // {
+                        //     text: "el plazo de ejecución del " +
+                        //         self.contrato_obj.tipo_contrato +
+                        //         " No. " +
+                        //         self.contrato_id +
+                        //         " de " +
+                        //         self.fecha_reg_ano +
+                        //         " en " + (self.calculoDiasLetras($scope.valor_prorroga_final)).toUpperCase() + ".",
+                        // },
+                        //     "\n\n",
 
-                        { text: "CLÁUSULA CUARTA.-", bold: true },
-                        { text: " Como consecuencia de lo anterior, " },
-                        { text: "MODIFICAR la CLAUSULA SEXTA", bold: true },
-                        {
-                            text: " del citado contrato, la cual quedará así: \n\n"
+                        // { text: "CLÁUSULA CUARTA.-", bold: true },
+                        // { text: " Como consecuencia de lo anterior, " },
+                        // { text: "MODIFICAR la CLAUSULA SEXTA", bold: true },
+                        // {
+                        //     text: " del citado contrato, la cual quedará así: \n\n"
 
-                        },
-                        {
-                            text: "“...El plazo de ejecución del contrato será de " +
-                                $scope.nuevo_plazo_contrato +
-                                ", contados a partir de los requisitos de ejecución…”.",
-                            italics: true,
-                        },
-                            "\n\n",
+                        // },
+                        // {
+                        //     text: "“...El plazo de ejecución del contrato será de " +
+                        //         $scope.nuevo_plazo_contrato +
+                        //         ", contados a partir de los requisitos de ejecución…”.",
+                        //     italics: true,
+                        // },
+                        //     "\n\n",
 
-                        { text: "CLÁUSULA QUINTA.-", bold: true },
-                        {
-                            text: "Las cláusulas y condiciones no modificadas por el presente instrumento continúan vigentes en los términos del contrato primigenio.",
-                        },
-                            "\n\n",
+                        // { text: "CLÁUSULA QUINTA.-", bold: true },
+                        // {
+                        //     text: "Las cláusulas y condiciones no modificadas por el presente instrumento continúan vigentes en los términos del contrato primigenio.",
+                        // },
+                        //     "\n\n",
 
-                        { text: "CLÁUSULA SEXTA.-", bold: true },
-                        {
-                            text: "La presente prórroga y adición requiere para su perfeccionamiento y legalización, la suscripción de la misma por las partes, " +
-                                "la actualización y aprobación de la garantía única  y la expedición del Registro Presupuestal.",
-                        },
-                            "\n\n",
-                        { text: "CLÁUSULA SÉPTIMA: ", bold: true },
-                        {
-                            text: "De conformidad con lo establecido en la Circular No. 001 de 2019, proferida por Colombia Compra Eficiente, " +
-                                "y en atención a lo establecido en al Acuerdo 003 de 2015 -Estatuto de Contratación de la Universidad Distrital- " +
-                                "la presente Adición y Prórroga se deberá publicar en el portal SECOP II, una vez esté suscrita por las partes, y sea devuelta a la Oficina de Contratación para el archivo correspondiente."
-                        },
-                            "\n\n\n",
-                            // {
-                            //     text: "Las partes manifiestan libremente que han procedido a la lectura total y cuidadosa del presente documento, por lo que, en consecuencia," +
-                            //         " se obligan en todos sus órdenes y manifestaciones.",
-                            // },
-                            //     "\n\n",
-                            // {
-                            //     text: "Para constancia, se firma en Bogotá, D.C., a los ______________________________________________.",
-                            // },
-                            //     "\n\n\n\n\n\n",
-                        ],
+                        // { text: "CLÁUSULA SEXTA.-", bold: true },
+                        // {
+                        //     text: "La presente prórroga y adición requiere para su perfeccionamiento y legalización, la suscripción de la misma por las partes, " +
+                        //         "la actualización y aprobación de la garantía única  y la expedición del Registro Presupuestal.",
+                        // },
+                        //     "\n\n",
+                        // { text: "CLÁUSULA SÉPTIMA: ", bold: true },
+                        // {
+                        //     text: "De conformidad con lo establecido en la Circular No. 001 de 2019, proferida por Colombia Compra Eficiente, " +
+                        //         "y en atención a lo establecido en al Acuerdo 003 de 2015 -Estatuto de Contratación de la Universidad Distrital- " +
+                        //         "la presente Adición y Prórroga se deberá publicar en el portal SECOP II, una vez esté suscrita por las partes, y sea devuelta a la Oficina de Contratación para el archivo correspondiente."
+                        // },
+                        //     "\n\n",
+                        //     "\n\n\n",
+                        //     // {
+                        //     //     text: "Las partes manifiestan libremente que han procedido a la lectura total y cuidadosa del presente documento, por lo que, en consecuencia," +
+                        //     //         " se obligan en todos sus órdenes y manifestaciones.",
+                        //     // },
+                        //     //     "\n\n",
+                        //     // {
+                        //     //     text: "Para constancia, se firma en Bogotá, D.C., a los ______________________________________________.",
+                        //     // },
+                        //     //     "\n\n\n\n\n\n",
+                        // ],
                     },
                     {
                         style: ["general_font"],
