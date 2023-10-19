@@ -1598,7 +1598,7 @@ angular
                             clausula_titulo = "CLÁUSULA DÉCIMA: "
                             break;
                         default:
-                            clausula_titulo = `cláusula ${numero}ª`;
+                            clausula_titulo = "cláusula " + numero + "ª";
                     }
 
                     clausulasTitulo.push({ text: clausula_titulo, bold: true });
