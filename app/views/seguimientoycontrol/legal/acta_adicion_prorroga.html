@@ -113,7 +113,8 @@
                                 <label>{{'NUMERO_OFICIO' | translate}}*</label>
                                 <br>
                                 <md-input-container style="margin:0;">
-                                    <input type="text" id="oficio" name="oficio" ng-model="sLactaAdicionProrroga.numero_oficio">
+                                    <input type="text" id="oficio" name="oficio"
+                                        ng-model="sLactaAdicionProrroga.numero_oficio">
                                 </md-input-container>
                             </div>
                             <div class="col-xs-12 col-md-6">
@@ -125,13 +126,25 @@
                                 <label>Fecha de expedición del acta</label><br>
                                 <md-datepicker ng-model="sLactaAdicionProrroga.f_expedicion_acta"
                                     md-placeholder="Ingrese fecha"></md-datepicker>
+                                <br><br>
                             </div>
-                            <!-- <div class="col-xs-12 col-md-12">
-                                <label for="motivo">{{'MOTIVO' | translate}}</label>
-                                <textarea style="height: 100px;" class="form-control" id="motivo" ng-model="motivo"
-                                    rows="3" maxlength="249" placeholder="{{'MOTIVO_NOVEDAD' | translate}}"
-                                    required></textarea>
-                            </div> -->
+                            <div class="col-xs-12 col-md-6">
+                                <label class="checkbox-inline"><input type="checkbox"
+                                        ng-model="nueva_clausula"><b>Cláusula adicional</b></label>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <md-input-container style="margin:0;">
+                                    <input ng-if="nueva_clausula" type="number" id="posicion_nc" name="posicion_nc"
+                                        ng-model="sLactaAdicionProrroga.posicion_clausula" min="4" max="9"
+                                        placeholder="posición (4-9)">
+                                </md-input-container>
+
+                            </div>
+                            <div class="col-xs-12 col-md-12">
+                                <textarea ng-if="nueva_clausula" style="height: 100px;" class="form-control"
+                                    id="nueva_clausula" ng-model="sLactaAdicionProrroga.nueva_clausula_text" rows="3"
+                                    maxlength="500" placeholder="NUEVA CLÁUSULA"></textarea>
+                            </div>
                         </div>
                     </div>
                     <div class="panel panel-default panel_adicion" style="display: none;">
