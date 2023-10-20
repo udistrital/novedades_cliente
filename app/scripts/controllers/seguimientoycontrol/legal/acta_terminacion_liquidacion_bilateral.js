@@ -60,6 +60,7 @@ angular.module('contractualClienteApp')
             self.idRegistro = "";
             self.elaboro = '';
             self.elaboro_cedula = token_service.getPayload().documento;
+            self.nueva_clausula_text = "";
 
             // const solic_input = document.getElementById("numero_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -1040,6 +1041,23 @@ angular.module('contractualClienteApp')
                 };
             })();
 
+            self.agregarClausulas = function () {
+                var estructura = {}
+                if ($scope.nueva_clausula) {
+                    estructura = {
+                        style: ['general_font'],
+                        text: [{
+                            text: [
+                                { text: 'CLAUSULA QUINTA: ', bold: true },
+                                {
+                                    text: self.nueva_clausula_text + "\n\n"
+                                }
+                            ],
+                        }]
+                    }
+                }
+            }
+
             self.get_plantilla = function () {
                 return {
                     pageSize: 'LETTER',
@@ -1283,6 +1301,7 @@ angular.module('contractualClienteApp')
 
                         }]
                     },
+                    self.agregarClausulas(),
                     {
 
                         style: ['general_font'],
