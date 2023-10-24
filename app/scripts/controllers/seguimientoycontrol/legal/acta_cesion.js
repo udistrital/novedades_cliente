@@ -32,6 +32,8 @@ angular
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
+            self.plazoDias = false;
+            self.plazoMeses = "";
             self.novedades = [];
             self.texto_busqueda = "";
             self.persona_sel = "";
@@ -157,9 +159,10 @@ angular
                         self.contrato_obj.tipo_contrato =
                             agora_response.data[0].TipoContrato.TipoContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
-                        if (self.contrato_obj.plazo > 30) {
-                            self.contrato_obj.plazo = Math.floor(self.contrato_obj.plazo / 30);
+                        if (self.contrato_obj.plazo > 12) {
+                            self.plazoDias = true;
                         }
+                        self.plazoMeses = self.calculoPlazoLetras(self.contrato_obj.plazo);
                         var fecha_reg = self.contrato_obj.fecha_registro;
                         var res = fecha_reg.split("-");
                         self.fecha_reg_dia = res[2].substring(0, 2);
@@ -169,12 +172,12 @@ angular
                         amazonAdministrativaRequest
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
                             .then(function (acta_response) {
-                                self.contrato_obj.Inicio = new Date(acta_response.data[0].FechaInicio);
-                                self.contrato_obj.Inicio.setDate(self.contrato_obj.Inicio.getDate() + 1)
-                                if (self.contrato_obj.Inicio.getDate() == 31) {
-                                    self.contrato_obj.Inicio.setDate(self.contrato_obj.Inicio.getDate() + 1);
-                                }
-                                self.contrato_obj.Fin = acta_response.data[0].FechaFin;
+                                self.contrato_obj.Inicio = self.getFechaUTC(acta_response.data[0].FechaInicio);
+                                // self.contrato_obj.Inicio.setDate(self.contrato_obj.Inicio.getDate() + 1)
+                                // if (self.contrato_obj.Inicio.getDate() == 31) {
+                                //     self.contrato_obj.Inicio.setDate(self.contrato_obj.Inicio.getDate() + 1);
+                                // }
+                                self.contrato_obj.Fin = self.getFechaUTC(acta_response.data[0].FechaFin);
                                 self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
                                 self.fecha_lim_sup = self.calcularFechaFin();
                                 self.f_cesion = new Date(self.fecha_lim_sup);
@@ -191,7 +194,7 @@ angular
                                         if (self.novedades.length != 0) {
                                             for (var i = self.novedades.length - 1; i >= 0; i--) {
                                                 if (self.novedades[i].tiponovedad == 2) {
-                                                    self.contrato_obj.Inicio = self.novedades[i].fechacesion;
+                                                    self.contrato_obj.Inicio = self.getFechaUTC(self.novedades[i].fechacesion);
                                                     self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
                                                     break;
                                                 }
@@ -430,42 +433,48 @@ angular
             });
 
             $scope.$watch("sLactaCesion.f_cesion", function () {
-                if (self.f_cesion.getDate() == 31) {
-                    swal(
-                        $translate.instant("TITULO_ADVERTENCIA"),
-                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
-                        "error"
-                    );
-                    var fecha = new Date(self.f_cesion);
-                    fecha.setDate(self.f_cesion.getDate() + 1);
-                    self.f_cesion = fecha;
-                }
-                self.f_terminacion = new Date(self.f_cesion);
+                // if (self.f_cesion.getDate() == 31) {
+                //     swal(
+                //         $translate.instant("TITULO_ADVERTENCIA"),
+                //         $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+                //         "error"
+                //     );
+                //     var fecha = new Date(self.f_cesion);
+                //     fecha.setDate(self.f_cesion.getDate() + 1);
+                //     self.f_cesion = fecha;
+                // }
+
+                self.f_terminacion = self.getFechaUTC(self.f_cesion);
                 self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
-                if (self.f_terminacion.getDate() == 31) {
-                    self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
-                };
+                // if (self.f_terminacion.getDate() == 31) {
+                //     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
+                // };
                 var fechaInicio = new Date(self.contrato_obj.Inicio);
-                fechaInicio.setDate(fechaInicio.getDate() + 1);
-                if (fechaInicio.getDate() == 31) {
-                    fechaInicio.setDate(fechaInicio.getDate() + 1);
-                }
-                fechaInicio.setHours(0, 0, 0, 0);
-                var months = self.f_terminacion.getMonth() - fechaInicio.getMonth() + (12 * (self.f_terminacion.getFullYear() - fechaInicio.getFullYear()));
+
+                var plazo_cedente = self.calculoPlazosCesion(fechaInicio, self.f_terminacion);
+                self.plazo_cedente_letras = self.calculoPlazoLetras(plazo_cedente);
+            });
+
+            self.calculoPlazosCesion = function (fecha_inicio, fecha_fin) {
+
+                console.log("Inicio: ", fecha_inicio);
+                console.log("Fin: ", fecha_fin);
+                var months = fecha_fin.getMonth() - fecha_inicio.getMonth() + (12 * (fecha_fin.getFullYear() - fecha_inicio.getFullYear()));
                 var days = 0;
                 if (months != 0) {
-                    if (fechaInicio.getDate() < self.f_terminacion.getDate()) {
-                        days += self.f_terminacion.getDate() - fechaInicio.getDate();
+                    if (fecha_inicio.getDate() < fecha_fin.getDate()) {
+                        days += fecha_fin.getDate() - fecha_inicio.getDate();
                     } else {
                         months -= 1;
-                        days += (30 - fechaInicio.getDate()) + (self.f_terminacion.getDate());
+                        days += (30 - fecha_inicio.getDate()) + (fecha_fin.getDate());
                     }
                 } else {
-                    days += self.f_terminacion.getDate() - fechaInicio.getDate();
+                    days += fecha_fin.getDate() - fecha_inicio.getDate();
                 }
                 days += (months * 30) + 1;
-                self.plazo_cedente_letras = self.calculoDiasLetras(days);
-            });
+                console.log("Days: ", days);
+                return days;
+            }
 
             /**
              * @ngdoc method
@@ -536,6 +545,65 @@ angular
                         $translate.instant("DIAS");
                 }
                 return texto.toLowerCase();
+            }
+
+            self.calculoPlazoLetras = function (plazo) {
+                if (self.plazoDias) {
+                    var plazo_meses = plazo / 30;
+                    var res = String(plazo_meses).split(".");
+                    var cantidad_meses = res[0];
+                    var decimal_cantidad_dias = "0." + res[1];
+                    var cantidad_dias = Math.ceil(parseFloat(decimal_cantidad_dias) / 0.03333333333336);
+                    var cantidad_meses_letras = numeroALetras(cantidad_meses, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var cantidad_dias_letras = numeroALetras(cantidad_dias, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto = "";
+                    if (cantidad_dias == 0) {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES");
+                    } else {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES") +
+                            " Y " +
+                            cantidad_dias_letras +
+                            cantidad_dias +
+                            " ) " +
+                            $translate.instant("DIAS");
+                    }
+                    return texto;
+
+                } else {
+                    var cantidad_meses_letras = numeroALetras(plazo, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto =
+                        cantidad_meses_letras +
+                        plazo +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES");
+                    return texto;
+                }
+            }
+
+            self.getFechaUTC = function (dateString) {
+                var fecha = new Date(dateString);
+                var anio = fecha.getUTCFullYear();
+                var mes = fecha.getUTCMonth();
+                var dia = fecha.getUTCDate();
+                var fechaUTC = new Date(anio, mes, dia, 12, 0, 0, 0);
+                return fechaUTC;
             }
 
             // $scope.validarValorDesembolsado = function (evento) {
@@ -734,12 +802,10 @@ angular
                     plural: $translate.instant("("),
                     singular: $translate.instant("("),
                 });
-                var f_inicio_contrato = moment(self.contrato_obj.Inicio);
-                var f_cesion = moment(self.f_terminacion);
-                var f_terminacion_contrato = moment(self.contrato_obj.Fin);
-                self.contrato_obj.plazo_cesionario =
-                    f_terminacion_contrato.diff(f_inicio_contrato, "days") -
-                    f_cesion.diff(f_inicio_contrato, "days");
+                self.contrato_obj.plazo_cesionario = self.calculoPlazosCesion(self.f_cesion, self.calcularFechaFin());
+                // self.contrato_obj.plazo_cesionario =
+                //     f_terminacion_contrato.diff(f_inicio_contrato, "days") -
+                //     f_cesion.diff(f_inicio_contrato, "days");
                 //Se obtiene el dato de Fecha Final Efectiva.
                 // amazonAdministrativaRequest
                 // .get("contrato_persona/" + self.contrato_obj.id)
@@ -782,6 +848,7 @@ angular
                                             self.cesion_nov.fechaprorroga = "0001-01-01T00:00:00Z";
                                             self.cesion_nov.fechareinicio = "0001-01-01T00:00:00Z";
                                             self.cesion_nov.fechasolicitud = self.fecha_solicitud;
+                                            self.cesion_nov.fechaexpedicion = self.f_expedicion_acta;
                                             self.cesion_nov.fechaoficiosupervisor = self.fecha_oficioS;
                                             self.cesion_nov.fechaoficioordenador = self.fecha_oficioO;
                                             self.cesion_nov.fechasuspension = "0001-01-01T00:00:00Z";
@@ -806,8 +873,7 @@ angular
                                             self.cesion_nov.plazoactual = 0;
                                             self.cesion_nov.poliza = "";
                                             self.cesion_nov.tiempoprorroga = 0;
-                                            self.cesion_nov.tiponovedad =
-                                                nc_response.data[0].CodigoAbreviacion;
+                                            self.cesion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
                                             self.cesion_nov.valoradicion = 0;
                                             self.cesion_nov.valorfinalcontrato = 0;
                                             self.cesion_nov.valor_desembolsado = parseFloat(self.valor_desembolsado.replace(/\,/g, ""));
@@ -816,11 +882,7 @@ angular
                                                 self.contrato_obj.vigencia
                                             );
                                             self.cesion_nov.vigenciacdp = "";
-                                            self.cesion_nov.fecharegistro = self.replaceAt(
-                                                self.contrato_obj.fecha_registro,
-                                                10,
-                                                "T"
-                                            );
+                                            self.cesion_nov.fecharegistro = self.f_hoy;
                                             self.cesion_nov.estado = self.estadoNovedad;
 
                                             //Recolección datos objeto POST Replica
@@ -833,9 +895,9 @@ angular
                                             self.contrato_obj_replica.DocumentoNuevo = self.cesionario_obj.identificacion;
                                             self.contrato_obj_replica.NombreCompleto = self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos;
                                             self.contrato_obj_replica.FechaRegistro = self.f_hoy;
-                                            self.contrato_obj_replica.PlazoEjecucion = self.contrato_obj.plazo;
+                                            self.contrato_obj_replica.PlazoEjecucion = self.contrato_obj.plazo_cesionario;
                                             self.contrato_obj_replica.FechaInicio = self.cesion_nov.fechacesion;
-                                            self.contrato_obj_replica.FechaFin = self.f_terminacion;
+                                            self.contrato_obj_replica.FechaFin = self.calcularFechaFin();
                                             self.contrato_obj_replica.UnidadEjecucion = 205;
                                             if (self.cesion_nov.tiponovedad === "NP_CES") {
                                                 self.contrato_obj_replica.TipoNovedad = parseFloat(219);
@@ -899,10 +961,6 @@ angular
                 } else {
                     fechaFin = self.contrato_obj.Fin;
                     fechaFinEfectiva = new Date(fechaFin);
-                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    if (fechaFinEfectiva.getDate() == 31) {
-                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    }
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
@@ -1210,6 +1268,15 @@ angular
                     new Date().getMinutes();
                 var output = self.get_plantilla();
                 const pdfDocGenerator = pdfMake.createPdf(output);
+                // pdfMake
+                //     .createPdf(output)
+                //     .download(
+                //         "acta_cesion_contrato_" +
+                //         self.contrato_id +
+                //         "_" +
+                //         dateTime +
+                //         ".pdf"
+                //     );
                 pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(
                         data,
@@ -1221,15 +1288,6 @@ angular
                         self
                     ).then(function (enlace) {
                         self.postNovedad(output, dateTime, enlace);
-                        // pdfMake
-                        //     .createPdf(output)
-                        //     .download(
-                        //         "acta_cesion_contrato_" +
-                        //         self.contrato_id +
-                        //         "_" +
-                        //         dateTime +
-                        //         ".pdf"
-                        //     );
                     });
                 });
             };
@@ -1348,7 +1406,7 @@ angular
                                 ", establece como plazo del contrato "
                         }, { text: '“El plazo de ejecución del Contrato es ', italics: true, }, {
                             text:
-                                self.contrato_plazo_letras + self.contrato_obj.plazo + ') MESES, ', bold: true, italics: true,
+                                self.plazoMeses + ', ', bold: true, italics: true,
                         },
                         {
                             text: 'contados a partir del cumplimiento de los requisitos de ejecución“, esto es, según el acta de inicio el ' + self.format_date_letter_mongo(self.contrato_obj.Inicio) +
@@ -1484,7 +1542,7 @@ angular
                                         NumeroALetras(parseInt(self.cesion_nov.valor_a_favor) + "") +
                                         "MONEDA CORRIENTE ($" +
                                         numberFormat(self.cesion_nov.valor_a_favor + "") +
-                                        " M/CTE), por un plazo de " + self.calculoDiasLetras(self.dias_pago_cedente) +
+                                        " M/CTE), por un plazo de " + self.calculoPlazoLetras(self.dias_pago_cedente) +
                                         ".\n\n"
                                 }],
 
@@ -1497,7 +1555,7 @@ angular
                                         "MONEDA CORRIENTE ($" +
                                         numberFormat(String(self.valor_contrato_cesionario()) + "") +
                                         " M/CTE), por un plazo de " +
-                                        self.calculoDiasLetras(self.contrato_obj.plazo_cesionario) +
+                                        self.calculoPlazoLetras(self.contrato_obj.plazo_cesionario) +
                                         ".\n\n"
                                 }],
                         },
@@ -1527,6 +1585,32 @@ angular
                     { text: " (CESIONARIO).\n\n", bold: true }]
                 });
                 return estructura;
+            }
+
+            self.agregarFirmas = function () {
+
+                var firmas = [];
+                firmas.push([
+                    "",
+                    { text: "Nombre", bold: true },
+                    { text: "Cargo", bold: true },
+                    { text: "Firma", bold: true },
+                ]);
+                if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                    firmas.push([
+                        { text: "Proyectó", bold: true },
+                        self.elaboro,
+                        "Abogado Oficina de Contratación",
+                        "",
+                    ]);
+                }
+                firmas.push([
+                    { text: "Aprobó", bold: true },
+                    self.contrato_obj.jefe_juridica_nombre_completo,
+                    "Jefe Oficina de Contratación",
+                    "",
+                ]);
+                return firmas;
             }
 
             /**
@@ -1797,8 +1881,8 @@ angular
                                     "MONEDA CORRIENTE ($" +
                                     numberFormat(String(self.valor_contrato_cesionario()) + "") +
                                     " M/CTE), por un plazo de " +
-                                    self.contrato_obj.plazo_cesionario +
-                                    " días.\n\n"
+                                    self.calculoPlazoLetras(self.contrato_obj.plazo_cesionario) +
+                                    ".\n\n"
                             },
                             ],
                             [{
@@ -1968,33 +2052,7 @@ angular
                         style: ["table3"],
                         table: {
                             widths: [65, 130, 130, 150],
-                            body: [
-                                [
-
-                                    { text: "Funcionario", bold: true },
-                                    { text: "Nombre", bold: true },
-                                    { text: "Cargo", bold: true },
-                                    { text: "Firma", bold: true },
-                                ],
-                                [
-                                    { text: "Proyectó", bold: false },
-                                    self.elaboro,
-                                    "Abogado Oficina de Contratación",
-                                    "",
-                                ],
-                                [
-                                    { text: "Revisó", bold: false },
-                                    self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina de Contratación",
-                                    "",
-                                ],
-                                [
-                                    { text: "Aprobó", bold: false },
-                                    self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina de Contratación",
-                                    "",
-                                ]
-                            ],
+                            body: self.agregarFirmas(),
                         },
                     },
                     ],
