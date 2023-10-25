@@ -157,6 +157,15 @@
                         <textarea class="form-control" name="motivo" style="border-radius:0;" id="motivo"
                             ng-model="sLactaSuspension.motivo" rows="5" maxlength="249" required></textarea>
                     </div>
+                    <div class="col-xs-12 col-md-6">
+                        <label class="checkbox-inline"><input type="checkbox" ng-model="nueva_clausula"><b>Cláusula
+                                adicional</b></label>
+                    </div>
+                    <div class="col-xs-12 col-md-12">
+                        <textarea ng-if="nueva_clausula" style="height: 100px;" class="form-control" id="nueva_clausula"
+                            ng-model="sLactaSuspension.nueva_clausula_text" rows="3" maxlength="500"
+                            placeholder="NUEVA CLÁUSULA"></textarea>
+                    </div>
                     </form>
                 </div>
             </div>

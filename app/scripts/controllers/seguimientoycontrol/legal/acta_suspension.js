@@ -47,6 +47,7 @@ angular
             self.n_solicitud = null;
             self.numero_oficio_supervisor = "";
             self.numero_oficio_ordenador = "";
+            self.nueva_clausula_text = "";
 
             self.novedades = [];
             self.contrato_id = $routeParams.contrato_id;
@@ -1149,6 +1150,21 @@ angular
                 return fecha.toLocaleDateString("es-ES", options);
             };
 
+            self.agregarClausulas = function () {
+                var estructura = {};
+                if ($scope.nueva_clausula) {
+                    estructura = {
+                        style: ['general_font'],
+                        text: [{
+                            text: [
+                                { text: ' CLÁUSULA CUARTA: ', bold: true },
+                                { text: self.nueva_clausula_text + '\n\n' }
+                            ]
+                        }]
+                    }
+                }
+            }
+
             /**
              * @ngdoc method
              * @name get_pdf
@@ -1438,6 +1454,7 @@ angular
 
                         }]
                     },
+                    self.agregarClausulas(),
                     {
                         style: ["general_font"],
                         text: [
