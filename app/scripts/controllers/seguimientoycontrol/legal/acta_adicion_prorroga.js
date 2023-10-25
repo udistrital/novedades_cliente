@@ -1691,8 +1691,6 @@ angular
 
             self.agregarFirmas = function () {
                 var firmas = [];
-                console.log(typeof self.elaboro_cedula);
-                console.log(typeof self.contrato_obj.jefe_juridica_documento);
                 firmas.push([
                     "",
                     { text: "Nombre", bold: true },
