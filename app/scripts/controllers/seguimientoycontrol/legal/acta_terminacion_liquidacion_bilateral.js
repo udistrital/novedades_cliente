@@ -57,6 +57,7 @@ angular.module('contractualClienteApp')
             self.fecha_terminacion_anticipada = new Date();
             self.fecha_efectos_legales = new Date();
             self.f_certificacion = new Date();
+            self.estados = [];
             self.f_expedicion_acta = new Date();
             self.estadoNovedad = "";
             self.idRegistro = "";
