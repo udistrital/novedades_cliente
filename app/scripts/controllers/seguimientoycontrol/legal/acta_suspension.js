@@ -150,8 +150,8 @@ angular
                         agoraRequest
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
                             .then(function (acta_response) {
-                                self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
-                                self.contrato_obj.Fin = acta_response.data[0].FechaFin;
+                                self.contrato_obj.Inicio = self.getFechaUTC(acta_response.data[0].FechaInicio);
+                                self.contrato_obj.Fin = self.getFechaUTC(acta_response.data[0].FechaFin);
                                 self.f_inicio = new Date(self.contrato_obj.Inicio);
                                 self.f_inicio.setDate(self.f_inicio.getDate() + 1);
                                 self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
@@ -629,6 +629,7 @@ angular
                             self.suspension_nov.periodosuspension = self.diff_dias;
                             self.suspension_nov.fecharegistro = new Date();
                             self.suspension_nov.fechasolicitud = self.fecha_solicitud;
+                            self.suspension_nov.fechaexpedicion = self.f_expedicion_acta;
                             self.suspension_nov.fechasuspension = self.f_inicio;
                             self.suspension_nov.fechareinicio = self.f_reinicio;
                             self.suspension_nov.fechafinsuspension = self.f_fin;
@@ -745,12 +746,7 @@ angular
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
                     fechaFinEfectiva = new Date(fechaFin);
                 } else {
-                    fechaFin = self.contrato_obj.Fin;
-                    fechaFinEfectiva = new Date(fechaFin);
-                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    if (fechaFinEfectiva.getDate() == 31) {
-                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    }
+                    fechaFinEfectiva = new Date(self.contrato_obj.Fin);
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
@@ -1103,6 +1099,17 @@ angular
                     return resultado;
                 }
             }
+
+
+            self.getFechaUTC = function (dateString) {
+                var fecha = new Date(dateString);
+                var anio = fecha.getUTCFullYear();
+                var mes = fecha.getUTCMonth();
+                var dia = fecha.getUTCDate();
+                var fechaUTC = new Date(anio, mes, dia, 12, 0, 0, 0);
+                return fechaUTC;
+            }
+
             /**
              * @ngdoc method
              * @name format_date_letter
@@ -1163,6 +1170,32 @@ angular
                         }]
                     }
                 }
+                return estructura;
+            }
+
+            self.agregarFirmas = function () {
+                var firmas = [];
+                firmas.push([
+                    "",
+                    { text: "Nombre", bold: true },
+                    { text: "Cargo", bold: true },
+                    { text: "Firma", bold: true },
+                ]);
+                if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                    firmas.push([
+                        { text: "Proyectó", bold: true },
+                        self.elaboro,
+                        "Abogado Oficina de Contratación",
+                        "",
+                    ]);
+                }
+                firmas.push([
+                    { text: "Aprobó", bold: true },
+                    self.contrato_obj.jefe_juridica_nombre_completo,
+                    "Jefe Oficina de Contratación",
+                    "",
+                ]);
+                return firmas;
             }
 
             /**
@@ -1601,32 +1634,7 @@ angular
                         style: "table3",
                         table: {
                             widths: [65, 130, 130, 150],
-                            body: [
-                                [
-                                    { text: "Funcionario", bold: true },
-                                    { text: "Nombre", bold: true },
-                                    { text: "Cargo", bold: true },
-                                    { text: "Firma", bold: true },
-                                ],
-                                [
-                                    { text: "Proyectó", bold: true },
-                                    self.elaboro,
-                                    "Abogado Oficina de Contratación",
-                                    "",
-                                ],
-                                [
-                                    { text: "Revisó", bold: true },
-                                    self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina de Contratación",
-                                    "",
-                                ],
-                                [
-                                    { text: "Aprobó", bold: true },
-                                    self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina de Contratación",
-                                    "",
-                                ],
-                            ],
+                            body: self.agregarFirmas(),
                         },
                     },
                     ],

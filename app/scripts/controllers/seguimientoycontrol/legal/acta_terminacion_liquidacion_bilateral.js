@@ -40,6 +40,8 @@ angular.module('contractualClienteApp')
             self.estado_suspendido = "{}";
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
+            self.plazoDias = false;
+            self.plazoMeses = "";
             self.contrato_obj = {};
             self.contrato_obj_replica = {};
             self.a_favor = {};
@@ -56,6 +58,7 @@ angular.module('contractualClienteApp')
             self.fecha_efectos_legales = new Date();
             self.f_certificacion = new Date();
             self.estados = [];
+            self.f_expedicion_acta = new Date();
             self.estadoNovedad = "";
             self.idRegistro = "";
             self.elaboro = '';
@@ -124,9 +127,10 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.fecha_registro = agora_response.data[0].FechaRegistro;
                     self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                     self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
-                    if (self.contrato_obj.plazo > 30) {
-                        self.contrato_obj.plazo = Math.floor(self.contrato_obj.plazo / 30);
+                    if (self.contrato_obj.plazo > 12) {
+                        self.plazoDias = true;
                     }
+                    self.plazoMeses = self.calculoPlazoLetras(self.contrato_obj.plazo);
                     self.contrato_obj.vigencia = self.contrato_vigencia;
                     self.contrato_obj.supervisor_cedula = agora_response.data[0].Supervisor.Documento;
                     self.contrato_obj.supervisor_rol = agora_response.data[0].Supervisor.Cargo;
@@ -138,15 +142,10 @@ angular.module('contractualClienteApp')
 
                     //Se obtiene los datos de Acta de Inicio.
                     agoraRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.id).then(function (acta_response) {
-                        self.contrato_obj.FechaInicio = new Date(acta_response.data[0].FechaInicio);
-                        self.contrato_obj.FechaInicio.setDate(self.contrato_obj.FechaInicio.getDate() + 1)
-                        if (self.contrato_obj.FechaInicio.getDate() == 31) {
-                            self.contrato_obj.FechaInicio.setDate(self.contrato_obj.FechaInicio.getDate() + 1);
-                        }
-                        self.contrato_obj.FechaFin = acta_response.data[0].FechaFin;
+                        self.contrato_obj.FechaInicio = self.getFechaUTC(acta_response.data[0].FechaInicio);
+                        self.contrato_obj.FechaFin = self.getFechaUTC(acta_response.data[0].FechaFin);
 
                         self.fecha_terminacion_anticipada = new Date(self.contrato_obj.FechaFin);
-                        self.fecha_terminacion_anticipada.setDate(self.fecha_terminacion_anticipada.getDate() + 1);
                         self.fecha_lim_inf = new Date(self.contrato_obj.FechaInicio);
                         self.fecha_lim_inf.setDate(self.fecha_lim_inf.getDate() + 1);
                         self.fecha_lim_sup = self.calcularFechaFin();
@@ -289,31 +288,31 @@ angular.module('contractualClienteApp')
                  * Funcion que observa y controla el cambio de fechas
                  * @param {date} Fecha de terminación anticipada
                  */
-            $scope.$watch("sLactaTerminacionAnticipada.fecha_solicitud", function () {
-                if (self.fecha_solicitud.getDate() == 31) {
-                    swal(
-                        $translate.instant("TITULO_ADVERTENCIA"),
-                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
-                        "error"
-                    );
-                    var fecha = new Date(self.fecha_solicitud);
-                    fecha.setDate(self.fecha_solicitud.getDate() + 1);
-                    self.fecha_solicitud = fecha;
-                }
-            });
+            // $scope.$watch("sLactaTerminacionAnticipada.fecha_solicitud", function () {
+            //     if (self.fecha_solicitud.getDate() == 31) {
+            //         swal(
+            //             $translate.instant("TITULO_ADVERTENCIA"),
+            //             $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+            //             "error"
+            //         );
+            //         var fecha = new Date(self.fecha_solicitud);
+            //         fecha.setDate(self.fecha_solicitud.getDate() + 1);
+            //         self.fecha_solicitud = fecha;
+            //     }
+            // });
 
-            $scope.$watch("sLactaTerminacionAnticipada.fecha_terminacion_anticipada", function () {
-                if (self.fecha_terminacion_anticipada.getDate() == 31) {
-                    swal(
-                        $translate.instant("TITULO_ADVERTENCIA"),
-                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
-                        "error"
-                    );
-                    var fecha = new Date(self.fecha_terminacion_anticipada);
-                    fecha.setDate(self.fecha_terminacion_anticipada.getDate() + 1);
-                    self.fecha_terminacion_anticipada = fecha;
-                }
-            });
+            // $scope.$watch("sLactaTerminacionAnticipada.fecha_terminacion_anticipada", function () {
+            //     if (self.fecha_terminacion_anticipada.getDate() == 31) {
+            //         swal(
+            //             $translate.instant("TITULO_ADVERTENCIA"),
+            //             $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+            //             "error"
+            //         );
+            //         var fecha = new Date(self.fecha_terminacion_anticipada);
+            //         fecha.setDate(self.fecha_terminacion_anticipada.getDate() + 1);
+            //         self.fecha_terminacion_anticipada = fecha;
+            //     }
+            // });
 
             /**
              * @ngdoc method
@@ -394,6 +393,56 @@ angular.module('contractualClienteApp')
                             centSingular: $translate.instant("CENTAVO"),
                         }) + " MONEDA CORRIENTE ($" +
                         numberFormat(String(self.terminacion_nov.saldo_contratista) + ' M/Cte.)');
+                }
+            }
+
+            self.calculoPlazoLetras = function (plazo) {
+                if (self.plazoDias) {
+                    var plazo_meses = plazo / 30;
+                    var res = String(plazo_meses).split(".");
+                    var cantidad_meses = res[0];
+                    var decimal_cantidad_dias = "0." + res[1];
+                    var cantidad_dias = Math.ceil(parseFloat(decimal_cantidad_dias) / 0.03333333333336);
+                    var cantidad_meses_letras = numeroALetras(cantidad_meses, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var cantidad_dias_letras = numeroALetras(cantidad_dias, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto = "";
+                    if (cantidad_dias == 0) {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES");
+                    } else {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES") +
+                            " Y " +
+                            cantidad_dias_letras +
+                            cantidad_dias +
+                            " ) " +
+                            $translate.instant("DIAS");
+                    }
+                    return texto;
+
+                } else {
+                    var cantidad_meses_letras = numeroALetras(plazo, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto =
+                        cantidad_meses_letras +
+                        plazo +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES");
+                    return texto;
                 }
             }
 
@@ -521,23 +570,24 @@ angular.module('contractualClienteApp')
                                                     allowOutsideClick: false
                                                 }).then(function () { });
                                             });
+                                    } else {
+                                        $scope.alert = "TITULO_ERROR_REPLICA";
+                                        swal({
+                                            title: $translate.instant("TITULO_ERROR_ACTA"),
+                                            type: "error",
+                                            html: $translate.instant($scope.alert) +
+                                                self.contrato_obj.numero_contrato +
+                                                $translate.instant("ANIO") +
+                                                self.contrato_obj.vigencia +
+                                                ".",
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false,
+                                        }).then(function () { });
                                     }
                                 }).catch(function (error) {
                                     //Error en la replica
-                                    $scope.alert = "TITULO_ERROR_REPLICA";
-                                    swal({
-                                        title: $translate.instant("TITULO_ERROR_ACTA"),
-                                        type: "error",
-                                        html: $translate.instant($scope.alert) +
-                                            self.contrato_obj.numero_contrato +
-                                            $translate.instant("ANIO") +
-                                            self.contrato_obj.vigencia +
-                                            ".",
-                                        showCloseButton: true,
-                                        showCancelButton: false,
-                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                        allowOutsideClick: false,
-                                    }).then(function () { });
                                 })
                         }
                     }
@@ -585,6 +635,7 @@ angular.module('contractualClienteApp')
                         self.terminacion_nov.fecharegistro = new Date();
                         self.terminacion_nov.numerosolicitud = self.numero_solicitud;
                         self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
+                        self.terminacion_nov.fechaexpedicion = self.f_expedicion_acta;
                         if (self.numero_oficio_supervisor == "") {
                             self.terminacion_nov.numerooficiosupervisor = "n.a.";
                         } else {
@@ -605,9 +656,6 @@ angular.module('contractualClienteApp')
                         self.terminacion_nov.estado = self.estadoNovedad;
                         self.fecha_efectos_legales = new Date(self.fecha_terminacion_anticipada);
                         self.fecha_efectos_legales.setDate(self.fecha_efectos_legales.getDate() + 1);
-                        if (self.fecha_efectos_legales.getDate() == 31) {
-                            self.fecha_efectos_legales.setDate(self.fecha_efectos_legales.getDate() + 1);
-                        }
                         // Recolección datos objeto POST Replica
                         self.contrato_obj_replica.NumeroContrato = self.contrato_obj.numero_contrato;
                         self.contrato_obj_replica.Vigencia = parseInt(self.contrato_obj.vigencia);
@@ -701,15 +749,6 @@ angular.module('contractualClienteApp')
 
                 const pdfDocGenerator = pdfMake.createPdf(output);
                 pdfDocGenerator.getBase64(function (data) {
-                    // pdfMake
-                    //     .createPdf(output)
-                    //     .download(
-                    //         "acta_terminacion_anticipada_" +
-                    //         self.contrato_id +
-                    //         "_" +
-                    //         dateTime +
-                    //         ".pdf"
-                    //     );
                     pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_terminacion_anticipada_" +
@@ -793,6 +832,16 @@ angular.module('contractualClienteApp')
 
                 return r_date;
             };
+
+            self.getFechaUTC = function (dateString) {
+                var fecha = new Date(dateString);
+                var anio = fecha.getUTCFullYear();
+                var mes = fecha.getUTCMonth();
+                var dia = fecha.getUTCDate();
+                var fechaUTC = new Date(anio, mes, dia, 12, 0, 0, 0);
+                return fechaUTC;
+            }
+
             /**
              * @ngdoc method
              * @name numberFormat
@@ -1056,6 +1105,33 @@ angular.module('contractualClienteApp')
                         }]
                     }
                 }
+                return estructura;
+            }
+
+            self.agregarFirmas = function () {
+
+                var firmas = [];
+                firmas.push([
+                    "",
+                    { text: "Nombre", bold: true },
+                    { text: "Cargo", bold: true },
+                    { text: "Firma", bold: true },
+                ]);
+                if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                    firmas.push([
+                        { text: "Proyectó", bold: true },
+                        self.elaboro,
+                        "Abogado Oficina de Contratación",
+                        "",
+                    ]);
+                }
+                firmas.push([
+                    { text: "Aprobó", bold: true },
+                    self.contrato_obj.jefe_juridica_nombre_completo,
+                    "Jefe Oficina de Contratación",
+                    "",
+                ]);
+                return firmas;
             }
 
             self.get_plantilla = function () {
@@ -1131,7 +1207,7 @@ angular.module('contractualClienteApp')
                                     }
                                 ],
                                 [
-                                    { text: 'FECHA DE INCIO', bold: true, style: 'topHeader' },
+                                    { text: 'FECHA DE INICIO', bold: true, style: 'topHeader' },
                                     { text: self.format_date_letter_mongo(self.contrato_obj.FechaInicio), style: 'topHeader' }
                                 ],
                             ],
@@ -1187,10 +1263,7 @@ angular.module('contractualClienteApp')
                             'Que el contrato se perfeccionó y ejecutó mediante Registro Presupuestal No. ' + self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n',
 
                             'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' +
-                            numeroALetras(self.contrato_obj.plazo, {
-                                plural: $translate.instant("("),
-                                singular: $translate.instant("("),
-                            }) + self.contrato_obj.plazo + ')' + ' meses contados a partir del perfeccionamiento de la Orden y/o contrato, es decir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
+                            self.plazoMeses + ' contados a partir del perfeccionamiento de la Orden y/o contrato, es decir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
 
                             'Que el valor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' se pactó en la suma total de ' +
                             numeroALetras(self.contrato_obj.valor, {
@@ -1307,7 +1380,7 @@ angular.module('contractualClienteApp')
                         style: ['general_font'],
                         text: [{
                             text: [
-                                "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., el día " + self.format_date_letter_mongo(self.f_expedicion_acta) + ".",
+                                "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., el día " + self.format_date_letter_mongo(self.f_expedicion_acta) +
                                 "\n",
                             ],
                         }]
@@ -1413,31 +1486,7 @@ angular.module('contractualClienteApp')
                         style: 'table3',
                         table: {
                             widths: [65, 130, 130, 150],
-                            body: [
-                                [{ text: 'Funcionario', bold: true },
-                                { text: 'Nombre', bold: true },
-                                { text: 'Cargo', bold: true },
-                                { text: 'Firma', bold: true }
-                                ],
-                                [
-                                    { text: 'Proyectó', bold: true },
-                                    self.elaboro,
-                                    "Abogado Oficina de Contratación",
-                                    ""
-                                ],
-                                [
-                                    { text: 'Revisó', bold: true },
-                                    self.contrato_obj.jefe_juridica_nombre_completo,
-                                    'Jefe Oficina de Contratación',
-                                    ''
-                                ],
-                                [
-                                    { text: 'Aprobó', bold: true },
-                                    self.contrato_obj.jefe_juridica_nombre_completo,
-                                    'Jefe Oficina de Contratación',
-                                    ''
-                                ],
-                            ]
+                            body: self.agregarFirmas(),
                         }
                     },
                     ],
