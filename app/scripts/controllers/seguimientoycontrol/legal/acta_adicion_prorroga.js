@@ -182,12 +182,8 @@ angular
                                         self.contrato_obj.NumeroContrato
                                     )
                                     .then(function (acta_response) {
-                                        self.contrato_obj.inicio = new Date(acta_response.data[0].FechaInicio);
-                                        self.contrato_obj.inicio.setDate(self.contrato_obj.inicio.getDate() + 1)
-                                        if (self.contrato_obj.inicio.getDate() == 31) {
-                                            self.contrato_obj.inicio.setDate(self.contrato_obj.inicio.getDate() + 1);
-                                        }
-                                        self.contrato_obj.fin = acta_response.data[0].FechaFin;
+                                        self.contrato_obj.inicio = self.getFechaUTC(acta_response.data[0].FechaInicio);
+                                        self.contrato_obj.fin = self.getFechaUTC(acta_response.data[0].FechaFin);
                                         self.calcularFechaFin(0, true);
                                     });
                             });
@@ -300,7 +296,6 @@ angular
                                                 iopn_response.data[0].IdCiudadExpedicionDocumento
                                             )
                                             .then(function (scj_response) {
-                                                console.log(scj_response);
                                                 self.contrato_obj.ordenador_gasto_ciudad_documento =
                                                     scj_response.data[0].Nombre;
                                                 self.contrato_obj.ordenador_gasto_tipo_documento =
@@ -502,21 +497,21 @@ angular
                 self.fecha_solicitud = new Date(novedad.fechasolicitud);
             }
 
-            /**
-             * @ngdoc method
-             * @name calculoTiempo
-             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaAdicionProrrogaCtrl
-             * @description
-             * Funcion que observa y controla el cambio de fechas
-             * @param {date} Fecha de Adición y Prórroga
-             */
-            $scope.$watch("sLactaAdicionProrroga.fecha_prorroga", function () {
-                if (self.fecha_prorroga.getDate() == 31) {
-                    var fecha = new Date(self.fecha_prorroga);
-                    fecha.setDate(self.fecha_prorroga.getDate() + 1);
-                    self.fecha_prorroga = fecha;
-                }
-            });
+            // /**
+            //  * @ngdoc method
+            //  * @name calculoTiempo
+            //  * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaAdicionProrrogaCtrl
+            //  * @description
+            //  * Funcion que observa y controla el cambio de fechas
+            //  * @param {date} Fecha de Adición y Prórroga
+            //  */
+            // $scope.$watch("sLactaAdicionProrroga.fecha_prorroga", function () {
+            //     if (self.fecha_prorroga.getDate() == 31) {
+            //         var fecha = new Date(self.fecha_prorroga);
+            //         fecha.setDate(self.fecha_prorroga.getDate() + 1);
+            //         self.fecha_prorroga = fecha;
+            //     }
+            // });
 
             $scope.$watch("sLactaAdicionProrroga.fecha_solicitud", function () {
                 if (self.fecha_solicitud.getDate() == 31) {
@@ -938,6 +933,15 @@ angular
                 }
             }
 
+            self.getFechaUTC = function (dateString) {
+                var fecha = new Date(dateString);
+                var anio = fecha.getUTCFullYear();
+                var mes = fecha.getUTCMonth();
+                var dia = fecha.getUTCDate();
+                var fechaUTC = new Date(anio, mes, dia, 12, 0, 0, 0);
+                return fechaUTC;
+            }
+
             /**
              * @ngdoc method
              * @name calcularFechaFin
@@ -953,16 +957,11 @@ angular
                 if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
                     fechaFinEfectiva = new Date(fechaFin);
-                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    if (fechaFinEfectiva.getDate() == 31) {
-                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    }
                 } else {
-                    fechaFin = self.contrato_obj.fin;
+                    fechaFin = new Date(self.contrato_obj.fin);
                     // console.log(fechaFin);
                     fechaFinEfectiva = new Date(fechaFin);
                     // console.log(fechaFinEfectiva);
-                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
                     if (fechaFinEfectiva.getDate() == 31) {
                         fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
                     }
@@ -1001,7 +1000,7 @@ angular
                     }
                 }
                 // console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
-                nuevaFechaFin.setHours(0, 0, 0, 0);
+                // nuevaFechaFin.setHours(0, 0, 0, 0);
                 return nuevaFechaFin;
             }
 
@@ -1180,12 +1179,18 @@ angular
                             self.estadoNovedad = "ENTR";
                         }
                         //objeto acta adición_prórroga
-                        self.fecha_solicitud.setHours(0, 0, 0, 0);
-                        self.fecha_prorroga.setHours(0, 0, 0, 0);
+                        self.fecha_solicitud.setHours(12, 0, 0, 0);
+                        self.fecha_prorroga.setHours(12, 0, 0, 0);
+                        self.f_expedicion_acta.setHours(12, 0, 0, 0);
+                        var fecha_prorroga_post = new Date(self.fecha_prorroga);
+                        if (fecha_prorroga_post.getDate() == 31) {
+                            fecha_prorroga_post.setDate(fecha_prorroga_post.getDate() + 1);
+                        }
                         self.data_acta_adicion_prorroga = {
                             contrato: self.contrato_obj.numero_contrato,
                             numerosolicitud: $scope.numero_solicitud,
                             fechasolicitud: self.fecha_solicitud,
+                            fechaexpedicion: self.f_expedicion_acta,
                             numerooficiosupervisor: "n.a.",
                             numerooficioordenador: self.numero_oficio,
                             numerocdp: String(self.cdp_numero),
@@ -1193,9 +1198,9 @@ angular
                             numerorp: String(0),
                             vigenciarp: String(0),
                             valoradicion: parseFloat($scope.valor_adicion.replace(/\,/g, "")),
-                            fechaadicion: self.fecha_prorroga,
+                            fechaadicion: fecha_prorroga_post,
                             tiempoprorroga: parseInt($scope.tiempo_prorroga),
-                            fechaprorroga: self.fecha_prorroga,
+                            fechaprorroga: fecha_prorroga_post,
                             vigencia: String(self.contrato_obj.vigencia),
                             motivo: "",
                             tiponovedad: tiponovedad,
@@ -1307,6 +1312,8 @@ angular
 
                 var docDefinition = self.formato_pdf();
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+                // console.log(self.contrato_obj_replica);
+                // console.log(self.data_acta_adicion_prorroga);
                 // pdfMake.createPdf(docDefinition).
                 //     download(
                 //         "acta_adicion_prorroga_contrato_" +
@@ -1674,7 +1681,6 @@ angular
                         "la presente Adición y Prórroga se deberá publicar en el portal SECOP II, una vez esté suscrita por las partes, y sea devuelta a la Oficina de Contratación para el archivo correspondiente.\n\n"
                 });
                 var for_limit = 7;
-                console.log(self.posicion_clausula);
                 if ($scope.nueva_clausula) {
                     clausulasText.splice(self.posicion_clausula, 0, { text: self.nueva_clausula_text + "\n\n" });
                     for_limit += 1

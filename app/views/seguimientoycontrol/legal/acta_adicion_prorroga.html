@@ -95,8 +95,8 @@
                                     <label>{{'NUMERO_SOLICITUD_NECESIDAD' | translate}}*</label>
                                     <br>
                                     <md-input-container style="margin:0;">
-                                        <input type="text" id="solicitud" name="solicitud" ng-model="numero_solicitud"
-                                            min="0" required>
+                                        <input type="text" id="solicitud" aria-label="solicitud" name="solicitud"
+                                            ng-model="numero_solicitud" min="0" required>
                                         <div ng-messages="formadipro.solicitud.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>
@@ -113,7 +113,7 @@
                                 <label>{{'NUMERO_OFICIO' | translate}}*</label>
                                 <br>
                                 <md-input-container style="margin:0;">
-                                    <input type="text" id="oficio" name="oficio"
+                                    <input type="text" id="oficio" aria-label="oficio" name="oficio"
                                         ng-model="sLactaAdicionProrroga.numero_oficio">
                                 </md-input-container>
                             </div>
@@ -205,15 +205,15 @@
                                         <label>{{'CDP - VIGENCIA' | translate}}</label>
                                         <br>
                                         <md-input-container style="margin:0; width: 40%;">
-                                            <input type="number" id="cdp_numero" name="cdp_numero"
-                                                ng-model="sLactaAdicionProrroga.cdp_numero">
+                                            <input type="number" id="cdp_numero" aria-label="cdp_numero"
+                                                name="cdp_numero" ng-model="sLactaAdicionProrroga.cdp_numero">
                                             <div ng-messages="formadipro.cdp_numero.$error">
                                                 <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                             </div>
                                         </md-input-container>-
                                         <md-input-container style="margin:0; width: 40%;">
-                                            <input type="number" id="cdp_vigencia" name="cdp_vigencia"
-                                                ng-model="sLactaAdicionProrroga.cdp_vigencia">
+                                            <input type="number" id="cdp_vigencia" aria-label="cdp_vigencia"
+                                                name="cdp_vigencia" ng-model="sLactaAdicionProrroga.cdp_vigencia">
                                             <div ng-messages="formadipro.cdp_vigencia.$error">
                                                 <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                             </div>
@@ -233,9 +233,9 @@
                                         <label>{{'VALOR_ADICION' | translate}} *</label>
                                         <br>
                                         <md-input-container style="margin:0;">
-                                            <input type="text" id="valor_adicion" name="valor_adicion"
-                                                ng-model="valor_adicion" ng-keyup="total_valor_contrato($event)" min="1"
-                                                required="false">
+                                            <input type="text" id="valor_adicion" aria-label="valor_adicion"
+                                                name="valor_adicion" ng-model="valor_adicion"
+                                                ng-keyup="total_valor_contrato($event)" min="1" required="false">
                                             <div ng-messages="formadipro.valor_adicion.$error">
                                                 <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                             </div>
@@ -245,7 +245,8 @@
                                         <label>{{'NUEVO_VALOR_CONTRATO' | translate}}</label>
                                         <br>
                                         <md-input-container style="margin:0;">
-                                            <input type="text" id="nuevo_valor_contrato" name="nuevo_valor_contrato"
+                                            <input type="text" id="nuevo_valor_contrato"
+                                                aria-label="nuevo_valor_contrato" name="nuevo_valor_contrato"
                                                 ng-model="nuevo_valor_contrato" readonly>
                                         </md-input-container>
                                     </div>
@@ -276,8 +277,9 @@
                                 <div class="col-xs-12 col-md-6">
                                     <label>{{'TIEMPO_PRORROGA' | translate}}* </label>
                                     <md-input-container style="margin:0;">
-                                        <input type="text" id="tiempo_prorroga" name="tiempo_prorroga"
-                                            ng-model="tiempo_prorroga" ng-keyup="total_plazo_contrato($event)" required>
+                                        <input type="text" id="tiempo_prorroga" aria-label="tiempo_prorroga"
+                                            name="tiempo_prorroga" ng-model="tiempo_prorroga"
+                                            ng-keyup="total_plazo_contrato($event)" required>
                                         <div ng-messages="formadipro.tiempo_prorroga.$error">
                                             <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                         </div>

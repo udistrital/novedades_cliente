@@ -215,7 +215,7 @@ angular
                                                         id: self.novedades[i].id,
                                                         tipoNovedad: self.novedades[i].nombreTipoNovedad,
                                                         enlace: self.novedades[i].enlace,
-                                                        fecha: self.novedades[i].fechasolicitud,
+                                                        fecha: self.novedades[i].fechaexpedicion,
                                                         estado: self.novedades[i].nombreEstado,
                                                     });
                                                 }

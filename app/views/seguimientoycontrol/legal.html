@@ -36,8 +36,8 @@
                                     <b>{{'NUMERO_CONTRATO' | translate}} *:</b>
                                 </p>
                                 <md-input-container style="margin:0; display:inline-block; width:40%;">
-                                    <input type="number" id="contrato_id" aria-label="contrato_id" name="contrato_id" required
-                                        ng-model="sLegal.contrato_id" ng-disabled="false" min="0">
+                                    <input type="number" id="contrato_id" aria-label="contrato_id" name="contrato_id"
+                                        required ng-model="sLegal.contrato_id" ng-disabled="false" min="0">
                                     <div ng-messages="formLegal.contrato_id.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                     </div>
@@ -211,7 +211,7 @@
                                             <center>Enlace</center>
                                         </th>
                                         <th>
-                                            <center>Fecha creacion</center>
+                                            <center>Fecha expedición</center>
                                         </th>
                                         <th>
                                             <center>Estado</center>
@@ -230,7 +230,7 @@
                                             <center>{{ novedad.enlace }}</center>
                                         </td>
                                         <td class="text-center"
-                                            ng-bind="formatDate(novedad.fecha) |  date:'yyyy-MM-dd H:mm:ss' : 'UTC'">
+                                            ng-bind="formatDate(novedad.fecha) |  date:'yyyy-MM-dd' : 'UTC'">
                                         </td>
                                         <td>
                                             <center>{{ novedad.estado }}</center>
