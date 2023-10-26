@@ -828,11 +828,17 @@ angular
                                             self.contrato_obj.contratista_documento
                                         )
                                         .then(function (response_ced) {
+                                            self.f_cesion.setHours(12, 0, 0, 0);
+                                            self.f_expedicion_acta.setHours(12, 0, 0, 0);
+                                            self.fecha_oficioS.setHours(12, 0, 0, 0);
+                                            self.fecha_oficioO.setHours(12, 0, 0, 0);
+                                            self.fecha_solicitud.setHours(12, 0, 0, 0);
+                                            self.f_hoy.setHours(12, 0, 0, 0);
                                             self.cesion_nov = {};
-                                            self.cesion_nov.aclaracion = "";
-                                            self.cesion_nov.camposaclaracion = null;
-                                            self.cesion_nov.camposmodificacion = null;
-                                            self.cesion_nov.camposmodificados = null;
+                                            // self.cesion_nov.aclaracion = "";
+                                            // self.cesion_nov.camposaclaracion = null;
+                                            // self.cesion_nov.camposmodificacion = null;
+                                            // self.cesion_nov.camposmodificados = null;
                                             self.cesion_nov.cedente = parseInt(
                                                 response_ced.data[0].Id
                                             );
@@ -841,19 +847,18 @@ angular
                                             );
                                             self.cesion_nov.contrato =
                                                 self.contrato_obj.numero_contrato;
-                                            self.cesion_nov.fechaadicion = "0001-01-01T00:00:00Z";
+                                            // self.cesion_nov.fechaadicion = "0001-01-01T00:00:00Z";
                                             self.cesion_nov.fechacesion = new Date(self.f_cesion);
                                             self.cesion_nov.fechafinefectiva = self.calcularFechaFin();
-                                            self.cesion_nov.fechaliquidacion = "0001-01-01T00:00:00Z";
-                                            self.cesion_nov.fechaprorroga = "0001-01-01T00:00:00Z";
-                                            self.cesion_nov.fechareinicio = "0001-01-01T00:00:00Z";
+                                            // self.cesion_nov.fechaliquidacion = "0001-01-01T00:00:00Z";
+                                            // self.cesion_nov.fechaprorroga = "0001-01-01T00:00:00Z";
+                                            // self.cesion_nov.fechareinicio = "0001-01-01T00:00:00Z";
                                             self.cesion_nov.fechasolicitud = self.fecha_solicitud;
                                             self.cesion_nov.fechaexpedicion = self.f_expedicion_acta;
                                             self.cesion_nov.fechaoficiosupervisor = self.fecha_oficioS;
                                             self.cesion_nov.fechaoficioordenador = self.fecha_oficioO;
-                                            self.cesion_nov.fechasuspension = "0001-01-01T00:00:00Z";
-                                            self.cesion_nov.fechaterminacionanticipada =
-                                                "0001-01-01T00:00:00Z";
+                                            // self.cesion_nov.fechasuspension = "0001-01-01T00:00:00Z";
+                                            // self.cesion_nov.fechaterminacionanticipada = "0001-01-01T00:00:00Z";
                                             self.cesion_nov.motivo = "";
                                             self.cesion_nov.numeroactaentrega = 0;
                                             self.cesion_nov.numerocdp = "";
@@ -868,14 +873,14 @@ angular
                                             } else {
                                                 self.cesion_nov.numerooficioordenador = self.numero_oficio_ordenador;
                                             }
-                                            self.cesion_nov.observacion = self.observaciones;
-                                            self.cesion_nov.periodosuspension = 0;
-                                            self.cesion_nov.plazoactual = 0;
+                                            // self.cesion_nov.observacion = self.observaciones;
+                                            // self.cesion_nov.periodosuspension = 0;
+                                            // self.cesion_nov.plazoactual = 0;
                                             self.cesion_nov.poliza = "";
-                                            self.cesion_nov.tiempoprorroga = 0;
+                                            // self.cesion_nov.tiempoprorroga = 0;
                                             self.cesion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
-                                            self.cesion_nov.valoradicion = 0;
-                                            self.cesion_nov.valorfinalcontrato = 0;
+                                            // self.cesion_nov.valoradicion = 0;
+                                            // self.cesion_nov.valorfinalcontrato = 0;
                                             self.cesion_nov.valor_desembolsado = parseFloat(self.valor_desembolsado.replace(/\,/g, ""));
                                             self.cesion_nov.valor_a_favor = parseFloat(self.valor_a_favor.replace(/\,/g, ""));
                                             self.cesion_nov.vigencia = String(
@@ -954,13 +959,11 @@ angular
                 if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
                     fechaFinEfectiva = new Date(fechaFin);
-                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                } else {
+                    fechaFinEfectiva = new Date(self.contrato_obj.Fin);
                     if (fechaFinEfectiva.getDate() == 31) {
                         fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
                     }
-                } else {
-                    fechaFin = self.contrato_obj.Fin;
-                    fechaFinEfectiva = new Date(fechaFin);
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 

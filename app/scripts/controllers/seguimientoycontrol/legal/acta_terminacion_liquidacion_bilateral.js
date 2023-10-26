@@ -626,13 +626,23 @@ angular.module('contractualClienteApp')
 
                 if ($scope.formTerminacion.$valid) {
                     novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
+                        self.fecha_terminacion_anticipada.setHours(12, 0, 0, 0);
+                        self.f_expedicion_acta.setHours(12, 0, 0, 0);
+                        self.fecha_oficioS.setHours(12, 0, 0, 0);
+                        self.fecha_oficioO.setHours(12, 0, 0, 0);
+                        self.fecha_solicitud.setHours(12, 0, 0, 0);
+                        self.f_hoy.setHours(12, 0, 0, 0);
+                        var f_terminacion_post = new Date(self.fecha_terminacion_anticipada);
+                        if (f_terminacion_post.getDate() == 31) {
+                            f_terminacion_post.setDate(f_terminacion_post.getDate() + 1);
+                        }
                         self.terminacion_nov = {};
                         self.terminacion_nov.contrato = self.contrato_obj.numero_contrato;
                         self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
                         self.terminacion_nov.cesionario = parseInt(self.contrato_obj.contratista);
                         self.terminacion_nov.motivo = self.motivo;
                         self.terminacion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
-                        self.terminacion_nov.fecharegistro = new Date();
+                        self.terminacion_nov.fecharegistro = self.f_hoy;
                         self.terminacion_nov.numerosolicitud = self.numero_solicitud;
                         self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
                         self.terminacion_nov.fechaexpedicion = self.f_expedicion_acta;
@@ -651,20 +661,16 @@ angular.module('contractualClienteApp')
                         self.terminacion_nov.valor_desembolsado = parseFloat(self.valor_desembolsado.replace(/\,/g, ""));
                         self.terminacion_nov.saldo_contratista = parseFloat(self.saldo_contratista.replace(/\,/g, ""));
                         self.terminacion_nov.saldo_universidad = parseFloat(self.saldo_universidad.replace(/\,/g, ""));
-                        self.terminacion_nov.fecha_terminacion_anticipada = new Date(self.fecha_terminacion_anticipada);
-                        self.terminacion_nov.fechafinefectiva = new Date(self.fecha_terminacion_anticipada);
+                        self.terminacion_nov.fecha_terminacion_anticipada = f_terminacion_post;
+                        self.terminacion_nov.fechafinefectiva = f_terminacion_post;
                         self.terminacion_nov.estado = self.estadoNovedad;
                         self.fecha_efectos_legales = new Date(self.fecha_terminacion_anticipada);
                         self.fecha_efectos_legales.setDate(self.fecha_efectos_legales.getDate() + 1);
                         // Recolección datos objeto POST Replica
                         self.contrato_obj_replica.NumeroContrato = self.contrato_obj.numero_contrato;
                         self.contrato_obj_replica.Vigencia = parseInt(self.contrato_obj.vigencia);
-                        self.contrato_obj_replica.FechaRegistro = new Date();
-                        self.contrato_obj_replica.FechaInicio = new Date(self.contrato_obj.FechaInicio);
-                        self.contrato_obj_replica.FechaInicio.setDate(self.contrato_obj_replica.FechaInicio.getDate() + 1);
-                        if (self.contrato_obj_replica.FechaInicio.getDate() == 31) {
-                            self.contrato_obj_replica.FechaInicio.setDate(self.contrato_obj_replica.FechaInicio.getDate() + 1);
-                        }
+                        self.contrato_obj_replica.FechaRegistro = self.f_hoy;
+                        self.contrato_obj_replica.FechaInicio = self.contrato_obj.FechaInicio;
                         self.contrato_obj_replica.FechaFin = new Date(self.terminacion_nov.fecha_terminacion_anticipada);
                         // self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                         // self.contrato_obj_replica.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
@@ -713,9 +719,7 @@ angular.module('contractualClienteApp')
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
                     fechaFinEfectiva = new Date(fechaFin);
                 } else {
-                    fechaFin = self.contrato_obj.FechaFin;
-                    fechaFinEfectiva = new Date(fechaFin);
-                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    fechaFinEfectiva = new Date(self.contrato_obj.FechaFin);
                     if (fechaFinEfectiva.getDate() == 31) {
                         fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
                     }
@@ -748,6 +752,17 @@ angular.module('contractualClienteApp')
                 var output = self.get_plantilla();
 
                 const pdfDocGenerator = pdfMake.createPdf(output);
+                // console.log(self.terminacion_nov);
+                // console.log(self.contrato_obj_replica);
+                // pdfMake
+                //     .createPdf(output)
+                //     .download(
+                //         "acta_terminacion_anticipada_" +
+                //         self.contrato_id +
+                //         "_" +
+                //         dateTime +
+                //         ".pdf"
+                //     );
                 pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(
                         data,
@@ -1274,7 +1289,7 @@ angular.module('contractualClienteApp')
                             }) + "MODENA CORRIENTE ($" + numberFormat(String(self.contrato_obj.valor) + "") + ' M/Cte.).\n\n',
 
                             'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
-                            ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
+                            ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + '.\n\n',
 
                             'Que según certificación de fecha ' + self.format_date_letter_mongo(self.f_certificacion) + ', expedida por el Jefe de la Unidad de Presupuesto, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' presenta un saldo a la fecha de ' +
                             numeroALetras(self.a_favor.valor, {
@@ -1341,7 +1356,7 @@ angular.module('contractualClienteApp')
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA SEGUNDA : ', bold: true },
-                                { text: ' Teniendo en cuenta que el Contratista ' + self.contrato_obj.contratista_nombre + ', ejecutará los servicios hasta el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', ' + self.a_favor.existe + '\n\n' }
+                                { text: ' Teniendo en cuenta que el Contratista ' + self.contrato_obj.contratista_nombre + ', ejecutará los servicios hasta el dia ' + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + ', ' + self.a_favor.existe + '\n\n' }
                             ]
                         }]
                     },

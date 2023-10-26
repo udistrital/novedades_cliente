@@ -52,6 +52,8 @@ angular
             self.novedades = [];
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
+            self.plazoDias = false;
+            self.plazoMeses = "";
             self.contrato_obj = {};
             self.elaboro = "";
             self.estados = [];
@@ -126,9 +128,10 @@ angular
                         self.contrato_obj.tipo_contrato =
                             agora_response.data[0].TipoContrato.TipoContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
-                        if (self.contrato_obj.plazo > 30) {
-                            self.contrato_obj.plazo = Math.floor(self.contrato_obj.plazo / 30);
+                        if (self.contrato_obj.plazo > 12) {
+                            self.plazoDias = true;
                         }
+                        self.plazoMeses = self.calculoPlazoLetras(self.contrato_obj.plazo);
                         self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                         self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
 
@@ -618,16 +621,36 @@ angular
                     novedadesRequest
                         .get("tipo_novedad", "query=Nombre:Suspensión")
                         .then(function (nc_response) {
-
+                            self.f_fin.setHours(12, 0, 0, 0);
+                            self.f_expedicion_acta.setHours(12, 0, 0, 0);
+                            self.fecha_oficioO.setHours(12, 0, 0, 0);
+                            self.fecha_oficioS.setHours(12, 0, 0, 0);
+                            self.fecha_oficioO.setHours(12, 0, 0, 0);
+                            self.f_hoy.setHours(12, 0, 0, 0);
+                            self.f_reinicio.setHours(12, 0, 0, 0);
+                            self.fecha_solicitud.setHours(12, 0, 0, 0);
+                            self.f_inicio.setHours(12, 0, 0, 0);
+                            // var fechaInicioPost = new Date(self.f_inicio);
+                            // if (fechaInicioPost.getDate() == 31) {
+                            //     fechaInicioPost.setDate(fechaInicioPost.getDate() + 1);
+                            // }
+                            // var fechaFinPost = new Date(self.f_fin);
+                            // if (fechaFinPost.getDate() == 31) {
+                            //     fechaFinPost.setDate(fechaFinPost.getDate() + 1);
+                            //     self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
+                            // }
+                            // if (self.f_reinicio.getDate() == 31) {
+                            //     self.f_reinicio.setDate(self.f_reinicio.getDate() + 1);
+                            // }
                             self.suspension_nov = {};
                             self.suspension_nov.tiponovedad =
                                 nc_response.data[0].CodigoAbreviacion;
-                            self.suspension_nov.numerosolicitud = self.n_solicitud;
+                            self.suspension_nov.numerosolicitud = "";
                             self.suspension_nov.contrato = self.contrato_obj.numero_contrato;
                             self.suspension_nov.vigencia = String(self.contrato_obj.vigencia);
                             self.suspension_nov.motivo = self.motivo;
                             self.suspension_nov.periodosuspension = self.diff_dias;
-                            self.suspension_nov.fecharegistro = new Date();
+                            self.suspension_nov.fecharegistro = self.f_hoy;
                             self.suspension_nov.fechasolicitud = self.fecha_solicitud;
                             self.suspension_nov.fechaexpedicion = self.f_expedicion_acta;
                             self.suspension_nov.fechasuspension = self.f_inicio;
@@ -678,8 +701,8 @@ angular
                     self.contrato_obj_replica.Vigencia = parseInt(self.contrato_vigencia);
                     self.contrato_obj_replica.Documento = String(self.contrato_obj.contratista_documento);
                     self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
-                    self.contrato_obj_replica.FechaRegistro = new Date();
-                    self.contrato_obj_replica.PlazoEjecucion = self.contrato_obj.plazo;
+                    self.contrato_obj_replica.FechaRegistro = self.f_hoy;
+                    self.contrato_obj_replica.PlazoEjecucion = self.diff_dias;
                     self.contrato_obj_replica.FechaInicio = self.f_inicio;
                     self.contrato_obj_replica.FechaFin = self.f_fin;
                     self.contrato_obj_replica.UnidadEjecucion = 205;
@@ -747,6 +770,9 @@ angular
                     fechaFinEfectiva = new Date(fechaFin);
                 } else {
                     fechaFinEfectiva = new Date(self.contrato_obj.Fin);
+                    if (fechaFinEfectiva.getDate() == 31) {
+                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    }
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
@@ -755,7 +781,7 @@ angular
                 // console.log("FechaFin: ", nuevaFechaFin);
 
                 if (diasNovedad != 0) {
-                    diasNovedad = parseInt(diasNovedad) + 1;
+                    diasNovedad = parseInt(diasNovedad);
                     var fechaAux = new Date(fechaFinEfectiva);
                     var dd = fechaFinEfectiva.getDate();
                     fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
@@ -769,12 +795,11 @@ angular
                                 nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
                             }
                         } else {
-                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
                         }
-                    } else if (nuevaFechaFin.getDate() < 31) {
-                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                    } else {
+                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
                     }
-                    // console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
                 return nuevaFechaFin;
             }
@@ -1024,6 +1049,56 @@ angular
                     );
             } //NumeroALetras()
 
+            self.calculoPlazoLetras = function (plazo) {
+                if (self.plazoDias) {
+                    var plazo_meses = plazo / 30;
+                    var res = String(plazo_meses).split(".");
+                    var cantidad_meses = res[0];
+                    var decimal_cantidad_dias = "0." + res[1];
+                    var cantidad_dias = Math.ceil(parseFloat(decimal_cantidad_dias) / 0.03333333333336);
+                    var cantidad_meses_letras = NumeroALetras(cantidad_meses, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var cantidad_dias_letras = NumeroALetras(cantidad_dias, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto = "";
+                    if (cantidad_dias == 0) {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES");
+                    } else {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES") +
+                            " Y " +
+                            cantidad_dias_letras +
+                            cantidad_dias +
+                            " ) " +
+                            $translate.instant("DIAS");
+                    }
+                    return texto;
+
+                } else {
+                    var cantidad_meses_letras = NumeroALetras(plazo, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto =
+                        cantidad_meses_letras +
+                        plazo +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES");
+                    return texto;
+                }
+            }
+
             /**
              * @ngdoc method
              * @name formato_generacion_pdf
@@ -1044,7 +1119,17 @@ angular
                     new Date().getMinutes();
 
                 var docDefinition = self.get_pdf();
-
+                // console.log(self.contrato_obj_replica);
+                // console.log(self.suspension_nov);
+                // pdfMake
+                //     .createPdf(docDefinition)
+                //     .download(
+                //         "acta_suspension_contrato_" +
+                //         self.contrato_id +
+                //         "_" +
+                //         dateTime +
+                //         ".pdf"
+                //     );
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
                 pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(
@@ -1668,5 +1753,217 @@ angular
                     },
                 };
             };
+
+            var numeroALetras = (function () {
+                function Unidades(num) {
+                    switch (num) {
+                        case 1:
+                            return $translate.instant("UN");
+                        case 2:
+                            return $translate.instant("DOS");
+                        case 3:
+                            return $translate.instant("TRES");
+                        case 4:
+                            return $translate.instant("CUATRO");
+                        case 5:
+                            return $translate.instant("CINCO");
+                        case 6:
+                            return $translate.instant("SEIS");
+                        case 7:
+                            return $translate.instant("SIETE");
+                        case 8:
+                            return $translate.instant("OCHO");
+                        case 9:
+                            return $translate.instant("NUEVE");
+                    }
+                    return "";
+                }
+
+                function Decenas(num) {
+                    var decena = Math.floor(num / 10);
+                    var unidad = num - decena * 10;
+                    switch (decena) {
+                        case 1:
+                            switch (unidad) {
+                                case 0:
+                                    return $translate.instant("DIEZ");
+                                case 1:
+                                    return $translate.instant("ONCE");
+                                case 2:
+                                    return $translate.instant("DOCE");
+                                case 3:
+                                    return $translate.instant("TRECE");
+                                case 4:
+                                    return $translate.instant("CATORCE");
+                                case 5:
+                                    return $translate.instant("QUINCE");
+                                case 6:
+                                    return $translate.instant("DIECISEIS");
+                                case 7:
+                                    return $translate.instant("DIECISIETE");
+                                case 8:
+                                    return $translate.instant("DIECIOCHO");
+                                case 9:
+                                    return $translate.instant("DIECINUEVE");
+                                default:
+                                    return $translate.instant("DIECI") + Unidades(unidad);
+                            }
+                        case 2:
+                            if (unidad == 0) {
+                                return $translate.instant("VEINTE");
+                            } else {
+                                return $translate.instant("VEINTI") + Unidades(unidad);
+                            }
+                        case 3:
+                            return DecenasY($translate.instant("TREINTA"), unidad);
+                        case 4:
+                            return DecenasY($translate.instant("CUARENTA"), unidad);
+                        case 5:
+                            return DecenasY($translate.instant("CINCUENTA"), unidad);
+                        case 6:
+                            return DecenasY($translate.instant("SESENTA"), unidad);
+                        case 7:
+                            return DecenasY($translate.instant("SETENTA"), unidad);
+                        case 8:
+                            return DecenasY($translate.instant("OCHENTA"), unidad);
+                        case 9:
+                            return DecenasY($translate.instant("NOVENTA"), unidad);
+                        case 0:
+                            return Unidades(unidad);
+                    }
+                }
+
+                function DecenasY(strSin, numUnidades) {
+                    if (numUnidades > 0)
+                        return strSin + $translate.instant("Y") + Unidades(numUnidades);
+                    return strSin;
+                }
+
+                function Centenas(num) {
+                    var centenas = Math.floor(num / 100);
+                    var decenas = num - centenas * 100;
+                    switch (centenas) {
+                        case 1:
+                            if (decenas > 0)
+                                return $translate.instant("CIENTO") + Decenas(decenas);
+                            return $translate.instant("CIEN");
+                        case 2:
+                            return $translate.instant("DOSCIENTOS") + Decenas(decenas);
+                        case 3:
+                            return $translate.instant("TRESCIENTOS") + Decenas(decenas);
+                        case 4:
+                            return $translate.instant("CUATROCIENTOS") + Decenas(decenas);
+                        case 5:
+                            return $translate.instant("QUINIENTOS") + Decenas(decenas);
+                        case 6:
+                            return $translate.instant("SEISCIENTOS") + Decenas(decenas);
+                        case 7:
+                            return $translate.instant("SETECIENTOS") + Decenas(decenas);
+                        case 8:
+                            return $translate.instant("OCHOCIENTOS") + Decenas(decenas);
+                        case 9:
+                            return $translate.instant("NOVECIENTOS") + Decenas(decenas);
+                    }
+                    return Decenas(decenas);
+                }
+
+                function Seccion(num, divisor, strSingular, strPlural) {
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var letras = "";
+                    if (cientos > 0)
+                        if (cientos > 1) letras = Centenas(cientos) + " " + strPlural;
+                        else letras = strSingular;
+                    if (resto > 0) letras += "";
+                    return letras;
+                }
+
+                function Miles(num) {
+                    var divisor = 1000;
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var strMiles = Seccion(
+                        num,
+                        divisor,
+                        $translate.instant("UNMIL"),
+                        $translate.instant("MIL")
+                    );
+                    var strCentenas = Centenas(resto);
+                    if (strMiles == "") return strCentenas;
+                    return strMiles + " " + strCentenas;
+                }
+
+                function Millones(num) {
+                    var divisor = 1000000;
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var strMillones = Seccion(
+                        num,
+                        divisor,
+                        $translate.instant("UNMILLON"),
+                        $translate.instant("MILLONES")
+                    );
+                    var strMiles = Miles(resto);
+                    if (strMillones == "") return strMiles;
+                    return strMillones + " " + strMiles;
+                }
+
+                return function NumeroALetras(num, currency) {
+                    currency = currency || {};
+                    var data = {
+                        numero: num,
+                        enteros: Math.floor(num),
+                        centavos: Math.round(num * 100) - Math.floor(num) * 100,
+                        letrasCentavos: "",
+                        letrasMonedaPlural: currency.plural || $translate.instant("PESOS"),
+                        letrasMonedaSingular: currency.singular || $translate.instant("PESO"),
+                        letrasMonedaCentavoPlural: currency.centPlural || "CHIQUI PESOS",
+                        letrasMonedaCentavoSingular: currency.centSingular || "CHIQUI PESO",
+                    };
+
+                    if (data.centavos > 0) {
+                        data.letrasCentavos =
+                            $translate.instant("CON") +
+                            (function () {
+                                if (data.centavos == 1)
+                                    return (
+                                        Millones(data.centavos) +
+                                        " " +
+                                        data.letrasMonedaCentavoSingular
+                                    );
+                                else
+                                    return (
+                                        Millones(data.centavos) +
+                                        " " +
+                                        data.letrasMonedaCentavoPlural
+                                    );
+                            })();
+                    }
+
+                    if (data.enteros == 0)
+                        return (
+                            $translate.instant("CERO") +
+                            data.letrasMonedaPlural +
+                            " " +
+                            data.letrasCentavos
+                        );
+                    if (data.enteros == 1)
+                        return (
+                            Millones(data.enteros) +
+                            " " +
+                            data.letrasMonedaSingular +
+                            " " +
+                            data.letrasCentavos
+                        );
+                    else
+                        return (
+                            Millones(data.enteros) +
+                            " " +
+                            data.letrasMonedaPlural +
+                            " " +
+                            data.letrasCentavos
+                        );
+                };
+            })();
         }
     );
