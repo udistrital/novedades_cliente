@@ -92,7 +92,7 @@
                             <div class="col-xs-12 col-md-6">
                                 <label>{{'NUMERO_OFICIO_SUPERVISOR' | translate}}*</label>
                                 <md-input-container style="margin:0;">
-                                    <input type="text" id="numero_oficio_supervisor" name="numero_oficio_supervisor"
+                                    <input type="text" id="numero_oficio_supervisor" aria-label="numero_oficio_supervisor" name="numero_oficio_supervisor"
                                         ng-model="sLactaSuspension.numero_oficio_supervisor">
                                     <div ng-messages="formSuspension.solicitud.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
@@ -108,7 +108,7 @@
                             <div class="col-xs-12 col-md-6">
                                 <label>{{'NUMERO_OFICIO_ORDENADOR' | translate}}*</label>
                                 <md-input-container style="margin:0;">
-                                    <input type="text" id="numero_oficio_ordenador" name="numero_oficio_ordenador"
+                                    <input type="text" id="numero_oficio_ordenador" aria-label="numero_oficio_ordenador" name="numero_oficio_ordenador"
                                         ng-model="sLactaSuspension.numero_oficio_ordenador">
                                     <div ng-messages="formSuspension.numero_oficio_ordenador.$error">
                                         <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
@@ -127,7 +127,7 @@
                             <b>{{'PERIODO_SUSPENSION' | translate}} *:</b>
                         </p>
                         <md-input-container style="margin:0;">
-                            <input type="number" name="diff_dias" id="periodo" required
+                            <input type="number" name="diff_dias" aria-label="periodo" id="periodo" required
                                 ng-model="sLactaSuspension.diff_dias" ng-disabled="true" min="0">
                             <div ng-messages="formSuspension.diff_dias.$error">
                                 <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
