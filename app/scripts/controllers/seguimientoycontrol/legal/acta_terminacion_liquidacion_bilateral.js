@@ -163,6 +163,18 @@ angular.module('contractualClienteApp')
                                 self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
                             });
                         });
+                    }).catch(function (error) {
+                        //Servidor no disponible
+                        swal({
+                            title: $translate.instant('TITULO_ERROR_LEGAL'),
+                            type: 'error',
+                            html: "Error al consultar datos de ordenadores del contrato " + self.contrato_obj.numero_contrato +
+                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false
+                        });
                     });
 
                     //Obtención de datos del supervisor.
@@ -201,7 +213,19 @@ angular.module('contractualClienteApp')
                                         });
                                 });
 
-                        });
+                        }).catch(function (error) {
+                            //Servidor no disponible
+                            swal({
+                                title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                type: 'error',
+                                html: "Error al consultar datos del supervisor del contrato " + self.contrato_obj.numero_contrato +
+                                    $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false
+                            });
+                        });;
 
                     //Obtención de datos del jefe de Oficina de Contratación
                     agoraRequest.get('supervisor_contrato?query=DependenciaSupervisor:DEP636&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
@@ -212,6 +236,18 @@ angular.module('contractualClienteApp')
                                 self.contrato_obj.jefe_juridica_tipo_documento = ijpn_response.data[0].TipoDocumento.ValorParametro;
                                 self.contrato_obj.jefe_juridica_nombre_completo = ijpn_response.data[0].PrimerNombre + " " + ijpn_response.data[0].SegundoNombre + " " + ijpn_response.data[0].PrimerApellido + " " + ijpn_response.data[0].SegundoApellido;
                             });
+                        });
+                    }).catch(function (error) {
+                        //Servidor no disponible
+                        swal({
+                            title: $translate.instant('TITULO_ERROR_LEGAL'),
+                            type: 'error',
+                            html: "Error al consultar datos de ordenadores del contrato " + self.contrato_obj.numero_contrato +
+                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false
                         });
                     });
 
@@ -275,9 +311,33 @@ angular.module('contractualClienteApp')
                                     });
                             });
                         }
+                    }).catch(function (error) {
+                        //Servidor no disponible
+                        swal({
+                            title: $translate.instant('TITULO_ERROR_LEGAL'),
+                            type: 'error',
+                            html: "Error al consultar datos de novedades del contrato " + self.contrato_obj.numero_contrato +
+                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false
+                        });
                     });
 
                 }
+            }).catch(function (error) {
+                //Servidor no disponible
+                swal({
+                    title: $translate.instant('TITULO_ERROR_ACTA'),
+                    type: 'error',
+                    html: "Error al consultar datos del contrato (contrato_general) # " + self.contrato_obj.numero_contrato +
+                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                    showCloseButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                    allowOutsideClick: false
+                }).then(function () { });
             });
 
             /**
@@ -502,19 +562,19 @@ angular.module('contractualClienteApp')
                                     }
                                 });
                         } else {
-                            self.contrato_obj_replica.esFechaActual = true;
                             novedadesMidRequest
-                                .post("replica", self.contrato_obj_replica)
-                                .then(function (request_novedades) {
-                                    if (
-                                        request_novedades.status == 200 ||
-                                        request_novedades.statusText == "OK"
-                                    ) {
-                                        console.log("Replica correcta");
+                                .post('novedad', self.terminacion_nov)
+                                .then(function (response_nosql) {
+                                    if (response_nosql.status == 200 || response_nosql.statusText == "Ok") {
+                                        self.contrato_obj_replica.esFechaActual = true;
                                         novedadesMidRequest
-                                            .post('novedad', self.terminacion_nov)
-                                            .then(function (response_nosql) {
-                                                if (response_nosql.status == 200 || response_nosql.statusText == "Ok") {
+                                            .post("replica", self.contrato_obj_replica)
+                                            .then(function (request_novedades) {
+                                                if (
+                                                    request_novedades.status == 200 ||
+                                                    request_novedades.statusText == "OK"
+                                                ) {
+                                                    console.log("Replica correcta");
                                                     agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
                                                         if (response.status == 201 || Object.keys(response.data) > 0) {
                                                             pdfMake
@@ -539,56 +599,93 @@ angular.module('contractualClienteApp')
                                                                 window.location.href = "#/seguimientoycontrol/legal";
                                                             });
                                                         }
+                                                    }).catch(function (error) {
+                                                        //Servidor no disponible
+                                                        $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                                        swal({
+                                                            title: $translate.instant('TITULO_ERROR_ACTA'),
+                                                            type: 'error',
+                                                            html: "Error al cambiar el estado de la novedad del contrato # " + self.contrato_obj.numero_contrato +
+                                                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                                            showCloseButton: true,
+                                                            showCancelButton: false,
+                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                            allowOutsideClick: false
+                                                        }).then(function () { });
                                                     });
                                                 } else {
-                                                    //respuesta incorrecta, ej: 400/500
-                                                    $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                                    novedadesMidRequest.delete('novedad', {}).then(function (response) {
+                                                        if (response.status == 200 || response.statusText == "Ok") {
+                                                            console.log("Registro de novedad eliminado!")
+                                                        }
+                                                    });
+                                                    novedadesMidRequest.delete('replica', {}).then(function (response) {
+                                                        if (response.status == 200 || response.statusText == "Ok") {
+                                                            console.log("Registros de replica eliminado!")
+                                                        }
+                                                    });
+                                                    $scope.alert = "TITULO_ERROR_REPLICA";
                                                     swal({
-                                                        title: $translate.instant('TITULO_ERROR_ACTA'),
-                                                        type: 'error',
-                                                        html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
-                                                            $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                        title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                        type: "error",
+                                                        html: $translate.instant($scope.alert) +
+                                                            self.contrato_obj.numero_contrato +
+                                                            $translate.instant("ANIO") +
+                                                            self.contrato_obj.vigencia +
+                                                            ".",
                                                         showCloseButton: true,
                                                         showCancelButton: false,
                                                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                        allowOutsideClick: false
-                                                    }).then(function () {
-
-                                                    });
+                                                        allowOutsideClick: false,
+                                                    }).then(function () { });
                                                 }
                                             }).catch(function (error) {
-                                                //Servidor no disponible
-                                                $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                                //Error en la replica
+                                                $scope.alert = "DESCRIPCION_ERROR_CESION2";
                                                 swal({
-                                                    title: $translate.instant('TITULO_ERROR_ACTA'),
-                                                    type: 'error',
-                                                    html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
-                                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                                    title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                    type: "error",
+                                                    html: $translate.instant($scope.alert) +
+                                                        self.contrato_obj.numero_contrato +
+                                                        $translate.instant("ANIO") +
+                                                        self.contrato_obj.vigencia +
+                                                        ".\n" + error,
                                                     showCloseButton: true,
                                                     showCancelButton: false,
                                                     confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                    allowOutsideClick: false
+                                                    allowOutsideClick: false,
                                                 }).then(function () { });
                                             });
                                     } else {
-                                        $scope.alert = "TITULO_ERROR_REPLICA";
+                                        //respuesta incorrecta, ej: 400/500
+                                        $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
                                         swal({
-                                            title: $translate.instant("TITULO_ERROR_ACTA"),
-                                            type: "error",
-                                            html: $translate.instant($scope.alert) +
-                                                self.contrato_obj.numero_contrato +
-                                                $translate.instant("ANIO") +
-                                                self.contrato_obj.vigencia +
-                                                ".",
+                                            title: $translate.instant('TITULO_ERROR_ACTA'),
+                                            type: 'error',
+                                            html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
+                                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
                                             showCloseButton: true,
                                             showCancelButton: false,
                                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                            allowOutsideClick: false,
-                                        }).then(function () { });
+                                            allowOutsideClick: false
+                                        }).then(function () {
+
+                                        });
                                     }
                                 }).catch(function (error) {
-                                    //Error en la replica
-                                })
+                                    //Servidor no disponible
+                                    $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                    swal({
+                                        title: $translate.instant('TITULO_ERROR_ACTA'),
+                                        type: 'error',
+                                        html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
+                                            $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                        showCloseButton: true,
+                                        showCancelButton: false,
+                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                        allowOutsideClick: false
+                                    }).then(function () { });
+                                });
                         }
                     }
                 });
@@ -752,8 +849,8 @@ angular.module('contractualClienteApp')
                 var output = self.get_plantilla();
 
                 const pdfDocGenerator = pdfMake.createPdf(output);
-                // console.log(self.terminacion_nov);
-                // console.log(self.contrato_obj_replica);
+                console.log(self.terminacion_nov);
+                console.log(self.contrato_obj_replica);
                 // pdfMake
                 //     .createPdf(output)
                 //     .download(

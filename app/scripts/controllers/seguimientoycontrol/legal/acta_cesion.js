@@ -268,6 +268,18 @@ angular
                                                         });
                                                 });
                                         }
+                                    }).catch(function (error) {
+                                        //Servidor no disponible
+                                        swal({
+                                            title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                            type: 'error',
+                                            html: "Error al consultar datos de novedades del contrato " + self.contrato_obj.numero_contrato +
+                                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false
+                                        });
                                     });
                             });
                         //Se obtiene información del supervisor
@@ -337,6 +349,18 @@ angular
 
                                             });
                                     });
+                            }).catch(function (error) {
+                                //Servidor no disponible
+                                swal({
+                                    title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                    type: 'error',
+                                    html: "Error al consultar datos de supervispor del contrato " + self.contrato_obj.numero_contrato +
+                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false
+                                });
                             });
 
                         //Obtención de datos del ordenador del gasto
@@ -370,7 +394,19 @@ angular
                                         self.contrato_obj.ordenador_gasto_ciudad_documento =
                                             sc_response.data[0].Nombre;
                                     });
-                            });
+                            }).catch(function (error) {
+                                //Servidor no disponible
+                                swal({
+                                    title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                    type: 'error',
+                                    html: "Error al consultar datos de ordenadores del contrato " + self.contrato_obj.numero_contrato +
+                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false
+                                });
+                            });;
 
                         //Obtención de datos del jefe de Oficina de Contratación
                         amazonAdministrativaRequest
@@ -407,6 +443,18 @@ angular
                                                     ijpn_response.data[0].SegundoApellido;
                                             });
                                     });
+                            }).catch(function (error) {
+                                //Servidor no disponible
+                                swal({
+                                    title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                    type: 'error',
+                                    html: "Error al consultar datos de supervisores del contrato " + self.contrato_obj.numero_contrato +
+                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false
+                                });
                             });
                     }
                 });
@@ -705,40 +753,60 @@ angular
              */
             self.postNovedad = function (output, dateTime, enlaceDoc) {
                 self.cesion_nov.enlace = enlaceDoc;
-                novedadesMidRequest
-                    .post("novedad", self.cesion_nov)
-                    .then(function (request_novedades) {
-                        if (
-                            request_novedades.status == 200 ||
-                            request_novedades.statusText == "OK"
-                        ) {
-                            pdfMake
-                                .createPdf(output)
-                                .download(
-                                    "acta_cesion_contrato_" +
-                                    self.contrato_id +
-                                    "_" +
-                                    dateTime +
-                                    ".pdf"
-                                );
-                            swal(
-                                $translate.instant("TITULO_BUEN_TRABAJO"),
-                                $translate.instant("DESCRIPCION_CESION") +
-                                self.contrato_obj.numero_contrato +
-                                " " +
-                                $translate.instant("ANIO") +
-                                ": " +
-                                self.contrato_obj.vigencia,
-                                "success"
-                            ).then(function () {
-                                window.location.href =
-                                    "#/seguimientoycontrol/legal";
-                            });
-                        } else {
-                            //respuesta incorrecta, ej: 400/500
+                if (self.estadoNovedad == "ENTR") {
+                    novedadesMidRequest
+                        .post("novedad", self.cesion_nov)
+                        .then(function (request_novedades) {
+                            if (
+                                request_novedades.status == 200 ||
+                                request_novedades.statusText == "OK"
+                            ) {
+                                pdfMake
+                                    .createPdf(output)
+                                    .download(
+                                        "acta_cesion_contrato_" +
+                                        self.contrato_id +
+                                        "_" +
+                                        dateTime +
+                                        ".pdf"
+                                    );
+                                swal(
+                                    $translate.instant("TITULO_BUEN_TRABAJO"),
+                                    $translate.instant("DESCRIPCION_CESION") +
+                                    self.contrato_obj.numero_contrato +
+                                    " " +
+                                    $translate.instant("ANIO") +
+                                    ": " +
+                                    self.contrato_obj.vigencia,
+                                    "success"
+                                ).then(function () {
+                                    window.location.href =
+                                        "#/seguimientoycontrol/legal";
+                                });
+                            } else {
+                                //respuesta incorrecta, ej: 400/500
+                                $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                                swal({
+                                    title: $translate.instant("TITULO_ERROR_REPLICA"),
+                                    type: "error",
+                                    html: $translate.instant($scope.alert) +
+                                        self.contrato_obj.numero_contrato +
+                                        $translate.instant("ANIO") +
+                                        self.contrato_obj.vigencia +
+                                        ".",
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log("error: ", error);
+                            //Servidor no disponible
                             $scope.alert = "DESCRIPCION_ERROR_CESION2";
                             swal({
-                                title: $translate.instant("TITULO_ERROR_REPLICA"),
+                                title: $translate.instant("TITULO_ERROR_ACTA"),
                                 type: "error",
                                 html: $translate.instant($scope.alert) +
                                     self.contrato_obj.numero_contrato +
@@ -750,26 +818,126 @@ angular
                                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                 allowOutsideClick: false,
                             }).then(function () { });
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log("error: ", error);
-                        //Servidor no disponible
-                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
-                        swal({
-                            title: $translate.instant("TITULO_ERROR_ACTA"),
-                            type: "error",
-                            html: $translate.instant($scope.alert) +
-                                self.contrato_obj.numero_contrato +
-                                $translate.instant("ANIO") +
-                                self.contrato_obj.vigencia +
-                                ".",
-                            showCloseButton: true,
-                            showCancelButton: false,
-                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                            allowOutsideClick: false,
-                        }).then(function () { });
-                    })
+                        });
+                } else {
+                    novedadesMidRequest
+                        .post("novedad", self.cesion_nov)
+                        .then(function (request_novedades) {
+                            if (
+                                request_novedades.status == 200 ||
+                                request_novedades.statusText == "OK"
+                            ) {
+                                self.contrato_obj_replica.esFechaActual = true;
+                                novedadesMidRequest
+                                    .post("replica", self.contrato_obj_replica)
+                                    .then(function (request_replica) {
+                                        if (
+                                            request_replica.status == 200 ||
+                                            request_replica.statusText == "OK"
+                                        ) {
+                                            console.log("Replica correcta");
+                                            pdfMake
+                                                .createPdf(output)
+                                                .download(
+                                                    "acta_cesion_contrato_" +
+                                                    self.contrato_id +
+                                                    "_" +
+                                                    dateTime +
+                                                    ".pdf"
+                                                );
+                                            swal(
+                                                $translate.instant("TITULO_BUEN_TRABAJO"),
+                                                $translate.instant("DESCRIPCION_CESION") +
+                                                self.contrato_obj.numero_contrato +
+                                                " " +
+                                                $translate.instant("ANIO") +
+                                                ": " +
+                                                self.contrato_obj.vigencia,
+                                                "success"
+                                            ).then(function () {
+                                                window.location.href =
+                                                    "#/seguimientoycontrol/legal";
+                                            });
+                                        } else {
+                                            novedadesMidRequest.delete('novedad', {}).then(function (response) {
+                                                if (response.status == 200 || response.statusText == "Ok") {
+                                                    console.log("Registro de novedad eliminado!")
+                                                }
+                                            });
+                                            novedadesMidRequest.delete('replica', {}).then(function (response) {
+                                                if (response.status == 200 || response.statusText == "Ok") {
+                                                    console.log("Registros de replica eliminado!")
+                                                }
+                                            });
+                                            $scope.alert = "TITULO_ERROR_REPLICA";
+                                            swal({
+                                                title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                type: "error",
+                                                html: $translate.instant($scope.alert) +
+                                                    self.contrato_obj.numero_contrato +
+                                                    $translate.instant("ANIO") +
+                                                    self.contrato_obj.vigencia +
+                                                    ".",
+                                                showCloseButton: true,
+                                                showCancelButton: false,
+                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                allowOutsideClick: false,
+                                            }).then(function () { });
+                                        }
+                                    }).catch(function (error) {
+                                        //Error en la replica
+                                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                                        swal({
+                                            title: $translate.instant("TITULO_ERROR_ACTA"),
+                                            type: "error",
+                                            html: $translate.instant($scope.alert) +
+                                                self.contrato_obj.numero_contrato +
+                                                $translate.instant("ANIO") +
+                                                self.contrato_obj.vigencia +
+                                                ".",
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false,
+                                        }).then(function () { });
+                                    });
+                            } else {
+                                //respuesta incorrecta, ej: 400/500
+                                $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                                swal({
+                                    title: $translate.instant("TITULO_ERROR_REPLICA"),
+                                    type: "error",
+                                    html: $translate.instant($scope.alert) +
+                                        self.contrato_obj.numero_contrato +
+                                        $translate.instant("ANIO") +
+                                        self.contrato_obj.vigencia +
+                                        ".",
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log("error: ", error);
+                            //Servidor no disponible
+                            $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                            swal({
+                                title: $translate.instant("TITULO_ERROR_ACTA"),
+                                type: "error",
+                                html: $translate.instant($scope.alert) +
+                                    self.contrato_obj.numero_contrato +
+                                    $translate.instant("ANIO") +
+                                    self.contrato_obj.vigencia +
+                                    ".",
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        });
+                }
             }
 
             /**
@@ -907,39 +1075,7 @@ angular
                                             if (self.cesion_nov.tiponovedad === "NP_CES") {
                                                 self.contrato_obj_replica.TipoNovedad = parseFloat(219);
                                             }
-                                            // self.formato_generacion_pdf();
-                                            if (self.estadoNovedad == "TERM") {
-                                                self.contrato_obj_replica.esFechaActual = true;
-                                                novedadesMidRequest
-                                                    .post("replica", self.contrato_obj_replica)
-                                                    .then(function (request_replica) {
-                                                        if (
-                                                            request_replica.status == 200 ||
-                                                            request_replica.statusText == "OK"
-                                                        ) {
-                                                            console.log("Replica correcta");
-                                                            self.formato_generacion_pdf();
-                                                        }
-                                                    }).catch(function (error) {
-                                                        //Error en la replica
-                                                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
-                                                        swal({
-                                                            title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                            type: "error",
-                                                            html: $translate.instant($scope.alert) +
-                                                                self.contrato_obj.numero_contrato +
-                                                                $translate.instant("ANIO") +
-                                                                self.contrato_obj.vigencia +
-                                                                ".",
-                                                            showCloseButton: true,
-                                                            showCancelButton: false,
-                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                            allowOutsideClick: false,
-                                                        }).then(function () { });
-                                                    })
-                                            } else {
-                                                self.formato_generacion_pdf();
-                                            }
+                                            self.formato_generacion_pdf();
                                         });
                                 });
                         })
