@@ -78,6 +78,8 @@ angular
             self.idRegistro = "";
             self.novedadCesion = false;
             self.nueva_clausula_text = "";
+            self.nuevo_considerando = "";
+            self.posicion_considerando = 1;
 
             // const solic_input = document.getElementById("n_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -1735,6 +1737,11 @@ angular
                     },
                     { text: " (CESIONARIO).\n\n", bold: true }]
                 });
+                if ($scope.nuevo_considerando) {
+                    estructura.splice(self.posicion_considerando-1, 0, {
+                        text: self.nuevo_considerando + "\n\n",
+                    });
+                }
                 return estructura;
             }
 

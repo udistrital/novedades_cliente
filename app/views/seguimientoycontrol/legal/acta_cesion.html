@@ -235,6 +235,23 @@
                             </div>
                             <div class="col-xs-12 col-md-6">
                                 <label class="checkbox-inline"><input type="checkbox"
+                                        ng-model="nuevo_considerando"><b>Considerando adicional</b></label>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <md-input-container style="margin:0;">
+                                    <input ng-if="nuevo_considerando" type="number" id="posicion_nc" name="posicion_nc"
+                                        ng-model="sLactaCesion.posicion_considerando" min="1" max="7"
+                                        placeholder="posición (1-7)">
+                                </md-input-container>
+
+                            </div>
+                            <div class="col-xs-12 col-md-12">
+                                <textarea ng-if="nuevo_considerando" style="height: 100px;" class="form-control"
+                                    id="nuevo_considerando" ng-model="sLactaCesion.nuevo_considerando" rows="3"
+                                    maxlength="500" placeholder="CONSIDERACIÓN ADICIONAL"></textarea>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <label class="checkbox-inline"><input type="checkbox"
                                         ng-model="nueva_clausula"><b>Cláusula adicional</b></label>
                             </div>
                             <div class="col-xs-12 col-md-12">
