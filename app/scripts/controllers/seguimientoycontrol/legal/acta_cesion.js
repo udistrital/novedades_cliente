@@ -162,7 +162,7 @@ angular
                         if (self.contrato_obj.plazo > 12) {
                             self.plazoDias = true;
                         }
-                        self.plazoMeses = self.calculoPlazoLetras(self.contrato_obj.plazo);
+                        self.plazoMeses = self.calculoPlazoLetras(self.contrato_obj.plazo, self.plazoDias);
                         var fecha_reg = self.contrato_obj.fecha_registro;
                         var res = fecha_reg.split("-");
                         self.fecha_reg_dia = res[2].substring(0, 2);
@@ -192,6 +192,16 @@ angular
                                         self.novedades = response_sql.data.Body;
                                         self.fecha_lim_sup = self.calcularFechaFin();
                                         if (self.novedades.length != 0) {
+                                            var adiciones = 0;
+                                            for (var i = 0; i < self.novedades.length; i++) {
+                                                if (
+                                                    self.novedades[i].tiponovedad == 6 ||
+                                                    self.novedades[i].tiponovedad == 8
+                                                ) {
+                                                    adiciones = adiciones + self.novedades[i].valoradicion;
+                                                }
+                                            }
+                                            self.contrato_obj.valor = self.contrato_obj.valor + adiciones;
                                             for (var i = self.novedades.length - 1; i >= 0; i--) {
                                                 if (self.novedades[i].tiponovedad == 2) {
                                                     self.contrato_obj.Inicio = self.getFechaUTC(self.novedades[i].fechacesion);
@@ -500,7 +510,7 @@ angular
                 var fechaInicio = new Date(self.contrato_obj.Inicio);
 
                 var plazo_cedente = self.calculoPlazosCesion(fechaInicio, self.f_terminacion);
-                self.plazo_cedente_letras = self.calculoPlazoLetras(plazo_cedente);
+                self.plazo_cedente_letras = self.calculoPlazoLetras(plazo_cedente, true);
             });
 
             self.calculoPlazosCesion = function (fecha_inicio, fecha_fin) {
@@ -595,8 +605,8 @@ angular
                 return texto.toLowerCase();
             }
 
-            self.calculoPlazoLetras = function (plazo) {
-                if (self.plazoDias) {
+            self.calculoPlazoLetras = function (plazo, diasBool) {
+                if (diasBool) {
                     var plazo_meses = plazo / 30;
                     var res = String(plazo_meses).split(".");
                     var cantidad_meses = res[0];
@@ -1407,6 +1417,8 @@ angular
                     new Date().getMinutes();
                 var output = self.get_plantilla();
                 const pdfDocGenerator = pdfMake.createPdf(output);
+                // console.log(self.cesion_nov);
+                // console.log(self.contrato_obj_replica);
                 // pdfMake
                 //     .createPdf(output)
                 //     .download(
@@ -1681,7 +1693,7 @@ angular
                                         NumeroALetras(parseInt(self.cesion_nov.valor_a_favor) + "") +
                                         "MONEDA CORRIENTE ($" +
                                         numberFormat(self.cesion_nov.valor_a_favor + "") +
-                                        " M/CTE), por un plazo de " + self.calculoPlazoLetras(self.dias_pago_cedente) +
+                                        " M/CTE), por un plazo de " + self.calculoPlazoLetras(self.dias_pago_cedente, true) +
                                         ".\n\n"
                                 }],
 
@@ -1694,7 +1706,7 @@ angular
                                         "MONEDA CORRIENTE ($" +
                                         numberFormat(String(self.valor_contrato_cesionario()) + "") +
                                         " M/CTE), por un plazo de " +
-                                        self.calculoPlazoLetras(self.contrato_obj.plazo_cesionario) +
+                                        self.calculoPlazoLetras(self.contrato_obj.plazo_cesionario, true) +
                                         ".\n\n"
                                 }],
                         },
@@ -2020,7 +2032,7 @@ angular
                                     "MONEDA CORRIENTE ($" +
                                     numberFormat(String(self.valor_contrato_cesionario()) + "") +
                                     " M/CTE), por un plazo de " +
-                                    self.calculoPlazoLetras(self.contrato_obj.plazo_cesionario) +
+                                    self.calculoPlazoLetras(self.contrato_obj.plazo_cesionario, true) +
                                     ".\n\n"
                             },
                             ],
