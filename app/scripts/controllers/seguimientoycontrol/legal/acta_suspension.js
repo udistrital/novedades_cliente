@@ -480,6 +480,7 @@ angular
                                             response_replica.status == 200 ||
                                             response.statusText == "Ok"
                                         ) {
+                                            var idNovedad = request_novedades.Body.NovedadPoscontractual.Id;
                                             self.contrato_obj_replica.esFechaActual = true;
                                             novedadesMidRequest
                                                 .post("replica", self.contrato_obj_replica)
@@ -545,16 +546,16 @@ angular
                                                                 }
                                                             });
                                                     } else {
-                                                        novedadesMidRequest.delete('novedad', {}).then(function (response) {
+                                                        novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
                                                             if (response.status == 200 || response.statusText == "Ok") {
                                                                 console.log("Registro de novedad eliminado!")
                                                             }
                                                         });
-                                                        novedadesMidRequest.delete('replica', {}).then(function (response) {
-                                                            if (response.status == 200 || response.statusText == "Ok") {
-                                                                console.log("Registros de replica eliminado!")
-                                                            }
-                                                        });
+                                                        // novedadesMidRequest.delete('replica', {}).then(function (response) {
+                                                        //     if (response.status == 200 || response.statusText == "Ok") {
+                                                        //         console.log("Registros de replica eliminado!")
+                                                        //     }
+                                                        // });
                                                         $scope.alert = "TITULO_ERROR_REPLICA";
                                                         swal({
                                                             title: $translate.instant("TITULO_ERROR_ACTA"),

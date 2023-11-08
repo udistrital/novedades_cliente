@@ -903,6 +903,7 @@ angular
                         .get("tipo_novedad", "query=Nombre:" + $scope.estado_novedad)
                         .then(function (nc_response) {
                             self.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+
                             if (self.plazoDias) {
                                 $scope.nuevo_plazo_contrato = self.calculoPlazoLetras(self.contrato_obj.plazo);
                             } else {
@@ -1106,6 +1107,7 @@ angular
                         .post("novedad", self.data_acta_adicion_prorroga)
                         .then(function (request) {
                             if (request.status == 200) {
+                                var idNovedad = request.Body.NovedadPoscontractual.Id;
                                 novedadesMidRequest
                                     .post("replica", self.contrato_obj_replica)
                                     .then(function (request_novedades) {
@@ -1138,16 +1140,16 @@ angular
                                             });
                                         } else {
                                             //Error en la replica
-                                            novedadesMidRequest.delete('novedad', {}).then(function (response) {
+                                            novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
                                                 if (response.status == 200 || response.statusText == "Ok") {
                                                     console.log("Registro de novedad eliminado!")
                                                 }
                                             });
-                                            novedadesMidRequest.delete('replica', {}).then(function (response) {
-                                                if (response.status == 200 || response.statusText == "Ok") {
-                                                    console.log("Registros de replica eliminado!")
-                                                }
-                                            });
+                                            // novedadesMidRequest.delete('replica', {}).then(function (response) {
+                                            //     if (response.status == 200 || response.statusText == "Ok") {
+                                            //         console.log("Registros de replica eliminado!")
+                                            //     }
+                                            // });
                                             $scope.alert = "TITULO_ERROR_REPLICA";
                                             swal({
                                                 title: $translate.instant("TITULO_ERROR_ACTA"),
