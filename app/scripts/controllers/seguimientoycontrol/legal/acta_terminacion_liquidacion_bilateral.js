@@ -566,7 +566,7 @@ angular.module('contractualClienteApp')
                                 .post('novedad', self.terminacion_nov)
                                 .then(function (response_nosql) {
                                     if (response_nosql.status == 200 || response_nosql.statusText == "Ok") {
-                                        var idNovedad = response_nosql.Body.NovedadPoscontractual.Id;
+                                        var idNovedad = response_nosql.data.Body.NovedadPoscontractual.Id;
                                         self.contrato_obj_replica.esFechaActual = true;
                                         novedadesMidRequest
                                             .post("replica", self.contrato_obj_replica)

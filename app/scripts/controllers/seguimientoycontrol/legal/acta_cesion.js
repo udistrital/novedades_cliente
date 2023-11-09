@@ -839,7 +839,7 @@ angular
                                 request_novedades.status == 200 ||
                                 request_novedades.statusText == "OK"
                             ) {
-                                var idNovedad = request_novedades.Body.NovedadPoscontractual.Id;
+                                var idNovedad = request_novedades.data.Body.NovedadPoscontractual.Id;
                                 self.contrato_obj_replica.esFechaActual = true;
                                 novedadesMidRequest
                                     .post("replica", self.contrato_obj_replica)
