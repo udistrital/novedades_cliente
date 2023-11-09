@@ -475,12 +475,12 @@ angular
                             } else {
                                 novedadesMidRequest
                                     .post("novedad", self.suspension_nov)
-                                    .then(function (response_replica) {
+                                    .then(function (request_novedades) {
                                         if (
-                                            response_replica.status == 200 ||
-                                            response.statusText == "Ok"
+                                            request_novedades.status == 200 ||
+                                            request_novedades.statusText == "Ok"
                                         ) {
-                                            var idNovedad = request_novedades.Body.NovedadPoscontractual.Id;
+                                            var idNovedad = request_novedades.data.Body.NovedadPoscontractual.Id;
                                             self.contrato_obj_replica.esFechaActual = true;
                                             novedadesMidRequest
                                                 .post("replica", self.contrato_obj_replica)

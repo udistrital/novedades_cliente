@@ -1043,7 +1043,7 @@ angular
                     novedadesMidRequest
                         .post("novedad", self.data_acta_adicion_prorroga)
                         .then(function (request) {
-                            if (request.status == 200) {
+                            if (request.status == 200 || request.statusText == "OK") {
                                 pdfMake.createPdf(docDefinition).
                                     download(
                                         "acta_adicion_prorroga_contrato_" +
@@ -1106,8 +1106,8 @@ angular
                     novedadesMidRequest
                         .post("novedad", self.data_acta_adicion_prorroga)
                         .then(function (request) {
-                            if (request.status == 200) {
-                                var idNovedad = request.Body.NovedadPoscontractual.Id;
+                            if (request.status == 200 || request.statusText == "OK") {
+                                var idNovedad = request.data.Body.NovedadPoscontractual.Id;
                                 novedadesMidRequest
                                     .post("replica", self.contrato_obj_replica)
                                     .then(function (request_novedades) {
@@ -1163,7 +1163,7 @@ angular
                                                 showCancelButton: false,
                                                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                 allowOutsideClick: false,
-                                            }).then(function () { });
+                                            });
 
                                         }
                                     }).catch(function (error) {
@@ -1181,7 +1181,7 @@ angular
                                             showCancelButton: false,
                                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                             allowOutsideClick: false,
-                                        }).then(function () { });
+                                        });
                                     });
                             } else {
                                 //respuesta incorrecta, ej: 400/500
@@ -1198,11 +1198,12 @@ angular
                                     showCancelButton: false,
                                     confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                     allowOutsideClick: false,
-                                }).then(function () { });
+                                });
                             }
                         })
                         .catch(function (error) {
                             //Servidor no disponible
+                            console.log(error);
                             $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
                             swal({
                                 title: $translate.instant("TITULO_ERROR_ACTA"),
