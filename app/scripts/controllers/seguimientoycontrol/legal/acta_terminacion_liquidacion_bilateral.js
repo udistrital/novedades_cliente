@@ -64,6 +64,7 @@ angular.module('contractualClienteApp')
             self.elaboro = '';
             self.elaboro_cedula = token_service.getPayload().documento;
             self.nueva_clausula_text = "";
+            self.tamanoFuente = 10;
 
             // const solic_input = document.getElementById("numero_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -620,11 +621,6 @@ angular.module('contractualClienteApp')
                                                             console.log("Registro de novedad eliminado!")
                                                         }
                                                     });
-                                                    // novedadesMidRequest.delete('replica', {}).then(function (response) {
-                                                    //     if (response.status == 200 || response.statusText == "Ok") {
-                                                    //         console.log("Registros de replica eliminado!")
-                                                    //     }
-                                                    // });
                                                     $scope.alert = "TITULO_ERROR_REPLICA";
                                                     swal({
                                                         title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -642,7 +638,12 @@ angular.module('contractualClienteApp')
                                                 }
                                             }).catch(function (error) {
                                                 //Error en la replica
-                                                $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                                                novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
+                                                    if (response.status == 200 || response.statusText == "Ok") {
+                                                        console.log("Registro de novedad eliminado!")
+                                                    }
+                                                });
+                                                $scope.alert = "TITULO_ERROR_REPLICA";
                                                 swal({
                                                     title: $translate.instant("TITULO_ERROR_ACTA"),
                                                     type: "error",
@@ -692,6 +693,16 @@ angular.module('contractualClienteApp')
                 });
             }
 
+            self.verDocumento = function () {
+                var docDefinition = self.get_plantilla();
+                const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+                pdfDocGenerator.open({
+                    title: 'PDF creado con PDFMake',
+                    width: 600,
+                    height: 400,
+                    closeBehavior: 'remove',
+                });
+            }
 
             /**
              * @ngdoc method
@@ -850,8 +861,8 @@ angular.module('contractualClienteApp')
                 var output = self.get_plantilla();
 
                 const pdfDocGenerator = pdfMake.createPdf(output);
-                console.log(self.terminacion_nov);
-                console.log(self.contrato_obj_replica);
+                // console.log(self.terminacion_nov);
+                // console.log(self.contrato_obj_replica);
                 // pdfMake
                 //     .createPdf(output)
                 //     .download(
@@ -1203,6 +1214,98 @@ angular.module('contractualClienteApp')
                 };
             })();
 
+            self.agregarConsideraciones = function () {
+                var consideraciones = [];
+                consideraciones.push(
+                    'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' +
+                    self.contrato_obj.contratista_nombre + ', se suscribió el ' + self.contrato_obj.tipo_contrato +
+                    ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', cuyo objeto es: "' +
+                    self.contrato_obj.objeto + '".\n\n',
+                );
+                consideraciones.push(
+                    {
+                        text: [
+                            { text: 'Que la cláusula 17 - Terminación Del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', establece que ' },
+                            { text: '"Terminación. ', bold: true },
+                            { text: 'Serán causales de terminación del contrato el común acuerdo de las partes al respecto, la ocurrencia de cualquier circunstancia de fuerza mayor o caso fortuito que impida la ejecución del contrato, así como el cumplimiento del plazo pactado para su ejecución. Adicionalmente, dará lugar a la terminación anticipada del contrato el incumplimiento de sus obligaciones, por parte de EL CONTRATISTA, debidamente comprobado, que impida continuar con su ejecución”.\n\n', italics: true },
+                        ]
+                    }
+                );
+                consideraciones.push(
+                    'Que el contrato se perfeccionó y ejecutó mediante Registro Presupuestal No. ' +
+                    self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n',
+                );
+                consideraciones.push(
+                    'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' +
+                    self.plazoMeses + ' contados a partir del perfeccionamiento de la Orden y/o contrato, es decir del ' +
+                    self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
+                );
+                consideraciones.push(
+                    'Que el valor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
+                    ' se pactó en la suma total de ' +
+                    numeroALetras(self.contrato_obj.valor, {
+                        plural: $translate.instant("PESOS"),
+                        singular: $translate.instant("PESO"),
+                        centPlural: $translate.instant("CENTAVOS"),
+                        centSingular: $translate.instant("CENTAVO"),
+                    }) + "MODENA CORRIENTE ($" + numberFormat(String(self.contrato_obj.valor) + "") + ' M/Cte.).\n\n'
+                );
+                consideraciones.push(
+                    'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.fecha_solicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
+                    ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + '.\n\n',
+                );
+                consideraciones.push(
+                    'Que según certificación de fecha ' + self.format_date_letter_mongo(self.f_certificacion) + ', expedida por el Jefe de la Unidad de Presupuesto, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' presenta un saldo a la fecha de ' +
+                    numeroALetras(self.a_favor.valor, {
+                        plural: $translate.instant("PESOS"),
+                        singular: $translate.instant("PESO"),
+                        centPlural: $translate.instant("CENTAVOS"),
+                        centSingular: $translate.instant("CENTAVO"),
+                    }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.a_favor.valor) + '') + ' M/CTE).\n\n'
+                );
+                consideraciones.push(
+                    'Que mediante oficio ' + self.numero_oficio_supervisor + ' de fecha ' + self.format_date_letter_mongo(self.fecha_oficioS) +
+                    ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunicó al señor(a) ' +
+                    self.contrato_obj.ordenadorGasto_nombre +
+                    ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' +
+                    self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
+                );
+                consideraciones.push(
+                    'Que por medio del oficio ' + self.numero_oficio_ordenador + ' de fecha ' +
+                    self.format_date_letter_mongo(self.fecha_oficioO) +
+                    ' recibido por la Oficina de Contratación, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre +
+                    ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No. ' +
+                    self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
+                );
+                if (self.novedades.length > 0) {
+                    for (var i = 0; i < self.novedades.length; i++) {
+                        if (
+                            self.novedades[i].tiponovedad == 8
+                        ) {
+                            var texto_otrosi = 'Que el día ' + self.format_date_letter_mongo(self.novedades[i].fechaprorroga) + ', se realizó la modificación en adición y prórroga, al ' +
+                                self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', en su orden por la suma de ' +
+                                numeroALetras(
+                                    self.novedades[i].valoradicion, {
+                                    plural: $translate.instant("PESOS"),
+                                    singular: $translate.instant("PESO"),
+                                    centPlural: $translate.instant("CENTAVOS"),
+                                    centSingular: $translate.instant("CENTAVO"),
+                                }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.novedades[i].valoradicion)) + " M/CTE)," +
+                                ' y prórroga en tiempo por ' + self.calculoPlazoLetras(self.novedades[i].tiempoprorroga) +
+                                ' en atención a la solicitud recibida por correo electrónico, de fecha ' + self.format_date_letter_mongo(self.novedades[i].fechasolicitud) +
+                                ', por medio de la cual, el ' + self.contrato_obj.ordenadorGasto_rol +
+                                ', solicitó la citada modificación; cuya justificación se encuentra descrita en la solicitud de necesidad No. ' +
+                                self.novedades[i].numerosolicitud + ' del ' + self.format_date_letter_mongo(self.novedades[i].fechasolicitud) +
+                                ', con respaldo del CDP ' + self.novedades[i].numerocdp + ' de ' + self.novedades[i].vigenciacdp + ".\n\n"
+                            consideraciones.splice(
+                                5, 0, texto_otrosi
+                            );
+                        }
+                    }
+                }
+                return consideraciones;
+            }
+
             self.agregarClausulas = function () {
                 var estructura = {}
                 if ($scope.nueva_clausula) {
@@ -1360,48 +1463,7 @@ angular.module('contractualClienteApp')
                     },
                     {
                         style: ['general_list'],
-                        ol: [
-
-                            'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' + self.contrato_obj.contratista_nombre + ', se suscribió el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', cuyo objeto es: "' + self.contrato_obj.objeto + '".\n\n',
-
-                            //'Que el valor del  ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó por la suma de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + "), y un plazo de " + self.contrato_obj.plazo + ' meses, contados partir del acta de inicio, lo cual tuvo lugar el día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
-                            {
-                                text: [
-                                    { text: 'Que la cláusula 17 - Terminación Del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', establece que ' },
-                                    { text: '"Terminación. ', bold: true },
-                                    { text: 'Serán causales de terminación del contrato el común acuerdo de las partes al respecto, la ocurrencia de cualquier circunstancia de fuerza mayor o caso fortuito que impida la ejecución del contrato, así como el cumplimiento del plazo pactado para su ejecución. Adicionalmente, dará lugar a la terminación anticipada del contrato el incumplimiento de sus obligaciones, por parte de EL CONTRATISTA, debidamente comprobado, que impida continuar con su ejecución”.\n\n', italics: true },
-                                ]
-                            },
-
-                            'Que el contrato se perfeccionó y ejecutó mediante Registro Presupuestal No. ' + self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n',
-
-                            'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' +
-                            self.plazoMeses + ' contados a partir del perfeccionamiento de la Orden y/o contrato, es decir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
-
-                            'Que el valor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' se pactó en la suma total de ' +
-                            numeroALetras(self.contrato_obj.valor, {
-                                plural: $translate.instant("PESOS"),
-                                singular: $translate.instant("PESO"),
-                                centPlural: $translate.instant("CENTAVOS"),
-                                centSingular: $translate.instant("CENTAVO"),
-                            }) + "MODENA CORRIENTE ($" + numberFormat(String(self.contrato_obj.valor) + "") + ' M/Cte.).\n\n',
-
-                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
-                            ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + '.\n\n',
-
-                            'Que según certificación de fecha ' + self.format_date_letter_mongo(self.f_certificacion) + ', expedida por el Jefe de la Unidad de Presupuesto, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' presenta un saldo a la fecha de ' +
-                            numeroALetras(self.a_favor.valor, {
-                                plural: $translate.instant("PESOS"),
-                                singular: $translate.instant("PESO"),
-                                centPlural: $translate.instant("CENTAVOS"),
-                                centSingular: $translate.instant("CENTAVO"),
-                            }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.a_favor.valor) + '') + ' M/CTE).\n\n',
-
-                            'Que mediante oficio ' + self.numero_oficio_supervisor + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunicó al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n',
-
-                            'Que por medio del oficio ' + self.numero_oficio_ordenador + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficioordenador) + ' recibido por la Oficina de Contratación, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n',
-
-                        ]
+                        ol: self.agregarConsideraciones(),
                     },
                     {
                         style: ['general_font'],
@@ -1435,15 +1497,15 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'Valor desembolsado', bold: true, style: 'topHeader' },
-                                    { text: '$' + numberFormat(String(self.terminacion_nov.valor_desembolsado) + ''), style: 'topHeader' }
+                                    { text: '$' + numberFormat(String(parseFloat(self.valor_desembolsado.replace(/\,/g, ""))) + ''), style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'Saldo a favor del contratista', bold: true, style: 'topHeader' },
-                                    { text: '$' + numberFormat(String(self.terminacion_nov.saldo_contratista) + ''), style: 'topHeader' }
+                                    { text: '$' + numberFormat(String(parseFloat(self.saldo_contratista.replace(/\,/g, ""))) + ''), style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'Saldo a favor de la Universidad', bold: true, style: 'topHeader' },
-                                    { text: '$' + numberFormat(String(self.terminacion_nov.saldo_universidad) + '') + '\n\n\n', style: 'topHeader' }
+                                    { text: '$' + numberFormat(String(parseFloat(self.saldo_universidad.replace(/\,/g, ""))) + '') + '\n\n\n', style: 'topHeader' }
                                 ],
                             ]
                         },
@@ -1605,7 +1667,7 @@ angular.module('contractualClienteApp')
                     ],
                     styles: {
                         general_font: {
-                            fontSize: 10,
+                            fontSize: self.tamanoFuente,
                             alignment: 'justify',
                             margin: [25, 0, 25, 0]
                         },

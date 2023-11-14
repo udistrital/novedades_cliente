@@ -80,6 +80,7 @@ angular
             self.novedades = [];
             self.estadoNovedad = "";
             self.novedadOtrosi = false;
+            self.tamanoFuente = 10;
 
             self.editBool = $routeParams.contrato_vigencia === true;
 
@@ -1111,7 +1112,7 @@ angular
                                 novedadesMidRequest
                                     .post("replica", self.contrato_obj_replica)
                                     .then(function (request_novedades) {
-                                        // console.log(request_novedades);
+                                        console.log(request_novedades);
                                         if (
                                             request_novedades.status == 200 ||
                                             request_novedades.statusText == "OK"
@@ -1145,11 +1146,6 @@ angular
                                                     console.log("Registro de novedad eliminado!")
                                                 }
                                             });
-                                            // novedadesMidRequest.delete('replica', {}).then(function (response) {
-                                            //     if (response.status == 200 || response.statusText == "Ok") {
-                                            //         console.log("Registros de replica eliminado!")
-                                            //     }
-                                            // });
                                             $scope.alert = "TITULO_ERROR_REPLICA";
                                             swal({
                                                 title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -1168,7 +1164,12 @@ angular
                                         }
                                     }).catch(function (error) {
                                         //Servidor no disponible
-                                        $scope.alert = "DESCRIPCION_ERROR_REPLICA";
+                                        novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
+                                            if (response.status == 200 || response.statusText == "Ok") {
+                                                console.log("Registro de novedad eliminado!")
+                                            }
+                                        });
+                                        $scope.alert = "TITULO_ERROR_REPLICA";
                                         swal({
                                             title: $translate.instant("TITULO_ERROR_ACTA"),
                                             type: "error",
@@ -1200,8 +1201,7 @@ angular
                                     allowOutsideClick: false,
                                 });
                             }
-                        })
-                        .catch(function (error) {
+                        }).catch(function (error) {
                             //Servidor no disponible
                             console.log(error);
                             $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
@@ -1400,6 +1400,17 @@ angular
                 //         allowOutsideClick: false,
                 //     }).then(function () { });
                 // }
+            }
+
+            self.verDocumento = function () {
+                var docDefinition = self.formato_pdf();
+                const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+                pdfDocGenerator.open({
+                    title: 'PDF creado con PDFMake',
+                    width: 600,
+                    height: 400,
+                    closeBehavior: 'remove',
+                });
             }
 
             /**
@@ -2154,7 +2165,7 @@ angular
                             marginBottom: 30,
                         },
                         general_font: {
-                            fontSize: 10,
+                            fontSize: self.tamanoFuente,
                             alignment: "justify",
                             margin: [25, 0, 25, 0],
                         },

@@ -80,6 +80,7 @@ angular
             self.nueva_clausula_text = "";
             self.nuevo_considerando = "";
             self.posicion_considerando = 1;
+            self.tamanoFuente = 10;
 
             // const solic_input = document.getElementById("n_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -895,11 +896,15 @@ angular
                                                 showCancelButton: false,
                                                 confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                 allowOutsideClick: false,
-                                            }).then(function () { });
+                                            });
                                         }
                                     }).catch(function (error) {
-                                        //Error en la replica
-                                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                                        novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
+                                            if (response.status == 200 || response.statusText == "Ok") {
+                                                console.log("Registro de novedad eliminado!")
+                                            }
+                                        });
+                                        $scope.alert = "TITULO_ERROR_REPLICA";
                                         swal({
                                             title: $translate.instant("TITULO_ERROR_ACTA"),
                                             type: "error",
@@ -907,12 +912,12 @@ angular
                                                 self.contrato_obj.numero_contrato +
                                                 $translate.instant("ANIO") +
                                                 self.contrato_obj.vigencia +
-                                                ".",
+                                                ".\n" + error,
                                             showCloseButton: true,
                                             showCancelButton: false,
                                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                             allowOutsideClick: false,
-                                        }).then(function () { });
+                                        });
                                     });
                             } else {
                                 //respuesta incorrecta, ej: 400/500
@@ -951,6 +956,17 @@ angular
                             }).then(function () { });
                         });
                 }
+            }
+
+            self.verDocumento = function () {
+                var docDefinition = self.get_plantilla();
+                const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+                pdfDocGenerator.open({
+                    title: 'PDF creado con PDFMake',
+                    width: 600,
+                    height: 400,
+                    closeBehavior: 'remove',
+                });
             }
 
             /**
@@ -1629,6 +1645,29 @@ angular
                             });
 
                         }
+                        if (
+                            self.novedades[i].tiponovedad == 8
+                        ) {
+                            var texto_otrosi = 'Que el día ' + self.format_date_letter_mongo(self.novedades[i].fechaprorroga) + ', se realizó la modificación en adición y prórroga, al ' +
+                                self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', en su orden por la suma de ' +
+                                numeroALetras(
+                                    self.novedades[i].valoradicion, {
+                                    plural: $translate.instant("PESOS"),
+                                    singular: $translate.instant("PESO"),
+                                    centPlural: $translate.instant("CENTAVOS"),
+                                    centSingular: $translate.instant("CENTAVO"),
+                                }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.novedades[i].valoradicion)) + " M/CTE)," +
+                                ' y prórroga en tiempo por ' + self.calculoPlazoLetras(self.novedades[i].tiempoprorroga) +
+                                ' en atención a la solicitud recibida por correo electrónico, de fecha ' + self.format_date_letter_mongo(self.novedades[i].fechaoficioordenador) +
+                                ', por medio de la cual, el ' + self.contrato_obj.ordenadorGasto_rol +
+                                ', solicitó la citada modificación; cuya justificación se encuentra descrita en la solicitud de necesidad No. ' +
+                                self.novedades[i].numerosolicitud + ' del ' + self.format_date_letter_mongo(self.novedades[i].fechasolicitud) +
+                                ', con respaldo del CDP ' + self.novedades[i].numerocdp + ' de ' + self.novedades[i].vigenciacdp + ".\n\n"
+                            estructura.push({
+                                text: texto_otrosi
+                            });
+
+                        }
                     }
                 }
                 estructura.push({
@@ -1650,7 +1689,7 @@ angular
                 });
                 estructura.push([{
                     text: "Que mediante oficio " +
-                        self.cesion_nov.numerooficiosupervisor +
+                        self.numero_oficio_supervisor +
                         " de fecha " +
                         self.format_date_letter_mongo(self.fecha_oficioS) +
                         ", el supervisor del " +
@@ -1672,8 +1711,8 @@ angular
                             text: "Por los servicios prestados por el señor(a) " +
                                 self.contrato_obj.contratista_nombre +
                                 " (CEDENTE), hasta el día " + self.format_date_letter_mongo(self.f_terminacion) +
-                                ", se reconoció un valor total de " + NumeroALetras(self.cesion_nov.valor_desembolsado + "") +
-                                "MONEDA CORRIENTE ($" + numberFormat(self.cesion_nov.valor_desembolsado + "") +
+                                ", se reconoció un valor total de " + NumeroALetras(self.valor_desembolsado + "") +
+                                "MONEDA CORRIENTE ($" + numberFormat(self.valor_desembolsado + "") +
                                 " M/CTE), por el plazo ejecutado del contrato de " +
                                 self.plazo_cedente_letras +
                                 ".\n\n"
@@ -1693,9 +1732,9 @@ angular
                             text: [
                                 { text: "Existe un valor pendiente por cancelar al señor(a) " + self.contrato_obj.contratista_nombre }, { text: "(CEDENTE), ", bold: true }, {
                                     text: "por valor de " +
-                                        NumeroALetras(parseInt(self.cesion_nov.valor_a_favor) + "") +
+                                        NumeroALetras(parseInt(self.valor_a_favor) + "") +
                                         "MONEDA CORRIENTE ($" +
-                                        numberFormat(self.cesion_nov.valor_a_favor + "") +
+                                        numberFormat(self.valor_a_favor + "") +
                                         " M/CTE), por un plazo de " + self.calculoPlazoLetras(self.dias_pago_cedente, true) +
                                         ".\n\n"
                                 }],
@@ -1720,7 +1759,7 @@ angular
                 estructura.push({
                     text: [{
                         text: "Que por medio del oficio " +
-                            self.cesion_nov.numerooficioordenador +
+                            self.numero_oficio_ordenador +
                             " de fecha " +
                             self.format_date_letter_mongo(self.fecha_oficioO) +
                             ", recibido por la Oficina de Contratación, el señor(a) " +
@@ -2220,7 +2259,7 @@ angular
                             marginTop: 80,
                         },
                         general_font: {
-                            fontSize: 10,
+                            fontSize: self.tamanoFuente,
                             alignment: "justify",
                             margin: [25, 0, 25, 0],
                         },

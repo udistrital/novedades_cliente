@@ -128,6 +128,20 @@
                                     md-placeholder="Ingrese fecha"></md-datepicker>
                                 <br><br>
                             </div>
+                            <div class="row" style="border: 0px solid;">
+                                <div class="col-xs-12 col-md-12">
+                                    <label for="verDoc">Previsualización del documento</label>
+                                    <br><br>
+                                    <md-input-container style="margin:0;">
+                                        <input type="number"  id="tamano_fuente" name="tamano_fuente"
+                                            ng-model="sLactaAdicionProrroga.tamanoFuente" min="1" max="30"
+                                            placeholder="tamaño fuente general">
+                                    </md-input-container>
+                                    <md-button class="md-icon-button" ng-click="sLactaAdicionProrroga.verDocumento()">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </md-button>
+                                </div>
+                            </div>
                             <div class="col-xs-12 col-md-6">
                                 <label class="checkbox-inline"><input type="checkbox"
                                         ng-model="nueva_clausula"><b>Cláusula adicional</b></label>

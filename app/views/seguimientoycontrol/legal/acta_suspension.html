@@ -164,7 +164,21 @@
                     <div class="col-xs-12 col-md-12">
                         <textarea ng-if="nueva_clausula" style="height: 100px;" class="form-control" id="nueva_clausula"
                             ng-model="sLactaSuspension.nueva_clausula_text" rows="3" maxlength="500"
-                            placeholder="NUEVA CLÁUSULA"></textarea>
+                            placeholder="NUEVA CLÁUSULA"></textarea><br>
+                    </div>
+                    <div class="row" style="border: 0px solid;">
+                        <div class="col-xs-12 col-md-12">
+                            <label for="verDoc">Previsualización del documento</label>
+                            <br><br>
+                            <md-input-container style="margin:0;">
+                                <input type="number"  id="tamano_fuente" name="tamano_fuente"
+                                    ng-model="sLactaSuspension.tamanoFuente" min="1" max="30"
+                                    placeholder="tamaño fuente general">
+                            </md-input-container>
+                            <md-button class="md-icon-button" ng-click="sLactaSuspension.verDocumento()">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </md-button>
+                        </div>
                     </div>
                     </form>
                 </div>

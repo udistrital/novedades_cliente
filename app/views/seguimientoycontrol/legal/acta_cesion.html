@@ -210,8 +210,6 @@
                                     </md-input-container>
                                 </div>
                             </div>
-
-
                             <div class="col-md-12 form-group">
                                 <br>
                                 <label>{{'CEDULA_CESIONARIO' | translate}}</label>
@@ -258,6 +256,21 @@
                                 <textarea ng-if="nueva_clausula" style="height: 100px;" class="form-control"
                                     id="nueva_clausula" ng-model="sLactaCesion.nueva_clausula_text" rows="3"
                                     maxlength="500" placeholder="NUEVA CLÁUSULA"></textarea>
+                                    <br>
+                            </div>
+                            <div class="row" style="border: 0px solid;">
+                                <div class="col-xs-12 col-md-12">
+                                    <label for="verDoc">Previsualización del documento</label>
+                                    <br><br>
+                                    <md-input-container style="margin:0;">
+                                        <input type="number" id="tamano_fuente" name="tamano_fuente"
+                                            ng-model="sLactaCesion.tamanoFuente" min="1" max="30"
+                                            placeholder="tamaño fuente general">
+                                    </md-input-container>
+                                    <md-button class="md-icon-button" ng-click="sLactaCesion.verDocumento()">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </md-button>
+                                </div>
                             </div>
                             <!-- <div class="form-group col-md-12">
                                 <label for="consideraciones">{{'OTRAS_OBSERVACIONES' | translate}} *:</label>

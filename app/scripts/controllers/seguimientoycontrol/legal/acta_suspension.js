@@ -60,6 +60,7 @@ angular
             self.estadoNovedad = "";
             self.idRegistro = "";
             self.elaboro_cedula = token_service.getPayload().documento;
+            self.tamanoFuente = 10;
 
             // const solic_input = document.getElementById("n_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -551,11 +552,6 @@ angular
                                                                 console.log("Registro de novedad eliminado!")
                                                             }
                                                         });
-                                                        // novedadesMidRequest.delete('replica', {}).then(function (response) {
-                                                        //     if (response.status == 200 || response.statusText == "Ok") {
-                                                        //         console.log("Registros de replica eliminado!")
-                                                        //     }
-                                                        // });
                                                         $scope.alert = "TITULO_ERROR_REPLICA";
                                                         swal({
                                                             title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -573,7 +569,12 @@ angular
                                                     }
                                                 }).catch(function (error) {
                                                     //Servidor no disponible
-                                                    $scope.alert = "DESCRIPCION_ERROR_REPLICA";
+                                                    novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
+                                                        if (response.status == 200 || response.statusText == "Ok") {
+                                                            console.log("Registro de novedad eliminado!")
+                                                        }
+                                                    });
+                                                    $scope.alert = "TITULO_ERROR_REPLICA";
                                                     swal({
                                                         title: $translate.instant("TITULO_ERROR_ACTA"),
                                                         type: "error",
@@ -581,7 +582,7 @@ angular
                                                             self.contrato_obj.numero_contrato +
                                                             $translate.instant("ANIO") +
                                                             self.contrato_obj.vigencia +
-                                                            ".\n" + error,
+                                                            ".",
                                                         showCloseButton: true,
                                                         showCancelButton: false,
                                                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
@@ -626,6 +627,17 @@ angular
                             allowOutsideClick: false,
                         }).then(function () { });
                     });
+            }
+
+            self.verDocumento = function () {
+                var docDefinition = self.get_pdf();
+                const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+                pdfDocGenerator.open({
+                    title: 'PDF creado con PDFMake',
+                    width: 600,
+                    height: 400,
+                    closeBehavior: 'remove',
+                });
             }
 
             /**
@@ -1514,7 +1526,7 @@ angular
                                 },
                                 {
                                     text: self.format_date_letter_mongo(
-                                        self.suspension_nov.fechareinicio
+                                        self.f_reinicio
                                     ),
                                     style: "topHeader",
                                 },
@@ -1596,13 +1608,13 @@ angular
                                 ]
                             },
 
-                            'Que mediante escrito de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechasolicitud) + ' , el Contratista ' + self.contrato_obj.contratista_nombre + ', solicita a ' + self.contrato_obj.supervisor_nombre_completo + ', quien cumple la función de supervisor, la autorización para realizar la Suspensión del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que mediante escrito de fecha ' + self.format_date_letter_mongo(self.fecha_solicitud) + ' , el Contratista ' + self.contrato_obj.contratista_nombre + ', solicita a ' + self.contrato_obj.supervisor_nombre_completo + ', quien cumple la función de supervisor, la autorización para realizar la Suspensión del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.f_inicio) + ' y ' + self.format_date_letter_mongo(self.f_fin) + '.\n\n',
 
-                            'Que mediante oficio ' + self.suspension_nov.numerooficiosupervisor + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficiosupervisor) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que mediante oficio ' + self.numero_oficio_supervisor + ' de fecha ' + self.format_date_letter_mongo(self.fecha_oficioS) + ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para suspender el mismo, durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.f_inicio) + ' y ' + self.format_date_letter_mongo(self.f_fin) + '.\n\n',
 
-                            'Que por medio del oficio ' + self.suspension_nov.numerooficioordenador + ' de fecha ' + self.format_date_letter_mongo(self.suspension_nov.fechaoficioordenador) + ' recibido por la Oficina de Contratación, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la revisión del acta de suspensión del Contrato de Prestación de Servicios  No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que por medio del oficio ' + self.numero_oficio_ordenador + ' de fecha ' + self.format_date_letter_mongo(self.fecha_oficioO) + ' recibido por la Oficina de Contratación, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la revisión del acta de suspensión del Contrato de Prestación de Servicios  No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.f_inicio) + ' y ' + self.format_date_letter_mongo(self.f_fin) + '.\n\n',
 
-                            'Que la presente acta de suspensión sólo tendrá efectos a partir del ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' al ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n',
+                            'Que la presente acta de suspensión sólo tendrá efectos a partir del ' + self.format_date_letter_mongo(self.f_inicio) + ' al ' + self.format_date_letter_mongo(self.f_fin) + '.\n\n',
                         ]
                     },
                     {
@@ -1621,7 +1633,7 @@ angular
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA PRIMERA: SUSPENDER ', bold: true },
-                                { text: 'el contrato de prestación de servicios No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.suspension_nov.fechasuspension) + ' y ' + self.format_date_letter_mongo(self.suspension_nov.fechafinsuspension) + '.\n\n', }
+                                { text: 'el contrato de prestación de servicios No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', durante el período comprendido entre el día ' + self.format_date_letter_mongo(self.f_inicio) + ' y ' + self.format_date_letter_mongo(self.f_fin) + '.\n\n', }
                             ]
 
 
@@ -1802,7 +1814,7 @@ angular
                     ],
                     styles: {
                         general_font: {
-                            fontSize: 10,
+                            fontSize: self.tamanoFuente,
                             alignment: "justify",
                         },
                         topHeader: {
