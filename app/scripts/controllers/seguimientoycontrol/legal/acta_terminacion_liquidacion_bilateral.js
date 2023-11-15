@@ -1220,7 +1220,7 @@ angular.module('contractualClienteApp')
                     'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' +
                     self.contrato_obj.contratista_nombre + ', se suscribió el ' + self.contrato_obj.tipo_contrato +
                     ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', cuyo objeto es: "' +
-                    self.contrato_obj.objeto + '".\n\n',
+                    self.contrato_obj.objeto + '".\n\n'
                 );
                 consideraciones.push(
                     {
@@ -1233,12 +1233,12 @@ angular.module('contractualClienteApp')
                 );
                 consideraciones.push(
                     'Que el contrato se perfeccionó y ejecutó mediante Registro Presupuestal No. ' +
-                    self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n',
+                    self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n'
                 );
                 consideraciones.push(
                     'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' +
                     self.plazoMeses + ' contados a partir del perfeccionamiento de la Orden y/o contrato, es decir del ' +
-                    self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
+                    self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n'
                 );
                 consideraciones.push(
                     'Que el valor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
@@ -1252,7 +1252,7 @@ angular.module('contractualClienteApp')
                 );
                 consideraciones.push(
                     'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.fecha_solicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
-                    ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + '.\n\n',
+                    ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + '.\n\n'
                 );
                 consideraciones.push(
                     'Que según certificación de fecha ' + self.format_date_letter_mongo(self.f_certificacion) + ', expedida por el Jefe de la Unidad de Presupuesto, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' presenta un saldo a la fecha de ' +
