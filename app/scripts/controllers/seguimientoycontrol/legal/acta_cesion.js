@@ -81,6 +81,7 @@ angular
             self.nuevo_considerando = "";
             self.posicion_considerando = 1;
             self.tamanoFuente = 10;
+            self.valor_total_contrato = 0;
 
             // const solic_input = document.getElementById("n_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -204,7 +205,7 @@ angular
                                                     adiciones = adiciones + self.novedades[i].valoradicion;
                                                 }
                                             }
-                                            self.contrato_obj.valor = self.contrato_obj.valor + adiciones;
+                                            self.valor_total_contrato = self.contrato_obj.valor + adiciones;
                                             for (var i = self.novedades.length - 1; i >= 0; i--) {
                                                 if (self.novedades[i].tiponovedad == 2) {
                                                     self.contrato_obj.Inicio = self.getFechaUTC(self.novedades[i].fechacesion);
@@ -546,7 +547,7 @@ angular
              */
             $scope.formato_valores_cesion = function (evento, num) {
                 var valor = evento.target.value.replace(/[^0-9\.]/g, "");
-                var valor_valido = parseInt(self.contrato_obj.valor);
+                var valor_valido = parseInt(self.valor_total_contrato);
                 if (num == 1) {
                     if (valor <= valor_valido) {
                         self.valor_desembolsado = numberFormat(valor);
@@ -1510,7 +1511,7 @@ angular
 
             self.valor_contrato_cesionario = function () {
                 return (
-                    self.contrato_obj.valor -
+                    self.valor_total_contrato -
                     (parseFloat(self.valor_a_favor.replace(/\,/g, "")) + parseFloat(self.valor_desembolsado.replace(/\,/g, "")))
                 );
             };
