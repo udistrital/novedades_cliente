@@ -32,6 +32,7 @@ angular
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
+            self.cesionario_obj = {};
             self.plazoDias = false;
             self.plazoMeses = "";
             self.novedades = [];
@@ -41,8 +42,8 @@ angular
             self.fecha_oficioS = new Date();
             self.numero_oficio_ordenador = "";
             self.fecha_oficioO = new Date();
-            self.valor_desembolsado = null;
-            self.valor_a_favor = "";
+            self.valor_desembolsado = "0";
+            self.valor_a_favor = "0";
             self.plazo_cedente = 0;
             self.plazo_cedente_letras = "";
             self.dias_pago_cedente = 0;
@@ -195,8 +196,8 @@ angular
                                     .then(function (response_sql) {
                                         self.novedades = response_sql.data.Body;
                                         self.fecha_lim_sup = self.calcularFechaFin();
+                                        var adiciones = 0;
                                         if (self.novedades.length != 0) {
-                                            var adiciones = 0;
                                             for (var i = 0; i < self.novedades.length; i++) {
                                                 if (
                                                     self.novedades[i].tiponovedad == 6 ||
@@ -205,7 +206,6 @@ angular
                                                     adiciones = adiciones + self.novedades[i].valoradicion;
                                                 }
                                             }
-                                            self.valor_total_contrato = self.contrato_obj.valor + adiciones;
                                             for (var i = self.novedades.length - 1; i >= 0; i--) {
                                                 if (self.novedades[i].tiponovedad == 2) {
                                                     self.contrato_obj.Inicio = self.getFechaUTC(self.novedades[i].fechacesion);
@@ -214,6 +214,7 @@ angular
                                                 }
                                             }
                                         }
+                                        self.valor_total_contrato = self.contrato_obj.valor + adiciones;
                                         self.f_cesion = new Date(self.fecha_lim_sup);
                                         if (self.novedades.length != "0") {
                                             var last_cesion =
@@ -739,7 +740,6 @@ angular
              */
             self.persona_sel_change = function (val) {
                 if (val != null) {
-                    self.cesionario_obj = {};
                     self.cesionario_obj.nombre =
                         val.PrimerNombre + " " + val.SegundoNombre;
                     self.cesionario_obj.apellidos =
@@ -960,14 +960,26 @@ angular
             }
 
             self.verDocumento = function () {
-                var docDefinition = self.get_plantilla();
-                const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-                pdfDocGenerator.open({
-                    title: 'PDF creado con PDFMake',
-                    width: 600,
-                    height: 400,
-                    closeBehavior: 'remove',
-                });
+                if (self.persona_sel != "") {
+                    var docDefinition = self.get_plantilla();
+                    const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+                    pdfDocGenerator.open({
+                        title: 'PDF creado con PDFMake',
+                        width: 600,
+                        height: 400,
+                        closeBehavior: 'remove',
+                    });
+                } else {
+                    swal({
+                        title: "Error al previsualizar documento!",
+                        type: "error",
+                        html: "No se ha seleccionado ningún cesionario!",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    });
+                }
             }
 
             /**
