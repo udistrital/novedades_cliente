@@ -36,7 +36,7 @@ angular
             self.contrato_obj = {};
             self.fecha = {};
             self.f_hoy = new Date();
-            self.cdp_numero = 0;
+            self.cdp_numero = null;
             self.cdp_vigencia = 0;
             // self.cdprp = [];
             self.selected = "";
@@ -107,7 +107,9 @@ angular
             //             $scope.numero_solicitud = data[0].id_numero_solicitud;
             //         }
             //     });
-
+            agoraRequest.get("vigencia_contrato", "").then(function (response) {
+                $scope.vigencias = response.data;
+            });
             agoraRequest
                 .get("informacion_persona_natural?query=Id:" + self.elaboro_cedula)
                 .then(function (ipn_response) {
@@ -982,7 +984,7 @@ angular
                 var fechaFinEfectiva;
                 if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
-                    fechaFinEfectiva = new Date(fechaFin);
+                    fechaFinEfectiva = self.getFechaUTC(fechaFin);
                 } else {
                     fechaFin = new Date(self.contrato_obj.fin);
                     // console.log(fechaFin);
