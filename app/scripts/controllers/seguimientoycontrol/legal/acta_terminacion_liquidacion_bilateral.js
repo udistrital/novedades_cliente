@@ -616,11 +616,7 @@ angular.module('contractualClienteApp')
                                                         }).then(function () { });
                                                     });
                                                 } else {
-                                                    novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
-                                                        if (response.status == 200 || response.statusText == "Ok") {
-                                                            console.log("Registro de novedad eliminado!")
-                                                        }
-                                                    });
+                                                    self.desactivarNovedad(idNovedad);
                                                     $scope.alert = "TITULO_ERROR_REPLICA";
                                                     swal({
                                                         title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -638,11 +634,7 @@ angular.module('contractualClienteApp')
                                                 }
                                             }).catch(function (error) {
                                                 //Error en la replica
-                                                novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
-                                                    if (response.status == 200 || response.statusText == "Ok") {
-                                                        console.log("Registro de novedad eliminado!")
-                                                    }
-                                                });
+                                                self.desactivarNovedad(idNovedad);
                                                 $scope.alert = "TITULO_ERROR_REPLICA";
                                                 swal({
                                                     title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -693,6 +685,53 @@ angular.module('contractualClienteApp')
                 });
             }
 
+            self.desactivarNovedad = function (idNovedad) {
+                novedadesRequest.get('novedades_poscontractuales/' + idNovedad).then(function (res) {
+                    var struct = {};
+                    if (res.status == 200 || res.statusText == "Ok") {
+                        const fechaCrea = new Date(res.data.FechaCreacion)
+                        const fechaMod = new Date(res.data.FechaModificacion);
+                        const añoC = fechaCrea.getUTCFullYear();
+                        const mesC = fechaCrea.getUTCMonth() + 1;
+                        const diaC = fechaCrea.getUTCDate();
+                        const añoM = fechaMod.getUTCFullYear();
+                        const mesM = fechaMod.getUTCMonth() + 1;
+                        const diaM = fechaMod.getUTCDate();
+                        const fechaFormatCreacion = `${añoC}-${mesC < 10 ? '0' : ''}${mesC}-${diaC < 10 ? '0' : ''}${diaC}T12:00:00Z`;
+                        const fechaFormatMod = `${añoM}-${mesM < 10 ? '0' : ''}${mesM}-${diaM < 10 ? '0' : ''}${diaM}T12:00:00Z`;
+                        struct = res.data;
+                        struct.FechaCreacion = fechaFormatCreacion;
+                        struct.FechaModificacion = fechaFormatMod;
+                        struct.Activo = false;
+                        novedadesRequest.put('novedades_poscontractuales', idNovedad, struct).then(function (resPut) {
+                            if (resPut.status != 200) {
+                                $scope.alert = "El registro fue realizado de manera incompleta";
+                                swal({
+                                    title: "Error al desactivar la novedad!",
+                                    type: "error",
+                                    html: $translate.instant($scope.alert),
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        }).catch(function () {
+                            $scope.alert = "El registro fue realizado de manera incompleta";
+                            swal({
+                                title: "Error al desactivar la novedad!",
+                                type: "error",
+                                html: $translate.instant($scope.alert),
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        });
+                    }
+                });
+            }
+
             self.verDocumento = function () {
                 var docDefinition = self.get_plantilla();
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
@@ -721,17 +760,18 @@ angular.module('contractualClienteApp')
                     "Vigencia": parseInt(self.contrato_vigencia),
                     "FechaRegistro": new Date()
                 };
-                var fechaActual = new Date();
-                if (
-                    (fechaActual.getDate() == self.fecha_terminacion_anticipada.getDate()
-                        && fechaActual.getMonth() == self.fecha_terminacion_anticipada.getMonth()
-                        && fechaActual.getFullYear() == self.fecha_terminacion_anticipada.getFullYear())
-                    || fechaActual > self.fecha_terminacion_anticipada
-                ) {
-                    self.estadoNovedad = "TERM";
-                } else {
-                    self.estadoNovedad = "ENTR";
-                }
+                // var fechaActual = new Date();
+                // if (
+                //     (fechaActual.getDate() == self.fecha_terminacion_anticipada.getDate()
+                //         && fechaActual.getMonth() == self.fecha_terminacion_anticipada.getMonth()
+                //         && fechaActual.getFullYear() == self.fecha_terminacion_anticipada.getFullYear())
+                //     || fechaActual > self.fecha_terminacion_anticipada
+                // ) {
+                //     self.estadoNovedad = "TERM";
+                // } else {
+                //     self.estadoNovedad = "ENTR";
+                // }
+                self.estadoNovedad = "TERM";
 
                 if ($scope.formTerminacion.$valid) {
                     novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
