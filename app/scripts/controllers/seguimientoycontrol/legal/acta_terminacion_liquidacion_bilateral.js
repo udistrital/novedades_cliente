@@ -689,19 +689,27 @@ angular.module('contractualClienteApp')
                 novedadesRequest.get('novedades_poscontractuales/' + idNovedad).then(function (res) {
                     var struct = {};
                     if (res.status == 200 || res.statusText == "Ok") {
-                        const fechaCrea = new Date(res.data.FechaCreacion)
-                        const fechaMod = new Date(res.data.FechaModificacion);
-                        const añoC = fechaCrea.getUTCFullYear();
-                        const mesC = fechaCrea.getUTCMonth() + 1;
-                        const diaC = fechaCrea.getUTCDate();
-                        const añoM = fechaMod.getUTCFullYear();
-                        const mesM = fechaMod.getUTCMonth() + 1;
-                        const diaM = fechaMod.getUTCDate();
-                        const fechaFormatCreacion = `${añoC}-${mesC < 10 ? '0' : ''}${mesC}-${diaC < 10 ? '0' : ''}${diaC}T12:00:00Z`;
-                        const fechaFormatMod = `${añoM}-${mesM < 10 ? '0' : ''}${mesM}-${diaM < 10 ? '0' : ''}${diaM}T12:00:00Z`;
+                        const fechaC = new Date(res.data.FechaCreacion);
+                        fechaC.setHours(12, 0, 0, 0, 0);
+                        const añoC = fechaC.getFullYear();
+                        const mesC = (fechaC.getMonth() + 1).toString().padStart(2, '0');
+                        const diaC = fechaC.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaCreacion = añoC + '-' + mesC + '-' + diaC + 'T12:00:00Z';
+
+                        const fechaM = new Date(res.data.FechaModificacion);
+                        fechaM.setHours(12, 0, 0, 0, 0);
+                        const añoM = fechaM.getFullYear();
+                        const mesM = (fechaM.getMonth() + 1).toString().padStart(2, '0');
+                        const diaM = fechaM.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaMod = añoM + '-' + mesM + '-' + diaM + 'T12:00:00Z';
+
+                        const motivo = "Error en la réplica";
                         struct = res.data;
-                        struct.FechaCreacion = fechaFormatCreacion;
-                        struct.FechaModificacion = fechaFormatMod;
+                        struct.FechaCreacion = formattedFechaCreacion;
+                        struct.FechaModificacion = formattedFechaMod;
+                        struct.Motivo = motivo;
                         struct.Activo = false;
                         novedadesRequest.put('novedades_poscontractuales', idNovedad, struct).then(function (resPut) {
                             if (resPut.status != 200) {
