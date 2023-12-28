@@ -1143,11 +1143,7 @@ angular
                                             });
                                         } else {
                                             //Error en la replica
-                                            novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
-                                                if (response.status == 200 || response.statusText == "Ok") {
-                                                    console.log("Registro de novedad eliminado!")
-                                                }
-                                            });
+                                            self.desactivarNovedad(idNovedad);
                                             $scope.alert = "TITULO_ERROR_REPLICA";
                                             swal({
                                                 title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -1166,11 +1162,7 @@ angular
                                         }
                                     }).catch(function (error) {
                                         //Servidor no disponible
-                                        novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
-                                            if (response.status == 200 || response.statusText == "Ok") {
-                                                console.log("Registro de novedad eliminado!")
-                                            }
-                                        });
+                                        self.desactivarNovedad(idNovedad);
                                         $scope.alert = "TITULO_ERROR_REPLICA";
                                         swal({
                                             title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -1314,17 +1306,18 @@ angular
             self.generarActa = function () {
                 if (self.novedadOtrosi == false) {
                     generateTipoNovedad(function (tiponovedad) {
-                        var fechaActual = self.f_hoy;
-                        if (
-                            (fechaActual.getDate() == self.fecha_prorroga.getDate()
-                                && fechaActual.getMonth() == self.fecha_prorroga.getMonth()
-                                && fechaActual.getFullYear() == self.fecha_prorroga.getFullYear())
-                            || fechaActual > self.fecha_prorroga
-                        ) {
-                            self.estadoNovedad = "TERM";
-                        } else {
-                            self.estadoNovedad = "ENTR";
-                        }
+                        // var fechaActual = self.f_hoy;
+                        // if (
+                        //     (fechaActual.getDate() == self.fecha_prorroga.getDate()
+                        //         && fechaActual.getMonth() == self.fecha_prorroga.getMonth()
+                        //         && fechaActual.getFullYear() == self.fecha_prorroga.getFullYear())
+                        //     || fechaActual > self.fecha_prorroga
+                        // ) {
+                        //     self.estadoNovedad = "TERM";
+                        // } else {
+                        //     self.estadoNovedad = "ENTR";
+                        // }
+                        self.estadoNovedad = "ENEJ"
                         //objeto acta adición_prórroga
                         self.fecha_solicitud.setHours(12, 0, 0, 0);
                         self.fecha_prorroga.setHours(12, 0, 0, 0);
@@ -1402,6 +1395,61 @@ angular
                 //         allowOutsideClick: false,
                 //     }).then(function () { });
                 // }
+            }
+
+            self.desactivarNovedad = function (idNovedad) {
+                novedadesRequest.get('novedades_poscontractuales/' + idNovedad).then(function (res) {
+                    var struct = {};
+                    if (res.status == 200 || res.statusText == "Ok") {
+                        const fechaC = new Date(res.data.FechaCreacion);
+                        fechaC.setHours(12, 0, 0, 0, 0);
+                        const añoC = fechaC.getFullYear();
+                        const mesC = (fechaC.getMonth() + 1).toString().padStart(2, '0');
+                        const diaC = fechaC.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaCreacion = añoC + '-' + mesC + '-' + diaC + 'T12:00:00Z';
+
+                        const fechaM = new Date(res.data.FechaModificacion);
+                        fechaM.setHours(12, 0, 0, 0, 0);
+                        const añoM = fechaM.getFullYear();
+                        const mesM = (fechaM.getMonth() + 1).toString().padStart(2, '0');
+                        const diaM = fechaM.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaMod = añoM + '-' + mesM + '-' + diaM + 'T12:00:00Z';
+
+                        const motivo = "Error en la réplica";
+                        struct = res.data;
+                        struct.FechaCreacion = formattedFechaCreacion;
+                        struct.FechaModificacion = formattedFechaMod;
+                        struct.Motivo = motivo;
+                        struct.Activo = false;
+                        novedadesRequest.put('novedades_poscontractuales', idNovedad, struct).then(function (resPut) {
+                            if (resPut.status != 200) {
+                                $scope.alert = "El registro fue realizado de manera incompleta";
+                                swal({
+                                    title: "Error al desactivar la novedad!",
+                                    type: "error",
+                                    html: $translate.instant($scope.alert),
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        }).catch(function () {
+                            $scope.alert = "El registro fue realizado de manera incompleta";
+                            swal({
+                                title: "Error al desactivar la novedad!",
+                                type: "error",
+                                html: $translate.instant($scope.alert),
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        });
+                    }
+                });
             }
 
             self.verDocumento = function () {

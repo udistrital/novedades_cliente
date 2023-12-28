@@ -874,16 +874,7 @@ angular
                                                     "#/seguimientoycontrol/legal";
                                             });
                                         } else {
-                                            novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
-                                                if (response.status == 200 || response.statusText == "Ok") {
-                                                    console.log("Registro de novedad eliminado!")
-                                                }
-                                            });
-                                            // novedadesMidRequest.delete('replica', {}).then(function (response) {
-                                            //     if (response.status == 200 || response.statusText == "Ok") {
-                                            //         console.log("Registros de replica eliminado!")
-                                            //     }
-                                            // });
+                                            self.desactivarNovedad(idNovedad);
                                             $scope.alert = "TITULO_ERROR_REPLICA";
                                             swal({
                                                 title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -900,11 +891,7 @@ angular
                                             });
                                         }
                                     }).catch(function (error) {
-                                        novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
-                                            if (response.status == 200 || response.statusText == "Ok") {
-                                                console.log("Registro de novedad eliminado!")
-                                            }
-                                        });
+                                        self.desactivarNovedad(idNovedad);
                                         $scope.alert = "TITULO_ERROR_REPLICA";
                                         swal({
                                             title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -959,6 +946,61 @@ angular
                 }
             }
 
+            self.desactivarNovedad = function (idNovedad) {
+                novedadesRequest.get('novedades_poscontractuales/' + idNovedad).then(function (res) {
+                    var struct = {};
+                    if (res.status == 200 || res.statusText == "Ok") {
+                        const fechaC = new Date(res.data.FechaCreacion);
+                        fechaC.setHours(12, 0, 0, 0, 0);
+                        const añoC = fechaC.getFullYear();
+                        const mesC = (fechaC.getMonth() + 1).toString().padStart(2, '0');
+                        const diaC = fechaC.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaCreacion = añoC + '-' + mesC + '-' + diaC + 'T12:00:00Z';
+
+                        const fechaM = new Date(res.data.FechaModificacion);
+                        fechaM.setHours(12, 0, 0, 0, 0);
+                        const añoM = fechaM.getFullYear();
+                        const mesM = (fechaM.getMonth() + 1).toString().padStart(2, '0');
+                        const diaM = fechaM.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaMod = añoM + '-' + mesM + '-' + diaM + 'T12:00:00Z';
+
+                        const motivo = "Error en la réplica";
+                        struct = res.data;
+                        struct.FechaCreacion = formattedFechaCreacion;
+                        struct.FechaModificacion = formattedFechaMod;
+                        struct.Motivo = motivo;
+                        struct.Activo = false;
+                        novedadesRequest.put('novedades_poscontractuales', idNovedad, struct).then(function (resPut) {
+                            if (resPut.status != 200) {
+                                $scope.alert = "El registro fue realizado de manera incompleta";
+                                swal({
+                                    title: "Error al desactivar la novedad!",
+                                    type: "error",
+                                    html: $translate.instant($scope.alert),
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        }).catch(function () {
+                            $scope.alert = "El registro fue realizado de manera incompleta";
+                            swal({
+                                title: "Error al desactivar la novedad!",
+                                type: "error",
+                                html: $translate.instant($scope.alert),
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        });
+                    }
+                });
+            }
+
             self.verDocumento = function () {
                 if (self.persona_sel != "") {
                     var docDefinition = self.get_plantilla();
@@ -991,17 +1033,18 @@ angular
              * actualizacion de los datos del contrato y reporte de la novedad
              */
             self.generarActa = function () {
-                var fechaActual = new Date();
-                if (
-                    (fechaActual.getDate() == self.f_cesion.getDate()
-                        && fechaActual.getMonth() == self.f_cesion.getMonth()
-                        && fechaActual.getFullYear() == self.f_cesion.getFullYear())
-                    || fechaActual > self.f_cesion
-                ) {
-                    self.estadoNovedad = "TERM";
-                } else {
-                    self.estadoNovedad = "ENTR";
-                }
+                // var fechaActual = new Date();
+                // if (
+                //     (fechaActual.getDate() == self.f_cesion.getDate()
+                //         && fechaActual.getMonth() == self.f_cesion.getMonth()
+                //         && fechaActual.getFullYear() == self.f_cesion.getFullYear())
+                //     || fechaActual > self.f_cesion
+                // ) {
+                //     self.estadoNovedad = "TERM";
+                // } else {
+                //     self.estadoNovedad = "ENTR";
+                // }
+                self.estadoNovedad = "ENEJ";
                 self.valor_contrato_letras = numeroALetras(parseFloat(self.contrato_obj.valor), {
                     plural: $translate.instant("PESOS"),
                     singular: $translate.instant("PESO"),
@@ -1136,7 +1179,7 @@ angular
                 var fechaFinEfectiva;
                 if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
-                    fechaFinEfectiva = new Date(fechaFin);
+                    fechaFinEfectiva = self.getFechaUTC(fechaFin);
                 } else {
                     fechaFinEfectiva = new Date(self.contrato_obj.Fin);
                     if (fechaFinEfectiva.getDate() == 31) {

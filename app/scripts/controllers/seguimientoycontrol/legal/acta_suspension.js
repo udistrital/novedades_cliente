@@ -547,11 +547,7 @@ angular
                                                                 }
                                                             });
                                                     } else {
-                                                        novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
-                                                            if (response.status == 200 || response.statusText == "Ok") {
-                                                                console.log("Registro de novedad eliminado!")
-                                                            }
-                                                        });
+                                                        self.desactivarNovedad(idNovedad);
                                                         $scope.alert = "TITULO_ERROR_REPLICA";
                                                         swal({
                                                             title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -569,11 +565,7 @@ angular
                                                     }
                                                 }).catch(function (error) {
                                                     //Servidor no disponible
-                                                    novedadesMidRequest.delete('novedad', idNovedad).then(function (response) {
-                                                        if (response.status == 200 || response.statusText == "Ok") {
-                                                            console.log("Registro de novedad eliminado!")
-                                                        }
-                                                    });
+                                                    self.desactivarNovedad(idNovedad);
                                                     $scope.alert = "TITULO_ERROR_REPLICA";
                                                     swal({
                                                         title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -629,6 +621,61 @@ angular
                     });
             }
 
+            self.desactivarNovedad = function (idNovedad) {
+                novedadesRequest.get('novedades_poscontractuales/' + idNovedad).then(function (res) {
+                    var struct = {};
+                    if (res.status == 200 || res.statusText == "Ok") {
+                        const fechaC = new Date(res.data.FechaCreacion);
+                        fechaC.setHours(12, 0, 0, 0, 0);
+                        const añoC = fechaC.getFullYear();
+                        const mesC = (fechaC.getMonth() + 1).toString().padStart(2, '0');
+                        const diaC = fechaC.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaCreacion = añoC + '-' + mesC + '-' + diaC + 'T12:00:00Z';
+
+                        const fechaM = new Date(res.data.FechaModificacion);
+                        fechaM.setHours(12, 0, 0, 0, 0);
+                        const añoM = fechaM.getFullYear();
+                        const mesM = (fechaM.getMonth() + 1).toString().padStart(2, '0');
+                        const diaM = fechaM.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaMod = añoM + '-' + mesM + '-' + diaM + 'T12:00:00Z';
+
+                        const motivo = "Error en la réplica";
+                        struct = res.data;
+                        struct.FechaCreacion = formattedFechaCreacion;
+                        struct.FechaModificacion = formattedFechaMod;
+                        struct.Motivo = motivo;
+                        struct.Activo = false;
+                        novedadesRequest.put('novedades_poscontractuales', idNovedad, struct).then(function (resPut) {
+                            if (resPut.status != 200) {
+                                $scope.alert = "El registro fue realizado de manera incompleta";
+                                swal({
+                                    title: "Error al desactivar la novedad!",
+                                    type: "error",
+                                    html: $translate.instant($scope.alert),
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        }).catch(function () {
+                            $scope.alert = "El registro fue realizado de manera incompleta";
+                            swal({
+                                title: "Error al desactivar la novedad!",
+                                type: "error",
+                                html: $translate.instant($scope.alert),
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        });
+                    }
+                });
+            }
+
             self.verDocumento = function () {
                 var docDefinition = self.get_pdf();
                 const pdfDocGenerator = pdfMake.createPdf(docDefinition);
@@ -658,17 +705,18 @@ angular
                     Vigencia: parseInt(self.contrato_vigencia),
                     FechaRegistro: new Date(),
                 };
-                var fechaActual = new Date();
-                if (
-                    (fechaActual.getDate() == self.f_inicio.getDate()
-                        && fechaActual.getMonth() == self.f_inicio.getMonth()
-                        && fechaActual.getFullYear() == self.f_inicio.getFullYear())
-                    || fechaActual > self.f_inicio
-                ) {
-                    self.estadoNovedad = "TERM";
-                } else {
-                    self.estadoNovedad = "ENTR";
-                }
+                // var fechaActual = new Date();
+                // if (
+                //     (fechaActual.getDate() == self.f_inicio.getDate()
+                //         && fechaActual.getMonth() == self.f_inicio.getMonth()
+                //         && fechaActual.getFullYear() == self.f_inicio.getFullYear())
+                //     || fechaActual > self.f_inicio
+                // ) {
+                //     self.estadoNovedad = "TERM";
+                // } else {
+                //     self.estadoNovedad = "ENTR";
+                // }
+                self.estadoNovedad = "ENEJ";
                 if (self.f_inicio.getDate() == 31) {
                     //respuesta incorrecta, ej: 400/500
                     self.f_inicio = new Date();
@@ -856,7 +904,7 @@ angular
                 var fechaFinEfectiva;
                 if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
-                    fechaFinEfectiva = new Date(fechaFin);
+                    fechaFinEfectiva = self.getFechaUTC(fechaFin);
                 } else {
                     fechaFinEfectiva = new Date(self.contrato_obj.Fin);
                     if (fechaFinEfectiva.getDate() == 31) {
