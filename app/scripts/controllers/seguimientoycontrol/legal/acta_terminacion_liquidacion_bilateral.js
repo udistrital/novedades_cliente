@@ -635,6 +635,7 @@ angular.module('contractualClienteApp')
                                             }).catch(function (error) {
                                                 //Error en la replica
                                                 self.desactivarNovedad(idNovedad);
+                                                const errMsg = error.data.Body[1].err.err;
                                                 $scope.alert = "TITULO_ERROR_REPLICA";
                                                 swal({
                                                     title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -643,12 +644,12 @@ angular.module('contractualClienteApp')
                                                         self.contrato_obj.numero_contrato +
                                                         $translate.instant("ANIO") +
                                                         self.contrato_obj.vigencia +
-                                                        ".\n" + error,
+                                                        ": '" + errMsg + "'.",
                                                     showCloseButton: true,
                                                     showCancelButton: false,
                                                     confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                     allowOutsideClick: false,
-                                                }).then(function () { });
+                                                });
                                             });
                                     } else {
                                         //respuesta incorrecta, ej: 400/500
@@ -829,10 +830,12 @@ angular.module('contractualClienteApp')
                         self.contrato_obj_replica.FechaRegistro = self.f_hoy;
                         self.contrato_obj_replica.FechaInicio = self.contrato_obj.FechaInicio;
                         self.contrato_obj_replica.FechaFin = new Date(self.terminacion_nov.fecha_terminacion_anticipada);
-                        // self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
-                        // self.contrato_obj_replica.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
-                        // self.contrato_obj_replica.ValorNovedad = parseFloat(self.terminacion_nov.valor_desembolsado);
+                        self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                        self.contrato_obj_replica.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
+                        self.contrato_obj_replica.ValorNovedad = parseFloat(self.terminacion_nov.valor_desembolsado);
                         self.contrato_obj_replica.Documento = self.contrato_obj.contratista_documento;
+                        self.contrato_obj_replica.NumeroCdp = 0;
+                        self.contrato_obj_replica.VigenciaCdp = 0;
                         if (self.terminacion_nov.tiponovedad === "NP_TER") {
                             self.contrato_obj_replica.TipoNovedad = parseFloat(218);
                         };
