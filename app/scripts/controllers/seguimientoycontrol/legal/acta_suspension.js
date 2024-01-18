@@ -566,6 +566,7 @@ angular
                                                 }).catch(function (error) {
                                                     //Servidor no disponible
                                                     self.desactivarNovedad(idNovedad);
+                                                    const errMsg = error.data.Body[1].err.err;
                                                     $scope.alert = "TITULO_ERROR_REPLICA";
                                                     swal({
                                                         title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -574,12 +575,12 @@ angular
                                                             self.contrato_obj.numero_contrato +
                                                             $translate.instant("ANIO") +
                                                             self.contrato_obj.vigencia +
-                                                            ".",
+                                                            ": '" + errMsg + "'.",
                                                         showCloseButton: true,
                                                         showCancelButton: false,
                                                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                                         allowOutsideClick: false,
-                                                    }).then(function () { });
+                                                    });
                                                 })
                                         }
                                     })

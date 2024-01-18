@@ -417,7 +417,7 @@ var text_es = {
     TITULO_ERROR_LEGAL: "Error al consultar datos del contrato",
     TITULO_ERROR: "Errores en el formulario",
     TITULO_ERROR_ACTA: "Error al generar el acta",
-    TITULO_ERROR_REPLICA: "Error al realizar la réplica de la novedad",
+    TITULO_ERROR_REPLICA: "Error al realizar la réplica de la novedad ",
     TITULO_BUEN_TRABAJO: "¡Buen trabajo!",
     TITULO_ADVERTENCIA: "Advertencia",
     TITULO_NOVEDAD_EN_CURSO: "Ya hay una solicitud de novedad en curso para el contrato # ",

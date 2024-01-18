@@ -892,6 +892,7 @@ angular
                                         }
                                     }).catch(function (error) {
                                         self.desactivarNovedad(idNovedad);
+                                        const errMsg = error.data.Body[1].err.err;
                                         $scope.alert = "TITULO_ERROR_REPLICA";
                                         swal({
                                             title: $translate.instant("TITULO_ERROR_ACTA"),
@@ -900,7 +901,7 @@ angular
                                                 self.contrato_obj.numero_contrato +
                                                 $translate.instant("ANIO") +
                                                 self.contrato_obj.vigencia +
-                                                ".\n" + error,
+                                                ": '" + errMsg + "'.",
                                             showCloseButton: true,
                                             showCancelButton: false,
                                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
@@ -1157,6 +1158,8 @@ angular
                                             self.contrato_obj_replica.FechaInicio = self.cesion_nov.fechacesion;
                                             self.contrato_obj_replica.FechaFin = self.calcularFechaFin();
                                             self.contrato_obj_replica.UnidadEjecucion = 205;
+                                            self.contrato_obj_replica.VigenciaCdp = 0;
+                                            self.contrato_obj_replica.NumeroCdp = 0;
                                             if (self.cesion_nov.tiponovedad === "NP_CES") {
                                                 self.contrato_obj_replica.TipoNovedad = parseFloat(219);
                                             }
