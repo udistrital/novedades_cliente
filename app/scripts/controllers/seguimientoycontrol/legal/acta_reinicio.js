@@ -40,9 +40,10 @@ angular
             self.contrato_obj = {};
             self.contrato_obj_replica = {};
             self.suspension_obj = {};
-            self.n_solicitud = null;
+            self.n_solicitud = "";
             self.fecha_solicitud = new Date();
             self.f_expedicion_acta = new Date();
+            self.f_hoy = new Date();
             self.auxiliar = null;
             self.novedades = [];
             self.estadoNovedad = "";
@@ -744,18 +745,19 @@ angular
                                     });
                             } else {
                                 novedadesMidRequest
-                                    .put("replica", self.suspension_obj.id, self.contrato_obj_replica)
-                                    .then(function (request_argo) {
+                                    .post("novedad", self.reinicio_nov)
+                                    .then(function (response_nosql) {
                                         if (
-                                            request_argo.status == 200 ||
-                                            request_argo.statusText == "Ok"
+                                            response_nosql.status == 200 ||
+                                            response_nosql.statusText == "OK"
                                         ) {
+                                            var idNovedad = response_nosql.data.Body.NovedadPoscontractual.Id;
                                             novedadesMidRequest
-                                                .post("novedad", self.reinicio_nov)
-                                                .then(function (response_nosql) {
+                                                .put("replica", self.suspension_obj.id, self.contrato_obj_replica)
+                                                .then(function (request_argo) {
                                                     if (
-                                                        response_nosql.status == 200 ||
-                                                        response_nosql.statusText == "OK"
+                                                        request_argo.status == 200 ||
+                                                        request_argo.statusText == "Ok"
                                                     ) {
                                                         agoraRequest
                                                             .post("contrato_estado", nuevoEstado)
@@ -784,16 +786,141 @@ angular
                                                                         window.location.href =
                                                                             "#/seguimientoycontrol/legal";
                                                                     });
+                                                                } else {
+                                                                    $scope.alert =
+                                                                        "DESCRIPCION_ERROR_REINICIO";
+                                                                    swal({
+                                                                        title: $translate.instant(
+                                                                            "TITULO_ERROR_ACTA"
+                                                                        ),
+                                                                        type: "error",
+                                                                        html: $translate.instant($scope.alert) +
+                                                                            self.contrato_obj.numero_contrato +
+                                                                            $translate.instant("ANIO") +
+                                                                            self.contrato_obj.vigencia +
+                                                                            ".",
+                                                                        showCloseButton: true,
+                                                                        showCancelButton: false,
+                                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                        allowOutsideClick: false,
+                                                                    }).then(function () { });
                                                                 }
                                                             });
-                                                    }
+                                                    } else {
+                                                        self.desactivarNovedad(idNovedad);
+                                                        $scope.alert = "TITULO_ERROR_REPLICA";
+                                                        swal({
+                                                            title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                            type: "error",
+                                                            html: $translate.instant($scope.alert) +
+                                                                self.contrato_obj.numero_contrato +
+                                                                $translate.instant("ANIO") +
+                                                                self.contrato_obj.vigencia +
+                                                                ".",
+                                                            showCloseButton: true,
+                                                            showCancelButton: false,
+                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                            allowOutsideClick: false,
+                                                        }).then(function () { });
+                                                    };
+                                                }).catch(function (error) {
+                                                    //Servidor no disponible
+                                                    self.desactivarNovedad(idNovedad);
+                                                    console.log(error);
+                                                    const errMsg = error.data.Body[1].err;
+                                                    $scope.alert = "TITULO_ERROR_REPLICA";
+                                                    swal({
+                                                        title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                        type: "error",
+                                                        html: $translate.instant($scope.alert) +
+                                                            self.contrato_obj.numero_contrato +
+                                                            $translate.instant("ANIO") +
+                                                            self.contrato_obj.vigencia +
+                                                            ": '" + errMsg + "'.",
+                                                        showCloseButton: true,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                        allowOutsideClick: false,
+                                                    });
                                                 });
-                                        };
+                                        }
+                                    })
+                                    .catch(function (error) {
+                                        //Servidor no disponible
+                                        $scope.alert = "DESCRIPCION_ERROR_REINICIO";
+                                        swal({
+                                            title: $translate.instant("TITULO_ERROR_ACTA"),
+                                            type: "error",
+                                            html: $translate.instant($scope.alert) +
+                                                self.contrato_obj.numero_contrato +
+                                                $translate.instant("ANIO") +
+                                                self.contrato_obj.vigencia +
+                                                ".\n" + error,
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false,
+                                        }).then(function () { });
                                     });
                             }
                         }
                     });
 
+            }
+
+            self.desactivarNovedad = function (idNovedad) {
+                novedadesRequest.get('novedades_poscontractuales/' + idNovedad).then(function (res) {
+                    var struct = {};
+                    if (res.status == 200 || res.statusText == "Ok") {
+                        const fechaC = new Date(res.data.FechaCreacion);
+                        fechaC.setHours(12, 0, 0, 0, 0);
+                        const añoC = fechaC.getFullYear();
+                        const mesC = (fechaC.getMonth() + 1).toString().padStart(2, '0');
+                        const diaC = fechaC.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaCreacion = añoC + '-' + mesC + '-' + diaC + 'T12:00:00Z';
+
+                        const fechaM = new Date(res.data.FechaModificacion);
+                        fechaM.setHours(12, 0, 0, 0, 0);
+                        const añoM = fechaM.getFullYear();
+                        const mesM = (fechaM.getMonth() + 1).toString().padStart(2, '0');
+                        const diaM = fechaM.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaMod = añoM + '-' + mesM + '-' + diaM + 'T12:00:00Z';
+
+                        const motivo = "Error en la réplica";
+                        struct = res.data;
+                        struct.FechaCreacion = formattedFechaCreacion;
+                        struct.FechaModificacion = formattedFechaMod;
+                        struct.Motivo = motivo;
+                        struct.Activo = false;
+                        novedadesRequest.put('novedades_poscontractuales', idNovedad, struct).then(function (resPut) {
+                            if (resPut.status != 200) {
+                                $scope.alert = "El registro fue realizado de manera incompleta";
+                                swal({
+                                    title: "Error al desactivar la novedad!",
+                                    type: "error",
+                                    html: $translate.instant($scope.alert),
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        }).catch(function () {
+                            $scope.alert = "El registro fue realizado de manera incompleta";
+                            swal({
+                                title: "Error al desactivar la novedad!",
+                                type: "error",
+                                html: $translate.instant($scope.alert),
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        });
+                    }
+                });
             }
 
             /**
@@ -814,35 +941,44 @@ angular
                     Vigencia: parseInt(self.contrato_vigencia),
                     FechaRegistro: new Date(),
                 };
-                var fechaActual = new Date();
-                if (
-                    (fechaActual.getDate() == self.f_reinicio.getDate()
-                        && fechaActual.getMonth() == self.f_reinicio.getMonth()
-                        && fechaActual.getFullYear() == self.f_reinicio.getFullYear())
-                    || fechaActual > self.f_reinicio
-                ) {
-                    self.estadoNovedad = "TERM";
-                } else {
-                    self.estadoNovedad = "ENTR";
-                }
+                // var fechaActual = new Date();
+                // if (
+                //     (fechaActual.getDate() == self.f_reinicio.getDate()
+                //         && fechaActual.getMonth() == self.f_reinicio.getMonth()
+                //         && fechaActual.getFullYear() == self.f_reinicio.getFullYear())
+                //     || fechaActual > self.f_reinicio
+                // ) {
+                //     self.estadoNovedad = "TERM";
+                // } else {
+                //     self.estadoNovedad = "ENTR";
+                // }
+                self.estadoNovedad = "TERM";
                 if ($scope.formReinicio.$valid) {
                     novedadesRequest
                         .get("tipo_novedad", "query=Nombre:Reinicio")
                         .then(function (nc_response) {
+
+                            self.f_hoy.setHours(12, 0, 0, 0);
+                            self.fecha_solicitud.setHours(12, 0, 0, 0);
+                            self.f_suspension.setHours(12, 0, 0, 0);
+                            self.f_finsuspension.setHours(12, 0, 0, 0);
+                            self.f_reinicio.setHours(12, 0, 0, 0);
+                            self.f_expedicion_acta.setHours(12, 0, 0, 0);
+
                             self.reinicio_nov = {};
                             self.reinicio_nov.contrato = self.contrato_obj.numero_contrato;
                             self.reinicio_nov.vigencia = String(self.contrato_obj.vigencia);
                             self.reinicio_nov.motivo = self.motivo_suspension;
                             self.reinicio_nov.tiponovedad =
                                 nc_response.data[0].CodigoAbreviacion;
-                            self.reinicio_nov.fecharegistro = new Date();
+                            self.reinicio_nov.fecharegistro = self.f_hoy;
                             self.reinicio_nov.fechasolicitud = self.fecha_solicitud;
+                            self.reinicio_nov.fechaexpedicion = self.f_expedicion_acta;
                             self.reinicio_nov.numerosolicitud = self.n_solicitud;
                             self.reinicio_nov.numerooficioestadocuentas = 0;
                             self.reinicio_nov.valor_desembolsado = 0;
                             self.reinicio_nov.saldo_contratista = 0;
                             self.reinicio_nov.saldo_universidad = 0;
-                            self.reinicio_nov.fecha_terminacion_anticipada = "0001-01-01T00:00:00Z";
                             self.reinicio_nov.periodosuspension = self.diff_dias;
                             self.reinicio_nov.fechasuspension = self.f_suspension;
                             self.reinicio_nov.fechafinsuspension = self.f_finsuspension;
@@ -857,7 +993,7 @@ angular
                             //recolección POST Argo
                             self.contrato_obj_replica.NumeroContrato = self.suspension_obj.NumeroContrato; //Revisar si toca parsearlo
                             self.contrato_obj_replica.Vigencia = self.suspension_obj.Vigencia; //parseInt(self.contrato_obj.vigencia);
-                            self.contrato_obj_replica.FechaRegistro = new Date();//self.suspension_obj.FechaRegistro;
+                            self.contrato_obj_replica.FechaRegistro = self.f_hoy;//self.suspension_obj.FechaRegistro;
                             self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                             self.contrato_obj_replica.Documento = String(self.contrato_obj.contratista_documento);
                             self.contrato_obj_replica.PlazoEjecucion = self.suspension_obj.PlazoEjecucion;
@@ -908,7 +1044,7 @@ angular
                 if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
                     var diasSuspension = self.novedades[self.novedades.length - 1].periodosuspension;
-                    fechaFinEfectiva = new Date(fechaFin);
+                    fechaFinEfectiva = this.getFechaUTC(fechaFin);
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
@@ -924,29 +1060,8 @@ angular
                     if (nuevaFechaFin.getDate() == 31) {
                         nuevaFechaFin.setDate(nuevaFechaFin.getDate() - 1);
                     }
-                    console.log(nuevaFechaFin);
-                    // var fechaAux = new Date(fechaFinEfectiva);
-                    // var dd = fechaFinEfectiva.getDate();
-                    // fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
-                    // fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
-                    // nuevaFechaFin.setMonth(fechaFinEfectiva.getMonth() + (diasNovedad / 30));
-                    // if (fechaAux.getDate() == 31) {
-                    //     if (dd + (diasNovedad % 30) > 30) {
-                    //         if ((dd + (diasNovedad % 30)) == 31) {
-                    //             nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) + 1);
-                    //         } else {
-                    //             nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
-                    //         }
-                    //     } else {
-                    //         nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
-                    //     }
-                    // } else if (nuevaFechaFin.getDate() < 31) {
-                    //     nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
-                    // }
-                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
                 return nuevaFechaFin;
-
             }
 
             /**
@@ -1019,6 +1134,15 @@ angular
 
                 });
             };
+
+            self.getFechaUTC = function (dateString) {
+                var fecha = new Date(dateString);
+                var anio = fecha.getUTCFullYear();
+                var mes = fecha.getUTCMonth();
+                var dia = fecha.getUTCDate();
+                var fechaUTC = new Date(anio, mes, dia, 12, 0, 0, 0);
+                return fechaUTC;
+            }
 
             /**
              * @ngdoc method
