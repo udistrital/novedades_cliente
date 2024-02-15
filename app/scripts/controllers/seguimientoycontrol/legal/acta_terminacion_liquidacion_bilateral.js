@@ -35,43 +35,50 @@ angular.module('contractualClienteApp')
             self.novedades = [];
             self.estadoNovedad = "";
             self.f_hoy = new Date();
-            self.n_solicitud = null;
             self.fecha_inicio = "";
             self.motivo = "";
-            self.num_oficio = null;
             self.estado_suspendido = "{}";
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
+            self.plazoDias = false;
+            self.plazoMeses = "";
             self.contrato_obj = {};
             self.contrato_obj_replica = {};
             self.a_favor = {};
-            self.numero_solicitud = null;
-            self.numero_oficio_estado_cuentas = null;
-            self.fecha_oficio = new Date();
+            self.numero_solicitud = "";
+            self.numero_oficio_supervisor = "";
+            self.numero_oficio_ordenador = "";
+            self.fecha_oficioO = new Date();
+            self.fecha_oficioS = new Date();
             self.valor_desembolsado = '';
             self.saldo_contratista = '';
-            self.saldo_universidad = null;
+            self.saldo_universidad = '';
             self.fecha_solicitud = new Date();
             self.fecha_terminacion_anticipada = new Date();
+            self.fecha_efectos_legales = new Date();
+            self.f_certificacion = new Date();
             self.estados = [];
+            self.f_expedicion_acta = new Date();
             self.estadoNovedad = "";
             self.idRegistro = "";
             self.elaboro = '';
             self.elaboro_cedula = token_service.getPayload().documento;
+            self.nueva_clausula_text = "";
+            self.tamanoFuente = 10;
 
-            const solic_input = document.getElementById("numero_solicitud");
-            solic_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
+            // const solic_input = document.getElementById("numero_solicitud");
+            // solic_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
 
-            const oficio_input = document.getElementById("numero_oficio_estado_cuentas");
-            oficio_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
+            // const oficio_input = document.getElementById("numero_oficio_supervisor");
+            // oficio_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
 
             const desembolsado_input = document.getElementById("valor_desembolsado");
             desembolsado_input.addEventListener("input", function () {
@@ -94,6 +101,16 @@ angular.module('contractualClienteApp')
                 }
             });
 
+            financieraJbpmRequest
+                .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
+                .then(function (response) {
+                    var data = response.data.cdps_vigencia.cdp_vigencia;
+                    // console.log(data);
+                    if (data != undefined && data[0].id_numero_solicitud != null) {
+                        self.numero_solicitud = data[0].id_numero_solicitud;
+                    }
+                });
+
             agoraRequest.get('estado_contrato?query=NombreEstado:Suspendido').then(function (ec_response) {
                 self.estados[1] = ec_response.data[0];
             });
@@ -111,21 +128,25 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.fecha_registro = agora_response.data[0].FechaRegistro;
                     self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                     self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
+                    if (self.contrato_obj.plazo > 12) {
+                        self.plazoDias = true;
+                    }
+                    self.plazoMeses = self.calculoPlazoLetras(self.contrato_obj.plazo);
                     self.contrato_obj.vigencia = self.contrato_vigencia;
                     self.contrato_obj.supervisor_cedula = agora_response.data[0].Supervisor.Documento;
                     self.contrato_obj.supervisor_rol = agora_response.data[0].Supervisor.Cargo;
                     self.contrato_obj.contratista = agora_response.data[0].Contratista;
-                    self.contrato_obj.fecha_suscripcion = String(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
+                    self.contrato_obj.fecha_suscripcion = new Date(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
+                    self.contrato_obj.fecha_suscripcion.setDate(self.contrato_obj.fecha_suscripcion.getUTCDate());
                     self.contrato_obj.tipo_contrato = agora_response.data[0].TipoContrato.TipoContrato;
                     self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
 
                     //Se obtiene los datos de Acta de Inicio.
                     agoraRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.id).then(function (acta_response) {
-                        self.contrato_obj.FechaInicio = acta_response.data[0].FechaInicio;
-                        self.contrato_obj.FechaFin = acta_response.data[0].FechaFin;
+                        self.contrato_obj.FechaInicio = self.getFechaUTC(acta_response.data[0].FechaInicio);
+                        self.contrato_obj.FechaFin = self.getFechaUTC(acta_response.data[0].FechaFin);
 
                         self.fecha_terminacion_anticipada = new Date(self.contrato_obj.FechaFin);
-                        self.fecha_terminacion_anticipada.setDate(self.fecha_terminacion_anticipada.getDate() + 1);
                         self.fecha_lim_inf = new Date(self.contrato_obj.FechaInicio);
                         self.fecha_lim_inf.setDate(self.fecha_lim_inf.getDate() + 1);
                         self.fecha_lim_sup = self.calcularFechaFin();
@@ -142,6 +163,18 @@ angular.module('contractualClienteApp')
                             coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
                                 self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
                             });
+                        });
+                    }).catch(function (error) {
+                        //Servidor no disponible
+                        swal({
+                            title: $translate.instant('TITULO_ERROR_LEGAL'),
+                            type: 'error',
+                            html: "Error al consultar datos de ordenadores del contrato " + self.contrato_obj.numero_contrato +
+                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false
                         });
                     });
 
@@ -181,10 +214,22 @@ angular.module('contractualClienteApp')
                                         });
                                 });
 
-                        });
+                        }).catch(function (error) {
+                            //Servidor no disponible
+                            swal({
+                                title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                type: 'error',
+                                html: "Error al consultar datos del supervisor del contrato " + self.contrato_obj.numero_contrato +
+                                    $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false
+                            });
+                        });;
 
-                    //Obtención de datos del jefe de juridica
-                    agoraRequest.get('supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
+                    //Obtención de datos del jefe de Oficina de Contratación
+                    agoraRequest.get('supervisor_contrato?query=DependenciaSupervisor:DEP636&sortby=FechaFin&order=desc&limit=1').then(function (jj_response) {
                         self.contrato_obj.jefe_juridica_documento = jj_response.data[0].Documento;
                         agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.jefe_juridica_documento).then(function (ijpn_response) {
                             coreAmazonRequest.get('ciudad', 'query=Id:' + ijpn_response.data[0].IdCiudadExpedicionDocumento).then(function (scj_response) {
@@ -193,10 +238,23 @@ angular.module('contractualClienteApp')
                                 self.contrato_obj.jefe_juridica_nombre_completo = ijpn_response.data[0].PrimerNombre + " " + ijpn_response.data[0].SegundoNombre + " " + ijpn_response.data[0].PrimerApellido + " " + ijpn_response.data[0].SegundoApellido;
                             });
                         });
+                    }).catch(function (error) {
+                        //Servidor no disponible
+                        swal({
+                            title: $translate.instant('TITULO_ERROR_LEGAL'),
+                            type: 'error',
+                            html: "Error al consultar datos de ordenadores del contrato " + self.contrato_obj.numero_contrato +
+                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false
+                        });
                     });
 
                     novedadesMidRequest.get('novedad', self.contrato_obj.numero_contrato + "/" + self.contrato_obj.vigencia).then(function (response_sql) {
                         self.novedades = response_sql.data.Body;
+                        self.fecha_lim_sup = self.calcularFechaFin();
                         if (self.novedades.length != '0') {
                             var last_cesion = self.novedades[self.novedades.length - 1];
                             self.contrato_obj.contratista = last_cesion.cesionario;
@@ -221,6 +279,7 @@ angular.module('contractualClienteApp')
                                             var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
                                             self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
                                             self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                                            self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
                                         }
                                     });
                             });
@@ -248,13 +307,38 @@ angular.module('contractualClienteApp')
                                             var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
                                             self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
                                             self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                                            self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
                                         }
                                     });
                             });
                         }
+                    }).catch(function (error) {
+                        //Servidor no disponible
+                        swal({
+                            title: $translate.instant('TITULO_ERROR_LEGAL'),
+                            type: 'error',
+                            html: "Error al consultar datos de novedades del contrato " + self.contrato_obj.numero_contrato +
+                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false
+                        });
                     });
 
                 }
+            }).catch(function (error) {
+                //Servidor no disponible
+                swal({
+                    title: $translate.instant('TITULO_ERROR_ACTA'),
+                    type: 'error',
+                    html: "Error al consultar datos del contrato (contrato_general) # " + self.contrato_obj.numero_contrato +
+                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                    showCloseButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                    allowOutsideClick: false
+                }).then(function () { });
             });
 
             /**
@@ -265,56 +349,161 @@ angular.module('contractualClienteApp')
                  * Funcion que observa y controla el cambio de fechas
                  * @param {date} Fecha de terminación anticipada
                  */
-            $scope.$watch("sLactaTerminacionAnticipada.fecha_solicitud", function () {
-                if (self.fecha_solicitud.getDate() == 31) {
-                    swal(
-                        $translate.instant("TITULO_ADVERTENCIA"),
-                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
-                        "error"
-                    );
-                    var fecha = new Date(self.fecha_solicitud);
-                    fecha.setDate(self.fecha_solicitud.getDate() + 1);
-                    self.fecha_solicitud = fecha;
-                }
-            });
+            // $scope.$watch("sLactaTerminacionAnticipada.fecha_solicitud", function () {
+            //     if (self.fecha_solicitud.getDate() == 31) {
+            //         swal(
+            //             $translate.instant("TITULO_ADVERTENCIA"),
+            //             $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+            //             "error"
+            //         );
+            //         var fecha = new Date(self.fecha_solicitud);
+            //         fecha.setDate(self.fecha_solicitud.getDate() + 1);
+            //         self.fecha_solicitud = fecha;
+            //     }
+            // });
 
-            $scope.$watch("sLactaTerminacionAnticipada.fecha_terminacion_anticipada", function () {
-                if (self.fecha_terminacion_anticipada.getDate() == 31) {
-                    swal(
-                        $translate.instant("TITULO_ADVERTENCIA"),
-                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
-                        "error"
-                    );
-                    var fecha = new Date(self.fecha_terminacion_anticipada);
-                    fecha.setDate(self.fecha_terminacion_anticipada.getDate() + 1);
-                    self.fecha_terminacion_anticipada = fecha;
-                }
-            });
+            // $scope.$watch("sLactaTerminacionAnticipada.fecha_terminacion_anticipada", function () {
+            //     if (self.fecha_terminacion_anticipada.getDate() == 31) {
+            //         swal(
+            //             $translate.instant("TITULO_ADVERTENCIA"),
+            //             $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+            //             "error"
+            //         );
+            //         var fecha = new Date(self.fecha_terminacion_anticipada);
+            //         fecha.setDate(self.fecha_terminacion_anticipada.getDate() + 1);
+            //         self.fecha_terminacion_anticipada = fecha;
+            //     }
+            // });
 
-            $scope.check_saldo = function () {
-                if (self.a_favor_de == "Universidad") {
-                    $(".universidad_check").show("fast");
-                    if ($(".contratista_check").is(":visible")) {
-                        $(".contratista_check").hide("fast");
+            /**
+             * @ngdoc method
+             * @name formato_valores_terminacion
+             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl
+             * @description
+             * funcion para modificar el formato de valores para la interfaz
+             */
+            $scope.formato_valores_terminacion = function (evento, num) {
+                var valor = evento.target.value.replace(/[^0-9\.]/g, "");
+                var valor_valido = parseInt(self.contrato_obj.valor);
+                if (num == 1) {
+                    if (valor <= valor_valido) {
+                        self.valor_desembolsado = numberFormat(valor);
+                    } else {
+                        self.valor_desembolsado = undefined;
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            "El valor desembolsado no puede ser mayor al valor del contrato",
+                            "info"
+                        );
                     }
-                } else if (self.a_favor_de = "Contratista") {
-                    $(".contratista_check").show("fast");
-                    if ( $(".universidad_check").is(":visible")) {
-                        $(".universidad_check").hide("fast");
+                } else if (num == 2) {
+                    if (valor <= valor_valido) {
+                        self.saldo_contratista = numberFormat(valor);
+                    } else {
+                        self.saldo_contratista = undefined;
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            "El saldo a favor del contratista no puede ser mayor al valor del contrato",
+                            "info"
+                        );
+                    }
+                } else if (num == 3) {
+                    if (valor <= valor_valido) {
+                        self.saldo_universidad = numberFormat(valor);
+                    } else {
+                        self.saldo_universidad = undefined;
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            "El saldo a favor de la Universidad no puede ser mayor al valor del contrato",
+                            "info"
+                        );
                     }
                 }
-            }
+            };
+
+            // $scope.check_saldo = function () {
+            //     if (self.a_favor_de == "Universidad") {
+            //         $(".universidad_check").show("fast");
+            //         if ($(".contratista_check").is(":visible")) {
+            //             $(".contratista_check").hide("fast");
+            //             self.saldo_contratista = 0;
+            //         }
+            //     } else if (self.a_favor_de = "Contratista") {
+            //         $(".contratista_check").show("fast");
+            //         if ($(".universidad_check").is(":visible")) {
+            //             $(".universidad_check").hide("fast");
+            //             self.saldo_universidad = 0;
+            //         }
+            //     }
+            // }
 
             // seleccionador de beneficiario de saldo
             self.selecionarSaldo = function () {
-                if (self.a_favor_de == "Universidad") {
-                    self.a_favor.entidad = "la Universidad Distrital.";
+                if (self.saldo_contratista == 0) {
+                    // self.a_favor.entidad = "la Universidad Distrital.";
                     self.a_favor.valor = self.terminacion_nov.saldo_universidad;
                     self.a_favor.existe = "no existe un saldo a favor de este.";
-                } else if (self.a_favor_de == "Contratista") {
-                    self.a_favor.entidad = "el Contratista.";
-                    self.a_favor.valor = self.terminacion_nov.saldo_contratista;
-                    self.a_favor.existe = ' existe un saldo a favor de este, por el periodo comprendido entre el dia ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' y  el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', por un valor de $' + numberFormat(String(self.terminacion_nov.saldo_contratista) + '');
+                } else {
+                    // self.a_favor.entidad = "el Contratista.";
+                    self.a_favor.valor = parseFloat(self.saldo_contratista.replace(/\,/g, "")) + parseFloat(self.saldo_universidad.replace(/\,/g, ""));
+                    self.a_favor.existe = ' queda un saldo pendiente a su favor, por la suma de ' +
+                        numeroALetras(self.terminacion_nov.saldo_contratista, {
+                            plural: $translate.instant("PESOS"),
+                            singular: $translate.instant("PESO"),
+                            centPlural: $translate.instant("CENTAVOS"),
+                            centSingular: $translate.instant("CENTAVO"),
+                        }) + " MONEDA CORRIENTE ($" +
+                        numberFormat(String(self.terminacion_nov.saldo_contratista) + ' M/Cte.)');
+                }
+            }
+
+            self.calculoPlazoLetras = function (plazo) {
+                if (self.plazoDias) {
+                    var plazo_meses = plazo / 30;
+                    var res = String(plazo_meses).split(".");
+                    var cantidad_meses = res[0];
+                    var decimal_cantidad_dias = "0." + res[1];
+                    var cantidad_dias = Math.ceil(parseFloat(decimal_cantidad_dias) / 0.03333333333336);
+                    var cantidad_meses_letras = numeroALetras(cantidad_meses, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var cantidad_dias_letras = numeroALetras(cantidad_dias, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto = "";
+                    if (cantidad_dias == 0) {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES");
+                    } else {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES") +
+                            " Y " +
+                            cantidad_dias_letras +
+                            cantidad_dias +
+                            " ) " +
+                            $translate.instant("DIAS");
+                    }
+                    return texto;
+
+                } else {
+                    var cantidad_meses_letras = numeroALetras(plazo, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto =
+                        cantidad_meses_letras +
+                        plazo +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES");
+                    return texto;
                 }
             }
 
@@ -330,8 +519,7 @@ angular.module('contractualClienteApp')
                 self.terminacion_nov.enlace = enlaceDoc;
                 novedadesMidRequest.post('validarCambioEstado', self.estados).then(function (vc_response) {
                     if (vc_response.data.Body == "true") {
-                        console.log(self.terminacion_nov)
-                        if (self.terminacion_nov.estado == "4518") {
+                        if (self.terminacion_nov.estado == "ENTR") {
                             novedadesMidRequest
                                 .post('novedad', self.terminacion_nov)
                                 .then(function (response_nosql) {
@@ -375,19 +563,20 @@ angular.module('contractualClienteApp')
                                     }
                                 });
                         } else {
-                            self.contrato_obj_replica.esFechaActual = true;
                             novedadesMidRequest
-                                .post("replica", self.contrato_obj_replica)
-                                .then(function (request_novedades) {
-                                    if (
-                                        request_novedades.status == 200 ||
-                                        request_novedades.statusText == "OK"
-                                    ) {
-                                        console.log("Replica correcta");
+                                .post('novedad', self.terminacion_nov)
+                                .then(function (response_nosql) {
+                                    if (response_nosql.status == 200 || response_nosql.statusText == "Ok") {
+                                        var idNovedad = response_nosql.data.Body.NovedadPoscontractual.Id;
+                                        self.contrato_obj_replica.esFechaActual = true;
                                         novedadesMidRequest
-                                            .post('novedad', self.terminacion_nov)
-                                            .then(function (response_nosql) {
-                                                if (response_nosql.status == 200 || response_nosql.statusText == "Ok") {
+                                            .post("replica", self.contrato_obj_replica)
+                                            .then(function (request_novedades) {
+                                                if (
+                                                    request_novedades.status == 200 ||
+                                                    request_novedades.statusText == "OK"
+                                                ) {
+                                                    console.log("Replica correcta");
                                                     agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
                                                         if (response.status == 201 || Object.keys(response.data) > 0) {
                                                             pdfMake
@@ -412,60 +601,156 @@ angular.module('contractualClienteApp')
                                                                 window.location.href = "#/seguimientoycontrol/legal";
                                                             });
                                                         }
+                                                    }).catch(function (error) {
+                                                        //Servidor no disponible
+                                                        $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                                        swal({
+                                                            title: $translate.instant('TITULO_ERROR_ACTA'),
+                                                            type: 'error',
+                                                            html: "Error al cambiar el estado de la novedad del contrato # " + self.contrato_obj.numero_contrato +
+                                                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                                            showCloseButton: true,
+                                                            showCancelButton: false,
+                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                            allowOutsideClick: false
+                                                        }).then(function () { });
                                                     });
                                                 } else {
-                                                    //respuesta incorrecta, ej: 400/500
-                                                    $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                                    self.desactivarNovedad(idNovedad);
+                                                    $scope.alert = "TITULO_ERROR_REPLICA";
                                                     swal({
-                                                        title: $translate.instant('TITULO_ERROR_ACTA'),
-                                                        type: 'error',
-                                                        html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
-                                                            $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                                        title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                        type: "error",
+                                                        html: $translate.instant($scope.alert) +
+                                                            self.contrato_obj.numero_contrato +
+                                                            $translate.instant("ANIO") +
+                                                            self.contrato_obj.vigencia +
+                                                            ".",
                                                         showCloseButton: true,
                                                         showCancelButton: false,
                                                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                        allowOutsideClick: false
-                                                    }).then(function () {
-
-                                                    });
+                                                        allowOutsideClick: false,
+                                                    }).then(function () { });
                                                 }
                                             }).catch(function (error) {
-                                                //Servidor no disponible
-                                                $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                                //Error en la replica
+                                                self.desactivarNovedad(idNovedad);
+                                                const errMsg = error.data.Body[1].err.err;
+                                                $scope.alert = "TITULO_ERROR_REPLICA";
                                                 swal({
-                                                    title: $translate.instant('TITULO_ERROR_ACTA'),
-                                                    type: 'error',
-                                                    html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
-                                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                                    title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                    type: "error",
+                                                    html: $translate.instant($scope.alert) +
+                                                        self.contrato_obj.numero_contrato +
+                                                        $translate.instant("ANIO") +
+                                                        self.contrato_obj.vigencia +
+                                                        ": '" + errMsg + "'.",
                                                     showCloseButton: true,
                                                     showCancelButton: false,
                                                     confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                    allowOutsideClick: false
-                                                }).then(function () { });
+                                                    allowOutsideClick: false,
+                                                });
                                             });
+                                    } else {
+                                        //respuesta incorrecta, ej: 400/500
+                                        $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
+                                        swal({
+                                            title: $translate.instant('TITULO_ERROR_ACTA'),
+                                            type: 'error',
+                                            html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
+                                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.',
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false
+                                        }).then(function () {
+
+                                        });
                                     }
                                 }).catch(function (error) {
-                                    //Error en la replica
-                                    $scope.alert = "TITULO_ERROR_REPLICA";
+                                    //Servidor no disponible
+                                    $scope.alert = 'DESCRIPCION_ERROR_TERMINACION';
                                     swal({
-                                        title: $translate.instant("TITULO_ERROR_ACTA"),
-                                        type: "error",
-                                        html: $translate.instant($scope.alert) +
-                                            self.contrato_obj.numero_contrato +
-                                            $translate.instant("ANIO") +
-                                            self.contrato_obj.vigencia +
-                                            ".",
+                                        title: $translate.instant('TITULO_ERROR_ACTA'),
+                                        type: 'error',
+                                        html: $translate.instant($scope.alert) + self.contrato_obj.numero_contrato +
+                                            $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
                                         showCloseButton: true,
                                         showCancelButton: false,
                                         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                        allowOutsideClick: false,
+                                        allowOutsideClick: false
                                     }).then(function () { });
-                                })
+                                });
                         }
                     }
                 });
             }
 
+            self.desactivarNovedad = function (idNovedad) {
+                novedadesRequest.get('novedades_poscontractuales/' + idNovedad).then(function (res) {
+                    var struct = {};
+                    if (res.status == 200 || res.statusText == "Ok") {
+                        const fechaC = new Date(res.data.FechaCreacion);
+                        fechaC.setHours(12, 0, 0, 0, 0);
+                        const añoC = fechaC.getFullYear();
+                        const mesC = (fechaC.getMonth() + 1).toString().padStart(2, '0');
+                        const diaC = fechaC.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaCreacion = añoC + '-' + mesC + '-' + diaC + 'T12:00:00Z';
+
+                        const fechaM = new Date(res.data.FechaModificacion);
+                        fechaM.setHours(12, 0, 0, 0, 0);
+                        const añoM = fechaM.getFullYear();
+                        const mesM = (fechaM.getMonth() + 1).toString().padStart(2, '0');
+                        const diaM = fechaM.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaMod = añoM + '-' + mesM + '-' + diaM + 'T12:00:00Z';
+
+                        const motivo = "Error en la réplica";
+                        struct = res.data;
+                        struct.FechaCreacion = formattedFechaCreacion;
+                        struct.FechaModificacion = formattedFechaMod;
+                        struct.Motivo = motivo;
+                        struct.Activo = false;
+                        novedadesRequest.put('novedades_poscontractuales', idNovedad, struct).then(function (resPut) {
+                            if (resPut.status != 200) {
+                                $scope.alert = "El registro fue realizado de manera incompleta";
+                                swal({
+                                    title: "Error al desactivar la novedad!",
+                                    type: "error",
+                                    html: $translate.instant($scope.alert),
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        }).catch(function () {
+                            $scope.alert = "El registro fue realizado de manera incompleta";
+                            swal({
+                                title: "Error al desactivar la novedad!",
+                                type: "error",
+                                html: $translate.instant($scope.alert),
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        });
+                    }
+                });
+            }
+
+            self.verDocumento = function () {
+                var docDefinition = self.get_plantilla();
+                const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+                pdfDocGenerator.open({
+                    title: 'PDF creado con PDFMake',
+                    width: 600,
+                    height: 400,
+                    closeBehavior: 'remove',
+                });
+            }
 
             /**
              * @ngdoc method
@@ -484,52 +769,73 @@ angular.module('contractualClienteApp')
                     "Vigencia": parseInt(self.contrato_vigencia),
                     "FechaRegistro": new Date()
                 };
-                var fechaActual = new Date();
-                if (
-                    (fechaActual.getDate() == self.fecha_terminacion_anticipada.getDate()
-                        && fechaActual.getMonth() == self.fecha_terminacion_anticipada.getMonth()
-                        && fechaActual.getFullYear() == self.fecha_terminacion_anticipada.getFullYear())
-                    || fechaActual > self.fecha_terminacion_anticipada
-                ) {
-                    self.estadoNovedad = "4519";
-                } else {
-                    self.estadoNovedad = "4518";
-                }
+                // var fechaActual = new Date();
+                // if (
+                //     (fechaActual.getDate() == self.fecha_terminacion_anticipada.getDate()
+                //         && fechaActual.getMonth() == self.fecha_terminacion_anticipada.getMonth()
+                //         && fechaActual.getFullYear() == self.fecha_terminacion_anticipada.getFullYear())
+                //     || fechaActual > self.fecha_terminacion_anticipada
+                // ) {
+                //     self.estadoNovedad = "TERM";
+                // } else {
+                //     self.estadoNovedad = "ENTR";
+                // }
+                self.estadoNovedad = "TERM";
 
                 if ($scope.formTerminacion.$valid) {
                     novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
+                        self.fecha_terminacion_anticipada.setHours(12, 0, 0, 0);
+                        self.f_expedicion_acta.setHours(12, 0, 0, 0);
+                        self.fecha_oficioS.setHours(12, 0, 0, 0);
+                        self.fecha_oficioO.setHours(12, 0, 0, 0);
+                        self.fecha_solicitud.setHours(12, 0, 0, 0);
+                        self.f_hoy.setHours(12, 0, 0, 0);
+                        var f_terminacion_post = new Date(self.fecha_terminacion_anticipada);
+                        if (f_terminacion_post.getDate() == 31) {
+                            f_terminacion_post.setDate(f_terminacion_post.getDate() + 1);
+                        }
                         self.terminacion_nov = {};
                         self.terminacion_nov.contrato = self.contrato_obj.numero_contrato;
                         self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
                         self.terminacion_nov.cesionario = parseInt(self.contrato_obj.contratista);
                         self.terminacion_nov.motivo = self.motivo;
                         self.terminacion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
-                        self.terminacion_nov.fecharegistro = new Date();
-                        self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
-                        self.terminacion_nov.fechaoficio = self.fecha_oficio;
+                        self.terminacion_nov.fecharegistro = self.f_hoy;
                         self.terminacion_nov.numerosolicitud = self.numero_solicitud;
-                        self.terminacion_nov.numerooficioestadocuentas = self.numero_oficio_estado_cuentas;
-                        self.terminacion_nov.valor_desembolsado = self.valor_desembolsado;
-                        self.terminacion_nov.saldo_contratista = self.saldo_contratista;
-                        self.terminacion_nov.saldo_universidad = self.saldo_universidad;
-                        self.terminacion_nov.fecha_terminacion_anticipada = self.fecha_terminacion_anticipada;
-                        self.terminacion_nov.fechafinefectiva = self.fecha_terminacion_anticipada;
+                        self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
+                        self.terminacion_nov.fechaexpedicion = self.f_expedicion_acta;
+                        if (self.numero_oficio_supervisor == "") {
+                            self.terminacion_nov.numerooficiosupervisor = "n.a.";
+                        } else {
+                            self.terminacion_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
+                        }
+                        if (self.numero_oficio_ordenador == "") {
+                            self.terminacion_nov.numerooficioordenador = "n.a.";
+                        } else {
+                            self.terminacion_nov.numerooficioordenador = self.numero_oficio_ordenador;
+                        }
+                        self.terminacion_nov.fechaoficiosupervisor = self.fecha_oficioS;
+                        self.terminacion_nov.fechaoficioordenador = self.fecha_oficioO;
+                        self.terminacion_nov.valor_desembolsado = parseFloat(self.valor_desembolsado.replace(/\,/g, ""));
+                        self.terminacion_nov.saldo_contratista = parseFloat(self.saldo_contratista.replace(/\,/g, ""));
+                        self.terminacion_nov.saldo_universidad = parseFloat(self.saldo_universidad.replace(/\,/g, ""));
+                        self.terminacion_nov.fecha_terminacion_anticipada = f_terminacion_post;
+                        self.terminacion_nov.fechafinefectiva = f_terminacion_post;
                         self.terminacion_nov.estado = self.estadoNovedad;
-
+                        self.fecha_efectos_legales = new Date(self.fecha_terminacion_anticipada);
+                        self.fecha_efectos_legales.setDate(self.fecha_efectos_legales.getDate() + 1);
                         // Recolección datos objeto POST Replica
                         self.contrato_obj_replica.NumeroContrato = self.contrato_obj.numero_contrato;
                         self.contrato_obj_replica.Vigencia = parseInt(self.contrato_obj.vigencia);
-                        self.contrato_obj_replica.FechaRegistro = new Date();
-                        self.contrato_obj_replica.FechaInicio = new Date(self.contrato_obj.FechaInicio);
-                        self.contrato_obj_replica.FechaInicio.setDate(self.contrato_obj_replica.FechaInicio.getDate() + 1);
-                        if (self.contrato_obj_replica.FechaInicio.getDate() == 31) {
-                            self.contrato_obj_replica.FechaInicio.setDate(self.contrato_obj_replica.FechaInicio.getDate() + 1);
-                        }
+                        self.contrato_obj_replica.FechaRegistro = self.f_hoy;
+                        self.contrato_obj_replica.FechaInicio = self.contrato_obj.FechaInicio;
                         self.contrato_obj_replica.FechaFin = new Date(self.terminacion_nov.fecha_terminacion_anticipada);
-                        // self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
-                        // self.contrato_obj_replica.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
-                        // self.contrato_obj_replica.ValorNovedad = parseFloat(self.terminacion_nov.valor_desembolsado);
+                        self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                        self.contrato_obj_replica.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
+                        self.contrato_obj_replica.ValorNovedad = parseFloat(self.terminacion_nov.valor_desembolsado);
                         self.contrato_obj_replica.Documento = self.contrato_obj.contratista_documento;
+                        self.contrato_obj_replica.NumeroCdp = 0;
+                        self.contrato_obj_replica.VigenciaCdp = 0;
                         if (self.terminacion_nov.tiponovedad === "NP_TER") {
                             self.contrato_obj_replica.TipoNovedad = parseFloat(218);
                         };
@@ -573,9 +879,7 @@ angular.module('contractualClienteApp')
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
                     fechaFinEfectiva = new Date(fechaFin);
                 } else {
-                    fechaFin = self.contrato_obj.FechaFin;
-                    fechaFinEfectiva = new Date(fechaFin);
-                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    fechaFinEfectiva = new Date(self.contrato_obj.FechaFin);
                     if (fechaFinEfectiva.getDate() == 31) {
                         fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
                     }
@@ -608,6 +912,17 @@ angular.module('contractualClienteApp')
                 var output = self.get_plantilla();
 
                 const pdfDocGenerator = pdfMake.createPdf(output);
+                // console.log(self.terminacion_nov);
+                // console.log(self.contrato_obj_replica);
+                // pdfMake
+                //     .createPdf(output)
+                //     .download(
+                //         "acta_terminacion_anticipada_" +
+                //         self.contrato_id +
+                //         "_" +
+                //         dateTime +
+                //         ".pdf"
+                //     );
                 pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(
                         data,
@@ -656,7 +971,7 @@ angular.module('contractualClienteApp')
                 var mm = date.getMonth();
                 var yyyy = date.getFullYear();
                 var fecha = new Date(yyyy, mm, dd);
-                var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var options = { year: 'numeric', month: 'long', day: 'numeric' };
                 return fecha.toLocaleDateString("es-ES", options);
             };
             /**
@@ -692,6 +1007,16 @@ angular.module('contractualClienteApp')
 
                 return r_date;
             };
+
+            self.getFechaUTC = function (dateString) {
+                var fecha = new Date(dateString);
+                var anio = fecha.getUTCFullYear();
+                var mes = fecha.getUTCMonth();
+                var dia = fecha.getUTCDate();
+                var fechaUTC = new Date(anio, mes, dia, 12, 0, 0, 0);
+                return fechaUTC;
+            }
+
             /**
              * @ngdoc method
              * @name numberFormat
@@ -728,206 +1053,352 @@ angular.module('contractualClienteApp')
                 }
             }
 
-            function Unidades(num) {
-
-                switch (num) {
-                    case 1:
-                        return "Un";
-                    case 2:
-                        return "Dos";
-                    case 3:
-                        return "Tres";
-                    case 4:
-                        return "Cuatro";
-                    case 5:
-                        return "Cinco";
-                    case 6:
-                        return "Seis";
-                    case 7:
-                        return "Siete";
-                    case 8:
-                        return "Ocho";
-                    case 9:
-                        return "Nueve";
-                }
-
-                return "";
-            } //Unidades()
-
-            function Decenas(num) {
-
-                var decena = Math.floor(num / 10);
-                var unidad = num - (decena * 10);
-
-                switch (decena) {
-                    case 1:
-                        switch (unidad) {
-                            case 0:
-                                return "Diez";
-                            case 1:
-                                return "Once";
-                            case 2:
-                                return "Doce";
-                            case 3:
-                                return "Trece";
-                            case 4:
-                                return "Catorce";
-                            case 5:
-                                return "Quince";
-                            default:
-                                return "Dieci" + Unidades(unidad);
-                        }
-                    case 2:
-                        switch (unidad) {
-                            case 0:
-                                return "Veinte";
-                            default:
-                                return "Veinti" + Unidades(unidad);
-                        }
-                    case 3:
-                        return DecenasY("Treinta", unidad);
-                    case 4:
-                        return DecenasY("Cuarenta", unidad);
-                    case 5:
-                        return DecenasY("Cincuenta", unidad);
-                    case 6:
-                        return DecenasY("Sesenta", unidad);
-                    case 7:
-                        return DecenasY("Setenta", unidad);
-                    case 8:
-                        return DecenasY("Ochenta", unidad);
-                    case 9:
-                        return DecenasY("Noventa", unidad);
-                    case 0:
-                        return Unidades(unidad);
-                }
-            } //Decenas()
-
-            function DecenasY(strSin, numUnidades) {
-                if (numUnidades > 0)
-                    return strSin + " Y " + Unidades(numUnidades)
-
-                return strSin;
-            } //DecenasY()
-
-            function Centenas(num) {
-                var centenas = Math.floor(num / 100);
-                var decenas = num - (centenas * 100);
-
-                switch (centenas) {
-                    case 1:
-                        if (decenas > 0)
-                            return "Ciento " + Decenas(decenas);
-                        return "Cien";
-                    case 2:
-                        return "Doscientos " + Decenas(decenas);
-                    case 3:
-                        return "Trescientos " + Decenas(decenas);
-                    case 4:
-                        return "Cuatroscientos " + Decenas(decenas);
-                    case 5:
-                        return "Quinientos " + Decenas(decenas);
-                    case 6:
-                        return "Seiscientos" + Decenas(decenas);
-                    case 7:
-                        return "Setecientos " + Decenas(decenas);
-                    case 8:
-                        return "Ochocientos " + Decenas(decenas);
-                    case 9:
-                        return "Novecientos " + Decenas(decenas);
-                }
-
-                return Decenas(decenas);
-            } //Centenas()
-
-            function Seccion(num, divisor, strSingular, strPlural) {
-                var cientos = Math.floor(num / divisor)
-                var resto = num - (cientos * divisor)
-                var letras = "";
-                if (cientos > 0)
-                    if (cientos > 1)
-                        letras = Centenas(cientos) + " " + strPlural;
-                    else
-                        letras = strSingular;
-                if (resto > 0)
-                    letras += "";
-                return letras;
-            } //Seccion()
-
-            function Miles(num) {
-                var divisor = 1000;
-                var cientos = Math.floor(num / divisor)
-                var resto = num - (cientos * divisor)
-
-                var strMiles = Seccion(num, divisor, "Un Mil", "Mil");
-                var strCentenas = Centenas(resto);
-
-                if (strMiles == "")
-                    return strCentenas;
-
-                return strMiles + " " + strCentenas;
-            } //Miles()
-
-            function Millones(num) {
-                var divisor = 1000000;
-                var cientos = Math.floor(num / divisor)
-                var resto = num - (cientos * divisor)
-
-                var strMillones = Seccion(num, divisor, "Un Millón ", "Millones ");
-                var strMiles = Miles(resto);
-
-                if (strMillones == "")
-                    return strMiles;
-
-                return strMillones + " " + strMiles;
-            } //Millones()
-            function NumeroALetras(num) {
-                var data = {
-                    numero: num,
-                    enteros: Math.floor(num),
-                    centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
-                    letrasCentavos: "",
-                    letrasMonedaPlural: 'Pesos', //“PESOS”, 'Dólares', 'Bolívares', 'etcs'
-                    letrasMonedaSingular: 'Peso', //“PESO”, 'Dólar', 'Bolivar', 'etc'
-
-                    letrasMonedaCentavoPlural: "Centavos",
-                    letrasMonedaCentavoSingular: "Centavo"
-                };
-
-                if (data.centavos > 0) {
-                    data.letrasCentavos = "Con " + (function () {
-                        if (data.centavos == 1)
-                            return Millones(data.centavos) + " " + data.letrasMonedaCentavoSingular;
-                        else
-                            return Millones(data.centavos) + " " + data.letrasMonedaCentavoPlural;
-                    })();
-                };
-
-                if (data.enteros == 0)
-                    return "Cero " + data.letrasMonedaPlural + " " + data.letrasCentavos;
-                if (data.enteros == 1)
-                    return Millones(data.enteros) + " " + data.letrasMonedaSingular + " " + data.letrasCentavos;
-                else
-                    return Millones(data.enteros) + " " + data.letrasMonedaPlural + " " + data.letrasCentavos;
-            } //NumeroALetras()
-            function tiempoEjecucion(tiempo, unidad) {
-                if (unidad == '205') {
-                    var meses = tiempo / 30;
-                    if (meses > 1) {
-                        meses = Math.floor(meses);
-                        var parcial = meses * 30;
-                        var dias = tiempo - parcial;
-                        var plazo = meses + " mes(es) y " + dias + " dia(s) ";
-                    } else {
-                        var plazo = tiempo + " dia(s) ";
+            var numeroALetras = (function () {
+                function Unidades(num) {
+                    switch (num) {
+                        case 1:
+                            return $translate.instant("UN");
+                        case 2:
+                            return $translate.instant("DOS");
+                        case 3:
+                            return $translate.instant("TRES");
+                        case 4:
+                            return $translate.instant("CUATRO");
+                        case 5:
+                            return $translate.instant("CINCO");
+                        case 6:
+                            return $translate.instant("SEIS");
+                        case 7:
+                            return $translate.instant("SIETE");
+                        case 8:
+                            return $translate.instant("OCHO");
+                        case 9:
+                            return $translate.instant("NUEVE");
                     }
-                } else if (unidad == '206') {
-                    var plazo = tiempo + " Mes(es) ";
-                } else {
-                    var meses = tiempo * 12;
-                    var plazo = meses + " mes(es) ";
+                    return "";
                 }
-                return plazo;
+
+                function Decenas(num) {
+                    var decena = Math.floor(num / 10);
+                    var unidad = num - decena * 10;
+                    switch (decena) {
+                        case 1:
+                            switch (unidad) {
+                                case 0:
+                                    return $translate.instant("DIEZ");
+                                case 1:
+                                    return $translate.instant("ONCE");
+                                case 2:
+                                    return $translate.instant("DOCE");
+                                case 3:
+                                    return $translate.instant("TRECE");
+                                case 4:
+                                    return $translate.instant("CATORCE");
+                                case 5:
+                                    return $translate.instant("QUINCE");
+                                case 6:
+                                    return $translate.instant("DIECISEIS");
+                                case 7:
+                                    return $translate.instant("DIECISIETE");
+                                case 8:
+                                    return $translate.instant("DIECIOCHO");
+                                case 9:
+                                    return $translate.instant("DIECINUEVE");
+                                default:
+                                    return $translate.instant("DIECI") + Unidades(unidad);
+                            }
+                        case 2:
+                            if (unidad == 0) {
+                                return $translate.instant("VEINTE");
+                            } else {
+                                return $translate.instant("VEINTI") + Unidades(unidad);
+                            }
+                        case 3:
+                            return DecenasY($translate.instant("TREINTA"), unidad);
+                        case 4:
+                            return DecenasY($translate.instant("CUARENTA"), unidad);
+                        case 5:
+                            return DecenasY($translate.instant("CINCUENTA"), unidad);
+                        case 6:
+                            return DecenasY($translate.instant("SESENTA"), unidad);
+                        case 7:
+                            return DecenasY($translate.instant("SETENTA"), unidad);
+                        case 8:
+                            return DecenasY($translate.instant("OCHENTA"), unidad);
+                        case 9:
+                            return DecenasY($translate.instant("NOVENTA"), unidad);
+                        case 0:
+                            return Unidades(unidad);
+                    }
+                }
+
+                function DecenasY(strSin, numUnidades) {
+                    if (numUnidades > 0)
+                        return strSin + $translate.instant("Y") + Unidades(numUnidades);
+                    return strSin;
+                }
+
+                function Centenas(num) {
+                    var centenas = Math.floor(num / 100);
+                    var decenas = num - centenas * 100;
+                    switch (centenas) {
+                        case 1:
+                            if (decenas > 0)
+                                return $translate.instant("CIENTO") + Decenas(decenas);
+                            return $translate.instant("CIEN");
+                        case 2:
+                            return $translate.instant("DOSCIENTOS") + Decenas(decenas);
+                        case 3:
+                            return $translate.instant("TRESCIENTOS") + Decenas(decenas);
+                        case 4:
+                            return $translate.instant("CUATROCIENTOS") + Decenas(decenas);
+                        case 5:
+                            return $translate.instant("QUINIENTOS") + Decenas(decenas);
+                        case 6:
+                            return $translate.instant("SEISCIENTOS") + Decenas(decenas);
+                        case 7:
+                            return $translate.instant("SETECIENTOS") + Decenas(decenas);
+                        case 8:
+                            return $translate.instant("OCHOCIENTOS") + Decenas(decenas);
+                        case 9:
+                            return $translate.instant("NOVECIENTOS") + Decenas(decenas);
+                    }
+                    return Decenas(decenas);
+                }
+
+                function Seccion(num, divisor, strSingular, strPlural) {
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var letras = "";
+                    if (cientos > 0)
+                        if (cientos > 1) letras = Centenas(cientos) + " " + strPlural;
+                        else letras = strSingular;
+                    if (resto > 0) letras += "";
+                    return letras;
+                }
+
+                function Miles(num) {
+                    var divisor = 1000;
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var strMiles = Seccion(
+                        num,
+                        divisor,
+                        $translate.instant("UNMIL"),
+                        $translate.instant("MIL")
+                    );
+                    var strCentenas = Centenas(resto);
+                    if (strMiles == "") return strCentenas;
+                    return strMiles + " " + strCentenas;
+                }
+
+                function Millones(num) {
+                    var divisor = 1000000;
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var strMillones = Seccion(
+                        num,
+                        divisor,
+                        $translate.instant("UNMILLON"),
+                        $translate.instant("MILLONES")
+                    );
+                    var strMiles = Miles(resto);
+                    if (strMillones == "") return strMiles;
+                    return strMillones + " " + strMiles;
+                }
+
+                return function NumeroALetras(num, currency) {
+                    currency = currency || {};
+                    var data = {
+                        numero: num,
+                        enteros: Math.floor(num),
+                        centavos: Math.round(num * 100) - Math.floor(num) * 100,
+                        letrasCentavos: "",
+                        letrasMonedaPlural: currency.plural || $translate.instant("PESOS"),
+                        letrasMonedaSingular: currency.singular || $translate.instant("PESO"),
+                        letrasMonedaCentavoPlural: currency.centPlural || "CHIQUI PESOS",
+                        letrasMonedaCentavoSingular: currency.centSingular || "CHIQUI PESO",
+                    };
+
+                    if (data.centavos > 0) {
+                        data.letrasCentavos =
+                            $translate.instant("CON") +
+                            (function () {
+                                if (data.centavos == 1)
+                                    return (
+                                        Millones(data.centavos) +
+                                        " " +
+                                        data.letrasMonedaCentavoSingular
+                                    );
+                                else
+                                    return (
+                                        Millones(data.centavos) +
+                                        " " +
+                                        data.letrasMonedaCentavoPlural
+                                    );
+                            })();
+                    }
+
+                    if (data.enteros == 0)
+                        return (
+                            $translate.instant("CERO") +
+                            data.letrasMonedaPlural +
+                            " " +
+                            data.letrasCentavos
+                        );
+                    if (data.enteros == 1)
+                        return (
+                            Millones(data.enteros) +
+                            " " +
+                            data.letrasMonedaSingular +
+                            " " +
+                            data.letrasCentavos
+                        );
+                    else
+                        return (
+                            Millones(data.enteros) +
+                            " " +
+                            data.letrasMonedaPlural +
+                            " " +
+                            data.letrasCentavos
+                        );
+                };
+            })();
+
+            self.agregarConsideraciones = function () {
+                var consideraciones = [];
+                consideraciones.push(
+                    'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' +
+                    self.contrato_obj.contratista_nombre + ', se suscribió el ' + self.contrato_obj.tipo_contrato +
+                    ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', cuyo objeto es: "' +
+                    self.contrato_obj.objeto + '".\n\n'
+                );
+                consideraciones.push(
+                    {
+                        text: [
+                            { text: 'Que la cláusula 17 - Terminación Del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', establece que ' },
+                            { text: '"Terminación. ', bold: true },
+                            { text: 'Serán causales de terminación del contrato el común acuerdo de las partes al respecto, la ocurrencia de cualquier circunstancia de fuerza mayor o caso fortuito que impida la ejecución del contrato, así como el cumplimiento del plazo pactado para su ejecución. Adicionalmente, dará lugar a la terminación anticipada del contrato el incumplimiento de sus obligaciones, por parte de EL CONTRATISTA, debidamente comprobado, que impida continuar con su ejecución”.\n\n', italics: true },
+                        ]
+                    }
+                );
+                consideraciones.push(
+                    'Que el contrato se perfeccionó y ejecutó mediante Registro Presupuestal No. ' +
+                    self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n'
+                );
+                consideraciones.push(
+                    'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' +
+                    self.plazoMeses + ' contados a partir del perfeccionamiento de la Orden y/o contrato, es decir del ' +
+                    self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n'
+                );
+                consideraciones.push(
+                    'Que el valor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
+                    ' se pactó en la suma total de ' +
+                    numeroALetras(self.contrato_obj.valor, {
+                        plural: $translate.instant("PESOS"),
+                        singular: $translate.instant("PESO"),
+                        centPlural: $translate.instant("CENTAVOS"),
+                        centSingular: $translate.instant("CENTAVO"),
+                    }) + "MODENA CORRIENTE ($" + numberFormat(String(self.contrato_obj.valor) + "") + ' M/Cte.).\n\n'
+                );
+                consideraciones.push(
+                    'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.fecha_solicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
+                    ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + '.\n\n'
+                );
+                consideraciones.push(
+                    'Que según certificación de fecha ' + self.format_date_letter_mongo(self.f_certificacion) + ', expedida por el Jefe de la Unidad de Presupuesto, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' presenta un saldo a la fecha de ' +
+                    numeroALetras(self.a_favor.valor, {
+                        plural: $translate.instant("PESOS"),
+                        singular: $translate.instant("PESO"),
+                        centPlural: $translate.instant("CENTAVOS"),
+                        centSingular: $translate.instant("CENTAVO"),
+                    }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.a_favor.valor) + '') + ' M/CTE).\n\n'
+                );
+                consideraciones.push(
+                    'Que mediante oficio ' + self.numero_oficio_supervisor + ' de fecha ' + self.format_date_letter_mongo(self.fecha_oficioS) +
+                    ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunicó al señor(a) ' +
+                    self.contrato_obj.ordenadorGasto_nombre +
+                    ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' +
+                    self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
+                );
+                consideraciones.push(
+                    'Que por medio del oficio ' + self.numero_oficio_ordenador + ' de fecha ' +
+                    self.format_date_letter_mongo(self.fecha_oficioO) +
+                    ' recibido por la Oficina de Contratación, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre +
+                    ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No. ' +
+                    self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
+                );
+                if (self.novedades.length > 0) {
+                    for (var i = 0; i < self.novedades.length; i++) {
+                        if (
+                            self.novedades[i].tiponovedad == 8
+                        ) {
+                            var texto_otrosi = 'Que el día ' + self.format_date_letter_mongo(self.novedades[i].fechaprorroga) + ', se realizó la modificación en adición y prórroga, al ' +
+                                self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', en su orden por la suma de ' +
+                                numeroALetras(
+                                    self.novedades[i].valoradicion, {
+                                    plural: $translate.instant("PESOS"),
+                                    singular: $translate.instant("PESO"),
+                                    centPlural: $translate.instant("CENTAVOS"),
+                                    centSingular: $translate.instant("CENTAVO"),
+                                }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.novedades[i].valoradicion)) + " M/CTE)," +
+                                ' y prórroga en tiempo por ' + self.calculoPlazoLetras(self.novedades[i].tiempoprorroga) +
+                                ' en atención a la solicitud recibida por correo electrónico, de fecha ' + self.format_date_letter_mongo(self.novedades[i].fechasolicitud) +
+                                ', por medio de la cual, el ' + self.contrato_obj.ordenadorGasto_rol +
+                                ', solicitó la citada modificación; cuya justificación se encuentra descrita en la solicitud de necesidad No. ' +
+                                self.novedades[i].numerosolicitud + ' del ' + self.format_date_letter_mongo(self.novedades[i].fechasolicitud) +
+                                ', con respaldo del CDP ' + self.novedades[i].numerocdp + ' de ' + self.novedades[i].vigenciacdp + ".\n\n"
+                            consideraciones.splice(
+                                5, 0, texto_otrosi
+                            );
+                        }
+                    }
+                }
+                return consideraciones;
+            }
+
+            self.agregarClausulas = function () {
+                var estructura = {}
+                if ($scope.nueva_clausula) {
+                    estructura = {
+                        style: ['general_font'],
+                        text: [{
+                            text: [
+                                { text: 'CLAUSULA QUINTA: ', bold: true },
+                                {
+                                    text: self.nueva_clausula_text + "\n\n"
+                                }
+                            ],
+                        }]
+                    }
+                }
+                return estructura;
+            }
+
+            self.agregarFirmas = function () {
+
+                var firmas = [];
+                firmas.push([
+                    "",
+                    { text: "Nombre", bold: true },
+                    { text: "Cargo", bold: true },
+                    { text: "Firma", bold: true },
+                ]);
+                if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                    firmas.push([
+                        { text: "Proyectó", bold: true },
+                        self.elaboro,
+                        "Abogado Oficina de Contratación",
+                        "",
+                    ]);
+                }
+                firmas.push([
+                    { text: "Aprobó", bold: true },
+                    self.contrato_obj.jefe_juridica_nombre_completo,
+                    "Jefe Oficina de Contratación",
+                    "",
+                ]);
+                return firmas;
             }
 
             self.get_plantilla = function () {
@@ -952,7 +1423,7 @@ angular.module('contractualClienteApp')
                                         ' '
                                     ],
                                     [' ',
-                                        { text: 'Proceso: Gestión Jurídica', alignment: 'center', fontSize: 9 },
+                                        { text: 'Proceso: Gestión de Contratación', alignment: 'center', fontSize: 9 },
                                         { text: 'Fecha de Aprobación: 30/07/2019', fontSize: 9 },
                                         ' '
                                     ],
@@ -972,7 +1443,7 @@ angular.module('contractualClienteApp')
                                     { text: self.contrato_obj.tipo_contrato, style: 'topHeader' }
                                 ],
                                 [
-                                    { text: 'CONTRATO No', bold: true, style: 'topHeader' },
+                                    { text: 'CONTRATO No.', bold: true, style: 'topHeader' },
                                     {
                                         text: [
                                             { text: self.contrato_id, bold: true },
@@ -991,10 +1462,19 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'VALOR', bold: true, style: 'topHeader' },
-                                    { text: NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(String(self.contrato_obj.valor) + ""), style: 'topHeader' }
+                                    {
+                                        text: numeroALetras(
+                                            self.contrato_obj.valor, {
+                                            plural: $translate.instant("PESOS"),
+                                            singular: $translate.instant("PESO"),
+                                            centPlural: $translate.instant("CENTAVOS"),
+                                            centSingular: $translate.instant("CENTAVO"),
+                                        }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.contrato_obj.valor)) + " M/CTE)",
+                                        style: 'topHeader'
+                                    }
                                 ],
                                 [
-                                    { text: 'FECHA DE INCIO', bold: true, style: 'topHeader' },
+                                    { text: 'FECHA DE INICIO', bold: true, style: 'topHeader' },
                                     { text: self.format_date_letter_mongo(self.contrato_obj.FechaInicio), style: 'topHeader' }
                                 ],
                             ],
@@ -1011,52 +1491,30 @@ angular.module('contractualClienteApp')
                         text: [{
 
                             text: [{
-                                text: '\n\nEntre los suscritos a saber, ' + self.contrato_obj.ordenadorGasto_nombre + ', mayor de edad, identificado con ' + self.contrato_obj.ordenador_gasto_tipo_documento + ' No. ' +
+                                text: '\n\nEntre los suscritos a saber, ' + self.contrato_obj.ordenadorGasto_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.ordenador_gasto_tipo_documento + ' No. ' +
                                     self.contrato_obj.ordenador_gasto_documento + ' de ' + self.contrato_obj.ordenador_gasto_ciudad_documento + ' quien actúa en calidad de ' + self.contrato_obj.ordenadorGasto_rol + ' según ' + self.contrato_obj.ordenador_gasto_resolucion + ' y ordenador del gasto, y por la otra ' + self.contrato_obj.contratista_nombre + ', mayor de edad, e identificado(a) con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ' de ' + self.contrato_obj.contratista_ciudad_documento + ' quíén actúa en calidad de contratista, hemos convenido en'
                             },
                             { text: ' TERMINAR ANTICIPADAMENTE Y POR MUTUO ACUERDO ', bold: true },
-                            { text: ' y en consecuencia liquidar a partir de la firma de la presente acta, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' suscrito el día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.' }
+                            { text: ' y en consecuencia, ' },
+                            {
+                                text: 'LIQUIDAR BILATERALMENTE', bold: true,
+                            },
+                            {
+                                text: ' a partir de la firma de la presente acta, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' suscrito el día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ', previas las siguientes '
+                            },
+                            {
+                                text: 'CONSIDERACIONES:\n\n', bold: true,
+                            }
                             ]
                         },
-                        {
-                            text: '\n\nLa presente Terminación y liquidación anticipada por mutuo acuerdo se lleva a cabo en forma que se determina a continuación previa las siguientes consideraciones : \n\n'
-                        }
+                            // {
+                            //     text: '\n\nLa presente Terminación y liquidación anticipada por mutuo acuerdo se lleva a cabo en forma que se determina a continuación previa las siguientes consideraciones : \n\n'
+                            // }
                         ]
                     },
                     {
                         style: ['general_list'],
-                        ol: [
-
-                            'Que entre la Universidad Distrital Francisco José de Caldas y el señor ' + self.contrato_obj.contratista_nombre + ', se suscribió el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', cuyo objeto es: "' + self.contrato_obj.objeto + '".\n\n',
-
-                            //'Que el valor del  ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó por la suma de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(self.contrato_obj.valor) + "), y un plazo de " + self.contrato_obj.plazo + ' meses, contados partir del acta de inicio, lo cual tuvo lugar el día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
-                            {
-                                style: ['general_font'],
-                                text: [{
-                                    text: [
-                                        { text: 'Que la cláusula 17 - Terminación Del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', establece que ' },
-                                        { text: '"Terminación. ', bold: true },
-                                        { text: 'Serán causales de terminación del contrato el común acuerdo de las partes al respecto, la ocurrencia de cualquier circunstancia de fuerza mayor o caso fortuito que impida la ejecución del contrato, así como el cumplimiento del plazo pactado para su ejecución. Adicionalmente, dará lugar a la terminación anticipada del contrato el incumplimiento de sus obligaciones, por parte de EL CONTRATISTA, debidamente comprobado, que impida continuar con su ejecución”.\n\n', italics: true },
-
-                                    ]
-                                }]
-                            },
-
-                            'Que el contrato se perfeccionó y ejecutó mediante Registro Presupuestal No. ' + self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n',
-
-                            'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' + self.contrato_obj.plazo + 'meses (contados a partir del perfeccionamiento de la Orden y/o contrato), es decir del ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + '.\n\n',
-
-                            'Que el valor de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' se pactó en la suma total de ' + NumeroALetras(self.contrato_obj.valor) + '($' + numberFormat(String(self.contrato_obj.valor) + "") + '),\n\n',
-
-                            'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.terminacion_nov.fechaoficio) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' como Supervisor del mismo.\n\n',
-
-                            'Que según certificación de fecha ' + self.format_date_letter_mongo(self.contrato_obj.cdp_fecha) + ', expedida por Jefe de Sección de Presupuesto, presenta un saldo a la fecha de  ' + NumeroALetras(self.a_favor.valor) + '($' + numberFormat(String(self.a_favor.valor) + '') + ').\n\n',
-
-                            'Que mediante oficio No ' + numberFormat(String(self.terminacion_nov.numerooficioestadocuentas) + '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' el Supervisor del CPS No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunico al señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + '.\n\n',
-
-                            'Que por medio del oficio ' + numberFormat(String(self.terminacion_nov.numerooficioestadocuentas) + '') + ' de fecha ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' recibido por la Oficina Asesora Jurídica, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre + ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No.' + self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n',
-
-                        ]
+                        ol: self.agregarConsideraciones(),
                     },
                     {
                         style: ['general_font'],
@@ -1073,7 +1531,7 @@ angular.module('contractualClienteApp')
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA PRIMERA: TERMINAR Y LIQUIDAR DE MANERA ANTICIPADA Y DE MUTUO ACUERDO el contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', ', bold: true },
-                                { text: 'a partir del ' + self.format_date_letter_mongo(self.terminacion_nov.fechasolicitud) + ' de la siguiente manera:\n\n' }
+                                { text: 'a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + ' de la siguiente manera:\n\n' }
                             ]
 
 
@@ -1090,15 +1548,15 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'Valor desembolsado', bold: true, style: 'topHeader' },
-                                    { text: '$' + numberFormat(String(self.terminacion_nov.valor_desembolsado) + ''), style: 'topHeader' }
+                                    { text: '$' + numberFormat(String(parseFloat(self.valor_desembolsado.replace(/\,/g, ""))) + ''), style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'Saldo a favor del contratista', bold: true, style: 'topHeader' },
-                                    { text: '$' + numberFormat(String(self.terminacion_nov.saldo_contratista) + ''), style: 'topHeader' }
+                                    { text: '$' + numberFormat(String(parseFloat(self.saldo_contratista.replace(/\,/g, ""))) + ''), style: 'topHeader' }
                                 ],
                                 [
                                     { text: 'Saldo a favor de la Universidad', bold: true, style: 'topHeader' },
-                                    { text: '$' + numberFormat(String(self.terminacion_nov.saldo_universidad) + '') + '\n\n\n', style: 'topHeader' }
+                                    { text: '$' + numberFormat(String(parseFloat(self.saldo_universidad.replace(/\,/g, ""))) + '') + '\n\n\n', style: 'topHeader' }
                                 ],
                             ]
                         },
@@ -1109,7 +1567,7 @@ angular.module('contractualClienteApp')
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA SEGUNDA : ', bold: true },
-                                { text: ' Teniendo en cuenta que el Contratista ' + self.contrato_obj.contratista_nombre + ', ejecutó los servicios hasta el dia ' + self.format_date_letter_mongo(self.terminacion_nov.fecha_terminacion_anticipada) + ', del año en curso y ' + self.a_favor.existe + '\n\n\n' }
+                                { text: ' Teniendo en cuenta que el Contratista ' + self.contrato_obj.contratista_nombre + ', ejecutará los servicios hasta el dia ' + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + ', ' + self.a_favor.existe + '\n\n' }
                             ]
                         }]
                     },
@@ -1119,7 +1577,10 @@ angular.module('contractualClienteApp')
                             text: [
                                 { text: ' CLÁUSULA TERCERA : ', bold: true },
                                 {
-                                    text: 'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' a nombre de ' + self.contrato_obj.contratista_nombre + ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del mismo, declarandose a paz y salvo por todo concepto una vez se compruebe el pago de la cláusula segunda de la presente Acta.\n\n '
+                                    text: 'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' +
+                                        self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' a nombre de ' +
+                                        self.contrato_obj.contratista_nombre + ", con efectos legales a partir del " + self.format_date_letter_mongo(self.fecha_efectos_legales) +
+                                        ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del mismo, declarándose a paz y salvo por todo concepto una vez se compruebe el pago de la cláusula segunda de la presente Acta.\n\n'
                                 }
                             ],
 
@@ -1132,20 +1593,22 @@ angular.module('contractualClienteApp')
                             text: [
                                 { text: 'CLAUSULA CUARTA: PUBLICACIÓN. ', bold: true },
                                 {
-                                    text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de terminación y liquidación bilateral en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente..\n\n '
+                                    text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No. 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de terminación y liquidación bilateral en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente..\n\n'
                                 }
                             ],
 
 
                         }]
                     },
+                    self.agregarClausulas(),
                     {
 
                         style: ['general_font'],
                         text: [{
                             text: [
-                                { text: 'Dado en Bogotá, D.C. a los __________________________________\n\n\n\n\n\n\n\n\n\n\n\n' }
-                            ]
+                                "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., el día " + self.format_date_letter_mongo(self.f_expedicion_acta) +
+                                "\n",
+                            ],
                         }]
                     },
                     {
@@ -1153,6 +1616,30 @@ angular.module('contractualClienteApp')
                         table: {
                             widths: [270, 270],
                             body: [
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
                                 [{
                                     text: "______________________________________",
                                     bold: false,
@@ -1209,6 +1696,7 @@ angular.module('contractualClienteApp')
 
                             ],
                         },
+                        unbreakable: true,
                         layout: "noBorders",
                     },
                     {
@@ -1224,37 +1712,13 @@ angular.module('contractualClienteApp')
                         style: 'table3',
                         table: {
                             widths: [65, 130, 130, 150],
-                            body: [
-                                [{ text: 'Funcionario', bold: true },
-                                { text: 'Nombre', bold: true },
-                                { text: 'Cargo', bold: true },
-                                { text: 'Firma', bold: true }
-                                ],
-                                [
-                                    { text: 'Proyectó', bold: true },
-                                    self.elaboro,
-                                    "Abogado Oficina Asesora Jurídica",
-                                    ""
-                                ],
-                                [
-                                    { text: 'Revisó', bold: true },
-                                    self.contrato_obj.jefe_juridica_nombre_completo,
-                                    'Jefe Oficina Asesora Jurídica',
-                                    ''
-                                ],
-                                [
-                                    { text: 'Aprobó', bold: true },
-                                    self.contrato_obj.jefe_juridica_nombre_completo,
-                                    'Jefe Oficina Asesora Jurídica',
-                                    ''
-                                ],
-                            ]
+                            body: self.agregarFirmas(),
                         }
                     },
                     ],
                     styles: {
                         general_font: {
-                            fontSize: 10,
+                            fontSize: self.tamanoFuente,
                             alignment: 'justify',
                             margin: [25, 0, 25, 0]
                         },

@@ -24,45 +24,78 @@ angular
             novedadesMidRequest,
             titanMidRequest,
             novedadesRequest,
-            pdfMakerService
+            pdfMakerService,
+            financieraJbpmRequest
         ) {
             var self = this;
 
             self.contrato_id = $routeParams.contrato_id;
             self.contrato_vigencia = $routeParams.contrato_vigencia;
             self.contrato_obj = {};
+            self.cesionario_obj = {};
+            self.plazoDias = false;
+            self.plazoMeses = "";
+            self.novedades = [];
             self.texto_busqueda = "";
             self.persona_sel = "";
-            self.numero_oficio_supervisor = null;
+            self.numero_oficio_supervisor = "";
             self.fecha_oficioS = new Date();
-            self.numero_oficio_ordenador = null;
+            self.numero_oficio_ordenador = "";
             self.fecha_oficioO = new Date();
-            self.valor_desembolsado = null;
-            self.valor_a_favor = "";
+            self.valor_desembolsado = "0";
+            self.valor_a_favor = "0";
+            self.plazo_cedente = 0;
+            self.plazo_cedente_letras = "";
+            self.dias_pago_cedente = 0;
+            self.valor_contrato_letras = "";
+            self.contrato_plazo_letras = "";
+            var meses = new Array(
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            );
             //self.f_oficio = new Date();
             self.f_cesion = new Date();
             self.f_terminacion = new Date();
             self.f_hoy = new Date();
+            self.fecha_lim_inf = new Date();
+            self.fecha_lim_sup = new Date();
             self.observaciones = "";
             self.fecha_solicitud = new Date();
+            self.f_expedicion_acta = new Date();
             self.n_solicitud = null;
             self.elaboro = "";
             self.elaboro_cedula = token_service.getPayload().documento;
-
+            self.estadoNovedad = "";
+            self.idRegistro = "";
             self.novedadCesion = false;
+            self.nueva_clausula_text = "";
+            self.nuevo_considerando = "";
+            self.posicion_considerando = 1;
+            self.tamanoFuente = 10;
+            self.valor_total_contrato = 0;
 
-            const solic_input = document.getElementById("n_solicitud");
-            solic_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
-            const oficio_input = document.getElementById("numero_oficio_supervisor");
-            oficio_input.addEventListener("input", function () {
-                if (this.value.length > 11) {
-                    this.value = this.value.slice(0, 11);
-                }
-            });
+            // const solic_input = document.getElementById("n_solicitud");
+            // solic_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
+            // const oficio_input = document.getElementById("numero_oficio_supervisor");
+            // oficio_input.addEventListener("input", function () {
+            //     if (this.value.length > 11) {
+            //         this.value = this.value.slice(0, 11);
+            //     }
+            // });
             const valordes_input = document.getElementById("valor_desembolsado");
             valordes_input.addEventListener("input", function () {
                 if (this.value.length > 11) {
@@ -88,6 +121,16 @@ angular
                         ipn_response.data[0].PrimerApellido +
                         " " +
                         ipn_response.data[0].SegundoApellido;
+                });
+
+            financieraJbpmRequest
+                .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
+                .then(function (response) {
+                    var data = response.data.cdps_vigencia.cdp_vigencia;
+                    // console.log(data);
+                    if (data != undefined && data[0].id_numero_solicitud != null) {
+                        self.n_solicitud = data[0].id_numero_solicitud;
+                    }
                 });
 
             agoraRequest
@@ -121,13 +164,138 @@ angular
                         self.contrato_obj.tipo_contrato =
                             agora_response.data[0].TipoContrato.TipoContrato;
                         self.contrato_obj.plazo = agora_response.data[0].PlazoEjecucion;
-
+                        if (self.contrato_obj.plazo > 12) {
+                            self.plazoDias = true;
+                        }
+                        self.plazoMeses = self.calculoPlazoLetras(self.contrato_obj.plazo, self.plazoDias);
+                        var fecha_reg = self.contrato_obj.fecha_registro;
+                        var res = fecha_reg.split("-");
+                        self.fecha_reg_dia = res[2].substring(0, 2);
+                        self.fecha_reg_mes = meses[parseInt(res[1] - 1)];
+                        self.fecha_reg_ano = res[0];
                         //Se obtiene los datos de Acta de Inicio.
                         amazonAdministrativaRequest
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
                             .then(function (acta_response) {
-                                self.contrato_obj.Inicio = acta_response.data[0].FechaInicio;
-                                self.contrato_obj.Fin = acta_response.data[0].FechaFin;
+                                self.contrato_obj.Inicio = self.getFechaUTC(acta_response.data[0].FechaInicio);
+                                // self.contrato_obj.Inicio.setDate(self.contrato_obj.Inicio.getDate() + 1)
+                                // if (self.contrato_obj.Inicio.getDate() == 31) {
+                                //     self.contrato_obj.Inicio.setDate(self.contrato_obj.Inicio.getDate() + 1);
+                                // }
+                                self.contrato_obj.Fin = self.getFechaUTC(acta_response.data[0].FechaFin);
+                                self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
+                                self.fecha_lim_sup = self.calcularFechaFin();
+                                self.f_cesion = new Date(self.fecha_lim_sup);
+                                novedadesMidRequest
+                                    .get(
+                                        "novedad",
+                                        self.contrato_obj.numero_contrato +
+                                        "/" +
+                                        self.contrato_obj.vigencia
+                                    )
+                                    .then(function (response_sql) {
+                                        self.novedades = response_sql.data.Body;
+                                        self.fecha_lim_sup = self.calcularFechaFin();
+                                        var adiciones = 0;
+                                        if (self.novedades.length != 0) {
+                                            for (var i = 0; i < self.novedades.length; i++) {
+                                                if (
+                                                    self.novedades[i].tiponovedad == 6 ||
+                                                    self.novedades[i].tiponovedad == 8
+                                                ) {
+                                                    adiciones = adiciones + self.novedades[i].valoradicion;
+                                                }
+                                            }
+                                            for (var i = self.novedades.length - 1; i >= 0; i--) {
+                                                if (self.novedades[i].tiponovedad == 2) {
+                                                    self.contrato_obj.Inicio = self.getFechaUTC(self.novedades[i].fechacesion);
+                                                    self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        self.valor_total_contrato = self.contrato_obj.valor + adiciones;
+                                        self.f_cesion = new Date(self.fecha_lim_sup);
+                                        if (self.novedades.length != "0") {
+                                            var last_cesion =
+                                                self.novedades[self.novedades.length - 1];
+                                            self.contrato_obj.contratista = last_cesion.cesionario;
+                                            //Obtencion de datos del contratista
+                                            amazonAdministrativaRequest
+                                                .get(
+                                                    "informacion_proveedor?query=Id:" + last_cesion.cesionario
+                                                )
+                                                .then(function (ip_response) {
+                                                    self.contrato_obj.contratista_documento =
+                                                        ip_response.data[0].NumDocumento;
+                                                    self.contrato_obj.contratista_nombre =
+                                                        ip_response.data[0].NomProveedor;
+                                                    amazonAdministrativaRequest
+                                                        .get(
+                                                            "informacion_persona_natural?query=Id:" +
+                                                            ip_response.data[0].NumDocumento
+                                                        )
+                                                        .then(function (ipn_response) {
+                                                            self.contrato_obj.contratista_tipo_documento =
+                                                                ipn_response.data[0].TipoDocumento.ValorParametro;
+                                                            coreAmazonRequest
+                                                                .get(
+                                                                    "ciudad",
+                                                                    "query=Id:" +
+                                                                    ipn_response.data[0].IdCiudadExpedicionDocumento
+                                                                )
+                                                                .then(function (c_response) {
+                                                                    self.contrato_obj.contratista_ciudad_documento =
+                                                                        c_response.data[0].Nombre;
+                                                                });
+                                                        });
+                                                });
+                                        } else {
+                                            //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
+                                            amazonAdministrativaRequest
+                                                .get(
+                                                    "informacion_proveedor?query=Id:" +
+                                                    self.contrato_obj.contratista
+                                                )
+                                                .then(function (ip_response) {
+                                                    self.contrato_obj.contratista_documento =
+                                                        ip_response.data[0].NumDocumento;
+                                                    self.contrato_obj.contratista_nombre =
+                                                        ip_response.data[0].NomProveedor;
+                                                    amazonAdministrativaRequest
+                                                        .get(
+                                                            "informacion_persona_natural?query=Id:" +
+                                                            ip_response.data[0].NumDocumento
+                                                        )
+                                                        .then(function (ipn_response) {
+                                                            self.contrato_obj.contratista_tipo_documento =
+                                                                ipn_response.data[0].TipoDocumento.ValorParametro;
+                                                            coreAmazonRequest
+                                                                .get(
+                                                                    "ciudad",
+                                                                    "query=Id:" +
+                                                                    ipn_response.data[0].IdCiudadExpedicionDocumento
+                                                                )
+                                                                .then(function (c_response) {
+                                                                    self.contrato_obj.contratista_ciudad_documento =
+                                                                        c_response.data[0].Nombre;
+                                                                });
+                                                        });
+                                                });
+                                        }
+                                    }).catch(function (error) {
+                                        //Servidor no disponible
+                                        swal({
+                                            title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                            type: 'error',
+                                            html: "Error al consultar datos de novedades del contrato " + self.contrato_obj.numero_contrato +
+                                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false
+                                        });
+                                    });
                             });
                         //Se obtiene información del supervisor
                         // amazonAdministrativaRequest
@@ -196,6 +364,18 @@ angular
 
                                             });
                                     });
+                            }).catch(function (error) {
+                                //Servidor no disponible
+                                swal({
+                                    title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                    type: 'error',
+                                    html: "Error al consultar datos de supervispor del contrato " + self.contrato_obj.numero_contrato +
+                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false
+                                });
                             });
 
                         //Obtención de datos del ordenador del gasto
@@ -229,126 +409,67 @@ angular
                                         self.contrato_obj.ordenador_gasto_ciudad_documento =
                                             sc_response.data[0].Nombre;
                                     });
-                            });
+                            }).catch(function (error) {
+                                //Servidor no disponible
+                                swal({
+                                    title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                    type: 'error',
+                                    html: "Error al consultar datos de ordenadores del contrato " + self.contrato_obj.numero_contrato +
+                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false
+                                });
+                            });;
 
-                        novedadesMidRequest
+                        //Obtención de datos del jefe de Oficina de Contratación
+                        amazonAdministrativaRequest
                             .get(
-                                "novedad",
-                                self.contrato_obj.numero_contrato +
-                                "/" +
-                                self.contrato_obj.vigencia
+                                "supervisor_contrato?query=DependenciaSupervisor:DEP636&sortby=FechaFin&order=desc&limit=1"
                             )
-                            .then(function (response_sql) {
-                                var elementos_cesion = response_sql.data.Body;
-                                for (var i = 0; i < elementos_cesion.length; i++) {
-                                    if (elementos_cesion[i].tiponovedad == 2) {
-                                        self.novedadCesion = true;
-                                    }
-                                }
-                                if (elementos_cesion.length != "0") {
-                                    var last_cesion =
-                                        elementos_cesion[elementos_cesion.length - 1];
-                                    self.contrato_obj.contratista = last_cesion.cesionario;
-                                    //Obtencion de datos del contratista
-                                    amazonAdministrativaRequest
-                                        .get(
-                                            "informacion_proveedor?query=Id:" + last_cesion.cesionario
-                                        )
-                                        .then(function (ip_response) {
-                                            self.contrato_obj.contratista_documento =
-                                                ip_response.data[0].NumDocumento;
-                                            self.contrato_obj.contratista_nombre =
-                                                ip_response.data[0].NomProveedor;
-                                            amazonAdministrativaRequest
-                                                .get(
-                                                    "informacion_persona_natural?query=Id:" +
-                                                    ip_response.data[0].NumDocumento
-                                                )
-                                                .then(function (ipn_response) {
-                                                    self.contrato_obj.contratista_tipo_documento =
-                                                        ipn_response.data[0].TipoDocumento.ValorParametro;
-                                                    coreAmazonRequest
-                                                        .get(
-                                                            "ciudad",
-                                                            "query=Id:" +
-                                                            ipn_response.data[0].IdCiudadExpedicionDocumento
-                                                        )
-                                                        .then(function (c_response) {
-                                                            self.contrato_obj.contratista_ciudad_documento =
-                                                                c_response.data[0].Nombre;
-                                                        });
-                                                });
-                                        });
-                                } else {
-                                    //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
-                                    amazonAdministrativaRequest
-                                        .get(
-                                            "informacion_proveedor?query=Id:" +
-                                            self.contrato_obj.contratista
-                                        )
-                                        .then(function (ip_response) {
-                                            self.contrato_obj.contratista_documento =
-                                                ip_response.data[0].NumDocumento;
-                                            self.contrato_obj.contratista_nombre =
-                                                ip_response.data[0].NomProveedor;
-                                            amazonAdministrativaRequest
-                                                .get(
-                                                    "informacion_persona_natural?query=Id:" +
-                                                    ip_response.data[0].NumDocumento
-                                                )
-                                                .then(function (ipn_response) {
-                                                    self.contrato_obj.contratista_tipo_documento =
-                                                        ipn_response.data[0].TipoDocumento.ValorParametro;
-                                                    coreAmazonRequest
-                                                        .get(
-                                                            "ciudad",
-                                                            "query=Id:" +
-                                                            ipn_response.data[0].IdCiudadExpedicionDocumento
-                                                        )
-                                                        .then(function (c_response) {
-                                                            self.contrato_obj.contratista_ciudad_documento =
-                                                                c_response.data[0].Nombre;
-                                                        });
-                                                });
-                                        });
-                                }
-
-                                //Obtención de datos del jefe de juridica
+                            .then(function (jj_response) {
+                                self.contrato_obj.jefe_juridica_documento =
+                                    jj_response.data[0].Documento;
                                 amazonAdministrativaRequest
                                     .get(
-                                        "supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1"
+                                        "informacion_persona_natural?query=Id:" +
+                                        self.contrato_obj.jefe_juridica_documento
                                     )
-                                    .then(function (jj_response) {
-                                        self.contrato_obj.jefe_juridica_documento =
-                                            jj_response.data[0].Documento;
-                                        amazonAdministrativaRequest
+                                    .then(function (ijpn_response) {
+                                        coreAmazonRequest
                                             .get(
-                                                "informacion_persona_natural?query=Id:" +
-                                                self.contrato_obj.jefe_juridica_documento
+                                                "ciudad",
+                                                "query=Id:" +
+                                                ijpn_response.data[0].IdCiudadExpedicionDocumento
                                             )
-                                            .then(function (ijpn_response) {
-                                                coreAmazonRequest
-                                                    .get(
-                                                        "ciudad",
-                                                        "query=Id:" +
-                                                        ijpn_response.data[0].IdCiudadExpedicionDocumento
-                                                    )
-                                                    .then(function (scj_response) {
-                                                        self.contrato_obj.jefe_juridica_ciudad_documento =
-                                                            scj_response.data[0].Nombre;
-                                                        self.contrato_obj.jefe_juridica_tipo_documento =
-                                                            ijpn_response.data[0].TipoDocumento.ValorParametro;
-                                                        self.contrato_obj.jefe_juridica_nombre_completo =
-                                                            ijpn_response.data[0].PrimerNombre +
-                                                            " " +
-                                                            ijpn_response.data[0].SegundoNombre +
-                                                            " " +
-                                                            ijpn_response.data[0].PrimerApellido +
-                                                            " " +
-                                                            ijpn_response.data[0].SegundoApellido;
-                                                    });
+                                            .then(function (scj_response) {
+                                                self.contrato_obj.jefe_juridica_ciudad_documento =
+                                                    scj_response.data[0].Nombre;
+                                                self.contrato_obj.jefe_juridica_tipo_documento =
+                                                    ijpn_response.data[0].TipoDocumento.ValorParametro;
+                                                self.contrato_obj.jefe_juridica_nombre_completo =
+                                                    ijpn_response.data[0].PrimerNombre +
+                                                    " " +
+                                                    ijpn_response.data[0].SegundoNombre +
+                                                    " " +
+                                                    ijpn_response.data[0].PrimerApellido +
+                                                    " " +
+                                                    ijpn_response.data[0].SegundoApellido;
                                             });
                                     });
+                            }).catch(function (error) {
+                                //Servidor no disponible
+                                swal({
+                                    title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                    type: 'error',
+                                    html: "Error al consultar datos de supervisores del contrato " + self.contrato_obj.numero_contrato +
+                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false
+                                });
                             });
                     }
                 });
@@ -361,84 +482,221 @@ angular
              * Funcion que observa y controla el cambio de fechas
              * @param {date} Fecha de cesion
              */
-            $scope.$watch("sLactaCesion.f_oficio", function () {
-                if (self.f_oficio.getDate() == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.f_oficio = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
-                };
+            $scope.$watch("sLactaCesion.fecha_oficioS", function () {
+                if (self.fecha_oficioS.getDate() == 31) {
+                    swal(
+                        $translate.instant("TITULO_ADVERTENCIA"),
+                        $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+                        "error"
+                    );
+                    var fecha = new Date(self.fecha_oficioS);
+                    fecha.setDate(self.fecha_oficioS.getDate() + 1);
+                    self.fecha_oficioS = fecha;
+                }
             });
 
             $scope.$watch("sLactaCesion.f_cesion", function () {
-                if (self.f_cesion == 31) {
-                    //respuesta incorrecta, ej: 400/500
-                    self.f_oficio = new Date();
-                    self.f_cesion = new Date();
-                    $scope.alert =
-                        "DESCRIPCION_ERROR_FECHA_31";
-                    swal({
-                        title: $translate.instant(
-                            "TITULO_ERROR_ACTA"
-                        ),
-                        type: "error",
-                        html: $translate.instant($scope.alert) +
-                            ".",
-                        showCloseButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        allowOutsideClick: false,
-                    }).then(function () { });
-                }
-                self.f_terminacion = new Date(self.f_cesion);
-                self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
-                if (self.f_terminacion.getDate == 31) {
-                    self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
-                };
+                // if (self.f_cesion.getDate() == 31) {
+                //     swal(
+                //         $translate.instant("TITULO_ADVERTENCIA"),
+                //         $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
+                //         "error"
+                //     );
+                //     var fecha = new Date(self.f_cesion);
+                //     fecha.setDate(self.f_cesion.getDate() + 1);
+                //     self.f_cesion = fecha;
+                // }
 
-                // self.f_terminacion = new Date(self.f_cesion);
-                // self.f_terminacion.setDate(self.f_terminacion.getDate() - 1)
-                // if(self.f_terminacion.getDate == 31){
-                //     console.log("entró");
+                self.f_terminacion = self.getFechaUTC(self.f_cesion);
+                self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
+                // if (self.f_terminacion.getDate() == 31) {
                 //     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
-                // };             
+                // };
+                var fechaInicio = new Date(self.contrato_obj.Inicio);
 
+                var plazo_cedente = self.calculoPlazosCesion(fechaInicio, self.f_terminacion);
+                self.plazo_cedente_letras = self.calculoPlazoLetras(plazo_cedente, true);
             });
 
-            // $scope.$watch("sLactaCesion.f_terminacion", function () {              
-            //     if(self.f_oficio.getDate() == 31){
-            //         //respuesta incorrecta, ej: 400/500
-            //         self.f_oficio = new Date();
-            //         self.f_cesion = new Date();
-            //         self.f_terminacion = new Date();
-            //         $scope.alert =
-            //             "DESCRIPCION_ERROR_FECHA_31";
-            //         swal({
-            //             title: $translate.instant(
-            //                 "TITULO_ERROR_ACTA"
-            //             ),
-            //             type: "error",
-            //             html: $translate.instant($scope.alert) +                            
-            //                 ".",
-            //             showCloseButton: true,
-            //             showCancelButton: false,
-            //             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-            //             allowOutsideClick: false,
-            //         }).then(function () { });
-            //     };                         
-            // });
+            self.calculoPlazosCesion = function (fecha_inicio, fecha_fin) {
+
+                console.log("Inicio: ", fecha_inicio);
+                console.log("Fin: ", fecha_fin);
+                var months = fecha_fin.getMonth() - fecha_inicio.getMonth() + (12 * (fecha_fin.getFullYear() - fecha_inicio.getFullYear()));
+                var days = 0;
+                if (months != 0) {
+                    if (fecha_inicio.getDate() < fecha_fin.getDate()) {
+                        days += fecha_fin.getDate() - fecha_inicio.getDate();
+                    } else {
+                        months -= 1;
+                        days += (30 - fecha_inicio.getDate()) + (fecha_fin.getDate());
+                    }
+                } else {
+                    days += fecha_fin.getDate() - fecha_inicio.getDate();
+                }
+                days += (months * 30) + 1;
+                console.log("Days: ", days);
+                return days;
+            }
+
+            /**
+             * @ngdoc method
+             * @name formato_valores_cesion
+             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
+             * @description
+             * funcion para modificar el formato de valores para la interfaz
+             */
+            $scope.formato_valores_cesion = function (evento, num) {
+                var valor = evento.target.value.replace(/[^0-9\.]/g, "");
+                var valor_valido = parseInt(self.valor_total_contrato);
+                if (num == 1) {
+                    if (valor <= valor_valido) {
+                        self.valor_desembolsado = numberFormat(valor);
+                    } else {
+                        self.valor_desembolsado = undefined;
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            "El valor desembolsado no puede ser mayor al valor del contrato",
+                            "info"
+                        );
+                    }
+                } else if (num == 2) {
+                    if (valor <= valor_valido) {
+                        self.valor_a_favor = numberFormat(valor);
+                    } else {
+                        self.valor_a_favor = undefined;
+                        swal(
+                            $translate.instant("TITULO_ADVERTENCIA"),
+                            "El valor a favor del cedente no puede ser mayor al valor del contrato",
+                            "info"
+                        );
+                    }
+                }
+            };
+
+            self.calculoDiasLetras = function (num) {
+
+                var plazo_meses = num / 30;
+                var res = String(plazo_meses).split(".");
+                var cantidad_meses = res[0];
+                var decimal_cantidad_dias = "0." + res[1];
+                var cantidad_dias = Math.ceil(parseFloat(decimal_cantidad_dias) / 0.03333333333336);
+                var cantidad_meses_letras = numeroALetras(cantidad_meses, {
+                    plural: $translate.instant("("),
+                    singular: $translate.instant("("),
+                });
+                var cantidad_dias_letras = numeroALetras(cantidad_dias, {
+                    plural: $translate.instant("("),
+                    singular: $translate.instant("("),
+                });
+                if (cantidad_dias == 0) {
+                    var texto =
+                        cantidad_meses_letras +
+                        cantidad_meses +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES");
+                } else {
+                    var texto =
+                        cantidad_meses_letras +
+                        cantidad_meses +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES") +
+                        " Y " +
+                        cantidad_dias_letras +
+                        cantidad_dias +
+                        " ) " +
+                        $translate.instant("DIAS");
+                }
+                return texto.toLowerCase();
+            }
+
+            self.calculoPlazoLetras = function (plazo, diasBool) {
+                if (diasBool) {
+                    var plazo_meses = plazo / 30;
+                    var res = String(plazo_meses).split(".");
+                    var cantidad_meses = res[0];
+                    var decimal_cantidad_dias = "0." + res[1];
+                    var cantidad_dias = Math.ceil(parseFloat(decimal_cantidad_dias) / 0.03333333333336);
+                    var cantidad_meses_letras = numeroALetras(cantidad_meses, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var cantidad_dias_letras = numeroALetras(cantidad_dias, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto = "";
+                    if (cantidad_dias == 0) {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES");
+                    } else {
+                        texto =
+                            cantidad_meses_letras +
+                            cantidad_meses +
+                            " ) " +
+                            $translate.instant("MENSAJE_MESES") +
+                            " Y " +
+                            cantidad_dias_letras +
+                            cantidad_dias +
+                            " ) " +
+                            $translate.instant("DIAS");
+                    }
+                    return texto;
+
+                } else {
+                    var cantidad_meses_letras = numeroALetras(plazo, {
+                        plural: $translate.instant("("),
+                        singular: $translate.instant("("),
+                    });
+                    var texto =
+                        cantidad_meses_letras +
+                        plazo +
+                        " ) " +
+                        $translate.instant("MENSAJE_MESES");
+                    return texto;
+                }
+            }
+
+            self.getFechaUTC = function (dateString) {
+                var fecha = new Date(dateString);
+                var anio = fecha.getUTCFullYear();
+                var mes = fecha.getUTCMonth();
+                var dia = fecha.getUTCDate();
+                var fechaUTC = new Date(anio, mes, dia, 12, 0, 0, 0);
+                return fechaUTC;
+            }
+
+            // $scope.validarValorDesembolsado = function (evento) {
+            //     // console.log(typeof self.contrato_obj.valor);
+            //     // console.log(evento.target.value);
+            //     var valor_cesion = evento.target.value;
+            //     if (valor_cesion > self.contrato_obj.valor) {
+            //         self.valor_desembolsado = undefined;
+            //         swal(
+            //             $translate.instant("TITULO_ADVERTENCIA"),
+            //             "El valor desembolsado debe ser menor al valor del contrato",
+            //             "info"
+            //         );
+            //     }
+
+            // }
+
+            // $scope.validarValorCedente = function (evento) {
+            //     // console.log(typeof self.contrato_obj.valor);
+            //     // console.log(evento.target.value);
+            //     var valor_cesion = evento.target.value;
+            //     if (valor_cesion > self.contrato_obj.valor) {
+            //         self.valor_a_favor = undefined;
+            //         swal(
+            //             $translate.instant("TITULO_ADVERTENCIA"),
+            //             "El valor a favor del cedente debe ser menor al valor del contrato",
+            //             "info"
+            //         );
+            //     }
+            // }
 
             //consulta cesionario
             amazonAdministrativaRequest
@@ -482,7 +740,6 @@ angular
              */
             self.persona_sel_change = function (val) {
                 if (val != null) {
-                    self.cesionario_obj = {};
                     self.cesionario_obj.nombre =
                         val.PrimerNombre + " " + val.SegundoNombre;
                     self.cesionario_obj.apellidos =
@@ -502,6 +759,274 @@ angular
 
             /**
              * @ngdoc method
+             * @name postNovedad
+             * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
+             * @description
+             * funcion que realiza la inserción de los datos de la novedad
+             * enviando la petición POST al MID de Novedades
+             */
+            self.postNovedad = function (output, dateTime, enlaceDoc) {
+                self.cesion_nov.enlace = enlaceDoc;
+                if (self.estadoNovedad == "ENTR") {
+                    novedadesMidRequest
+                        .post("novedad", self.cesion_nov)
+                        .then(function (request_novedades) {
+                            if (
+                                request_novedades.status == 200 ||
+                                request_novedades.statusText == "OK"
+                            ) {
+                                pdfMake
+                                    .createPdf(output)
+                                    .download(
+                                        "acta_cesion_contrato_" +
+                                        self.contrato_id +
+                                        "_" +
+                                        dateTime +
+                                        ".pdf"
+                                    );
+                                swal(
+                                    $translate.instant("TITULO_BUEN_TRABAJO"),
+                                    $translate.instant("DESCRIPCION_CESION") +
+                                    self.contrato_obj.numero_contrato +
+                                    " " +
+                                    $translate.instant("ANIO") +
+                                    ": " +
+                                    self.contrato_obj.vigencia,
+                                    "success"
+                                ).then(function () {
+                                    window.location.href =
+                                        "#/seguimientoycontrol/legal";
+                                });
+                            } else {
+                                //respuesta incorrecta, ej: 400/500
+                                $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                                swal({
+                                    title: $translate.instant("TITULO_ERROR_REPLICA"),
+                                    type: "error",
+                                    html: $translate.instant($scope.alert) +
+                                        self.contrato_obj.numero_contrato +
+                                        $translate.instant("ANIO") +
+                                        self.contrato_obj.vigencia +
+                                        ".",
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log("error: ", error);
+                            //Servidor no disponible
+                            $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                            swal({
+                                title: $translate.instant("TITULO_ERROR_ACTA"),
+                                type: "error",
+                                html: $translate.instant($scope.alert) +
+                                    self.contrato_obj.numero_contrato +
+                                    $translate.instant("ANIO") +
+                                    self.contrato_obj.vigencia +
+                                    ".",
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        });
+                } else {
+                    novedadesMidRequest
+                        .post("novedad", self.cesion_nov)
+                        .then(function (request_novedades) {
+                            if (
+                                request_novedades.status == 200 ||
+                                request_novedades.statusText == "OK"
+                            ) {
+                                var idNovedad = request_novedades.data.Body.NovedadPoscontractual.Id;
+                                self.contrato_obj_replica.esFechaActual = true;
+                                novedadesMidRequest
+                                    .post("replica", self.contrato_obj_replica)
+                                    .then(function (request_replica) {
+                                        if (
+                                            request_replica.status == 200 ||
+                                            request_replica.statusText == "OK"
+                                        ) {
+                                            console.log("Replica correcta");
+                                            pdfMake
+                                                .createPdf(output)
+                                                .download(
+                                                    "acta_cesion_contrato_" +
+                                                    self.contrato_id +
+                                                    "_" +
+                                                    dateTime +
+                                                    ".pdf"
+                                                );
+                                            swal(
+                                                $translate.instant("TITULO_BUEN_TRABAJO"),
+                                                $translate.instant("DESCRIPCION_CESION") +
+                                                self.contrato_obj.numero_contrato +
+                                                " " +
+                                                $translate.instant("ANIO") +
+                                                ": " +
+                                                self.contrato_obj.vigencia,
+                                                "success"
+                                            ).then(function () {
+                                                window.location.href =
+                                                    "#/seguimientoycontrol/legal";
+                                            });
+                                        } else {
+                                            self.desactivarNovedad(idNovedad);
+                                            $scope.alert = "TITULO_ERROR_REPLICA";
+                                            swal({
+                                                title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                type: "error",
+                                                html: $translate.instant($scope.alert) +
+                                                    self.contrato_obj.numero_contrato +
+                                                    $translate.instant("ANIO") +
+                                                    self.contrato_obj.vigencia +
+                                                    ".",
+                                                showCloseButton: true,
+                                                showCancelButton: false,
+                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                allowOutsideClick: false,
+                                            });
+                                        }
+                                    }).catch(function (error) {
+                                        self.desactivarNovedad(idNovedad);
+                                        const errMsg = error.data.Body[1].err.err;
+                                        $scope.alert = "TITULO_ERROR_REPLICA";
+                                        swal({
+                                            title: $translate.instant("TITULO_ERROR_ACTA"),
+                                            type: "error",
+                                            html: $translate.instant($scope.alert) +
+                                                self.contrato_obj.numero_contrato +
+                                                $translate.instant("ANIO") +
+                                                self.contrato_obj.vigencia +
+                                                ": '" + errMsg + "'.",
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false,
+                                        });
+                                    });
+                            } else {
+                                //respuesta incorrecta, ej: 400/500
+                                $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                                swal({
+                                    title: $translate.instant("TITULO_ERROR_REPLICA"),
+                                    type: "error",
+                                    html: $translate.instant($scope.alert) +
+                                        self.contrato_obj.numero_contrato +
+                                        $translate.instant("ANIO") +
+                                        self.contrato_obj.vigencia +
+                                        ".",
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log("error: ", error);
+                            //Servidor no disponible
+                            $scope.alert = "DESCRIPCION_ERROR_CESION2";
+                            swal({
+                                title: $translate.instant("TITULO_ERROR_ACTA"),
+                                type: "error",
+                                html: $translate.instant($scope.alert) +
+                                    self.contrato_obj.numero_contrato +
+                                    $translate.instant("ANIO") +
+                                    self.contrato_obj.vigencia +
+                                    ".",
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        });
+                }
+            }
+
+            self.desactivarNovedad = function (idNovedad) {
+                novedadesRequest.get('novedades_poscontractuales/' + idNovedad).then(function (res) {
+                    var struct = {};
+                    if (res.status == 200 || res.statusText == "Ok") {
+                        const fechaC = new Date(res.data.FechaCreacion);
+                        fechaC.setHours(12, 0, 0, 0, 0);
+                        const añoC = fechaC.getFullYear();
+                        const mesC = (fechaC.getMonth() + 1).toString().padStart(2, '0');
+                        const diaC = fechaC.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaCreacion = añoC + '-' + mesC + '-' + diaC + 'T12:00:00Z';
+
+                        const fechaM = new Date(res.data.FechaModificacion);
+                        fechaM.setHours(12, 0, 0, 0, 0);
+                        const añoM = fechaM.getFullYear();
+                        const mesM = (fechaM.getMonth() + 1).toString().padStart(2, '0');
+                        const diaM = fechaM.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaMod = añoM + '-' + mesM + '-' + diaM + 'T12:00:00Z';
+
+                        const motivo = "Error en la réplica";
+                        struct = res.data;
+                        struct.FechaCreacion = formattedFechaCreacion;
+                        struct.FechaModificacion = formattedFechaMod;
+                        struct.Motivo = motivo;
+                        struct.Activo = false;
+                        novedadesRequest.put('novedades_poscontractuales', idNovedad, struct).then(function (resPut) {
+                            if (resPut.status != 200) {
+                                $scope.alert = "El registro fue realizado de manera incompleta";
+                                swal({
+                                    title: "Error al desactivar la novedad!",
+                                    type: "error",
+                                    html: $translate.instant($scope.alert),
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        }).catch(function () {
+                            $scope.alert = "El registro fue realizado de manera incompleta";
+                            swal({
+                                title: "Error al desactivar la novedad!",
+                                type: "error",
+                                html: $translate.instant($scope.alert),
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        });
+                    }
+                });
+            }
+
+            self.verDocumento = function () {
+                if (self.persona_sel != "") {
+                    var docDefinition = self.get_plantilla();
+                    const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+                    pdfDocGenerator.open({
+                        title: 'PDF creado con PDFMake',
+                        width: 600,
+                        height: 400,
+                        closeBehavior: 'remove',
+                    });
+                } else {
+                    swal({
+                        title: "Error al previsualizar documento!",
+                        type: "error",
+                        html: "No se ha seleccionado ningún cesionario!",
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                    });
+                }
+            }
+
+            /**
+             * @ngdoc method
              * @name generarActa
              * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaCesionCtrl
              * @description
@@ -509,12 +1034,32 @@ angular
              * actualizacion de los datos del contrato y reporte de la novedad
              */
             self.generarActa = function () {
-                var f_inicio_contrato = moment(self.contrato_obj.Inicio);
-                var f_cesion = moment(self.f_terminacion);
-                var f_terminacion_contrato = moment(self.contrato_obj.Fin);
-                self.contrato_obj.plazo_cesionario =
-                    f_terminacion_contrato.diff(f_inicio_contrato, "days") -
-                    f_cesion.diff(f_inicio_contrato, "days");
+                // var fechaActual = new Date();
+                // if (
+                //     (fechaActual.getDate() == self.f_cesion.getDate()
+                //         && fechaActual.getMonth() == self.f_cesion.getMonth()
+                //         && fechaActual.getFullYear() == self.f_cesion.getFullYear())
+                //     || fechaActual > self.f_cesion
+                // ) {
+                //     self.estadoNovedad = "TERM";
+                // } else {
+                //     self.estadoNovedad = "ENTR";
+                // }
+                self.estadoNovedad = "ENEJ";
+                self.valor_contrato_letras = numeroALetras(parseFloat(self.contrato_obj.valor), {
+                    plural: $translate.instant("PESOS"),
+                    singular: $translate.instant("PESO"),
+                    centPlural: $translate.instant("CENTAVOS"),
+                    centSingular: $translate.instant("CENTAVO"),
+                });
+                self.contrato_plazo_letras = numeroALetras(self.contrato_obj.plazo, {
+                    plural: $translate.instant("("),
+                    singular: $translate.instant("("),
+                });
+                self.contrato_obj.plazo_cesionario = self.calculoPlazosCesion(self.f_cesion, self.calcularFechaFin());
+                // self.contrato_obj.plazo_cesionario =
+                //     f_terminacion_contrato.diff(f_inicio_contrato, "days") -
+                //     f_cesion.diff(f_inicio_contrato, "days");
                 //Se obtiene el dato de Fecha Final Efectiva.
                 // amazonAdministrativaRequest
                 // .get("contrato_persona/" + self.contrato_obj.id)
@@ -522,230 +1067,106 @@ angular
                 //     self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                 // });
                 if ($scope.formCesion.$valid) {
+                    amazonAdministrativaRequest
+                        .get(
+                            "informacion_proveedor?query=NumDocumento:" +
+                            self.cesionario_obj.identificacion
+                        )
+                        .then(function (response_ces) {
+                            novedadesRequest
+                                .get("tipo_novedad", "query=Nombre:Cesión")
+                                .then(function (nc_response) {
+                                    amazonAdministrativaRequest
+                                        .get(
+                                            "informacion_proveedor?query=NumDocumento:" +
+                                            self.contrato_obj.contratista_documento
+                                        )
+                                        .then(function (response_ced) {
+                                            self.f_cesion.setHours(12, 0, 0, 0);
+                                            self.f_expedicion_acta.setHours(12, 0, 0, 0);
+                                            self.fecha_oficioS.setHours(12, 0, 0, 0);
+                                            self.fecha_oficioO.setHours(12, 0, 0, 0);
+                                            self.fecha_solicitud.setHours(12, 0, 0, 0);
+                                            self.f_hoy.setHours(12, 0, 0, 0);
+                                            self.cesion_nov = {};
+                                            // self.cesion_nov.aclaracion = "";
+                                            // self.cesion_nov.camposaclaracion = null;
+                                            // self.cesion_nov.camposmodificacion = null;
+                                            // self.cesion_nov.camposmodificados = null;
+                                            self.cesion_nov.cedente = parseInt(
+                                                response_ced.data[0].Id
+                                            );
+                                            self.cesion_nov.cesionario = parseInt(
+                                                response_ces.data[0].Id
+                                            );
+                                            self.cesion_nov.contrato =
+                                                self.contrato_obj.numero_contrato;
+                                            // self.cesion_nov.fechaadicion = "0001-01-01T00:00:00Z";
+                                            self.cesion_nov.fechacesion = new Date(self.f_cesion);
+                                            self.cesion_nov.fechafinefectiva = self.calcularFechaFin();
+                                            // self.cesion_nov.fechaliquidacion = "0001-01-01T00:00:00Z";
+                                            // self.cesion_nov.fechaprorroga = "0001-01-01T00:00:00Z";
+                                            // self.cesion_nov.fechareinicio = "0001-01-01T00:00:00Z";
+                                            self.cesion_nov.fechasolicitud = self.fecha_solicitud;
+                                            self.cesion_nov.fechaexpedicion = self.f_expedicion_acta;
+                                            self.cesion_nov.fechaoficiosupervisor = self.fecha_oficioS;
+                                            self.cesion_nov.fechaoficioordenador = self.fecha_oficioO;
+                                            // self.cesion_nov.fechasuspension = "0001-01-01T00:00:00Z";
+                                            // self.cesion_nov.fechaterminacionanticipada = "0001-01-01T00:00:00Z";
+                                            self.cesion_nov.motivo = "";
+                                            self.cesion_nov.numeroactaentrega = 0;
+                                            self.cesion_nov.numerocdp = "";
+                                            self.cesion_nov.numerosolicitud = self.n_solicitud;
+                                            if (self.numero_oficio_supervisor == "") {
+                                                self.cesion_nov.numerooficiosupervisor = "n.a.";
+                                            } else {
+                                                self.cesion_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
+                                            }
+                                            if (self.numero_oficio_ordenador == "") {
+                                                self.cesion_nov.numerooficioordenador = "n.a.";
+                                            } else {
+                                                self.cesion_nov.numerooficioordenador = self.numero_oficio_ordenador;
+                                            }
+                                            // self.cesion_nov.observacion = self.observaciones;
+                                            // self.cesion_nov.periodosuspension = 0;
+                                            // self.cesion_nov.plazoactual = 0;
+                                            self.cesion_nov.poliza = "";
+                                            // self.cesion_nov.tiempoprorroga = 0;
+                                            self.cesion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+                                            // self.cesion_nov.valoradicion = 0;
+                                            // self.cesion_nov.valorfinalcontrato = 0;
+                                            self.cesion_nov.valor_desembolsado = parseFloat(self.valor_desembolsado.replace(/\,/g, ""));
+                                            self.cesion_nov.valor_a_favor = parseFloat(self.valor_a_favor.replace(/\,/g, ""));
+                                            self.cesion_nov.vigencia = String(
+                                                self.contrato_obj.vigencia
+                                            );
+                                            self.cesion_nov.vigenciacdp = "";
+                                            self.cesion_nov.fecharegistro = self.f_hoy;
+                                            self.cesion_nov.estado = self.estadoNovedad;
 
-                    if (self.novedadCesion == false) {
-                        amazonAdministrativaRequest
-                            .get(
-                                "informacion_proveedor?query=NumDocumento:" +
-                                self.cesionario_obj.identificacion
-                            )
-                            .then(function (response_ces) {
-                                novedadesRequest
-                                    .get("tipo_novedad", "query=Nombre:Cesión")
-                                    .then(function (nc_response) {
-                                        amazonAdministrativaRequest
-                                            .get(
-                                                "informacion_proveedor?query=NumDocumento:" +
-                                                self.contrato_obj.contratista_documento
-                                            )
-                                            .then(function (response_ced) {
-                                                self.cesion_nov = {};
-                                                self.cesion_nov.aclaracion = "";
-                                                self.cesion_nov.camposaclaracion = null;
-                                                self.cesion_nov.camposmodificacion = null;
-                                                self.cesion_nov.camposmodificados = null;
-                                                self.cesion_nov.cedente = parseInt(
-                                                    response_ced.data[0].Id
-                                                );
-                                                self.cesion_nov.cesionario = parseInt(
-                                                    response_ces.data[0].Id
-                                                );
-                                                self.cesion_nov.contrato =
-                                                    self.contrato_obj.numero_contrato;
-                                                self.cesion_nov.fechaadicion = "0001-01-01T00:00:00Z";
-                                                self.cesion_nov.fechacesion = new Date(self.f_cesion);
-                                                self.cesion_nov.fechaliquidacion = "0001-01-01T00:00:00Z";
-                                                self.cesion_nov.fechaprorroga = "0001-01-01T00:00:00Z";
-                                                self.cesion_nov.fechareinicio = "0001-01-01T00:00:00Z";
-                                                self.cesion_nov.fechasolicitud = self.fecha_solicitud;
-                                                self.cesion_nov.fechaoficiosupervisor = self.fecha_oficioS;
-                                                self.cesion_nov.fechaoficioordenador = self.fecha_oficioO;
-                                                self.cesion_nov.fechasuspension = "0001-01-01T00:00:00Z";
-                                                self.cesion_nov.fechaterminacionanticipada =
-                                                    "0001-01-01T00:00:00Z";
-                                                self.cesion_nov.motivo = "";
-                                                self.cesion_nov.numeroactaentrega = 0;
-                                                self.cesion_nov.numerocdp = "";
-                                                self.cesion_nov.numerooficiosupervisor =
-                                                    self.numero_oficio_supervisor;
-                                                self.cesion_nov.numerooficioordenador =
-                                                    self.numero_oficio_ordenador;
-                                                self.cesion_nov.numerosolicitud = self.n_solicitud;
-                                                self.cesion_nov.observacion = self.observaciones;
-                                                self.cesion_nov.periodosuspension = 0;
-                                                self.cesion_nov.plazoactual = 0;
-                                                self.cesion_nov.poliza = "";
-                                                self.cesion_nov.tiempoprorroga = 0;
-                                                self.cesion_nov.tiponovedad =
-                                                    nc_response.data[0].CodigoAbreviacion;
-                                                self.cesion_nov.valoradicion = 0;
-                                                self.cesion_nov.valorfinalcontrato = 0;
-                                                self.cesion_nov.vigencia = String(
-                                                    self.contrato_obj.vigencia
-                                                );
-                                                self.cesion_nov.fechaoficio = new Date(self.f_oficio);
-                                                self.cesion_nov.fecharegistro = self.replaceAt(
-                                                    self.contrato_obj.fecha_registro,
-                                                    10,
-                                                    "T"
-                                                );
-                                                //Recolección datos objeto POST Argo
-                                                self.contrato_obj_argo = {};
-                                                self.contrato_obj_argo.NumeroContrato = self.contrato_id; //Revisar si toca parsearlo
-                                                self.contrato_obj_argo.Vigencia = parseInt(self.contrato_vigencia);
-                                                self.contrato_obj_argo.FechaRegistro = self.f_hoy;
-                                                self.contrato_obj_argo.Contratista = parseFloat(self.cesion_nov.cesionario, 64);
-                                                self.contrato_obj_argo.PlazoEjecucion = self.contrato_obj.plazo;
-                                                self.contrato_obj_argo.FechaInicio = self.cesion_nov.fechacesion;
-                                                self.contrato_obj_argo.FechaFin = self.f_terminacion;
-                                                self.contrato_obj_argo.UnidadEjecucion = 205;
-                                                //Tratamiento de datos para objeto payload POST Argo
-                                                if (self.cesion_nov.tiponovedad === "NP_CES") {
-                                                    self.contrato_obj_argo.TipoNovedad = parseFloat(219);
-                                                }
-
-                                                //Replica Titán
-                                                self.contrato_obj_titan = {};
-                                                self.contrato_obj_titan.DocumentoActual = self.contrato_obj.contratista_documento;
-                                                self.contrato_obj_titan.DocumentoNuevo = self.cesionario_obj.identificacion;
-                                                self.contrato_obj_titan.FechaInicio = self.cesion_nov.fechacesion;
-                                                self.contrato_obj_titan.NombreCompleto = self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos;
-                                                self.contrato_obj_titan.NumeroContrato = self.contrato_id;
-                                                self.contrato_obj_titan.Vigencia = parseInt(self.contrato_vigencia);
-
-                                                // titanMidRequest
-                                                //     .post("novedad/ceder_contrato", self.contrato_obj_titan)
-                                                //     .then(function (request_titan){
-                                                //         if (
-                                                //             request_titan.status == 201 ||request_titan.status == 200 ||
-                                                //             request_titan.statusText == "Created" || request_titan.statusText == "OK"
-                                                //             ) {
-                                                //                 console.log("POST Titán respuesta positiva");
-
-
-                                                amazonAdministrativaRequest
-                                                    .post("novedad_postcontractual", self.contrato_obj_argo)
-                                                    .then(function (request_argo) {
-                                                        if (
-                                                            request_argo.status == 201 || request_argo.status == 200 ||
-                                                            request_argo.statusText == "Created" || request_argo.statusText == "OK"
-                                                        ) {
-                                                            novedadesMidRequest
-                                                                .post("novedad", self.cesion_nov)
-                                                                .then(function (request_novedades) {
-                                                                    if (
-                                                                        request_novedades.status == 200 ||
-                                                                        request_novedades.statusText == "OK"
-                                                                    ) {
-                                                                        self.formato_generacion_pdf();
-
-                                                                        swal(
-                                                                            $translate.instant("TITULO_BUEN_TRABAJO"),
-                                                                            $translate.instant("DESCRIPCION_CESION") +
-                                                                            self.contrato_obj.numero_contrato +
-                                                                            " " +
-                                                                            $translate.instant("ANIO") +
-                                                                            ": " +
-                                                                            self.contrato_obj.vigencia,
-                                                                            "success"
-                                                                        ).then(function () {
-                                                                            window.location.href =
-                                                                                "#/seguimientoycontrol/legal";
-                                                                        });
-                                                                    } else {
-                                                                        //respuesta incorrecta, ej: 400/500
-                                                                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
-                                                                        swal({
-                                                                            title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                                            type: "error",
-                                                                            html: $translate.instant($scope.alert) +
-                                                                                self.contrato_obj.numero_contrato +
-                                                                                $translate.instant("ANIO") +
-                                                                                self.contrato_obj.vigencia +
-                                                                                ".",
-                                                                            showCloseButton: true,
-                                                                            showCancelButton: false,
-                                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                            allowOutsideClick: false,
-                                                                        }).then(function () { });
-                                                                    }
-                                                                })
-                                                                .catch(function (error) {
-                                                                    //Servidor no disponible
-                                                                    $scope.alert = "DESCRIPCION_ERROR_CESION2";
-                                                                    swal({
-                                                                        title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                                        type: "error",
-                                                                        html: $translate.instant($scope.alert) +
-                                                                            self.contrato_obj.numero_contrato +
-                                                                            $translate.instant("ANIO") +
-                                                                            self.contrato_obj.vigencia +
-                                                                            ".",
-                                                                        showCloseButton: true,
-                                                                        showCancelButton: false,
-                                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                                        allowOutsideClick: false,
-                                                                    }).then(function () { });
-                                                                })
-
-                                                            //     }   
-                                                            // })
-                                                            // .catch(function (error) {
-                                                            //     //Servidor no disponible
-                                                            //     $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
-                                                            //     swal({
-                                                            //         title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                            //         type: "error",
-                                                            //         html: $translate.instant($scope.alert) +
-                                                            //             self.contrato_obj.numero_contrato +
-                                                            //             $translate.instant("ANIO") +
-                                                            //             self.contrato_obj.vigencia +
-                                                            //             ".",
-                                                            //         showCloseButton: true,
-                                                            //         showCancelButton: false,
-                                                            //         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                            //         allowOutsideClick: false,
-                                                            //     }).then(function () { });
-                                                            // })
-                                                        }
-                                                    })
-                                                    .catch(function (error) {
-                                                        //Servidor no disponible
-                                                        $scope.alert = "DESCRIPCION_ERROR_CESION2";
-                                                        swal({
-                                                            title: $translate.instant("TITULO_ERROR_ACTA"),
-                                                            type: "error",
-                                                            html: $translate.instant($scope.alert) +
-                                                                self.contrato_obj.numero_contrato +
-                                                                $translate.instant("ANIO") +
-                                                                self.contrato_obj.vigencia +
-                                                                ".",
-                                                            showCloseButton: true,
-                                                            showCancelButton: false,
-                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                                            allowOutsideClick: false,
-                                                        }).then(function () { });
-                                                    })
-                                            });
-                                    });
-                            })
-                    } else {
-                        //respuesta incorrecta, ej: 400/500
-                        $scope.alert = "DESCRIPCION_ERROR_CESION";
-                        swal({
-                            title: $translate.instant("TITULO_ERROR_ACTA"),
-                            type: "error",
-                            html: $translate.instant($scope.alert) +
-                                self.contrato_obj.numero_contrato +
-                                $translate.instant("ANIO") +
-                                self.contrato_obj.vigencia +
-                                ".",
-                            showCloseButton: true,
-                            showCancelButton: false,
-                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                            allowOutsideClick: false,
-                        }).then(function () { });
-                    }
+                                            //Recolección datos objeto POST Replica
+                                            self.contrato_obj_replica = {};
+                                            self.contrato_obj_replica.esFechaActual = false;
+                                            self.contrato_obj_replica.NumeroContrato = self.contrato_id //Revisar si toca parsearlo
+                                            self.contrato_obj_replica.Vigencia = parseInt(self.contrato_vigencia);
+                                            self.contrato_obj_replica.Contratista = parseFloat(self.cesion_nov.cesionario, 64);
+                                            self.contrato_obj_replica.DocumentoActual = self.contrato_obj.contratista_documento;
+                                            self.contrato_obj_replica.DocumentoNuevo = self.cesionario_obj.identificacion;
+                                            self.contrato_obj_replica.NombreCompleto = self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos;
+                                            self.contrato_obj_replica.FechaRegistro = self.f_hoy;
+                                            self.contrato_obj_replica.PlazoEjecucion = self.contrato_obj.plazo_cesionario;
+                                            self.contrato_obj_replica.FechaInicio = self.cesion_nov.fechacesion;
+                                            self.contrato_obj_replica.FechaFin = self.calcularFechaFin();
+                                            self.contrato_obj_replica.UnidadEjecucion = 205;
+                                            self.contrato_obj_replica.VigenciaCdp = 0;
+                                            self.contrato_obj_replica.NumeroCdp = 0;
+                                            if (self.cesion_nov.tiponovedad === "NP_CES") {
+                                                self.contrato_obj_replica.TipoNovedad = parseFloat(219);
+                                            }
+                                            self.formato_generacion_pdf();
+                                        });
+                                });
+                        })
                 } else {
                     swal(
                         $translate.instant("TITULO_ERROR"),
@@ -754,6 +1175,26 @@ angular
                     );
                 }
             };
+
+            self.calcularFechaFin = function () {
+
+                var fechaFin;
+                var fechaFinEfectiva;
+                if (self.novedades.length != 0) {
+                    fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                    fechaFinEfectiva = self.getFechaUTC(fechaFin);
+                } else {
+                    fechaFinEfectiva = new Date(self.contrato_obj.Fin);
+                    if (fechaFinEfectiva.getDate() == 31) {
+                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
+                    }
+                }
+                var nuevaFechaFin = new Date(fechaFinEfectiva);
+
+                // console.log("FechaFin: ", nuevaFechaFin);
+                return nuevaFechaFin;
+            }
+
             /**
              * @ngdoc method
              * @name replaceAt
@@ -762,7 +1203,6 @@ angular
              * funcion para el formateo de objetos tipo fecha a formato dd/mm/yyyy
              * @param {date} param
              */
-
             self.replaceAt = function (string, index, replace) {
                 return (
                     string.substring(0, index) + replace + string.substring(index + 1)
@@ -1053,23 +1493,20 @@ angular
                     new Date().getHours() +
                     "" +
                     new Date().getMinutes();
-                //console.log("acá se ve la fecha", dateTime);
                 var output = self.get_plantilla();
-                //console.log("acá se ve el output",output);
-                pdfMake
-                    .createPdf(output)
-                    .download(
-                        "acta_cesion_contrato_" +
-                        self.contrato_id +
-                        "_" +
-                        dateTime +
-                        ".pdf"
-                    );
-                //console.log("antes del Generator");
                 const pdfDocGenerator = pdfMake.createPdf(output);
-                //console.log("acá se ve la el pdf", pdfDocGenerator);
+                // console.log(self.cesion_nov);
+                // console.log(self.contrato_obj_replica);
+                // pdfMake
+                //     .createPdf(output)
+                //     .download(
+                //         "acta_cesion_contrato_" +
+                //         self.contrato_id +
+                //         "_" +
+                //         dateTime +
+                //         ".pdf"
+                //     );
                 pdfDocGenerator.getBase64(function (data) {
-                    //console.log("acá se ve la data", data);
                     pdfMakerService.saveDocGestorDoc(
                         data,
                         "acta_cesion_contrato_" +
@@ -1078,7 +1515,9 @@ angular
                         dateTime +
                         ".pdf",
                         self
-                    );
+                    ).then(function (enlace) {
+                        self.postNovedad(output, dateTime, enlace);
+                    });
                 });
             };
 
@@ -1121,7 +1560,6 @@ angular
                 var yyyy = date.getFullYear();
                 var fecha = new Date(yyyy, mm, dd);
                 var options = {
-                    weekday: "long",
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -1131,10 +1569,306 @@ angular
 
             self.valor_contrato_cesionario = function () {
                 return (
-                    self.contrato_obj.valor -
-                    (self.valor_a_favor + self.valor_desembolsado)
+                    self.valor_total_contrato -
+                    (parseFloat(self.valor_a_favor.replace(/\,/g, "")) + parseFloat(self.valor_desembolsado.replace(/\,/g, "")))
                 );
             };
+
+            self.agregarClausulas = function () {
+                var estructura = [];
+                if ($scope.nueva_clausula) {
+                    estructura.push(
+                        {
+                            text: "CLAUSULA QUINTA: ",
+                            bold: true,
+                        },
+                        {
+                            text: self.nueva_clausula_text + "\n\n",
+                        }
+                    );
+                }
+                return estructura;
+            }
+
+            self.agregarConsideraciones = function () {
+                var estructura = [];
+                estructura.push({
+                    text: "Que entre la Universidad Distrital Francisco José de Caldas y el señor " +
+                        self.contrato_obj.contratista_nombre +
+                        ", se suscribió el " +
+                        self.contrato_obj.tipo_contrato +
+                        " No. " +
+                        self.contrato_obj.numero_contrato +
+                        " de " +
+                        self.contrato_obj.vigencia +
+                        ", cuyo objeto es “" +
+                        self.contrato_obj.objeto +
+                        "”\n\n",
+                });
+                estructura.push({
+                    text: [
+                        {
+                            text: "Que la cláusula 3 del " +
+                                self.contrato_obj.tipo_contrato +
+                                " No. " +
+                                self.contrato_obj.numero_contrato +
+                                " de " +
+                                self.contrato_obj.vigencia +
+                                ", establece como valor del contrato "
+                        }, { text: '“(...) El valor del presente Contrato corresponde a la suma de ', italics: true, }, {
+                            text:
+                                self.valor_contrato_letras + ' MONEDA CORRIENTE ($' + numberFormat(String(self.contrato_obj.valor)) + ' M/CTE)', bold: true, italics: true,
+                        },
+                        {
+                            text: ' incluido IVA, así como todos los impuestos y retenciones legalmente (...)“.\n\n', italics: true,
+                        }]
+                });
+                estructura.push({
+                    text: [
+                        {
+                            text: "Que la cláusula 6 del " +
+                                self.contrato_obj.tipo_contrato +
+                                " No. " +
+                                self.contrato_obj.numero_contrato +
+                                " de " +
+                                self.contrato_obj.vigencia +
+                                ", establece como plazo del contrato "
+                        }, { text: '“El plazo de ejecución del Contrato es ', italics: true, }, {
+                            text:
+                                self.plazoMeses + ', ', bold: true, italics: true,
+                        },
+                        {
+                            text: 'contados a partir del cumplimiento de los requisitos de ejecución“, esto es, según el acta de inicio el ' + self.format_date_letter_mongo(self.contrato_obj.Inicio) +
+                                ".\n\n", italics: true,
+                        }]
+                });
+                estructura.push({
+                    text: [
+                        {
+                            text: "Que la cláusula 15 - Cesión. Del " +
+                                self.contrato_obj.tipo_contrato +
+                                " No. " +
+                                self.contrato_obj.numero_contrato +
+                                " de " +
+                                self.contrato_obj.vigencia +
+                                ", establece que "
+                        }, { text: '“El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de ', italics: true, }, {
+                            text: 'LA UNIVERSIDAD"\n\n', bold: true, italics: true,
+                        }]
+                });
+                if (self.novedades.length > 0) {
+                    for (var i = 0; i < self.novedades.length; i++) {
+                        if (self.novedades[i].tiponovedad == 1) {
+                            var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
+                            var fechaInicio = self.novedades[i].fechasuspension;
+                            var fechaFin = self.novedades[i].fechafinsuspension;
+                            var res1 = fechaInicio.split("-");
+                            var res2 = fechaFin.split("-");
+                            var fecha_sus_dia = res1[2].substring(0, 2);
+                            var fecha_sus_mes = meses[parseInt(res1[1] - 1)];
+                            var fecha_sus_ano = res1[0];
+                            var fecha_fin_dia = res2[2].substring(0, 2);
+                            var fecha_fin_mes = meses[parseInt(res2[1] - 1)];
+                            var fecha_fin_ano = res2[0];
+
+                            estructura.push({
+                                text: "Que, mediante acta con fecha de suscripción del " +
+                                    fechaSolicitud[2].substring(0, 2) +
+                                    " de " + meses[parseInt(fechaSolicitud[1] - 1)] +
+                                    " de " + fechaSolicitud[0] +
+                                    ", se suspendió el " +
+                                    self.contrato_obj.tipo_contrato +
+                                    " No. " +
+                                    self.contrato_obj.numero_contrato +
+                                    " de " +
+                                    self.contrato_obj.vigencia +
+                                    " durante el periodo comprendido entre el " +
+                                    fecha_sus_dia + " de " + fecha_sus_mes + " de " + fecha_sus_ano +
+                                    " y el día " + fecha_fin_dia + " de " + fecha_fin_mes + " de " + fecha_fin_ano + ".\n\n"
+                            });
+
+                        }
+                        if (self.novedades[i].tiponovedad == 3) {
+                            var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
+                            estructura.push({
+                                text: "Que, mediante acta con fecha de suscripción del " +
+                                    fechaSolicitud[2].substring(0, 2) +
+                                    " de " + meses[parseInt(fechaSolicitud[1] - 1)] +
+                                    " de " + fechaSolicitud[0] +
+                                    ", se reinició el " +
+                                    self.contrato_obj.tipo_contrato +
+                                    " No. " +
+                                    self.contrato_obj.numero_contrato +
+                                    " de " +
+                                    self.contrato_obj.vigencia + ".\n\n"
+                            });
+
+                        }
+                        if (
+                            self.novedades[i].tiponovedad == 8
+                        ) {
+                            var texto_otrosi = 'Que el día ' + self.format_date_letter_mongo(self.novedades[i].fechaprorroga) + ', se realizó la modificación en adición y prórroga, al ' +
+                                self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', en su orden por la suma de ' +
+                                numeroALetras(
+                                    self.novedades[i].valoradicion, {
+                                    plural: $translate.instant("PESOS"),
+                                    singular: $translate.instant("PESO"),
+                                    centPlural: $translate.instant("CENTAVOS"),
+                                    centSingular: $translate.instant("CENTAVO"),
+                                }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.novedades[i].valoradicion)) + " M/CTE)," +
+                                ' y prórroga en tiempo por ' + self.calculoPlazoLetras(self.novedades[i].tiempoprorroga) +
+                                ' en atención a la solicitud recibida por correo electrónico, de fecha ' + self.format_date_letter_mongo(self.novedades[i].fechaoficioordenador) +
+                                ', por medio de la cual, el ' + self.contrato_obj.ordenadorGasto_rol +
+                                ', solicitó la citada modificación; cuya justificación se encuentra descrita en la solicitud de necesidad No. ' +
+                                self.novedades[i].numerosolicitud + ' del ' + self.format_date_letter_mongo(self.novedades[i].fechasolicitud) +
+                                ', con respaldo del CDP ' + self.novedades[i].numerocdp + ' de ' + self.novedades[i].vigenciacdp + ".\n\n"
+                            estructura.push({
+                                text: texto_otrosi
+                            });
+
+                        }
+                    }
+                }
+                estructura.push({
+                    text: "Que, mediante escrito de fecha " +
+                        self.format_date_letter_mongo(self.fecha_solicitud) +
+                        ", el(la) Contratista " +
+                        self.contrato_obj.contratista_nombre +
+                        " (cedente), solicita a " +
+                        self.contrato_obj.supervisor_nombre +
+                        " quien cumple la función de supervisor, la autorización para realizar la Cesión del " +
+                        self.contrato_obj.tipo_contrato +
+                        " a partir del día " +
+                        self.format_date_letter_mongo(self.f_cesion) +
+                        ", a " +
+                        self.cesionario_obj.nombre +
+                        " " +
+                        self.cesionario_obj.apellidos +
+                        " (cesionario) quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n\n",
+                });
+                estructura.push([{
+                    text: "Que mediante oficio " +
+                        self.numero_oficio_supervisor +
+                        " de fecha " +
+                        self.format_date_letter_mongo(self.fecha_oficioS) +
+                        ", el supervisor del " +
+                        self.contrato_obj.tipo_contrato +
+                        " No. " +
+                        self.contrato_obj.numero_contrato +
+                        " de " +
+                        self.contrato_obj.vigencia +
+                        ", le comunicó al señor(a) " +
+                        self.contrato_obj.ordenadorGasto_nombre +
+                        " en calidad de Ordenador del Gasto del citado contrato, la autorización para ceder el mismo, a partir del día " +
+                        self.format_date_letter_mongo(self.f_cesion) +
+                        " a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos +
+                        " (cesionario), y aportó un estado financiero expedido por la Unidad de Presupuesto, en donde informa lo siguiente:\n\n",
+                },
+                {
+                    ul: [
+                        {
+                            text: "Por los servicios prestados por el señor(a) " +
+                                self.contrato_obj.contratista_nombre +
+                                " (CEDENTE), hasta el día " + self.format_date_letter_mongo(self.f_terminacion) +
+                                ", se reconoció un valor total de " + NumeroALetras(self.valor_desembolsado + "") +
+                                "MONEDA CORRIENTE ($" + numberFormat(self.valor_desembolsado + "") +
+                                " M/CTE), por el plazo ejecutado del contrato de " +
+                                self.plazo_cedente_letras +
+                                ".\n\n"
+                        },
+                        // { text: " CONTRATISTA CEDENTE,", bold: true }, {
+                        //     text: " hasta el día " +
+                        //         self.format_date_letter_mongo(self.f_terminacion) +
+                        //         " se reconoció un valor total de " +
+                        //         NumeroALetras(self.valor_desembolsado + "") +
+                        //         "($" +
+                        //         numberFormat(String(self.valor_desembolsado) + "") +
+                        //         "), por el plazo ejecutado del contrato de " +
+                        //         self.contrato_obj.plazo +
+                        //         " meses.\n\n"
+                        // },
+                        {
+                            text: [
+                                { text: "Existe un valor pendiente por cancelar al señor(a) " + self.contrato_obj.contratista_nombre }, { text: "(CEDENTE), ", bold: true }, {
+                                    text: "por valor de " +
+                                        NumeroALetras(parseInt(self.valor_a_favor) + "") +
+                                        "MONEDA CORRIENTE ($" +
+                                        numberFormat(self.valor_a_favor + "") +
+                                        " M/CTE), por un plazo de " + self.calculoPlazoLetras(self.dias_pago_cedente, true) +
+                                        ".\n\n"
+                                }],
+
+                        },
+                        {
+                            text: [
+                                { text: "La suma a ceder al señor(a) " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos }, { text: " (CESIONARIO)", bold: true }, {
+                                    text: " es de " +
+                                        NumeroALetras(self.valor_contrato_cesionario() + "") +
+                                        "MONEDA CORRIENTE ($" +
+                                        numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                                        " M/CTE), por un plazo de " +
+                                        self.calculoPlazoLetras(self.contrato_obj.plazo_cesionario, true) +
+                                        ".\n\n"
+                                }],
+                        },
+                    ]
+
+                },
+                ]);
+                estructura.push({
+                    text: [{
+                        text: "Que por medio del oficio " +
+                            self.numero_oficio_ordenador +
+                            " de fecha " +
+                            self.format_date_letter_mongo(self.fecha_oficioO) +
+                            ", recibido por la Oficina de Contratación, el señor(a) " +
+                            self.contrato_obj.ordenadorGasto_nombre +
+                            ", como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de cesión del " +
+                            self.contrato_obj.tipo_contrato +
+                            " No. " +
+                            self.contrato_obj.numero_contrato +
+                            " de " +
+                            self.contrato_obj.vigencia +
+                            ", a partir del día " +
+                            self.format_date_letter_mongo(self.f_cesion) +
+                            ", a favor de " +
+                            self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
+                    },
+                    { text: " (CESIONARIO).\n\n", bold: true }]
+                });
+                if ($scope.nuevo_considerando) {
+                    estructura.splice(self.posicion_considerando - 1, 0, {
+                        text: self.nuevo_considerando + "\n\n",
+                    });
+                }
+                return estructura;
+            }
+
+            self.agregarFirmas = function () {
+
+                var firmas = [];
+                firmas.push([
+                    "",
+                    { text: "Nombre", bold: true },
+                    { text: "Cargo", bold: true },
+                    { text: "Firma", bold: true },
+                ]);
+                if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                    firmas.push([
+                        { text: "Proyectó", bold: true },
+                        self.elaboro,
+                        "Abogado Oficina de Contratación",
+                        "",
+                    ]);
+                }
+                firmas.push([
+                    { text: "Aprobó", bold: true },
+                    self.contrato_obj.jefe_juridica_nombre_completo,
+                    "Jefe Oficina de Contratación",
+                    "",
+                ]);
+                return firmas;
+            }
 
             /**
              * @ngdoc method
@@ -1189,7 +1923,7 @@ angular
                                     [
                                         " ",
                                         {
-                                            text: "Proceso: Gestión Jurídica",
+                                            text: "Proceso: Gestión de Contratación",
                                             alignment: "center",
                                             fontSize: 9,
                                         },
@@ -1321,16 +2055,15 @@ angular
                                 self.contrato_obj.ordenadorGasto_nombre +
                                 " mayor de edad vecino(a) de esta ciudad, identificado(a) con " +
                                 self.contrato_obj.ordenador_gasto_tipo_documento +
-                                " Nro " +
+                                " No. " +
                                 self.contrato_obj.ordenador_gasto_documento +
                                 " expedida en " +
                                 self.contrato_obj.ordenador_gasto_ciudad_documento +
                                 ", quien actúa en calidad de " +
                                 self.contrato_obj.ordenadorGasto_rol +
-                                ", y Ordenador del Gasto, del " +
-                                self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_id +
+                                ", y Ordenador del Gasto, del " + self.contrato_obj.tipo_contrato +
+                                " No. " + self.contrato_id +
+                                " de " + self.contrato_vigencia +
                                 ", de otra, " +
                                 self.contrato_obj.contratista_nombre +
                                 ", identificado(a) con " +
@@ -1366,213 +2099,85 @@ angular
                     },
                     {
                         style: ["general_list"],
-                        ol: [{
-                            text: "Que entre la Universidad Distrital Francisco José de Caldas y el señor " +
-                                self.contrato_obj.contratista_nombre +
-                                ", se suscribió el " +
-                                self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_obj.numero_contrato +
-                                " de " +
-                                self.contrato_obj.vigencia +
-                                ", cuyo objeto es “" +
-                                self.contrato_obj.objeto +
-                                "”\n\n",
-                        },
-                        [{
-                            text: [
-                                {
-                                    text: "Que la cláusula 15 - Cesión. Del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_obj.numero_contrato +
-                                        " de " +
-                                        self.contrato_obj.vigencia +
-                                        ", establece que "
-                                }, { text: '“El Contratista no puede ceder parcial ni totalmente sus obligaciones o derechos derivados del presente Contrato, sin la autorización previa y por escrito de ', italics: true, }, {
-                                    text: 'LA UNIVERSIDAD"\n\n', bold: true, italics: true,
-                                }]
-                        }],
-
-
-
-
-                        {
-                            text: "Que mediante escrito de fecha " +
-                                self.format_date_letter_mongo(self.f_oficio) +
-                                ", el Contratista " +
-                                self.contrato_obj.contratista_nombre +
-                                ", (cedente) solicita a " +
-                                self.contrato_obj.supervisor_nombre +
-                                " quien cumple la función supervisor, la autorización para realizar la Cesión del " +
-                                self.contrato_obj.tipo_contrato +
-                                " a partir del día " +
-                                self.format_date_letter_mongo(self.f_cesion) +
-                                ", a " +
-                                self.cesionario_obj.nombre +
-                                " " +
-                                self.cesionario_obj.apellidos +
-                                " (cesionario) quien cumple con las calidades y competencias para desarrollar el objeto del Contrato.\n",
-                        },
-                        [{
-                            text: "Que mediante oficio No. " +
-                                self.cesion_nov.numerooficiosupervisor +
-                                " de fecha " +
-                                self.format_date_letter_mongo(self.fecha_oficioS) +
-                                ", el supervisor del " +
-                                self.contrato_obj.tipo_contrato +
-                                " No. " +
-                                self.contrato_obj.numero_contrato +
-                                " de " +
-                                self.contrato_obj.vigencia +
-                                ", le comunicó al señor(a) " +
-                                self.contrato_obj.ordenadorGasto_nombre +
-                                " en calidad de Ordenador el Gasto del citado contrato, la autorización para ceder el mismo, a partir del día " +
-                                self.format_date_letter_mongo(self.f_cesion) +
-                                ", y aportó un estado financiero expedido por la Sección de Presupuesto, en donde informa lo siguiente:\n\n",
-                        },
-                        {
-                            ul: [
-                                [{
-                                    text: "Por los servicios prestados por el señor(a) " +
-                                        self.contrato_obj.contratista_nombre
-                                }, { text: " CONTRATISTA CEDENTE,", bold: true }, {
-                                    text: " hasta el día " +
-                                        self.format_date_letter_mongo(self.f_terminacion) +
-                                        " se reconoció un valor total de " +
-                                        NumeroALetras(self.valor_desembolsado + "") +
-                                        "($" +
-                                        numberFormat(String(self.valor_desembolsado) + "") +
-                                        "), y ejecutor del contrato un plazo de " +
-                                        self.contrato_obj.plazo +
-                                        " meses.\n\n"
-                                },
-                                ],
-                                {
-                                    text: [
-                                        { text: "Existe un valor pendiente por cancelar al señor " + self.contrato_obj.contratista_nombre }, { text: "(CEDENTE), ", bold: true }, {
-                                            text: "por valor de " +
-                                                NumeroALetras(self.valor_a_favor + "") +
-                                                "($" +
-                                                numberFormat(String(self.valor_a_favor) + "") +
-                                                "), que corresponden al periodo comprendido entre el día " +
-                                                self.format_date_letter_mongo(self.contrato_obj.Inicio) +
-                                                " al dia " +
-                                                self.format_date_letter_mongo(self.f_terminacion) +
-                                                ".\n\n"
-                                        }],
-
-                                },
-                                // {
-                                //     text: [
-                                //         { text: "La suma a ceder al señor(a) " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos }, { text: " (CESIONARIO)", bold: true }, {
-                                //             text: " es de " +
-                                //                 NumeroALetras(self.valor_contrato_cesionario() + "") +
-                                //                 "($" +
-                                //                 numberFormat(String(self.valor_contrato_cesionario()) + "") +
-                                //                 "), por un plazo de " +
-                                //                 self.contrato_obj.plazo_cesionario +
-                                //                 " días.\n\n"
-                                //         }],
-                                // },
-                            ]
-
-                        },
-
-                        {
-                            text: [{
-                                text: [{
-                                    text: "Que por medio del oficio " +
-                                        self.cesion_nov.numerooficioordenador +
-                                        " de fecha " +
-                                        self.format_date_letter_mongo(self.fecha_oficioO) +
-                                        ", recibido por la Oficina Asesora Jurídica, el señor(a) " +
-                                        self.contrato_obj.ordenadorGasto_nombre +
-                                        ", como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de cesión del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_obj.numero_contrato +
-                                        " de " +
-                                        self.contrato_obj.vigencia +
-                                        ", a partir día " +
-                                        self.format_date_letter_mongo(self.f_cesion) +
-                                        ", a favor de " +
-                                        self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
-                                },
-                                { text: " (CESIONARIO).\n\n", bold: true }]
-
-                            }],
-                        },
-                        ],
-
-                        {
-
-                            text: [
-                                [{
-                                    text: "Por lo anterior las partes acuerdan las siguientes ",
-                                },
-                                {
-                                    text: "CLÁUSULAS:\n\n",
-                                    bold: true,
-                                },
-                                ],
-                                [{ text: "CLÁUSULA PRIMERA: CESIÓN. ", bold: true, },
-                                { text: "El señor(a) " + self.contrato_obj.contratista_nombre }, { text: " (CEDENTE)", bold: true },
-                                {
-                                    text: " cede el " + self.contrato_obj.tipo_contrato + " No." + self.contrato_obj.numero_contrato + ", suscrito el día " +
-                                        self.format_date_letter_mongo(self.f_oficio) + ", a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
-                                },
-                                { text: " (CESIONARIO)", bold: true },
-                                {
-                                    text: ", en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día " +
-                                        self.format_date_letter_mongo(self.f_cesion) +
-                                        ".\n\n",
-                                }],
-                                [{
-                                    text: "CLAUSULA SEGUNDA: VALOR CEDIDO. ",
-                                    bold: true,
-                                },
-                                {
-                                    text: "La suma a ceder a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
-                                },
-                                { text: " (CESIONARIO)", bold: true },
-                                {
-                                    text: " es de " +
-                                        NumeroALetras(self.valor_contrato_cesionario() + "") +
-                                        "($" +
-                                        numberFormat(String(self.valor_contrato_cesionario()) + "") +
-                                        "), por un plazo de " +
-                                        self.contrato_obj.plazo_cesionario +
-                                        " días.\n\n"
-                                },
-                                ],
-                                [{
-                                    text: "CLAUSULA TERCERA: GARANTÍA. EL CESIONARIO ",
-                                    bold: true,
-                                },
-                                {
-                                    text: "se compromete a modificar la Póliza de Cumplimiento expedida en virtud del " +
-                                        self.contrato_obj.tipo_contrato +
-                                        " No. " +
-                                        self.contrato_obj.numero_contrato +
-                                        " de " +
-                                        self.contrato_obj.vigencia +
-                                        " o a expedir una nueva de conformidad con la suscripción del presente documento. \n\n",
-                                },
-                                ],
-                                [{
-                                    text: "CLAUSULA CUARTA: PUBLICACIÓN. ",
-                                    bold: true,
-                                },
-                                {
-                                    text: "- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se  procederá a la publicación del presente documento de cesión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente:\n\n",
-                                },
-                                ],
-                                {
-                                    text: "En constancia de lo consignado en el presente documento, se firma, \n\nen Bogotá, D.C., a los ________________________________________.\n\n\n",
-                                },
+                        ol: self.agregarConsideraciones(),
+                    },
+                    {
+                        style: ["general_font"],
+                        text: [
+                            [{
+                                text: "Por lo anterior las partes acuerdan las siguientes ",
+                            },
+                            {
+                                text: "CLÁUSULAS:\n\n",
+                                bold: true,
+                            },
                             ],
-                        },
+                            [{ text: "CLÁUSULA PRIMERA: CESIÓN. ", bold: true, },
+                            { text: "El señor(a) " + self.contrato_obj.contratista_nombre }, { text: " (CEDENTE)", bold: true },
+                            {
+                                text: " cede el " + self.contrato_obj.tipo_contrato + " No. " + self.contrato_obj.numero_contrato + ", suscrito el día " +
+                                    self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ", a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
+                            },
+                            { text: " (CESIONARIO)", bold: true },
+                            {
+                                text: ", en todas las obligaciones, términos y condiciones pactadas en el contrato, a partir del día " +
+                                    self.format_date_letter_mongo(self.f_cesion) +
+                                    ".\n\n",
+                            }],
+                            [{
+                                text: "CLAUSULA SEGUNDA: VALOR CEDIDO. ",
+                                bold: true,
+                            },
+                            {
+                                text: "La suma a ceder a " + self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos
+                            },
+                            { text: " (CESIONARIO)", bold: true },
+                            {
+                                text: " es de " +
+                                    NumeroALetras(self.valor_contrato_cesionario() + "") +
+                                    "MONEDA CORRIENTE ($" +
+                                    numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                                    " M/CTE), por un plazo de " +
+                                    self.calculoPlazoLetras(self.contrato_obj.plazo_cesionario, true) +
+                                    ".\n\n"
+                            },
+                            ],
+                            [{
+                                text: "CLAUSULA TERCERA: GARANTÍA. EL CESIONARIO ",
+                                bold: true,
+                            },
+                            {
+                                text: "se compromete a modificar la Póliza de Cumplimiento expedida en virtud del " +
+                                    self.contrato_obj.tipo_contrato +
+                                    " No. " +
+                                    self.contrato_obj.numero_contrato +
+                                    " de " +
+                                    self.contrato_obj.vigencia +
+                                    " o a expedir una nueva de conformidad con la suscripción del presente documento. \n\n",
+                            },
+                            ],
+                            [{
+                                text: "CLAUSULA CUARTA: PUBLICACIÓN. ",
+                                bold: true,
+                            },
+                            {
+                                text: "- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se  procederá a la publicación del presente documento de cesión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente:\n\n",
+                            },
+                            ],
+                            self.agregarClausulas(),
+                            // {
+                            //     text: "En constancia de lo consignado en el presente documento, se firma, \n\nen Bogotá, D.C., a los ________________________________________.\n\n\n",
+                            // },
+                        ],
+                    },
+                    {
+                        style: ["general_font"],
+                        text: [
+                            // "MOTIVO DE LA CESIÓN: " +
+                            // self.observaciones +
+                            // ".\n\n" +
+                            "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., el día " + self.format_date_letter_mongo(self.f_expedicion_acta) + ".",
+                            "\n",
                         ],
                     },
                     {
@@ -1580,6 +2185,30 @@ angular
                         table: {
                             widths: [270, 270],
                             body: [
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
                                 [{
                                     text: "______________________________________",
                                     bold: false,
@@ -1671,6 +2300,7 @@ angular
                                 ],
                             ],
                         },
+                        unbreakable: true,
                         layout: "noBorders",
 
                     },
@@ -1678,35 +2308,8 @@ angular
                     {
                         style: ["table3"],
                         table: {
-                            widths: [65, 130, 130, "*"],
-                            body: [
-                                [
-
-                                    { text: "Funcionario", bold: true },
-                                    { text: "Nombre", bold: true },
-                                    { text: "Cargo", bold: true },
-                                    { text: "Firma", bold: true },
-                                ],
-                                [
-                                    { text: "Proyectó", bold: false },
-                                    "" + self.elaboro,
-                                    //"Abogado Oficina Asesora Jurídica",
-                                    "",
-                                    "",
-                                ],
-                                [
-                                    { text: "Revisó", bold: false },
-                                    "",
-                                    "",
-                                    "",
-                                ],
-                                [
-                                    { text: "Aprobó", bold: false },
-                                    "",
-                                    "Jefe Oficina Asesora Jurídica",
-                                    "",
-                                ]
-                            ],
+                            widths: [65, 130, 130, 150],
+                            body: self.agregarFirmas(),
                         },
                     },
                     ],
@@ -1715,7 +2318,7 @@ angular
                             marginTop: 80,
                         },
                         general_font: {
-                            fontSize: 10,
+                            fontSize: self.tamanoFuente,
                             alignment: "justify",
                             margin: [25, 0, 25, 0],
                         },
@@ -1750,6 +2353,217 @@ angular
                 };
 
             };
+            var numeroALetras = (function () {
+                function Unidades(num) {
+                    switch (num) {
+                        case 1:
+                            return $translate.instant("UN");
+                        case 2:
+                            return $translate.instant("DOS");
+                        case 3:
+                            return $translate.instant("TRES");
+                        case 4:
+                            return $translate.instant("CUATRO");
+                        case 5:
+                            return $translate.instant("CINCO");
+                        case 6:
+                            return $translate.instant("SEIS");
+                        case 7:
+                            return $translate.instant("SIETE");
+                        case 8:
+                            return $translate.instant("OCHO");
+                        case 9:
+                            return $translate.instant("NUEVE");
+                    }
+                    return "";
+                }
+
+                function Decenas(num) {
+                    var decena = Math.floor(num / 10);
+                    var unidad = num - decena * 10;
+                    switch (decena) {
+                        case 1:
+                            switch (unidad) {
+                                case 0:
+                                    return $translate.instant("DIEZ");
+                                case 1:
+                                    return $translate.instant("ONCE");
+                                case 2:
+                                    return $translate.instant("DOCE");
+                                case 3:
+                                    return $translate.instant("TRECE");
+                                case 4:
+                                    return $translate.instant("CATORCE");
+                                case 5:
+                                    return $translate.instant("QUINCE");
+                                case 6:
+                                    return $translate.instant("DIECISEIS");
+                                case 7:
+                                    return $translate.instant("DIECISIETE");
+                                case 8:
+                                    return $translate.instant("DIECIOCHO");
+                                case 9:
+                                    return $translate.instant("DIECINUEVE");
+                                default:
+                                    return $translate.instant("DIECI") + Unidades(unidad);
+                            }
+                        case 2:
+                            if (unidad == 0) {
+                                return $translate.instant("VEINTE");
+                            } else {
+                                return $translate.instant("VEINTI") + Unidades(unidad);
+                            }
+                        case 3:
+                            return DecenasY($translate.instant("TREINTA"), unidad);
+                        case 4:
+                            return DecenasY($translate.instant("CUARENTA"), unidad);
+                        case 5:
+                            return DecenasY($translate.instant("CINCUENTA"), unidad);
+                        case 6:
+                            return DecenasY($translate.instant("SESENTA"), unidad);
+                        case 7:
+                            return DecenasY($translate.instant("SETENTA"), unidad);
+                        case 8:
+                            return DecenasY($translate.instant("OCHENTA"), unidad);
+                        case 9:
+                            return DecenasY($translate.instant("NOVENTA"), unidad);
+                        case 0:
+                            return Unidades(unidad);
+                    }
+                }
+
+                function DecenasY(strSin, numUnidades) {
+                    if (numUnidades > 0)
+                        return strSin + $translate.instant("Y") + Unidades(numUnidades);
+                    return strSin;
+                }
+
+                function Centenas(num) {
+                    var centenas = Math.floor(num / 100);
+                    var decenas = num - centenas * 100;
+                    switch (centenas) {
+                        case 1:
+                            if (decenas > 0)
+                                return $translate.instant("CIENTO") + Decenas(decenas);
+                            return $translate.instant("CIEN");
+                        case 2:
+                            return $translate.instant("DOSCIENTOS") + Decenas(decenas);
+                        case 3:
+                            return $translate.instant("TRESCIENTOS") + Decenas(decenas);
+                        case 4:
+                            return $translate.instant("CUATROCIENTOS") + Decenas(decenas);
+                        case 5:
+                            return $translate.instant("QUINIENTOS") + Decenas(decenas);
+                        case 6:
+                            return $translate.instant("SEISCIENTOS") + Decenas(decenas);
+                        case 7:
+                            return $translate.instant("SETECIENTOS") + Decenas(decenas);
+                        case 8:
+                            return $translate.instant("OCHOCIENTOS") + Decenas(decenas);
+                        case 9:
+                            return $translate.instant("NOVECIENTOS") + Decenas(decenas);
+                    }
+                    return Decenas(decenas);
+                }
+
+                function Seccion(num, divisor, strSingular, strPlural) {
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var letras = "";
+                    if (cientos > 0)
+                        if (cientos > 1) letras = Centenas(cientos) + " " + strPlural;
+                        else letras = strSingular;
+                    if (resto > 0) letras += "";
+                    return letras;
+                }
+
+                function Miles(num) {
+                    var divisor = 1000;
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var strMiles = Seccion(
+                        num,
+                        divisor,
+                        $translate.instant("UNMIL"),
+                        $translate.instant("MIL")
+                    );
+                    var strCentenas = Centenas(resto);
+                    if (strMiles == "") return strCentenas;
+                    return strMiles + " " + strCentenas;
+                }
+
+                function Millones(num) {
+                    var divisor = 1000000;
+                    var cientos = Math.floor(num / divisor);
+                    var resto = num - cientos * divisor;
+                    var strMillones = Seccion(
+                        num,
+                        divisor,
+                        $translate.instant("UNMILLON"),
+                        $translate.instant("MILLONES")
+                    );
+                    var strMiles = Miles(resto);
+                    if (strMillones == "") return strMiles;
+                    return strMillones + " " + strMiles;
+                }
+
+                return function NumeroALetras(num, currency) {
+                    currency = currency || {};
+                    var data = {
+                        numero: num,
+                        enteros: Math.floor(num),
+                        centavos: Math.round(num * 100) - Math.floor(num) * 100,
+                        letrasCentavos: "",
+                        letrasMonedaPlural: currency.plural || $translate.instant("PESOS"),
+                        letrasMonedaSingular: currency.singular || $translate.instant("PESO"),
+                        letrasMonedaCentavoPlural: currency.centPlural || "CHIQUI PESOS",
+                        letrasMonedaCentavoSingular: currency.centSingular || "CHIQUI PESO",
+                    };
+
+                    if (data.centavos > 0) {
+                        data.letrasCentavos =
+                            $translate.instant("CON") +
+                            (function () {
+                                if (data.centavos == 1)
+                                    return (
+                                        Millones(data.centavos) +
+                                        " " +
+                                        data.letrasMonedaCentavoSingular
+                                    );
+                                else
+                                    return (
+                                        Millones(data.centavos) +
+                                        " " +
+                                        data.letrasMonedaCentavoPlural
+                                    );
+                            })();
+                    }
+
+                    if (data.enteros == 0)
+                        return (
+                            $translate.instant("CERO") +
+                            data.letrasMonedaPlural +
+                            " " +
+                            data.letrasCentavos
+                        );
+                    if (data.enteros == 1)
+                        return (
+                            Millones(data.enteros) +
+                            " " +
+                            data.letrasMonedaSingular +
+                            " " +
+                            data.letrasCentavos
+                        );
+                    else
+                        return (
+                            Millones(data.enteros) +
+                            " " +
+                            data.letrasMonedaPlural +
+                            " " +
+                            data.letrasCentavos
+                        );
+                };
+            })();
         }
 
     )
