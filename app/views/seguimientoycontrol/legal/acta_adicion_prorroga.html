@@ -209,8 +209,8 @@
                                         <br>
                                         <md-input-container style="margin:0; width: 40%;">
                                             <br>
-                                            <input type="number" id="cdp_numero" aria-label="cdp_numero" name="cdp_numero"
-                                                ng-model="sLactaAdicionProrroga.cdp_numero" required>
+                                            <input type="number" id="cdp_numero" aria-label="cdp_numero"
+                                                name="cdp_numero" ng-model="sLactaAdicionProrroga.cdp_numero" required>
                                             <div ng-messages="formadipro.cdp_numero.$error">
                                                 <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
                                             </div>
@@ -310,10 +310,15 @@
                     </button>
                 </div>
             </div>
-            <div class="row" ng-if="sLactaAdicionProrroga.editBool==true">
+            <!-- <div class="row" ng-if="sLactaAdicionProrroga.editBool==true">
                 <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center;">
+                    <button type="submit" class="btn btn-primary btn-lg"
+                        ng-click="sLactaAdicionProrroga.comprobar_seleccion_novedad()">
+                        <span class="glyphicon glyphicon-file"></span> {{'ACTUALIZAR_NOVEDAD_ADICION_PRORROGA' |
+                        translate}}
+                    </button>
                 </div>
-            </div>
+            </div> -->
         </div>
         <br>
         <br>
