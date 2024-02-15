@@ -31,10 +31,11 @@ angular
             self.contrato_obj = {};
             self.estado_resultado_response = false;
             self.estado_contrato_obj.estado = 0;
+            self.novedades = [];
             self.novedadEnCurso = false;
             self.contratistaBool = false;
             self.usuarioJuridica = false;
-            self.rolesUsuario = token_service.getPayload().role;
+            self.rolesUsuario = [];
             self.rolActual = "";
             self.createBool = false;
             $scope.status = "";
@@ -42,25 +43,28 @@ angular
                 $scope.vigencias = response.data;
             });
 
+            self.rolesUsuario = token_service.getPayload().role;
             // Asignación del rol del usuario
             for (var i = 0; i < self.rolesUsuario.length; i++) {
-                if (self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO') {
+                if (self.rolesUsuario[i] === 'ASISTENTE_JURIDICA') {
                     self.rolActual = self.rolesUsuario[i];
                     break;
                 }
             }
-            if (self.rolActual != 'ORDENADOR_DEL_GASTO') {
+            if (self.rolActual != 'ASISTENTE_JURIDICA') {
                 for (var i = 0; i < self.rolesUsuario.length; i++) {
                     if (
                         self.rolesUsuario[i] === 'SUPERVISOR' ||
-                        self.rolesUsuario[i] === 'ASISTENTE_JURIDICA' ||
+                        self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO' ||
                         self.rolesUsuario[i] === 'CONTRATISTA'
                     ) {
-                        self.rolActual = "SUPERVISOR";
+                        // console.log(self.rolesUsuario[i]);
+                        self.rolActual = self.rolesUsuario[i];
                         break;
                     }
                 }
             }
+            // console.log("Rol", self.rolActual);
 
             /**
              * @ngdoc method
@@ -195,25 +199,32 @@ angular
                                             self.contrato_obj.vigencia
                                         )
                                         .then(function (response_sql) {
-                                            for (var i = 0; i < response_sql.data.Body.length; i++) {
+                                            self.novedades = response_sql.data.Body;
+                                            var adiciones = 0;
+                                            for (var i = 0; i < self.novedades.length; i++) {
+                                                if (self.novedades[i].tiponovedad == 6 || self.novedades[i].tiponovedad == 8) {
+                                                    adiciones += parseFloat(self.novedades[i].valoradicion);
+                                                }
+                                            }
+                                            self.contrato_obj.valor = parseFloat(self.contrato_obj.valor) + adiciones;
+                                            for (var i = 0; i < self.novedades.length; i++) {
                                                 if (
-                                                    response_sql.data.Body[i].id !=
+                                                    self.novedades[i].id !=
                                                     undefined
                                                 ) {
                                                     $scope.novedadesTabla.push({
-                                                        id: response_sql.data.Body[i].id,
-                                                        tipoNovedad: response_sql.data.Body[i].nombreTipoNovedad,
-                                                        enlace: response_sql.data.Body[i].enlace,
-                                                        fecha: response_sql.data.Body[i].fechasolicitud,
-                                                        estado: response_sql.data.Body[i].estado,
+                                                        id: self.novedades[i].id,
+                                                        tipoNovedad: self.novedades[i].nombreTipoNovedad,
+                                                        enlace: self.novedades[i].enlace,
+                                                        fecha: self.novedades[i].fechaexpedicion,
+                                                        estado: self.novedades[i].nombreEstado,
                                                     });
                                                 }
                                             }
-                                            var elementos_cesion = response_sql.data.Body;
-                                            if (elementos_cesion != undefined && elementos_cesion.length != "0") {
+                                            if (self.novedades != undefined && self.novedades.length != "0") {
                                                 var last_newness =
-                                                    elementos_cesion[elementos_cesion.length - 1];
-                                                if (last_newness.estado == "EN_TRAMITE") {
+                                                    self.novedades[self.novedades.length - 1];
+                                                if (last_newness.estado == "ENTR") {
                                                     self.novedadEnCurso = true;
                                                     swal({
                                                         title: $translate.instant("INFORMACION"),
@@ -479,29 +490,6 @@ angular
 
             }
             $scope.eliminarNovedad = function (idRegNov) {
-                if (estado == "EN_TRAMITE") {
-                    estructura = {
-                        "Id": 9530,
-                        "NumeroSolicitud": "7617171",
-                        "ContratoId": 3007,
-                        "NumeroCdpId": 0,
-                        "Motivo": "prueba",
-                        "Aclaracion": "",
-                        "Observacion": "",
-                        "Vigencia": 2023,
-                        "VigenciaCdp": 0,
-                        "FechaCreacion": "2023-02-20 09:03:11.521786 +0000 +0000",
-                        "FechaModificacion": "2023-02-20 09:03:11.521786 +0000 +0000",
-                        "Activo": true,
-                        "TipoNovedad": 3,
-                        "Estado": "TERMINADA"
-                    };
-                    novedadesMidRequest
-                        .put("novedad", idRegNov, estructura)
-                        .then(function (response) {
-                            console.log("Res: ", response)
-                        });
-                }
 
             }
 

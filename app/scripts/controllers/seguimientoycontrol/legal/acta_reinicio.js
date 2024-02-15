@@ -24,7 +24,8 @@ angular
             amazonAdministrativaRequest,
             novedadesMidRequest,
             novedadesRequest,
-            pdfMakerService
+            pdfMakerService,
+            financieraJbpmRequest
         ) {
             this.awesomeThings = ["HTML5 Boilerplate", "AngularJS", "Karma"];
 
@@ -39,8 +40,10 @@ angular
             self.contrato_obj = {};
             self.contrato_obj_replica = {};
             self.suspension_obj = {};
-            self.n_solicitud = null;
+            self.n_solicitud = "";
             self.fecha_solicitud = new Date();
+            self.f_expedicion_acta = new Date();
+            self.f_hoy = new Date();
             self.auxiliar = null;
             self.novedades = [];
             self.estadoNovedad = "";
@@ -53,19 +56,19 @@ angular
             self.estados = [];
             self.elaboro_cedula = token_service.getPayload().documento;
 
-            const solic_input = document.getElementById("n_solicitud");
-            solic_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
+            // const solic_input = document.getElementById("n_solicitud");
+            // solic_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
 
-            const oficio_input = document.getElementById("oficio");
-            oficio_input.addEventListener("input", function () {
-                if (this.value.length > 7) {
-                    this.value = this.value.slice(0, 7);
-                }
-            });
+            // const oficio_input = document.getElementById("oficio");
+            // oficio_input.addEventListener("input", function () {
+            //     if (this.value.length > 7) {
+            //         this.value = this.value.slice(0, 7);
+            //     }
+            // });
 
             //Obtiene los datos de quien elaboró la Novedad
             agoraRequest
@@ -79,6 +82,16 @@ angular
                         ipn_response.data[0].PrimerApellido +
                         " " +
                         ipn_response.data[0].SegundoApellido;
+                });
+
+            financieraJbpmRequest
+                .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
+                .then(function (response) {
+                    var data = response.data.cdps_vigencia.cdp_vigencia;
+                    // console.log(data);
+                    if (data != undefined && data[0].id_numero_solicitud != null) {
+                        self.n_solicitud = data[0].id_numero_solicitud;
+                    }
                 });
 
             agoraRequest
@@ -129,10 +142,10 @@ angular
                                 self.calcularFechaFin(0);
                             });
 
-                        //Obtención de datos del jefe de juridica
+                        //Obtención de datos del jefe de Oficina de Contratación
                         agoraRequest
                             .get(
-                                "supervisor_contrato?query=CargoId.Id:78&sortby=FechaFin&order=desc&limit=1"
+                                "supervisor_contrato?query=DependenciaSupervisor:DEP636&sortby=FechaFin&order=desc&limit=1"
                             )
                             .then(function (jj_response) {
                                 self.contrato_obj.jefe_juridica_documento =
@@ -255,6 +268,7 @@ angular
                             )
                             .then(function (response) {
                                 self.novedades = response.data.Body;
+                                self.calcularFechaFin(0);
                                 if (self.novedades.length != "0") {
                                     var last_cesion =
                                         self.novedades[self.novedades.length - 1];
@@ -443,7 +457,6 @@ angular
                 var yyyy = date.getFullYear();
                 var fecha = new Date(yyyy, mm, dd);
                 var options = {
-                    weekday: "long",
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -700,7 +713,7 @@ angular
                     .then(function (vc_response) {
                         self.validacion = vc_response.data.Body;
                         if (self.validacion == "true") {
-                            if (self.estadoNovedad == "4518") {
+                            if (self.estadoNovedad == "ENTR") {
                                 novedadesMidRequest
                                     .post("novedad", self.reinicio_nov)
                                     .then(function (response_nosql) {
@@ -732,18 +745,19 @@ angular
                                     });
                             } else {
                                 novedadesMidRequest
-                                    .put("replica", self.suspension_obj.id, self.contrato_obj_replica)
-                                    .then(function (request_argo) {
+                                    .post("novedad", self.reinicio_nov)
+                                    .then(function (response_nosql) {
                                         if (
-                                            request_argo.status == 200 ||
-                                            request_argo.statusText == "Ok"
+                                            response_nosql.status == 200 ||
+                                            response_nosql.statusText == "OK"
                                         ) {
+                                            var idNovedad = response_nosql.data.Body.NovedadPoscontractual.Id;
                                             novedadesMidRequest
-                                                .post("novedad", self.reinicio_nov)
-                                                .then(function (response_nosql) {
+                                                .put("replica", self.suspension_obj.id, self.contrato_obj_replica)
+                                                .then(function (request_argo) {
                                                     if (
-                                                        response_nosql.status == 200 ||
-                                                        response_nosql.statusText == "OK"
+                                                        request_argo.status == 200 ||
+                                                        request_argo.statusText == "Ok"
                                                     ) {
                                                         agoraRequest
                                                             .post("contrato_estado", nuevoEstado)
@@ -772,16 +786,141 @@ angular
                                                                         window.location.href =
                                                                             "#/seguimientoycontrol/legal";
                                                                     });
+                                                                } else {
+                                                                    $scope.alert =
+                                                                        "DESCRIPCION_ERROR_REINICIO";
+                                                                    swal({
+                                                                        title: $translate.instant(
+                                                                            "TITULO_ERROR_ACTA"
+                                                                        ),
+                                                                        type: "error",
+                                                                        html: $translate.instant($scope.alert) +
+                                                                            self.contrato_obj.numero_contrato +
+                                                                            $translate.instant("ANIO") +
+                                                                            self.contrato_obj.vigencia +
+                                                                            ".",
+                                                                        showCloseButton: true,
+                                                                        showCancelButton: false,
+                                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                                        allowOutsideClick: false,
+                                                                    }).then(function () { });
                                                                 }
                                                             });
-                                                    }
+                                                    } else {
+                                                        self.desactivarNovedad(idNovedad);
+                                                        $scope.alert = "TITULO_ERROR_REPLICA";
+                                                        swal({
+                                                            title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                            type: "error",
+                                                            html: $translate.instant($scope.alert) +
+                                                                self.contrato_obj.numero_contrato +
+                                                                $translate.instant("ANIO") +
+                                                                self.contrato_obj.vigencia +
+                                                                ".",
+                                                            showCloseButton: true,
+                                                            showCancelButton: false,
+                                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                            allowOutsideClick: false,
+                                                        }).then(function () { });
+                                                    };
+                                                }).catch(function (error) {
+                                                    //Servidor no disponible
+                                                    self.desactivarNovedad(idNovedad);
+                                                    console.log(error);
+                                                    const errMsg = error.data.Body[1].err;
+                                                    $scope.alert = "TITULO_ERROR_REPLICA";
+                                                    swal({
+                                                        title: $translate.instant("TITULO_ERROR_ACTA"),
+                                                        type: "error",
+                                                        html: $translate.instant($scope.alert) +
+                                                            self.contrato_obj.numero_contrato +
+                                                            $translate.instant("ANIO") +
+                                                            self.contrato_obj.vigencia +
+                                                            ": '" + errMsg + "'.",
+                                                        showCloseButton: true,
+                                                        showCancelButton: false,
+                                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                        allowOutsideClick: false,
+                                                    });
                                                 });
-                                        };
+                                        }
+                                    })
+                                    .catch(function (error) {
+                                        //Servidor no disponible
+                                        $scope.alert = "DESCRIPCION_ERROR_REINICIO";
+                                        swal({
+                                            title: $translate.instant("TITULO_ERROR_ACTA"),
+                                            type: "error",
+                                            html: $translate.instant($scope.alert) +
+                                                self.contrato_obj.numero_contrato +
+                                                $translate.instant("ANIO") +
+                                                self.contrato_obj.vigencia +
+                                                ".\n" + error,
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false,
+                                        }).then(function () { });
                                     });
                             }
                         }
                     });
 
+            }
+
+            self.desactivarNovedad = function (idNovedad) {
+                novedadesRequest.get('novedades_poscontractuales/' + idNovedad).then(function (res) {
+                    var struct = {};
+                    if (res.status == 200 || res.statusText == "Ok") {
+                        const fechaC = new Date(res.data.FechaCreacion);
+                        fechaC.setHours(12, 0, 0, 0, 0);
+                        const añoC = fechaC.getFullYear();
+                        const mesC = (fechaC.getMonth() + 1).toString().padStart(2, '0');
+                        const diaC = fechaC.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaCreacion = añoC + '-' + mesC + '-' + diaC + 'T12:00:00Z';
+
+                        const fechaM = new Date(res.data.FechaModificacion);
+                        fechaM.setHours(12, 0, 0, 0, 0);
+                        const añoM = fechaM.getFullYear();
+                        const mesM = (fechaM.getMonth() + 1).toString().padStart(2, '0');
+                        const diaM = fechaM.getDate().toString().padStart(2, '0');
+
+                        const formattedFechaMod = añoM + '-' + mesM + '-' + diaM + 'T12:00:00Z';
+
+                        const motivo = "Error en la réplica";
+                        struct = res.data;
+                        struct.FechaCreacion = formattedFechaCreacion;
+                        struct.FechaModificacion = formattedFechaMod;
+                        struct.Motivo = motivo;
+                        struct.Activo = false;
+                        novedadesRequest.put('novedades_poscontractuales', idNovedad, struct).then(function (resPut) {
+                            if (resPut.status != 200) {
+                                $scope.alert = "El registro fue realizado de manera incompleta";
+                                swal({
+                                    title: "Error al desactivar la novedad!",
+                                    type: "error",
+                                    html: $translate.instant($scope.alert),
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                }).then(function () { });
+                            }
+                        }).catch(function () {
+                            $scope.alert = "El registro fue realizado de manera incompleta";
+                            swal({
+                                title: "Error al desactivar la novedad!",
+                                type: "error",
+                                html: $translate.instant($scope.alert),
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                allowOutsideClick: false,
+                            }).then(function () { });
+                        });
+                    }
+                });
             }
 
             /**
@@ -802,36 +941,44 @@ angular
                     Vigencia: parseInt(self.contrato_vigencia),
                     FechaRegistro: new Date(),
                 };
-                var fechaActual = new Date();
-                if (
-                    (fechaActual.getDate() == self.f_reinicio.getDate()
-                        && fechaActual.getMonth() == self.f_reinicio.getMonth()
-                        && fechaActual.getFullYear() == self.f_reinicio.getFullYear())
-                    || fechaActual > self.f_reinicio
-                ) {
-                    self.estadoNovedad = "4519";
-                } else {
-                    self.estadoNovedad = "4518";
-                }
+                // var fechaActual = new Date();
+                // if (
+                //     (fechaActual.getDate() == self.f_reinicio.getDate()
+                //         && fechaActual.getMonth() == self.f_reinicio.getMonth()
+                //         && fechaActual.getFullYear() == self.f_reinicio.getFullYear())
+                //     || fechaActual > self.f_reinicio
+                // ) {
+                //     self.estadoNovedad = "TERM";
+                // } else {
+                //     self.estadoNovedad = "ENTR";
+                // }
+                self.estadoNovedad = "TERM";
                 if ($scope.formReinicio.$valid) {
                     novedadesRequest
                         .get("tipo_novedad", "query=Nombre:Reinicio")
                         .then(function (nc_response) {
+
+                            self.f_hoy.setHours(12, 0, 0, 0);
+                            self.fecha_solicitud.setHours(12, 0, 0, 0);
+                            self.f_suspension.setHours(12, 0, 0, 0);
+                            self.f_finsuspension.setHours(12, 0, 0, 0);
+                            self.f_reinicio.setHours(12, 0, 0, 0);
+                            self.f_expedicion_acta.setHours(12, 0, 0, 0);
+
                             self.reinicio_nov = {};
                             self.reinicio_nov.contrato = self.contrato_obj.numero_contrato;
                             self.reinicio_nov.vigencia = String(self.contrato_obj.vigencia);
                             self.reinicio_nov.motivo = self.motivo_suspension;
                             self.reinicio_nov.tiponovedad =
                                 nc_response.data[0].CodigoAbreviacion;
-                            self.reinicio_nov.fecharegistro = new Date();
+                            self.reinicio_nov.fecharegistro = self.f_hoy;
                             self.reinicio_nov.fechasolicitud = self.fecha_solicitud;
+                            self.reinicio_nov.fechaexpedicion = self.f_expedicion_acta;
                             self.reinicio_nov.numerosolicitud = self.n_solicitud;
                             self.reinicio_nov.numerooficioestadocuentas = 0;
                             self.reinicio_nov.valor_desembolsado = 0;
                             self.reinicio_nov.saldo_contratista = 0;
                             self.reinicio_nov.saldo_universidad = 0;
-                            self.reinicio_nov.fecha_terminacion_anticipada =
-                                "0001-01-01T00:00:00Z";
                             self.reinicio_nov.periodosuspension = self.diff_dias;
                             self.reinicio_nov.fechasuspension = self.f_suspension;
                             self.reinicio_nov.fechafinsuspension = self.f_finsuspension;
@@ -846,7 +993,7 @@ angular
                             //recolección POST Argo
                             self.contrato_obj_replica.NumeroContrato = self.suspension_obj.NumeroContrato; //Revisar si toca parsearlo
                             self.contrato_obj_replica.Vigencia = self.suspension_obj.Vigencia; //parseInt(self.contrato_obj.vigencia);
-                            self.contrato_obj_replica.FechaRegistro = new Date();//self.suspension_obj.FechaRegistro;
+                            self.contrato_obj_replica.FechaRegistro = self.f_hoy;//self.suspension_obj.FechaRegistro;
                             self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
                             self.contrato_obj_replica.Documento = String(self.contrato_obj.contratista_documento);
                             self.contrato_obj_replica.PlazoEjecucion = self.suspension_obj.PlazoEjecucion;
@@ -875,6 +1022,7 @@ angular
 
 
                                     self.estados[0] = estado_temp_from;
+                                    // console.log(self.reinicio_nov);
                                     self.formato_generacion_pdf(nuevoEstado);
 
                                 });
@@ -890,51 +1038,31 @@ angular
                 }
             };
 
-            self.calcularFechaFin = function (diasNovedad) {
+            self.calcularFechaFin = function (nuevosDiasNovedad) {
 
                 var fechaFin;
                 var fechaFinEfectiva;
                 if (self.novedades.length != 0) {
                     fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
-                    fechaFinEfectiva = new Date(fechaFin);
-                } else {
-                    fechaFin = self.contrato_obj.Fin;
-                    fechaFinEfectiva = new Date(fechaFin);
-                    fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    if (fechaFinEfectiva.getDate() == 31) {
-                        fechaFinEfectiva.setDate(fechaFinEfectiva.getDate() + 1);
-                    }
+                    var diasSuspension = self.novedades[self.novedades.length - 1].periodosuspension;
+                    fechaFinEfectiva = this.getFechaUTC(fechaFin);
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
 
-                console.log("diasNovedad", diasNovedad);
+                // console.log("diasNovedad", diasNovedad);
 
-                console.log("FechaFin: ", nuevaFechaFin);
+                // console.log("FechaFin: ", nuevaFechaFin);
 
-                if (diasNovedad != 0) {
-                    diasNovedad = parseInt(diasNovedad) + 1;
-                    var fechaAux = new Date(fechaFinEfectiva);
-                    var dd = fechaFinEfectiva.getDate();
-                    fechaAux.setMonth(fechaAux.getMonth() + (diasNovedad / 30) + 1);
-                    fechaAux.setDate(fechaAux.getDate() - fechaAux.getDate());
-                    nuevaFechaFin.setMonth(fechaFinEfectiva.getMonth() + (diasNovedad / 30));
-                    if (fechaAux.getDate() == 31) {
-                        if (dd + (diasNovedad % 30) > 30) {
-                            if ((dd + (diasNovedad % 30)) == 31) {
-                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) + 1);
-                            } else {
-                                nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30));
-                            }
-                        } else {
-                            nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
-                        }
-                    } else if (nuevaFechaFin.getDate() < 31) {
-                        nuevaFechaFin.setDate(fechaFinEfectiva.getDate() + (diasNovedad % 30) - 1);
+                if (nuevosDiasNovedad != 0) {
+                    var diasNovedad = diasSuspension - nuevosDiasNovedad;
+                    console.log(diasNovedad);
+                    console.log(nuevaFechaFin);
+                    nuevaFechaFin.setDate(nuevaFechaFin.getDate() - diasNovedad);
+                    if (nuevaFechaFin.getDate() == 31) {
+                        nuevaFechaFin.setDate(nuevaFechaFin.getDate() - 1);
                     }
-                    console.log("NuevaFechaFinEfectiva: ", nuevaFechaFin);
                 }
                 return nuevaFechaFin;
-
             }
 
             /**
@@ -1008,6 +1136,15 @@ angular
                 });
             };
 
+            self.getFechaUTC = function (dateString) {
+                var fecha = new Date(dateString);
+                var anio = fecha.getUTCFullYear();
+                var mes = fecha.getUTCMonth();
+                var dia = fecha.getUTCDate();
+                var fechaUTC = new Date(anio, mes, dia, 12, 0, 0, 0);
+                return fechaUTC;
+            }
+
             /**
              * @ngdoc method
              * @name get_pdf
@@ -1061,7 +1198,7 @@ angular
                                     [
                                         " ",
                                         {
-                                            text: "Proceso: Gestión Jurídica",
+                                            text: "Proceso: Gestión de Contratación",
                                             alignment: "center",
                                             fontSize: 9,
                                         },
@@ -1127,9 +1264,9 @@ angular
                                     { text: "VALOR", bold: true, style: "topHeader" },
                                     {
                                         text: NumeroALetras(self.contrato_obj.valor) +
-                                            "($" +
+                                            "MONEDA CORRIENTE ($" +
                                             numberFormat(self.contrato_obj.valor) +
-                                            ")",
+                                            " M/CTE)",
                                         style: "topHeader",
                                     },
                                 ],
@@ -1148,7 +1285,7 @@ angular
                                     style: "topHeader",
                                 },
                                 {
-                                    text: self.suspension_obj.PlazoEjecucion,
+                                    text: self.suspension_obj.PlazoEjecucion + " Meses",
                                     style: "topHeader",
                                 },
                                 ],
@@ -1191,7 +1328,7 @@ angular
                             "\n\n",
                             "Entre los suscritos, a saber " +
                             self.contrato_obj.supervisor_nombre_completo +
-                            " identificado con  " +
+                            " identificado(a) con  " +
                             self.contrato_obj.supervisor_tipo_documento +
                             " No. " +
                             self.contrato_obj.supervisor_cedula +
@@ -1199,13 +1336,13 @@ angular
                             self.contrato_obj.supervisor_ciudad_documento +
                             " en su calidad de interventor y/o supervisor y " +
                             self.contrato_obj.contratista_nombre +
-                            " identificado con " +
+                            " identificado(a) con " +
                             self.contrato_obj.contratista_tipo_documento +
                             " No. " +
                             self.contrato_obj.contratista_documento +
                             " de " +
                             self.contrato_obj.contratista_ciudad_documento +
-                            " en su calidad de contratista, se ha determinado REINICIAR el contrato de " +
+                            " en su calidad de contratista, se ha determinado REINICIAR el " +
                             self.contrato_obj.tipo_contrato +
                             " No. " +
                             self.contrato_id +
@@ -1226,8 +1363,8 @@ angular
                             "MOTIVO DE LA SUSPENSIÓN: " +
                             self.novedad_motivo +
                             ".\n\n" +
-                            "Para constancia, firman las partes a los _____ dias del mes de ______________ del año ________.",
-                            "\n\n\n\n\n",
+                            "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., el día " + self.format_date_letter_mongo(self.f_expedicion_acta) + ".",
+                            "\n",
                         ],
                     },
 
@@ -1236,6 +1373,30 @@ angular
                         table: {
                             widths: [270, 270],
                             body: [
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: "\n\n",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "",
+                                        bold: false,
+                                        style: "topHeader",
+                                    },
+                                ],
                                 [{
                                     text: "______________________________________",
                                     bold: false,
@@ -1295,6 +1456,7 @@ angular
                                 // ],
                             ],
                         },
+                        unbreakable: true,
                         layout: "noBorders",
                     },
                     {
@@ -1311,13 +1473,13 @@ angular
                                 [
                                     { text: "Elaboró", bold: true },
                                     self.elaboro,
-                                    "Abogado Oficina Asesora Jurídica",
+                                    "Abogado Oficina de Contratación",
                                     "",
                                 ],
                                 [
                                     { text: "Revisó y Aprobó", bold: true },
                                     self.contrato_obj.jefe_juridica_nombre_completo,
-                                    "Jefe Oficina Asesora Jurídica",
+                                    "Jefe Oficina de Contratación",
                                     "",
                                 ],
                             ],
