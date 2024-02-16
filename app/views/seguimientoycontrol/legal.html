@@ -61,7 +61,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12" style="padding-left:25px;">
+                            <div class="col-md-12" style="padding-left:25px;" ng-if="sLegal.rolActual!='CONTRATISTA'">
                                 <label for="boton_novedad">{{'SELECCIONE_UNA_NOVEDAD' | translate}}</label>
                                 <br>
                                 <div class="btn-group" ng-if="sLegal.estado_resultado_response == true">
@@ -110,6 +110,39 @@
                                     </ul>
                                     </select>
                                 </div>
+                                <!-- <div class="btn-group" ng-if="sLegal.estado_resultado_response == 0">
+                                    <button type="button" id="boton_novedad" class="btn btn-success dropdown-toggle"
+                                        data-toggle="dropdown" ng-disabled="false">
+                                        {{'NOVEDADES' | translate}} ola
+                                        <span class="caret"></span>
+                                    </button>
+                                </div> -->
+                            </div>
+                            <!-- <div class="col-md-12" style="padding-left:25px;" ng-if="sLegal.rolActual=='CONTRATISTA'">
+                                <label for="boton_novedad">{{'SELECCIONE_UNA_NOVEDAD' | translate}}</label>
+                                <br>
+                                <div class="btn-group" ng-if="sLegal.estado_resultado_response == true">
+                                    <button type="button" id="boton_novedad" class="btn btn-primary dropdown-toggle"
+                                        data-toggle="dropdown">
+                                        {{'NOVEDADES' | translate}}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                            <a ng-click="sLegal.crearSolicitud()">Solicitud de suspensión</a>
+                                        </li>
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 2 && sLegal.novedadEnCurso == false">
+                                            <a ng-click="sLegal.crearSolicitud()">Solicitud de reinicio</a>
+                                        </li>
+                                        <li
+                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                                            <a ng-click="sLegal.crearSolicitud()">Solicitud de cesión</a>
+                                        </li>
+                                    </ul>
+                                    </select>
+                                </div>
                                 <div class="btn-group" ng-if="sLegal.estado_resultado_response == 0">
                                     <button type="button" id="boton_novedad" class="btn btn-success dropdown-toggle"
                                         data-toggle="dropdown" ng-disabled="true">
@@ -117,7 +150,8 @@
                                         <span class="caret"></span>
                                     </button>
                                 </div>
-                            </div>
+                            </div> -->
+
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-7">
