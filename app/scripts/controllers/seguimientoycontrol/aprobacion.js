@@ -51,14 +51,14 @@ angular
             });
 
             // Asignación del rol del usuario
-            for (const rol of self.rolesUsuario) {
+            for (var i = 0; i < self.rolesUsuario.length; i++) {
                 if (rol === 'ORDENADOR_DEL_GASTO') {
                     self.rolActual = rol;
                     break;
                 }
             }
             if (self.rolActual != 'ORDENADOR_DEL_GASTO') {
-                for (const rol of self.rolesUsuario) {
+                for (var i = 0; i < self.rolesUsuario.length; i++) {
                     if (
                         rol === 'SUPERVISOR' ||
                         // rol === 'ASISTENTE_JURIDICA' ||
