@@ -441,6 +441,7 @@ var text_es = {
     DESCRIPCION_ERROR_CESION2: "No se pudo registrar la novedad de cesión al contrato # ",
     DESCRIPCION_SUSPENSION: "Se registro exitosamente la novedad de suspensión al contrato # ",
     DESCRIPCION_ERROR_SUSPENSION: "No se pudo registrar la novedad de suspensión al contrato # ",
+    DESCRIPCION_ERROR_REINICIO: "No se pudo registrar la novedad de reinicio al contrato # ",
     DESCRIPCION_REINICIO: "Se registro exitosamente la novedad de reinicio al contrato # ",
     DESCRIPCION_ACTA_CESION: "Ingresar póliza para habilitar creación de novedades sobre el contrato",
     DESCRIPCION_TERMINACION: "Se registro exitosamente la novedad de terminacion anticipada<br>al contrato # ",
