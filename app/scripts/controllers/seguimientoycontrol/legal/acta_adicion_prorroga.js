@@ -274,44 +274,64 @@ angular
                                 self.contrato_obj.ordenadorGasto_id +
                                 "&sortby=FechaFin&order=desc&limit=1"
                             )
-                            .then(function (og_response) {
-                                self.contrato_obj.ordenadorGasto_nombre =
-                                    og_response.data[0].NombreOrdenador;
-                                self.contrato_obj.ordenadorGasto_rol =
-                                    og_response.data[0].RolOrdenador;
-
-                                self.contrato_obj.ordenador_gasto_documento =
-                                    og_response.data[0].Documento;
-                                self.contrato_obj.ordenador_gasto_resolucion =
-                                    og_response.data[0].InfoResolucion;
-                                self.contrato_obj.ordenador_gasto_Inicio =
-                                    og_response.data[0].FechaInicio;
+                            .then(function (og_response_id) {
+                                const rolOrdenador = og_response_id.data[0].RolOrdenador;
                                 agoraRequest
                                     .get(
-                                        "informacion_persona_natural?query=Id:" +
-                                        self.contrato_obj.ordenador_gasto_documento
-                                    )
-                                    .then(function (iopn_response) {
-                                        coreAmazonRequest
+                                        "ordenadores?query=RolOrdenador:" +
+                                        rolOrdenador +
+                                        "&sortby=FechaInicio&order=desc&limit=1"
+                                    ).then(function (og_response) {
+                                        self.contrato_obj.ordenadorGasto_nombre =
+                                            og_response.data[0].NombreOrdenador;
+                                        self.contrato_obj.ordenadorGasto_rol =
+                                            og_response.data[0].RolOrdenador;
+
+                                        self.contrato_obj.ordenador_gasto_documento =
+                                            og_response.data[0].Documento;
+                                        self.contrato_obj.ordenador_gasto_resolucion =
+                                            og_response.data[0].InfoResolucion;
+                                        self.contrato_obj.ordenador_gasto_Inicio =
+                                            og_response.data[0].FechaInicio;
+                                        agoraRequest
                                             .get(
-                                                "ciudad",
-                                                "query=Id:" +
-                                                iopn_response.data[0].IdCiudadExpedicionDocumento
+                                                "informacion_persona_natural?query=Id:" +
+                                                self.contrato_obj.ordenador_gasto_documento
                                             )
-                                            .then(function (scj_response) {
-                                                self.contrato_obj.ordenador_gasto_ciudad_documento =
-                                                    scj_response.data[0].Nombre;
-                                                self.contrato_obj.ordenador_gasto_tipo_documento =
-                                                    iopn_response.data[0].TipoDocumento.ValorParametro;
-                                                self.contrato_obj.ordenador_gasto_nombre_completo =
-                                                    iopn_response.data[0].PrimerNombre +
-                                                    " " +
-                                                    iopn_response.data[0].SegundoNombre +
-                                                    " " +
-                                                    iopn_response.data[0].PrimerApellido +
-                                                    " " +
-                                                    iopn_response.data[0].SegundoApellido;
+                                            .then(function (iopn_response) {
+                                                coreAmazonRequest
+                                                    .get(
+                                                        "ciudad",
+                                                        "query=Id:" +
+                                                        iopn_response.data[0].IdCiudadExpedicionDocumento
+                                                    )
+                                                    .then(function (scj_response) {
+                                                        self.contrato_obj.ordenador_gasto_ciudad_documento =
+                                                            scj_response.data[0].Nombre;
+                                                        self.contrato_obj.ordenador_gasto_tipo_documento =
+                                                            iopn_response.data[0].TipoDocumento.ValorParametro;
+                                                        self.contrato_obj.ordenador_gasto_nombre_completo =
+                                                            iopn_response.data[0].PrimerNombre +
+                                                            " " +
+                                                            iopn_response.data[0].SegundoNombre +
+                                                            " " +
+                                                            iopn_response.data[0].PrimerApellido +
+                                                            " " +
+                                                            iopn_response.data[0].SegundoApellido;
+                                                    });
                                             });
+                                    }).catch(function (error) {
+                                        //Servidor no disponible
+                                        swal({
+                                            title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                            type: 'error',
+                                            html: "Error al consultar datos de ordenadores del contrato " + self.contrato_obj.numero_contrato +
+                                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false
+                                        });
                                     });
                             }).catch(function (error) {
                                 //Servidor no disponible
