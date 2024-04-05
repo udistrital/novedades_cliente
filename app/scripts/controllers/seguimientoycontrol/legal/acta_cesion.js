@@ -385,29 +385,49 @@ angular
                                 self.contrato_obj.ordenadorGasto_id +
                                 "&sortby=FechaFin&order=desc&limit=1"
                             )
-                            .then(function (og_response) {
-                                self.contrato_obj.ordenadorGasto_nombre =
-                                    og_response.data[0].NombreOrdenador;
-                                self.contrato_obj.ordenadorGasto_rol =
-                                    og_response.data[0].RolOrdenador;
-                                self.contrato_obj.ordenador_gasto_documento =
-                                    og_response.data[0].Documento;
-                                self.contrato_obj.ordenador_gasto_resolucion =
-                                    og_response.data[0].InfoResolucion;
+                            .then(function (og_response_id) {
+                                const rolOrdenador = og_response_id.data[0].RolOrdenador;
                                 amazonAdministrativaRequest
                                     .get(
-                                        "informacion_persona_natural?query=Id:" +
-                                        og_response.data[0].Documento
-                                    )
-                                    .then(function (ispn_response) {
-                                        self.contrato_obj.ordenador_gasto_tipo_documento =
-                                            ispn_response.data[0].TipoDocumento.ValorParametro;
-                                    });
-                                coreAmazonRequest
-                                    .get("ciudad", "query=Id:" + og_response.data[0].IdCiudad)
-                                    .then(function (sc_response) {
-                                        self.contrato_obj.ordenador_gasto_ciudad_documento =
-                                            sc_response.data[0].Nombre;
+                                        "ordenadores?query=RolOrdenador:" +
+                                        rolOrdenador +
+                                        "&sortby=FechaInicio&order=desc&limit=1"
+                                    ).then(function (og_response) {
+                                        self.contrato_obj.ordenadorGasto_nombre =
+                                            og_response.data[0].NombreOrdenador;
+                                        self.contrato_obj.ordenadorGasto_rol =
+                                            og_response.data[0].RolOrdenador;
+                                        self.contrato_obj.ordenador_gasto_documento =
+                                            og_response.data[0].Documento;
+                                        self.contrato_obj.ordenador_gasto_resolucion =
+                                            og_response.data[0].InfoResolucion;
+                                        amazonAdministrativaRequest
+                                            .get(
+                                                "informacion_persona_natural?query=Id:" +
+                                                og_response.data[0].Documento
+                                            )
+                                            .then(function (ispn_response) {
+                                                self.contrato_obj.ordenador_gasto_tipo_documento =
+                                                    ispn_response.data[0].TipoDocumento.ValorParametro;
+                                            });
+                                        coreAmazonRequest
+                                            .get("ciudad", "query=Id:" + og_response.data[0].IdCiudad)
+                                            .then(function (sc_response) {
+                                                self.contrato_obj.ordenador_gasto_ciudad_documento =
+                                                    sc_response.data[0].Nombre;
+                                            });
+                                    }).catch(function (error) {
+                                        //Servidor no disponible
+                                        swal({
+                                            title: $translate.instant('TITULO_ERROR_LEGAL'),
+                                            type: 'error',
+                                            html: "Error al consultar datos de ordenadores del contrato " + self.contrato_obj.numero_contrato +
+                                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false
+                                        });
                                     });
                             }).catch(function (error) {
                                 //Servidor no disponible
@@ -421,7 +441,7 @@ angular
                                     confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                     allowOutsideClick: false
                                 });
-                            });;
+                            });
 
                         //Obtención de datos del jefe de Oficina de Contratación
                         amazonAdministrativaRequest
@@ -1770,7 +1790,7 @@ angular
                             text: "Por los servicios prestados por el señor(a) " +
                                 self.contrato_obj.contratista_nombre +
                                 " (CEDENTE), hasta el día " + self.format_date_letter_mongo(self.f_terminacion) +
-                                ", se reconoció un valor total de " + NumeroALetras(self.valor_desembolsado + "") +
+                                ", se reconoció un valor total de " + NumeroALetras(parseFloat(self.valor_desembolsado.replace(/\,/g, "")) + "") +
                                 "MONEDA CORRIENTE ($" + numberFormat(self.valor_desembolsado + "") +
                                 " M/CTE), por el plazo ejecutado del contrato de " +
                                 self.plazo_cedente_letras +
@@ -1791,7 +1811,7 @@ angular
                             text: [
                                 { text: "Existe un valor pendiente por cancelar al señor(a) " + self.contrato_obj.contratista_nombre }, { text: "(CEDENTE), ", bold: true }, {
                                     text: "por valor de " +
-                                        NumeroALetras(parseInt(self.valor_a_favor) + "") +
+                                        NumeroALetras(parseFloat(self.valor_a_favor.replace(/\,/g, "")) + "") +
                                         "MONEDA CORRIENTE ($" +
                                         numberFormat(self.valor_a_favor + "") +
                                         " M/CTE), por un plazo de " + self.calculoPlazoLetras(self.dias_pago_cedente, true) +

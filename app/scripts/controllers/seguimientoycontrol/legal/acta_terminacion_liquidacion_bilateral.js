@@ -153,15 +153,20 @@ angular.module('contractualClienteApp')
                     });
 
                     //Obtención de datos del ordenador del gasto
-                    agoraRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response) {
-                        self.contrato_obj.ordenadorGasto_nombre = og_response.data[0].NombreOrdenador;
-                        self.contrato_obj.ordenadorGasto_rol = og_response.data[0].RolOrdenador;
-                        self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
-                        self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
-                        agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.ordenador_gasto_documento).then(function (ipn_response) {
-                            self.contrato_obj.ordenador_gasto_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
-                            coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
-                                self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
+                    agoraRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response_id) {
+                        const rolOrdenador = og_response_id.data[0].RolOrdenador;
+                        agoraRequest.get(
+                            "ordenadores?query=RolOrdenador:" + rolOrdenador + "&sortby=FechaInicio&order=desc&limit=1"
+                        ).then(function (og_response) {
+                            self.contrato_obj.ordenadorGasto_nombre = og_response.data[0].NombreOrdenador;
+                            self.contrato_obj.ordenadorGasto_rol = og_response.data[0].RolOrdenador;
+                            self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
+                            self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
+                            agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.ordenador_gasto_documento).then(function (ipn_response) {
+                                self.contrato_obj.ordenador_gasto_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
+                                coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
+                                    self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
+                                });
                             });
                         });
                     }).catch(function (error) {
