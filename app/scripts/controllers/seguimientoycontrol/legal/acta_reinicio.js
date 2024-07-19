@@ -1161,7 +1161,7 @@ angular
                                     style: "topHeader",
                                 },
                                 {
-                                    text: self.suspension_obj.PlazoEjecucion + " Meses",
+                                    text: self.suspension_obj.PlazoEjecucion + " Días",
                                     style: "topHeader",
                                 },
                                 ],
