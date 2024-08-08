@@ -1513,18 +1513,18 @@ angular
                 //         self.contrato_id + "_" + dateTime +
                 //         ".pdf"
                 //     );
-                self.PostNovedad(dateTime, docDefinition, "enlace");
-                // pdfDocGenerator.getBase64(function (data) {
-                //     pdfMakerService.saveDocGestorDoc(data,
-                //         "acta_adicion_prorroga_contrato_" +
-                //         self.contrato_id +
-                //         "_" +
-                //         dateTime +
-                //         ".pdf",
-                //         self).then(function (enlace) {
-                //             self.PostNovedad(dateTime, docDefinition, enlace);
-                //         });
-                // });
+                // self.PostNovedad(dateTime, docDefinition, "enlace");
+                pdfDocGenerator.getBase64(function (data) {
+                    pdfMakerService.saveDocGestorDoc(data,
+                        "acta_adicion_prorroga_contrato_" +
+                        self.contrato_id +
+                        "_" +
+                        dateTime +
+                        ".pdf",
+                        self).then(function (enlace) {
+                            self.PostNovedad(dateTime, docDefinition, enlace);
+                        });
+                });
             }
 
             /**
