@@ -283,7 +283,7 @@ angular
                                 if (self.novedades.length != "0") {
                                     var last_cesion =
                                         self.novedades[self.novedades.length - 1];
-                                    self.contrato_obj.contratista = last_cesion.cesionario;
+                                    self.contrato_obj.contratista = last_cesion.Cesionario;
                                     //Obtencion de datos del contratista
                                     agoraRequest
                                         .get(
@@ -907,7 +907,7 @@ angular
                 var fechaFin;
                 var fechaFinEfectiva;
                 if (self.novedades.length != 0) {
-                    fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                    fechaFin = self.novedades[self.novedades.length - 1].FechaFinEfectiva;
                     fechaFinEfectiva = self.getFechaUTC(fechaFin);
                 } else {
                     fechaFinEfectiva = new Date(self.contrato_obj.Fin);
