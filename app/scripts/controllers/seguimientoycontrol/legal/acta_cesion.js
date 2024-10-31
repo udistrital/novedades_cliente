@@ -200,15 +200,15 @@ angular
                                         if (self.novedades.length != 0) {
                                             for (var i = 0; i < self.novedades.length; i++) {
                                                 if (
-                                                    self.novedades[i].tiponovedad == 6 ||
-                                                    self.novedades[i].tiponovedad == 8
+                                                    self.novedades[i].TipoNovedad == 6 ||
+                                                    self.novedades[i].TipoNovedad == 8
                                                 ) {
-                                                    adiciones = adiciones + self.novedades[i].valoradicion;
+                                                    adiciones = adiciones + self.novedades[i].ValorAdicion;
                                                 }
                                             }
                                             for (var i = self.novedades.length - 1; i >= 0; i--) {
-                                                if (self.novedades[i].tiponovedad == 2) {
-                                                    self.contrato_obj.Inicio = self.getFechaUTC(self.novedades[i].fechacesion);
+                                                if (self.novedades[i].TipoNovedad == 2) {
+                                                    self.contrato_obj.Inicio = self.getFechaUTC(self.novedades[i].FechaCesion);
                                                     self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
                                                     break;
                                                 }
@@ -219,11 +219,11 @@ angular
                                         if (self.novedades.length != "0") {
                                             var last_cesion =
                                                 self.novedades[self.novedades.length - 1];
-                                            self.contrato_obj.contratista = last_cesion.cesionario;
+                                            self.contrato_obj.contratista = last_cesion.Cesionario;
                                             //Obtencion de datos del contratista
                                             amazonAdministrativaRequest
                                                 .get(
-                                                    "informacion_proveedor?query=Id:" + last_cesion.cesionario
+                                                    "informacion_proveedor?query=Id:" + last_cesion.Cesionario
                                                 )
                                                 .then(function (ip_response) {
                                                     self.contrato_obj.contratista_documento =
@@ -1201,7 +1201,7 @@ angular
                 var fechaFin;
                 var fechaFinEfectiva;
                 if (self.novedades.length != 0) {
-                    fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                    fechaFin = self.novedades[self.novedades.length - 1].FechaFinEfectiva;
                     fechaFinEfectiva = self.getFechaUTC(fechaFin);
                 } else {
                     fechaFinEfectiva = new Date(self.contrato_obj.Fin);
@@ -1678,10 +1678,10 @@ angular
                 });
                 if (self.novedades.length > 0) {
                     for (var i = 0; i < self.novedades.length; i++) {
-                        if (self.novedades[i].tiponovedad == 1) {
-                            var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
-                            var fechaInicio = self.novedades[i].fechasuspension;
-                            var fechaFin = self.novedades[i].fechafinsuspension;
+                        if (self.novedades[i].TipoNovedad == 1) {
+                            var fechaSolicitud = self.novedades[i].FechaSolicitud.split("-");
+                            var fechaInicio = self.novedades[i].FechaSuspension;
+                            var fechaFin = self.novedades[i].FechaFinSuspension;
                             var res1 = fechaInicio.split("-");
                             var res2 = fechaFin.split("-");
                             var fecha_sus_dia = res1[2].substring(0, 2);
@@ -1708,8 +1708,8 @@ angular
                             });
 
                         }
-                        if (self.novedades[i].tiponovedad == 3) {
-                            var fechaSolicitud = self.novedades[i].fechasolicitud.split("-");
+                        if (self.novedades[i].TipoNovedad == 3) {
+                            var fechaSolicitud = self.novedades[i].FechaSolicitud.split("-");
                             estructura.push({
                                 text: "Que, mediante acta con fecha de suscripción del " +
                                     fechaSolicitud[2].substring(0, 2) +
@@ -1725,23 +1725,23 @@ angular
 
                         }
                         if (
-                            self.novedades[i].tiponovedad == 8
+                            self.novedades[i].TipoNovedad == 8
                         ) {
-                            var texto_otrosi = 'Que el día ' + self.format_date_letter_mongo(self.novedades[i].fechaprorroga) + ', se realizó la modificación en adición y prórroga, al ' +
+                            var texto_otrosi = 'Que el día ' + self.format_date_letter_mongo(self.novedades[i].FechaProrroga) + ', se realizó la modificación en adición y prórroga, al ' +
                                 self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', en su orden por la suma de ' +
                                 numeroALetras(
-                                    self.novedades[i].valoradicion, {
-                                    plural: $translate.instant("PESOS"),
+                                    self.novedades[i].ValorAdicion, {
+                                    plural: $translate.instant("PESOS"),    
                                     singular: $translate.instant("PESO"),
                                     centPlural: $translate.instant("CENTAVOS"),
                                     centSingular: $translate.instant("CENTAVO"),
-                                }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.novedades[i].valoradicion)) + " M/CTE)," +
-                                ' y prórroga en tiempo por ' + self.calculoPlazoLetras(self.novedades[i].tiempoprorroga) +
-                                ' en atención a la solicitud recibida por correo electrónico, de fecha ' + self.format_date_letter_mongo(self.novedades[i].fechaoficioordenador) +
+                                }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.novedades[i].ValorAdicion)) + " M/CTE)," +
+                                ' y prórroga en tiempo por ' + self.calculoPlazoLetras(self.novedades[i].TiempoProrroga) +
+                                ' en atención a la solicitud recibida por correo electrónico, de fecha ' + self.format_date_letter_mongo(self.novedades[i].FechaOficioOrdenador) +
                                 ', por medio de la cual, el ' + self.contrato_obj.ordenadorGasto_rol +
                                 ', solicitó la citada modificación; cuya justificación se encuentra descrita en la solicitud de necesidad No. ' +
-                                self.novedades[i].numerosolicitud + ' del ' + self.format_date_letter_mongo(self.novedades[i].fechasolicitud) +
-                                ', con respaldo del CDP ' + self.novedades[i].numerocdp + ' de ' + self.novedades[i].vigenciacdp + ".\n\n"
+                                self.novedades[i].NumeroSolicitud + ' del ' + self.format_date_letter_mongo(self.novedades[i].FechaSolicitud) +
+                                ', con respaldo del CDP ' + self.novedades[i].NumeroCdp + ' de ' + self.novedades[i].VigenciaCdp + ".\n\n"
                             estructura.push({
                                 text: texto_otrosi
                             });

@@ -272,7 +272,7 @@ angular
                                 if (self.novedades.length != "0") {
                                     var last_cesion =
                                         self.novedades[self.novedades.length - 1];
-                                    self.contrato_obj.contratista = last_cesion.cesionario;
+                                    self.contrato_obj.contratista = last_cesion.Cesionario;
                                     //Consulta datos del contratista
                                     agoraRequest
                                         .get(
@@ -313,15 +313,15 @@ angular
                                     // self.novedad_motivo = elementos_cesion[i].motivo;
                                     // self.novedad_finsuspension =
                                     //     elementos_cesion[i].fechafinsuspension;
-                                    self.auxiliar = last_cesion.id;
-                                    self.novedad_suspension = last_cesion.fechasuspension;
-                                    self.novedad_reinicio = last_cesion.fechareinicio;
-                                    self.novedad_motivo = last_cesion.motivo;
-                                    self.novedad_finsuspension = last_cesion.fechafinsuspension;
+                                    self.auxiliar = last_cesion.Id;
+                                    self.novedad_suspension = last_cesion.FechaSuspension;
+                                    self.novedad_reinicio = last_cesion.FechaReinicio;
+                                    self.novedad_motivo = last_cesion.Motivo;
+                                    self.novedad_finsuspension = last_cesion.FechaFinSuspension;
                                     novedadesRequest
                                         .get(
                                             "tipo_novedad",
-                                            "query=Id:" + last_cesion.tiponovedad
+                                            "query=Id:" + last_cesion.TipoNovedad
                                         )
                                         .then(function (nr_response) {
                                             if (nr_response.data[0].CodigoAbreviacion == "NP_SUS") {
@@ -1043,8 +1043,8 @@ angular
                 var fechaFin;
                 var fechaFinEfectiva;
                 if (self.novedades.length != 0) {
-                    fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
-                    var diasSuspension = self.novedades[self.novedades.length - 1].periodosuspension;
+                    fechaFin = self.novedades[self.novedades.length - 1].FechaFinEfectiva;
+                    var diasSuspension = self.novedades[self.novedades.length - 1].PeriodoSuspension;
                     fechaFinEfectiva = this.getFechaUTC(fechaFin);
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
