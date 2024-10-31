@@ -362,17 +362,17 @@ angular
                                         self.novedades[self.novedades.length - 1];
                                     if (self.editBool == true) {
                                         if (
-                                            last_novelty.tiponovedad == 6 ||
-                                            last_novelty.tiponovedad == 7 ||
-                                            last_novelty.tiponovedad == 8
+                                            last_novelty.TipoNovedad == 6 ||
+                                            last_novelty.TipoNovedad == 7 ||
+                                            last_novelty.TipoNovedad == 8
                                         ) {
                                             self.asignarCamposEdicion(last_novelty);
                                         }
                                     }
-                                    self.contrato_obj.contratista = last_novelty.cesionario;
+                                    self.contrato_obj.contratista = last_novelty.Cesionario;
                                     agoraRequest
                                         .get(
-                                            "informacion_proveedor?query=Id:" + last_novelty.cesionario
+                                            "informacion_proveedor?query=Id:" + last_novelty.Cesionario
                                         )
                                         .then(function (ip_response) {
                                             self.contrato_obj.contratista_documento =
@@ -597,8 +597,8 @@ angular
                 var valor_adicion = evento.target.value.replace(/[^0-9\.]/g, "");
                 var adiciones = 0;
                 for (var i = 0; i < self.novedades.length; i++) {
-                    if (self.novedades[i].tiponovedad == 6 || self.novedades[i].tiponovedad == 8) {
-                        adiciones += parseFloat(self.novedades[i].valoradicion);
+                    if (self.novedades[i].TipoNovedad == 6 || self.novedades[i].TipoNovedad == 8) {
+                        adiciones += parseFloat(self.novedades[i].ValorAdicion);
                     }
                 }
                 var valor_contrato =
@@ -642,8 +642,8 @@ angular
                 var valor_prorroga = evento.target.value.replace(/[^0-9\.]/g, "");
                 var prorrogas = 0;
                 for (var i = 0; i < self.novedades.length; i++) {
-                    if (self.novedades[i].tiponovedad == 7 || self.novedades[i].tiponovedad == 8) {
-                        prorrogas += parseInt(self.novedades[i].tiempoprorroga);
+                    if (self.novedades[i].TipoNovedad == 7 || self.novedades[i].TipoNovedad == 8) {
+                        prorrogas += parseInt(self.novedades[i].TiempoProrroga);
                     }
                 }
                 var plazo_actual_dias = 0;
@@ -1003,7 +1003,7 @@ angular
                 var fechaFin;
                 var fechaFinEfectiva;
                 if (self.novedades.length != 0) {
-                    fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                    fechaFin = self.novedades[self.novedades.length - 1].FechaFinEfectiva;
                     fechaFinEfectiva = self.getFechaUTC(fechaFin);
                 } else {
                     fechaFin = new Date(self.contrato_obj.fin);
@@ -1555,11 +1555,11 @@ angular
             self.agregarCesion = function () {
                 return $q(function (resolve) {
                     for (var i = self.novedades.length - 1; i >= 0; i--) {
-                        if (self.novedades[i].tiponovedad == 2) {
-                            var fechacesion = self.novedades[i].fechacesion.split("-");
+                        if (self.novedades[i].TipoNovedad == 2) {
+                            var fechacesion = self.novedades[i].FechaCesion.split("-");
                             agoraRequest
                                 .get(
-                                    "informacion_proveedor?query=Id:" + self.novedades[i].cedente
+                                    "informacion_proveedor?query=Id:" + self.novedades[i].Cedente
                                 )
                                 .then(function (ip_response) {
                                     var cedente_nombre = ip_response.data[0].NomProveedor;

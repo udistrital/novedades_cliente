@@ -262,7 +262,7 @@ angular.module('contractualClienteApp')
                         self.fecha_lim_sup = self.calcularFechaFin();
                         if (self.novedades.length != '0') {
                             var last_cesion = self.novedades[self.novedades.length - 1];
-                            self.contrato_obj.contratista = last_cesion.cesionario;
+                            self.contrato_obj.contratista = last_cesion.Cesionario;
                             agoraRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
                                 self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
                                 self.contrato_obj.contratista_nombre = ip_response.data[0].NomProveedor;
@@ -881,7 +881,7 @@ angular.module('contractualClienteApp')
                 var fechaFin;
                 var fechaFinEfectiva;
                 if (self.novedades.length != 0) {
-                    fechaFin = self.novedades[self.novedades.length - 1].fechafinefectiva;
+                    fechaFin = self.novedades[self.novedades.length - 1].FechaFinEfectiva;
                     fechaFinEfectiva = new Date(fechaFin);
                 } else {
                     fechaFinEfectiva = new Date(self.contrato_obj.FechaFin);
@@ -1336,9 +1336,9 @@ angular.module('contractualClienteApp')
                 if (self.novedades.length > 0) {
                     for (var i = 0; i < self.novedades.length; i++) {
                         if (
-                            self.novedades[i].tiponovedad == 8
+                            self.novedades[i].TipoNovedad == 8
                         ) {
-                            var texto_otrosi = 'Que el día ' + self.format_date_letter_mongo(self.novedades[i].fechaprorroga) + ', se realizó la modificación en adición y prórroga, al ' +
+                            var texto_otrosi = 'Que el día ' + self.format_date_letter_mongo(self.novedades[i].FechaProrroga) + ', se realizó la modificación en adición y prórroga, al ' +
                                 self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', en su orden por la suma de ' +
                                 numeroALetras(
                                     self.novedades[i].valoradicion, {
@@ -1346,13 +1346,13 @@ angular.module('contractualClienteApp')
                                     singular: $translate.instant("PESO"),
                                     centPlural: $translate.instant("CENTAVOS"),
                                     centSingular: $translate.instant("CENTAVO"),
-                                }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.novedades[i].valoradicion)) + " M/CTE)," +
-                                ' y prórroga en tiempo por ' + self.calculoPlazoLetras(self.novedades[i].tiempoprorroga) +
-                                ' en atención a la solicitud recibida por correo electrónico, de fecha ' + self.format_date_letter_mongo(self.novedades[i].fechasolicitud) +
+                                }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.novedades[i].ValorAdicion)) + " M/CTE)," +
+                                ' y prórroga en tiempo por ' + self.calculoPlazoLetras(self.novedades[i].TiempoProrroga) +
+                                ' en atención a la solicitud recibida por correo electrónico, de fecha ' + self.format_date_letter_mongo(self.novedades[i].FechaSolicitud) +
                                 ', por medio de la cual, el ' + self.contrato_obj.ordenadorGasto_rol +
                                 ', solicitó la citada modificación; cuya justificación se encuentra descrita en la solicitud de necesidad No. ' +
-                                self.novedades[i].numerosolicitud + ' del ' + self.format_date_letter_mongo(self.novedades[i].fechasolicitud) +
-                                ', con respaldo del CDP ' + self.novedades[i].numerocdp + ' de ' + self.novedades[i].vigenciacdp + ".\n\n"
+                                self.novedades[i].NumeroSolicitud + ' del ' + self.format_date_letter_mongo(self.novedades[i].FechaSolicitud) +
+                                ', con respaldo del CDP ' + self.novedades[i].NumeroCdp + ' de ' + self.novedades[i].VigenciaCdp + ".\n\n"
                             consideraciones.splice(
                                 5, 0, texto_otrosi
                             );
