@@ -202,29 +202,29 @@ angular
                                             self.novedades = response_sql.data.Body;
                                             var adiciones = 0;
                                             for (var i = 0; i < self.novedades.length; i++) {
-                                                if (self.novedades[i].tiponovedad == 6 || self.novedades[i].tiponovedad == 8) {
-                                                    adiciones += parseFloat(self.novedades[i].valoradicion);
+                                                if (self.novedades[i].TipoNovedad == 6 || self.novedades[i].TipoNovedad == 8) {
+                                                    adiciones += parseFloat(self.novedades[i].ValorAdicion);
                                                 }
                                             }
                                             self.contrato_obj.valor = parseFloat(self.contrato_obj.valor) + adiciones;
                                             for (var i = 0; i < self.novedades.length; i++) {
                                                 if (
-                                                    self.novedades[i].id !=
+                                                    self.novedades[i].Id !=
                                                     undefined
                                                 ) {
                                                     $scope.novedadesTabla.push({
-                                                        id: self.novedades[i].id,
-                                                        tipoNovedad: self.novedades[i].nombreTipoNovedad,
-                                                        enlace: self.novedades[i].enlace,
-                                                        fecha: self.novedades[i].fechaexpedicion,
-                                                        estado: self.novedades[i].nombreEstado,
+                                                        id: self.novedades[i].Id,
+                                                        tipoNovedad: self.novedades[i].NombreTipoNovedad,
+                                                        enlace: self.novedades[i].Enlace,
+                                                        fecha: self.novedades[i].FechaExpedicion,
+                                                        estado: self.novedades[i].NombreEstado,
                                                     });
                                                 }
                                             }
                                             if (self.novedades != undefined && self.novedades.length != "0") {
                                                 var last_newness =
                                                     self.novedades[self.novedades.length - 1];
-                                                if (last_newness.estado == "ENTR") {
+                                                if (last_newness.Estado == "ENTR") {
                                                     self.novedadEnCurso = true;
                                                     swal({
                                                         title: $translate.instant("INFORMACION"),
@@ -243,15 +243,15 @@ angular
                                                 novedadesRequest
                                                     .get(
                                                         "tipo_novedad",
-                                                        "query=Id:" + last_newness.tiponovedad
+                                                        "query=Id:" + last_newness.TipoNovedad
                                                     )
                                                     .then(function (nr_response) {
                                                         self.contrato_obj.tipo_novedad =
                                                             nr_response.data[0].CodigoAbreviacion;
                                                         if (self.contrato_obj.tipo_novedad == "NP_CES") {
                                                             self.contrato_obj.contratista =
-                                                                last_newness.cesionario;
-                                                            if (last_newness.poliza === "") {
+                                                                last_newness.Cesionario;
+                                                            if (last_newness.Poliza === "") {
                                                                 if (self.novedadEnCurso == false) {
                                                                     self.estado_contrato_obj.estado = 10;
                                                                     swal(
@@ -269,7 +269,7 @@ angular
                                                             self.contrato_obj.tipo_novedad == "NP_ADPRO"
                                                         ) {
                                                             self.contrato_obj.contratista =
-                                                                last_newness.cesionario;
+                                                                last_newness.Cesionario;
                                                         }
                                                         //Obtiene los datos aosicados al proveedor de un contrato que ha tenido una novedad
                                                         agoraRequest
