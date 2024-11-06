@@ -59,10 +59,10 @@ angular.module('contractualClienteApp')
                     var elementos_cesion = response_sql.data.Body;
                     if (elementos_cesion.length != '0') {
                         var last_newness = elementos_cesion[elementos_cesion.length - 1];
-                        novedadesRequest.get('tipo_novedad', 'query=Id:' + last_newness.tiponovedad).then(function (nr_response) {
+                        novedadesRequest.get('tipo_novedad', 'query=Id:' + last_newness.TipoNovedad).then(function (nr_response) {
                             self.contrato_obj.tipo_novedad = nr_response.data[0].CodigoAbreviacion;
                             if (self.contrato_obj.tipo_novedad == "NP_CES") {
-                                self.contrato_obj.contratista = last_newness.cesionario;
+                                self.contrato_obj.contratista = last_newness.Cesionario;
                                 //Obtencion de datos del contratista
                                 agoraRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
                                     self.contrato_obj.contratista_documento = ip_response.data[0].NumDocumento;
@@ -76,7 +76,7 @@ angular.module('contractualClienteApp')
                                 });
                             }
                             //Trae los datos de la poliza del contrato acutal guardado en el esquema novedades
-                            novedadesRequest.get('poliza', 'query=IdNovedadesPoscontractuales:' + last_newness.id).then(function (nrp_response) {
+                            novedadesRequest.get('poliza', 'query=IdNovedadesPoscontractuales:' + last_newness.Id).then(function (nrp_response) {
                                 poliza = nrp_response.data[0];
                                 poliza.FechaCreacion = poliza.FechaCreacion.slice(0, -12);
                                 delete poliza.FechaModificacion;
