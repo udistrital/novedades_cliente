@@ -287,7 +287,7 @@ angular
                                     //Obtencion de datos del contratista
                                     agoraRequest
                                         .get(
-                                            "informacion_proveedor?query=Id:" + last_cesion.cesionario
+                                            "informacion_proveedor?query=Id:" + self.contrato_obj.contratista
                                         )
                                         .then(function (ip_response) {
                                             self.contrato_obj.contratista_documento =
