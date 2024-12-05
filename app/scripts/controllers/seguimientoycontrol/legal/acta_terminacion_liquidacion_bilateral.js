@@ -288,6 +288,13 @@ angular.module('contractualClienteApp')
                                         }
                                     });
                             });
+                            var adiciones = 0;
+                            for (var i = 0; i < self.novedades.length; i++) {
+                                if (self.novedades[i].TipoNovedad == 6 || self.novedades[i].TipoNovedad == 8) {
+                                    adiciones += parseInt(self.novedades[i].ValorAdicion);
+                                }
+                            }
+                            self.contrato_obj.valor = parseInt(self.contrato_obj.valor) + adiciones;
                         } else {
                             //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
                             agoraRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
