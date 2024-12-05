@@ -389,7 +389,13 @@ angular.module('contractualClienteApp')
              */
             $scope.formato_valores_terminacion = function (evento, num) {
                 var valor = evento.target.value.replace(/[^0-9\.]/g, "");
-                var valor_valido = parseInt(self.contrato_obj.valor);
+                var adiciones = 0;
+                for (var i = 0; i < self.novedades.length; i++) {
+                    if (self.novedades[i].TipoNovedad == 6 || self.novedades[i].TipoNovedad == 8) {
+                        adiciones += parseFloat(self.novedades[i].ValorAdicion);
+                    }
+                }
+                var valor_valido = parseInt(self.contrato_obj.valor + adiciones);
                 if (num == 1) {
                     if (valor <= valor_valido) {
                         self.valor_desembolsado = numberFormat(valor);
