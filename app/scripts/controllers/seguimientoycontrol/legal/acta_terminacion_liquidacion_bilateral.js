@@ -288,6 +288,13 @@ angular.module('contractualClienteApp')
                                         }
                                     });
                             });
+                            var adiciones = 0;
+                            for (var i = 0; i < self.novedades.length; i++) {
+                                if (self.novedades[i].TipoNovedad == 6 || self.novedades[i].TipoNovedad == 8) {
+                                    adiciones += parseInt(self.novedades[i].ValorAdicion);
+                                }
+                            }
+                            self.contrato_obj.valor += adiciones;
                         } else {
                             //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
                             agoraRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
@@ -389,13 +396,7 @@ angular.module('contractualClienteApp')
              */
             $scope.formato_valores_terminacion = function (evento, num) {
                 var valor = evento.target.value.replace(/[^0-9\.]/g, "");
-                var adiciones = 0;
-                for (var i = 0; i < self.novedades.length; i++) {
-                    if (self.novedades[i].TipoNovedad == 6 || self.novedades[i].TipoNovedad == 8) {
-                        adiciones += parseFloat(self.novedades[i].ValorAdicion);
-                    }
-                }
-                var valor_valido = parseInt(self.contrato_obj.valor + adiciones);
+                var valor_valido = parseInt(self.contrato_obj.valor);
                 if (num == 1) {
                     if (valor <= valor_valido) {
                         self.valor_desembolsado = numberFormat(valor);
