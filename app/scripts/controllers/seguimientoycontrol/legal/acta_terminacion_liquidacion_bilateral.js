@@ -294,7 +294,7 @@ angular.module('contractualClienteApp')
                                     adiciones += parseInt(self.novedades[i].ValorAdicion);
                                 }
                             }
-                            self.contrato_obj.valor += adiciones;
+                            self.contrato_obj.valor = parseInt(self.contrato_obj.valor) + adiciones;
                         } else {
                             //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
                             agoraRequest.get('informacion_proveedor?query=Id:' + self.contrato_obj.contratista).then(function (ip_response) {
