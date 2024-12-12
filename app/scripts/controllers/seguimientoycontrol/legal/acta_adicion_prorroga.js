@@ -153,13 +153,9 @@ angular
                             agora_response.data[0].Supervisor.Cargo;
                         self.contrato_obj.fecha_registro =
                             agora_response.data[0].FechaRegistro;
-                        self.contrato_obj.fecha_suscripcion = new Date(
+                        self.contrato_obj.fecha_suscripcion = self.getFechaUTC(
                             agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion
                         );
-                        self.contrato_obj.fecha_suscripcion.setDate(self.contrato_obj.fecha_suscripcion.getDate() + 1)
-                        // if (self.contrato_obj.fecha_suscripcion.getDate() == 31) {
-                        //     self.contrato_obj.fecha_suscripcion.setDate(self.contrato_obj.fecha_suscripcion.getDate() + 1);
-                        // }
                         self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
                         self.contrato_obj.vigencia = self.contrato_vigencia;
                         var fecha_reg = self.contrato_obj.fecha_registro;

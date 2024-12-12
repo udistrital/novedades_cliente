@@ -136,8 +136,7 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.supervisor_cedula = agora_response.data[0].Supervisor.Documento;
                     self.contrato_obj.supervisor_rol = agora_response.data[0].Supervisor.Cargo;
                     self.contrato_obj.contratista = agora_response.data[0].Contratista;
-                    self.contrato_obj.fecha_suscripcion = new Date(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
-                    self.contrato_obj.fecha_suscripcion.setDate(self.contrato_obj.fecha_suscripcion.getUTCDate());
+                    self.contrato_obj.fecha_suscripcion = self.getFechaUTC(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
                     self.contrato_obj.tipo_contrato = agora_response.data[0].TipoContrato.TipoContrato;
                     self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
 
