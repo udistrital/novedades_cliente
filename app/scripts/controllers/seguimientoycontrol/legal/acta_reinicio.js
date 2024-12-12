@@ -126,7 +126,7 @@ angular
                         self.contrato_obj.supervisor_rol =
                             agora_response.data[0].Supervisor.Cargo;
                         self.contrato_obj.contratista = agora_response.data[0].Contratista;
-                        self.contrato_obj.fecha_suscripcion = String(
+                        self.contrato_obj.fecha_suscripcion = self.getFechaUTC(
                             agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion
                         );
                         self.contrato_obj.tipo_contrato =
