@@ -381,12 +381,11 @@ angular
                     allowOutsideClick: false,
                 }).then(function (result) {
                     if (result) {
-                        agoraRequest
+                        novedadesMidRequest
                             .delete(
-                                "contrato_estado", self.estado_contrato_obj.idRegistro
-                            )
-                            .then(function (ce_response) {
-                                if (ce_response.data == "OK") {
+                                "validarCambioEstado", self.estado_contrato_obj.idRegistro
+                            ).then(function (response) {
+                                if (response.data == "OK") {
                                     swal({
                                         title: $translate.instant("TITULO_BUEN_TRABAJO"),
                                         type: "success",
