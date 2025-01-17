@@ -126,14 +126,17 @@ angular
                                 .then(function (ce_response) {
                                     self.estado_contrato_obj.estado =
                                         ce_response.data[ce_response.data.length - 1].Estado.Id;
+                                    self.estado_contrato_obj.idRegistro = ce_response.data[ce_response.data.length - 1].Id;
                                     if (self.estado_contrato_obj.estado == 7) {
                                         swal($translate.instant("CONTRATO_CANCELADO"), "", "info");
                                     }
                                     if (
-                                        self.estado_contrato_obj.estado == 6 ||
-                                        self.estado_contrato_obj.estado == 8
+                                        self.estado_contrato_obj.estado == 6
                                     ) {
                                         swal($translate.instant("CONTRATO_FINALIZADO"), "", "info");
+                                    }
+                                    if (self.estado_contrato_obj.estado == 8) {
+                                        swal($translate.instant("CONTRATO_FIN_ANTICIPADO"), "", "info");
                                     }
                                     if (self.estado_contrato_obj.estado == 3) {
                                         swal($translate.instant("CONTRATO_INICIO"), "", "info");
@@ -361,6 +364,65 @@ angular
                         );
                     });
             };
+
+            $scope.activarContrato = function () {
+                swal({
+                    title: "¿Está seguro de que desea cambiar el estado del contrato?",
+                    type: "question",
+                    html: "Contrato: " +
+                        self.contrato_obj.numero_contrato +
+                        $translate.instant("ANIO") +
+                        self.contrato_obj.vigencia +
+                        ".",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                    cancelButtonText: '<i class="fa fa-thumbs-down"></i> Cancelar',
+                    allowOutsideClick: false,
+                }).then(function (result) {
+                    if (result) {
+                        agoraRequest
+                            .delete(
+                                "contrato_estado", self.estado_contrato_obj.idRegistro
+                            )
+                            .then(function (ce_response) {
+                                if (ce_response.data == "OK") {
+                                    swal({
+                                        title: $translate.instant("TITULO_BUEN_TRABAJO"),
+                                        type: "success",
+                                        html: "Se hizo el cambio en el último estado del contrato",
+                                        showCloseButton: false,
+                                        showCancelButton: false,
+                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                        allowOutsideClick: false,
+                                    }).then(function () {
+                                        self.buscar_contrato();
+                                    });
+                                } else {
+                                    swal({
+                                        title: $translate.instant("ERROR"),
+                                        type: "error",
+                                        html: "No se pudo cambiar el estado del contrato",
+                                        showCloseButton: false,
+                                        showCancelButton: false,
+                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                        allowOutsideClick: false,
+                                    });
+                                }
+                            }).catch(function (error) {
+                                swal({
+                                    title: $translate.instant("ERROR"),
+                                    type: "error",
+                                    html: "No se pudo cambiar el estado del contrato",
+                                    showCloseButton: false,
+                                    showCancelButton: false,
+                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                    allowOutsideClick: false,
+                                });
+                            });
+                    }
+                }).catch(function (error) { });
+            }
 
             if (self.rolActual == 'CONTRATISTA') {
                 agoraRequest.get(
