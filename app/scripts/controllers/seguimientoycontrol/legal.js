@@ -381,43 +381,67 @@ angular
                     allowOutsideClick: false,
                 }).then(function (result) {
                     if (result) {
-                        novedadesMidRequest
-                            .delete(
-                                "validarCambioEstado", self.estado_contrato_obj.idRegistro
-                            ).then(function (response) {
-                                if (response.data == "OK") {
-                                    swal({
-                                        title: $translate.instant("TITULO_BUEN_TRABAJO"),
-                                        type: "success",
-                                        html: "Se hizo el cambio en el último estado del contrato",
-                                        showCloseButton: false,
-                                        showCancelButton: false,
-                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                        allowOutsideClick: false,
-                                    }).then(function () {
-                                        self.buscar_contrato();
-                                    });
-                                } else {
-                                    swal({
-                                        title: $translate.instant("ERROR"),
-                                        type: "error",
-                                        html: "No se pudo cambiar el estado del contrato",
-                                        showCloseButton: false,
-                                        showCancelButton: false,
-                                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                        allowOutsideClick: false,
-                                    });
+                        const now = new Date();
+                        const year = now.getFullYear();
+                        const month = String(now.getMonth() + 1).padStart(2, '0');
+                        const day = String(now.getDate()).padStart(2, '0');
+                        const formattedDate = `${year}-${month}-${day}T00:00:00Z`; // formato argo
+                        let estadoContrato = 0;
+                        agoraRequest
+                            .get("estado_contrato?query=NombreEstado:En ejecucion")
+                            .then(function (ec_response) {
+                                estadoContrato = ec_response.data[0].Id;
+                                var cambioEstado = {
+                                    Estado: {
+                                        Id: estadoContrato,
+                                    },
+                                    FechaRegistro: formattedDate,
+                                    NumeroContrato: self.contrato_obj.id,
+                                    Usuario: "CC" + token_service.getPayload().documento,
+                                    Vigencia: parseInt(self.contrato_obj.vigencia)
                                 }
-                            }).catch(function (error) {
-                                swal({
-                                    title: $translate.instant("ERROR"),
-                                    type: "error",
-                                    html: "No se pudo cambiar el estado del contrato",
-                                    showCloseButton: false,
-                                    showCancelButton: false,
-                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                    allowOutsideClick: false,
-                                });
+                                novedadesMidRequest
+                                    .post(
+                                        "validarCambioEstado", cambioEstado
+                                    ).then(function (response) {
+                                        if (response.data.Type == "OK") {
+                                            let estadoRes = response.data.Body[1];
+                                            swal({
+                                                title: "Cambio de estado exitoso",
+                                                type: "success",
+                                                html: "Se hizo el registro de estado de contrato (Argo)<br><br>" +
+                                                    "Usuario: " + estadoRes.Usuario + "<br>" +
+                                                    "Fecha: " + estadoRes.FechaRegistro,
+                                                showCloseButton: false,
+                                                showCancelButton: false,
+                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                allowOutsideClick: false,
+                                            }).then(function () {
+                                                self.buscar_contrato();
+                                            });
+                                        } else {
+                                            swal({
+                                                title: $translate.instant("ERROR"),
+                                                type: "error",
+                                                html: "No se pudo cambiar el estado del contrato",
+                                                showCloseButton: false,
+                                                showCancelButton: false,
+                                                confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                                allowOutsideClick: false,
+                                            });
+                                        }
+                                    }).catch(function (error) {
+                                        swal({
+                                            title: $translate.instant("ERROR"),
+                                            type: "error",
+                                            html: "No se pudo cambiar el estado del contrato",
+                                            showCloseButton: false,
+                                            showCancelButton: false,
+                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                                            allowOutsideClick: false,
+                                        });
+                                        console.log(error);
+                                    });
                             });
                     }
                 }).catch(function (error) { });
