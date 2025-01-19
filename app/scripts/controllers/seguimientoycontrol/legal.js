@@ -386,7 +386,7 @@ angular
                         const month = String(now.getMonth() + 1).padStart(2, '0');
                         const day = String(now.getDate()).padStart(2, '0');
                         const formattedDate = year + '-' + month + '-' + day + 'T00:00:00.000Z'; // formato argo
-                        let estadoContrato = 0;
+                        var estadoContrato = 0;
                         agoraRequest
                             .get("estado_contrato?query=NombreEstado:En ejecucion")
                             .then(function (ec_response) {
@@ -405,7 +405,7 @@ angular
                                         "validarCambioEstado", cambioEstado
                                     ).then(function (response) {
                                         if (response.data.Type == "OK") {
-                                            let estadoRes = response.data.Body[1];
+                                            var estadoRes = response.data.Body[1];
                                             swal({
                                                 title: "Cambio de estado exitoso",
                                                 type: "success",
