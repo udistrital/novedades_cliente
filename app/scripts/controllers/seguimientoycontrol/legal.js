@@ -385,7 +385,7 @@ angular
                         const year = now.getFullYear();
                         const month = String(now.getMonth() + 1).padStart(2, '0');
                         const day = String(now.getDate()).padStart(2, '0');
-                        const formattedDate = `${year}-${month}-${day}T00:00:00Z`; // formato argo
+                        const formattedDate = year + '-' + month + '-' + day + 'T00:00:00.000Z'; // formato argo
                         let estadoContrato = 0;
                         agoraRequest
                             .get("estado_contrato?query=NombreEstado:En ejecucion")
