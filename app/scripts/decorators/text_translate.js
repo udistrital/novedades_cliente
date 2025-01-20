@@ -281,6 +281,7 @@ var text_es = {
     CREAR_NOVEDAD_TERMINACION_BILATERAL: "Crear Novedad de Terminación Anticipada",
     CREAR_NOVEDAD_OTRO_SI_MODIFICATORIO: "Crear Otro Sí Modificatorio",
     CREAR_NOVEDAD_OTRO_SI_ACLARATORIO: "Crear Otro Sí Aclaratorio",
+    ACTIVAR_CONTRATO: "Activar Contrato",
     SELECCIONAR_CONTRATO: "Seleccionar contrato",
     //ACTA INICIO
     ACTA_INICIO_MAY: "ACTA DE INICIO",
@@ -938,6 +939,7 @@ var text_es = {
     NUMERO_CONTRATO: "Número Contrato",
     CONTRATO_CANCELADO: "Contrato cancelado",
     CONTRATO_FINALIZADO: "Contrato finalizado",
+    CONTRATO_FIN_ANTICIPADO: "Contrato finalizado (anticipado)",
     CONTRATO_INICIO: "Contrato sin acta de inicio",
     RP: "RP",
     ANIO: " vigencia "
@@ -1196,6 +1198,7 @@ var text_en = {
     FECHA_TERMINACION_ANTICIPADA: "Date Early Termination",
     CREAR_NOVEDAD_TERMINACION_ANTICIPADA: "Create Novelty Early Termination",
     CREAR_NOVEDAD_TERMINACION_BILATERAL: "Create Novelty of Early Termination",
+    ACTIVAR_CONTRATO: "Activate Contract",
     SELECCIONAR_CONTRATO: "Choose contract",
     CREAR_NOVEDAD_OTRO_SI_MODIFICATORIO: "Create Other Yes Modification",
     CREAR_NOVEDAD_OTRO_SI_ACLARATORIO: "Create Other Yes Clear",
