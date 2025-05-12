@@ -115,7 +115,7 @@ angular.module('notificacionService', [])
             },
 
             changeStateNoView: function () {
-                
+
                 if (methods.log.filter(function (data) { return (data.Estado).toLowerCase() === 'enviada' }).length >= 1) {
                     configuracionRequest.post('notificacion_estado_usuario/changeStateNoView/' + user, {})
                         .then(function (response) {
