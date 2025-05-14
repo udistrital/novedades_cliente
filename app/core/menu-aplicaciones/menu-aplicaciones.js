@@ -158,6 +158,7 @@ angular.module('core')
             $scope.claseAppContainer = behaviorTheme.aplicacion;
             var getRoles = function () {
 
+
                 var data = [];
                 if (window.localStorage.getItem('id_token') !== null) {
                     //isLogin = true;
@@ -174,7 +175,7 @@ angular.module('core')
             }
 
             var container_aplicativos = document.getElementById("menu-aplicaciones");
-            
+
             var existe = function (nombre, array) {
 
                 var filtro = array.filter(function (data) {
@@ -193,10 +194,10 @@ angular.module('core')
                         })
                         return categoria
                     })
-                    nuevasAplicaciones = nuevasAplicaciones.filter(function (categoria) { return (categoria.aplicaciones.length > 0) });  
+                    nuevasAplicaciones = nuevasAplicaciones.filter(function (categoria) { return (categoria.aplicaciones.length > 0) });
                         $scope.categorias = nuevasAplicaciones;
-                    
+
                 }).catch(function (error) {
-                    
+
                 });
         });

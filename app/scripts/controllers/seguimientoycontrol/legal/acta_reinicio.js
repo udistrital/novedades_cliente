@@ -826,7 +826,6 @@ angular
                                                 }).catch(function (error) {
                                                     //Servidor no disponible
                                                     self.desactivarNovedad(idNovedad);
-                                                    console.log(error);
                                                     const errMsg = error.data.Body[1].err;
                                                     $scope.alert = "TITULO_ERROR_REPLICA";
                                                     swal({
@@ -1029,7 +1028,6 @@ angular
 
                         });
                 } else {
-                    console.log("Error", $scope.formReinicio);
                     swal(
                         $translate.instant("TITULO_ERROR"),
                         $translate.instant("DESCRIPCION_ERROR"),
@@ -1055,8 +1053,6 @@ angular
 
                 if (nuevosDiasNovedad != 0) {
                     var diasNovedad = diasSuspension - nuevosDiasNovedad;
-                    console.log(diasNovedad);
-                    console.log(nuevaFechaFin);
                     nuevaFechaFin.setDate(nuevaFechaFin.getDate() - diasNovedad);
                     if (nuevaFechaFin.getDate() == 31) {
                         nuevaFechaFin.setDate(nuevaFechaFin.getDate() - 1);
