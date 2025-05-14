@@ -11,7 +11,6 @@
 
 angular.module('contractualClienteApp')
     .factory('notificacion', function($websocket) {
-      console.log('notificacion')
         var dataStream = $websocket(); //"ws://localhost:8080/register?id=2&profile=admin"
         var log = [];
         dataStream.onMessage(function(message) {

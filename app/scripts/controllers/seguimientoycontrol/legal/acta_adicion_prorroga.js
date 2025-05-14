@@ -131,7 +131,6 @@ angular
           self.contrato_vigencia
         )
         .then(function (agora_response) {
-          console.log(agora_response);
           if (agora_response.data.length > 0) {
             self.contrato_obj.contratista = agora_response.data[0].Contratista;
             self.contrato_obj.cesion = 0;
@@ -166,7 +165,6 @@ angular
             self.fecha_reg_mes = meses[parseInt(res[1] - 1)];
             self.fecha_reg_ano = res[0];
             self.unidadEjecutora = agora_response.data[0].UnidadEjecutora;
-            console.log(self.unidadEjecutora);
             //Se obtiene los datos de Acta de Inicio.
             agoraRequest
               .get(
@@ -1128,12 +1126,10 @@ angular
                 novedadesMidRequest
                   .post("replica", self.contrato_obj_replica)
                   .then(function (request_novedades) {
-                    console.log(request_novedades);
                     if (
                       request_novedades.status == 200 ||
                       request_novedades.statusText == "OK"
                     ) {
-                      console.log("Replica correcta");
                       pdfMake.createPdf(docDefinition).
                         download(
                           "acta_adicion_prorroga_contrato_" +
@@ -1212,7 +1208,6 @@ angular
               }
             }).catch(function (error) {
               //Servidor no disponible
-              console.log(error);
               $scope.alert = "DESCRIPCION_ERROR_ADICION_PRORROGA";
               swal({
                 title: $translate.instant("TITULO_ERROR_ACTA"),
