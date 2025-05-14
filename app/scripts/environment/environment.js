@@ -41,24 +41,27 @@ angular.module("contractualClienteApp").constant("CONF", {
         // TITAN_MID_SERVICE: "http://pruebasapi.intranetoas.udistrital.edu.co:8082/v1/",
         //CUMPLIDOS_MID_SERVICE: "http://pruebasapi2.intranetoas.udistrital.edu.co:8513/v1/",
         //NOVEDADES_SERVICE: "http://localhost:8014/v1/",
-        NOVEDADES_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",        
-        // NOVEDADES_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_mid/v1/",        
+        NOVEDADES_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_crud/v1/",
+        // NOVEDADES_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/novedades_mid/v1/",
         CUMPLIDOS_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/cumplidos_mid/v1/",
         DOCUMENTOS_CRUD: "https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2/",
         //DOCUMENTOS_CRUD: "http://pruebasapi.intranetoas.udistrital.edu.co:8094/v1/",
         NOTIFICACION_WS: "wss://pruebasapi.portaloas.udistrital.edu.co:8116/ws/join",
         AUTENTICATION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/autenticacion_mid/v1/",
         TOKEN: {
-            AUTORIZATION_URL: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
-            URL_USER_INFO: "https://autenticacion.portaloas.udistrital.edu.co/oauth2/userinfo",
-            CLIENTE_ID: "sWe9_P_C76DWGOsLcOY4T7BYH6oa",
-            REDIRECT_URL: "http://localhost:9000/",
-            RESPONSE_TYPE: "id_token token",
-            SCOPE: "openid email documento",
-            BUTTON_CLASS: "btn btn-warning btn-sm",
-            SIGN_OUT_URL: "https://autenticacion.portaloas.udistrital.edu.co/oidc/logout",
-            SIGN_OUT_REDIRECT_URL: "http://localhost:9000/",
-            SIGN_OUT_APPEND_TOKEN: "true",
-        },
+      AUTORIZATION_URL:
+        "https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize",
+      URL_USER_INFO:
+        "https://autenticacion.portaloas.udistrital.edu.co/oauth2/userinfo",
+      CLIENTE_ID: "sWe9_P_C76DWGOsLcOY4T7BYH6oa",
+      REDIRECT_URL: "http://localhost:9000/",
+      RESPONSE_TYPE: "id_token token",
+      SCOPE: "openid email documento",
+      BUTTON_CLASS: "btn btn-custom btn-sm",
+      SIGN_OUT_URL:
+        "https://autenticacion.portaloas.udistrital.edu.co/oidc/logout",
+      SIGN_OUT_REDIRECT_URL: "http://localhost:9000/",
+      SIGN_OUT_APPEND_TOKEN: "true"
+    }
     },
 });

@@ -48,15 +48,15 @@ angular
     .factory(
         "token_service",
         function ($q, CONF, md5, $interval, autenticacionMidRequest) {
-            var service = {
-                //session: $localStorage.default(params),
-                header: null,
-                token: null,
-                logout_url: null,
-                loaded_data: false,
-                getLoginData: function () {
-                    //Para  llamar el api de autenticacion
-                    var deferred = $q.defer();
+          var service = {
+            //session: $localStorage.default(params),
+            header: null,
+            token: null,
+            logout_url: null,
+            loaded_data: false,
+            getLoginData: function () {
+              //Para  llamar el api de autenticacion
+              var deferred = $q.defer();
                     if (
                         window.localStorage.getItem("access_token") !== null &&
                         window.localStorage.getItem("access_token") !== undefined
@@ -64,9 +64,9 @@ angular
                         if (
                             window.localStorage.getItem("access_code") === null ||
                             window.localStorage.getItem("access_code") === undefined
-                        ) {
+                          ) {
                             var appUserInfo = JSON.parse(
-                                atob(window.localStorage.getItem("id_token").split(".")[1])
+                              atob(window.localStorage.getItem("id_token").split(".")[1])
                             );
                             var appUserDocument;
                             var appUserRole;

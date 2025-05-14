@@ -110,6 +110,7 @@ angular.module('implicitToken', [])
                 }
             },
             getPayload: function() {
+              console.log('getPayload')
                 var id_token = window.localStorage.getItem('id_token').split('.');
                 return JSON.parse(atob(id_token[1]));
             },
