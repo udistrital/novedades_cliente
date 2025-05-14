@@ -132,6 +132,19 @@ angular
                         self.n_solicitud = data[0].id_numero_solicitud;
                     }
                 });
+            financieraJbpmRequest
+                .get(
+                    "cdprptercerocontrato/" +
+                    self.contrato_obj.vigencia + "/" +
+                    self.contrato_obj.numero_contrato
+                )
+                .then(function (financiera_response) {
+                    if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                        self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                        self.contrato_obj.rp_numero = self.cdprp[cdprp.length - 1].rp;
+                        self.contrato_obj.cdp_numero = self.cdprp[cdprp.length - 1].cdp;
+                    }
+                });
 
             agoraRequest
                 .get(
@@ -1599,7 +1612,7 @@ angular
                 if ($scope.nueva_clausula) {
                     estructura.push(
                         {
-                            text: "CLAUSULA QUINTA: ",
+                            text: "CLAUSULA SEXTA: ",
                             bold: true,
                         },
                         {
@@ -1731,7 +1744,7 @@ angular
                                 self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', en su orden por la suma de ' +
                                 numeroALetras(
                                     self.novedades[i].ValorAdicion, {
-                                    plural: $translate.instant("PESOS"),    
+                                    plural: $translate.instant("PESOS"),
                                     singular: $translate.instant("PESO"),
                                     centPlural: $translate.instant("CENTAVOS"),
                                     centSingular: $translate.instant("CENTAVO"),
@@ -1873,20 +1886,37 @@ angular
                     { text: "Cargo", bold: true },
                     { text: "Firma", bold: true },
                 ]);
-                if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                if (self.unidadEjecutora == 1) {
+                    if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                        firmas.push([
+                            { text: "Proyectó", bold: true },
+                            self.elaboro,
+                            "Abogado Oficina de Contratación",
+                            "",
+                        ]);
+                    }
                     firmas.push([
-                        { text: "Proyectó", bold: true },
-                        self.elaboro,
-                        "Abogado Oficina de Contratación",
+                        { text: "Aprobó", bold: true },
+                        self.contrato_obj.jefe_juridica_nombre_completo,
+                        "Jefe Oficina de Contratación",
+                        "",
+                    ]);
+                } else {
+                    if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                        firmas.push([
+                            { text: "Proyectó", bold: true },
+                            "panic",
+                            self.elaboro,
+                            "CPS Coordinadora Legal - Ofex",
+                        ]);
+                    }
+                    firmas.push([
+                        { text: "Aprobó", bold: true },
+                        self.contrato_obj.ordenadorGasto_nombre,
+                        "Jefe Oficina de Extensión y Supervisor - Ofex",
                         "",
                     ]);
                 }
-                firmas.push([
-                    { text: "Aprobó", bold: true },
-                    self.contrato_obj.jefe_juridica_nombre_completo,
-                    "Jefe Oficina de Contratación",
-                    "",
-                ]);
                 return firmas;
             }
 
@@ -2182,6 +2212,19 @@ angular
                             },
                             {
                                 text: "- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se  procederá a la publicación del presente documento de cesión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente:\n\n",
+                            },
+                            ],
+
+                            [{
+                                text: "CLAUSULA QUINTA: PUBLICACIÓN. ",
+                                bold: true,
+                            },
+                            {
+                                text: "- El presente contrato se ampara en el CDP N° " + self.contrato_obj.cdp_numero + " y con CRP N° " + self.contrato_obj.rp_numero + ". Se ordena la liberación del CRP número " + self.contrato_obj.rp_numero + " por el valor a ceder de " +
+                                    NumeroALetras(self.valor_contrato_cesionario() + "") +
+                                    "MONEDA CORRIENTE ($" +
+                                    numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                                    " M/CTE)",
                             },
                             ],
                             self.agregarClausulas(),

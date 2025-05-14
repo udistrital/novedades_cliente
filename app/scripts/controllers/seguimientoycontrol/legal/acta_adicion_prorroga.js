@@ -1919,8 +1919,8 @@ angular
             firmas.push([
               { text: "Proyectó", bold: true },
               "panic",
+              self.elaboro,
               "CPS Coordinadora Legal - Ofex",
-              "",
             ]);
           }
           firmas.push([

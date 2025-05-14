@@ -1395,20 +1395,37 @@ angular.module('contractualClienteApp')
                     { text: "Cargo", bold: true },
                     { text: "Firma", bold: true },
                 ]);
-                if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                if (self.unidadEjecutora == 1) {
+                    if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                        firmas.push([
+                            { text: "Proyectó", bold: true },
+                            self.elaboro,
+                            "Abogado Oficina de Contratación",
+                            "",
+                        ]);
+                    }
                     firmas.push([
-                        { text: "Proyectó", bold: true },
-                        self.elaboro,
-                        "Abogado Oficina de Contratación",
+                        { text: "Aprobó", bold: true },
+                        self.contrato_obj.jefe_juridica_nombre_completo,
+                        "Jefe Oficina de Contratación",
+                        "",
+                    ]);
+                } else {
+                    if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                        firmas.push([
+                            { text: "Proyectó", bold: true },
+                            "panic",
+                            self.elaboro,
+                            "CPS Coordinadora Legal - Ofex",
+                        ]);
+                    }
+                    firmas.push([
+                        { text: "Aprobó", bold: true },
+                        self.contrato_obj.ordenadorGasto_nombre,
+                        "Jefe Oficina de Extensión y Supervisor - Ofex",
                         "",
                     ]);
                 }
-                firmas.push([
-                    { text: "Aprobó", bold: true },
-                    self.contrato_obj.jefe_juridica_nombre_completo,
-                    "Jefe Oficina de Contratación",
-                    "",
-                ]);
                 return firmas;
             }
 
@@ -1568,6 +1585,14 @@ angular.module('contractualClienteApp')
                                 [
                                     { text: 'Saldo a favor de la Universidad', bold: true, style: 'topHeader' },
                                     { text: '$' + numberFormat(String(parseFloat(self.saldo_universidad.replace(/\,/g, ""))) + '') + '\n\n\n', style: 'topHeader' }
+                                ],
+                                [
+                                    { text: 'CDP N°', bold: true, style: 'topHeader' },
+                                    { text: '' + numberFormat(String(parseFloat(self.contrato_obj.cdp_numero)) + '') + '\n\n\n', style: 'topHeader' }
+                                ],
+                                [
+                                    { text: 'CRP N°', bold: true, style: 'topHeader' },
+                                    { text: '' + numberFormat(String(parseFloat(self.contrato_obj.rp_numero)) + '') + '\n\n\n', style: 'topHeader' }
                                 ],
                             ]
                         },
