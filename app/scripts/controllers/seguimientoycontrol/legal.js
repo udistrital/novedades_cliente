@@ -58,13 +58,11 @@ angular
                         self.rolesUsuario[i] === 'ORDENADOR_DEL_GASTO' ||
                         self.rolesUsuario[i] === 'CONTRATISTA'
                     ) {
-                        // console.log(self.rolesUsuario[i]);
                         self.rolActual = self.rolesUsuario[i];
                         break;
                     }
                 }
             }
-            // console.log("Rol", self.rolActual);
 
             /**
              * @ngdoc method
@@ -440,7 +438,6 @@ angular
                                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                             allowOutsideClick: false,
                                         });
-                                        console.log(error);
                                     });
                             });
                     }

@@ -587,7 +587,6 @@ angular.module('contractualClienteApp')
                                                     request_novedades.status == 200 ||
                                                     request_novedades.statusText == "OK"
                                                 ) {
-                                                    console.log("Replica correcta");
                                                     agoraRequest.post('contrato_estado', nuevoEstado).then(function (response) {
                                                         if (response.status == 201 || Object.keys(response.data) > 0) {
                                                             pdfMake
@@ -896,8 +895,6 @@ angular.module('contractualClienteApp')
                     }
                 }
                 var nuevaFechaFin = new Date(fechaFinEfectiva);
-
-                console.log("FechaFin: ", nuevaFechaFin);
                 return nuevaFechaFin;
             }
 

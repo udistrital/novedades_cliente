@@ -494,7 +494,6 @@ angular
                                                         response_replica.status == 200 ||
                                                         response_replica.statusText == "OK"
                                                     ) {
-                                                        console.log("Replica correcta");
                                                         agoraRequest
                                                             .post("contrato_estado", nuevoEstado)
                                                             .then(function (response) {

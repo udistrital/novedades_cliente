@@ -552,9 +552,6 @@ angular
             });
 
             self.calculoPlazosCesion = function (fecha_inicio, fecha_fin) {
-
-                console.log("Inicio: ", fecha_inicio);
-                console.log("Fin: ", fecha_fin);
                 var months = fecha_fin.getMonth() - fecha_inicio.getMonth() + (12 * (fecha_fin.getFullYear() - fecha_inicio.getFullYear()));
                 var days = 0;
                 if (months != 0) {
@@ -568,7 +565,6 @@ angular
                     days += fecha_fin.getDate() - fecha_inicio.getDate();
                 }
                 days += (months * 30) + 1;
-                console.log("Days: ", days);
                 return days;
             }
 
@@ -849,7 +845,6 @@ angular
                             }
                         })
                         .catch(function (error) {
-                            console.log("error: ", error);
                             //Servidor no disponible
                             $scope.alert = "DESCRIPCION_ERROR_CESION2";
                             swal({
@@ -883,7 +878,6 @@ angular
                                             request_replica.status == 200 ||
                                             request_replica.statusText == "OK"
                                         ) {
-                                            console.log("Replica correcta");
                                             pdfMake
                                                 .createPdf(output)
                                                 .download(
@@ -960,7 +954,6 @@ angular
                             }
                         })
                         .catch(function (error) {
-                            console.log("error: ", error);
                             //Servidor no disponible
                             $scope.alert = "DESCRIPCION_ERROR_CESION2";
                             swal({
