@@ -143,8 +143,8 @@ angular
                 .then(function (financiera_response) {
                     if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
                         self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                        self.contrato_obj.rp_numero = self.cdprp[cdprp.length - 1].rp;
-                        self.contrato_obj.cdp_numero = self.cdprp[cdprp.length - 1].cdp;
+                        self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
+                        self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
                         self.rp_numero = self.contrato_obj.rp_numero;
                         self.cdp_numero = self.contrato_obj.cdp_numero;
                     }
