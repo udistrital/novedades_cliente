@@ -133,18 +133,28 @@ angular
                     }
                 });
             financieraJbpmRequest
-                .get(
-                    "cdprptercerocontrato/" +
-                    self.contrato_vigencia + "/" +
-                    self.contrato_id
-                )
-                .then(function (financiera_response) {
-                    if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
-                        self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                        self.contrato_obj.rp_numero = self.cdprp[cdprp.length - 1].rp;
-                        self.contrato_obj.cdp_numero = self.cdprp[cdprp.length - 1].cdp;
-                    }
-                });
+              .get(
+                "cdprptercerocontrato/" +
+                self.contrato_vigencia + "/" +
+                self.contrato_id
+              )
+              .then(function (financiera_response) {
+
+                  const cdpRpTercero = financiera_response?.data?.cdp_rp_tercero?.cdp_rp;
+
+                  if (Array.isArray(cdpRpTercero) && cdpRpTercero.length > 0) {
+                  const ultimo = cdpRpTercero[cdpRpTercero.length - 1];
+
+                    self.contrato_obj.rp_fecha = ultimo.vigencia || null;
+                  self.contrato_obj.rp_numero = ultimo.rp || null;
+                  self.contrato_obj.cdp_numero = ultimo.cdp || null;
+                } else {
+                  console.warn("No se encontró información de CDP/RP para este contrato.");
+                }
+              })
+              .catch(function (error) {
+                console.error("Error al obtener CDP/RP del contrato:", error);
+              });
 
             agoraRequest
                 .get(
@@ -166,7 +176,7 @@ angular
                             agora_response.data[0].OrdenadorGasto;
                         self.contrato_obj.vigencia = self.contrato_vigencia;
                         //self.contrato_obj.supervisor_cedula =
-                        //agora_response.data[0].Supervisor.Documento;                       
+                        //agora_response.data[0].Supervisor.Documento;
                         self.contrato_obj.supervisor_rol =
                             agora_response.data[0].Supervisor.Cargo;
                         self.contrato_obj.contratista = agora_response.data[0].Contratista;
@@ -1090,7 +1100,7 @@ angular
                 //Se obtiene el dato de Fecha Final Efectiva.
                 // amazonAdministrativaRequest
                 // .get("contrato_persona/" + self.contrato_obj.id)
-                // .then(function (acta_response) {                    
+                // .then(function (acta_response) {
                 //     self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                 // });
                 if ($scope.formCesion.$valid) {
@@ -2306,7 +2316,7 @@ angular
                                 // ],
                                 // [
 
-                                // ],                              
+                                // ],
 
 
                                 // [{
@@ -2323,7 +2333,7 @@ angular
 
                                 // [
 
-                                // ],                              
+                                // ],
 
 
                                 [{
