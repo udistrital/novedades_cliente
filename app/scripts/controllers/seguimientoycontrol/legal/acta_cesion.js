@@ -2211,7 +2211,7 @@ angular
                                 text: "- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se  procederá a la publicación del presente documento de cesión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente:\n\n",
                             },
                             ],
-/*
+
                             [{
                                 text: "CLAUSULA QUINTA: ",
                                 bold: true,
@@ -2223,7 +2223,7 @@ angular
                                     numberFormat(String(self.valor_contrato_cesionario()) + "") +
                                     " M/CTE)",
                             },
-                            ],*/
+                            ],
                             self.agregarClausulas(),
                             // {
                             //     text: "En constancia de lo consignado en el presente documento, se firma, \n\nen Bogotá, D.C., a los ________________________________________.\n\n\n",
