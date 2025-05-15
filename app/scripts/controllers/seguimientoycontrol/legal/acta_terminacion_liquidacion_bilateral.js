@@ -114,7 +114,7 @@ angular.module('contractualClienteApp')
                 .get(
                     "cdprptercerocontrato/" +
                     self.contrato_vigencia + "/" +
-                    elf.contrato_id
+                    self.contrato_id
                 )
                 .then(function (financiera_response) {
                     if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
