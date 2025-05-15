@@ -1913,7 +1913,6 @@ angular
           if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
             firmas.push([
               { text: "Proyectó", bold: true },
-              "panic",
               self.elaboro,
               "CPS Coordinadora Legal - Ofex",
             ]);

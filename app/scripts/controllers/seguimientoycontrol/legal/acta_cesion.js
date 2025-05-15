@@ -135,8 +135,8 @@ angular
             financieraJbpmRequest
                 .get(
                     "cdprptercerocontrato/" +
-                    self.contrato_obj.vigencia + "/" +
-                    self.contrato_obj.numero_contrato
+                    self.contrato_vigencia + "/" +
+                    self.contrato_id
                 )
                 .then(function (financiera_response) {
                     if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
@@ -186,6 +186,7 @@ angular
                         self.fecha_reg_dia = res[2].substring(0, 2);
                         self.fecha_reg_mes = meses[parseInt(res[1] - 1)];
                         self.fecha_reg_ano = res[0];
+                        self.unidadEjecutora = agora_response.data[0].UnidadEjecutora;
                         //Se obtiene los datos de Acta de Inicio.
                         amazonAdministrativaRequest
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
@@ -1898,7 +1899,6 @@ angular
                     if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
                         firmas.push([
                             { text: "Proyectó", bold: true },
-                            "panic",
                             self.elaboro,
                             "CPS Coordinadora Legal - Ofex",
                         ]);
@@ -2209,7 +2209,7 @@ angular
                             ],
 
                             [{
-                                text: "CLAUSULA QUINTA: PUBLICACIÓN. ",
+                                text: "CLAUSULA QUINTA: ",
                                 bold: true,
                             },
                             {
