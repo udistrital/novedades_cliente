@@ -1879,9 +1879,8 @@ angular
                             NumeroALetras(self.valor_contrato_cesionario() + "") +
                             "MONEDA CORRIENTE ($" +
                             numberFormat(String(self.valor_contrato_cesionario()) + "") +
-                            " M/CTE)"
-                    },
-                    { text: "", bold: true }]
+                            " M/CTE)",
+                    }]
                 });
                 if ($scope.nuevo_considerando) {
                     estructura.splice(self.posicion_considerando - 1, 0, {
