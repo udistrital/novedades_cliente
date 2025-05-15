@@ -139,7 +139,7 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.fecha_suscripcion = self.getFechaUTC(agora_response.data[0].ContratoSuscrito[0].FechaSuscripcion);
                     self.contrato_obj.tipo_contrato = agora_response.data[0].TipoContrato.TipoContrato;
                     self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
-
+                    self.unidadEjecutora = agora_response.data[0].UnidadEjecutora;
                     //Se obtiene los datos de Acta de Inicio.
                     agoraRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.id).then(function (acta_response) {
                         self.contrato_obj.FechaInicio = self.getFechaUTC(acta_response.data[0].FechaInicio);
@@ -1411,7 +1411,6 @@ angular.module('contractualClienteApp')
                     if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
                         firmas.push([
                             { text: "Proyectó", bold: true },
-                            "panic",
                             self.elaboro,
                             "CPS Coordinadora Legal - Ofex",
                         ]);

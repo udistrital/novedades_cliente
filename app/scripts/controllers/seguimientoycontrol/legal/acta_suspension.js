@@ -135,7 +135,7 @@ angular
                         self.plazoMeses = self.calculoPlazoLetras(self.contrato_obj.plazo);
                         self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                         self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
-
+                        self.unidadEjecutora = agora_response.data[0].UnidadEjecutora;
                         //Obtención de datos del ordenador del gasto
                         agoraRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response_id) {
                             const rolOrdenador = og_response_id.data[0].RolOrdenador;
@@ -1425,7 +1425,6 @@ angular
                     if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
                       firmas.push([
                         { text: "Proyectó", bold: true },
-                        "panic",
                         self.elaboro,
                         "CPS Coordinadora Legal - Ofex",
                       ]);
