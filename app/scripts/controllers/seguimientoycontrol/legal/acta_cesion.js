@@ -1867,6 +1867,22 @@ angular
                     },
                     { text: " (CESIONARIO).\n\n", bold: true }]
                 });
+                estructura.push({
+                    text: [{
+                        text: "El presente contrato se ampara en el CDP N° " +
+                            self.cdp_numero +
+                            " y con CRP N° " +
+                            self.rp_numero +
+                            ". Se ordena la liberación del CRP número " +
+                            self.rp_numero +
+                            " por el valor a ceder de " +
+                            NumeroALetras(self.valor_contrato_cesionario() + "") +
+                            "MONEDA CORRIENTE ($" +
+                            numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                            " M/CTE)"
+                    },
+                    { text: "", bold: true }]
+                });
                 if ($scope.nuevo_considerando) {
                     estructura.splice(self.posicion_considerando - 1, 0, {
                         text: self.nuevo_considerando + "\n\n",
@@ -2212,18 +2228,6 @@ angular
                             },
                             ],
 
-                            [{
-                                text: "CLAUSULA QUINTA: ",
-                                bold: true,
-                            },
-                            {
-                                text: "- El presente contrato se ampara en el CDP N° " + self.cdp_numero + " y con CRP N° " + self.rp_numero+ ". Se ordena la liberación del CRP número " + self.rp_numero+ " por el valor a ceder de " +
-                                    NumeroALetras(self.valor_contrato_cesionario() + "") +
-                                    "MONEDA CORRIENTE ($" +
-                                    numberFormat(String(self.valor_contrato_cesionario()) + "") +
-                                    " M/CTE)",
-                            },
-                            ],
                             self.agregarClausulas(),
                             // {
                             //     text: "En constancia de lo consignado en el presente documento, se firma, \n\nen Bogotá, D.C., a los ________________________________________.\n\n\n",
