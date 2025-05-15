@@ -65,6 +65,8 @@ angular.module('contractualClienteApp')
             self.elaboro_cedula = token_service.getPayload().documento;
             self.nueva_clausula_text = "";
             self.tamanoFuente = 10;
+            self.rp_numero = 0;
+            self.cdp_numero = 0;
 
             // const solic_input = document.getElementById("numero_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -111,28 +113,23 @@ angular.module('contractualClienteApp')
                     }
                 });
             financieraJbpmRequest
-              .get(
-                "cdprptercerocontrato/" +
-                self.contrato_vigencia + "/" +
-                self.contrato_id
-              )
-              .then(function (financiera_response) {
-
-                  const cdpRpTercero = financiera_response?.data?.cdp_rp_tercero?.cdp_rp;
-
-                  if (Array.isArray(cdpRpTercero) && cdpRpTercero.length > 0) {
-                  const ultimo = cdpRpTercero[cdpRpTercero.length - 1];
-
-                    self.contrato_obj.rp_fecha = ultimo.vigencia || null;
-                  self.contrato_obj.rp_numero = ultimo.rp || null;
-                  self.contrato_obj.cdp_numero = ultimo.cdp || null;
-                } else {
-                  console.warn("No se encontró información de CDP/RP para este contrato.");
-                }
-              })
-              .catch(function (error) {
-                console.error("Error al obtener CDP/RP del contrato:", error);
-              });
+                .get(
+                    "cdprptercerocontrato/" +
+                    self.contrato_vigencia + "/" +
+                    self.contrato_id
+                )
+                .then(function (financiera_response) {
+                  console.log(financiera_response);
+                    if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                      console.log(financiera_response.data.cdp_rp_tercero.cdp_rp);
+                        var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                        self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
+                        self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                        self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
+                        self.rp_numero = self.contrato_obj.rp_numero;
+                        self.cdp_numero = self.contrato_obj.cdp_numero;
+                    }
+                });
 
             agoraRequest.get('estado_contrato?query=NombreEstado:Suspendido').then(function (ec_response) {
                 self.estados[1] = ec_response.data[0];
@@ -297,26 +294,19 @@ angular.module('contractualClienteApp')
                                 //consulta el CDP y RP
                                 financieraJbpmRequest
                                   .get(
-                                    "cdprptercerocontrato/" +
-                                    self.contrato_vigencia + "/" +
-                                    self.contrato_id
+                                      "cdprptercerocontrato/" +
+                                      self.contrato_vigencia + "/" +
+                                      self.contrato_id
                                   )
                                   .then(function (financiera_response) {
-
-                                      const cdpRpTercero = financiera_response?.data?.cdp_rp_tercero?.cdp_rp;
-
-                                      if (Array.isArray(cdpRpTercero) && cdpRpTercero.length > 0) {
-                                      const ultimo = cdpRpTercero[cdpRpTercero.length - 1];
-
-                                        self.contrato_obj.rp_fecha = ultimo.vigencia || null;
-                                      self.contrato_obj.rp_numero = ultimo.rp || null;
-                                      self.contrato_obj.cdp_numero = ultimo.cdp || null;
-                                    } else {
-                                      console.warn("No se encontró información de CDP/RP para este contrato.");
-                                    }
-                                  })
-                                  .catch(function (error) {
-                                    console.error("Error al obtener CDP/RP del contrato:", error);
+                                      if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                          var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                          self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
+                                          self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                                          self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
+                                          self.rp_numero = self.contrato_obj.rp_numero;
+                                          self.cdp_numero = self.contrato_obj.cdp_numero;
+                                      }
                                   });
                             });
                             var adiciones = 0;
@@ -340,28 +330,19 @@ angular.module('contractualClienteApp')
                                 });
                                 //consulta el CDP y RP
                                 financieraJbpmRequest
-                                  .get(
-                                    "cdprptercerocontrato/" +
-                                    self.contrato_vigencia + "/" +
-                                    self.contrato_id
-                                  )
-                                  .then(function (financiera_response) {
-
-                                      const cdpRpTercero = financiera_response?.data?.cdp_rp_tercero?.cdp_rp;
-
-                                      if (Array.isArray(cdpRpTercero) && cdpRpTercero.length > 0) {
-                                      const ultimo = cdpRpTercero[cdpRpTercero.length - 1];
-
-                                        self.contrato_obj.rp_fecha = ultimo.vigencia || null;
-                                      self.contrato_obj.rp_numero = ultimo.rp || null;
-                                      self.contrato_obj.cdp_numero = ultimo.cdp || null;
-                                    } else {
-                                      console.warn("No se encontró información de CDP/RP para este contrato.");
-                                    }
-                                  })
-                                  .catch(function (error) {
-                                    console.error("Error al obtener CDP/RP del contrato:", error);
-                                  });
+                                    .get(
+                                        "cdprptercerocontrato/" +
+                                        self.contrato_obj.vigencia + "/" +
+                                        self.contrato_obj.numero_contrato
+                                    )
+                                    .then(function (financiera_response) {
+                                        if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                            var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                            self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
+                                            self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                                            self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
+                                        }
+                                    });
                             });
                         }
                     }).catch(function (error) {
@@ -1629,7 +1610,7 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'CRP N°', bold: true, style: 'topHeader' },
-                                    { text: '' + numberFormat(String(parseFloat(self.contrato_obj.rp_numero)) + '') + '\n\n\n', style: 'topHeader' }
+                                    { text: '' + numberFormat(String(parseFloat(self.rp_numero )) + '') + '\n\n\n', style: 'topHeader' }
                                 ],
                             ]
                         },
