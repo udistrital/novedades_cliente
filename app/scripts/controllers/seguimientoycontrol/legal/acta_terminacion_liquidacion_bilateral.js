@@ -65,6 +65,8 @@ angular.module('contractualClienteApp')
             self.elaboro_cedula = token_service.getPayload().documento;
             self.nueva_clausula_text = "";
             self.tamanoFuente = 10;
+            self.rp_numero = 0;
+            self.cdp_numero = 0;
 
             // const solic_input = document.getElementById("numero_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -117,11 +119,15 @@ angular.module('contractualClienteApp')
                     self.contrato_id
                 )
                 .then(function (financiera_response) {
+                  console.log(financiera_response);
                     if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                      console.log(financiera_response.data.cdp_rp_tercero.cdp_rp);
                         var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
                         self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
                         self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
                         self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
+                        self.rp_numero = self.contrato_obj.rp_numero;
+                        self.cdp_numero = self.contrato_obj.cdp_numero;
                     }
                 });
 
@@ -287,19 +293,21 @@ angular.module('contractualClienteApp')
                                 });
                                 //consulta el CDP y RP
                                 financieraJbpmRequest
-                                    .get(
-                                        "cdprptercerocontrato/" +
-                                        self.contrato_vigencia + "/" +
-                                        elf.contrato_id
-                                    )
-                                    .then(function (financiera_response) {
-                                        if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
-                                            var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                                            self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
-                                            self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
-                                            self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
-                                        }
-                                    });
+                                  .get(
+                                      "cdprptercerocontrato/" +
+                                      self.contrato_vigencia + "/" +
+                                      self.contrato_id
+                                  )
+                                  .then(function (financiera_response) {
+                                      if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                          var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                          self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
+                                          self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                                          self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
+                                          self.rp_numero = self.contrato_obj.rp_numero;
+                                          self.cdp_numero = self.contrato_obj.cdp_numero;
+                                      }
+                                  });
                             });
                             var adiciones = 0;
                             for (var i = 0; i < self.novedades.length; i++) {
@@ -1602,7 +1610,7 @@ angular.module('contractualClienteApp')
                                 ],
                                 [
                                     { text: 'CRP N°', bold: true, style: 'topHeader' },
-                                    { text: '' + numberFormat(String(parseFloat(self.contrato_obj.rp_numero)) + '') + '\n\n\n', style: 'topHeader' }
+                                    { text: '' + numberFormat(String(parseFloat(self.rp_numero )) + '') + '\n\n\n', style: 'topHeader' }
                                 ],
                             ]
                         },

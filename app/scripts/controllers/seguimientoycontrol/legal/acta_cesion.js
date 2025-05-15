@@ -83,6 +83,8 @@ angular
             self.posicion_considerando = 1;
             self.tamanoFuente = 10;
             self.valor_total_contrato = 0;
+            self.rp_numero = 0;
+            self.cdp_numero = 0;
 
             // const solic_input = document.getElementById("n_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -143,6 +145,8 @@ angular
                         self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
                         self.contrato_obj.rp_numero = self.cdprp[cdprp.length - 1].rp;
                         self.contrato_obj.cdp_numero = self.cdprp[cdprp.length - 1].cdp;
+                        self.rp_numero = self.contrato_obj.rp_numero;
+                        self.cdp_numero = self.contrato_obj.cdp_numero;
                     }
                 });
 
@@ -166,7 +170,7 @@ angular
                             agora_response.data[0].OrdenadorGasto;
                         self.contrato_obj.vigencia = self.contrato_vigencia;
                         //self.contrato_obj.supervisor_cedula =
-                        //agora_response.data[0].Supervisor.Documento;                       
+                        //agora_response.data[0].Supervisor.Documento;
                         self.contrato_obj.supervisor_rol =
                             agora_response.data[0].Supervisor.Cargo;
                         self.contrato_obj.contratista = agora_response.data[0].Contratista;
@@ -1090,7 +1094,7 @@ angular
                 //Se obtiene el dato de Fecha Final Efectiva.
                 // amazonAdministrativaRequest
                 // .get("contrato_persona/" + self.contrato_obj.id)
-                // .then(function (acta_response) {                    
+                // .then(function (acta_response) {
                 //     self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                 // });
                 if ($scope.formCesion.$valid) {
@@ -2213,7 +2217,7 @@ angular
                                 bold: true,
                             },
                             {
-                                text: "- El presente contrato se ampara en el CDP N° " + self.contrato_obj.cdp_numero + " y con CRP N° " + self.contrato_obj.rp_numero + ". Se ordena la liberación del CRP número " + self.contrato_obj.rp_numero + " por el valor a ceder de " +
+                                text: "- El presente contrato se ampara en el CDP N° " + self.cdp_numero + " y con CRP N° " + self.rp_numero+ ". Se ordena la liberación del CRP número " + self.rp_numero+ " por el valor a ceder de " +
                                     NumeroALetras(self.valor_contrato_cesionario() + "") +
                                     "MONEDA CORRIENTE ($" +
                                     numberFormat(String(self.valor_contrato_cesionario()) + "") +
@@ -2306,7 +2310,7 @@ angular
                                 // ],
                                 // [
 
-                                // ],                              
+                                // ],
 
 
                                 // [{
@@ -2323,7 +2327,7 @@ angular
 
                                 // [
 
-                                // ],                              
+                                // ],
 
 
                                 [{
