@@ -83,6 +83,8 @@ angular
             self.posicion_considerando = 1;
             self.tamanoFuente = 10;
             self.valor_total_contrato = 0;
+            self.rp_numero = 0;
+            self.cdp_numero = 0;
 
             // const solic_input = document.getElementById("n_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -133,28 +135,20 @@ angular
                     }
                 });
             financieraJbpmRequest
-              .get(
-                "cdprptercerocontrato/" +
-                self.contrato_vigencia + "/" +
-                self.contrato_id
-              )
-              .then(function (financiera_response) {
-
-                  const cdpRpTercero = financiera_response?.data?.cdp_rp_tercero?.cdp_rp;
-
-                  if (Array.isArray(cdpRpTercero) && cdpRpTercero.length > 0) {
-                  const ultimo = cdpRpTercero[cdpRpTercero.length - 1];
-
-                    self.contrato_obj.rp_fecha = ultimo.vigencia || null;
-                  self.contrato_obj.rp_numero = ultimo.rp || null;
-                  self.contrato_obj.cdp_numero = ultimo.cdp || null;
-                } else {
-                  console.warn("No se encontró información de CDP/RP para este contrato.");
-                }
-              })
-              .catch(function (error) {
-                console.error("Error al obtener CDP/RP del contrato:", error);
-              });
+                .get(
+                    "cdprptercerocontrato/" +
+                    self.contrato_vigencia + "/" +
+                    self.contrato_id
+                )
+                .then(function (financiera_response) {
+                    if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                        self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                        self.contrato_obj.rp_numero = self.cdprp[cdprp.length - 1].rp;
+                        self.contrato_obj.cdp_numero = self.cdprp[cdprp.length - 1].cdp;
+                        self.rp_numero = self.contrato_obj.rp_numero;
+                        self.cdp_numero = self.contrato_obj.cdp_numero;
+                    }
+                });
 
             agoraRequest
                 .get(
@@ -2223,7 +2217,7 @@ angular
                                 bold: true,
                             },
                             {
-                                text: "- El presente contrato se ampara en el CDP N° " + self.contrato_obj.cdp_numero + " y con CRP N° " + self.contrato_obj.rp_numero + ". Se ordena la liberación del CRP número " + self.contrato_obj.rp_numero + " por el valor a ceder de " +
+                                text: "- El presente contrato se ampara en el CDP N° " + self.cdp_numero + " y con CRP N° " + self.rp_numero+ ". Se ordena la liberación del CRP número " + self.rp_numero+ " por el valor a ceder de " +
                                     NumeroALetras(self.valor_contrato_cesionario() + "") +
                                     "MONEDA CORRIENTE ($" +
                                     numberFormat(String(self.valor_contrato_cesionario()) + "") +
@@ -2638,4 +2632,3 @@ angular
             return date ? moment(date).format("DD/MM/YYYY") : "";
         };
     });
-
