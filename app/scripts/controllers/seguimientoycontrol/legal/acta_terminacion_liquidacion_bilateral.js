@@ -110,6 +110,20 @@ angular.module('contractualClienteApp')
                         self.numero_solicitud = data[0].id_numero_solicitud;
                     }
                 });
+            financieraJbpmRequest
+                .get(
+                    "cdprptercerocontrato/" +
+                    self.contrato_vigencia + "/" +
+                    elf.contrato_id
+                )
+                .then(function (financiera_response) {
+                    if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                        var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                        self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
+                        self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                        self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
+                    }
+                });
 
             agoraRequest.get('estado_contrato?query=NombreEstado:Suspendido').then(function (ec_response) {
                 self.estados[1] = ec_response.data[0];
@@ -275,8 +289,8 @@ angular.module('contractualClienteApp')
                                 financieraJbpmRequest
                                     .get(
                                         "cdprptercerocontrato/" +
-                                        self.contrato_obj.vigencia + "/" +
-                                        self.contrato_obj.numero_contrato
+                                        self.contrato_vigencia + "/" +
+                                        elf.contrato_id
                                     )
                                     .then(function (financiera_response) {
                                         if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {

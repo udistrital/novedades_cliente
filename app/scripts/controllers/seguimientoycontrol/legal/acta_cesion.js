@@ -135,8 +135,8 @@ angular
             financieraJbpmRequest
                 .get(
                     "cdprptercerocontrato/" +
-                    self.contrato_obj.vigencia + "/" +
-                    self.contrato_obj.numero_contrato
+                    self.contrato_vigencia + "/" +
+                    self.contrato_id
                 )
                 .then(function (financiera_response) {
                     if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
@@ -2209,7 +2209,7 @@ angular
                             ],
 
                             [{
-                                text: "CLAUSULA QUINTA: PUBLICACIÓN. ",
+                                text: "CLAUSULA QUINTA: ",
                                 bold: true,
                             },
                             {
