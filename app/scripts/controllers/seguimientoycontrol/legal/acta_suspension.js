@@ -822,7 +822,7 @@ angular
                             self.contrato_estado.Usuario = "usuario_prueba";
                         });
 
-                    //Obtención de datos para alimentar objeto que será el payload del POST a Agóra 
+                    //Obtención de datos para alimentar objeto que será el payload del POST a Agóra
                     // self.contrato_obj_replica = {};
                     // self.contrato_obj_replica.NumeroContrato = self.contrato_id //Revisar si toca parsearlo
                     // self.contrato_obj_replica.Vigencia = parseInt(self.contrato_vigencia);
@@ -1427,6 +1427,7 @@ angular
                         { text: "Proyectó", bold: true },
                         self.elaboro,
                         "CPS Coordinadora Legal - Ofex",
+                        "",
                       ]);
                     }
                     firmas.push([
