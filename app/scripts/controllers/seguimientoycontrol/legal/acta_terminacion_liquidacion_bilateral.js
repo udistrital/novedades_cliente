@@ -112,24 +112,6 @@ angular.module('contractualClienteApp')
                         self.numero_solicitud = data[0].id_numero_solicitud;
                     }
                 });
-            financieraJbpmRequest
-                .get(
-                    "cdprptercerocontrato/" +
-                    self.contrato_vigencia + "/" +
-                    self.contrato_id
-                )
-                .then(function (financiera_response) {
-                  console.log(financiera_response);
-                    if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
-                      console.log(financiera_response.data.cdp_rp_tercero.cdp_rp);
-                        var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                        self.contrato_obj.rp_fecha = cdprp[self.cdprp.length - 1].vigencia;
-                        self.contrato_obj.rp_numero = cdprp[self.cdprp.length - 1].rp;
-                        self.contrato_obj.cdp_numero = cdprp[self.cdprp.length - 1].cdp;
-                        self.rp_numero = self.contrato_obj.rp_numero;
-                        self.cdp_numero = self.contrato_obj.cdp_numero;
-                    }
-                });
 
             agoraRequest.get('estado_contrato?query=NombreEstado:Suspendido').then(function (ec_response) {
                 self.estados[1] = ec_response.data[0];
@@ -201,6 +183,22 @@ angular.module('contractualClienteApp')
                             allowOutsideClick: false
                         });
                     });
+
+                    financieraJbpmRequest
+                        .get(
+                              "cdprptercerocontrato/" +
+                              self.contrato_vigencia + "/" +
+                              self.contrato_id + "/0" + self.unidadEjecutora + "/12"
+                            )
+                            .then(function (financiera_response) {
+                              if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
+                                self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
+                                self.rp_numero = self.contrato_obj.rp_numero;
+                                self.cdp_numero = self.contrato_obj.cdp_numero;
+                              }
+                            });
 
                     //Obtención de datos del supervisor.
                     amazonAdministrativaRequest
@@ -330,19 +328,21 @@ angular.module('contractualClienteApp')
                                 });
                                 //consulta el CDP y RP
                                 financieraJbpmRequest
-                                    .get(
-                                        "cdprptercerocontrato/" +
-                                        self.contrato_obj.vigencia + "/" +
-                                        self.contrato_obj.numero_contrato
-                                    )
-                                    .then(function (financiera_response) {
-                                        if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
-                                            var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                                            self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
-                                            self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
-                                            self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
-                                        }
-                                    });
+                                  .get(
+                                      "cdprptercerocontrato/" +
+                                      self.contrato_vigencia + "/" +
+                                      self.contrato_id
+                                  )
+                                  .then(function (financiera_response) {
+                                      if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                          var cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                          self.contrato_obj.rp_fecha = cdprp[cdprp.length - 1].vigencia;
+                                          self.contrato_obj.rp_numero = cdprp[cdprp.length - 1].rp;
+                                          self.contrato_obj.cdp_numero = cdprp[cdprp.length - 1].cdp;
+                                          self.rp_numero = self.contrato_obj.rp_numero;
+                                          self.cdp_numero = self.contrato_obj.cdp_numero;
+                                      }
+                                  });
                             });
                         }
                     }).catch(function (error) {
