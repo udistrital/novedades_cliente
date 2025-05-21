@@ -85,6 +85,7 @@ angular
             self.valor_total_contrato = 0;
             self.rp_numero = 0;
             self.cdp_numero = 0;
+            self.unidadEjecutora= 0;
 
             // const solic_input = document.getElementById("n_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -132,21 +133,6 @@ angular
                     // console.log(data);
                     if (data != undefined && data[0].id_numero_solicitud != null) {
                         self.n_solicitud = data[0].id_numero_solicitud;
-                    }
-                });
-            financieraJbpmRequest
-                .get(
-                    "cdprptercerocontrato/" +
-                    self.contrato_vigencia + "/" +
-                    self.contrato_id
-                )
-                .then(function (financiera_response) {
-                    if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
-                        self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                        self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
-                        self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
-                        self.rp_numero = self.contrato_obj.rp_numero;
-                        self.cdp_numero = self.contrato_obj.cdp_numero;
                     }
                 });
 
@@ -394,6 +380,22 @@ angular
                                     confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                     allowOutsideClick: false
                                 });
+                            });
+
+                        financieraJbpmRequest
+                            .get(
+                              "cdprptercerocontrato/" +
+                              self.contrato_vigencia + "/" +
+                              self.contrato_id + "/0" + self.unidadEjecutora + "/12"
+                            )
+                            .then(function (financiera_response) {
+                              if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
+                                self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
+                                self.rp_numero = self.contrato_obj.rp_numero;
+                                self.cdp_numero = self.contrato_obj.cdp_numero;
+                              }
                             });
 
                         //Obtención de datos del ordenador del gasto
