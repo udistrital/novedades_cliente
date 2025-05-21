@@ -83,6 +83,9 @@ angular
             self.posicion_considerando = 1;
             self.tamanoFuente = 10;
             self.valor_total_contrato = 0;
+            self.rp_numero = 0;
+            self.cdp_numero = 0;
+            self.unidadEjecutora= 0;
 
             // const solic_input = document.getElementById("n_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -132,19 +135,6 @@ angular
                         self.n_solicitud = data[0].id_numero_solicitud;
                     }
                 });
-            financieraJbpmRequest
-                .get(
-                    "cdprptercerocontrato/" +
-                    self.contrato_obj.vigencia + "/" +
-                    self.contrato_obj.numero_contrato
-                )
-                .then(function (financiera_response) {
-                    if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
-                        self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
-                        self.contrato_obj.rp_numero = self.cdprp[cdprp.length - 1].rp;
-                        self.contrato_obj.cdp_numero = self.cdprp[cdprp.length - 1].cdp;
-                    }
-                });
 
             agoraRequest
                 .get(
@@ -166,7 +156,7 @@ angular
                             agora_response.data[0].OrdenadorGasto;
                         self.contrato_obj.vigencia = self.contrato_vigencia;
                         //self.contrato_obj.supervisor_cedula =
-                        //agora_response.data[0].Supervisor.Documento;                       
+                        //agora_response.data[0].Supervisor.Documento;
                         self.contrato_obj.supervisor_rol =
                             agora_response.data[0].Supervisor.Cargo;
                         self.contrato_obj.contratista = agora_response.data[0].Contratista;
@@ -186,6 +176,7 @@ angular
                         self.fecha_reg_dia = res[2].substring(0, 2);
                         self.fecha_reg_mes = meses[parseInt(res[1] - 1)];
                         self.fecha_reg_ano = res[0];
+                        self.unidadEjecutora = agora_response.data[0].UnidadEjecutora;
                         //Se obtiene los datos de Acta de Inicio.
                         amazonAdministrativaRequest
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
@@ -389,6 +380,22 @@ angular
                                     confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
                                     allowOutsideClick: false
                                 });
+                            });
+
+                        financieraJbpmRequest
+                            .get(
+                              "cdprptercerocontrato/" +
+                              self.contrato_vigencia + "/" +
+                              self.contrato_id + "/0" + self.unidadEjecutora + "/12"
+                            )
+                            .then(function (financiera_response) {
+                              if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
+                                self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
+                                self.rp_numero = self.contrato_obj.rp_numero;
+                                self.cdp_numero = self.contrato_obj.cdp_numero;
+                              }
                             });
 
                         //Obtención de datos del ordenador del gasto
@@ -1089,7 +1096,7 @@ angular
                 //Se obtiene el dato de Fecha Final Efectiva.
                 // amazonAdministrativaRequest
                 // .get("contrato_persona/" + self.contrato_obj.id)
-                // .then(function (acta_response) {                    
+                // .then(function (acta_response) {
                 //     self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                 // });
                 if ($scope.formCesion.$valid) {
@@ -1862,6 +1869,21 @@ angular
                     },
                     { text: " (CESIONARIO).\n\n", bold: true }]
                 });
+                estructura.push({
+                    text: [{
+                        text: "El presente contrato se ampara en el CDP N° " +
+                            self.cdp_numero +
+                            " y con CRP N° " +
+                            self.rp_numero +
+                            ". Se ordena la liberación del CRP número " +
+                            self.rp_numero +
+                            " por el valor a ceder de " +
+                            NumeroALetras(self.valor_contrato_cesionario() + "") +
+                            "MONEDA CORRIENTE ($" +
+                            numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                            " M/CTE)",
+                    }]
+                });
                 if ($scope.nuevo_considerando) {
                     estructura.splice(self.posicion_considerando - 1, 0, {
                         text: self.nuevo_considerando + "\n\n",
@@ -1898,9 +1920,9 @@ angular
                     if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
                         firmas.push([
                             { text: "Proyectó", bold: true },
-                            "panic",
                             self.elaboro,
                             "CPS Coordinadora Legal - Ofex",
+                            "",
                         ]);
                     }
                     firmas.push([
@@ -2208,18 +2230,6 @@ angular
                             },
                             ],
 
-                            [{
-                                text: "CLAUSULA QUINTA: PUBLICACIÓN. ",
-                                bold: true,
-                            },
-                            {
-                                text: "- El presente contrato se ampara en el CDP N° " + self.contrato_obj.cdp_numero + " y con CRP N° " + self.contrato_obj.rp_numero + ". Se ordena la liberación del CRP número " + self.contrato_obj.rp_numero + " por el valor a ceder de " +
-                                    NumeroALetras(self.valor_contrato_cesionario() + "") +
-                                    "MONEDA CORRIENTE ($" +
-                                    numberFormat(String(self.valor_contrato_cesionario()) + "") +
-                                    " M/CTE)",
-                            },
-                            ],
                             self.agregarClausulas(),
                             // {
                             //     text: "En constancia de lo consignado en el presente documento, se firma, \n\nen Bogotá, D.C., a los ________________________________________.\n\n\n",
@@ -2306,7 +2316,7 @@ angular
                                 // ],
                                 // [
 
-                                // ],                              
+                                // ],
 
 
                                 // [{
@@ -2323,7 +2333,7 @@ angular
 
                                 // [
 
-                                // ],                              
+                                // ],
 
 
                                 [{
@@ -2628,4 +2638,3 @@ angular
             return date ? moment(date).format("DD/MM/YYYY") : "";
         };
     });
-
