@@ -1629,8 +1629,34 @@ angular.module('contractualClienteApp')
                     {
                         style: ['general_font'],
                         text: [{
+                          text: [
+                            { text: ' CLÁUSULA TERCERA: ', bold: true },
+                            {
+                              text: 'ORDENAR liberar el saldo a favor de la UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS por valor de ',
+                            },
+                            {
+                              text: numeroALetras(self.saldo_universidad.replace(/\,/g, ""), {
+                                plural: $translate.instant("PESOS"),
+                                singular: $translate.instant("PESO"),
+                                centPlural: $translate.instant("CENTAVOS"),
+                                centSingular: $translate.instant("CENTAVO"),
+                              }),
+                              bold: true
+                            },
+                            { text: ' PESOS M/CTE ($', bold: true },
+                            {
+                              text: numberFormat(String(self.saldo_universidad.replace(/\,/g, ""))),
+                              bold: true
+                            },
+                            { text: ' M/CTE), en atención a que es un valor no ejecutado en el contrato.\n\n' }
+                          ]
+                        }]
+                      },
+                    {
+                        style: ['general_font'],
+                        text: [{
                             text: [
-                                { text: ' CLÁUSULA TERCERA : ', bold: true },
+                                { text: ' CLÁUSULA CUARTA : ', bold: true },
                                 {
                                     text: 'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' +
                                         self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' a nombre de ' +
@@ -1646,7 +1672,7 @@ angular.module('contractualClienteApp')
                         style: ['general_font'],
                         text: [{
                             text: [
-                                { text: 'CLAUSULA CUARTA: PUBLICACIÓN. ', bold: true },
+                                { text: 'CLAUSULA QUINTA: PUBLICACIÓN. ', bold: true },
                                 {
                                     text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No. 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de terminación y liquidación bilateral en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente..\n\n'
                                 }
