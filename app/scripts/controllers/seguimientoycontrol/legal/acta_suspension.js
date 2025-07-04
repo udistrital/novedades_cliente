@@ -135,7 +135,7 @@ angular
                         self.plazoMeses = self.calculoPlazoLetras(self.contrato_obj.plazo);
                         self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                         self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
-
+                        self.unidadEjecutora = agora_response.data[0].UnidadEjecutora;
                         //Obtención de datos del ordenador del gasto
                         agoraRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response_id) {
                             const rolOrdenador = og_response_id.data[0].RolOrdenador;
@@ -494,7 +494,6 @@ angular
                                                         response_replica.status == 200 ||
                                                         response_replica.statusText == "OK"
                                                     ) {
-                                                        console.log("Replica correcta");
                                                         agoraRequest
                                                             .post("contrato_estado", nuevoEstado)
                                                             .then(function (response) {
@@ -823,7 +822,7 @@ angular
                             self.contrato_estado.Usuario = "usuario_prueba";
                         });
 
-                    //Obtención de datos para alimentar objeto que será el payload del POST a Agóra 
+                    //Obtención de datos para alimentar objeto que será el payload del POST a Agóra
                     // self.contrato_obj_replica = {};
                     // self.contrato_obj_replica.NumeroContrato = self.contrato_id //Revisar si toca parsearlo
                     // self.contrato_obj_replica.Vigencia = parseInt(self.contrato_vigencia);
@@ -1407,20 +1406,37 @@ angular
                     { text: "Cargo", bold: true },
                     { text: "Firma", bold: true },
                 ]);
-                if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
-                    firmas.push([
+                if (self.unidadEjecutora == 1) {
+                    if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                      firmas.push([
                         { text: "Proyectó", bold: true },
                         self.elaboro,
                         "Abogado Oficina de Contratación",
                         "",
+                      ]);
+                    }
+                    firmas.push([
+                      { text: "Aprobó", bold: true },
+                      self.contrato_obj.jefe_juridica_nombre_completo,
+                      "Jefe Oficina de Contratación",
+                      "",
                     ]);
-                }
-                firmas.push([
-                    { text: "Aprobó", bold: true },
-                    self.contrato_obj.jefe_juridica_nombre_completo,
-                    "Jefe Oficina de Contratación",
-                    "",
-                ]);
+                  } else {
+                    if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                      firmas.push([
+                        { text: "Proyectó", bold: true },
+                        self.elaboro,
+                        "CPS Coordinadora Legal - Ofex",
+                        "",
+                      ]);
+                    }
+                    firmas.push([
+                      { text: "Aprobó", bold: true },
+                      self.contrato_obj.ordenadorGasto_nombre,
+                      "Jefe Oficina de Extensión y Supervisor - Ofex",
+                      "",
+                    ]);
+                  }
                 return firmas;
             }
 

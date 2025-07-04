@@ -83,6 +83,9 @@ angular
             self.posicion_considerando = 1;
             self.tamanoFuente = 10;
             self.valor_total_contrato = 0;
+            self.rp_numero = 0;
+            self.cdp_numero = 0;
+            self.unidadEjecutora= 0;
 
             // const solic_input = document.getElementById("n_solicitud");
             // solic_input.addEventListener("input", function () {
@@ -153,7 +156,7 @@ angular
                             agora_response.data[0].OrdenadorGasto;
                         self.contrato_obj.vigencia = self.contrato_vigencia;
                         //self.contrato_obj.supervisor_cedula =
-                        //agora_response.data[0].Supervisor.Documento;                       
+                        //agora_response.data[0].Supervisor.Documento;
                         self.contrato_obj.supervisor_rol =
                             agora_response.data[0].Supervisor.Cargo;
                         self.contrato_obj.contratista = agora_response.data[0].Contratista;
@@ -173,6 +176,7 @@ angular
                         self.fecha_reg_dia = res[2].substring(0, 2);
                         self.fecha_reg_mes = meses[parseInt(res[1] - 1)];
                         self.fecha_reg_ano = res[0];
+                        self.unidadEjecutora = agora_response.data[0].UnidadEjecutora;
                         //Se obtiene los datos de Acta de Inicio.
                         amazonAdministrativaRequest
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
@@ -378,6 +382,22 @@ angular
                                 });
                             });
 
+                        financieraJbpmRequest
+                            .get(
+                              "cdprptercerocontrato/" +
+                              self.contrato_vigencia + "/" +
+                              self.contrato_id + "/0" + self.unidadEjecutora + "/12"
+                            )
+                            .then(function (financiera_response) {
+                              if (financiera_response.data.cdp_rp_tercero.cdp_rp != undefined) {
+                                self.cdprp = financiera_response.data.cdp_rp_tercero.cdp_rp;
+                                self.contrato_obj.rp_numero = self.cdprp[self.cdprp.length - 1].rp;
+                                self.contrato_obj.cdp_numero = self.cdprp[self.cdprp.length - 1].cdp;
+                                self.rp_numero = self.contrato_obj.rp_numero;
+                                self.cdp_numero = self.contrato_obj.cdp_numero;
+                              }
+                            });
+
                         //Obtención de datos del ordenador del gasto
                         amazonAdministrativaRequest
                             .get(
@@ -539,9 +559,6 @@ angular
             });
 
             self.calculoPlazosCesion = function (fecha_inicio, fecha_fin) {
-
-                console.log("Inicio: ", fecha_inicio);
-                console.log("Fin: ", fecha_fin);
                 var months = fecha_fin.getMonth() - fecha_inicio.getMonth() + (12 * (fecha_fin.getFullYear() - fecha_inicio.getFullYear()));
                 var days = 0;
                 if (months != 0) {
@@ -555,7 +572,6 @@ angular
                     days += fecha_fin.getDate() - fecha_inicio.getDate();
                 }
                 days += (months * 30) + 1;
-                console.log("Days: ", days);
                 return days;
             }
 
@@ -836,7 +852,6 @@ angular
                             }
                         })
                         .catch(function (error) {
-                            console.log("error: ", error);
                             //Servidor no disponible
                             $scope.alert = "DESCRIPCION_ERROR_CESION2";
                             swal({
@@ -870,7 +885,6 @@ angular
                                             request_replica.status == 200 ||
                                             request_replica.statusText == "OK"
                                         ) {
-                                            console.log("Replica correcta");
                                             pdfMake
                                                 .createPdf(output)
                                                 .download(
@@ -947,7 +961,6 @@ angular
                             }
                         })
                         .catch(function (error) {
-                            console.log("error: ", error);
                             //Servidor no disponible
                             $scope.alert = "DESCRIPCION_ERROR_CESION2";
                             swal({
@@ -1083,7 +1096,7 @@ angular
                 //Se obtiene el dato de Fecha Final Efectiva.
                 // amazonAdministrativaRequest
                 // .get("contrato_persona/" + self.contrato_obj.id)
-                // .then(function (acta_response) {                    
+                // .then(function (acta_response) {
                 //     self.contrato_obj.Fin = acta_response.data[0].FechaFin;
                 // });
                 if ($scope.formCesion.$valid) {
@@ -1599,7 +1612,7 @@ angular
                 if ($scope.nueva_clausula) {
                     estructura.push(
                         {
-                            text: "CLAUSULA QUINTA: ",
+                            text: "CLAUSULA SEXTA: ",
                             bold: true,
                         },
                         {
@@ -1731,7 +1744,7 @@ angular
                                 self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', en su orden por la suma de ' +
                                 numeroALetras(
                                     self.novedades[i].ValorAdicion, {
-                                    plural: $translate.instant("PESOS"),    
+                                    plural: $translate.instant("PESOS"),
                                     singular: $translate.instant("PESO"),
                                     centPlural: $translate.instant("CENTAVOS"),
                                     centSingular: $translate.instant("CENTAVO"),
@@ -1856,6 +1869,21 @@ angular
                     },
                     { text: " (CESIONARIO).\n\n", bold: true }]
                 });
+                estructura.push({
+                    text: [{
+                        text: "El presente contrato se ampara en el CDP N° " +
+                            self.cdp_numero +
+                            " y con CRP N° " +
+                            self.rp_numero +
+                            ". Se ordena la liberación del CRP número " +
+                            self.rp_numero +
+                            " por el valor a ceder de " +
+                            NumeroALetras(self.valor_contrato_cesionario() + "") +
+                            "MONEDA CORRIENTE ($" +
+                            numberFormat(String(self.valor_contrato_cesionario()) + "") +
+                            " M/CTE)",
+                    }]
+                });
                 if ($scope.nuevo_considerando) {
                     estructura.splice(self.posicion_considerando - 1, 0, {
                         text: self.nuevo_considerando + "\n\n",
@@ -1873,20 +1901,37 @@ angular
                     { text: "Cargo", bold: true },
                     { text: "Firma", bold: true },
                 ]);
-                if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                if (self.unidadEjecutora == 1) {
+                    if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                        firmas.push([
+                            { text: "Proyectó", bold: true },
+                            self.elaboro,
+                            "Abogado Oficina de Contratación",
+                            "",
+                        ]);
+                    }
                     firmas.push([
-                        { text: "Proyectó", bold: true },
-                        self.elaboro,
-                        "Abogado Oficina de Contratación",
+                        { text: "Aprobó", bold: true },
+                        self.contrato_obj.jefe_juridica_nombre_completo,
+                        "Jefe Oficina de Contratación",
+                        "",
+                    ]);
+                } else {
+                    if (self.elaboro_cedula != self.contrato_obj.jefe_juridica_documento) {
+                        firmas.push([
+                            { text: "Proyectó", bold: true },
+                            self.elaboro,
+                            "CPS Coordinadora Legal - Ofex",
+                            "",
+                        ]);
+                    }
+                    firmas.push([
+                        { text: "Aprobó", bold: true },
+                        self.contrato_obj.ordenadorGasto_nombre,
+                        "Jefe Oficina de Extensión y Supervisor - Ofex",
                         "",
                     ]);
                 }
-                firmas.push([
-                    { text: "Aprobó", bold: true },
-                    self.contrato_obj.jefe_juridica_nombre_completo,
-                    "Jefe Oficina de Contratación",
-                    "",
-                ]);
                 return firmas;
             }
 
@@ -2184,6 +2229,7 @@ angular
                                 text: "- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se  procederá a la publicación del presente documento de cesión en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente:\n\n",
                             },
                             ],
+
                             self.agregarClausulas(),
                             // {
                             //     text: "En constancia de lo consignado en el presente documento, se firma, \n\nen Bogotá, D.C., a los ________________________________________.\n\n\n",
@@ -2270,7 +2316,7 @@ angular
                                 // ],
                                 // [
 
-                                // ],                              
+                                // ],
 
 
                                 // [{
@@ -2287,7 +2333,7 @@ angular
 
                                 // [
 
-                                // ],                              
+                                // ],
 
 
                                 [{
@@ -2592,4 +2638,3 @@ angular
             return date ? moment(date).format("DD/MM/YYYY") : "";
         };
     });
-

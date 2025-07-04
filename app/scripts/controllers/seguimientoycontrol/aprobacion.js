@@ -65,7 +65,6 @@ angular
                         rol === 'CONTRATISTA'
                     ) {
                         self.rolActual = "ORDENADOR_DEL_GASTO";
-                        console.log(self.rolActual);
                         break;
                     }
                 }
@@ -103,7 +102,6 @@ angular
                         self.contrato_vigencia
                     )
                     .then(function (agora_response) {
-                        console.log(agora_response);
                         if (agora_response.data.length > 0) {
                             self.contrato_obj.numero_contrato = self.contrato_id;
                             self.contrato_obj.id =
@@ -242,7 +240,6 @@ angular
                                             request_novedades.status == 200 ||
                                             request_novedades.statusText == "OK"
                                         ) {
-                                            console.log("Replica correcta");
                                             novedadesMidRequest
                                                 .post("novedad", self.suspension_nov)
                                                 .then(function (request_novedades) {
@@ -400,7 +397,6 @@ angular
             }
 
             self.revisarNovedad = function (contrato, vigencia) {
-                console.log("ola")
                 var ref = "#/seguimientoycontrol/legal/acta_adicion_prorroga/" + contrato + "/" + vigencia + "/false"
                 window.location.href = ref;
             }
@@ -463,8 +459,6 @@ angular
                     confirmButtonText: 'Enviar Solicitud'
                 }).then(function () {
 
-                    console.log("Aqui se ejecuta");
-
                 }).catch(swal.noop);
             }
 
@@ -525,10 +519,8 @@ angular
                 .get(
                     "aprobacion", self.rolActual
                 ).then(function (response) {
-                    console.log(response);
                     for (var i = 0; i < response.data.Body.length; i++) {
 
-                        console.log(response.data.Body[i]);
                         if (
                             response.data.Body !=
                             null
@@ -542,6 +534,5 @@ angular
                             });
                         }
                     }
-                    console.log($scope.novedadesTabla);
                 });
         });
