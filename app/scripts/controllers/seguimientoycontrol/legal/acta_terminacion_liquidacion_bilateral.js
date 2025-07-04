@@ -1643,7 +1643,7 @@ angular.module('contractualClienteApp')
                               }),
                               bold: true
                             },
-                            { text: ' PESOS M/CTE ($', bold: true },
+                            { text: ' M/CTE ($', bold: true },
                             {
                               text: numberFormat(String(self.saldo_universidad.replace(/\,/g, ""))),
                               bold: true
