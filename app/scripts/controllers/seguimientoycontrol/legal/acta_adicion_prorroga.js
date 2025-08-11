@@ -1539,8 +1539,6 @@ angular
           var docDefinition = self.formato_pdf();
 
         const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-        // console.log(self.contrato_obj_replica);
-        // console.log(self.data_acta_adicion_prorroga);
         // pdfMake.createPdf(docDefinition).
         //     download(
         //         "acta_adicion_prorroga_contrato_" +
@@ -1560,7 +1558,6 @@ angular
             });
           });
         });
-         //aqui van
       }
 
       /**
