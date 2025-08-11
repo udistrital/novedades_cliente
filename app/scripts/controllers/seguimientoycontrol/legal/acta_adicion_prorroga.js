@@ -1498,18 +1498,21 @@ angular
         });
       }
 
-              var wait = self._readyContratista || $q.when();
+      self.verDocumento = function () {
+        var wait = self._readyContratista || $q.when();
 
-              wait.then(function () {
-                var docDefinition = self.formato_pdf();
-                const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-                pdfDocGenerator.open({
-                  title: 'PDF creado con PDFMake',
-                  width: 600,
-                  height: 400,
-                  closeBehavior: 'remove',
-                });
-              });
+        wait.then(function () {
+          var docDefinition = self.formato_pdf();
+          const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+          pdfDocGenerator.open({
+            title: 'PDF creado con PDFMake',
+            width: 600,
+            height: 400,
+            closeBehavior: 'remove',
+          });
+        });
+      };
+
 
 
       /**
