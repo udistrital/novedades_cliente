@@ -133,6 +133,34 @@ angular
         .then(function (agora_response) {
           if (agora_response.data.length > 0) {
             self.contrato_obj.contratista = agora_response.data[0].Contratista;
+            self._readyContratista = agoraRequest
+              .get("informacion_proveedor?query=Id:" + self.contrato_obj.contratista)
+              .then(function (ip_response) {
+                var prov = (ip_response && ip_response.data && ip_response.data[0]) || {};
+                self.contrato_obj.contratista_documento = prov.NumDocumento || "";
+                self.contrato_obj.contratista_nombre    = prov.NomProveedor || "";
+
+                if (!self.contrato_obj.contratista_documento) return;
+
+                return agoraRequest
+                  .get("informacion_persona_natural?query=Id:" + self.contrato_obj.contratista_documento)
+                  .then(function (ipn_response) {
+                    var ipn = (ipn_response && ipn_response.data && ipn_response.data[0]) || {};
+                    self.contrato_obj.contratista_tipo_Documento =
+                      (ipn.TipoDocumento && ipn.TipoDocumento.ValorParametro) || "";
+
+                    if (!ipn.IdCiudadExpedicionDocumento) return;
+
+                    return coreAmazonRequest
+                      .get("ciudad", "query=Id:" + ipn.IdCiudadExpedicionDocumento)
+                      .then(function (c_response) {
+                        self.contrato_obj.contratista_ciudad_cedula =
+                          (c_response && c_response.data && c_response.data[0] && c_response.data[0].Nombre) || "";
+                      });
+                  });
+              })
+              .catch(function () {});
+
             self.contrato_obj.cesion = 0;
             self.contrato_obj.numero_contrato = self.contrato_id;
             self.contrato_obj.id =
@@ -368,7 +396,7 @@ angular
                     }
                   }
                   self.contrato_obj.contratista = last_novelty.Cesionario;
-                  agoraRequest
+                  self._readyContratista = agoraRequest
                     .get(
                       "informacion_proveedor?query=Id:" + last_novelty.Cesionario
                     )
@@ -1470,16 +1498,19 @@ angular
         });
       }
 
-      self.verDocumento = function () {
-        var docDefinition = self.formato_pdf();
-        const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-        pdfDocGenerator.open({
-          title: 'PDF creado con PDFMake',
-          width: 600,
-          height: 400,
-          closeBehavior: 'remove',
-        });
-      }
+              var wait = self._readyContratista || $q.when();
+
+              wait.then(function () {
+                var docDefinition = self.formato_pdf();
+                const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+                pdfDocGenerator.open({
+                  title: 'PDF creado con PDFMake',
+                  width: 600,
+                  height: 400,
+                  closeBehavior: 'remove',
+                });
+              });
+
 
       /**
        * @ngdoc method
@@ -1500,7 +1531,10 @@ angular
           "" +
           new Date().getMinutes();
 
-        var docDefinition = self.formato_pdf();
+        var wait = self._readyContratista || $q.when();
+        wait.then(function () {
+          var docDefinition = self.formato_pdf();
+
         const pdfDocGenerator = pdfMake.createPdf(docDefinition);
         // console.log(self.contrato_obj_replica);
         // console.log(self.data_acta_adicion_prorroga);
@@ -1521,7 +1555,9 @@ angular
             self).then(function (enlace) {
               self.PostNovedad(dateTime, docDefinition, enlace);
             });
+          });
         });
+         //aqui van
       }
 
       /**
