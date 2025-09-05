@@ -1,321 +1,265 @@
 <br>
 <div class="panel panel-default">
-    <div class="panel panel-body">
-        <p>
-        <div class="centrado">
-            <center>
-                <h3>
-                    <b>{{'SEGUIMIENTO_LEGAL' | translate}}</b>
-                </h3>
-            </center>
-            <hr>
-            <div style="float:left;margin-bottom:2%;width:100%">
-                <div class="row" style="border:0px solid;">
-                    <div class="col-sm-12 col-md-5">
-                        <div class="row" ng-if="sLegal.rolActual == 'CONTRATISTA'">
-                            <div class="form-group col-md-12">
-                                <p style="margin:0; display:inline-block; width:35%;">
-                                    <b>{{'NUMERO_CONTRATO' | translate}}:</b>
-                                </p>
-                                <md-input-container style="margin:0; display:inline-block; width:25%;">
-                                    <input type="text" ng-model="sLegal.contrato_id" ng-disabled="true">
-                                </md-input-container>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <p style="margin:0; display:inline-block; width:35%;">
-                                    <b>{{'VIGENCIA_CONTRATO' | translate}}:</b>
-                                </p>
-                                <md-input-container style="margin:0; display:inline-block; width:25%;">
-                                    <input type="text" ng-model="sLegal.contrato_vigencia" ng-disabled="true">
-                                </md-input-container>
-                            </div>
-                        </div>
-                        <div class="row" ng-if="sLegal.rolActual != 'CONTRATISTA'">
-                            <div class="form-group col-md-12">
-                                <p style="margin:0; display:inline-block; width:40%;">
-                                    <b>{{'NUMERO_CONTRATO' | translate}} *:</b>
-                                </p>
-                                <md-input-container style="margin:0; display:inline-block; width:40%;">
-                                    <input type="number" id="contrato_id" aria-label="contrato_id" name="contrato_id"
-                                        required ng-model="sLegal.contrato_id" ng-disabled="false" min="0">
-                                    <div ng-messages="formLegal.contrato_id.$error">
-                                        <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
-                                    </div>
-                                </md-input-container>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <p style="margin:0; display:inline-block; width:40%;">
-                                    <b>{{'VIGENCIA_CONTRATO' | translate}} *:</b>
-                                </p>
-                                <select class="form-control" ng-model="sLegal.contrato_vigencia"
-                                    style="margin:0; display:inline-block; width:40%;">
-                                    <option ng-repeat="vigencia in vigencias">{{vigencia}}</option>
-                                </select>
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <button class="btn btn-primary dropdown-toggle" ng-click="sLegal.buscar_contrato()">
-                                    {{'BTN.BUSCAR' | translate}}
-                                    {{'NUMERO_CONTRATO' | translate}}
-                                </button>
-                                <hr style="border-bottom:1px solid #cecdcc;">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12" style="padding-left:25px;" ng-if="sLegal.rolActual!='CONTRATISTA'">
-                                <label for="boton_novedad">{{'SELECCIONE_UNA_NOVEDAD' | translate}}</label>
-                                <br>
-                                <div class="btn-group" ng-if="sLegal.estado_resultado_response == true">
-                                    <button type="button" id="boton_novedad" class="btn btn-primary dropdown-toggle"
-                                        data-toggle="dropdown" ng-disabled="sLegal.createBool">
-                                        {{'NOVEDADES' | translate}}
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
-                                            <a
-                                                href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}/false">{{'CREAR_NOVEDAD_ADICION_PRORROGA'
-                                                | translate}}</a>
-                                        </li>
-                                        <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 10 && sLegal.novedadEnCurso == false">
-                                            <a
-                                                href="#/seguimientoycontrol/legal/acta_inicio/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'AGREGAR_POLIZA'
-                                                | translate}}</a>
-                                        </li>
-                                        <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
-                                            <a
-                                                href="#/seguimientoycontrol/legal/acta_suspension/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_SUSPENSION'
-                                                | translate}}</a>
-                                        </li>
-                                        <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 2 && sLegal.novedadEnCurso == false">
-                                            <a
-                                                href="#/seguimientoycontrol/legal/acta_reinicio/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_REINICIO'
-                                                | translate}}</a>
-                                        </li>
-                                        <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
-                                            <a
-                                                href="#/seguimientoycontrol/legal/acta_cesion/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_CESION'
-                                                | translate}}</a>
-                                        </li>
-                                        <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
-                                            <a
-                                                href="#/seguimientoycontrol/legal/acta_terminacion_liquidacion_bilateral/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_TERMINACION_BILATERAL'
-                                                | translate}}</a>
-                                        </li>
-                                        <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 6 && sLegal.novedadEnCurso == false">
-                                            <a
-                                                ng-click="activarContrato()">{{'ACTIVAR_CONTRATO'
-                                                | translate}}</a>
-                                        </li>
-                                    </ul>
-                                    </select>
-                                </div>
-                                <!-- <div class="btn-group" ng-if="sLegal.estado_resultado_response == 0">
-                                    <button type="button" id="boton_novedad" class="btn btn-success dropdown-toggle"
-                                        data-toggle="dropdown" ng-disabled="false">
-                                        {{'NOVEDADES' | translate}} ola
-                                        <span class="caret"></span>
-                                    </button>
-                                </div> -->
-                            </div>
-                            <!-- <div class="col-md-12" style="padding-left:25px;" ng-if="sLegal.rolActual=='CONTRATISTA'">
-                                <label for="boton_novedad">{{'SELECCIONE_UNA_NOVEDAD' | translate}}</label>
-                                <br>
-                                <div class="btn-group" ng-if="sLegal.estado_resultado_response == true">
-                                    <button type="button" id="boton_novedad" class="btn btn-primary dropdown-toggle"
-                                        data-toggle="dropdown">
-                                        {{'NOVEDADES' | translate}}
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
-                                            <a ng-click="sLegal.crearSolicitud()">Solicitud de suspensión</a>
-                                        </li>
-                                        <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 2 && sLegal.novedadEnCurso == false">
-                                            <a ng-click="sLegal.crearSolicitud()">Solicitud de reinicio</a>
-                                        </li>
-                                        <li
-                                            ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
-                                            <a ng-click="sLegal.crearSolicitud()">Solicitud de cesión</a>
-                                        </li>
-                                    </ul>
-                                    </select>
-                                </div>
-                                <div class="btn-group" ng-if="sLegal.estado_resultado_response == 0">
-                                    <button type="button" id="boton_novedad" class="btn btn-success dropdown-toggle"
-                                        data-toggle="dropdown" ng-disabled="true">
-                                        {{'NOVEDADES' | translate}}
-                                        <span class="caret"></span>
-                                    </button>
-                                </div>
-                            </div> -->
-
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-7">
-                        <div class=" panel panel-default">
-                            <div class="panel-heading">
-                                <center>
-                                    <h4>
-                                        <b>{{'INFORMACION' | translate}}</b>
-                                    </h4>
-                                </center>
-                            </div>
-                            <div class="panel-body" style="text-align:left;"
-                                ng-if="sLegal.estado_resultado_response == true">
-                                <div class="row">
-                                    <div class="col-sm-4 col-md-3">
-                                        <b>{{'NUMERO_CONTRATO' | translate}}</b>
-                                    </div>
-                                    <div class="col-sm-8 col-md-9">
-                                        <p>{{sLegal.contrato_obj.numero_contrato}}</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-4 col-md-3">
-                                        <b>{{'CONTRATANTE' | translate}}</b>
-                                    </div>
-                                    <div class="col-sm-8 col-md-9">
-                                        <p>{{'UNIVERSIDAD_NOMBRE' | translate}}</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-4 col-md-3">
-                                        <b>{{'CONTRATISTA' | translate}}</b>
-                                    </div>
-                                    <div class="col-sm-8 col-md-9"
-                                        ng-if="sLegal.contrato_obj.contratista_documento != null">
-                                        <p>
-                                            {{sLegal.contrato_obj.contratista_nombre}}
-                                            <br>
-                                            <span style="color:#555; font-size:14px;">
-                                                {{sLegal.contrato_obj.contratista_documento}}
-                                            </span>
-                                        </p>
-                                    </div>
-                                    <div class="col-sm-8 col-md-9"
-                                        ng-if="sLegal.contrato_obj.contratista_documento == null">
-                                        <p>{{'NO_REGISTRA' | translate}}</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-4 col-md-3">
-                                        <b>{{'OBJETO' | translate}}</b>
-                                    </div>
-                                    <div class="col-sm-8 col-md-9" ng-if="sLegal.contrato_obj.objeto != null">
-                                        <p>{{sLegal.contrato_obj.objeto}}</p>
-                                    </div>
-                                    <div class="col-sm-8 col-md-9" ng-if="sLegal.contrato_obj.objeto == null">
-                                        <p>{{'NO_REGISTRA' | translate}}</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-4 col-md-3">
-                                        <b>{{'VALOR_CONTRATO' | translate}}</b>
-                                    </div>
-                                    <div class="col-sm-8 col-md-9">
-                                        <p>{{sLegal.contrato_obj.valor | currency}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <div class="panel panel-body">
+    <p>
+    <div class="centrado">
+      <center>
+        <h3>
+          <b>{{'SEGUIMIENTO_LEGAL' | translate}}</b>
+        </h3>
+      </center>
+      <hr>
+      <div style="float:left;margin-bottom:2%;width:100%">
+        <div class="row" style="border:0px solid;">
+          <div class="col-sm-12 col-md-5">
+            <div class="row" ng-if="sLegal.rolActual == 'CONTRATISTA'">
+              <div class="form-group col-md-12">
+                <p style="margin:0; display:inline-block; width:35%;">
+                  <b>{{'NUMERO_CONTRATO' | translate}}:</b>
+                </p>
+                <md-input-container style="margin:0; display:inline-block; width:25%;">
+                  <input type="text" ng-model="sLegal.contrato_id" ng-disabled="true">
+                </md-input-container>
+              </div>
+              <div class="form-group col-md-12">
+                <p style="margin:0; display:inline-block; width:35%;">
+                  <b>{{'VIGENCIA_CONTRATO' | translate}}:</b>
+                </p>
+                <md-input-container style="margin:0; display:inline-block; width:25%;">
+                  <input type="text" ng-model="sLegal.contrato_vigencia" ng-disabled="true">
+                </md-input-container>
+              </div>
             </div>
-            <center>
-                <div class="row" style="border:0px solid; width:70%;" ng-if="sLegal.estado_resultado_response == true">
-                    <div class="col-sm-12 col-md-12">
-                        <div class=" panel panel-default">
-                            <div class="panel-heading">
-                                <center>
-                                    <h4>
-                                        <b>NOVEDADES</b>
-                                    </h4>
-                                </center>
-                            </div>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <center>Tipo Novedad</center>
-                                        </th>
-                                        <th>
-                                            <center>Enlace</center>
-                                        </th>
-                                        <th>
-                                            <center>Fecha expedición</center>
-                                        </th>
-                                        <th>
-                                            <center>Estado</center>
-                                        </th>
-                                        <th>
-                                            <center>Acciones</center>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="novedad in novedadesTabla | limitTo:numLimit:start">
-                                        <td>
-                                            <center>{{ novedad.tipoNovedad }}</center>
-                                        </td>
-                                        <td>
-                                            <center>{{ novedad.enlace }}</center>
-                                        </td>
-                                        <td class="text-center"
-                                            ng-bind="formatDate(novedad.fecha) |  date:'yyyy-MM-dd' : 'UTC'">
-                                        </td>
-                                        <td>
-                                            <center>{{ novedad.estado }}</center>
-                                        </td>
-                                        <td>
-                                            <center>
-                                                <md-button class="md-icon-button"
-                                                    ng-click="verDocumento(novedad.enlace)"
-                                                    ng-disabled="novedad.enlace == ''">
-                                                    <span class="glyphicon glyphicon-eye-open"></span>
-                                                </md-button>
-                                                <!-- <md-button class="md-icon-button"
-                                                    ng-click="verDocumento(novedad.enlace)"
-                                                    ng-if="self.estado_contrato_obj.estado != 6 && self.estado_contrato_obj.estado != 8"
-                                                    disabled="true"
-                                                    href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}/true">
-                                                    <span class="glyphicon glyphicon-edit"></span>
-                                                </md-button>
-                                                <md-button class="md-icon-button"
-                                                    ng-click="eliminarNovedad(novedad.id)"
-                                                    disabled="true">
-                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                </md-button> -->
-                                            </center>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5"><span style="padding:5px">{{numLimit}} registros por
-                                                pagina</span> <span style='text-align: center'>Pagina# {{currentPage}}
-                                                de {{pages}}</span>
-                                            <span style="float:right;padding:5px"><a ng-hide="hidePrev()" href=""
-                                                    ng-click="PrevPage()">Prev</a></span>
-
-                                            <span style="float:right;padding:5px"><a ng-hide="hideNext()" href=""
-                                                    ng-click="nextPage()">Next</a></span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+            <div class="row" ng-if="sLegal.rolActual != 'CONTRATISTA'">
+              <div class="form-group col-md-12">
+                <p style="margin:0; display:inline-block; width:40%;">
+                  <b>{{'NUMERO_CONTRATO' | translate}} *:</b>
+                </p>
+                <md-input-container style="margin:0; display:inline-block; width:40%;">
+                  <input type="number" id="contrato_id" aria-label="contrato_id" name="contrato_id" required
+                    ng-model="sLegal.contrato_id" ng-disabled="false" min="0">
+                  <div ng-messages="formLegal.contrato_id.$error">
+                    <div ng-message="required">{{'CAMPO_REQUERIDO' | translate}}</div>
+                  </div>
+                </md-input-container>
+              </div>
+              <div class="form-group col-md-12">
+                <p style="margin:0; display:inline-block; width:40%;">
+                  <b>{{'VIGENCIA_CONTRATO' | translate}} *:</b>
+                </p>
+                <select class="form-control" ng-model="sLegal.contrato_vigencia"
+                  style="margin:0; display:inline-block; width:40%;">
+                  <option ng-repeat="vigencia in vigencias">{{vigencia}}</option>
+                </select>
+              </div>
+              <div class="col-md-12 form-group">
+                <button class="btn btn-primary dropdown-toggle" ng-click="sLegal.buscar_contrato()">
+                  {{'BTN.BUSCAR' | translate}}
+                  {{'NUMERO_CONTRATO' | translate}}
+                </button>
+                <hr style="border-bottom:1px solid #cecdcc;">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12" style="padding-left:25px;" ng-if="sLegal.rolActual!='CONTRATISTA'">
+                <label for="boton_novedad">{{'SELECCIONE_UNA_NOVEDAD' | translate}}</label>
+                <br>
+                <div class="btn-group" ng-if="sLegal.estado_resultado_response == true">
+                  <button type="button" id="boton_novedad" class="btn btn-primary dropdown-toggle"
+                    data-toggle="dropdown" ng-disabled="sLegal.createBool">
+                    {{'NOVEDADES' | translate}}
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                      <a
+                        href="#/seguimientoycontrol/legal/acta_adicion_prorroga/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}/false">{{'CREAR_NOVEDAD_ADICION_PRORROGA'
+                        | translate}}</a>
+                    </li>
+                    <li ng-if="sLegal.estado_contrato_obj.estado == 10 && sLegal.novedadEnCurso == false">
+                      <a
+                        href="#/seguimientoycontrol/legal/acta_inicio/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'AGREGAR_POLIZA'
+                        | translate}}</a>
+                    </li>
+                    <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                      <a
+                        href="#/seguimientoycontrol/legal/acta_suspension/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_SUSPENSION'
+                        | translate}}</a>
+                    </li>
+                    <li ng-if="sLegal.estado_contrato_obj.estado == 2 && sLegal.novedadEnCurso == false">
+                      <a
+                        href="#/seguimientoycontrol/legal/acta_reinicio/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_REINICIO'
+                        | translate}}</a>
+                    </li>
+                    <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                      <a
+                        href="#/seguimientoycontrol/legal/acta_cesion/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_CESION'
+                        | translate}}</a>
+                    </li>
+                    <li ng-if="sLegal.estado_contrato_obj.estado == 4 && sLegal.novedadEnCurso == false">
+                      <a
+                        href="#/seguimientoycontrol/legal/acta_terminacion_liquidacion_bilateral/{{sLegal.contrato_id}}/{{sLegal.contrato_vigencia}}">{{'CREAR_NOVEDAD_TERMINACION_BILATERAL'
+                        | translate}}</a>
+                    </li>
+                    <li ng-if="sLegal.estado_contrato_obj.estado == 6 && sLegal.novedadEnCurso == false">
+                      <a ng-click="activarContrato()">{{'ACTIVAR_CONTRATO'
+                        | translate}}</a>
+                    </li>
+                  </ul>
+                  </select>
                 </div>
-            </center>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-7">
+            <div class=" panel panel-default">
+              <div class="panel-heading">
+                <center>
+                  <h4>
+                    <b>{{'INFORMACION' | translate}}</b>
+                  </h4>
+                </center>
+              </div>
+              <div class="panel-body" style="text-align:left;" ng-if="sLegal.estado_resultado_response == true">
+                <div class="row">
+                  <div class="col-sm-4 col-md-3">
+                    <b>{{'NUMERO_CONTRATO' | translate}}</b>
+                  </div>
+                  <div class="col-sm-8 col-md-9">
+                    <p>{{sLegal.contrato_obj.numero_contrato}}</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4 col-md-3">
+                    <b>{{'CONTRATANTE' | translate}}</b>
+                  </div>
+                  <div class="col-sm-8 col-md-9">
+                    <p>{{'UNIVERSIDAD_NOMBRE' | translate}}</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4 col-md-3">
+                    <b>{{'CONTRATISTA' | translate}}</b>
+                  </div>
+                  <div class="col-sm-8 col-md-9" ng-if="sLegal.contrato_obj.contratista_documento != null">
+                    <p>
+                      {{sLegal.contrato_obj.contratista_nombre}}
+                      <br>
+                      <span style="color:#555; font-size:14px;">
+                        {{sLegal.contrato_obj.contratista_documento}}
+                      </span>
+                    </p>
+                  </div>
+                  <div class="col-sm-8 col-md-9" ng-if="sLegal.contrato_obj.contratista_documento == null">
+                    <p>{{'NO_REGISTRA' | translate}}</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4 col-md-3">
+                    <b>{{'OBJETO' | translate}}</b>
+                  </div>
+                  <div class="col-sm-8 col-md-9" ng-if="sLegal.contrato_obj.objeto != null">
+                    <p>{{sLegal.contrato_obj.objeto}}</p>
+                  </div>
+                  <div class="col-sm-8 col-md-9" ng-if="sLegal.contrato_obj.objeto == null">
+                    <p>{{'NO_REGISTRA' | translate}}</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4 col-md-3">
+                    <b>{{'VALOR_CONTRATO' | translate}}</b>
+                  </div>
+                  <div class="col-sm-8 col-md-9">
+                    <p>{{sLegal.contrato_obj.valor | currency}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+      <center>
+        <div class="row" style="border:0px solid; width:70%;" ng-if="sLegal.estado_resultado_response == true">
+          <div class="col-sm-12 col-md-12">
+            <div class=" panel panel-default">
+              <div class="panel-heading">
+                <center>
+                  <h4>
+                    <b>NOVEDADES</b>
+                  </h4>
+                </center>
+              </div>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>
+                      <center>Tipo Novedad</center>
+                    </th>
+                    <th>
+                      <center>Enlace</center>
+                    </th>
+                    <th>
+                      <center>Fecha expedición</center>
+                    </th>
+                    <th>
+                      <center>Estado</center>
+                    </th>
+                    <th>
+                      <center>Acciones</center>
+                    </th>
+                    <th>
+                      <center>Anular</center>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="novedad in novedadesTabla | limitTo:numLimit:start">
+                    <td>
+                      <center>{{ novedad.tipoNovedad }}</center>
+                    </td>
+                    <td>
+                      <center>{{ novedad.enlace }}</center>
+                    </td>
+                    <td class="text-center" ng-bind="formatDate(novedad.fecha) |  date:'yyyy-MM-dd' : 'UTC'"></td>
+                    <td>
+                      <center>{{ novedad.estado }}</center>
+                    </td>
+                    <td>
+                      <center>
+                        <md-button class="md-icon-button" ng-click="verDocumento(novedad.enlace)"
+                          ng-disabled="novedad.enlace == ''">
+                          <span class="glyphicon glyphicon-eye-open"></span>
+                        </md-button>
+                      </center>
+                    </td>
+                    <td class="text-center">
+                      <md-button class="md-raised md-warn" type="button"
+                        ng-disabled="novedad.estado === 'ANULADA' || anulandoId" ng-click="anularFila(novedad)">
+                        Anular
+                      </md-button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6">
+                      <span style="padding:5px">{{numLimit}} registros por pagina</span>
+                      <span style="text-align: center">Pagina# {{currentPage}} de {{pages}}</span>
+                      <span style="float:right;padding:5px">
+                        <a ng-hide="hidePrev()" href="" ng-click="PrevPage()">Prev</a>
+                      </span>
+                      <span style="float:right;padding:5px">
+                        <a ng-hide="hideNext()" href="" ng-click="nextPage()">Next</a>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+        </div>
+      </center>
     </div>
+  </div>
 </div>
 </div>
 <br>
