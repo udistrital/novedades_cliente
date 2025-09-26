@@ -49,8 +49,30 @@ angular
         } catch (e) { return ""; }
       }
 
-      // ====== AJUSTE: anular con modal "Cargando..." ======
+      $scope.getNovedadKey = function(n) {
+        return n && (n.id || n.Id || n.IdNovedad || n.novedadId);
+      };
+
+      $scope.idBotonHabilitado = null;
+      $scope.anulandoId = null;
+
+      $scope.formatDate = function (date) { return new Date(date); };
+
       $scope.anularFila = function (novedad) {
+        if ($scope.novedadesTabla && $scope.novedadesTabla.length > 1) {
+          swal(
+            "Operación no permitida",
+            "No se pueden anular novedades cuando existen múltiples registros. " +
+            "Por favor comuníquese con soporte para gestionar este caso.",
+            "warning"
+          );
+          return;
+        }
+        if ($scope.getNovedadKey(novedad) !== $scope.idBotonHabilitado) {
+          swal('Operación no permitida', 'Solo se puede anular la última novedad registrada.', 'warning');
+          return;
+        }
+
         var id = novedad.id || novedad.Id || novedad.IdNovedad || novedad.novedadId;
         if (!id) {
           swal($translate.instant("ERROR"), $translate.instant("No se encontró el Id de la novedad"), "error");
@@ -76,22 +98,54 @@ angular
         }).then(function (ok) {
           if (!ok) return;
 
-          // Mostrar modal de carga bloqueante
           swal({
             title: "Cargando...",
-            html: "Por favor espera mientras se procesa la anulación, el proceso puede tardar varios segundos.",
+            html: `
+              <p>Por favor espera mientras se procesa la anulación.<br>El proceso puede tardar varios minutos.</p>
+              <div style="margin-top:15px; width:100%; background:#eee; border-radius:4px; overflow:hidden;">
+                <div id="progress-bar" style="
+                  width: 100%;
+                  height: 12px;
+                  background: #3c8dbc;
+                  animation: progress-indeterminate 2s infinite;">
+                </div>
+              </div>
+                    <style>
+                      @keyframes progress-indeterminate {
+                        0%   {margin-left: -100%; width: 100%;}
+                        50%  {margin-left: 0%; width: 100%;}
+                        100% {margin-left: 100%; width: 100%;}
+                      }
+
+                      @keyframes gradient-shift {
+                        0%   { background-position: 0% 50%; }
+                        50%  { background-position: 100% 50%; }
+                        100% { background-position: 0% 50%; }
+                      }
+
+                      #progress-bar {
+                        width: 100% !important;
+                        height: 14px !important;
+                        border-radius: 10px;
+                        background: linear-gradient(90deg, #2980b9, #6dd5fa, #ffffff);
+                        background-size: 200% 200%;
+                        animation: progress-indeterminate 2.5s infinite linear,
+                                   gradient-shift 5s infinite ease-in-out;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.15),
+                                    inset 0 1px 2px rgba(255,255,255,0.6);
+                      }
+                    </style>
+            `,
             allowOutsideClick: false,
             showConfirmButton: false
           });
-          if (swal.showLoading) { try { swal.showLoading(); } catch (e) {} }
 
           $scope.anulandoId = id;
 
-          // Ajusta la ruta si tu MID usa otra
           novedadesMidRequest.patch("novedad", id, {})
             .then(function (resp) {
               var r = resp && resp.data ? resp.data : {};
-              swal.close(); // cerrar loading
+              swal.close();
 
               if (r.Success) {
                 swal({
@@ -107,7 +161,6 @@ angular
                   if (typeof self.buscar_contrato === "function") {
                     self.buscar_contrato();
                   } else {
-                    // fallback visual si no hay recarga
                     novedad.estado = "ANULADA";
                   }
                 });
@@ -125,7 +178,7 @@ angular
             })
             .catch(function (err) {
               console.error("Error PATCH /v1/novedad/" + id, err);
-              swal.close(); // cerrar loading
+              swal.close();
               swal({
                 title: "Error",
                 type: "error",
@@ -167,13 +220,6 @@ angular
         }
       }
 
-      /**
-       * @ngdoc method
-       * @name get_contratos_vigencia
-       * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegal
-       * @description
-       * funcion para obtener la totalidad de los contratos por vigencia seleccionada
-       */
       self.buscar_contrato = function () {
         self.novedadEnCurso = false;
         $scope.novedadesTabla = [];
@@ -279,6 +325,11 @@ angular
                             estado: self.novedades[k].NombreEstado
                           });
                         }
+                      }
+
+                      if ($scope.novedadesTabla.length > 0) {
+                        var ultima = $scope.novedadesTabla[$scope.novedadesTabla.length - 1];
+                        $scope.idBotonHabilitado = $scope.getNovedadKey(ultima);
                       }
 
                       if (self.novedades != undefined && self.novedades.length != "0") {
@@ -525,8 +576,7 @@ angular
       $scope.cancel = function () { $mdDialog.cancel(); };
       $scope.answer = function (answer) { $mdDialog.hide(answer); };
 
-      $scope.formatDate = function (date) { return new Date(date); };
-
+      // paginación
       $scope.currentPage = 1;
       $scope.numLimit = 5;
       $scope.start = 0;
