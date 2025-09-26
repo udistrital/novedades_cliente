@@ -49,7 +49,7 @@ angular
         } catch (e) { return ""; }
       }
 
-      $scope.getNovedadKey = function(n) {
+      $scope.getNovedadKey = function (n) {
         return n && (n.id || n.Id || n.IdNovedad || n.novedadId);
       };
 
@@ -100,45 +100,40 @@ angular
 
           swal({
             title: "Cargando...",
-            html: `
-              <p>Por favor espera mientras se procesa la anulación.<br>El proceso puede tardar varios minutos.</p>
-              <div style="margin-top:15px; width:100%; background:#eee; border-radius:4px; overflow:hidden;">
-                <div id="progress-bar" style="
-                  width: 100%;
-                  height: 12px;
-                  background: #3c8dbc;
-                  animation: progress-indeterminate 2s infinite;">
-                </div>
-              </div>
-                    <style>
-                      @keyframes progress-indeterminate {
-                        0%   {margin-left: -100%; width: 100%;}
-                        50%  {margin-left: 0%; width: 100%;}
-                        100% {margin-left: 100%; width: 100%;}
-                      }
+            html: '' +
+              '<p>Por favor espera mientras se procesa la anulación.<br>El proceso puede tardar varios minutos.</p>' +
+              '<div style="margin-top:15px; width:100%; background:#f4f4f4; border-radius:10px; overflow:hidden;">' +
+              '<div id="progress-bar"></div>' +
+              '</div>' +
+              '<style>' +
+              '@keyframes progress-indeterminate {' +
+              '0%   {margin-left: -100%; width: 100%;}' +
+              '50%  {margin-left: 0%; width: 100%;}' +
+              '100% {margin-left: 100%; width: 100%;}' +
+              '}' +
 
-                      @keyframes gradient-shift {
-                        0%   { background-position: 0% 50%; }
-                        50%  { background-position: 100% 50%; }
-                        100% { background-position: 0% 50%; }
-                      }
+              '@keyframes gradient-shift {' +
+              '0%   { background-position: 0% 50%; }' +
+              '50%  { background-position: 100% 50%; }' +
+              '100% { background-position: 0% 50%; }' +
+              '}' +
 
-                      #progress-bar {
-                        width: 100% !important;
-                        height: 14px !important;
-                        border-radius: 10px;
-                        background: linear-gradient(90deg, #2980b9, #6dd5fa, #ffffff);
-                        background-size: 200% 200%;
-                        animation: progress-indeterminate 2.5s infinite linear,
-                                   gradient-shift 5s infinite ease-in-out;
-                        box-shadow: 0 2px 8px rgba(0,0,0,0.15),
-                                    inset 0 1px 2px rgba(255,255,255,0.6);
-                      }
-                    </style>
-            `,
+              '#progress-bar {' +
+              'width: 100% !important;' +
+              'height: 14px !important;' +
+              'border-radius: 10px;' +
+              'background: linear-gradient(90deg, #2980b9, #6dd5fa, #ffffff);' +
+              'background-size: 200% 200%;' +
+              'animation: progress-indeterminate 2.5s infinite linear, ' +
+              'gradient-shift 5s infinite ease-in-out;' +
+              'box-shadow: 0 2px 8px rgba(0,0,0,0.15), ' +
+              'inset 0 1px 2px rgba(255,255,255,0.6);' +
+              '}' +
+              '</style>',
             allowOutsideClick: false,
             showConfirmButton: false
           });
+
 
           $scope.anulandoId = id;
 

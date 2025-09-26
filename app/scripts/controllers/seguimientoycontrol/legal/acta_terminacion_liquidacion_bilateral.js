@@ -791,43 +791,43 @@ angular.module('contractualClienteApp')
              * @description
              * funcion que valida la data de la novedad
              */
-            self.generarActa = function () {
-                swal({
-                  title: "Creando novedad...",
-                  html: `
-                    <p>Por favor espera mientras se procesa la creación.<br>El proceso puede tardar varios minutos.</p>
-                    <div style="margin-top:15px; width:100%; background:#f4f4f4; border-radius:10px; overflow:hidden;">
-                      <div id="progress-bar"></div>
-                    </div>
-                    <style>
-                      @keyframes progress-indeterminate {
-                        0%   {margin-left: -100%; width: 100%;}
-                        50%  {margin-left: 0%; width: 100%;}
-                        100% {margin-left: 100%; width: 100%;}
-                      }
+          self.generarActa = function () {
+            swal({
+              title: "Creando novedad...",
+              html: '' +
+                '<p>Por favor espera mientras se procesa la creación.<br>El proceso puede tardar varios minutos.</p>' +
+                '<div style="margin-top:15px; width:100%; background:#f4f4f4; border-radius:10px; overflow:hidden;">' +
+                '<div id="progress-bar"></div>' +
+                '</div>' +
+                '<style>' +
+                '@keyframes progress-indeterminate {' +
+                '0%   {margin-left: -100%; width: 100%;}' +
+                '50%  {margin-left: 0%; width: 100%;}' +
+                '100% {margin-left: 100%; width: 100%;}' +
+                '}' +
 
-                      @keyframes gradient-shift {
-                        0%   { background-position: 0% 50%; }
-                        50%  { background-position: 100% 50%; }
-                        100% { background-position: 0% 50%; }
-                      }
+                '@keyframes gradient-shift {' +
+                '0%   { background-position: 0% 50%; }' +
+                '50%  { background-position: 100% 50%; }' +
+                '100% { background-position: 0% 50%; }' +
+                '}' +
 
-                      #progress-bar {
-                        width: 100% !important;
-                        height: 14px !important;
-                        border-radius: 10px;
-                        background: linear-gradient(90deg, #2980b9, #6dd5fa, #ffffff);
-                        background-size: 200% 200%;
-                        animation: progress-indeterminate 2.5s infinite linear,
-                                   gradient-shift 5s infinite ease-in-out;
-                        box-shadow: 0 2px 8px rgba(0,0,0,0.15),
-                                    inset 0 1px 2px rgba(255,255,255,0.6);
-                      }
-                    </style>
-                  `,
-                  showConfirmButton: false,
-                  allowOutsideClick: false
-                });
+                '#progress-bar {' +
+                'width: 100% !important;' +
+                'height: 14px !important;' +
+                'border-radius: 10px;' +
+                'background: linear-gradient(90deg, #2980b9, #6dd5fa, #ffffff);' +
+                'background-size: 200% 200%;' +
+                'animation: progress-indeterminate 2.5s infinite linear,' +
+                'gradient-shift 5s infinite ease-in-out;' +
+                'box-shadow: 0 2px 8px rgba(0,0,0,0.15),' +
+                'inset 0 1px 2px rgba(255,255,255,0.6);' +
+                '}' +
+                '</style>',
+              showConfirmButton: false,
+              allowOutsideClick: false
+            });
+
 
 
 
