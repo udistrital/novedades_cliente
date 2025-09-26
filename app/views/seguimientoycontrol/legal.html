@@ -106,7 +106,6 @@
                         | translate}}</a>
                     </li>
                   </ul>
-                  </select>
                 </div>
               </div>
             </div>
@@ -213,7 +212,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr ng-repeat="novedad in novedadesTabla | limitTo:numLimit:start">
+                  <tr ng-repeat="novedad in novedadesTabla | limitTo:numLimit:start track by getNovedadKey(novedad)">
                     <td>
                       <center>{{ novedad.tipoNovedad }}</center>
                     </td>
@@ -234,7 +233,8 @@
                     </td>
                     <td class="text-center">
                       <md-button class="md-raised md-warn" type="button"
-                        ng-disabled="novedad.estado === 'ANULADA' || anulandoId" ng-click="anularFila(novedad)">
+                        ng-disabled="anulandoId || getNovedadKey(novedad) !== idBotonHabilitado"
+                        ng-click="anularFila(novedad)">
                         Anular
                       </md-button>
                     </td>
