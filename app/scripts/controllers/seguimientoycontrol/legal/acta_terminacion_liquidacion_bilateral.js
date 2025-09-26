@@ -791,6 +791,7 @@ angular.module('contractualClienteApp')
              * @description
              * funcion que valida la data de la novedad
              */
+
           self.generarActa = function () {
             swal({
               title: "Creando novedad...",
@@ -827,6 +828,7 @@ angular.module('contractualClienteApp')
               showConfirmButton: false,
               allowOutsideClick: false
             });
+
 
 
 
@@ -940,7 +942,7 @@ angular.module('contractualClienteApp')
                         'error'
                     );
                 }
-            };
+
 
             self.calcularFechaFin = function () {
 

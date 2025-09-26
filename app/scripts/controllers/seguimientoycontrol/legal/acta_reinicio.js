@@ -930,6 +930,7 @@ angular
              * funcion para la genracion del pdf del acta correspondiente a la novedad de reinicio
              * actualizacion de los datos del contrato y reporte de la novedad
              */
+
           self.generarActa = function () {
             swal({
               title: "Creando novedad...",
@@ -966,6 +967,7 @@ angular
               showConfirmButton: false,
               allowOutsideClick: false
             });
+
 
                 var nuevoEstado = {
                     Estado: {
@@ -1070,7 +1072,7 @@ angular
                         "error"
                     );
                 }
-            };
+
 
             self.calcularFechaFin = function (nuevosDiasNovedad) {
 

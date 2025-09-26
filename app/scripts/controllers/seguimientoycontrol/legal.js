@@ -100,6 +100,7 @@ angular
 
           swal({
             title: "Cargando...",
+
             html: '' +
               '<p>Por favor espera mientras se procesa la anulación.<br>El proceso puede tardar varios minutos.</p>' +
               '<div style="margin-top:15px; width:100%; background:#f4f4f4; border-radius:10px; overflow:hidden;">' +
@@ -129,6 +130,7 @@ angular
               'box-shadow: 0 2px 8px rgba(0,0,0,0.15), ' +
               'inset 0 1px 2px rgba(255,255,255,0.6);' +
               '}' +
+
               '</style>',
             allowOutsideClick: false,
             showConfirmButton: false

@@ -884,6 +884,7 @@ angular
        * @description
        * funcion para validar si se selecciono la novedad de adicion - prorroga
        */
+
       self.comprobar_seleccion_novedad = function () {
         swal({
           title: "Creando novedad...",
@@ -920,6 +921,7 @@ angular
           showConfirmButton: false,
           allowOutsideClick: false
         });
+
 
 
         try {
@@ -975,7 +977,7 @@ angular
           plural: $translate.instant("("),
           singular: $translate.instant("("),
         });
-      };
+
 
       function generateTipoNovedad(callback) {
         if ($scope.adicion == true && $scope.prorroga != true) {
