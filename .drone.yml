@@ -54,7 +54,7 @@ steps:
     - push
 
 - name: build_release
-  image: node:14.11.0
+  image: node:14
   commands:
   - npm install -g grunt-cli bower
   - npm install natives
