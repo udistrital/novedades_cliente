@@ -698,9 +698,8 @@ angular
              * funcion para la genracion del pdf del acta correspondiente a la novedad de suspension
              * actualizacion de los datos del contrato y reporte de la novedad
              */
-
-          self.generarActa = function () {
-            swal({
+            self.generarActa = function () {
+              swal({
               title: "Creando novedad...",
               html: '' +
                 '<p>Por favor espera mientras se procesa la creación.<br>El proceso puede tardar varios minutos.</p>' +
@@ -735,8 +734,6 @@ angular
               showConfirmButton: false,
               allowOutsideClick: false
             });
-
-
                 var nuevoEstado = {
                     Estado: {
                         Id: 2,
@@ -937,6 +934,7 @@ angular
                         "error"
                     );
                 }
+            };
 
             self.calcularFechaFin = function (diasNovedad) {
 

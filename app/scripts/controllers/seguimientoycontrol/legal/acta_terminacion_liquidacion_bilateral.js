@@ -791,9 +791,8 @@ angular.module('contractualClienteApp')
              * @description
              * funcion que valida la data de la novedad
              */
-
-          self.generarActa = function () {
-            swal({
+            self.generarActa = function () {
+              swal({
               title: "Creando novedad...",
               html: '' +
                 '<p>Por favor espera mientras se procesa la creación.<br>El proceso puede tardar varios minutos.</p>' +
@@ -828,11 +827,6 @@ angular.module('contractualClienteApp')
               showConfirmButton: false,
               allowOutsideClick: false
             });
-
-
-
-
-
                 var nuevoEstado = {
                     "Estado": {
                         "Id": 8
@@ -942,7 +936,7 @@ angular.module('contractualClienteApp')
                         'error'
                     );
                 }
-
+            };
 
             self.calcularFechaFin = function () {
 

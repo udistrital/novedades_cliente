@@ -884,7 +884,6 @@ angular
        * @description
        * funcion para validar si se selecciono la novedad de adicion - prorroga
        */
-
       self.comprobar_seleccion_novedad = function () {
         swal({
           title: "Creando novedad...",
@@ -921,11 +920,9 @@ angular
           showConfirmButton: false,
           allowOutsideClick: false
         });
-
-
-
         try {
           if ($scope.adicion == true || $scope.prorroga == true) {
+
             $scope.estado_novedad = true;
             if ($scope.adicion == true) {
               $("#valor_adicion").prop("required", true);
@@ -952,6 +949,7 @@ angular
               "info"
             );
           }
+
         }
         var valor_contrato_inicial = self.contrato_obj.valor;
         $scope.valor_contrato_letras = numeroALetras(valor_contrato_inicial, {
@@ -976,8 +974,9 @@ angular
           $scope.valor_prorroga_final, {
           plural: $translate.instant("("),
           singular: $translate.instant("("),
-        });
-
+        }
+        );
+      };
 
       function generateTipoNovedad(callback) {
         if ($scope.adicion == true && $scope.prorroga != true) {
