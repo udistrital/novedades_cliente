@@ -100,7 +100,6 @@ angular
 
           swal({
             title: "Cargando...",
-
             html: '' +
               '<p>Por favor espera mientras se procesa la anulación.<br>El proceso puede tardar varios minutos.</p>' +
               '<div style="margin-top:15px; width:100%; background:#f4f4f4; border-radius:10px; overflow:hidden;">' +
@@ -191,7 +190,57 @@ angular
             });
         });
       };
-      // ====== /AJUSTE ======
+
+      $scope.verDocumento = function (enlace) {
+        if (!enlace) {
+          swal($translate.instant("ERROR"), $translate.instant("Enlace de documento inválido"), "error");
+          return;
+        }
+
+        novedadesMidRequest
+          .get("gestor_documental", enlace)
+          .then(function (response) {
+            var body = response && response.data ? response.data.Body : null;
+
+            var fileStr = null;
+            if (Array.isArray(body) && body.length > 0) {
+              fileStr = body[0].file || body[0].File || body[0].file_base64 || body[0].archivo || null;
+            } else if (body && typeof body === "object") {
+              fileStr = body.file || body.File || body.file_base64 || body.archivo || null;
+            } else if (response && typeof response.data === "string") {
+              fileStr = response.data;
+            }
+
+            if (!fileStr) {
+              swal($translate.instant("TITULO_ERROR_LEGAL"), $translate.instant("No se pudo obtener el archivo del gestor documental"), "error");
+              return;
+            }
+
+            var docB64 = ("" + fileStr).split("'");
+            var file = docB64.length > 1 ? docB64[1] : docB64[0];
+            file = (file || "").trim();
+
+            if (!file) {
+              swal($translate.instant("TITULO_ERROR_LEGAL"), $translate.instant("Archivo vacío o corrupto"), "error");
+              return;
+            }
+
+            var pdfWindow = window.open("");
+            if (!pdfWindow) {
+              swal("Error", "El navegador bloqueó la ventana emergente. Por favor habilite pop-ups para ver el documento.", "error");
+              return;
+            }
+            pdfWindow.document.write(
+              "<iframe width='100%' height='100%' src='data:application/pdf;base64," +
+              file +
+              "'></iframe>"
+            );
+          })
+          .catch(function (err) {
+            console.error("Error al obtener documento desde gestor_documental:", err);
+            swal($translate.instant("TITULO_ERROR_LEGAL"), $translate.instant("No fue posible obtener el documento"), "error");
+          });
+      };
 
       agoraRequest.get("vigencia_contrato", "").then(function (response) {
         $scope.vigencias = response.data;
@@ -573,7 +622,7 @@ angular
       $scope.cancel = function () { $mdDialog.cancel(); };
       $scope.answer = function (answer) { $mdDialog.hide(answer); };
 
-      // paginación
+
       $scope.currentPage = 1;
       $scope.numLimit = 5;
       $scope.start = 0;
