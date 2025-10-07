@@ -63,7 +63,6 @@ angular
                 "Noviembre",
                 "Diciembre"
             );
-            //self.f_oficio = new Date();
             self.f_cesion = new Date();
             self.f_terminacion = new Date();
             self.f_hoy = new Date();
@@ -86,19 +85,6 @@ angular
             self.rp_numero = 0;
             self.cdp_numero = 0;
             self.unidadEjecutora= 0;
-
-            // const solic_input = document.getElementById("n_solicitud");
-            // solic_input.addEventListener("input", function () {
-            //     if (this.value.length > 7) {
-            //         this.value = this.value.slice(0, 7);
-            //     }
-            // });
-            // const oficio_input = document.getElementById("numero_oficio_supervisor");
-            // oficio_input.addEventListener("input", function () {
-            //     if (this.value.length > 11) {
-            //         this.value = this.value.slice(0, 11);
-            //     }
-            // });
             const valordes_input = document.getElementById("valor_desembolsado");
             valordes_input.addEventListener("input", function () {
                 if (this.value.length > 11) {
@@ -177,15 +163,10 @@ angular
                         self.fecha_reg_mes = meses[parseInt(res[1] - 1)];
                         self.fecha_reg_ano = res[0];
                         self.unidadEjecutora = agora_response.data[0].UnidadEjecutora;
-                        //Se obtiene los datos de Acta de Inicio.
                         amazonAdministrativaRequest
                             .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
                             .then(function (acta_response) {
                                 self.contrato_obj.Inicio = self.getFechaUTC(acta_response.data[0].FechaInicio);
-                                // self.contrato_obj.Inicio.setDate(self.contrato_obj.Inicio.getDate() + 1)
-                                // if (self.contrato_obj.Inicio.getDate() == 31) {
-                                //     self.contrato_obj.Inicio.setDate(self.contrato_obj.Inicio.getDate() + 1);
-                                // }
                                 self.contrato_obj.Fin = self.getFechaUTC(acta_response.data[0].FechaFin);
                                 self.fecha_lim_inf = new Date(self.contrato_obj.Inicio);
                                 self.fecha_lim_sup = self.calcularFechaFin();
@@ -255,7 +236,6 @@ angular
                                                         });
                                                 });
                                         } else {
-                                            //Obtiene los datos aosicados al proveedor de un contrato que no tiene novedades
                                             amazonAdministrativaRequest
                                                 .get(
                                                     "informacion_proveedor?query=Id:" +
@@ -288,7 +268,6 @@ angular
                                                 });
                                         }
                                     }).catch(function (error) {
-                                        //Servidor no disponible
                                         swal({
                                             title: $translate.instant('TITULO_ERROR_LEGAL'),
                                             type: 'error',
@@ -301,34 +280,6 @@ angular
                                         });
                                     });
                             });
-                        //Se obtiene información del supervisor
-                        // amazonAdministrativaRequest
-                        //     .get(
-                        //         "informacion_persona_natural?query=Id:" +
-                        //         self.contrato_obj.supervisor_cedula
-                        //     )
-                        //     .then(function (ispn_response) {
-                        //         self.contrato_obj.supervisor_tipo_documento =
-                        //             ispn_response.data[0].TipoDocumento.ValorParametro;
-                        //         self.contrato_obj.supervisor_nombre =
-                        //             ispn_response.data[0].PrimerNombre +
-                        //             " " +
-                        //             ispn_response.data[0].SegundoNombre +
-                        //             " " +
-                        //             ispn_response.data[0].PrimerApellido +
-                        //             " " +
-                        //             ispn_response.data[0].SegundoApellido;
-                        //         coreAmazonRequest
-                        //             .get(
-                        //                 "ciudad",
-                        //                 "query=Id:" +
-                        //                 ispn_response.data[0].IdCiudadExpedicionDocumento
-                        //             )
-                        //             .then(function (sc_response) {
-                        //                 self.contrato_obj.supervisor_ciudad_documento =
-                        //                     sc_response.data[0].Nombre;
-                        //             });
-                        //     });
 
                         amazonAdministrativaRequest
                             .get(
@@ -369,7 +320,6 @@ angular
                                             });
                                     });
                             }).catch(function (error) {
-                                //Servidor no disponible
                                 swal({
                                     title: $translate.instant('TITULO_ERROR_LEGAL'),
                                     type: 'error',
@@ -398,72 +348,104 @@ angular
                               }
                             });
 
-                        //Obtención de datos del ordenador del gasto
-                        amazonAdministrativaRequest
+                      amazonAdministrativaRequest
+                        .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
+                        .then(function (acta_response) {
+                          if (!acta_response.data || acta_response.data.length === 0) {
+                            console.warn("No se encontró acta de inicio para el contrato");
+                            return;
+                          }
+
+                          var fechaInicio = acta_response.data[0].FechaInicio;
+
+                          amazonAdministrativaRequest
                             .get(
-                                "ordenadores?query=IdOrdenador:" +
-                                self.contrato_obj.ordenadorGasto_id +
-                                "&sortby=FechaFin&order=desc&limit=1"
+                              "ordenadores?query=IdOrdenador:" +
+                              self.contrato_obj.ordenadorGasto_id +
+                              ",FechaInicio__lte:" +
+                              fechaInicio +
+                              ",FechaFin__gte:" +
+                              fechaInicio
                             )
                             .then(function (og_response_id) {
-                                const rolOrdenador = og_response_id.data[0].RolOrdenador;
-                                amazonAdministrativaRequest
-                                    .get(
-                                        "ordenadores?query=RolOrdenador:" +
-                                        rolOrdenador +
-                                        "&sortby=FechaInicio&order=desc&limit=1"
-                                    ).then(function (og_response) {
-                                        self.contrato_obj.ordenadorGasto_nombre =
-                                            og_response.data[0].NombreOrdenador;
-                                        self.contrato_obj.ordenadorGasto_rol =
-                                            og_response.data[0].RolOrdenador;
-                                        self.contrato_obj.ordenador_gasto_documento =
-                                            og_response.data[0].Documento;
-                                        self.contrato_obj.ordenador_gasto_resolucion =
-                                            og_response.data[0].InfoResolucion;
-                                        amazonAdministrativaRequest
-                                            .get(
-                                                "informacion_persona_natural?query=Id:" +
-                                                og_response.data[0].Documento
-                                            )
-                                            .then(function (ispn_response) {
-                                                self.contrato_obj.ordenador_gasto_tipo_documento =
-                                                    ispn_response.data[0].TipoDocumento.ValorParametro;
-                                            });
-                                        coreAmazonRequest
-                                            .get("ciudad", "query=Id:" + og_response.data[0].IdCiudad)
-                                            .then(function (sc_response) {
-                                                self.contrato_obj.ordenador_gasto_ciudad_documento =
-                                                    sc_response.data[0].Nombre;
-                                            });
-                                    }).catch(function (error) {
-                                        //Servidor no disponible
-                                        swal({
-                                            title: $translate.instant('TITULO_ERROR_LEGAL'),
-                                            type: 'error',
-                                            html: "Error al consultar datos de ordenadores del contrato " + self.contrato_obj.numero_contrato +
-                                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
-                                            showCloseButton: true,
-                                            showCancelButton: false,
-                                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                            allowOutsideClick: false
+                              if (!og_response_id.data || og_response_id.data.length === 0) {
+                                console.warn("No se encontró ordenador vigente para esas fechas");
+                                return;
+                              }
+
+                              var rolId = og_response_id.data[0].RolId;
+
+                              amazonAdministrativaRequest
+                                .get(
+                                  "ordenadores?query=RolId:" +
+                                  rolId +
+                                  "&sortby=FechaInicio&order=desc&limit=1"
+                                )
+                                .then(function (og_actual) {
+                                  if (!og_actual.data || og_actual.data.length === 0) {
+                                    console.warn("No se encontró ordenador actual para el rol");
+                                    return;
+                                  }
+
+                                  var ord = og_actual.data[0];
+                                  self.contrato_obj.ordenadorGasto_nombre = ord.NombreOrdenador;
+                                  self.contrato_obj.ordenadorGasto_rol = ord.RolOrdenador;
+                                  self.contrato_obj.ordenador_gasto_documento = ord.Documento;
+                                  self.contrato_obj.ordenador_gasto_resolucion = ord.InfoResolucion;
+                                  self.contrato_obj.ordenador_gasto_Inicio = ord.FechaInicio;
+
+                                  amazonAdministrativaRequest
+                                    .get("informacion_persona_natural?query=Id:" + ord.Documento)
+                                    .then(function (iopn_response) {
+                                      if (!iopn_response.data || iopn_response.data.length === 0) {
+                                        return;
+                                      }
+
+                                      var persona = iopn_response.data[0];
+
+                                      coreAmazonRequest
+                                        .get(
+                                          "ciudad",
+                                          "query=Id:" + persona.IdCiudadExpedicionDocumento
+                                        )
+                                        .then(function (scj_response) {
+                                          if (scj_response.data && scj_response.data.length > 0) {
+                                            self.contrato_obj.ordenador_gasto_ciudad_documento =
+                                              scj_response.data[0].Nombre;
+                                          }
+
+                                          self.contrato_obj.ordenador_gasto_tipo_documento =
+                                            persona.TipoDocumento.ValorParametro;
+                                          self.contrato_obj.ordenador_gasto_nombre_completo =
+                                            persona.PrimerNombre +
+                                            " " +
+                                            (persona.SegundoNombre || "") +
+                                            " " +
+                                            persona.PrimerApellido +
+                                            " " +
+                                            (persona.SegundoApellido || "");
                                         });
                                     });
-                            }).catch(function (error) {
-                                //Servidor no disponible
-                                swal({
-                                    title: $translate.instant('TITULO_ERROR_LEGAL'),
-                                    type: 'error',
-                                    html: "Error al consultar datos de ordenadores del contrato " + self.contrato_obj.numero_contrato +
-                                        $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
-                                    showCloseButton: true,
-                                    showCancelButton: false,
-                                    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                                    allowOutsideClick: false
                                 });
                             });
+                        })
+                        .catch(function (error) {
+                          swal({
+                            title: $translate.instant("TITULO_ERROR_LEGAL"),
+                            type: "error",
+                            html:
+                              "Error al consultar datos del ordenador del gasto del contrato " +
+                              self.contrato_obj.numero_contrato +
+                              " vigencia " +
+                              self.contrato_obj.vigencia +
+                              ".<br>" +
+                              error,
+                            showCloseButton: true,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false,
+                          });
+                        });
 
-                        //Obtención de datos del jefe de Oficina de Contratación
                         amazonAdministrativaRequest
                             .get(
                                 "supervisor_contrato?query=DependenciaSupervisor:DEP636&sortby=FechaFin&order=desc&limit=1"
@@ -536,22 +518,9 @@ angular
             });
 
             $scope.$watch("sLactaCesion.f_cesion", function () {
-                // if (self.f_cesion.getDate() == 31) {
-                //     swal(
-                //         $translate.instant("TITULO_ADVERTENCIA"),
-                //         $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
-                //         "error"
-                //     );
-                //     var fecha = new Date(self.f_cesion);
-                //     fecha.setDate(self.f_cesion.getDate() + 1);
-                //     self.f_cesion = fecha;
-                // }
 
                 self.f_terminacion = self.getFechaUTC(self.f_cesion);
                 self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
-                // if (self.f_terminacion.getDate() == 31) {
-                //     self.f_terminacion.setDate(self.f_terminacion.getDate() - 1);
-                // };
                 var fechaInicio = new Date(self.contrato_obj.Inicio);
 
                 var plazo_cedente = self.calculoPlazosCesion(fechaInicio, self.f_terminacion);
@@ -705,36 +674,6 @@ angular
                 return fechaUTC;
             }
 
-            // $scope.validarValorDesembolsado = function (evento) {
-            //     // console.log(typeof self.contrato_obj.valor);
-            //     // console.log(evento.target.value);
-            //     var valor_cesion = evento.target.value;
-            //     if (valor_cesion > self.contrato_obj.valor) {
-            //         self.valor_desembolsado = undefined;
-            //         swal(
-            //             $translate.instant("TITULO_ADVERTENCIA"),
-            //             "El valor desembolsado debe ser menor al valor del contrato",
-            //             "info"
-            //         );
-            //     }
-
-            // }
-
-            // $scope.validarValorCedente = function (evento) {
-            //     // console.log(typeof self.contrato_obj.valor);
-            //     // console.log(evento.target.value);
-            //     var valor_cesion = evento.target.value;
-            //     if (valor_cesion > self.contrato_obj.valor) {
-            //         self.valor_a_favor = undefined;
-            //         swal(
-            //             $translate.instant("TITULO_ADVERTENCIA"),
-            //             "El valor a favor del cedente debe ser menor al valor del contrato",
-            //             "info"
-            //         );
-            //     }
-            // }
-
-            //consulta cesionario
             amazonAdministrativaRequest
                 .get(
                     "informacion_persona_natural?fields=Id,PrimerNombre,SegundoNombre,PrimerApellido,SegundoApellido,FechaExpedicionDocumento,TipoDocumento,IdCiudadExpedicionDocumento&limit=0"
@@ -1067,6 +1006,63 @@ angular
              * actualizacion de los datos del contrato y reporte de la novedad
              */
             self.generarActa = function () {
+              var resumenHTML = `
+                <div style="text-align:left; font-size:14px; line-height:1.6; margin-top:10px;">
+                  <div style="text-align:center; font-size:15px; font-weight:bold; margin-bottom:10px;">
+                    📝 Resumen previo
+                  </div>
+                  <p style="text-align:justify; margin-bottom:12px;">
+                    Se realizará la <b>novedad de cesión</b> al contrato
+                    <b>No. ${self.contrato_id} de ${self.contrato_vigencia}</b>.
+                  </p>
+                    <div style="background:#f8f9fa; border-radius:8px; padding:10px 15px; margin-bottom:10px;">
+                      <p style="margin:4px 0;">👤 <b>Contratista:</b> ${self.contrato_obj.contratista_nombre || "N/D"}</p>
+                      <p style="margin:4px 0;">👤 <b>Ordenador del gasto:</b> ${self.contrato_obj.ordenadorGasto_nombre || "N/D"}</p>
+                      <p style="margin:4px 0;">👤 <b>Supervisor:</b> ${self.contrato_obj.supervisor_nombre|| "N/D"}</p>
+                    </div>
+                    <div style="background:#eef5fb; border-radius:8px; padding:10px 15px; margin-bottom:10px;">
+                      <p style="margin:4px 0;"><b>📅 Fecha cesión:</b> ${self.format_date_letter_mongo(self.f_cesion) || "N/D"}</p>
+                      <p style="margin:4px 0;"><b>📅 Fecha de terminación del cedente:</b> ${self.format_date_letter_mongo(self.f_terminacion) || "N/D"}</p>
+                    </div>
+                    <hr style="margin:12px 0; border-top:1px solid #ccc;">
+                    <p style="text-align:center; font-size:14px; margin:8px 0;">
+                      ¿Desea continuar con la creación del acta?
+                    </p>
+                    <p style="text-align:center; font-size:13.5px; color:#555; margin-top:18px; line-height:1.5;
+              ">
+                ⚠️ <b>Verifique los datos antes de continuar.</b><br>
+                Si alguno no coincide, comuníquese con el equipo de soporte<br>
+                a través de <a href='https://iris.portaloas.udistrital.edu.co/scp/login.php' target='_blank' style='color:#007bff; text-decoration:none; font-weight:bold;'>IRIS</a>.
+              </p>
+                  </div>
+                `;
+
+            swal({
+              title: "Confirmar generación del acta",
+              html: resumenHTML,
+              type: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: '<i class="fa fa-check"></i> Sí, generar acta',
+              cancelButtonText: '<i class="fa fa-times"></i> Cancelar',
+              allowOutsideClick: false,
+              width: 600
+            }).then(function (result) {
+              if (!result.dismiss) {
+                self.ejecutarGeneracionActa();
+              } else {
+                swal({
+                  title: "Operación cancelada",
+                  text: "No se generó la novedad.",
+                  type: "info",
+                  confirmButtonText: "Entendido"
+                });
+              }
+            });
+          };
+
+          self.ejecutarGeneracionActa = function () {
               swal({
               title: "Creando novedad...",
               html: '' +
