@@ -760,60 +760,64 @@ angular
        * funcion para validar si se selecciono la novedad de adicion - prorroga
        */
       self.comprobar_seleccion_novedad = function () {
-              var resumenHTML = `
-                <div style="text-align:left; font-size:14px; line-height:1.6; margin-top:10px;">
-                  <div style="text-align:center; font-size:15px; font-weight:bold; margin-bottom:10px;">
-                    📝 Resumen previo
-                  </div>
-                  <p style="text-align:justify; margin-bottom:12px;">
-                    Se realizará la <b>novedad de adición y prórroga</b> al contrato
-                    <b>No. ${self.contrato_id} de ${self.contrato_vigencia}</b>.
-                  </p>
-                    <div style="background:#f8f9fa; border-radius:8px; padding:10px 15px; margin-bottom:10px;">
-                      <p style="margin:4px 0;">👤 <b>Contratista:</b> ${self.contrato_obj.contratista_nombre || "N/D"}</p>
-                      <p style="margin:4px 0;">👤 <b>Ordenador del gasto:</b> ${self.contrato_obj.ordenadorGasto_nombre|| "N/D"}</p>
-                    </div>
-                    <div style="background:#eef5fb; border-radius:8px; padding:10px 15px; margin-bottom:10px;">
-                      <p style="margin:4px 0;"><b>💰 Nuevo Valor del Contrato:</b> ${$scope.nuevo_valor_contrato || "N/D"}</p>
-                      <p style="margin:4px 0;"> <b>📅 Nuevo Plazo del Contrato:</b> ${$scope.nuevo_plazo_contrato || self.plazoMeses || "N/D"}</p>
-                    </div>
-                    <hr style="margin:12px 0; border-top:1px solid #ccc;">
-                    <p style="text-align:center; font-size:14px; margin:8px 0;">
-                      ¿Desea continuar con la creación del acta?
-                    </p>
-                    <p style="text-align:center; font-size:13.5px; color:#555; margin-top:18px; line-height:1.5;
-              ">
-                ⚠️ <b>Verifique los datos antes de continuar.</b><br>
-                Si alguno no coincide, comuníquese con el equipo de soporte<br>
-                a través de <a href='https://iris.portaloas.udistrital.edu.co/scp/login.php' target='_blank' style='color:#007bff; text-decoration:none; font-weight:bold;'>IRIS</a>.
-              </p>
-                  </div>
-                `;
+        var resumenHTML =
+          '<div style="text-align:left; font-size:14px; line-height:1.6; margin-top:10px;">' +
+          '<div style="text-align:center; font-size:15px; font-weight:bold; margin-bottom:10px;">' +
+          '📝 Resumen previo' +
+          '</div>' +
+          '<p style="text-align:justify; margin-bottom:12px;">' +
+          'Se realizará la <b>novedad de adición y prórroga</b> al contrato ' +
+          '<b>No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + '</b>.' +
+          '</p>' +
 
+          '<div style="background:#f8f9fa; border-radius:8px; padding:10px 15px; margin-bottom:10px;">' +
+          '<p style="margin:4px 0;">👤 <b>Contratista:</b> ' + (self.contrato_obj.contratista_nombre || "N/D") + '</p>' +
+          '<p style="margin:4px 0;">👤 <b>Ordenador del gasto:</b> ' + (self.contrato_obj.ordenadorGasto_nombre || "N/D") + '</p>' +
+          '</div>' +
+
+          '<div style="background:#eef5fb; border-radius:8px; padding:10px 15px; margin-bottom:10px;">' +
+          '<p style="margin:4px 0;"><b>💰 Nuevo Valor del Contrato:</b> ' + ($scope.nuevo_valor_contrato || "N/D") + '</p>' +
+          '<p style="margin:4px 0;"><b>📅 Nuevo Plazo del Contrato:</b> ' + ($scope.nuevo_plazo_contrato || self.plazoMeses || "N/D") + '</p>' +
+          '</div>' +
+
+          '<hr style="margin:12px 0; border-top:1px solid #ccc;">' +
+          '<p style="text-align:center; font-size:14px; margin:8px 0;">' +
+          '¿Desea continuar con la creación del acta?' +
+          '</p>' +
+
+          '<p style="text-align:center; font-size:13.5px; color:#555; margin-top:18px; line-height:1.5;">' +
+          '⚠️ <b>Verifique los datos antes de continuar.</b><br>' +
+          'Si alguno no coincide, comuníquese con el equipo de soporte<br>' +
+          'a través de <a href="https://iris.portaloas.udistrital.edu.co/scp/login.php" target="_blank" ' +
+          'style="color:#007bff; text-decoration:none; font-weight:bold;">IRIS</a>.' +
+          '</p>' +
+          '</div>';
+
+        swal({
+          title: "Confirmar generación del acta",
+          html: resumenHTML,
+          type: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: '<i class="fa fa-check"></i> Sí, generar acta',
+          cancelButtonText: '<i class="fa fa-times"></i> Cancelar',
+          allowOutsideClick: false,
+          width: 600
+        }).then(function (result) {
+          if (!result.dismiss) {
+            self.ejecutarGeneracionActa();
+          } else {
             swal({
-              title: "Confirmar generación del acta",
-              html: resumenHTML,
-              type: "question",
-              showCancelButton: true,
-              confirmButtonColor: "#3085d6",
-              cancelButtonColor: "#d33",
-              confirmButtonText: '<i class="fa fa-check"></i> Sí, generar acta',
-              cancelButtonText: '<i class="fa fa-times"></i> Cancelar',
-              allowOutsideClick: false,
-              width: 600
-            }).then(function (result) {
-              if (!result.dismiss) {
-                self.ejecutarGeneracionActa();
-              } else {
-                swal({
-                  title: "Operación cancelada",
-                  text: "No se generó la novedad.",
-                  type: "info",
-                  confirmButtonText: "Entendido"
-                });
-              }
+              title: "Operación cancelada",
+              text: "No se generó la novedad.",
+              type: "info",
+              confirmButtonText: "Entendido"
             });
-          };
+          }
+        });
+      };
+
 
           self.ejecutarGeneracionActa = function () {
         swal({
