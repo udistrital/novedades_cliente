@@ -778,37 +778,45 @@ angular
              * funcion para la genracion del pdf del acta correspondiente a la novedad de suspension
              * actualizacion de los datos del contrato y reporte de la novedad
              */
-            self.generarActa = function () {
-              var resumenHTML = `
-                <div style="text-align:left; font-size:14px; line-height:1.6; margin-top:10px;">
-                  <div style="text-align:center; font-size:15px; font-weight:bold; margin-bottom:10px;">
-                    📝 Resumen previo
-                  </div>
-                  <p style="text-align:justify; margin-bottom:12px;">
-                    Se realizará la <b>novedad de suspensión</b> al contrato
-                    <b>No. ${self.contrato_id} de ${self.contrato_vigencia}</b>.
-                    </p>
-                    <div style="background:#f8f9fa; border-radius:8px; padding:10px 15px; margin-bottom:10px;">
-                      <p style="margin:4px 0;">👤 <b>Contratista:</b> ${self.contrato_obj.contratista_nombre || "N/D"}</p>
-                      <p style="margin:4px 0;">👤 <b>Ordenador del gasto:</b> ${self.contrato_obj.ordenadorGasto_nombre || "N/D"}</p>
-                      <p style="margin:4px 0;">👤 <b>Supervisor:</b> ${self.contrato_obj.supervisor_nombre_completo || "N/D"}</p>
-                    </div>
-                    <div style="background:#eef5fb; border-radius:8px; padding:10px 15px; margin-bottom:10px;">
-                      <p style="margin:4px 0;"><b>📅 Fecha de inicio suspensión:</b> ${self.format_date_letter_mongo(self.f_inicio) || "N/D"}</p>
-                      <p style="margin:4px 0;"><b>📅 Fecha de fin suspensión:</b> ${self.format_date_letter_mongo(self.f_fin) || "N/D"}</p>
-                    </div>
-                    <hr style="margin:12px 0; border-top:1px solid #ccc;">
-                    <p style="text-align:center; font-size:14px; margin:8px 0;">
-                      ¿Desea continuar con la creación del acta?
-                    </p>
-                    <p style="text-align:center; font-size:13.5px; color:#555; margin-top:18px; line-height:1.5;
-              ">
-                ⚠️ <b>Verifique los datos antes de continuar.</b><br>
-                Si alguno no coincide, comuníquese con el equipo de soporte<br>
-                a través de <a href='https://iris.portaloas.udistrital.edu.co/scp/login.php' target='_blank' style='color:#007bff; text-decoration:none; font-weight:bold;'>IRIS</a>.
-              </p>
-                  </div>
-                `;
+          self.generarActa = function () {
+            var resumenHTML =
+              '<div style="text-align:left; font-size:14px; line-height:1.6; margin-top:10px;">' +
+              '<div style="text-align:center; font-size:15px; font-weight:bold; margin-bottom:10px;">' +
+              '📝 Resumen previo' +
+              '</div>' +
+              '<p style="text-align:justify; margin-bottom:12px;">' +
+              'Se realizará la <b>novedad de suspensión</b> al contrato ' +
+              '<b>No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + '</b>.' +
+              '</p>' +
+
+              '<div style="background:#f8f9fa; border-radius:8px; padding:10px 15px; margin-bottom:10px;">' +
+              '<p style="margin:4px 0;">👤 <b>Contratista:</b> ' + (self.contrato_obj.contratista_nombre || "N/D") + '</p>' +
+              '<p style="margin:4px 0;">👤 <b>Ordenador del gasto:</b> ' + (self.contrato_obj.ordenadorGasto_nombre || "N/D") + '</p>' +
+              '<p style="margin:4px 0;">👤 <b>Supervisor:</b> ' + (self.contrato_obj.supervisor_nombre_completo || "N/D") + '</p>' +
+              '</div>' +
+
+              '<div style="background:#eef5fb; border-radius:8px; padding:10px 15px; margin-bottom:10px;">' +
+              '<p style="margin:4px 0;"><b>📅 Fecha de inicio suspensión:</b> ' +
+              ((self.f_inicio && self.format_date_letter_mongo) ? self.format_date_letter_mongo(self.f_inicio) : "N/D") +
+              '</p>' +
+              '<p style="margin:4px 0;"><b>📅 Fecha de fin suspensión:</b> ' +
+              ((self.f_fin && self.format_date_letter_mongo) ? self.format_date_letter_mongo(self.f_fin) : "N/D") +
+              '</p>' +
+              '</div>' +
+
+              '<hr style="margin:12px 0; border-top:1px solid #ccc;">' +
+
+              '<p style="text-align:center; font-size:14px; margin:8px 0;">' +
+              '¿Desea continuar con la creación del acta?' +
+              '</p>' +
+
+              '<p style="text-align:center; font-size:13.5px; color:#555; margin-top:18px; line-height:1.5;">' +
+              '⚠️ <b>Verifique los datos antes de continuar.</b><br>' +
+              'Si alguno no coincide, comuníquese con el equipo de soporte<br>' +
+              'a través de <a href="https://iris.portaloas.udistrital.edu.co/scp/login.php" target="_blank" ' +
+              'style="color:#007bff; text-decoration:none; font-weight:bold;">IRIS</a>.' +
+              '</p>' +
+              '</div>';
 
             swal({
               title: "Confirmar generación del acta",
@@ -834,6 +842,7 @@ angular
               }
             });
           };
+
 
           self.ejecutarGeneracionActa = function () {
               swal({
