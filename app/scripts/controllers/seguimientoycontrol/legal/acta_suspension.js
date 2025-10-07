@@ -118,8 +118,6 @@ angular
                         self.contrato_obj.fecha_registro =
                             agora_response.data[0].FechaRegistro;
                         self.contrato_obj.vigencia = self.contrato_vigencia;
-                        // self.contrato_obj.supervisor_cedula =
-                        //     agora_response.data[0].Supervisor.Documento;
                         self.contrato_obj.supervisor_rol =
                             agora_response.data[0].Supervisor.Cargo;
                         self.contrato_obj.contratista = agora_response.data[0].Contratista;
@@ -136,21 +134,103 @@ angular
                         self.contrato_obj.ordenadorGasto_id = agora_response.data[0].OrdenadorGasto;
                         self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
                         self.unidadEjecutora = agora_response.data[0].UnidadEjecutora;
-                        //Obtención de datos del ordenador del gasto
-                        agoraRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response_id) {
-                            const rolOrdenador = og_response_id.data[0].RolOrdenador;
-                            agoraRequest.get("ordenadores?query=RolOrdenador:" + rolOrdenador + "&sortby=FechaInicio&order=desc&limit=1").then(function (og_response) {
-                                self.contrato_obj.ordenadorGasto_nombre = og_response.data[0].NombreOrdenador;
-                                self.contrato_obj.ordenadorGasto_rol = og_response.data[0].RolOrdenador;
-                                self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
-                                self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
-                                agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.ordenador_gasto_documento).then(function (ipn_response) {
-                                    self.contrato_obj.ordenador_gasto_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
-                                    coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
-                                        self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
+
+                      agoraRequest
+                        .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
+                        .then(function (acta_response) {
+                          if (!acta_response.data || acta_response.data.length === 0) {
+                            console.warn("No se encontró acta de inicio para el contrato");
+                            return;
+                          }
+
+                          var fechaInicio = acta_response.data[0].FechaInicio;
+
+                          agoraRequest
+                            .get(
+                              "ordenadores?query=IdOrdenador:" +
+                              self.contrato_obj.ordenadorGasto_id +
+                              ",FechaInicio__lte:" +
+                              fechaInicio +
+                              ",FechaFin__gte:" +
+                              fechaInicio
+                            )
+                            .then(function (og_response_id) {
+                              if (!og_response_id.data || og_response_id.data.length === 0) {
+                                console.warn("No se encontró ordenador vigente para esas fechas");
+                                return;
+                              }
+
+                              var rolId = og_response_id.data[0].RolId;
+
+                              agoraRequest
+                                .get(
+                                  "ordenadores?query=RolId:" +
+                                  rolId +
+                                  "&sortby=FechaInicio&order=desc&limit=1"
+                                )
+                                .then(function (og_actual) {
+                                  if (!og_actual.data || og_actual.data.length === 0) {
+                                    console.warn("No se encontró ordenador actual para el rol");
+                                    return;
+                                  }
+
+                                  var ord = og_actual.data[0];
+                                  self.contrato_obj.ordenadorGasto_nombre = ord.NombreOrdenador;
+                                  self.contrato_obj.ordenadorGasto_rol = ord.RolOrdenador;
+                                  self.contrato_obj.ordenador_gasto_documento = ord.Documento;
+                                  self.contrato_obj.ordenador_gasto_resolucion = ord.InfoResolucion;
+                                  self.contrato_obj.ordenador_gasto_Inicio = ord.FechaInicio;
+
+                                  agoraRequest
+                                    .get("informacion_persona_natural?query=Id:" + ord.Documento)
+                                    .then(function (iopn_response) {
+                                      if (!iopn_response.data || iopn_response.data.length === 0) {
+                                        return;
+                                      }
+
+                                      var persona = iopn_response.data[0];
+
+                                      coreAmazonRequest
+                                        .get(
+                                          "ciudad",
+                                          "query=Id:" + persona.IdCiudadExpedicionDocumento
+                                        )
+                                        .then(function (scj_response) {
+                                          if (scj_response.data && scj_response.data.length > 0) {
+                                            self.contrato_obj.ordenador_gasto_ciudad_documento =
+                                              scj_response.data[0].Nombre;
+                                          }
+
+                                          self.contrato_obj.ordenador_gasto_tipo_documento =
+                                            persona.TipoDocumento.ValorParametro;
+                                          self.contrato_obj.ordenador_gasto_nombre_completo =
+                                            persona.PrimerNombre +
+                                            " " +
+                                            (persona.SegundoNombre || "") +
+                                            " " +
+                                            persona.PrimerApellido +
+                                            " " +
+                                            (persona.SegundoApellido || "");
+                                        });
                                     });
                                 });
                             });
+                        })
+                        .catch(function (error) {
+                          swal({
+                            title: $translate.instant("TITULO_ERROR_LEGAL"),
+                            type: "error",
+                            html:
+                              "Error al consultar datos del ordenador del gasto del contrato " +
+                              self.contrato_obj.numero_contrato +
+                              " vigencia " +
+                              self.contrato_obj.vigencia +
+                              ".<br>" +
+                              error,
+                            showCloseButton: true,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            allowOutsideClick: false,
+                          });
                         });
 
                         //Se obtiene los datos de Acta de Inicio.
@@ -698,7 +778,73 @@ angular
              * funcion para la genracion del pdf del acta correspondiente a la novedad de suspension
              * actualizacion de los datos del contrato y reporte de la novedad
              */
-            self.generarActa = function () {
+          self.generarActa = function () {
+            var resumenHTML =
+              '<div style="text-align:left; font-size:14px; line-height:1.6; margin-top:10px;">' +
+              '<div style="text-align:center; font-size:15px; font-weight:bold; margin-bottom:10px;">' +
+              '📝 Resumen previo' +
+              '</div>' +
+              '<p style="text-align:justify; margin-bottom:12px;">' +
+              'Se realizará la <b>novedad de suspensión</b> al contrato ' +
+              '<b>No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + '</b>.' +
+              '</p>' +
+
+              '<div style="background:#f8f9fa; border-radius:8px; padding:10px 15px; margin-bottom:10px;">' +
+              '<p style="margin:4px 0;">👤 <b>Contratista:</b> ' + (self.contrato_obj.contratista_nombre || "N/D") + '</p>' +
+              '<p style="margin:4px 0;">👤 <b>Ordenador del gasto:</b> ' + (self.contrato_obj.ordenadorGasto_nombre || "N/D") + '</p>' +
+              '<p style="margin:4px 0;">👤 <b>Supervisor:</b> ' + (self.contrato_obj.supervisor_nombre_completo || "N/D") + '</p>' +
+              '</div>' +
+
+              '<div style="background:#eef5fb; border-radius:8px; padding:10px 15px; margin-bottom:10px;">' +
+              '<p style="margin:4px 0;"><b>📅 Fecha de inicio suspensión:</b> ' +
+              ((self.f_inicio && self.format_date_letter_mongo) ? self.format_date_letter_mongo(self.f_inicio) : "N/D") +
+              '</p>' +
+              '<p style="margin:4px 0;"><b>📅 Fecha de fin suspensión:</b> ' +
+              ((self.f_fin && self.format_date_letter_mongo) ? self.format_date_letter_mongo(self.f_fin) : "N/D") +
+              '</p>' +
+              '</div>' +
+
+              '<hr style="margin:12px 0; border-top:1px solid #ccc;">' +
+
+              '<p style="text-align:center; font-size:14px; margin:8px 0;">' +
+              '¿Desea continuar con la creación del acta?' +
+              '</p>' +
+
+              '<p style="text-align:center; font-size:13.5px; color:#555; margin-top:18px; line-height:1.5;">' +
+              '⚠️ <b>Verifique los datos antes de continuar.</b><br>' +
+              'Si alguno no coincide, comuníquese con el equipo de soporte<br>' +
+              'a través de <a href="https://iris.portaloas.udistrital.edu.co/scp/login.php" target="_blank" ' +
+              'style="color:#007bff; text-decoration:none; font-weight:bold;">IRIS</a>.' +
+              '</p>' +
+              '</div>';
+
+            swal({
+              title: "Confirmar generación del acta",
+              html: resumenHTML,
+              type: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: '<i class="fa fa-check"></i> Sí, generar acta',
+              cancelButtonText: '<i class="fa fa-times"></i> Cancelar',
+              allowOutsideClick: false,
+              width: 600
+            }).then(function (result) {
+              if (!result.dismiss) {
+                self.ejecutarGeneracionActa();
+              } else {
+                swal({
+                  title: "Operación cancelada",
+                  text: "No se generó la novedad.",
+                  type: "info",
+                  confirmButtonText: "Entendido"
+                });
+              }
+            });
+          };
+
+
+          self.ejecutarGeneracionActa = function () {
               swal({
               title: "Creando novedad...",
               html: '' +

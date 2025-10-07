@@ -68,19 +68,6 @@ angular.module('contractualClienteApp')
             self.rp_numero = 0;
             self.cdp_numero = 0;
 
-            // const solic_input = document.getElementById("numero_solicitud");
-            // solic_input.addEventListener("input", function () {
-            //     if (this.value.length > 7) {
-            //         this.value = this.value.slice(0, 7);
-            //     }
-            // });
-
-            // const oficio_input = document.getElementById("numero_oficio_supervisor");
-            // oficio_input.addEventListener("input", function () {
-            //     if (this.value.length > 7) {
-            //         this.value = this.value.slice(0, 7);
-            //     }
-            // });
 
             const desembolsado_input = document.getElementById("valor_desembolsado");
             desembolsado_input.addEventListener("input", function () {
@@ -107,7 +94,6 @@ angular.module('contractualClienteApp')
                 .get("cdp_vigencia/" + self.contrato_vigencia + "/" + self.contrato_id)
                 .then(function (response) {
                     var data = response.data.cdps_vigencia.cdp_vigencia;
-                    // console.log(data);
                     if (data != undefined && data[0].id_numero_solicitud != null) {
                         self.numero_solicitud = data[0].id_numero_solicitud;
                     }
@@ -122,7 +108,7 @@ angular.module('contractualClienteApp')
 
 
             agoraRequest.get('contrato_general/?query=ContratoSuscrito.NumeroContratoSuscrito:' + self.contrato_id + ',VigenciaContrato:' + self.contrato_vigencia).then(function (agora_response) {
-                if (agora_response.data.length > 0) {
+              if (agora_response.data.length > 0) {
                     self.contrato_obj.numero_contrato = self.contrato_id;
                     self.contrato_obj.id = agora_response.data[0].ContratoSuscrito[0].NumeroContrato.Id;
                     self.contrato_obj.valor = String(agora_response.data[0].ValorContrato);
@@ -142,7 +128,6 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.tipo_contrato = agora_response.data[0].TipoContrato.TipoContrato;
                     self.contrato_obj.DependenciaSupervisor = agora_response.data[0].Supervisor.DependenciaSupervisor;
                     self.unidadEjecutora = agora_response.data[0].UnidadEjecutora;
-                    //Se obtiene los datos de Acta de Inicio.
                     agoraRequest.get('acta_inicio?query=NumeroContrato:' + self.contrato_obj.id).then(function (acta_response) {
                         self.contrato_obj.FechaInicio = self.getFechaUTC(acta_response.data[0].FechaInicio);
                         self.contrato_obj.FechaFin = self.getFechaUTC(acta_response.data[0].FechaFin);
@@ -153,35 +138,102 @@ angular.module('contractualClienteApp')
                         self.fecha_lim_sup = self.calcularFechaFin();
                     });
 
-                    //Obtención de datos del ordenador del gasto
-                    agoraRequest.get('ordenadores?query=IdOrdenador:' + self.contrato_obj.ordenadorGasto_id + '&sortby=FechaFin&order=desc&limit=1').then(function (og_response_id) {
-                        const rolOrdenador = og_response_id.data[0].RolOrdenador;
-                        agoraRequest.get(
-                            "ordenadores?query=RolOrdenador:" + rolOrdenador + "&sortby=FechaInicio&order=desc&limit=1"
-                        ).then(function (og_response) {
-                            self.contrato_obj.ordenadorGasto_nombre = og_response.data[0].NombreOrdenador;
-                            self.contrato_obj.ordenadorGasto_rol = og_response.data[0].RolOrdenador;
-                            self.contrato_obj.ordenador_gasto_documento = og_response.data[0].Documento;
-                            self.contrato_obj.ordenador_gasto_resolucion = og_response.data[0].InfoResolucion;
-                            agoraRequest.get('informacion_persona_natural?query=Id:' + self.contrato_obj.ordenador_gasto_documento).then(function (ipn_response) {
-                                self.contrato_obj.ordenador_gasto_tipo_documento = ipn_response.data[0].TipoDocumento.ValorParametro;
-                                coreAmazonRequest.get('ciudad', 'query=Id:' + ipn_response.data[0].IdCiudadExpedicionDocumento).then(function (sc_response) {
-                                    self.contrato_obj.ordenador_gasto_ciudad_documento = sc_response.data[0].Nombre;
+                  agoraRequest
+                    .get("acta_inicio?query=NumeroContrato:" + self.contrato_obj.id)
+                    .then(function (acta_response) {
+                      if (!acta_response.data || acta_response.data.length === 0) {
+                        console.warn("No se encontró acta de inicio para el contrato");
+                        return;
+                      }
+
+                      var fechaInicio = acta_response.data[0].FechaInicio;
+
+                      agoraRequest
+                        .get(
+                          "ordenadores?query=IdOrdenador:" +
+                          self.contrato_obj.ordenadorGasto_id +
+                          ",FechaInicio__lte:" +
+                          fechaInicio +
+                          ",FechaFin__gte:" +
+                          fechaInicio
+                        )
+                        .then(function (og_response_id) {
+                          if (!og_response_id.data || og_response_id.data.length === 0) {
+                            console.warn("No se encontró ordenador vigente para esas fechas");
+                            return;
+                          }
+
+                          var rolId = og_response_id.data[0].RolId;
+
+                          agoraRequest
+                            .get(
+                              "ordenadores?query=RolId:" +
+                              rolId +
+                              "&sortby=FechaInicio&order=desc&limit=1"
+                            )
+                            .then(function (og_actual) {
+                              if (!og_actual.data || og_actual.data.length === 0) {
+                                console.warn("No se encontró ordenador actual para el rol");
+                                return;
+                              }
+
+                              var ord = og_actual.data[0];
+                              self.contrato_obj.ordenadorGasto_nombre = ord.NombreOrdenador;
+                              self.contrato_obj.ordenadorGasto_rol = ord.RolOrdenador;
+                              self.contrato_obj.ordenador_gasto_documento = ord.Documento;
+                              self.contrato_obj.ordenador_gasto_resolucion = ord.InfoResolucion;
+                              self.contrato_obj.ordenador_gasto_Inicio = ord.FechaInicio;
+
+                              agoraRequest
+                                .get("informacion_persona_natural?query=Id:" + ord.Documento)
+                                .then(function (iopn_response) {
+                                  if (!iopn_response.data || iopn_response.data.length === 0) {
+                                    return;
+                                  }
+
+                                  var persona = iopn_response.data[0];
+
+                                  coreAmazonRequest
+                                    .get(
+                                      "ciudad",
+                                      "query=Id:" + persona.IdCiudadExpedicionDocumento
+                                    )
+                                    .then(function (scj_response) {
+                                      if (scj_response.data && scj_response.data.length > 0) {
+                                        self.contrato_obj.ordenador_gasto_ciudad_documento =
+                                          scj_response.data[0].Nombre;
+                                      }
+
+                                      self.contrato_obj.ordenador_gasto_tipo_documento =
+                                        persona.TipoDocumento.ValorParametro;
+                                      self.contrato_obj.ordenador_gasto_nombre_completo =
+                                        persona.PrimerNombre +
+                                        " " +
+                                        (persona.SegundoNombre || "") +
+                                        " " +
+                                        persona.PrimerApellido +
+                                        " " +
+                                        (persona.SegundoApellido || "");
+                                    });
                                 });
                             });
                         });
-                    }).catch(function (error) {
-                        //Servidor no disponible
-                        swal({
-                            title: $translate.instant('TITULO_ERROR_LEGAL'),
-                            type: 'error',
-                            html: "Error al consultar datos de ordenadores del contrato " + self.contrato_obj.numero_contrato +
-                                $translate.instant('ANIO') + self.contrato_obj.vigencia + '.' + error,
-                            showCloseButton: true,
-                            showCancelButton: false,
-                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                            allowOutsideClick: false
-                        });
+                    })
+                    .catch(function (error) {
+                      swal({
+                        title: $translate.instant("TITULO_ERROR_LEGAL"),
+                        type: "error",
+                        html:
+                          "Error al consultar datos del ordenador del gasto del contrato " +
+                          self.contrato_obj.numero_contrato +
+                          " vigencia " +
+                          self.contrato_obj.vigencia +
+                          ".<br>" +
+                          error,
+                        showCloseButton: true,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                        allowOutsideClick: false,
+                      });
                     });
 
                     financieraJbpmRequest
@@ -382,31 +434,6 @@ angular.module('contractualClienteApp')
                  * Funcion que observa y controla el cambio de fechas
                  * @param {date} Fecha de terminación anticipada
                  */
-            // $scope.$watch("sLactaTerminacionAnticipada.fecha_solicitud", function () {
-            //     if (self.fecha_solicitud.getDate() == 31) {
-            //         swal(
-            //             $translate.instant("TITULO_ADVERTENCIA"),
-            //             $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
-            //             "error"
-            //         );
-            //         var fecha = new Date(self.fecha_solicitud);
-            //         fecha.setDate(self.fecha_solicitud.getDate() + 1);
-            //         self.fecha_solicitud = fecha;
-            //     }
-            // });
-
-            // $scope.$watch("sLactaTerminacionAnticipada.fecha_terminacion_anticipada", function () {
-            //     if (self.fecha_terminacion_anticipada.getDate() == 31) {
-            //         swal(
-            //             $translate.instant("TITULO_ADVERTENCIA"),
-            //             $translate.instant("DESCRIPCION_ERROR_FECHA_31"),
-            //             "error"
-            //         );
-            //         var fecha = new Date(self.fecha_terminacion_anticipada);
-            //         fecha.setDate(self.fecha_terminacion_anticipada.getDate() + 1);
-            //         self.fecha_terminacion_anticipada = fecha;
-            //     }
-            // });
 
             /**
              * @ngdoc method
@@ -454,21 +481,7 @@ angular.module('contractualClienteApp')
                 }
             };
 
-            // $scope.check_saldo = function () {
-            //     if (self.a_favor_de == "Universidad") {
-            //         $(".universidad_check").show("fast");
-            //         if ($(".contratista_check").is(":visible")) {
-            //             $(".contratista_check").hide("fast");
-            //             self.saldo_contratista = 0;
-            //         }
-            //     } else if (self.a_favor_de = "Contratista") {
-            //         $(".contratista_check").show("fast");
-            //         if ($(".universidad_check").is(":visible")) {
-            //             $(".universidad_check").hide("fast");
-            //             self.saldo_universidad = 0;
-            //         }
-            //     }
-            // }
+
 
             // seleccionador de beneficiario de saldo
             self.selecionarSaldo = function () {
@@ -784,15 +797,76 @@ angular.module('contractualClienteApp')
                 });
             }
 
-            /**
+                        /**
              * @ngdoc method
              * @name generarActa
              * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaTerminacionLiquidacionBilateralCtrl
              * @description
              * funcion que valida la data de la novedad
              */
-            self.generarActa = function () {
-              swal({
+
+          self.generarActa = function () {
+            var resumenHTML =
+              '<div style="text-align:left; font-size:14px; line-height:1.6; margin-top:10px;">' +
+              '<div style="text-align:center; font-size:15px; font-weight:bold; margin-bottom:10px;">' +
+              '📝 Resumen previo' +
+              '</div>' +
+              '<p style="text-align:justify; margin-bottom:12px;">' +
+              'Se realizará la <b>novedad de terminación anticipada</b> al contrato ' +
+              '<b>No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + '</b>.' +
+              '</p>' +
+              '<div style="background:#f8f9fa; border-radius:8px; padding:10px 15px; margin-bottom:10px;">' +
+              '<p style="margin:4px 0;">👤 <b>Contratista:</b> ' + (self.contrato_obj.contratista_nombre || "N/D") + '</p>' +
+              '<p style="margin:4px 0;">👤 <b>Ordenador del gasto:</b> ' + (self.contrato_obj.ordenadorGasto_nombre || "N/D") + '</p>' +
+              '<p style="margin:4px 0;">👤 <b>Supervisor:</b> ' + (self.contrato_obj.supervisor_nombre_completo || "N/D") + '</p>' +
+              '</div>' +
+              '<div style="background:#eef5fb; border-radius:8px; padding:10px 15px; margin-bottom:10px;">' +
+              '<p style="margin:4px 0;"><b>📅 Fecha de terminación anticipada:</b> ' +
+              (
+                self.fecha_terminacion_anticipada
+                  ? new Date(self.fecha_terminacion_anticipada).toLocaleDateString("es-CO", { day: "2-digit", month: "long", year: "numeric" })
+                  : "N/D"
+              ) +
+              '</p>' +
+              '</div>' +
+              '<hr style="margin:12px 0; border-top:1px solid #ccc;">' +
+              '<p style="text-align:center; font-size:14px; margin:8px 0;">¿Desea continuar con la creación del acta?</p>' +
+              '<p style="text-align:center; font-size:13.5px; color:#555; margin-top:18px; line-height:1.5;">' +
+              '⚠️ <b>Verifique los datos antes de continuar.</b><br>' +
+              'Si alguno no coincide, comuníquese con el equipo de soporte<br>' +
+              'a través de <a href="https://iris.portaloas.udistrital.edu.co/scp/login.php" target="_blank" ' +
+              'style="color:#007bff; text-decoration:none; font-weight:bold;">IRIS</a>.' +
+              '</p>' +
+              '</div>';
+
+            swal({
+              title: "Confirmar generación del acta",
+              html: resumenHTML,
+              type: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: '<i class="fa fa-check"></i> Sí, generar acta',
+              cancelButtonText: '<i class="fa fa-times"></i> Cancelar',
+              allowOutsideClick: false,
+              width: 600
+            }).then(function (result) {
+              if (!result.dismiss) {
+                self.ejecutarGeneracionActa();
+              } else {
+                swal({
+                  title: "Operación cancelada",
+                  text: "No se generó la novedad.",
+                  type: "info",
+                  confirmButtonText: "Entendido"
+                });
+              }
+            });
+          };
+
+
+          self.ejecutarGeneracionActa = function () {
+            swal({
               title: "Creando novedad...",
               html: '' +
                 '<p>Por favor espera mientras se procesa la creación.<br>El proceso puede tardar varios minutos.</p>' +
@@ -801,17 +875,15 @@ angular.module('contractualClienteApp')
                 '</div>' +
                 '<style>' +
                 '@keyframes progress-indeterminate {' +
-                '0%   {margin-left: -100%; width: 100%;}' +
-                '50%  {margin-left: 0%; width: 100%;}' +
+                '0% {margin-left: -100%; width: 100%;}' +
+                '50% {margin-left: 0%; width: 100%;}' +
                 '100% {margin-left: 100%; width: 100%;}' +
                 '}' +
-
                 '@keyframes gradient-shift {' +
-                '0%   { background-position: 0% 50%; }' +
-                '50%  { background-position: 100% 50%; }' +
+                '0% { background-position: 0% 50%; }' +
+                '50% { background-position: 100% 50%; }' +
                 '100% { background-position: 0% 50%; }' +
                 '}' +
-
                 '#progress-bar {' +
                 'width: 100% !important;' +
                 'height: 14px !important;' +
@@ -827,116 +899,101 @@ angular.module('contractualClienteApp')
               showConfirmButton: false,
               allowOutsideClick: false
             });
-                var nuevoEstado = {
-                    "Estado": {
-                        "Id": 8
-                    },
-                    "NumeroContrato": self.contrato_obj.id.toString(),
-                    "Usuario": token_service.getPayload().documento_compuesto,
-                    "Vigencia": parseInt(self.contrato_vigencia),
-                    "FechaRegistro": new Date()
-                };
-                // var fechaActual = new Date();
-                // if (
-                //     (fechaActual.getDate() == self.fecha_terminacion_anticipada.getDate()
-                //         && fechaActual.getMonth() == self.fecha_terminacion_anticipada.getMonth()
-                //         && fechaActual.getFullYear() == self.fecha_terminacion_anticipada.getFullYear())
-                //     || fechaActual > self.fecha_terminacion_anticipada
-                // ) {
-                //     self.estadoNovedad = "TERM";
-                // } else {
-                //     self.estadoNovedad = "ENTR";
-                // }
-                self.estadoNovedad = "TERM";
 
-                if ($scope.formTerminacion.$valid) {
-                    novedadesRequest.get('tipo_novedad', 'query=Nombre:Terminación Anticipada').then(function (nc_response) {
-                        self.fecha_terminacion_anticipada.setHours(12, 0, 0, 0);
-                        self.f_expedicion_acta.setHours(12, 0, 0, 0);
-                        self.fecha_oficioS.setHours(12, 0, 0, 0);
-                        self.fecha_oficioO.setHours(12, 0, 0, 0);
-                        self.fecha_solicitud.setHours(12, 0, 0, 0);
-                        self.f_hoy.setHours(12, 0, 0, 0);
-                        var f_terminacion_post = new Date(self.fecha_terminacion_anticipada);
-                        if (f_terminacion_post.getDate() == 31) {
-                            f_terminacion_post.setDate(f_terminacion_post.getDate() + 1);
-                        }
-                        self.terminacion_nov = {};
-                        self.terminacion_nov.contrato = self.contrato_obj.numero_contrato;
-                        self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
-                        self.terminacion_nov.cesionario = parseInt(self.contrato_obj.contratista);
-                        self.terminacion_nov.motivo = self.motivo;
-                        self.terminacion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
-                        self.terminacion_nov.fecharegistro = self.f_hoy;
-                        self.terminacion_nov.numerosolicitud = self.numero_solicitud;
-                        self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
-                        self.terminacion_nov.fechaexpedicion = self.f_expedicion_acta;
-                        if (self.numero_oficio_supervisor == "") {
-                            self.terminacion_nov.numerooficiosupervisor = "n.a.";
-                        } else {
-                            self.terminacion_nov.numerooficiosupervisor = self.numero_oficio_supervisor;
-                        }
-                        if (self.numero_oficio_ordenador == "") {
-                            self.terminacion_nov.numerooficioordenador = "n.a.";
-                        } else {
-                            self.terminacion_nov.numerooficioordenador = self.numero_oficio_ordenador;
-                        }
-                        self.terminacion_nov.fechaoficiosupervisor = self.fecha_oficioS;
-                        self.terminacion_nov.fechaoficioordenador = self.fecha_oficioO;
-                        self.terminacion_nov.valor_desembolsado = parseFloat(self.valor_desembolsado.replace(/\,/g, ""));
-                        self.terminacion_nov.saldo_contratista = parseFloat(self.saldo_contratista.replace(/\,/g, ""));
-                        self.terminacion_nov.saldo_universidad = parseFloat(self.saldo_universidad.replace(/\,/g, ""));
-                        self.terminacion_nov.fecha_terminacion_anticipada = f_terminacion_post;
-                        self.terminacion_nov.fechafinefectiva = f_terminacion_post;
-                        self.terminacion_nov.estado = self.estadoNovedad;
-                        self.fecha_efectos_legales = new Date(self.fecha_terminacion_anticipada);
-                        self.fecha_efectos_legales.setDate(self.fecha_efectos_legales.getDate() + 1);
-                        // Recolección datos objeto POST Replica
-                        self.contrato_obj_replica.NumeroContrato = self.contrato_obj.numero_contrato;
-                        self.contrato_obj_replica.Vigencia = parseInt(self.contrato_obj.vigencia);
-                        self.contrato_obj_replica.FechaRegistro = self.f_hoy;
-                        self.contrato_obj_replica.FechaInicio = self.contrato_obj.FechaInicio;
-                        self.contrato_obj_replica.FechaFin = new Date(self.terminacion_nov.fecha_terminacion_anticipada);
-                        self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
-                        self.contrato_obj_replica.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
-                        self.contrato_obj_replica.ValorNovedad = parseFloat(self.terminacion_nov.valor_desembolsado);
-                        self.contrato_obj_replica.Documento = self.contrato_obj.contratista_documento;
-                        self.contrato_obj_replica.NumeroCdp = 0;
-                        self.contrato_obj_replica.VigenciaCdp = 0;
-                        if (self.terminacion_nov.tiponovedad === "NP_TER") {
-                            self.contrato_obj_replica.TipoNovedad = parseFloat(218);
-                        };
-                        //primero obtenemos el estado actual - en esta caso es 'En ejecucion'
-                        //Se guarda en la posicion [0] del arreglo estados el estado actual
-                        //Luego se valida si es posible cambiar el estado - en este caso pasar de ejecucion a terminacion anticipada - devuelve si es true o false
-                        //si es true guardamos la novedad - y enviamos el cambio de estado del contrato
-                        self.selecionarSaldo();
-                        agoraRequest.get('contrato_estado?query=NumeroContrato:' + self.contrato_obj.id + ',Vigencia:' + self.contrato_obj.vigencia + '&sortby=Id&order=desc&limit=1').then(function (ce_response) {
-                            if (ce_response.data[ce_response.data.length - 1].Estado.NombreEstado == "En ejecucion") {
-                                var estado_temp_from = {
-                                    "NombreEstado": "ejecucion"
-                                }
-                                self.estados[0] = estado_temp_from;
-                                self.formato_generacion_pdf(nuevoEstado);
-                            } else {
-                                swal(
-                                    $translate.instant('INFORMACION'),
-                                    $translate.instant('El contrato no se encuentra en ejecución debido a esto no se puede suspender.'),
-                                    'info'
-                                ).then(function () {
-                                    window.location.href = "#/seguimientoycontrol/legal";
-                                });
-                            }
-                        });
-                    });
-                } else {
-                    swal(
-                        $translate.instant('TITULO_ERROR'),
-                        $translate.instant('DESCRIPCION_ERROR'),
-                        'error'
-                    );
-                }
+            var nuevoEstado = {
+              "Estado": { "Id": 8 },
+              "NumeroContrato": self.contrato_obj.id.toString(),
+              "Usuario": token_service.getPayload().documento_compuesto,
+              "Vigencia": parseInt(self.contrato_vigencia),
+              "FechaRegistro": new Date()
             };
+
+            self.estadoNovedad = "TERM";
+
+            if ($scope.formTerminacion.$valid) {
+              novedadesRequest
+                .get("tipo_novedad", "query=Nombre:Terminación Anticipada")
+                .then(function (nc_response) {
+                  self.fecha_terminacion_anticipada.setHours(12, 0, 0, 0);
+                  self.f_expedicion_acta.setHours(12, 0, 0, 0);
+                  self.fecha_oficioS.setHours(12, 0, 0, 0);
+                  self.fecha_oficioO.setHours(12, 0, 0, 0);
+                  self.fecha_solicitud.setHours(12, 0, 0, 0);
+                  self.f_hoy.setHours(12, 0, 0, 0);
+                  var f_terminacion_post = new Date(self.fecha_terminacion_anticipada);
+                  if (f_terminacion_post.getDate() == 31) {
+                    f_terminacion_post.setDate(f_terminacion_post.getDate() + 1);
+                  }
+
+                  self.terminacion_nov = {};
+                  self.terminacion_nov.contrato = self.contrato_obj.numero_contrato;
+                  self.terminacion_nov.vigencia = String(self.contrato_obj.vigencia);
+                  self.terminacion_nov.cesionario = parseInt(self.contrato_obj.contratista);
+                  self.terminacion_nov.motivo = self.motivo;
+                  self.terminacion_nov.tiponovedad = nc_response.data[0].CodigoAbreviacion;
+                  self.terminacion_nov.fecharegistro = self.f_hoy;
+                  self.terminacion_nov.numerosolicitud = self.numero_solicitud;
+                  self.terminacion_nov.fechasolicitud = self.fecha_solicitud;
+                  self.terminacion_nov.fechaexpedicion = self.f_expedicion_acta;
+                  self.terminacion_nov.numerooficiosupervisor = self.numero_oficio_supervisor || "n.a.";
+                  self.terminacion_nov.numerooficioordenador = self.numero_oficio_ordenador || "n.a.";
+                  self.terminacion_nov.fechaoficiosupervisor = self.fecha_oficioS;
+                  self.terminacion_nov.fechaoficioordenador = self.fecha_oficioO;
+                  self.terminacion_nov.valor_desembolsado = parseFloat(self.valor_desembolsado.replace(/\,/g, ""));
+                  self.terminacion_nov.saldo_contratista = parseFloat(self.saldo_contratista.replace(/\,/g, ""));
+                  self.terminacion_nov.saldo_universidad = parseFloat(self.saldo_universidad.replace(/\,/g, ""));
+                  self.terminacion_nov.fecha_terminacion_anticipada = f_terminacion_post;
+                  self.terminacion_nov.fechafinefectiva = f_terminacion_post;
+                  self.terminacion_nov.estado = self.estadoNovedad;
+                  self.fecha_efectos_legales = new Date(self.fecha_terminacion_anticipada);
+                  self.fecha_efectos_legales.setDate(self.fecha_efectos_legales.getDate() + 1);
+
+                  // Datos para la réplica
+                  self.contrato_obj_replica.NumeroContrato = self.contrato_obj.numero_contrato;
+                  self.contrato_obj_replica.Vigencia = parseInt(self.contrato_obj.vigencia);
+                  self.contrato_obj_replica.FechaRegistro = self.f_hoy;
+                  self.contrato_obj_replica.FechaInicio = self.contrato_obj.FechaInicio;
+                  self.contrato_obj_replica.FechaFin = new Date(self.terminacion_nov.fecha_terminacion_anticipada);
+                  self.contrato_obj_replica.Contratista = parseFloat(self.contrato_obj.contratista, 64);
+                  self.contrato_obj_replica.PlazoEjecucion = parseInt(self.contrato_obj.plazo);
+                  self.contrato_obj_replica.ValorNovedad = parseFloat(self.terminacion_nov.valor_desembolsado);
+                  self.contrato_obj_replica.Documento = self.contrato_obj.contratista_documento;
+                  self.contrato_obj_replica.NumeroCdp = 0;
+                  self.contrato_obj_replica.VigenciaCdp = 0;
+                  if (self.terminacion_nov.tiponovedad === "NP_TER") {
+                    self.contrato_obj_replica.TipoNovedad = parseFloat(218);
+                  }
+
+                  self.selecionarSaldo();
+
+                  agoraRequest
+                    .get("contrato_estado?query=NumeroContrato:" + self.contrato_obj.id + ",Vigencia:" + self.contrato_obj.vigencia + "&sortby=Id&order=desc&limit=1")
+                    .then(function (ce_response) {
+                      if (ce_response.data[ce_response.data.length - 1].Estado.NombreEstado == "En ejecucion") {
+                        var estado_temp_from = { "NombreEstado": "ejecucion" };
+                        self.estados[0] = estado_temp_from;
+                        self.formato_generacion_pdf(nuevoEstado);
+                      } else {
+                        swal(
+                          $translate.instant('INFORMACION'),
+                          $translate.instant('El contrato no se encuentra en ejecución debido a esto no se puede suspender.'),
+                          'info'
+                        ).then(function () {
+                          window.location.href = "#/seguimientoycontrol/legal";
+                        });
+                      }
+                    });
+                });
+            } else {
+              swal(
+                $translate.instant('TITULO_ERROR'),
+                $translate.instant('DESCRIPCION_ERROR'),
+                'error'
+              );
+            }
+          };
+
+
 
             self.calcularFechaFin = function () {
 
@@ -977,17 +1034,7 @@ angular.module('contractualClienteApp')
                 var output = self.get_plantilla();
 
                 const pdfDocGenerator = pdfMake.createPdf(output);
-                // console.log(self.terminacion_nov);
-                // console.log(self.contrato_obj_replica);
-                // pdfMake
-                //     .createPdf(output)
-                //     .download(
-                //         "acta_terminacion_anticipada_" +
-                //         self.contrato_id +
-                //         "_" +
-                //         dateTime +
-                //         ".pdf"
-                //     );
+
                 pdfDocGenerator.getBase64(function (data) {
                     pdfMakerService.saveDocGestorDoc(
                         data,
