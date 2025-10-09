@@ -5,7 +5,7 @@
             <h3 class="titulo-centrado">{{'ACTA_ADICION_PRORROGA' | translate}}</h3>
         </center>
     </div>
-    <form name="formadipro" id="formulario" ng-submit="sLactaAdicionProrroga.generarActa()" method="post">
+    <form name="formadipro" id="formulario" novalidate>
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6">
@@ -304,21 +304,13 @@
         <div class="panel-footer">
             <div class="row" ng-if="sLactaAdicionProrroga.editBool==false">
                 <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center;">
-                    <button type="submit" class="btn btn-primary btn-lg"
-                        ng-click="sLactaAdicionProrroga.comprobar_seleccion_novedad()">
-                        <span class="glyphicon glyphicon-file"></span> {{'CREAR_NOVEDAD_ADICION_PRORROGA' | translate}}
+                    <button type="button" class="btn btn-primary btn-lg" ng-click="sLactaAdicionProrroga.validarYConfirmarActa()">
+                      <span class="glyphicon glyphicon-file"></span>
+                      {{'CREAR_NOVEDAD_ADICION_PRORROGA' | translate}}
                     </button>
+
                 </div>
             </div>
-            <!-- <div class="row" ng-if="sLactaAdicionProrroga.editBool==true">
-                <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center;">
-                    <button type="submit" class="btn btn-primary btn-lg"
-                        ng-click="sLactaAdicionProrroga.comprobar_seleccion_novedad()">
-                        <span class="glyphicon glyphicon-file"></span> {{'ACTUALIZAR_NOVEDAD_ADICION_PRORROGA' |
-                        translate}}
-                    </button>
-                </div>
-            </div> -->
         </div>
         <br>
         <br>
