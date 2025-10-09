@@ -1017,7 +1017,8 @@ angular
               '</p>' +
 
               '<div style="background:#f8f9fa; border-radius:8px; padding:10px 15px; margin-bottom:10px;">' +
-              '<p style="margin:4px 0;">👤 <b>Contratista:</b> ' + (self.contrato_obj.contratista_nombre || "N/D") + '</p>' +
+              '<p style="margin:4px 0;">👤 <b>Cedente:</b> ' + (self.contrato_obj.contratista_nombre || "N/D") + '</p>' +
+              '<p style="margin:4px 0;">👤 <b>Cedente:</b> ' + (self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos || "N/D") + '</p>' +
               '<p style="margin:4px 0;">👤 <b>Ordenador del gasto:</b> ' + (self.contrato_obj.ordenadorGasto_nombre || "N/D") + '</p>' +
               '<p style="margin:4px 0;">👤 <b>Supervisor:</b> ' + (self.contrato_obj.supervisor_nombre || "N/D") + '</p>' +
               '</div>' +
@@ -1129,15 +1130,6 @@ angular
                     singular: $translate.instant("("),
                 });
                 self.contrato_obj.plazo_cesionario = self.calculoPlazosCesion(self.f_cesion, self.calcularFechaFin());
-                // self.contrato_obj.plazo_cesionario =
-                //     f_terminacion_contrato.diff(f_inicio_contrato, "days") -
-                //     f_cesion.diff(f_inicio_contrato, "days");
-                //Se obtiene el dato de Fecha Final Efectiva.
-                // amazonAdministrativaRequest
-                // .get("contrato_persona/" + self.contrato_obj.id)
-                // .then(function (acta_response) {
-                //     self.contrato_obj.Fin = acta_response.data[0].FechaFin;
-                // });
                 if ($scope.formCesion.$valid) {
                     amazonAdministrativaRequest
                         .get(
@@ -1161,10 +1153,6 @@ angular
                                             self.fecha_solicitud.setHours(12, 0, 0, 0);
                                             self.f_hoy.setHours(12, 0, 0, 0);
                                             self.cesion_nov = {};
-                                            // self.cesion_nov.aclaracion = "";
-                                            // self.cesion_nov.camposaclaracion = null;
-                                            // self.cesion_nov.camposmodificacion = null;
-                                            // self.cesion_nov.camposmodificados = null;
                                             self.cesion_nov.cedente = parseInt(
                                                 response_ced.data[0].Id
                                             );
