@@ -1018,7 +1018,7 @@ angular
 
               '<div style="background:#f8f9fa; border-radius:8px; padding:10px 15px; margin-bottom:10px;">' +
               '<p style="margin:4px 0;">👤 <b>Cedente:</b> ' + (self.contrato_obj.contratista_nombre || "N/D") + '</p>' +
-              '<p style="margin:4px 0;">👤 <b>Cedente:</b> ' + (self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos || "N/D") + '</p>' +
+              '<p style="margin:4px 0;">👤 <b>Cesionario:</b> ' + (self.cesionario_obj.nombre + " " + self.cesionario_obj.apellidos || "N/D") + '</p>' +
               '<p style="margin:4px 0;">👤 <b>Ordenador del gasto:</b> ' + (self.contrato_obj.ordenadorGasto_nombre || "N/D") + '</p>' +
               '<p style="margin:4px 0;">👤 <b>Supervisor:</b> ' + (self.contrato_obj.supervisor_nombre || "N/D") + '</p>' +
               '</div>' +
