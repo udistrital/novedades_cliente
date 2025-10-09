@@ -1473,8 +1473,19 @@ angular
 
       self.verDocumento = function () {
         var wait = self._readyContratista || $q.when();
-
         wait.then(function () {
+          var valor_contrato_inicial = self.contrato_obj.valor;
+          if (valor_contrato_inicial && !isNaN(valor_contrato_inicial)) {
+            $scope.valor_contrato_letras = numeroALetras(valor_contrato_inicial, {
+              plural: $translate.instant("PESOS"),
+              singular: $translate.instant("PESO"),
+              centPlural: $translate.instant("CENTAVOS"),
+              centSingular: $translate.instant("CENTAVO"),
+            });
+          } else {
+            $scope.valor_contrato_letras = "VALOR NO DISPONIBLE";
+          }
+          $scope.cantidad_salarios_minimos = (valor_contrato_inicial / 737717).toFixed(2);
           var docDefinition = self.formato_pdf();
           const pdfDocGenerator = pdfMake.createPdf(docDefinition);
           pdfDocGenerator.open({
@@ -1485,6 +1496,7 @@ angular
           });
         });
       };
+
 
 
 
