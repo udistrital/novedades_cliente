@@ -752,6 +752,32 @@ angular
       };
 
       $scope.estado_novedad = false;
+
+
+
+      /**
+       * @ngdoc method
+       * @name validarYConfirmarActa
+       * @methodOf contractualClienteApp.controller:SeguimientoycontrolLegalActaAdicionProrrogaCtrl
+       * @description
+       * Función para validar el formulario antes de abrir el resumen de confirmación
+       */
+      self.validarYConfirmarActa = function () {
+        if (!$scope.formadipro.$valid) {
+          swal({
+            title: "Campos incompletos",
+            text: "Por favor complete todos los campos obligatorios antes de continuar.",
+            type: "warning",
+            confirmButtonText: "Entendido",
+          });
+          return;
+        }
+
+        self.comprobar_seleccion_novedad();
+      };
+
+
+
       /**
        * @ngdoc method
        * @name comprobar_seleccion_novedad
@@ -875,7 +901,6 @@ angular
           } else {
             $scope.estado_novedad = false;
           }
-          // var cod = JSON.parse(document.getElementById("rp").value);
         } catch (error) {
           if ($scope.estado_novedad == false) {
             swal(
@@ -886,6 +911,8 @@ angular
           }
 
         }
+        self.generarActa();
+
         var valor_contrato_inicial = self.contrato_obj.valor;
         $scope.valor_contrato_letras = numeroALetras(valor_contrato_inicial, {
           plural: $translate.instant("PESOS"),
