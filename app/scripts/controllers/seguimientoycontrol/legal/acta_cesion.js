@@ -617,36 +617,31 @@ angular
 
             self.calculoPlazoLetras = function (plazo, diasBool) {
                 if (diasBool) {
+                    if (plazo < 60) {
+                        const meses = Math.floor(plazo / 30);
+                        const dias = plazo % 30;
+                        let partes = [];
+                        if (meses > 0) {
+                            let meses_letras = numeroALetras(meses, {
+                                plural: $translate.instant("("),
+                                singular: $translate.instant("("),
+                            });
+                            partes.push(
+                                meses_letras + meses + " ) " + (meses === 1 ? "MES" : "MESES")
+                            );
+                        }
+                        if (dias > 0) {
+                            let dias_letras = numeroALetras(dias, {
+                                plural: $translate.instant("("),
+                                singular: $translate.instant("("),
+                            });
+                            partes.push(
+                                dias_letras + dias + " ) " + (dias === 1 ? "DÍA" : "DÍAS")
+                            );
+                        }
 
-    // --- NUEVO FORMATO PARA PLAZOS MENORES DE 60 DÍAS ---
-    if (plazo < 60) {
-        const meses = Math.floor(plazo / 30);
-        const dias = plazo % 30;
-
-        let partes = [];
-
-        if (meses > 0) {
-            let meses_letras = numeroALetras(meses, {
-                plural: $translate.instant("("),
-                singular: $translate.instant("("),
-            });
-            partes.push(
-                meses_letras + meses + " ) " + (meses === 1 ? "MES" : "MESES")
-            );
-        }
-
-        if (dias > 0) {
-            let dias_letras = numeroALetras(dias, {
-                plural: $translate.instant("("),
-                singular: $translate.instant("("),
-            });
-            partes.push(
-                dias_letras + dias + " ) " + (dias === 1 ? "DÍA" : "DÍAS")
-            );
-        }
-
-        return partes.join(" Y ");
-    }
+                        return partes.join(" Y ");
+                    }
 
                     var plazo_meses = plazo / 30;
                     var res = String(plazo_meses).split(".");
