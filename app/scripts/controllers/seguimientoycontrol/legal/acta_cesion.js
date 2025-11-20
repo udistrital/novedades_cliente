@@ -617,19 +617,53 @@ angular
 
             self.calculoPlazoLetras = function (plazo, diasBool) {
                 if (diasBool) {
+
+    // --- NUEVO FORMATO PARA PLAZOS MENORES DE 60 DÍAS ---
+    if (plazo < 60) {
+        const meses = Math.floor(plazo / 30);
+        const dias = plazo % 30;
+
+        let partes = [];
+
+        if (meses > 0) {
+            let meses_letras = numeroALetras(meses, {
+                plural: $translate.instant("("),
+                singular: $translate.instant("("),
+            });
+            partes.push(
+                meses_letras + meses + " ) " + (meses === 1 ? "MES" : "MESES")
+            );
+        }
+
+        if (dias > 0) {
+            let dias_letras = numeroALetras(dias, {
+                plural: $translate.instant("("),
+                singular: $translate.instant("("),
+            });
+            partes.push(
+                dias_letras + dias + " ) " + (dias === 1 ? "DÍA" : "DÍAS")
+            );
+        }
+
+        return partes.join(" Y ");
+    }
+
                     var plazo_meses = plazo / 30;
                     var res = String(plazo_meses).split(".");
                     var cantidad_meses = res[0];
                     var decimal_cantidad_dias = "0." + res[1];
                     var cantidad_dias = Math.ceil(parseFloat(decimal_cantidad_dias) / 0.03333333333336);
+
                     var cantidad_meses_letras = numeroALetras(cantidad_meses, {
                         plural: $translate.instant("("),
                         singular: $translate.instant("("),
                     });
+
                     var cantidad_dias_letras = numeroALetras(cantidad_dias, {
                         plural: $translate.instant("("),
                         singular: $translate.instant("("),
                     });
+
                     var texto = "";
                     if (cantidad_dias == 0) {
                         texto =
@@ -647,11 +681,11 @@ angular
                             cantidad_dias_letras +
                             cantidad_dias +
                             " ) " +
-                            $translate.instant("DIAS");
+                            "DÍAS";
                     }
-                    return texto;
 
-                } else {
+                    return texto;
+                    }else {
                     var cantidad_meses_letras = numeroALetras(plazo, {
                         plural: $translate.instant("("),
                         singular: $translate.instant("("),
@@ -1776,7 +1810,7 @@ angular
                                     centPlural: $translate.instant("CENTAVOS"),
                                     centSingular: $translate.instant("CENTAVO"),
                                 }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.novedades[i].ValorAdicion)) + " M/CTE)," +
-                                ' y prórroga en tiempo por ' + self.calculoPlazoLetras(self.novedades[i].TiempoProrroga) +
+                                ' y prórroga en tiempo por ' + self.calculoPlazoLetras(self.novedades[i].TiempoProrroga, true) +
                                 ' en atención a la solicitud recibida por correo electrónico, de fecha ' + self.format_date_letter_mongo(self.novedades[i].FechaOficioOrdenador) +
                                 ', por medio de la cual, el ' + self.contrato_obj.ordenadorGasto_rol +
                                 ', solicitó la citada modificación; cuya justificación se encuentra descrita en la solicitud de necesidad No. ' +
