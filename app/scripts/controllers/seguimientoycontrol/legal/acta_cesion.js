@@ -620,9 +620,9 @@ angular
                     if (plazo < 60) {
                         const meses = Math.floor(plazo / 30);
                         const dias = plazo % 30;
-                        let partes = [];
+                        var partes = [];
                         if (meses > 0) {
-                            let meses_letras = numeroALetras(meses, {
+                            var meses_letras = numeroALetras(meses, {
                                 plural: $translate.instant("("),
                                 singular: $translate.instant("("),
                             });
@@ -631,7 +631,7 @@ angular
                             );
                         }
                         if (dias > 0) {
-                            let dias_letras = numeroALetras(dias, {
+                            var dias_letras = numeroALetras(dias, {
                                 plural: $translate.instant("("),
                                 singular: $translate.instant("("),
                             });
