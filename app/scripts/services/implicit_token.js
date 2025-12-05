@@ -126,11 +126,13 @@ angular
                     headers: {},
                 },
                 getHeader: function () {
+                    var payload = service.getPayload();
                     service.setting_bearer = {
                         headers: {
                             Accept: "application/json",
                             Authorization: "Bearer " + window.localStorage.getItem("access_token"),
                             "Content-Type": "application/json",
+                             "X-User": payload.documento
                         },
                     };
                     return service.setting_bearer;
