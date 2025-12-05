@@ -138,10 +138,7 @@ angular
 
           $scope.anulandoId = id;
 
-          novedadesMidRequest.patch("novedad", id, {
-              Usuario: "CC" + token_service.getPayload().documento
-      })
-
+          novedadesMidRequest.patch("novedad", id, {})
             .then(function (resp) {
               var r = resp && resp.data ? resp.data : {};
               swal.close();
