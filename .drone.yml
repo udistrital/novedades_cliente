@@ -70,7 +70,7 @@ steps:
     - pull_request
 
 - name: build_master
-  image: node:14.11.0
+  image: node:14
   commands:
   - npm install -g grunt-cli bower
   - npm install natives
