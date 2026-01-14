@@ -32,7 +32,7 @@ AWS_SECRET_ACCESS_KEY: Secreto de Usuario AWS
 
 Instalación
 
-Node v16.20.2
+Node v14.21.23
 
 ```shell
 # Clonar el repositorio:
