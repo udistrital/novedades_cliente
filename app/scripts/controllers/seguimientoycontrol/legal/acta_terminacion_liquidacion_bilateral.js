@@ -1439,12 +1439,12 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.tipo_contrato + 
                     ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + 
                     ' presenta un saldo a la fecha de ' +
-                    numeroALetras(self.a_favor.valor, {
+                    numeroALetras(self.saldo_contratista, {
                         plural: $translate.instant("PESOS"),
                         singular: $translate.instant("PESO"),
                         centPlural: $translate.instant("CENTAVOS"),
                         centSingular: $translate.instant("CENTAVO"),
-                    }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.a_favor.valor) + '') + ' M/CTE).\n\n'
+                    }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.saldo_contratista) + '') + ' M/CTE).\n\n'
                 );
                 
                 consideraciones.push(
