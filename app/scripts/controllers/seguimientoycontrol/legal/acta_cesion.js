@@ -2043,7 +2043,7 @@ angular
                                         alignment: "center",
                                         fontSize: 9,
                                     },
-                                    { text: "Código: GJ-PR-002-FR-008", fontSize: 9 },
+                                    { text: "Código: GC-PR-014-FR-052", fontSize: 9 },
                                     {
                                         image: "logo_sigud",
                                         fit: [65, 120],
@@ -2060,7 +2060,7 @@ angular
                                             alignment: "center",
                                             fontSize: 9,
                                         },
-                                        { text: "Versión: 03", margin: [0, 2], fontSize: 9 },
+                                        { text: "Versión: 02", margin: [0, 2], fontSize: 9 },
                                         " ",
                                     ],
                                     [
@@ -2070,7 +2070,7 @@ angular
                                             alignment: "center",
                                             fontSize: 9,
                                         },
-                                        { text: "Fecha de Aprobación: 30/07/2019", fontSize: 9 },
+                                        { text: "Fecha de Aprobación: 29/09/2025", fontSize: 9 },
                                         " ",
                                     ],
                                 ],
