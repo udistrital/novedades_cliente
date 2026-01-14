@@ -1585,7 +1585,7 @@ angular.module('contractualClienteApp')
                                     ],
                                     [' ',
                                         { text: 'Proceso: Gestión de Contratación', alignment: 'center', fontSize: 9 },
-                                        { text: 'Fecha de Aprobación: 2025/09/22, fontSize: 9 },
+                                        { text: 'Fecha de Aprobación: 2025/09/22', fontSize: 9 },
                                         ' '
                                     ],
                                 ]
