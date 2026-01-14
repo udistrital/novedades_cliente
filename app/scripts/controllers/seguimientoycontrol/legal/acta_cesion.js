@@ -1924,7 +1924,7 @@ angular
 
                 },
                 ]);
-                console.log("aaaaaa",self.contrato_obj.plazo_cesionario)
+                //console.log("aaaaaa",self.contrato_obj.plazo_cesionario)
                 /*
                 estructura.push({
                     text: [{
@@ -2021,12 +2021,6 @@ angular
              * funcion que retorna la plantilla en formato json
              */
             self.get_plantilla = function () {
-                console.log("1",this.plazoDias)
-                 console.log("2",this.plazoMeses)
-                  console.log("3",this.plazo_cedente)
-                   console.log("4",this.plazo_cesionario)
-                    console.log("5",this.plazo_meses)
-                     console.log("6",this.PlazoEjecucion)
                 return {
                     pageSize: "LETTER",
                     pageMargins: [50, 110, 50, 45],
@@ -2223,7 +2217,6 @@ angular
                             },
                         },
                     },
-
                     {
                         style: ["general_font"],
                         text: [{
@@ -2237,7 +2230,9 @@ angular
                                 self.contrato_obj.ordenador_gasto_ciudad_documento +
                                 ", quien actúa en calidad de " +
                                 self.contrato_obj.ordenadorGasto_rol +
-                                ", y Ordenador del Gasto, y por la otra "+
+                                " según "+
+                                self.contrato_obj.ordenador_gasto_resolucion +
+                                " debidamente autorizado para contratar según Acuerdo Nro. 03 de 2015  ( Estatuto de Contratación de la Universidad Distrital Francisco José de Caldas),  Resolución de Rectoría Nro. 262-2025 , y,  de otra "+
                                 self.contrato_obj.contratista_nombre + 
                                 ", mayor de edad, e identificado(a) con " +
                                 self.contrato_obj.contratista_tipo_documento +
@@ -2373,120 +2368,80 @@ angular
                             widths: [270, 270],
                             body: [
                                 [
+                                    { text: "\n\n", style: "topHeader" },
+                                    { text: "\n\n", style: "topHeader" },
+                                ],
+                                [
                                     {
-                                        text: "\n\n",
-                                        bold: false,
+                                        text: "______________________________________",
                                         style: "topHeader",
                                     },
                                     {
-                                        text: "",
-                                        bold: false,
+                                        text: "______________________________________",
                                         style: "topHeader",
                                     },
                                 ],
                                 [
                                     {
-                                        text: "\n\n",
-                                        bold: false,
+                                        text: self.contrato_obj.ordenadorGasto_nombre,
                                         style: "topHeader",
                                     },
                                     {
-                                        text: "",
-                                        bold: false,
+                                        text: self.contrato_obj.supervisor_nombre,
                                         style: "topHeader",
                                     },
                                 ],
-                                [{
-                                    text: "______________________________________",
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                {
-                                    text: "______________________________________",
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                ],
-                                [{
-                                    text: self.contrato_obj.ordenadorGasto_nombre,
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                {
-                                    text: self.contrato_obj.contratista_nombre,
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                ],
-                                // [{
-                                //     text: self.contrato_obj.ordenadorGasto_rol,
-                                //     bold: false,
-                                //     style: "topHeader",
-                                // },
-                                // ],
-                                [{
-                                    text: "Ordenador de Gasto",
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                //{ text: "", bold: true, style: "topHeader" },
-                                { text: "Cedente", bold: false, style: "topHeader" },
-                                ],
-                                // [
-
-                                // ],
-                                // [
-
-                                // ],
-
-
-                                // [{
-                                //     text: "CC. " + self.contrato_obj.ordenador_gasto_documento,
-                                //     bold: false,
-                                //     style: "topHeader",
-                                // },
-                                // {
-                                //     text: "CC. " + self.contrato_obj.contratista_documento,
-                                //     bold: false,
-                                //     style: "topHeader",
-                                // },
-                                // ],
-
-                                // [
-
-                                // ],
-
-
-                                [{
-                                    text: "\n\n\n\n______________________________________",
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                { text: "", bold: false, style: "topHeader" },
-                                ],
-                                [{
-                                    text: "" +
-                                        self.cesionario_obj.nombre +
-                                        " " +
-                                        self.cesionario_obj.apellidos,
-                                    bold: false,
-                                    style: "topHeader",
-                                },
-                                { text: "", bold: false, style: "topHeader" },
-                                ],
-                                // [{
-                                //     text: "CC. " + self.cesionario_obj.identificacion,
-                                //     bold: false,
-                                //     style: "topHeader",
-                                // },
-                                // { text: "", bold: false, style: "topHeader" },
-                                // ],
                                 [
-                                    { text: "Cesionario\n\n", bold: false, style: "topHeader" },
-                                    { text: "", style: "topHeader" },
+                                    {
+                                        text: "Ordenador del Gasto",
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "Supervisor",
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    { text: "\n\n\n", style: "topHeader" },
+                                    { text: "\n\n\n", style: "topHeader" },
+                                ],
+                                [
+                                    {
+                                        text: "______________________________________",
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "______________________________________",
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: self.contrato_obj.contratista_nombre,
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text:
+                                            self.cesionario_obj.nombre +
+                                            " " +
+                                            self.cesionario_obj.apellidos,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    {
+                                        text: "Cedente",
+                                        style: "topHeader",
+                                    },
+                                    {
+                                        text: "Cesionario",
+                                        style: "topHeader",
+                                    },
                                 ],
                             ],
                         },
+                    
+
                         unbreakable: true,
                         layout: "noBorders",
 
