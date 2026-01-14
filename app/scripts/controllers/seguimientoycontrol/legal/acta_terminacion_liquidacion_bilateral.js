@@ -1431,7 +1431,6 @@ angular.module('contractualClienteApp')
                     self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
                 );
                 
-                
                 consideraciones.push(
                     'Que según certificación de fecha ' + 
                     self.format_date_letter_mongo(self.f_certificacion) + 
@@ -1439,12 +1438,12 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.tipo_contrato + 
                     ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + 
                     ' presenta un saldo a la fecha de ' +
-                    numeroALetras(self.saldo_contratista, {
+                    numeroALetras(parseFloat(self.saldo_contratista.replace(/,/g, '')), {
                         plural: $translate.instant("PESOS"),
                         singular: $translate.instant("PESO"),
                         centPlural: $translate.instant("CENTAVOS"),
                         centSingular: $translate.instant("CENTAVO"),
-                    }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.saldo_contratista) + '') + ' M/CTE).\n\n'
+                    }) + 'MONEDA CORRIENTE ($' + numberFormat(self.saldo_contratista + '') + ' M/CTE).\n\n'
                 );
                 
                 consideraciones.push(
@@ -1576,7 +1575,7 @@ angular.module('contractualClienteApp')
                                     [
                                         { image: 'logo_ud', fit: [43, 80], rowSpan: 3, alignment: 'center', fontSize: 9 },
                                         { text: 'ACTA DE TERMINACIÓN Y LIQUIDACIÓN BILATERAL', bold: true, alignment: 'center', fontSize: 9 },
-                                        { text: 'Código: GJ-PR-002-FR-013', fontSize: 9 },
+                                        { text: 'Código: GC-PR-014- FR-057', fontSize: 9 },
                                         { image: 'logo_sigud', fit: [65, 120], rowSpan: 3, alignment: 'center', fontSize: 9 }
                                     ],
                                     [' ',
@@ -1586,7 +1585,7 @@ angular.module('contractualClienteApp')
                                     ],
                                     [' ',
                                         { text: 'Proceso: Gestión de Contratación', alignment: 'center', fontSize: 9 },
-                                        { text: 'Fecha de Aprobación: 30/07/2019', fontSize: 9 },
+                                        { text: 'Fecha de Aprobación: 2025/09/22, fontSize: 9 },
                                         ' '
                                     ],
                                 ]
