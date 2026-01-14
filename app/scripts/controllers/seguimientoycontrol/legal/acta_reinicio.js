@@ -1207,7 +1207,7 @@ angular
                                         alignment: "center",
                                         fontSize: 9,
                                     },
-                                    { text: "Código: GJ-PR-002-FR-009", fontSize: 9 },
+                                    { text: "Código: GC-PR-014-FR-053", fontSize: 9 },
                                     {
                                         image: "logo_sigud",
                                         fit: [65, 120],
@@ -1234,7 +1234,7 @@ angular
                                             alignment: "center",
                                             fontSize: 9,
                                         },
-                                        { text: "Fecha de Aprobación: 12/10/2017", fontSize: 9 },
+                                        { text: "Fecha de Aprobación: 22/09/2025", fontSize: 9 },
                                         " ",
                                     ],
                                 ],
@@ -1302,6 +1302,16 @@ angular
                                         style: "topHeader",
                                     },
                                 ],
+                                [{
+                                    text: "PLAZO",
+                                    bold: true,
+                                    style: "topHeader",
+                                },
+                                {
+                                    text: self.suspension_obj.PlazoEjecucion + " Días",
+                                    style: "topHeader",
+                                },
+                                ],
                                 [
                                     { text: "FECHA DE INICIO", bold: true, style: "topHeader" },
                                     {
@@ -1310,16 +1320,6 @@ angular
                                         ),
                                         style: "topHeader",
                                     },
-                                ],
-                                [{
-                                    text: "PLAZO DE EJECUCIÓN",
-                                    bold: true,
-                                    style: "topHeader",
-                                },
-                                {
-                                    text: self.suspension_obj.PlazoEjecucion + " Días",
-                                    style: "topHeader",
-                                },
                                 ],
                                 [{
                                     text: "PERIODO SUSPENSIÓN",
@@ -1354,51 +1354,131 @@ angular
                             },
                         },
                     },
-                    {
+                      {
                         style: ["general_font"],
                         text: [
-                            "\n\n",
-                            "Entre los suscritos, a saber " +
-                            self.contrato_obj.supervisor_nombre_completo +
-                            " identificado(a) con  " +
-                            self.contrato_obj.supervisor_tipo_documento +
-                            " No. " +
-                            self.contrato_obj.supervisor_cedula +
-                            " de " +
-                            self.contrato_obj.supervisor_ciudad_documento +
-                            " en su calidad de interventor y/o supervisor y " +
-                            self.contrato_obj.contratista_nombre +
-                            " identificado(a) con " +
-                            self.contrato_obj.contratista_tipo_documento +
-                            " No. " +
-                            self.contrato_obj.contratista_documento +
-                            " de " +
-                            self.contrato_obj.contratista_ciudad_documento +
-                            " en su calidad de contratista, se ha determinado REINICIAR el " +
-                            self.contrato_obj.tipo_contrato +
-                            " No. " +
-                            self.contrato_id +
-                            " de " +
-                            self.contrato_vigencia +
-                            ", suspendido durante el periodo comprendido entre el día " +
-                            self.format_date_letter_mongo(
-                                self.reinicio_nov.fechasuspension
-                            ) +
-                            " y " +
-                            self.format_date_letter_mongo(self.f_finsuspension),
-                            ".\n\n",
-                        ],
-                    },
-                    {
+                          "\n\nEntre los suscritos, a saber, ",
+                          self.contrato_obj.supervisor_nombre_completo,
+                          ", identificado con ",
+                          self.contrato_obj.supervisor_tipo_documento,
+                          " No. ",
+                          self.contrato_obj.supervisor_cedula,
+                          " de ",
+                          self.contrato_obj.supervisor_ciudad_documento,
+                          ", en su calidad de ",
+                          self.contrato_obj.supervisor_rol,
+                          ", y ",
+                          self.contrato_obj.contratista_nombre,
+                          ", identificado con ",
+                          self.contrato_obj.contratista_tipo_documento,
+                          " No. ",
+                          self.contrato_obj.contratista_documento,
+                          " de ",
+                          self.contrato_obj.contratista_ciudad_documento,
+                          ", en su calidad de contratista, se ha determinado ",
+                          { text: "REINICIAR", bold: true },
+                          " el Contrato de ",
+                          self.contrato_obj.tipo_contrato,
+                          " No. ",
+                          self.contrato_id,
+                          " del año ",
+                          self.contrato_vigencia,
+                          ", previas las siguientes consideraciones:\n\n"
+                        ]
+                      },
+                      {
+                        style: ["general_font"],
+                        ol: [
+                          {
+                            text: [
+                              "Que entre la Universidad Distrital Francisco José de Caldas y ",
+                              self.contrato_obj.contratista_nombre,
+                              ", se suscribió el CPS No. ",
+                              self.contrato_id,
+                              " del año ",
+                              self.contrato_vigencia,
+                              ", cuyo objeto es “",
+                              self.contrato_obj.objeto,
+                              "”."
+                            ]
+                          },
+                          {
+                            text: [
+                              "Que mediante acta de fecha ",
+                              self.format_date_letter_mongo(self.suspension_obj.FechaRegistro),
+                              ", se suspendió el Contrato No. ",
+                              self.contrato_id,
+                              " del año ",
+                              self.contrato_vigencia,
+                              ", durante el periodo comprendido entre el día ",
+                              self.format_date_letter_mongo(self.f_suspension),
+                              " y el día ",
+                              self.format_date_letter_mongo(self.f_finsuspension),
+                              " del año ",
+                              self.contrato_vigencia,
+                              "."
+                            ]
+                          },
+                          {
+                            text: [
+                              "Que de conformidad con el parágrafo de la cláusula 19- Suspensión. del CPS No. ",
+                              self.contrato_id,
+                              " del año ",
+                              self.contrato_vigencia,
+                              ", la cual establece que: “PARÁGRAFO. En caso de operar la suspensión del contrato, ",
+                              { text: "EL CONTRATISTA", bold: true },
+                              " se compromete a presentar certificado de modificación de la garantía única, ampliando su vigencia por el término que dure la suspensión”, se hace necesario que el contratista amplíe las garantías requeridas con la suscripción del contrato por el término de duración de la suspensión."
+                            ]
+                          }
+                        ]
+                      },
+                      {
                         style: ["general_font"],
                         text: [
-                            "MOTIVO DE LA SUSPENSIÓN: " +
-                            self.novedad_motivo +
-                            ".\n\n" +
-                            "En constancia de lo consignado en el presente documento, se firma en Bogotá D.C., el día " + self.format_date_letter_mongo(self.f_expedicion_acta) + ".",
-                            "\n",
-                        ],
-                    },
+                          { text: "\nPor lo anterior las partes acuerdan las siguientes CLÁUSULAS:\n\n", bold: true }
+                        ]
+                      },
+                      {
+                        style: ["general_font"],
+                        text: [
+                          { text: "CLÁUSULA PRIMERA: REINICIAR. ", bold: true },
+                          "El Contrato No. ",
+                          self.contrato_id,
+                          " del año ",
+                          self.contrato_vigencia,
+                          " suscrito con ",
+                          self.contrato_obj.contratista_nombre,
+                          ", a partir del día ",
+                          self.format_date_letter_mongo(self.reinicio_nov.fechareinicio),
+                          ".\n\n",
+
+                          { text: "CLÁUSULA SEGUNDA: GARANTÍA. ", bold: true },
+                          { text: "EL CONTRATISTA", bold: true },
+                          " se compromete a modificar la Póliza de Cumplimiento expedida en virtud del Contrato ",
+                          self.contrato_obj.tipo_contrato,
+                          " No. ",
+                          self.contrato_id,
+                          " del año ",
+                          self.contrato_vigencia,
+                          ", de conformidad con la suscripción del presente documento.\n\n",
+
+                          { text: "CLÁUSULA TERCERA: PUBLICACIÓN. ", bold: true },
+                          "En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con la normatividad vigente, por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de reinicio en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente.\n\n",
+
+                          "Para constancia, firman las partes a los ",
+                          { text: new Date(self.f_expedicion_acta).getDate(), bold: false },
+                          " días del mes ",
+                          {
+                            text: new Date(self.f_expedicion_acta).toLocaleDateString("es-ES", { month: "long" }),
+                            bold: false
+                          },
+                          " del año ",
+                          { text: new Date(self.f_expedicion_acta).getFullYear(), bold: false },
+                          ".\n\n"
+
+                        ]
+                      },
+
 
                     {
                         style: ["table2"],

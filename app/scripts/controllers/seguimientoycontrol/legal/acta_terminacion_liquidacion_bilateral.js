@@ -1379,33 +1379,25 @@ angular.module('contractualClienteApp')
 
             self.agregarConsideraciones = function () {
                 var consideraciones = [];
+                
                 consideraciones.push(
-                    'Que entre la Universidad Distrital Francisco José de Caldas y el señor(a) ' +
-                    self.contrato_obj.contratista_nombre + ', se suscribió el ' + self.contrato_obj.tipo_contrato +
-                    ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', cuyo objeto es: "' +
+                    'El día ' +self.format_date_letter_mongo(self.fecha_suscripcion)+
+                    ', LA UNIVERSIDAD y EL CONTRATISTA suscribieron el ' +
+                    self.contrato_obj.tipo_contrato +
+                    ' No. ' + self.contrato_id + ' de ' + 
+                    self.contrato_vigencia + ', cuyo objeto es: "' +
                     self.contrato_obj.objeto + '".\n\n'
                 );
+
                 consideraciones.push(
-                    {
-                        text: [
-                            { text: 'Que la cláusula 17 - Terminación Del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', establece que ' },
-                            { text: '"Terminación. ', bold: true },
-                            { text: 'Serán causales de terminación del contrato el común acuerdo de las partes al respecto, la ocurrencia de cualquier circunstancia de fuerza mayor o caso fortuito que impida la ejecución del contrato, así como el cumplimiento del plazo pactado para su ejecución. Adicionalmente, dará lugar a la terminación anticipada del contrato el incumplimiento de sus obligaciones, por parte de EL CONTRATISTA, debidamente comprobado, que impida continuar con su ejecución”.\n\n', italics: true },
-                        ]
-                    }
-                );
-                consideraciones.push(
-                    'Que el contrato se perfeccionó y ejecutó mediante Registro Presupuestal No. ' +
-                    self.contrato_obj.rp_numero + ' del ' + self.contrato_obj.rp_fecha + '.\n\n'
-                );
-                consideraciones.push(
-                    'Que según lo establecido en el Contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', el plazo de duración se pactó en ' +
-                    self.plazoMeses + ' contados a partir del perfeccionamiento de la Orden y/o contrato, es decir del ' +
+                    'Que el plazo de ejecución del contrato se estableció por ' + 
+                    self.plazoMeses + 
+                    ' contados a partir de la suscripción de la correspondiente Acta de inicio, lo cual tuvo lugar el día ' +
                     self.format_date_letter_mongo(self.contrato_obj.FechaInicio) + '.\n\n'
                 );
+
                 consideraciones.push(
-                    'Que el valor del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
-                    ' se pactó en la suma total de ' +
+                    'Que se pactó como valor del citado contrato, la suma de ' +
                     numeroALetras(self.contrato_obj.valor, {
                         plural: $translate.instant("PESOS"),
                         singular: $translate.instant("PESO"),
@@ -1413,32 +1405,72 @@ angular.module('contractualClienteApp')
                         centSingular: $translate.instant("CENTAVO"),
                     }) + "MODENA CORRIENTE ($" + numberFormat(String(self.contrato_obj.valor) + "") + ' M/Cte.).\n\n'
                 );
+
                 consideraciones.push(
-                    'Que el/la señor(a) ' + self.contrato_obj.contratista_nombre + ', mediante oficio de fecha  ' + self.format_date_letter_mongo(self.fecha_solicitud) + ', le solicita la aceptación de la Terminación Bilateral de ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
-                    ' al Supervisor del mismo y ejecutará el desarrollo de actividades hasta el ' + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + '.\n\n'
+                    {
+                        text: [
+                            { text: 'Que la cláusula 17 del ' + 
+                                self.contrato_obj.tipo_contrato + 
+                                ' No. ' + self.contrato_id + 
+                                ' de ' + self.contrato_vigencia + 
+                                ', establece que ' },
+                            { text: '"Terminación. ', bold: true },
+                            { text: 'Serán causales de terminación del contrato el común acuerdo de las partes al respecto, la ocurrencia de cualquier circunstancia de fuerza mayor o caso fortuito que impida la ejecución del contrato, así como el cumplimiento del plazo pactado para su ejecución. Adicionalmente, dará lugar a la terminación anticipada del contrato el incumplimiento de sus obligaciones, por parte de EL CONTRATISTA, debidamente comprobado, que impida continuar con su ejecución”.\n\n', italics: true },
+                        ]
+                    }
                 );
+
                 consideraciones.push(
-                    'Que según certificación de fecha ' + self.format_date_letter_mongo(self.f_certificacion) + ', expedida por el Jefe de la Unidad de Presupuesto, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ' presenta un saldo a la fecha de ' +
-                    numeroALetras(self.a_favor.valor, {
+                    'Que el contratista mediante oficio de fecha ' + 
+                    self.format_date_letter_mongo(self.fecha_oficioS) +
+                    ', solicita la Terminación Anticipada y Liquidación Bilateral del ' + 
+                    self.contrato_obj.tipo_contrato + 
+                    ' No. ' +
+                    self.contrato_id + ' de ' + self.contrato_vigencia + 
+                    ' al supervisor a partir del día ' +
+                    self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
+                );
+                
+                consideraciones.push(
+                    'Que según certificación de fecha ' + 
+                    self.format_date_letter_mongo(self.f_certificacion) + 
+                    ', expedida por el Líder de la Unidad de Presupuesto, el ' + 
+                    self.contrato_obj.tipo_contrato + 
+                    ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + 
+                    ' presenta un saldo a la fecha de ' +
+                    numeroALetras(parseFloat(self.saldo_contratista.replace(/,/g, '')), {
                         plural: $translate.instant("PESOS"),
                         singular: $translate.instant("PESO"),
                         centPlural: $translate.instant("CENTAVOS"),
                         centSingular: $translate.instant("CENTAVO"),
-                    }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.a_favor.valor) + '') + ' M/CTE).\n\n'
+                    }) + 'MONEDA CORRIENTE ($' + numberFormat(self.saldo_contratista + '') + ' M/CTE).\n\n'
                 );
+                
                 consideraciones.push(
-                    'Que mediante oficio ' + self.numero_oficio_supervisor + ' de fecha ' + self.format_date_letter_mongo(self.fecha_oficioS) +
-                    ' el Supervisor del CPS No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', le comunicó al señor(a) ' +
-                    self.contrato_obj.ordenadorGasto_nombre +
-                    ' en calidad de Ordenador del Gasto del citado contrato, la autorización para la terminación anticipada del mismo, a partir del ' +
+                    'Que por mediante oficio No. ' + 
+                    self.numero_oficio_supervisor +
+                     ' de fecha ' +
+                    self.format_date_letter_mongo(self.fecha_oficioS) +
+                    ' el supervisor del '+
+                    self.contrato_obj.tipo_contrato + 
+                    ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + 
+                    ', le comunicó a ' + self.contrato_obj.ordenadorGasto_nombre +
+                    ' en calidad de Ordenador el Gasto, la autorización para la terminación anticipada del mismo, a partir del ' +
                     self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
                 );
+
                 consideraciones.push(
-                    'Que por medio del oficio ' + self.numero_oficio_ordenador + ' de fecha ' +
+                    'Que por medio del oficio No. ' + 
+                    self.numero_oficio_ordenador +
+                     ' de fecha ' +
                     self.format_date_letter_mongo(self.fecha_oficioO) +
-                    ' recibido por la Oficina de Contratación, el señor(a) ' + self.contrato_obj.ordenadorGasto_nombre +
-                    ', como Ordenador del Gasto, solicitó de ésta, la elaboración del acta de terminación y liquidación bilateral anticipada del Contrato de Prestación de Servicios No. ' +
-                    self.contrato_id + ' de ' + self.contrato_vigencia + ' a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
+                    ', recibido por la Oficina de Contratación,  '+
+                    self.contrato_obj.ordenadorGasto_nombre +
+                    ' como Ordenador del Gasto, solicitó la elaboración del acta de terminación anticipada y liquidación bilateral del ' +
+                    self.contrato_obj.tipo_contrato + 
+                    ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
+                    ' a partir del ' +
+                    self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
                 );
                 if (self.novedades.length > 0) {
                     for (var i = 0; i < self.novedades.length; i++) {
@@ -1543,7 +1575,7 @@ angular.module('contractualClienteApp')
                                     [
                                         { image: 'logo_ud', fit: [43, 80], rowSpan: 3, alignment: 'center', fontSize: 9 },
                                         { text: 'ACTA DE TERMINACIÓN Y LIQUIDACIÓN BILATERAL', bold: true, alignment: 'center', fontSize: 9 },
-                                        { text: 'Código: GJ-PR-002-FR-013', fontSize: 9 },
+                                        { text: 'Código: GC-PR-014- FR-057', fontSize: 9 },
                                         { image: 'logo_sigud', fit: [65, 120], rowSpan: 3, alignment: 'center', fontSize: 9 }
                                     ],
                                     [' ',
@@ -1553,7 +1585,7 @@ angular.module('contractualClienteApp')
                                     ],
                                     [' ',
                                         { text: 'Proceso: Gestión de Contratación', alignment: 'center', fontSize: 9 },
-                                        { text: 'Fecha de Aprobación: 30/07/2019', fontSize: 9 },
+                                        { text: 'Fecha de Aprobación: 2025/09/22', fontSize: 9 },
                                         ' '
                                     ],
                                 ]
@@ -1590,6 +1622,28 @@ angular.module('contractualClienteApp')
                                     { text: self.contrato_obj.contratista_nombre + ", mayor de edad, identificado(a) con " + self.contrato_obj.contratista_tipo_documento + " No. " + self.contrato_obj.contratista_documento + " Expedida en " + self.contrato_obj.contratista_ciudad_documento, style: 'topHeader' }
                                 ],
                                 [
+                                    { text: "SUPERVISOR", bold: true, style: "topHeader" },
+                                    {
+                                        text: self.contrato_obj.supervisor_nombre_completo +
+                                            ", mayor de edad, identificado(a) con " +
+                                            self.contrato_obj.supervisor_tipo_documento +
+                                            " No. " +
+                                            self.contrato_obj.supervisor_cedula +
+                                            " Expedida en " +
+                                            self.contrato_obj.supervisor_ciudad_documento,
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    { text: "PLAZO", bold: true, style: "topHeader" },
+                                    {
+                                        text: [
+                                            { text: this.plazoMeses, bold: true },
+                                        ],
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
                                     { text: 'VALOR', bold: true, style: 'topHeader' },
                                     {
                                         text: numeroALetras(
@@ -1601,6 +1655,24 @@ angular.module('contractualClienteApp')
                                         }) + 'MONEDA CORRIENTE ($' + numberFormat(String(self.contrato_obj.valor)) + " M/CTE)",
                                         style: 'topHeader'
                                     }
+                                ],
+                                [
+                                    { text: "CDP", bold: true, style: "topHeader" },
+                                    {
+                                        text: [
+                                            { text: self.cdp_numero, bold: true },
+                                        ],
+                                        style: "topHeader",
+                                    },
+                                ],
+                                [
+                                    { text: "CRP", bold: true, style: "topHeader" },
+                                    {
+                                        text: [
+                                            { text: self.rp_numero, bold: true },
+                                        ],
+                                        style: "topHeader",
+                                    },
                                 ],
                                 [
                                     { text: 'FECHA DE INICIO', bold: true, style: 'topHeader' },
@@ -1620,8 +1692,24 @@ angular.module('contractualClienteApp')
                         text: [{
 
                             text: [{
-                                text: '\n\nEntre los suscritos a saber, ' + self.contrato_obj.ordenadorGasto_nombre + ', mayor de edad, identificado(a) con ' + self.contrato_obj.ordenador_gasto_tipo_documento + ' No. ' +
-                                    self.contrato_obj.ordenador_gasto_documento + ' de ' + self.contrato_obj.ordenador_gasto_ciudad_documento + ' quien actúa en calidad de ' + self.contrato_obj.ordenadorGasto_rol + ' según ' + self.contrato_obj.ordenador_gasto_resolucion + ' y ordenador del gasto, y por la otra ' + self.contrato_obj.contratista_nombre + ', mayor de edad, e identificado(a) con ' + self.contrato_obj.contratista_tipo_documento + ' No. ' + self.contrato_obj.contratista_documento + ' de ' + self.contrato_obj.contratista_ciudad_documento + ' quíén actúa en calidad de contratista, hemos convenido en'
+                                text: '\n\nEntre los suscritos a saber, ' + 
+                                self.contrato_obj.ordenadorGasto_nombre + 
+                                ', mayor de edad, identificado(a) con ' + 
+                                self.contrato_obj.ordenador_gasto_tipo_documento + 
+                                ' No. ' +
+                                self.contrato_obj.ordenador_gasto_documento + 
+                                ' de ' + self.contrato_obj.ordenador_gasto_ciudad_documento + 
+                                ' quien actúa en calidad de ' + 
+                                self.contrato_obj.ordenadorGasto_rol + 
+                                ' según ' + 
+                                self.contrato_obj.ordenador_gasto_resolucion + 
+                                ' y ordenador del gasto, y por la otra ' + 
+                                self.contrato_obj.contratista_nombre + 
+                                ', mayor de edad, e identificado(a) con ' + 
+                                self.contrato_obj.contratista_tipo_documento + 
+                                ' No. ' + self.contrato_obj.contratista_documento + 
+                                ' de ' + self.contrato_obj.contratista_ciudad_documento + 
+                                ' quíén actúa en calidad de contratista, hemos convenido en'
                             },
                             { text: ' TERMINAR ANTICIPADAMENTE Y POR MUTUO ACUERDO ', bold: true },
                             { text: ' y en consecuencia, ' },
@@ -1629,7 +1717,12 @@ angular.module('contractualClienteApp')
                                 text: 'LIQUIDAR BILATERALMENTE', bold: true,
                             },
                             {
-                                text: ' a partir de la firma de la presente acta, el ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' suscrito el día ' + self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ', previas las siguientes '
+                                text: ' el ' + self.contrato_obj.tipo_contrato + 
+                                ' No. ' + self.contrato_id + ' del año ' + 
+                                self.contrato_obj.vigencia+
+                               ' Suscrito el día '  +
+                                self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + 
+                                ', previas las siguientes '
                             },
                             {
                                 text: 'CONSIDERACIONES:\n\n', bold: true,
@@ -1659,8 +1752,10 @@ angular.module('contractualClienteApp')
                         style: ['general_font'],
                         text: [{
                             text: [
-                                { text: ' CLÁUSULA PRIMERA: TERMINAR Y LIQUIDAR DE MANERA ANTICIPADA Y DE MUTUO ACUERDO el contrato No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + ', ', bold: true },
-                                { text: 'a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + ' de la siguiente manera:\n\n' }
+                                { text: ' CLÁUSULA PRIMERA: TERMINAR DE MANERA ANTICIPADA Y LIQUIDAR BILATERALMENTE el contrato No. ' +
+                                 self.contrato_id + ' de ' + self.contrato_vigencia + ', ', bold: true },
+                                { text: 'a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + 
+                                    ' de la siguiente manera:\n\n' }
                             ]
 
 
@@ -1687,14 +1782,6 @@ angular.module('contractualClienteApp')
                                     { text: 'Saldo a favor de la Universidad', bold: true, style: 'topHeader' },
                                     { text: '$' + numberFormat(String(parseFloat(self.saldo_universidad.replace(/\,/g, ""))) + '') + '\n\n\n', style: 'topHeader' }
                                 ],
-                                [
-                                    { text: 'CDP N°', bold: true, style: 'topHeader' },
-                                    { text: '' + numberFormat(String(parseFloat(self.contrato_obj.cdp_numero)) + '') + '\n\n\n', style: 'topHeader' }
-                                ],
-                                [
-                                    { text: 'CRP N°', bold: true, style: 'topHeader' },
-                                    { text: '' + numberFormat(String(parseFloat(self.rp_numero )) + '') + '\n\n\n', style: 'topHeader' }
-                                ],
                             ]
                         },
                         layout: 'noBorders',
@@ -1704,7 +1791,24 @@ angular.module('contractualClienteApp')
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA SEGUNDA : ', bold: true },
-                                { text: ' Teniendo en cuenta que el Contratista ' + self.contrato_obj.contratista_nombre + ', ejecutará los servicios hasta el dia ' + self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + ', ' + self.a_favor.existe + '\n\n' }
+                                { text: ' Teniendo en cuenta que el Contratista ejecutó los servicios hasta el día' + 
+                                    self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + 
+                                    ', queda un saldo pendiente a su favor, por la suma de ' },
+                                     {
+                              text: numeroALetras(self.saldo_contratista.replace(/\,/g, ""), {
+                                plural: $translate.instant("PESOS"),
+                                singular: $translate.instant("PESO"),
+                                centPlural: $translate.instant("CENTAVOS"),
+                                centSingular: $translate.instant("CENTAVO"),
+                              }),
+                              bold: true
+                            },
+                            { text: ' M/CTE ($' + '\n\n', bold: true },
+                            {
+                              text: numberFormat(String(self.saldo_contratista.replace(/\,/g, ""))),
+                              bold: true
+                            },
+                            { text: ' M/CTE), en atención a que es un valor no ejecutado en el contrato.\n\n' }
                             ]
                         }]
                     },
@@ -1712,9 +1816,9 @@ angular.module('contractualClienteApp')
                         style: ['general_font'],
                         text: [{
                           text: [
-                            { text: ' CLÁUSULA TERCERA: ', bold: true },
+                            { text: ' CLÁUSULA TERCERA: ORDENAR ', bold: true },
                             {
-                              text: 'ORDENAR liberar el saldo a favor de la UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS por valor de ',
+                              text: 'liberar el saldo a favor de la UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS por valor de ',
                             },
                             {
                               text: numeroALetras(self.saldo_universidad.replace(/\,/g, ""), {
@@ -1740,10 +1844,14 @@ angular.module('contractualClienteApp')
                             text: [
                                 { text: ' CLÁUSULA CUARTA : ', bold: true },
                                 {
-                                    text: 'Las partes manifiestan que aceptan la terminación y liquidación del ' + self.contrato_obj.tipo_contrato + ' No. ' + self.contrato_id + ' del día ' +
-                                        self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + ' a nombre de ' +
-                                        self.contrato_obj.contratista_nombre + ", con efectos legales a partir del " + self.format_date_letter_mongo(self.fecha_efectos_legales) +
-                                        ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del mismo, declarándose a paz y salvo por todo concepto una vez se compruebe el pago de la cláusula segunda de la presente Acta.\n\n'
+                                    text: 'Las partes manifiestan que aceptan la Terminación Anticipada y liquidación Bilateral del ' 
+                                    + self.contrato_obj.tipo_contrato + 
+                                    ' No. ' + self.contrato_id + 
+                                    ' del día ' +
+                                    self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion) + 
+                                     ', con efectos legales a partir del "' + 
+                                     self.format_date_letter_mongo(self.fecha_efectos_legales) +
+                                    ' y se liberan mutuamente de cualquier otra obligación que pueda derivarse del mismo, declarándose a paz y salvo por todo concepto una vez se compruebe el pago de la cláusula segunda de la presente Acta.\n\n'
                                 }
                             ],
 
@@ -1756,7 +1864,7 @@ angular.module('contractualClienteApp')
                             text: [
                                 { text: 'CLAUSULA QUINTA: PUBLICACIÓN. ', bold: true },
                                 {
-                                    text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y en concordancia con lo establecido en la Resolución de Rectoría No. 008 de 2021 por medio de la cual se reglamenta el uso del SECOP II en la Universidad, se procederá a la publicación del presente documento de terminación y liquidación bilateral en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente..\n\n'
+                                    text: '- En virtud de lo dispuesto en el Estatuto de Contratación – Acuerdo 003 de 2015 y las normas vigentes, se procederá a la publicación del presente documento en el SECOP II que administra la Agencia Nacional de Contratación Pública – Colombia Compra Eficiente.\n\n'
                                 }
                             ],
 

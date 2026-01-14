@@ -31,6 +31,9 @@ AWS_SECRET_ACCESS_KEY: Secreto de Usuario AWS
 ### Ejecución del Proyecto
 
 Instalación
+
+Node v14.21.23
+
 ```shell
 # Clonar el repositorio:
 git clone https://github.com/udistrital/novedades_cliente
