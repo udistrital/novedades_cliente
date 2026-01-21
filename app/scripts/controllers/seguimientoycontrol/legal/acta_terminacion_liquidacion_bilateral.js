@@ -1381,7 +1381,7 @@ angular.module('contractualClienteApp')
                 var consideraciones = [];
                 
                 consideraciones.push(
-                    'El día ' +self.format_date_letter_mongo(self.fecha_suscripcion)+
+                    'El día ' +self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion)+
                     ', LA UNIVERSIDAD y EL CONTRATISTA suscribieron el ' +
                     self.contrato_obj.tipo_contrato +
                     ' No. ' + self.contrato_id + ' de ' + 
@@ -1791,7 +1791,7 @@ angular.module('contractualClienteApp')
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA SEGUNDA : ', bold: true },
-                                { text: ' Teniendo en cuenta que el Contratista ejecutó los servicios hasta el día' + 
+                                { text: ' Teniendo en cuenta que el Contratista ejecutó los servicios hasta el día ' + 
                                     self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + 
                                     ', queda un saldo pendiente a su favor, por la suma de ' },
                                      {
