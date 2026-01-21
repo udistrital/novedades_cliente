@@ -1381,7 +1381,7 @@ angular.module('contractualClienteApp')
                 var consideraciones = [];
                 
                 consideraciones.push(
-                    'El día ' +self.format_date_letter_mongo(self.fecha_suscripcion)+
+                    'El día ' +self.format_date_letter_mongo(self.contrato_obj.fecha_suscripcion)+
                     ', LA UNIVERSIDAD y EL CONTRATISTA suscribieron el ' +
                     self.contrato_obj.tipo_contrato +
                     ' No. ' + self.contrato_id + ' de ' + 
