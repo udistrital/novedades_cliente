@@ -1791,7 +1791,7 @@ angular.module('contractualClienteApp')
                         text: [{
                             text: [
                                 { text: ' CLÁUSULA SEGUNDA : ', bold: true },
-                                { text: ' Teniendo en cuenta que el Contratista ejecutó los servicios hasta el día' + 
+                                { text: ' Teniendo en cuenta que el Contratista ejecutó los servicios hasta el día ' + 
                                     self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + 
                                     ', queda un saldo pendiente a su favor, por la suma de ' },
                                      {
