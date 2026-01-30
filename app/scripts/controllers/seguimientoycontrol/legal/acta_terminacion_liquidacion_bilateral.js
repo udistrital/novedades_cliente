@@ -1428,7 +1428,7 @@ angular.module('contractualClienteApp')
                     ' No. ' +
                     self.contrato_id + ' de ' + self.contrato_vigencia + 
                     ' al supervisor a partir del día ' +
-                    self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
+                    self.format_date_letter_mongo(self.fecha_terminacion_anticipada) + '.\n\n'
                 );
                 
                 consideraciones.push(
