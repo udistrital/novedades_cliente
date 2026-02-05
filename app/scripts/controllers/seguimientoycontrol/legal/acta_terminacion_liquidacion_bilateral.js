@@ -1456,7 +1456,12 @@ angular.module('contractualClienteApp')
                     ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + 
                     ', le comunicó a ' + self.contrato_obj.ordenadorGasto_nombre +
                     ' en calidad de Ordenador el Gasto, la autorización para la terminación anticipada del mismo, a partir del ' +
-                    self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
+                    self.format_date_letter_mongo(
+  						new Date(new Date(self.fecha_terminacion_anticipada).setDate(
+    						new Date(self.fecha_terminacion_anticipada).getDate() + 1
+  						))
+)
+                     self.format_date_letter_mongo(self.fecha_terminacion_anticipada)+ '.\n\n'
                 );
 
                 consideraciones.push(
@@ -1470,7 +1475,7 @@ angular.module('contractualClienteApp')
                     self.contrato_obj.tipo_contrato + 
                     ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia +
                     ' a partir del ' +
-                    self.format_date_letter_mongo(self.fecha_efectos_legales) + '.\n\n'
+                    self.format_date_letter_mongo(self.fecha_terminacion_anticipada)+ '.\n\n'
                 );
                 if (self.novedades.length > 0) {
                     for (var i = 0; i < self.novedades.length; i++) {
@@ -1754,7 +1759,7 @@ angular.module('contractualClienteApp')
                             text: [
                                 { text: ' CLÁUSULA PRIMERA: TERMINAR DE MANERA ANTICIPADA Y LIQUIDAR BILATERALMENTE el contrato No. ' +
                                  self.contrato_id + ' de ' + self.contrato_vigencia + ', ', bold: true },
-                                { text: 'a partir del ' + self.format_date_letter_mongo(self.fecha_efectos_legales) + 
+                                { text: 'a partir del ' + self.format_date_letter_mongo(self.fecha_terminacion_anticipada)+ 
                                     ' de la siguiente manera:\n\n' }
                             ]
 
