@@ -1456,6 +1456,11 @@ angular.module('contractualClienteApp')
                     ' No. ' + self.contrato_id + ' de ' + self.contrato_vigencia + 
                     ', le comunicó a ' + self.contrato_obj.ordenadorGasto_nombre +
                     ' en calidad de Ordenador el Gasto, la autorización para la terminación anticipada del mismo, a partir del ' +
+                    self.format_date_letter_mongo(
+  						new Date(new Date(self.fecha_terminacion_anticipada).setDate(
+    						new Date(self.fecha_terminacion_anticipada).getDate() + 1
+  						))
+)
                      self.format_date_letter_mongo(self.fecha_terminacion_anticipada)+ '.\n\n'
                 );
 
